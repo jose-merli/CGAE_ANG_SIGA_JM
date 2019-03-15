@@ -572,10 +572,10 @@
             <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
             <app-fecha *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(value)]="nuevoEstadoColegial.fechaEstadoStr"
               [minDate]="fechaMinimaEstadoColegial" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
-              (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])"></app-fecha>
+              (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
             <app-fecha *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
               [(value)]="car[col.field]" [minDate]="fechaMinimaEstadoColegialMod" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
-              (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])"></app-fecha>
+              (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
           </ng-template>
 
         </p-column>
@@ -598,8 +598,9 @@
           <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
             <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
             <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
-            <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(ngModel)]="nuevoEstadoColegial.situacionResidente"
-              [options]="comboResidente" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+            <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') && datosColegiales[rowIndex].isMod == true"
+              [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+              placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
             <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
               [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
               placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
@@ -634,7 +635,7 @@
       <div class="text-right main-button ">
         <button [disabled]="!activarRestablecerColegiales() || !isRestablecer || disabledAction || tarjetaColegiales=='2'" (click)="restablecerColegiales()"
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="confirmarEliminarEstadoColegial(selectedDatos)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2'"
+        <button (click)="eliminarEstadoColegial(selectedDatos)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2'"
           pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         <button (click)="guardarColegiales()" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2'"
           pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
