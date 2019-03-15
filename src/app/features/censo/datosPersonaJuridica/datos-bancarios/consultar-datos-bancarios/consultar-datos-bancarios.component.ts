@@ -25,7 +25,7 @@ import { IfObservable } from "../../../../../../../node_modules/rxjs/observable/
 export class ConsultarDatosBancariosComponent implements OnInit {
   //fichasPosibles: any[];
 
-  openFichaCuentaBancaria: boolean = false;
+  openFichaCuentaBancaria: boolean = true;
   openFichaDatosMandatos: boolean = false;
   openFichaListadoFicherosAnexos: boolean = false;
   progressSpinner: boolean = false;
@@ -93,6 +93,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   comboProductoServicio: any[] = [];
   selectedProductoServicio: any = {};
   datosPrevios: any = {};
+  tipoIdentificacion: String;
 
 
   currentRoute: String;
@@ -131,7 +132,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   lengthCountryCode: Number = 0;
   // historico:boolean = false;
-
+  activaServicios: boolean = false;
+  activaProductos: boolean = false;
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
@@ -205,6 +207,15 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           console.log(err);
         }
       );
+
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.tipoIdentificacion = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
 
     this.tipoCuenta = [
       { name: "Abono", code: "A" },
@@ -419,6 +430,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
         console.log(error);
+        this.progressSpinner = false;
         //Error al insertar los mandatos de las cuentas
         if (
           this.bodySearch.error.message.toString() ==
@@ -436,12 +448,30 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.selectedTipo = [];
         this.body.motivo = undefined;
         this.registroEditable = "true";
-
+        this.searchDatosBancarios();
         this.cargarModoEdicion();
         this.progressSpinner = false;
         this.cargarDatosCuentaBancaria();
       }
     );
+  }
+
+  searchDatosBancarios() {
+    this.progressSpinner = true;
+    this.sigaServices
+      .postPaginado(
+        "fichaDatosBancarios_datosBancariosSearch",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          let searchDatosBancariosIdPersona = JSON.parse(data["body"]);
+          sessionStorage.setItem("allBanksData", searchDatosBancariosIdPersona.datosBancariosItem);
+        },
+        error => {
+        }
+      );
   }
 
   modo() {
@@ -494,6 +524,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.cerrarAuditoria();
           this.selectedTipo = [];
           this.body.motivo = null;
+          this.searchDatosBancarios();
           this.cargarModoEdicion();
           this.idCuenta = this.body.idCuenta;
         }
@@ -544,6 +575,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
               // auditoria
               this.cerrarAuditoria();
               this.body.motivo = null;
+              this.searchDatosBancarios();
               this.idCuenta = this.body.idCuenta;
               this.cargarDatosMandatos();
               this.cargarDatosAnexos();
@@ -930,6 +962,55 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
+
+  validarCuentaSJCS() {
+    this.confirmationService.confirm({
+      message: "Se van a revisar las servicios y facturas pendientes para asignar una cuenta en lugar de esta",
+      icon: "fa fa-info",
+      accept: () => {
+        this.revisionCuentas = true;
+        this.registroEditable = sessionStorage.getItem("editar");
+        if (this.registroEditable == "false") {
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
+        } else {
+          // dependiendo de esta variable, se muestra o no la auditoria
+          this.body.motivo = null;
+          if (this.ocultarMotivo) {
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.editarRegistro();
+            }
+          } else {
+            this.displayAuditoria = true;
+            this.showGuardarAuditoria = false;
+          }
+        }
+      },
+      reject: () => {
+        this.showGuardarAuditoria = false;
+        // this.revisionCuentas = false;
+        // this.registroEditable = sessionStorage.getItem("editar");
+        // if (this.registroEditable == "false") {
+        //   this.guardarRegistro();
+        // } else {
+        //   // dependiendo de esta variable, se muestra o no la auditoria
+        //   this.body.motivo = undefined;
+        //   if (this.ocultarMotivo) {
+        //     this.editarRegistro();
+        //   } else {
+        //     this.displayAuditoria = true;
+        //     this.showGuardarAuditoria = false;
+        //   }
+        // }
+      }
+    });
+  }
+
   validarCuentaCargo() {
     this.confirmationService.confirm({
       message: this.translateService.instant(
@@ -1019,7 +1100,41 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ) {
       this.formValido = true;
       this.getArrayTipoCuenta();
-      if (this.body.tipoCuenta.indexOf("C") !== -1) {
+      if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta.indexOf("C") !== -1) {
+        let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
+        let numBancos = 0;
+        // let encontrado = 
+        for (let i in bancos) {
+          if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
+            numBancos++;
+          }
+        }
+        if (numBancos <= 1) {
+          this.validarCuentaSJCS();
+        } else if (this.body.tipoCuenta.indexOf("C") !== -1) {
+          this.validarCuentaCargo();
+        } else {
+          this.revisionCuentas = false;
+          this.registroEditable = sessionStorage.getItem("editar");
+          if (this.registroEditable == "false") {
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.guardarRegistro();
+            }
+          } else {
+            if (this.ocultarMotivo == false) {
+              this.displayAuditoria = true;
+            } else {
+              this.displayAuditoria = false;
+              this.editarRegistro();
+            }
+
+            this.showGuardarAuditoria = false;
+            this.body.motivo = null;
+          }
+        }
+      } else if (this.body.tipoCuenta.indexOf("C") !== -1) {
         this.validarCuentaCargo();
       } else {
         this.revisionCuentas = false;
@@ -1156,17 +1271,43 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosMandatos.idPersona = this.idPersona;
     this.bodyDatosMandatos.idCuenta = this.idCuenta;
 
-    if (this.selectedEsquemaProducto) {
-      this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoProducto;
-      this.bodyDatosMandatos.esquema = this.selectedEsquemaProducto.value;
-      this.guardar(this.bodyDatosMandatos);
+    if (this.activaServicios && !this.activaProductos) {
+      if (this.selectedEsquemaServicio) {
+        this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoServicio;
+        this.bodyDatosMandatos.esquema = this.selectedEsquemaServicio.value;
+        this.bodyDatosMandatos.tipoId = this.bodyDatosMandatos.tipoIdServicio;
+        this.bodyDatosMandatos.identif = this.bodyDatosMandatos.identifServicio;
+        this.bodyDatosMandatos.referencia = this.bodyDatosMandatos.referenciaServicio;
+        this.guardar(this.bodyDatosMandatos);
+      }
+    } else if (!this.activaServicios && this.activaProductos) {
+      if (this.selectedEsquemaProducto) {
+        this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoProducto;
+        this.bodyDatosMandatos.esquema = this.selectedEsquemaProducto.value;
+        this.bodyDatosMandatos.tipoId = this.bodyDatosMandatos.tipoIdProducto;
+        this.bodyDatosMandatos.identif = this.bodyDatosMandatos.identifProducto;
+        this.bodyDatosMandatos.referencia = this.bodyDatosMandatos.referenciaProducto;
+        this.guardar(this.bodyDatosMandatos);
+      }
+    } else {
+      if (this.selectedEsquemaServicio) {
+        this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoServicio;
+        this.bodyDatosMandatos.esquema = this.selectedEsquemaServicio.value;
+        this.bodyDatosMandatos.tipoId = this.bodyDatosMandatos.tipoIdServicio;
+        this.bodyDatosMandatos.identif = this.bodyDatosMandatos.identifServicio;
+        this.bodyDatosMandatos.referencia = this.bodyDatosMandatos.referenciaServicio;
+        this.guardar(this.bodyDatosMandatos);
+      }
+      if (this.selectedEsquemaProducto) {
+        this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoProducto;
+        this.bodyDatosMandatos.esquema = this.selectedEsquemaProducto.value;
+        this.bodyDatosMandatos.tipoId = this.bodyDatosMandatos.tipoIdProducto;
+        this.bodyDatosMandatos.identif = this.bodyDatosMandatos.identifProducto;
+        this.bodyDatosMandatos.referencia = this.bodyDatosMandatos.referenciaProducto;
+        this.guardar(this.bodyDatosMandatos);
+      }
     }
 
-    if (this.selectedEsquemaServicio) {
-      this.bodyDatosMandatos.idMandato = this.bodyDatosMandatos.idMandatoServicio;
-      this.bodyDatosMandatos.esquema = this.selectedEsquemaServicio.value;
-      this.guardar(this.bodyDatosMandatos);
-    }
   }
 
   guardar(body) {
@@ -1180,7 +1321,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       },
       error => {
         this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
-        this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
+        // this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
         console.log(error);
         this.progressSpinner = false;
       }
@@ -1233,6 +1374,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   // Métodos listadoFicherosAnexos
+  activarCamposMandatos() {
+    for (let i in this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem) {
+      if (this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].tipo == "MANDATO" && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].tipoMandato == "SERVICIO" && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].firmaFecha == undefined && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].firmaFechaDate == undefined) {
+        this.activaServicios = true;
+      }
+      if (this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].tipo == "MANDATO" && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].tipoMandato == "PRODUCTO" && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].firmaFecha == undefined && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].firmaFechaDate == undefined) {
+        this.activaProductos = true;
+      }
+    }
+  }
 
   cargarDatosAnexos() {
     this.progressSpinner = false;
@@ -1269,6 +1420,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           // );
           console.log(error);
           this.progressSpinner = false;
+        }, () => {
+          this.activarCamposMandatos();
         }
       );
   }
@@ -1375,8 +1528,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         () => {
           this.limpiarDatosAnexo();
+          this.activarCamposMandatos();
         }
       );
+    this.activarCamposMandatos();
   }
 
   limpiarDatosAnexo() {
@@ -1524,6 +1679,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   actualizar(body) {
+    this.activaProductos = false;
+    this.activaServicios = false;
     this.progressSpinner = true;
     this.sigaServices.post("anexos_update", body).subscribe(
       data => {
@@ -1564,6 +1721,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.fubauto.chooseLabel = "Seleccionar Archivo";
 
         this.cargarDatosAnexos();
+        this.activarCamposMandatos();
       }
     );
   }
@@ -1637,7 +1795,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   // Métodos comunes
-
+  ngOnDestroy() {
+    sessionStorage.removeItem("idPersona");
+    sessionStorage.removeItem("allBanksData");
+  }
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
