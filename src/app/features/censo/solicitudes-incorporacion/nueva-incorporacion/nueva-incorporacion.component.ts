@@ -168,7 +168,9 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
     this.onChangeNColegiado(undefined);
     this.onChangeCodigoPostal();
-    this.getComboPoblacion(this.solicitudEditar.nombrePoblacion.toString());
+    if (this.solicitudEditar.nombrePoblacion != undefined) {
+      this.getComboPoblacion(this.solicitudEditar.nombrePoblacion.toString());
+    }
   }
 
   cargarCombos() {
