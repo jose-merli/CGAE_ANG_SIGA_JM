@@ -35,7 +35,8 @@
       <span>{{item.institucion}}</span>
     </li>
     <li>Idioma:
-      <span>{{item.idioma}} <i class="fa fa-edit" (click)="mostrarPopUpIdioma()" style="cursor: pointer"></i>
+      <span>{{item.idioma}}
+        <i class="fa fa-edit" (click)="mostrarPopUpIdioma()" style="cursor: pointer"></i>
       </span>
     </li>
     <li>Última conexión:
@@ -45,8 +46,7 @@
   </ul>
 </div>
 
-<p-dialog [(visible)]="showIdioma" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
-  [minWidth]="500">
+<p-dialog [(visible)]="showIdioma" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
   <p-header>
     <label>{{'censo.usuario.cambioidioma' | translate}}</label>
   </p-header>

@@ -15,6 +15,17 @@ export class DatosMandatosItem {
   tipoPagoServicio: String;
   combooItems: ComboItem[];
   status: String;
+  idTipoIdentificacionProducto: String;
+  idTipoIdentificacionServicio: String;
+  identificacionServicio: String;
+  identificacionProducto: String;
+  tipoId: String;
+  identif: String;
+  referencia: String;
+  tipoIdProducto: String;
+  tipoIdServicio: String;
+  identifServicio: String;
+  identifProducto: String;
 
-  constructor() {}
+  constructor() { }
 }
