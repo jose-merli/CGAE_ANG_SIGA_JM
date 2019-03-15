@@ -3763,6 +3763,7 @@ export class FichaColegialComponent implements OnInit {
             sessionStorage.setItem("permisos", "true");
           }
 
+          sessionStorage.setItem("allBanksData", JSON.stringify(this.datosBancarios));
           sessionStorage.setItem("editar", "true");
           sessionStorage.setItem("idPersona", this.idPersona);
           sessionStorage.setItem("fichaColegial", "true");

@@ -167,25 +167,33 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label style="font-weight: bold;">{{ "general.message.datos.generales" | translate}} {{"menu.productosYServicios.categorias.productos" | translate}}</label>
               </div>
-
-              <div class="form-group col-lg-12 col-md-12">
+              <div class="form-group col-lg-4 col-md-4">
+                <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} </label>
+                <p-dropdown class="select-form" [options]="tipoIdentificacion" [disabled]="!activaProductos" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [(ngModel)]="bodyDatosMandatos.tipoIdProducto" (onChange)="editarMandato = true"></p-dropdown>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
+                <input [(ngModel)]="bodyDatosMandatos.identifProducto" type="text" class="form-control" (ngModelChange)="editarMandato = true"
+                  [disabled]="!activaProductos || !permisos || disabledAction" pInputText>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
                 <label>{{"factSJCS.detalleFacturacion.literal.referencia" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control" [disabled]="!editarMandato || !permisos || disabledAction"
-                  pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control" (ngModelChange)="editarMandato = true"
+                  [disabled]="!activaProductos || !permisos || disabledAction" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.tipoPago" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" [disabled]="!editarMandato || !permisos || disabledAction"
-                  pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" disabled pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.esquemaUtil" | translate}}</label>
-                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato || !permisos || disabledAction"
-                  [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event)">
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo" [disabled]="!activaProductos || !permisos || disabledAction"
+                  [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event); editarMandato = true">
                 </p-dropdown>
 
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto"
-                  (onChange)="onChangeEsquemaProducto($event)" [disabled]="mandatoAnexoVacio || !permisos || !editarMandato || disabledAction">
+                  (onChange)="onChangeEsquemaProducto($event); editarMandato = true" [disabled]="mandatoAnexoVacio || !permisos || !activaProductos || disabledAction">
                 </p-dropdown>
               </div>
               <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" [(disabled)]="!permisos || disabledAction"
@@ -206,25 +214,34 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate}} {{"menu.productosYServicios.categorias.servicios" | translate}}</label>
               </div>
-
-              <div class="form-group col-lg-12 col-md-12">
+              <div class="form-group col-lg-4 col-md-4">
+                <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} </label>
+                <p-dropdown class="select-form" [options]="tipoIdentificacion" [disabled]="!activaServicios || !permisos || disabledAction"
+                  placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyDatosMandatos.tipoIdServicio"
+                  (onChange)="editarMandato = true"></p-dropdown>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
+                <input [(ngModel)]="bodyDatosMandatos.identifServicio" type="text" class="form-control" (ngModelChange)="editarMandato = true"
+                  [disabled]="!activaServicios || !permisos || disabledAction" pInputText>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
                 <label>{{"factSJCS.detalleFacturacion.literal.referencia" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control" [disabled]="!editarMandato || !permisos || disabledAction"
-                  pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control" (ngModelChange)="editarMandato = true"
+                  [disabled]="!activaServicios || !permisos || disabledAction" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.tipoPago" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" [disabled]="!editarMandato || !permisos || disabledAction"
-                  pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" disabled pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.esquemaUtil" | translate}}</label>
-                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo" [disabled]="!editarMandato || !permisos || disabledAction"
-                  [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event)">
+                <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo" [disabled]="!activaServicios || !permisos || disabledAction"
+                  [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event); editarMandato = true">
 
                 </p-dropdown>
                 <p-dropdown class="select-form" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio"
-                  (onChange)="onChangeEsquemaServicio($event)" [disabled]="mandatoAnexoVacio || !permisos || !editarMandato || disabledAction">
+                  (onChange)="onChangeEsquemaServicio($event); editarMandato = true" [disabled]="mandatoAnexoVacio || !permisos || !activaServicios || disabledAction">
 
                 </p-dropdown>
 
@@ -245,8 +262,8 @@
       </div>
       <div *ngIf="openFichaDatosMandatos && !nuevo" class="card-footer">
         <div class="text-right main-button">
-          <button (click)="validarGuardarMandato()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-            [disabled]="!editarMandato || !permisos || disabledAction"></button>
+          <button (click)="validarGuardarMandato(); editarMandato = false" pButton type="button" icon="far fa-save" iconPos="left"
+            label="{{ 'general.boton.guardar' | translate}}" [disabled]="!editarMandato || !permisos || disabledAction"></button>
         </div>
       </div>
     </div>
@@ -387,8 +404,7 @@
   </div>
 
   <!--FIRMA-->
-  <p-dialog [(visible)]="displayFirmar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
-    [minWidth]="500">
+  <p-dialog [(visible)]="displayFirmar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} - {{"pestana.fichaCliente.datosBancarios.ficherosAnexos" | translate}}</label>
     </p-header>
@@ -434,8 +450,7 @@
 
 
   <!--NUEVO-->
-  <p-dialog [(visible)]="displayNuevo" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
-    [minWidth]="500">
+  <p-dialog [(visible)]="displayNuevo" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} - {{"censo.sociedades.datosBancarios.insertarAnexo" | translate}}</label>
     </p-header>
@@ -488,8 +503,7 @@
 
   <!-- AUDITORIA -->
 
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minHeight]="500"
-    [minWidth]="500">
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} - {{"censo.consultaHistorico.cabecera" | translate}}</label>
     </p-header>
@@ -507,7 +521,6 @@
         <button (click)="cerrarAuditoria()" [(disabled)]="!permisos" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
         <button (click)="editarRegistro()" [disabled]="!showGuardarAuditoria || !permisos" pButton type="button" icon="fa fa-save"
           iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
-
       </div>
     </p-footer>
   </p-dialog>
