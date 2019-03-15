@@ -46,10 +46,17 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       activa: false
     },
     {
-      key: "documentos",
+      key: "destinatariosIndv",
       activa: false
     },
-
+    {
+      key: "destinatariosList",
+      activa: false
+    },
+    {
+      key: "documentos",
+      activa: false
+    }
   ];
 
   constructor(

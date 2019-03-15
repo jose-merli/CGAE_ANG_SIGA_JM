@@ -573,6 +573,11 @@ export class SigaServices {
     enviosMasivos_duplicar: "enviosMasivos/duplicarEnvio ",
     enviosMasivos_etiquetas: "enviosMasivos/detalle/etiquetas",
     enviosMasivos_etiquetasEnvio: "enviosMasivos/detalle/etiquetasEnvio ",
+    enviosMasivos_consultasDestAsociadas: 'enviosMasivos/detalle/ConsultasEnvAsociadas',
+    enviosMasivos_consultasDestDisp: 'enviosMasivos/detalle/consultasDestinatariosDisp',
+    enviosMasivos_consultasDestinatarios: 'enviosMasivos/detalle/consultasDest',
+    enviosMasivos_asociarConsulta: 'enviosMasivos/detalle/asociarConsulta',
+    enviosMasivos_desAsociarConsulta: 'enviosMasivos/detalle/desAsociarConsulta',
     enviosMasivos_guardarEtiquetas: "enviosMasivos/detalle/guardarEtiquetas",
     enviosMasivos_subirDocumento: "enviosMasivos/detalle/subirDocumento",
     enviosMasivos_detallePlantilla: "enviosMasivos/detalle/detallePlantilla",
@@ -895,11 +900,11 @@ export class SigaServices {
     this.menuToggled.next();
   }
 
-  notifyRefreshConsulta(){
+  notifyRefreshConsulta() {
     this.consultasRefresh.next();
   }
 
-  notifyRefreshEditar(){
+  notifyRefreshEditar() {
     this.deshabilitarEditar.next();
   }
 
