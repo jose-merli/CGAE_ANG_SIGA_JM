@@ -380,6 +380,7 @@ export class SigaServices {
       "/fichaDatosColegiales/datosColegialesSearch",
     fichaColegialColegiales_search:
       "fichaDatosColegiales/searchDatosColegiales",
+    fichaDatosColegiales_getNumColegiado: "/fichaDatosColegiales/getNumColegiado",
     alterMutua_estadoSolicitud: "alterMutua/estadoSolicitud",
     alterMutua_estadoColegiado: "alterMutua/estadoColegiado",
     alterMutua_propuestas: "alterMutua/propuestas",
@@ -559,7 +560,7 @@ export class SigaServices {
       "/fichaDatosColegiales/datosColegialesInsertEstado",
     fichaDatosColegiales_datosColegialesUpdateEstados:
       "/fichaDatosColegiales/datosColegialesUpdateEstados",
-      fichaDatosColegiales_datosColegialesDeleteEstado:
+    fichaDatosColegiales_datosColegialesDeleteEstado:
       "/fichaDatosColegiales/datosColegialesDeleteEstado",
     fichaColegialRegTel_permisos: "fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
@@ -738,9 +739,9 @@ export class SigaServices {
     return this.httpbackend
       .get(
         environment.newSigaUrl +
-          this.endpoints[service] +
-          "?institucion=" +
-          institucion
+        this.endpoints[service] +
+        "?institucion=" +
+        institucion
       )
       .map(response => {
         return response;
