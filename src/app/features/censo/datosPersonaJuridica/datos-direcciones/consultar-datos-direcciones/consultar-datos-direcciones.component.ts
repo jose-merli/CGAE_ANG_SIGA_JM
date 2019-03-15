@@ -1205,6 +1205,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  ngOnDestroy() {
+    sessionStorage.removeItem("historicoDir");
+  }
   clear() {
     this.msgs = [];
   }
