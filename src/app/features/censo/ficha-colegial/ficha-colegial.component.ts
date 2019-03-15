@@ -2340,27 +2340,27 @@ export class FichaColegialComponent implements OnInit {
     this.pasarFechas();
 
     if (this.colegialesBody.numColegiado != this.checkColegialesBody.numColegiado) {
-      if(!(this.colegialesBody.numColegiado == this.maxNumColegiado)){
-      this.solicitudEditar.numColegiado = this.colegialesBody.numColegiado;
-      this.sigaServices
-        .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
-        .subscribe(
-          data => {
-            let resultado = JSON.parse(data["body"]);
-            if (resultado.numColegiado == "disponible") {
-              this.comprobarDirecciones();
-            } else {
-              this.showFailNumColegiado("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
-    this.progressSpinner = false;
+      if (!(this.colegialesBody.numColegiado == this.maxNumColegiado)) {
+        this.solicitudEditar.numColegiado = this.colegialesBody.numColegiado;
+        this.sigaServices
+          .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
+          .subscribe(
+            data => {
+              let resultado = JSON.parse(data["body"]);
+              if (resultado.numColegiado == "disponible") {
+                this.comprobarDirecciones();
+              } else {
+                this.showFailNumColegiado("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
+                this.progressSpinner = false;
+              }
+            },
+            error => {
+              let resultado = JSON.parse(error["error"]);
+              this.showFailNumColegiado(resultado.error.message.toString());
+              this.progressSpinner = false;
             }
-          },
-          error => {
-            let resultado = JSON.parse(error["error"]);
-            this.showFailNumColegiado(resultado.error.message.toString());
-            this.progressSpinner = false;
-          }
-        );
-      }else{
+          );
+      } else {
         this.comprobarDirecciones();
       }
     } else {
@@ -2614,16 +2614,16 @@ export class FichaColegialComponent implements OnInit {
                         this.checkColegialesBody = JSON.parse(
                           JSON.stringify(this.colegialesBody)
                         );
-                          
+
                         let newBody = JSON.parse(sessionStorage.getItem("personaBody"));
                         newBody.numColegiado = this.colegialesBody.numColegiado;
                         newBody.idTiposSeguro = this.colegialesBody.idTiposSeguro;
                         newBody.nMutualista = this.colegialesBody.nMutualista;
                         newBody.comunitario = this.colegialesBody.comunitario;
-                        newBody.incorporacion = this.colegialesBody.incorporacion ;
-                        newBody.fechapresentacion = this.colegialesBody.fechapresentacion ;
+                        newBody.incorporacion = this.colegialesBody.incorporacion;
+                        newBody.fechapresentacion = this.colegialesBody.fechapresentacion;
                         newBody.fechaJura = this.colegialesBody.fechaJura;
-                        sessionStorage.setItem("personaBody",JSON.stringify(newBody));
+                        sessionStorage.setItem("personaBody", JSON.stringify(newBody));
 
                       },
                       error => {
@@ -3653,10 +3653,17 @@ export class FichaColegialComponent implements OnInit {
     );
 
     if (this.datosColegiales.length != 0) {
-      sessionStorage.setItem(
-        "situacionColegialesBody",
-        JSON.stringify(this.datosColegiales[0].idEstado)
-      );
+      if (this.isCrearColegial) {
+        sessionStorage.setItem(
+          "situacionColegialesBody",
+          JSON.stringify(this.datosColegiales[1].idEstado)
+        );
+      } else {
+        sessionStorage.setItem(
+          "situacionColegialesBody",
+          JSON.stringify(this.datosColegiales[0].idEstado)
+        );
+      }
     }
     // CAMBIO INCIDENCIA DIRECCIONES
     //sessionStorage.setItem("numDirecciones", JSON.stringify(this.datosDirecciones.length));
@@ -3695,10 +3702,17 @@ export class FichaColegialComponent implements OnInit {
         sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
 
         if (this.datosColegiales.length != 0) {
-          sessionStorage.setItem(
-            "situacionColegialesBody",
-            JSON.stringify(this.datosColegiales[0].idEstado)
-          );
+          if (this.isCrearColegial) {
+            sessionStorage.setItem(
+              "situacionColegialesBody",
+              JSON.stringify(this.datosColegiales[1].idEstado)
+            );
+          } else {
+            sessionStorage.setItem(
+              "situacionColegialesBody",
+              JSON.stringify(this.datosColegiales[0].idEstado)
+            );
+          }
         }
 
         this.router.navigate(["/consultarDatosDirecciones"]);
