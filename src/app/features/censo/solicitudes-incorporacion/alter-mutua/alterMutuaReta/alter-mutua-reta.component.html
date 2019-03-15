@@ -232,13 +232,13 @@
                         <label>
                             {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
                         </label>
-                        <input [disabled]="modoLectura" type="text" class="form-control" pInputText [(ngModel)]="asegurado.domicilio">
+                        <inputtype="text" class="form-control" pInputText [(ngModel)]="asegurado.domicilio">
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>
                             {{"censo.ws.literal.codigopostal" | translate}} (*)
                         </label>
-                        <input [disabled]="modoLectura" type="text" class="form-control" [maxLength]="5" [(ngModel)]="asegurado.cp" (ngModelChange)="onChangeCodigoPostal()"
+                        <inputtype="text" class="form-control" [maxLength]="5" [(ngModel)]="asegurado.cp" (ngModelChange)="onChangeCodigoPostal()"
                             pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
@@ -311,7 +311,7 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
-                <input type="text" class="form-control" [disabled]="modoLectura" pInputText disabled [(ngModel)]="asegurado.bic">
+                <input type="text" class="form-control" pInputText disabled [(ngModel)]="asegurado.bic">
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.tipoAbono.banco" | translate}}</label>

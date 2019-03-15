@@ -1553,12 +1553,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   // Operaciones editar/firmar
 
   mostrarDialogoFirmar(selectedDatos) {
-    let dato = selectedDatos[0];
+    let dato = selectedDatos;
 
     this.displayFirmar = true;
 
     this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
     this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
+    // if(dato.idAnexo != undefined)
     this.bodyDatosBancariosAnexo.idAnexo = dato.idAnexo;
     this.bodyDatosBancariosAnexo.idMandato = dato.idMandato;
     this.bodyDatosBancariosAnexo.tipoMandato = dato.tipoMandato;
@@ -1681,7 +1682,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
 
     this.actualizar(this.bodyDatosBancariosAnexo);
-
+    this.restablecerDatosFirma();
     this.selectMultiple = false;
   }
 
