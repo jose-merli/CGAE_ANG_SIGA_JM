@@ -47,6 +47,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   propuestas: any;
   estadoSolicitudResponse: any;
   codigoPostalValido: boolean;
+  selectedDatos1: any;
 
   @ViewChild("table")
   table;

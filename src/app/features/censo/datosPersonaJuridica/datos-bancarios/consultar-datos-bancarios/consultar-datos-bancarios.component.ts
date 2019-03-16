@@ -388,6 +388,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {
+          this.activarCamposMandatos();
           this.autogenerarDatos();
           this.checkBody = JSON.parse(JSON.stringify(this.body));
           this.progressSpinner = false;
@@ -452,6 +453,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.cargarModoEdicion();
         this.progressSpinner = false;
         this.cargarDatosCuentaBancaria();
+        this.activarCamposMandatos();
       }
     );
   }
@@ -527,6 +529,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.searchDatosBancarios();
           this.cargarModoEdicion();
           this.idCuenta = this.body.idCuenta;
+          this.activarCamposMandatos();
         }
       );
   }
@@ -580,7 +583,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
               this.cargarDatosMandatos();
               this.cargarDatosAnexos();
               this.cargarDatosCuentaBancaria();
+              this.activarCamposMandatos();
+
             }
+
           );
       }
     }
@@ -608,6 +614,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
       accept: () => {
+        this.activarCamposMandatos();
         this.cargarDatosCuentaBancaria();
 
         //this.activarRestablecer = true;
@@ -1401,7 +1408,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodyDatosBancariosAnexoSearch = JSON.parse(data["body"]);
           this.bodyDatosBancariosAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[0];
-          debugger;
+
           if (this.bodyDatosBancariosAnexo == undefined) {
             this.bodyDatosBancariosAnexo = new DatosBancariosSearchAnexosItem();
             this.mandatoAnexoVacio = true;
@@ -1546,12 +1553,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   // Operaciones editar/firmar
 
   mostrarDialogoFirmar(selectedDatos) {
-    let dato = selectedDatos[0];
+    let dato = selectedDatos;
 
     this.displayFirmar = true;
 
     this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
     this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
+    // if(dato.idAnexo != undefined)
     this.bodyDatosBancariosAnexo.idAnexo = dato.idAnexo;
     this.bodyDatosBancariosAnexo.idMandato = dato.idMandato;
     this.bodyDatosBancariosAnexo.tipoMandato = dato.tipoMandato;
@@ -1674,7 +1682,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
 
     this.actualizar(this.bodyDatosBancariosAnexo);
-
+    this.restablecerDatosFirma();
     this.selectMultiple = false;
   }
 
@@ -1866,14 +1874,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let distinto = false;
     let anexo = dato[0].idAnexo;
 
-    if(dato.length == 1){
+    if (dato.length == 1) {
       distinto = false;
       if (anexo == null) {
         tipo = "Orden";
-      }else{
+      } else {
         tipo = "Anexo";
       }
-    }else{
+    } else {
       dato.forEach(element => {
         if (anexo == null) {
           tipo = "Orden";
@@ -1889,7 +1897,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
         }
       });
-    }  
+    }
 
 
     if (!distinto) {

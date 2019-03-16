@@ -399,7 +399,8 @@ export class FichaColegialComponent implements OnInit {
   isRestablecer: boolean = false;
   isEliminarEstadoColegial: boolean = false;
   disabledToday: boolean = false;
-
+  fichaMutua: any;
+  
   constructor(
     private location: Location,
     private sigaServices: SigaServices,

@@ -49,7 +49,8 @@ export class DialogoComunicacionesComponent implements OnInit {
   progressSpinner: boolean = false;
   rutaComunicacion: String;
   fechaProgramada: Date;
-
+  dato: any;
+  
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
 
