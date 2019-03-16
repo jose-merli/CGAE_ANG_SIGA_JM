@@ -763,6 +763,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         let x = key;
         if (+x + 1 == +this.tiposChangeUnSelected.length) {
           msg += " y " + this.tiposChangeUnSelected[key].label;
+        } else if (+x == +this.tiposChangeSelected.length - 2) {
+          msg += this.tiposChangeSelected[key].label + " ";
         } else {
           msg += this.tiposChangeUnSelected[key].label + ", ";
         }
@@ -782,6 +784,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         let x = key;
         if (+x + 1 == +this.tiposChangeSelected.length) {
           msg += " y " + this.tiposChangeSelected[key].label;
+        } else if (+x == +this.tiposChangeSelected.length - 2) {
+          msg += this.tiposChangeSelected[key].label + " ";
         } else {
           msg += this.tiposChangeSelected[key].label + ", ";
         }
