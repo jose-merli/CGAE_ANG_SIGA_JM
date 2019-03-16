@@ -48,7 +48,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
         console.log(err);
       }
     );
-    console.log(sessionStorage);
+    
 
     this.textFilter = "Elegir";
     this.correcto = false;
