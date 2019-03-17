@@ -3557,6 +3557,7 @@ export class FichaColegialComponent implements OnInit {
         this.selectMultipleDirecciones = false;
         this.selectAllDirecciones = false;
         this.numSelectedDirecciones = 0;
+        this.progressSpinner = false;
 
       } else {
         this.serviceDeleteDirection(datosDelete, true);
