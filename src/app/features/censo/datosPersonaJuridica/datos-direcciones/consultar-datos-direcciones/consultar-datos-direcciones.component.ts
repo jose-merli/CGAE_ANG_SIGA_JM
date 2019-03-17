@@ -175,7 +175,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       } else {
         this.checkOtraProvincia = false;
       }
-      console.log(this.body);
+      
       if (
         this.body.idPoblacion !== null &&
         this.body.idPoblacion !== undefined
@@ -378,7 +378,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           });
 
-          console.log("poblac1", this.comboPoblacion);
+          
         },
         error => {
           this.progressSpinner = false;
@@ -1245,8 +1245,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        console.log("pobl", e.target.value);
-        console.log("poblac", this.comboPoblacion);
+
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];

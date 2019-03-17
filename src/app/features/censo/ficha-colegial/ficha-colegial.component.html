@@ -1357,7 +1357,7 @@
 
 
   <!--FICHA DATOS ALTER MUTUA-->
-  <div class="card">
+  <div *ngIf="tarjetaAlterMutua == '3' || tarjetaAlterMutua == '2'" class="card">
     <div class="card-header header-ficha">
       <div *ngIf="!fichaMutua" class="form-row">
         <div class="col-lg-1 col-md-2">

@@ -355,6 +355,10 @@ export class DatosBancariosComponent implements OnInit {
       this.openFicha = !this.openFicha;
     }
   }
+  ngOnDestroy() {
+    sessionStorage.removeItem("idPersona");
+    sessionStorage.removeItem("allBanksData");
+  }
 
   showFail(mensaje: string) {
     this.msgs = [];
