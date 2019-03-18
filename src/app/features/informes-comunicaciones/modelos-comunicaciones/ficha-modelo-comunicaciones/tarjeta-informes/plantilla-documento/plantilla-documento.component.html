@@ -247,6 +247,7 @@
                 *ngIf="col.field=='idConsulta' && dato.fechaBaja" class="text-uppercase">{{dato.descripcion}}</span>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != '' && !dato.fechaBaja">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='objetivo' && !dato.fechaBaja" class="text-uppercase">{{dato[col.field]}}</span>
+              <input *ngIf="col.field=='region' && !dato.fechaBaja" type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText>
             </td>
           </tr>
         </ng-template>

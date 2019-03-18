@@ -112,7 +112,8 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.cols = [
       { field: "objetivo", header: "Objetivo" },
-      { field: "idConsulta", header: "Consulta" }
+      { field: "idConsulta", header: "Consulta" },
+      { field: "region", header: "Region"}
     ];
 
     this.consultas = [
@@ -703,7 +704,8 @@ export class PlantillaDocumentoComponent implements OnInit {
         idConsultaAnterior: e.idConsultaAnterior,
         idObjetivo: e.idObjetivo,
         idInstitucion: e.idInstitucion,
-        idClaseComunicacion: this.body.idClaseComunicacion
+        idClaseComunicacion: this.body.idClaseComunicacion,
+        region: e.region
       };
       this.body.consultas.push(obj);
     });
