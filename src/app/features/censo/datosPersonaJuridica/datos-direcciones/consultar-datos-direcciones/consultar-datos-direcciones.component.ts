@@ -82,6 +82,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   valorPreferenteEmail: string = "10";
   valorPreferenteCorreo: string = "11";
   valorPreferenteSMS: string = "12";
+  valorPreferenteFax: string = "13";
 
   datosDirecciones: DatosDireccionesItem[] = [];
   tiposChangeSelected: any = [];
@@ -174,7 +175,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       } else {
         this.checkOtraProvincia = false;
       }
-      console.log(this.body);
+      
       if (
         this.body.idPoblacion !== null &&
         this.body.idPoblacion !== undefined
@@ -300,6 +301,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       n => {
         this.comboProvincia = n.combooItems;
 
+        let sin = { label: "", value: "" };
+        this.comboProvincia = [sin, ...this.comboProvincia]
+
         this.comboProvincia.map(e => {
           let accents =
             "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
@@ -374,7 +378,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           });
 
-          console.log("poblac1", this.comboPoblacion);
+          
         },
         error => {
           this.progressSpinner = false;
@@ -502,7 +506,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else {
         this.isDisabledCodigoPostal = false;
       }
-      if (this.provinciaSelecionada != "") {
+      if (this.provinciaSelecionada != "" && this.provinciaSelecionada != undefined) {
         if (this.historyDisable == true) {
           this.isDisabledPoblacion = true;
         } else {
@@ -542,6 +546,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else {
         this.codigoPostalValido = false;
         this.isDisabledPoblacion = true;
+        this.provinciaSelecionada = "";
       }
     }
   }
@@ -617,6 +622,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   validateCamposObligatorios() {
 
     let idFindTipoDirSMS = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteSMS);
+    let idFindTipoDirFax = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteFax);
     let idFindTipoDirEmail = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteEmail);
     let idFindTipoDirTel = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorGuardia);
     let idFindTipoDirCenso = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorCensoWeb);
@@ -629,6 +635,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (idFindTipoDirSMS != -1 && this.body.movil == undefined) {
       this.showInfo("Para el tipo Preferente SMS/BuroSMS es necesario rellenar el campo móvil");
       return false;
+    } else if (idFindTipoDirFax != -1 && this.body.fax == undefined) {
+      this.showInfo("Para el tipo Preferente Fax es necesario rellenar el campo fax");
+      return false;
     } else if (idFindTipoDirEmail != -1 && this.body.correoElectronico == undefined) {
       this.showInfo("Para el tipo Preferente Email es necesario rellenar el campo correo electrónico");
       return false;
@@ -638,15 +647,17 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else if (idFindTipoDirCenso != -1 || idFindTipoDirFact != -1 || idFindTipoDirDes != -1 || idFindTipoDirTras != -1 || idFindTipoDirGuia != -1 || idFindTipoDirCorreo != -1) {
 
       if (this.body.idPais == "191" && this.body.idPais != undefined) {
-        if (this.body.domicilio == undefined || this.body.idPoblacion == undefined || this.body.codigoPostal == undefined
-          || this.body.idProvincia == undefined) {
+        if (this.body.domicilio == undefined || this.body.domicilio == "" || this.body.idPoblacion == undefined
+          || this.body.idPoblacion == "" || this.body.codigoPostal == undefined || this.body.codigoPostal == ""
+          || this.body.idProvincia == undefined || this.body.idProvincia == "") {
           this.showInfo("Para el tipo dirección asignado es necesario rellenar el domicilio completo");
           return false;
         } else {
           return true;
         }
       } else if (this.body.idPais != "191" && this.body.idPais != undefined) {
-        if (this.body.domicilio == undefined || this.body.idPoblacion == undefined || this.body.codigoPostal == undefined) {
+        if (this.body.domicilio == undefined || this.body.domicilio == "" || this.body.idPoblacion == undefined ||
+          this.body.idPoblacion == "" || this.body.codigoPostal == undefined || this.body.codigoPostal == "") {
           this.showInfo("Para el tipo dirección añadido es necesario rellenar el domicilio completo");
           return false;
         } else {
@@ -676,39 +687,75 @@ para poder filtrar el dato con o sin estos caracteres*/
         || tipoSelected == this.valorPreferenteEmail
         || tipoSelected == this.valorPreferenteSMS) {
 
-        //¿Se ha eliminado de la lista?
-        let idFindTipoDir = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
+        if (!this.nuevo) {
 
-        //Si no se encuentra buscamos si se encontraba en otra direccion 
-        if (idFindTipoDir == -1) {
-          this.datosDirecciones.forEach(dir => {
-            if (dir.idDireccion != this.body.idDireccion) {
-              let tipoChange = dir.idTipoDireccion.find(tipoDir => tipoDir == tipoSelected);
+          //¿Se ha eliminado de la lista?
+          let idFindTipoDir = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
 
-              if (tipoChange != undefined) {
+          let dir = this.datosDirecciones.find(dir => dir.idDireccion == this.body.idDireccion);
+          let idFindTipoDirAntes;
+          //¿Se encontraba antes?
+          if (dir != undefined) {
+            idFindTipoDirAntes = dir.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
+          }
+
+          //Si no se encuentra y se encontraba antes --> buscamos si se encuentra en otra direccion 
+          if (idFindTipoDir == -1 && idFindTipoDirAntes != -1) {
+            this.datosDirecciones.forEach(dir => {
+              if (dir.idDireccion != this.body.idDireccion) {
+                let tipoChange = dir.idTipoDireccion.find(tipoDir => tipoDir == tipoSelected);
+
+                if (tipoChange != undefined) {
+                  this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
+                }
+              } else {
                 this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
               }
-            } else {
-              this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
-            }
-          });
-        }
+            });
 
-        //¿Se encuentra en alguna dirección?
-        this.datosDirecciones.forEach(dir => {
-          if (dir.idDireccion != this.body.idDireccion) {
-            let idFindTipo = dir.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
-
-            //Si se encuentra guardamos en un array los tipos encontrados
-            if (idFindTipo != -1) {
-              let tipoChange = this.comboTipoDireccion.find(combo => combo.value == tipoSelected);
-
-              if (tipoChange != undefined) {
-                this.tiposChangeSelected.push(tipoChange);
-              }
-            }
           }
-        });
+
+          //Si se encuentra en la actual buscamos si se encuentra en otra direccion
+          if (idFindTipoDir != -1) {
+            //¿Se encuentra en alguna dirección?
+            this.datosDirecciones.forEach(dir => {
+              if (dir.idDireccion != this.body.idDireccion) {
+                let idFindTipo = dir.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
+
+                //Si se encuentra guardamos en un array los tipos encontrados
+                if (idFindTipo != -1) {
+                  let tipoChange = this.comboTipoDireccion.find(combo => combo.value == tipoSelected);
+
+                  if (tipoChange != undefined) {
+                    this.tiposChangeSelected.push(tipoChange);
+                  }
+                }
+              }
+            });
+          }
+
+          //Direccion nueva
+        } else {
+          //¿Se encuentra seleccionada?
+          let idFindTipoDir = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
+
+          //Buscamos si se encuentra en otra direccion 
+          if (this.nuevo && idFindTipoDir != -1) {
+            this.datosDirecciones.forEach(dir => {
+              let idFindTipo = dir.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
+
+              //Si se encuentra guardamos en un array los tipos encontrados
+              if (idFindTipo != -1) {
+                let tipoChange = this.comboTipoDireccion.find(combo => combo.value == tipoSelected);
+
+                if (tipoChange != undefined) {
+                  this.tiposChangeSelected.push(tipoChange);
+                }
+              }
+            });
+          }
+
+        }
       }
 
       //Si es ejerciente
@@ -716,19 +763,21 @@ para poder filtrar el dato con o sin estos caracteres*/
         //El tipo de direccion es despacho?
         if (tipoSelected == this.valorDespacho) {
           let cont = 0;
-
-          //Se comprueba si esta en otra dirección
+          //Se comprueba si esta en otra dirección que no es la actual
           this.datosDirecciones.forEach(dir => {
-            let idFindTipo = dir.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
 
-            //Si se encuentra
-            if (idFindTipo != -1) {
-              cont = cont + 1;
+            if (dir.idDireccion != this.body.idDireccion) {
+              let idFindTipo = dir.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
+
+              //Si se encuentra, no hacemos nada porque no tenemos que añadirla a esta direccion 
+              if (idFindTipo != -1) {
+                cont = cont + 1;
+              }
             }
           });
 
-          //Si solamente hay una direccion con despacho, se comprueba si se ha eliminado de la lista
-          if (cont == 1) {
+          //Si no se encuentra en ninguna otra direccion, se comprueba si se ha eliminado de la lista
+          if (cont == 0) {
             //¿Se ha eliminado de la lista?
             let idFindTipoDir = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == tipoSelected);
 
@@ -763,6 +812,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         let x = key;
         if (+x + 1 == +this.tiposChangeUnSelected.length) {
           msg += " y " + this.tiposChangeUnSelected[key].label;
+        } else if (+x == +this.tiposChangeUnSelected.length - 2) {
+          msg += this.tiposChangeUnSelected[key].label + " ";
         } else {
           msg += this.tiposChangeUnSelected[key].label + ", ";
         }
@@ -782,6 +833,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         let x = key;
         if (+x + 1 == +this.tiposChangeSelected.length) {
           msg += " y " + this.tiposChangeSelected[key].label;
+        } else if (+x == +this.tiposChangeSelected.length - 2) {
+          msg += this.tiposChangeSelected[key].label + " ";
         } else {
           msg += this.tiposChangeSelected[key].label + ", ";
         }
@@ -1192,8 +1245,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        console.log("pobl", e.target.value);
-        console.log("poblac", this.comboPoblacion);
+
         this.resultadosPoblaciones = "No hay resultados";
       } else {
         this.comboPoblacion = [];

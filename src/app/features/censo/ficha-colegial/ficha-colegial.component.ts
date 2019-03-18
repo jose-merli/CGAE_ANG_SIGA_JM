@@ -901,6 +901,7 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+
   arreglarFecha(fecha) {
     let jsonDate = JSON.stringify(fecha);
     let rawDate = jsonDate.slice(1, -1);
@@ -2506,7 +2507,7 @@ export class FichaColegialComponent implements OnInit {
       tipos.push("Preferente Email");
     }
     if (idFindTipoDirGuardia == -1) {
-      tipos.push("Preferente Teléfono");
+      tipos.push("Guardia");
     }
     if (idFindTipoDirFact == -1) {
       tipos.push("Facturación");
@@ -2539,7 +2540,13 @@ export class FichaColegialComponent implements OnInit {
         return false;
       }
     } else {
-      this.msgDir = "Para finalizar el cambio a Ejerciente ";
+
+      if (isEjerciente) {
+        this.msgDir = "Para finalizar el cambio a Ejerciente ";
+      } else {
+        this.msgDir = "Para finalizar el cambio ";
+      }
+
       if (tipos.length == 0) {
         return true;
       } else if (tipos.length == 1) {
@@ -2777,11 +2784,15 @@ export class FichaColegialComponent implements OnInit {
       this.nuevoEstadoColegial.fechaEstadoStr = event;
     } else {
       selectedDatos.fechaEstadoStr = event;
-      this.datosColegiaciones[0].fechaEstadoNueva = event;
+      this.datosColegiales[0].fechaEstadoNueva = event;
+      this.datosColegiales[0].fechaEstadoStr = event;
+      this.activarGuardarColegiales = true;
     }
     this.isRestablecer = true;
     this.activacionGuardarColegiales();
+
   }
+
 
   onChangeDropEstadoColegial(event, selectedDatos) {
     if (!this.isCrearColegial) {
@@ -2840,6 +2851,8 @@ export class FichaColegialComponent implements OnInit {
     if (fecha.getDate() == fechaHoy.getDate() &&
       fecha.getMonth() == fechaHoy.getMonth() &&
       fecha.getFullYear() == fechaHoy.getFullYear()) {
+      this.disabledToday = true;
+    } else if (fecha > fechaHoy) {
       this.disabledToday = true;
     } else {
       this.disabledToday = false;
@@ -3544,6 +3557,7 @@ export class FichaColegialComponent implements OnInit {
         this.selectMultipleDirecciones = false;
         this.selectAllDirecciones = false;
         this.numSelectedDirecciones = 0;
+        this.progressSpinner = false;
 
       } else {
         this.serviceDeleteDirection(datosDelete, true);
