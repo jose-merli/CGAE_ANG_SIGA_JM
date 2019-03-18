@@ -1382,6 +1382,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   // Métodos listadoFicherosAnexos
   activarCamposMandatos() {
+    this.activaServicios = false;
+    this.activaProductos = false;
     for (let i in this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem) {
       if (this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].tipo == "MANDATO" && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].tipoMandato == "SERVICIO" && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].firmaFecha == undefined && this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[i].firmaFechaDate == undefined) {
         this.activaServicios = true;
@@ -1687,8 +1689,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   actualizar(body) {
-    this.activaProductos = false;
-    this.activaServicios = false;
     this.progressSpinner = true;
     this.sigaServices.post("anexos_update", body).subscribe(
       data => {
@@ -1872,7 +1872,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let tipo = "";
 
     let distinto = false;
-    let anexo = dato[0].idAnexo;
+    let anexo = dato.idAnexo;
 
     if (dato.length == 1) {
       distinto = false;
