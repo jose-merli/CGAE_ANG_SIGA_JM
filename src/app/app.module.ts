@@ -329,7 +329,9 @@ import { ConfiguracionEnvioMasivoComponent } from './features/informes-comunicac
 import { ProgramacionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/programacion-envio-masivo/programacion-envio-masivo.component'
 import { DocumentosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/documentos-envio-masivo/documentos-envio-masivo.component'
 import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatarios-etiquetas-envio-masivo/destinatarios-etiquetas-envio-masivo.component'
-import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component'
+import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
+import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
+
 
 @NgModule({
 	declarations: [
@@ -623,7 +625,8 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 		ExpedientesComponent,
 		RegtelComponent,
 		TurnoOficioComponent,
-		BusquedaCensoGeneralComponent
+		BusquedaCensoGeneralComponent,
+		DestinatarioIndvEnvioMasivoComponent
 	],
 	imports: [
 		BrowserModule,

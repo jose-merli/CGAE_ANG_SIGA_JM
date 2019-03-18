@@ -6,7 +6,6 @@ import { Router } from "@angular/router";
 import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { PlantillaEnvioConsultasItem } from "../../../../../models/PlantillaEnvioConsultasItem";
 import { PlantillasEnvioConsultasObject } from "../../../../../models/PlantillasEnvioConsultasObject";
 
 @Component({
@@ -118,6 +117,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 value: 40
             }
         ];
+        this.getDatos();
 
     }
 
@@ -145,9 +145,9 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
     abreCierraFicha() {
         if (sessionStorage.getItem("crearNuevoEnvio") == null) {
             this.openFicha = !this.openFicha;
-            if (this.openFicha) {
-                this.getDatos();
-            }
+            // if (this.openFicha) {
+            //     this.getDatos();
+            // }
         }
     }
 

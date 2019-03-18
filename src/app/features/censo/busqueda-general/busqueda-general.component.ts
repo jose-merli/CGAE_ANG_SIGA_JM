@@ -85,9 +85,9 @@ export class BusquedaGeneralComponent {
   institucionActual: string;
   labelRemitente: string;
 
-  currentRoute: String;  
+  currentRoute: String;
   idClaseComunicacion: String;
-  keys: any []= [];
+  keys: any[] = [];
 
   fichasPosibles = [
     {
@@ -252,7 +252,7 @@ export class BusquedaGeneralComponent {
       n => {
         this.comboIdentificacion = n.combooItems;
       },
-      error => {}
+      error => { }
     );
   }
 
@@ -272,7 +272,7 @@ export class BusquedaGeneralComponent {
       typeof dni === "string" &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
       dni.substr(8, 9).toUpperCase() ===
-        this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
@@ -638,6 +638,9 @@ export class BusquedaGeneralComponent {
       sessionStorage.removeItem("integrante");
       this.location.back();
       // ir a ficha de solicitud de Incorporación
+    } else if (sessionStorage.getItem("AddDestinatarioIndv") != null) {
+      sessionStorage.setItem("destinatarioIndv", JSON.stringify(id[0]));
+      this.location.back();
     } else if (
       sessionStorage.getItem("solicitudIncorporacion") == "true" &&
       sessionStorage.getItem("abrirRemitente") != "true"
@@ -968,13 +971,13 @@ export class BusquedaGeneralComponent {
     this.bodyJuridica.tipo = this.selectedTipo.value;
   }
 
-  navigateComunicar(dato){
-    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
-    sessionStorage.setItem("idModulo",'3');
-    this.getDatosComunicar();    
+  navigateComunicar(dato) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    sessionStorage.setItem("idModulo", '3');
+    this.getDatosComunicar();
   }
-  
-  getDatosComunicar(){
+
+  getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
@@ -986,26 +989,26 @@ export class BusquedaGeneralComponent {
             this.keys = JSON.parse(data['body']).keysItem;
             this.selectedDatos.forEach(element => {
               let keysValues = [];
-              this.keys.forEach(key =>{
-                if(element[key.nombre] != undefined){
+              this.keys.forEach(key => {
+                if (element[key.nombre] != undefined) {
                   keysValues.push(element[key.nombre]);
-                }            
+                }
               })
               datosSeleccionados.push(keysValues);
             });
-    
+
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
             console.log(err);
           }
-        );   
+        );
       },
       err => {
         console.log(err);
       }
-    );    
-  
+    );
+
   }
 }
