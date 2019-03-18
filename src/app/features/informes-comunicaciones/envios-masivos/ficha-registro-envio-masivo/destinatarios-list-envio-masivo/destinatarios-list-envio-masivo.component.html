@@ -10,11 +10,11 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Listas destinatarios:</label>
+            <label class="mr-auto title-ficha">Listas destinatarios</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Listas destinatarios:
-              <span *ngIf="etiquetasNoSeleccionadas">{{etiquetasNoSeleccionadas.length}}</span>
+            <label>Nº listas destinatarios:
+              <span *ngIf="datos">{{datos.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
@@ -52,7 +52,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-            <td *ngFor="let col of columns" pEditableColumn>
+            <td class="text-center" *ngFor="let col of columns" pEditableColumn>
               <p-dropdown [filter]="true" filterBy="label" *ngIf="col.field=='nombre' && !dato.asociada"
                 [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form"
                 (onChange)="onChangeConsultas($event)" dataKey="label" [emptyFilterMessage]="resultadosConsultas"
