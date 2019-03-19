@@ -9,8 +9,7 @@
             <div class="form-row">
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fecha programada</label>
-
-                    <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
+                    <app-fecha [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
                         showTime="true"></app-fecha>
                 </div>
             </div>

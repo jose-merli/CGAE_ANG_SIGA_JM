@@ -144,8 +144,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   getModelosComunicacion() {
 
-    this.idModulo = sessionStorage.getItem('idModulo');
-    this.idConsulta = sessionStorage.getItem('idConsulta');
+    this.idModulo = sessionStorage.getItem('idModulo');    
+
+    if(this.idClaseComunicacion == "5"){
+      this.idConsulta = sessionStorage.getItem('idConsulta');
+    }
 
     let modeloSearch = {
       idModulo: this.idModulo,
@@ -337,6 +340,7 @@ export class DialogoComunicacionesComponent implements OnInit {
         },
         err => {
           console.log(err);
+          this.showFail("Error al generar la documentación");
           this.progressSpinner = false;
         },
         () => {
