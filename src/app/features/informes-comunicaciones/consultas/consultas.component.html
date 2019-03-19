@@ -119,7 +119,7 @@
             iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="!eliminar"></button>
           <button *ngIf="selectedDatos && selectedDatos !='' && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton type="button" icon="fa
             fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !='' && selectedDatos.length == 1 && !selectedDatos[0].idClaseComunicacion" (click)="obtenerParametros(selectedDatos)" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos !='' && selectedDatos.length == 1 && selectedDatos[0].idClaseComunicacion == 5" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
         </div>
       </p-footer>
 

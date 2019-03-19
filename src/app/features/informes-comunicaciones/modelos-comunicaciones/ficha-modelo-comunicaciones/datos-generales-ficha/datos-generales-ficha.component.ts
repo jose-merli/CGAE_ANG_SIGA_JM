@@ -163,6 +163,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
                       JSON.stringify(this.body)
                     );
                     sessionStorage.removeItem("crearNuevoModelo");
+                    this.sigaServices.notifyRefreshPerfiles();
                   },
                   err => {
                     console.log(err);

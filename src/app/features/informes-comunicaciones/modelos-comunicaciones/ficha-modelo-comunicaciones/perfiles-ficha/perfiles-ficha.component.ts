@@ -59,6 +59,10 @@ export class PerfilesFichaComponent implements OnInit {
       this.editar = false;
     });
 
+    this.sigaServices.perfilesRefresh$.subscribe(() => {
+      this.getDatos();
+    });
+
     if (
       sessionStorage.getItem("soloLectura") != null &&
       sessionStorage.getItem("soloLectura") != undefined &&
@@ -117,6 +121,16 @@ export class PerfilesFichaComponent implements OnInit {
           this.perfilesSeleccionadosInicial = JSON.parse(
             JSON.stringify(this.perfilesSeleccionados)
           );
+
+          //por cada perfil seleccionado lo eliminamos de la lista de existentes
+          if(this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial){
+            this.perfilesSeleccionados.forEach(element => {
+              let x = this.perfilesNoSeleccionadosInicial.indexOf(element);
+              if(x > -1){
+                this.perfilesNoSeleccionadosInicial.splice(x,1);
+              }
+            });
+          }
         },
         err => {
           console.log(err);
