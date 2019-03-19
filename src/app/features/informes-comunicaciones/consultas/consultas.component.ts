@@ -61,6 +61,8 @@ export class ConsultasComponent implements OnInit {
   showValores: boolean = false;
   sentencia: string;
 
+  idClaseComunicacion: String;
+  currentRoute: String = "";
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -74,6 +76,8 @@ export class ConsultasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
+    
     sessionStorage.removeItem("consultasSearch");
     this.getInstitucion();
 
@@ -633,5 +637,28 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     });
     return valido;
+  }
+
+  navigateComunicar(selectedDatos) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de adminsitracion es 4
+    sessionStorage.setItem("idModulo", '4');
+    this.getDatosComunicar(selectedDatos);
+  }
+
+  getDatosComunicar(selectedDatos) {
+    let dato = selectedDatos[0];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+    sessionStorage.removeItem('datosComunicar');
+    sessionStorage.setItem('idConsulta', dato.idConsulta);
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.router.navigate(["/dialogoComunicaciones"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 }

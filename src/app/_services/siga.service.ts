@@ -699,10 +699,12 @@ export class SigaServices {
   private iframeRemove = new Subject<any>();
   private consultasRefresh = new Subject<any>();
   private deshabilitarEditar = new Subject<any>();
+  private perfilesRefresh = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
   deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
+  perfilesRefresh$ = this.perfilesRefresh.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -927,6 +929,10 @@ export class SigaServices {
 
   notifyRefreshEditar() {
     this.deshabilitarEditar.next();
+  }
+
+  notifyRefreshPerfiles() {
+    this.perfilesRefresh.next();
   }
 
   postSendContentAndParameter(

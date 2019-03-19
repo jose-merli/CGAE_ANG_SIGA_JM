@@ -27,8 +27,11 @@
                         <th style="width: 3em">
                             <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
                         </th>
-                        <th *ngFor="let col of columns">
+                        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                             {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                            col.field, 'contains')">
                         </th>
                     </tr>
                 </ng-template>
