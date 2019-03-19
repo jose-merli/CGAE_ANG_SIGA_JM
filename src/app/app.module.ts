@@ -294,7 +294,6 @@ import { ExpedientesComponent } from './features/censo/expedientesCenso/expedien
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
-import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 
 registerLocaleData(es);
 
@@ -629,7 +628,7 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 		RegtelComponent,
 		TurnoOficioComponent,
 		BusquedaCensoGeneralComponent,
-		DestinatarioIndvEnvioMasivoComponent
+		DestinatarioIndvEnvioMasivoComponent,
 		FechaComponent
 	],
 	imports: [
