@@ -6,5 +6,12 @@ export class ComunicacionesSearchItem {
   idEstado: String;
   fechaProgramacion: Date;
   idPlantillaEnvios: String;
+  nombre: String;
+  apellidos1: String;
+  apellidos2: String;
+  apellidos: String;
+  nif: String;
+  idInstitucion: String;
+  numColegiado: String;
   constructor() { }
 }

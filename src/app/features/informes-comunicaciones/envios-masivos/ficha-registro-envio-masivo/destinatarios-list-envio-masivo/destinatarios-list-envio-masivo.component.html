@@ -1,21 +1,19 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<app-dialog></app-dialog>
 <div class="ficha-container">
-  <!--DATOS GENERALES-->
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fas fa-comment-alt icon-ficha"></i>
+            <i class="fas fa-users icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'menu.informesYcomunicaciones.consultas' | translate}}</label>
+            <label class="mr-auto title-ficha">Listas destinatarios</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{'informesycomunicaciones.plantillasenvio.ficha.numConsultas' | translate}}:
+            <label>Nº listas destinatarios:
               <span *ngIf="datos">{{datos.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -24,14 +22,14 @@
       </div>
       <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fas fa-comment-alt icon-ficha"></i>
+          <i class="fas fa-users icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'menu.consultas' | translate}}</label>
+        <label class="title-ficha">Listas destinatarios</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <!--cuerpo datos generales-->
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <!--tarjetas listas de destinatarios-->
+    <div *ngIf="openFicha" class=" card-body card-body-ficha">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" selectionMode="multiple"
@@ -48,13 +46,13 @@
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
                 type="text" (input)="table.filter($event.target.value,
-                        col.field, 'contains')">
+                      col.field, 'contains')">
             </th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-            <td *ngFor="let col of columns" pEditableColumn>
+            <td class="text-center" *ngFor="let col of columns" pEditableColumn>
               <p-dropdown [filter]="true" filterBy="label" *ngIf="col.field=='nombre' && !dato.asociada"
                 [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form"
                 (onChange)="onChangeConsultas($event)" dataKey="label" [emptyFilterMessage]="resultadosConsultas"
@@ -88,7 +86,7 @@
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
               <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
-                todo" name="groupname"></p-checkbox>
+              todo" name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultiple}"
               (click)="isSelectMultiple()">
@@ -96,28 +94,25 @@
           </div>
         </ng-template>
       </p-table>
-      <p-footer>
-        <div class="text-right main-button">
-          <button [disabled]="nuevaConsulta || selectMultiple || selectAll" (click)="addConsulta()" pButton
-            type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
-          <button [disabled]="!nuevaConsulta" (click)="asociar()" pButton type="button" icon="far fa-save"
-            iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
-          <button [disabled]="selectedDatos =='' || nuevaConsulta" (click)="desasociar(selectedDatos)" pButton
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{'general.boton.eliminar'  | translate}}"></button>
-        </div>
-      </p-footer>
     </div>
-    <div *ngIf="openFicha" class="card-footer">
-      <div class="text-right main-button">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{
-                'general.boton.restablecer' | translate}}"></button>
-        <button (click)="goNuevaConsulta()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{
-                  'general.boton.new' | translate}}"></button>
-        <!-- <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button [disabled]="nuevaConsulta || selectMultiple || selectAll" (click)="addConsulta()" pButton type="button"
+          icon="fa fa-plus" iconPos="left" label="Añadir"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!nuevaConsulta" (click)="asociar()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="selectedDatos =='' || nuevaConsulta" (click)="desasociar(selectedDatos)" pButton
+          type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{'general.boton.eliminar'  | translate}}"></button>
+        <!--[disabled]="noEditar"-->
       </div>
     </div>
-
   </div>
+</div>
 
+
+<div *ngIf="progressSpinner " class="overlay-spinner">
+  <div class="loader "></div>
 </div>

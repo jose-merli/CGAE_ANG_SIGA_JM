@@ -57,9 +57,9 @@
                     | translate
                 }}</label>
                 <div class="d-flex justify-content-start mb-1">
-                  <i (click)="navigateTo()" class="fas fa-external-link-alt mr-2 float-right"></i>
+                  <i (click)="navigateTo(destinatario);$event.stopPropagation();" class="fas fa-external-link-alt mr-2 float-right"></i>
                   <label class="mr-3">
-                    <a (click)="navigateTo()">
+                    <a (click)="navigateTo(destinatario);$event.stopPropagation();">
                       <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                       </span>
                     </a>                    
@@ -87,9 +87,9 @@
                 | translate
             }}</label>
             <div class="d-flex justify-content-start mb-1 ml-auto"> 
-              <i (click)="navigateTo()" class="fas fa-external-link-alt mr-2 float-right"></i>             
+              <i (click)="navigateTo(destinatario);$event.stopPropagation();" class="fas fa-external-link-alt mr-2 float-right"></i>             
               <label class="mr-3">
-                <a (click)="navigateTo()">
+                <a (click)="navigateTo(destinatario);$event.stopPropagation();">
                   <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                   </span>
                 </a>                    
@@ -170,4 +170,8 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

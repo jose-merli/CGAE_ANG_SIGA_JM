@@ -1,8 +1,9 @@
 export class ConsultaConsultasItem {
-  idConsulta: String;
+  idConsulta: string;
   idInstitucion: String;
   idClaseComunicacion: String;
   sentencia: string;
   camposDinamicos: any [] = [];
+  idObjetivo: string;
   constructor() { }
 }

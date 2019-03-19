@@ -31,11 +31,11 @@ export class FichaModeloComunicacionesComponent implements OnInit {
       {
         key: "informes",
         activa: false
-      },
+      }/*
       {
         key: "comunicacion",
         activa: false
-      }
+      }*/
     ];
   }
 

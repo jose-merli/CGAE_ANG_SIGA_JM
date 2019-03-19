@@ -5,9 +5,9 @@ import { DestinatariosEnviosMasivosItem } from '../../../../../models/Destinatar
 import { Message, ConfirmationService } from "primeng/components/common/api";
 
 @Component({
-  selector: 'app-destinatarios-envio-masivo',
-  templateUrl: './destinatarios-envio-masivo.component.html',
-  styleUrls: ['./destinatarios-envio-masivo.component.scss']
+  selector: 'app-destinatarios-etiquetas-envio-masivo',
+  templateUrl: './destinatarios-etiquetas-envio-masivo.component.html',
+  styleUrls: ['./destinatarios-etiquetas-envio-masivo.component.scss']
 })
 export class DestinatariosEnvioMasivoComponent implements OnInit {
 
@@ -41,10 +41,17 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       activa: false
     },
     {
-      key: "documentos",
+      key: "destinatariosIndv",
       activa: false
     },
-
+    {
+      key: "destinatariosList",
+      activa: false
+    },
+    {
+      key: "documentos",
+      activa: false
+    }
   ];
 
   constructor(

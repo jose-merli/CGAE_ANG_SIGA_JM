@@ -15,6 +15,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
 import { ProgramarItem } from "../../../models/ProgramarItem";
+import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -54,6 +55,12 @@ export class ComunicacionesComponent implements OnInit {
   currentDate: Date = new Date();
   loaderEtiquetas: boolean = false;
   fichaBusqueda: boolean = false;
+  showDatosDestinatarios: boolean = true;
+  destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
+  colegios: any [] = [];
+  colegios_seleccionados: any [] = [];
+  busquedaDestinatarioDisabled: boolean = false;
+  personaBody: any;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -70,6 +77,67 @@ export class ComunicacionesComponent implements OnInit {
     this.selectedItem = 10;
 
     sessionStorage.removeItem("crearNuevaCom");
+    
+    this.getComboColegios();
+    this.getTipoEnvios();
+    this.getEstadosEnvios();
+    this.getClasesComunicaciones();
+
+    let objPersona = null;
+
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true){
+      if(sessionStorage.getItem("personaBody") != null){
+        this.personaBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        // Obtenemos el desatinatario     
+        let persona =  this.personaBody.idPersona;
+        let institucionPersona = this.personaBody.idInstitucion;
+        
+        objPersona = {
+          idPersona : persona,
+          idInstitucion: institucionPersona
+        }
+      }      
+
+    }else if(sessionStorage.getItem("filtroIdPersona") != null && sessionStorage.getItem("filtroIdInstitucion") != null){
+      // Obtenemos el desatinatario     
+      let persona =  sessionStorage.getItem("filtroIdPersona");
+      let institucionPersona = sessionStorage.getItem("filtroIdInstitucion");
+      
+      objPersona = {
+        idPersona : persona,
+        idInstitucion: institucionPersona
+      }     
+    }
+
+    if(objPersona != null){
+      this.sigaServices.post("busquedaPer_institucion", objPersona).subscribe(
+        data => {
+          let persona = JSON.parse(data["body"]);
+          if(persona && persona.colegiadoItem){
+            this.destinatario = persona.colegiadoItem[0];
+          }else if(persona && persona.noColegiadoItem){
+            this.destinatario = persona.noColegiadoItem[0];
+          }
+
+          this.bodySearch.nombre = this.destinatario.soloNombre;
+          this.bodySearch.apellidos1 = this.destinatario.apellidos1;
+          this.bodySearch.apellidos2 = this.destinatario.apellidos2;
+          this.bodySearch.nif = this.destinatario.nif;
+          this.bodySearch.numColegiado = this.destinatario.numColegiado;
+          this.bodySearch.idInstitucion = this.destinatario.idInstitucion;
+        },
+        err => {
+          this.showFail("Error al obtener la persona");
+          console.log(err);
+        },
+        () => {
+          //this.buscar();
+        }
+      );
+
+      // Deshabilitamos los botones
+      this.busquedaDestinatarioDisabled = true;
+    }
 
     if (sessionStorage.getItem("filtrosCom") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosCom"));
@@ -82,17 +150,13 @@ export class ComunicacionesComponent implements OnInit {
       this.buscar();
     }
 
-    this.getTipoEnvios();
-    this.getEstadosEnvios();
-    this.getClasesComunicaciones();
-
     this.cols = [
-      { field: "claseComunicacion", header: "Clases de comunicaciones" },
-      { field: "destinatario", header: "Destinatario" },
-      { field: "fechaCreacion", header: "Fecha creación" },
-      { field: "fechaProgramada", header: "Fecha programación" },
-      { field: "tipoEnvio", header: "Tipo envío" },
-      { field: "estadoEnvio", header: "Estado" }
+      { field: "claseComunicacion", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
+      { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
+      { field: "fechaCreacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" },
+      { field: "fechaProgramada", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
+      { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
+      { field: "estadoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.estadoEnvio" }
     ];
 
     this.rowsPerPage = [
@@ -133,6 +197,18 @@ export class ComunicacionesComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  getComboColegios(){
+    this.sigaServices.get("modelos_colegio").subscribe(
+      n => {
+        this.colegios = n.combooItems;
+        this.colegios.unshift({ label: "", value: "" });
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getTipoEnvios() {
@@ -240,7 +316,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.getResultados();
   }
 
-  getResultados() {
+  getResultados() {    
     this.sigaServices
       .postPaginado("comunicaciones_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -394,6 +470,41 @@ función para que no cargue primero las etiquetas de los idiomas*/
 
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
+  }
+
+  onHideDatosDestinatarios() {
+    this.showDatosDestinatarios = !this.showDatosDestinatarios;
+  }
+
+  duplicar(dato) {
+    let envioDuplicar = dato[0];
+
+    let datoDuplicar = {
+      idEnvio: envioDuplicar.idEnvio,
+      idTipoEnvios: envioDuplicar.idTipoEnvios,
+      idPlantillaEnvios: envioDuplicar.idPlantillaEnvios
+    }
+
+    this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
+      data => {
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
+        
+        let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
+        datoDuplicado.forEach(element => {
+          if (element.fechaProgramada != null) {
+            element.fechaProgramada = new Date(element.fechaProgramada);
+          }
+          element.fechaCreacion = new Date(element.fechaCreacion);
+        });
+        sessionStorage.setItem("ComunicacionDuplicada", "true");
+        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
+        this.router.navigate(["/fichaRegistroEnvioMasivo"]);       
+      },
+      err => {
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
+        console.log(err);
+      }
+    );
   }
 
 
