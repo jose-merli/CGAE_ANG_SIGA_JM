@@ -38,17 +38,17 @@
         <div class="col-lg-8 col-md-8">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}} *</label>
+              <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}(*)</label>
               <p-dropdown [options]="modulos" [(ngModel)]="body.idModulo" class="select-form" (onChange)="cargaComboClaseCom($event)"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}} *</label>
+              <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}(*)</label>
               <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText>
             </div>
           </div>
           <div class="form-row d-flex align-items-start">
             <div class="form-group col-lg-4 col-md-4">
-              <label>{{'informesycomunicaciones.consultas.objetivo' | translate}} *</label>
+              <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}(*)</label>
               <p-dropdown (onChange)="onChangeObjetivo()" [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-2 col-md-2">
@@ -67,7 +67,7 @@
         <div class="col-lg-4 col-md-4 pl-0">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>{{'general.description' | translate}} *</label>
+              <label>{{'general.description' | translate}}(*)</label>
               <textarea pInputTextarea style="height:90px" autoResize="autoResize" [(ngModel)]="body.descripcion"></textarea>
             </div>
           </div>

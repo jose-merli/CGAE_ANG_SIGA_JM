@@ -70,7 +70,7 @@ export class BusquedaSancionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private authenticationService: AuthenticationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.currentRoute = this.router.url;
@@ -175,7 +175,7 @@ export class BusquedaSancionesComponent implements OnInit {
       }
     );
   }
-  getColegioFilter() {}
+  getColegioFilter() { }
   getInstitutionSession(colegios, idColegios) {
     var obj: any;
     colegios.forEach(element => {
@@ -346,7 +346,9 @@ export class BusquedaSancionesComponent implements OnInit {
     this.body.nombre = "";
     this.body.primerApellido = "";
     this.body.segundoApellido = "";
-    this.colegios_seleccionados = [];
+    if (!this.disabledColegio) {
+      this.colegios_seleccionados = [];
+    }
     this.body.chkRehabilitado = false;
     this.body.fechaDesdeDate = undefined;
     this.body.fechaHastaDate = undefined;
@@ -432,8 +434,8 @@ export class BusquedaSancionesComponent implements OnInit {
     this.sigaServices
       .post("busquedaSanciones_updateSanction", this.body)
       .subscribe(
-        data => {},
-        error => {},
+        data => { },
+        error => { },
         () => {
           this.search();
         }
@@ -457,6 +459,7 @@ export class BusquedaSancionesComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
 
   navigateComunicar(dato){
     sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
@@ -497,6 +500,13 @@ export class BusquedaSancionesComponent implements OnInit {
         console.log(err);
       }
     );    
-  
+  } 
+  fillFechaDesdeDate(event) {
+    this.body.fechaDesdeDate = event;
   }
+
+  fillFechaHastaDate(event) {
+    this.body.fechaHastaDate = event;
+  }
+
 }

@@ -5,7 +5,7 @@ import { TranslateService } from '../../../commons/translate/translation.service
 @Component({
 	selector: 'app-cargas-masivas',
 	templateUrl: './cargas-masivas.component.html',
-	styleUrls: [ './cargas-masivas.component.scss' ]
+	styleUrls: ['./cargas-masivas.component.scss']
 })
 export class CargasMasivasComponent implements OnInit, AfterContentInit {
 	cargasMasivas: SelectItem[];
@@ -15,25 +15,39 @@ export class CargasMasivasComponent implements OnInit, AfterContentInit {
 	enableCV: boolean = false;
 	progressSpinner: boolean = false;
 	selectedTipoCarga: string;
+	cargaMasivaGF: string = this.translateService.instant('menu.cen.cargaMasivaGruposFijos');
+	cargaMasivaCV: string = this.translateService.instant('menu.cen.cargaMasivaDatosCurriculares');
 
-	constructor(private translateService: TranslateService) {}
+
+	constructor(private translateService: TranslateService) { }
 
 	ngOnInit() {
 		// Abrir tarjeta
 		this.showCargasMasivas = true;
-	}
 
-	ngAfterContentInit() {
 		this.cargasMasivas = [
 			{
-				label: this.translateService.instant('menu.cen.cargaMasivaGruposFijos'),
+				label: this.cargaMasivaGF,
 				value: 'GF'
 			},
 			{
-				label: this.translateService.instant('menu.cen.cargaMasivaDatosCurriculares'),
+				label: this.cargaMasivaCV,
 				value: 'CV'
 			}
 		];
+	}
+
+	ngAfterContentInit() {
+		// this.cargasMasivas = [
+		// 	{
+		// 		label: this.translateService.instant('menu.cen.cargaMasivaGruposFijos'),
+		// 		value: 'GF'
+		// 	},
+		// 	{
+		// 		label: this.translateService.instant('menu.cen.cargaMasivaDatosCurriculares'),
+		// 		value: 'CV'
+		// 	}
+		// ];
 	}
 
 	onHideCargasMasivas() {

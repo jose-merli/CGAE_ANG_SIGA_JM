@@ -29,5 +29,6 @@ export class DatosDireccionesItem {
   esColegiado: boolean;
   nombrepartido: String;
   poblacionExtranjera: String;
-  constructor() {}
+  error: Error;
+  constructor() { }
 }

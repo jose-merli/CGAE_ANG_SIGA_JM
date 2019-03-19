@@ -1,10 +1,10 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <div class="header-title">
-    <i class="fa fa-square"></i> 
+    <i class="fa fa-square"></i>
     <p>{{ "menu.formacion" | translate}}
       <i class="fa fa-angle-right"> </i>{{ 'menu.formacion.buscarCursos' | translate}}</p>
-      <!-- <i class="fa fa-angle-right"></i> Búsqueda Cursos</p> -->
+    <!-- <i class="fa fa-angle-right"></i> Búsqueda Cursos</p> -->
 
   </div>
 
@@ -22,13 +22,13 @@
             <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombVis" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
               [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
-              (onChange)="onChangeSelectVisibilidad($event)"></p-dropdown>
+              (onChange)="onChangeSelectVisibilidad($event)" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombCol" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)"></p-dropdown>
+              [(ngModel)]='body.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event)" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
@@ -43,13 +43,13 @@
             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
             <input [formControl]="formBusqueda.controls['nombreCurso']" type="text" class="form-control" pInputText [(ngModel)]="body.nombreCurso">
             <small class="input-error" *ngIf="!formBusqueda.controls['nombreCurso'].pristine && formBusqueda.controls['nombreCurso'].status == 'INVALID'">
-                {{'formacion.busquedaCursos.controlFiltros.minimoCaracteres' | translate }}</small>
+              {{'formacion.busquedaCursos.controlFiltros.minimoCaracteres' | translate }}</small>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
             <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='body.idEstado' [options]="comboEstados"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div [formGroup]="formGroupPrecios" class="form-group col-lg-3 col-md-2">
@@ -73,31 +73,31 @@
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'formacion.fichaCursos.datosDeGestion.plazasDisponibles' | translate}}</label>
             <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.plazasDisponibles'
-              [options]="comboDisponibilidadPlazas" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              [options]="comboDisponibilidadPlazas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionDesde' | translate }}</label>
-            <p-calendar [monthNavigator]="true" [yearNavigator]="true" [maxDate]="getFechaInscripcionHasta()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionDesdeDate"></p-calendar>
+            <app-fecha [maxDate]="getFechaInscripcionHasta()" [(value)]="body.fechaInscripcionDesdeDate" [utc]="false" (valueChangeSelected)="fillFechaInscripcionDesdeDate($event)"
+              (valueChangeInput)="fillFechaInscripcionDesdeDate($event)"></app-fecha>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaInscripcionHasta' | translate }}</label>
-            <p-calendar [monthNavigator]="true" [yearNavigator]="true" [minDate]="getFechaInscripcionDesde()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaInscripcionHastaDate"></p-calendar>
+            <app-fecha [minDate]="getFechaInscripcionDesde()" [(value)]="body.fechaInscripcionHastaDate" [utc]="false" (valueChangeSelected)="fillFechaInscripcionHastaDate($event)"
+              (valueChangeInput)="fillFechaInscripcionHastaDate($event)"></app-fecha>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionDesde' | translate}}</label>
-            <p-calendar [monthNavigator]="true" [yearNavigator]="true" [maxDate]="getFechaImparticionHasta()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionDesdeDate"></p-calendar>
+            <app-fecha [maxDate]="getFechaImparticionHasta()" [(value)]="body.fechaImparticionDesdeDate" [utc]="false" (valueChangeSelected)="fillFechaImparticionDesdeDate($event)"
+              (valueChangeInput)="fillFechaImparticionDesdeDate($event)"></app-fecha>
           </div>
 
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'form.busquedaCursos.literal.fechaImparticionHasta' | translate}}</label>
-            <p-calendar [monthNavigator]="true" [yearNavigator]="true" [minDate]="getFechaImparticionDesde()" yearRange="1930:2050" [locale]="es"
-              [utc]="true" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [(ngModel)]="body.fechaImparticionHastaDate"></p-calendar>
+            <app-fecha [minDate]="getFechaImparticionDesde()" [(value)]="body.fechaImparticionHastaDate" (valueChangeSelected)="fillFechaImparticionHastaDate($event)"
+              (valueChangeInput)="fillFechaImparticionHastaDate($event)"></app-fecha>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
@@ -109,9 +109,9 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
-            <p-multiSelect #mySelect [disabled]="!editar" [defaultLabel]="literalMultiselect" autoWidth="false" [(ngModel)]='selectedTemas'
-              [options]="comboTemas" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
-            
+            <p-multiSelect #mySelect [disabled]="!editar" defaultLabel="{{'general.boton.seleccionar' | translate}}" autoWidth="false"
+              [(ngModel)]='selectedTemas' [options]="comboTemas" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
+
           </div>
 
 
@@ -124,7 +124,8 @@
         <button (click)="changeColsAndData()" pButton type="button " icon="fa fa-eraser " iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
         <button [disabled]="!formBusqueda.valid || !formGroupPrecios.valid" (click)="isBuscar(false)" pButton type="button" icon="fa fa-search"
           iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button pButton [disabled]="!activacionEditar || isLetrado" (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton [disabled]="!activacionEditar || isLetrado" (click)="crearCurso()" type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -133,8 +134,8 @@
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" (onRowSelect)="irEditarCurso(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="4" dataKey="idCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable" [value]="datos"
-        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        pageLinks="4" dataKey="idCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable"
+        [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
 
@@ -149,10 +150,11 @@
             <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
             <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true"></p-dropdown>
             <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>

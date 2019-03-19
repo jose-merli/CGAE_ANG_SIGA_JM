@@ -350,6 +350,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.showInfo("El estado de uno o varios envíos no es válido");
     }
 
+
   }
 
   confirmarCancelar(dato) {
@@ -518,5 +519,16 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     );
   }
-  
+  fillFechaCreacion(event) {
+    this.bodySearch.fechaCreacion = event;
+  }
+
+  fillFechaProgramacion(event) {
+    this.bodySearch.fechaProgramacion = event;
+  }
+
+  fillFechaProgramada(event) {
+    this.bodyProgramar.fechaProgramada = event;
+  }
+
 }

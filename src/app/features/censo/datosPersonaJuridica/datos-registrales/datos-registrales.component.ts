@@ -110,6 +110,8 @@ export class DatosRegistralesComponent implements OnInit {
   @ViewChild("table")
   table;
 
+  tarjeta: string;
+
   constructor(
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
@@ -200,30 +202,17 @@ export class DatosRegistralesComponent implements OnInit {
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "12a";
-    let derechoAcceso;
+
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
       () => {
-        if (derechoAcceso >= 2) {
-          this.activacionEditar = true;
-          if (derechoAcceso == 2) {
-            this.camposDesactivados = true;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
       }
     );
   }
@@ -485,7 +474,7 @@ export class DatosRegistralesComponent implements OnInit {
         } else {
           this.showCustomFail(
             "El campo número de registro SIGA no puede ser superior a la longitud del contador: " +
-              this.longitudcontador
+            this.longitudcontador
           );
           this.progressSpinner = false;
         }
@@ -578,11 +567,12 @@ export class DatosRegistralesComponent implements OnInit {
         this.body.identificacionReg != "" &&
         !this.onlySpaces(this.body.identificacionReg))
     ) {
-      this.sociedadProfesional = true;
+      // this.sociedadProfesional = true;
       this.onChangeSociedadProfesional();
+      return true;
     } else {
-      this.sociedadProfesional = false;
       this.onChangeSociedadProfesional();
+      return false;
     }
   }
 
@@ -614,41 +604,29 @@ export class DatosRegistralesComponent implements OnInit {
         return true;
       }
     } else if (
-      (this.body.numeroPoliza != undefined &&
-        !this.onlySpaces(this.body.numeroPoliza)) ||
-      (this.body.companiaAseg != undefined &&
-        !this.onlySpaces(this.body.companiaAseg)) ||
-      (this.body.actividades != undefined &&
-        this.body.actividades.length > 0) ||
-      (this.fechaFin != undefined && this.compruebaFechaFin())
+      (this.body.objetoSocial != undefined &&
+        this.body.objetoSocial != "" &&
+        !this.onlySpaces(this.body.objetoSocial)) &&
+      (this.body.resena != undefined &&
+        this.body.resena != "" &&
+        !this.onlySpaces(this.body.resena)) &&
+      (this.fechaConstitucion != undefined &&
+        this.compruebaFechaConstitucion()) &&
+      this.fechaInscripcion != undefined &&
+      (this.body.numRegistro != undefined &&
+        this.body.numRegistro != "" &&
+        !this.onlySpaces(this.body.numRegistro)) &&
+      (this.body.identificacionReg != undefined &&
+        this.body.identificacionReg != "" &&
+        !this.onlySpaces(this.body.identificacionReg) &&
+        (this.body.contadorNumsspp != undefined &&
+          this.body.contadorNumsspp != "") &&
+        !this.onlySpaces(this.body.contadorNumsspp)) &&
+      (this.body.identificacionReg != undefined &&
+        this.body.identificacionReg != "" &&
+        !this.onlySpaces(this.body.identificacionReg))
     ) {
-      if (
-        (this.body.objetoSocial != undefined &&
-          this.body.objetoSocial != "" &&
-          !this.onlySpaces(this.body.objetoSocial)) ||
-        (this.body.resena != undefined &&
-          this.body.resena != "" &&
-          !this.onlySpaces(this.body.resena)) ||
-        (this.fechaConstitucion != undefined &&
-          this.compruebaFechaConstitucion()) ||
-        this.fechaInscripcion != undefined ||
-        (this.body.numRegistro != undefined &&
-          this.body.numRegistro != "" &&
-          !this.onlySpaces(this.body.numRegistro)) ||
-        (this.body.identificacionReg != undefined &&
-          this.body.identificacionReg != "" &&
-          !this.onlySpaces(this.body.identificacionReg) &&
-          (this.body.contadorNumsspp != undefined &&
-            this.body.contadorNumsspp != "") &&
-          !this.onlySpaces(this.body.contadorNumsspp)) ||
-        (this.body.identificacionReg != undefined &&
-          this.body.identificacionReg != "" &&
-          !this.onlySpaces(this.body.identificacionReg))
-      ) {
-        return true;
-      } else {
-        return false;
-      }
+      return false;
     } else {
       return true;
     }
@@ -687,7 +665,7 @@ export class DatosRegistralesComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     // si no se esta creando una nueva sociedad
     if (
-      this.activacionEditar == true &&
+      (this.tarjeta == '2' || this.tarjeta == '3') &&
       sessionStorage.getItem("crearnuevo") == null
     ) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -743,26 +721,6 @@ export class DatosRegistralesComponent implements OnInit {
 
   onChangeSociedadProfesional() {
     this.comprobarValidacion();
-    // if (this.sociedadProfesional == true) {
-    //   for (let campo of this.camposObligatorios) {
-    //     if (
-    //       campo.cardGeneral == true &&
-    //       campo.cardRegistral == true &&
-    //       campo.cardNotario == true &&
-    //       campo.cardDirecciones == true &&
-    //       campo.cardIntegrantes == true
-    //     ) {
-    //       this.sociedadProfesional = true;
-    //     } else {
-    //       this.showCustomFail(
-    //         "Debe rellenar todos los campos obligatorios para poder activar la opción de sociedad profesional"
-    //       );
-    //       setTimeout(() => {
-    //         this.sociedadProfesional = false;
-    //       }, 50);
-    //     }
-    //   }
-    // }
     if (this.isNuevo && this.sociedadProfesional == true) {
       if (this.modo == "0") {
         this.body.contadorNumsspp = String(
@@ -780,20 +738,19 @@ export class DatosRegistralesComponent implements OnInit {
         this.body.sufijoNumsspp = this.sufijo;
         this.noEditable = false;
       }
-    } else {
-      if (this.sociedadProfesional == false) {
-        this.body.prefijoNumsspp = undefined;
-        this.body.contadorNumsspp = undefined;
-        this.body.sufijoNumsspp = undefined;
-      } else {
-        this.body.prefijoNumsspp = this.cadenaPrefijo;
-        this.body.sufijoNumsspp = this.cadenaSufijo;
-        this.body.contadorNumsspp = this.fillWithCeros(
-          this.cadenaContador,
-          Number(this.longitudcontador)
-        );
-      }
+    } else if (this.sociedadProfesional == true) {
+      this.body.prefijoNumsspp = "SP/";
     }
+    // else {
+    //   if (this.sociedadProfesional == true) {
+    //     this.body.prefijoNumsspp = this.cadenaPrefijo;
+    //     this.body.sufijoNumsspp = this.cadenaSufijo;
+    // this.body.contadorNumsspp = this.fillWithCeros(
+    //       this.cadenaContador,
+    //       Number(this.longitudcontador)
+    //     );
+    //   }
+    // }
   }
 
   // isSociedadDisabled() {
@@ -810,4 +767,28 @@ export class DatosRegistralesComponent implements OnInit {
   //     }
   //   }
   // }
+
+
+  fillFechaConstitucion(event) {
+    this.fechaConstitucion = event;
+    this.habilitarCheck();
+    this.compruebaFechaConstitucion();
+  }
+
+  fillFechaFin(event) {
+    this.fechaFin = event;
+    this.compruebaFechaFin();
+  }
+
+  fillFechaInscripcion(event) {
+    this.fechaInscripcion = event;
+    this.habilitarCheck();
+  }
+
+  fillFechaCancelacion(event) {
+    this.fechaCancelacion = event;
+    this.habilitarCheck();
+  }
+
+
 }

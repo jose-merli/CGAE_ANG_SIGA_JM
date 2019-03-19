@@ -499,18 +499,9 @@ export class BusquedaGeneralComponent {
                 }
               } else {
                 // encuentra datos, muestra mensaje informativo si tiene nif + {nombre || primer apellido || segundo apellido informado}
-                if (
-                  this.bodyFisica.nif != undefined &&
-                  this.bodyFisica.nif.trim() != "" &&
-                  ((this.bodyFisica.nombre != undefined &&
-                    this.bodyFisica.nombre.trim() != "") ||
-                    (this.bodyFisica.primerApellido != undefined &&
-                      this.bodyFisica.primerApellido.trim() != "") ||
-                    (this.bodyFisica.segundoApellido != undefined &&
-                      this.bodyFisica.segundoApellido.trim() != ""))
-                ) {
+                if (this.searchFisica.onlyNif) {
                   this.showWarning(
-                    "se ha encontrado una persona con el Núm. de identificación indicado. Revise el resto de los datos, porque al seleccionar este registro se usarán los datos existentes anteriormente y no podrá modificar sus datos generales"
+                    "Se ha encontrado una persona con el Núm. de identificación indicado. Revise el resto de los datos, porque al seleccionar este registro se usarán los datos existentes anteriormente y no podrá modificar sus datos generales"
                   );
                 }
               }
@@ -847,7 +838,7 @@ export class BusquedaGeneralComponent {
           ) {
             let formador = new FormadorCursoItem();
             formador.tipoIdentificacion = this.tipoCIF;
-            // formador.nif = this.bodyFisica.nif;
+            formador.nif = this.bodyFisica.nif;
             sessionStorage.removeItem("abrirFormador");
             sessionStorage.setItem("formador", JSON.stringify(formador));
             if (

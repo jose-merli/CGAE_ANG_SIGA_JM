@@ -33,9 +33,8 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-4">
           <label class="d-block mb-1">{{'enviosMasivos.literal.creado' | translate}}</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [disabled]="true"
-            [minDate]="currentDate" [locale]="es" showTime="true" [(ngModel)]="body.fechaCreacion" dateFormat="dd/mm/yy"
-            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <app-fecha [(value)]="body.fechaCreacion" [disabled]="true" [minDate]="currentDate" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaCreacion($event)"
+            (valueChangeInput)="fillFechaCreacion($event)"></app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'enviosMasivos.literal.estado' | translate}}</label>
@@ -43,10 +42,10 @@
           </p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} *</label>
-          <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [minDate]="currentDate"
-            [disabled]="noEditar" [locale]="es" showTime="true" [(ngModel)]="body.fechaProgramada" dateFormat="dd/mm/yy"
-            icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+          <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} (*)</label>
+          <app-fecha [(value)]="body.fechaProgramada" [minDate]="currentDate" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaProgramada($event)"
+            (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
+
         </div>
       </div>
     </div>

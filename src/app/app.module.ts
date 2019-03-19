@@ -41,6 +41,8 @@ import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
+import { FechaComponent } from './commons/fecha/fecha.component'
+
 //PRIMENG
 
 import { DropdownModule } from "primeng/dropdown";
@@ -292,6 +294,7 @@ import { ExpedientesComponent } from './features/censo/expedientesCenso/expedien
 import { RegtelComponent } from './features/censo/regtel/regtel.component';
 import { TurnoOficioComponent } from './features/censo/turnoOficioCenso/turnoOficio.component';
 import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
+import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 
 registerLocaleData(es);
 
@@ -627,6 +630,7 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 		TurnoOficioComponent,
 		BusquedaCensoGeneralComponent,
 		DestinatarioIndvEnvioMasivoComponent
+		FechaComponent
 	],
 	imports: [
 		BrowserModule,

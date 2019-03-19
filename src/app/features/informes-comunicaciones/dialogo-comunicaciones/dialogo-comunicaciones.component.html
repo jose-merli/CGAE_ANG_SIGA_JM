@@ -9,9 +9,9 @@
             <div class="form-row">
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fecha programada</label>
-                    <p-calendar [minDate]="currentDate" showTime="true" [locale]="es"
-                        [(ngModel)]="bodyComunicacion.fechaProgramacion" dateFormat="dd/mm/yy"
-                        icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+
+                    <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
+                        showTime="true"></app-fecha>
                 </div>
             </div>
             <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos"
@@ -62,6 +62,7 @@
                         <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al
                             {{tableModelos.first + tableModelos.rows}} de un
                             total de {{tableModelos.totalRecords}}</label>
+
                     </div>
                 </ng-template>
             </p-table>
@@ -80,9 +81,8 @@
         </div>
     </div>
 </div>
+<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="600">
 
-<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true"
-    [minWidth]="600">
     <p-header>
         <label>Valores</label>
     </p-header>
@@ -118,6 +118,7 @@
                 label="{{ 'dialogo.boton.descargar' | translate}}"></button>
         </div>
     </p-footer>
+
 </p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

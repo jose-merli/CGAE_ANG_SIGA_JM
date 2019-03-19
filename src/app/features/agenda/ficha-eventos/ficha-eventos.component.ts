@@ -27,6 +27,7 @@ import { AsistenciaEventoObject } from "../../../models/AsistenciaEventoObject";
 import { DatosPersonaEventoItem } from "../../../models/DatosPersonaEventoItem";
 import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObject";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
+import { FechaComponent } from "../../../commons/fecha/fecha.component";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -143,6 +144,17 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   comboAsistencia;
   checkAsistencias: boolean = false;
   asistenciasUpdate = [];
+  archivoDisponible: boolean = false;
+  existeArchivo: boolean = false;
+  file: File = undefined;
+
+  @ViewChild("pUploadFile")
+  pUploadFile;
+
+  disabledToday: boolean = true;
+
+  @ViewChild("fechaFi") fechaFi: FechaComponent;
+  @ViewChild("fechaIni") fechaIni: FechaComponent;
 
   constructor(
     private sigaServices: SigaServices,
@@ -151,7 +163,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     private location: Location,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getColsResults();
@@ -265,6 +277,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.disabledTipoEvento = true;
       this.path = "agendaFormacion";
       this.idCurso = sessionStorage.getItem("idCurso");
+      this.disabledToday = false;
 
       //Cargamos los tipo de calendarios que existen
       this.getComboCalendar();
@@ -330,13 +343,16 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (sessionStorage.getItem("isSession")) {
         this.isFormacionCalendar = true;
       } else {
-        this.newEvent.idTipoCalendario = JSON.parse(
-          sessionStorage.getItem("calendarioEdit")
-        ).idTipoCalendario;
 
-        this.idCalendario = JSON.parse(
-          sessionStorage.getItem("calendarioEdit")
-        ).idCalendario;
+        if (sessionStorage.getItem("calendarioEdit") != undefined) {
+          this.newEvent.idTipoCalendario = JSON.parse(
+            sessionStorage.getItem("calendarioEdit")
+          ).idTipoCalendario;
+
+          this.idCalendario = JSON.parse(
+            sessionStorage.getItem("calendarioEdit")
+          ).idCalendario;
+        }
       }
 
       //Indicamos que estamos en modo edicion
@@ -355,6 +371,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     ) {
       this.modoTipoEventoInscripcion = true;
       this.disabledTipoEvento = true;
+      this.disabledToday = false;
 
       this.path = "formacionInicioInscripcion";
 
@@ -364,8 +381,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCurso = curso.idCurso;
         curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
         this.searchEvent(curso);
-        //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
-        this.createEvent = true;
 
       } else {
         this.newEvent = new EventoItem();
@@ -385,7 +400,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         this.invalidDateMin.setHours(this.newEvent.start.getHours());
         this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(this.newEvent.start.getHours());
+        this.invalidDateMax.setHours(23);
         this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
@@ -400,7 +415,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
-        this.getEntryListCourse();
       }
 
       if (sessionStorage.getItem("courseCurrent")) {
@@ -416,6 +430,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.modoTipoEventoInscripcion = true;
       this.disabledTipoEvento = true;
       this.path = "formacionFinInscripcion";
+      this.disabledToday = false;
 
       let curso = JSON.parse(sessionStorage.getItem("curso"));
 
@@ -423,8 +438,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.idCurso = curso.idCurso;
         curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
         this.searchEvent(curso);
-        //Indicamos que el evento ya esta creado para que pueda acceder a todas las tarjetas
-        this.createEvent = true;
+
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
@@ -443,7 +457,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         this.invalidDateMin.setHours(this.newEvent.start.getHours());
         this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(this.newEvent.start.getHours());
+        this.invalidDateMax.setHours(23);
         this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
@@ -458,7 +472,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
-        this.getEntryListCourse();
       }
 
       if (sessionStorage.getItem("courseCurrent")) {
@@ -534,7 +547,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
 
       this.checkIsEventoCumplidoOrCancelado();
-      
+
       //8. Viene directo
     } else {
       this.isFormacionCalendar = false;
@@ -578,10 +591,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkIsEventoCumplidoOrCancelado(){
-    if(this.newEvent.idEstadoEvento != this.valorEstadoEventoPlanificado){
+  checkIsEventoCumplidoOrCancelado() {
+    if (this.newEvent.idEstadoEvento != undefined && this.newEvent.idEstadoEvento != this.valorEstadoEventoPlanificado) {
       this.isEventoCumplidoOrCancelado = true;
-    }else{
+    } else {
       this.isEventoCumplidoOrCancelado = false;
     }
   }
@@ -793,7 +806,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
         this.callSaveEvent(url);
-        
+
         // if (this.newEvent.idEstadoEvento == this.valorEstadoEventoPlanificado) {
         //   let mess = "¿Desea enviar un aviso del cambio realizado?";
 
@@ -912,8 +925,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   restEvent() {
     this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
-    this.newEvent.start = new Date(this.newEvent.start);
-    this.newEvent.end = new Date(this.newEvent.end);
+
+    if (this.initEvent.start != null) {
+      this.newEvent.start = new Date(this.newEvent.start);
+    } else {
+      this.newEvent.start = undefined;
+    }
+
+    if (this.initEvent.end != null) {
+      this.newEvent.end = new Date(this.newEvent.end);
+    } else {
+      this.newEvent.start = undefined;
+    }
+
     this.checkFechaInicioRepeticion = false;
     this.checkFechaFinRepeticion = false;
     this.checkTipoRepeticion = false;
@@ -938,6 +962,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   selectInvalidDates() {
+
     this.invalidDateMin = new Date(
       JSON.parse(JSON.stringify(this.newEvent.start))
     );
@@ -948,6 +973,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
     this.invalidDateMax.setHours(23);
     this.invalidDateMax.setMinutes(59);
+
+    if (this.newEvent.end == undefined) {
+      this.newEvent.end = new Date(
+        JSON.parse(JSON.stringify(this.newEvent.start))
+      );
+    }
+
     if (this.newEvent.end < this.newEvent.start) {
       this.newEvent.end = new Date(
         JSON.parse(JSON.stringify(this.newEvent.start))
@@ -956,19 +988,33 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   validatorDates(event) {
+
     if (this.newEvent.end < this.newEvent.start) {
       this.newEvent.end = new Date(
         JSON.parse(JSON.stringify(this.newEvent.start))
       );
-      this.fechaFin.currentHour = this.fechaInicio.currentHour;
-      this.fechaFin.currentMinute = this.fechaInicio.currentMinute;
-      this.fechaFin.inputfieldViewChild.nativeElement.value = this.fechaInicio.inputfieldViewChild.nativeElement.value;
-      this.fechaFin.inputFieldValue = this.fechaInicio.inputFieldValue;
-      this.fechaFin.value = this.fechaInicio.value;
+      this.fechaFi.calendar.currentHour = this.fechaIni.calendar.currentHour;
+      this.fechaFi.calendar.currentMinute = this.fechaIni.calendar.currentMinute;
+      this.fechaFi.calendar.inputfieldViewChild.nativeElement.value = this.fechaIni.calendar.inputfieldViewChild.nativeElement.value;
+      this.fechaFi.calendar.inputFieldValue = this.fechaIni.calendar.inputFieldValue;
+      this.fechaFi.calendar.value = this.fechaIni.calendar.value;
     }
   }
 
-  unselectInvalidDates() {
+  unselectInvalidDates(event) {
+
+    this.invalidDateMin = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMax = new Date(
+      JSON.parse(JSON.stringify(this.newEvent.start))
+    );
+    this.invalidDateMin.setHours(this.newEvent.start.getHours());
+    this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+    this.invalidDateMax.setHours(23);
+    this.invalidDateMax.setMinutes(59);
+
+
     if (this.newEvent.end.getHours() == this.newEvent.start.getHours()) {
       if (this.newEvent.end.getMinutes() < this.newEvent.start.getMinutes()) {
         this.newEvent.end.setMinutes(this.newEvent.start.getMinutes());
@@ -980,6 +1026,45 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.invalidDateMin.setMinutes(0);
     }
   }
+
+  fillStart(event) {
+    this.newEvent.start = event;
+    this.validatorDates(event);
+    this.selectInvalidDates();
+  }
+
+  fillStartEvent(event) {
+
+    if (event == null) {
+      this.newEvent.start = event;
+      this.newEvent.end = event;
+    }
+
+    if (this.newEvent.end == undefined || this.newEvent.end == null) {
+      this.newEvent.start = event;
+      this.newEvent.end = event;
+      this.unselectInvalidDates(event);
+    } else {
+      this.newEvent.start = event;
+      if (this.newEvent.start != null && this.newEvent.start != undefined) {
+        if (this.newEvent.start.getDate() != this.newEvent.end.getDate() ||
+          this.newEvent.start.getMonth() != this.newEvent.end.getMonth() ||
+          this.newEvent.start.getFullYear() != this.newEvent.end.getFullYear()) {
+          this.newEvent.end = event;
+        }
+      }
+      this.unselectInvalidDates(event);
+    }
+    this.validatorDates(event);
+
+  }
+
+  fillEnd(event) {
+    this.newEvent.end = event;
+    this.validatorDates(event);
+    this.unselectInvalidDates(event);
+  }
+
 
   deleteEvent() {
     let mess = this.translateService.instant("eventos.mensaje.eliminar.evento");
@@ -1077,7 +1162,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     }
   }
 
-  isCheckFechaInicioRepeticion() {
+  isCheckFechaInicioRepeticion(event) {
+
+    this.newEvent.fechaInicioRepeticion = event;
+
     if (this.newEvent.fechaInicioRepeticion != null) {
       this.checkFechaInicioRepeticion = true;
     } else {
@@ -1085,7 +1173,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     }
   }
 
-  isCheckFechaFinRepeticion() {
+  isCheckFechaFinRepeticion(event) {
+
+    this.newEvent.fechaFinRepeticion = event;
+
     if (this.newEvent.fechaFinRepeticion != null) {
       this.checkFechaFinRepeticion = true;
     } else {
@@ -1130,8 +1221,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         if (n.body != "") {
           this.newEvent = JSON.parse(n.body);
           this.newEvent.idCurso = this.idCurso;
+          this.getEventNotifications();
+          //Inficamos que estamos en modo edicion
+          this.modoEdicionEvento = true;
+          //Ya esta creado el evento
+          this.createEvent = true;
+
         } else {
           this.newEvent = new EventoItem();
+          this.createEvent = false;
+          this.getComboCalendar();
+
+
         }
 
         if (
@@ -1141,6 +1242,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.start = new Date(curso.fechaInscripcionDesdeDate);
           this.newEvent.end = new Date(curso.fechaInscripcionDesdeDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+          this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
           //Indicamos que el limite que puede durar el evento
           this.invalidDateMin = new Date(
@@ -1152,7 +1254,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
           this.invalidDateMin.setHours(this.newEvent.start.getHours());
           this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-          this.invalidDateMax.setHours(this.newEvent.start.getHours());
+          this.invalidDateMax.setHours(23);
           this.invalidDateMax.setMinutes(59);
         } else if (
           sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
@@ -1161,6 +1263,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
           this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
+          this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
           //Indicamos que el limite que puede durar el evento
           this.invalidDateMin = new Date(
@@ -1172,7 +1275,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
           this.invalidDateMin.setHours(this.newEvent.start.getHours());
           this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-          this.invalidDateMax.setHours(this.newEvent.start.getHours());
+          this.invalidDateMax.setHours(23);
           this.invalidDateMax.setMinutes(59);
         }
 
@@ -1184,12 +1287,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         }
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
-        this.getEventNotifications();
 
-        //Inficamos que estamos en modo edicion
-        this.modoEdicionEvento = true;
-
-       this.checkIsEventoCumplidoOrCancelado();
+        this.checkIsEventoCumplidoOrCancelado();
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
@@ -1445,7 +1544,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.checkFormadores = JSON.parse(JSON.stringify(this.results));
           this.results.forEach(element => {
             if (element.color == undefined) {
-              element.color = this.getRandomColor();
+              element.color = "#87CEFA";
             }
           });
 
@@ -1484,7 +1583,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.formadores.length != this.results.length
     ) {
       this.autoComplete.panelVisible = true;
-      this.backgroundColor = this.getRandomColor();
+      this.backgroundColor = "#87CEFA";
       if (this.results.length > 0) {
         this.formadoresSuggest = [];
 
@@ -1514,7 +1613,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   visiblePanelBlur(event) {
     if (this.autoComplete.highlightOption != undefined) {
-      this.autoComplete.highlightOption.color = this.getRandomColor();
+      this.autoComplete.highlightOption.color = "#87CEFA";
       this.results.push(this.autoComplete.highlightOption);
       this.autoComplete.highlightOption = undefined;
     }
@@ -1737,6 +1836,72 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         }
       );
+  }
+
+  getFile(event: any) {
+    let fileList: FileList = event.files;
+
+    let nombreCompletoArchivo = fileList[0].name;
+    let extensionArchivo = nombreCompletoArchivo.substring(
+      nombreCompletoArchivo.lastIndexOf("."),
+      nombreCompletoArchivo.length
+    );
+
+    if (
+      extensionArchivo == null ||
+      extensionArchivo.trim() == "" ||
+      !/\.(xls)$/i.test(extensionArchivo.trim().toUpperCase())
+    ) {
+      this.file = undefined;
+      this.archivoDisponible = false;
+      this.existeArchivo = false;
+      this.showMessage(
+        "info",
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant(
+          "formacion.mensaje.extesion.fichero.erronea"
+        )
+      );
+    } else {
+      // se almacena el archivo para habilitar boton guardar
+      this.file = fileList[0];
+      this.archivoDisponible = true;
+      this.existeArchivo = true;
+
+      this.uploadFile();
+    }
+  }
+
+  uploadFile() {
+    this.progressSpinner = true;
+
+    if (this.file != undefined) {
+      this.sigaServices
+        .postSendContentAndParameter(
+          "fichaEventos_uploadFile",
+          "?idEvento=" + this.newEvent.idEvento,
+          this.file
+        )
+        .subscribe(
+          data => {
+            this.file = null;
+            this.progressSpinner = false;
+
+            this.showSuccess();
+            this.getEntryListCourse();
+          },
+          error => {
+            console.log(error);
+            this.showMessage("error", "Error", error.error.error.description
+            );
+            this.progressSpinner = false;
+          },
+          () => {
+            this.pUploadFile.clear();
+            this.progressSpinner = false;
+          }
+        );
+    }
   }
 
   //FUNCIONES GENERALES

@@ -51,7 +51,8 @@ export class DialogoComunicacionesComponent implements OnInit {
   fechaProgramada: Date;
   plantillas: any[] = [];
   idConsulta: string;
-
+  dato: any;
+  
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
 

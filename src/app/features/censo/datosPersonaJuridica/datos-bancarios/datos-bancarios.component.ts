@@ -47,6 +47,7 @@ export class DatosBancariosComponent implements OnInit {
 
   suscripcionBusquedaNuevo: Subscription;
 
+  tarjeta: string;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -58,7 +59,7 @@ export class DatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private cardService: cardService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDatosBancarios") == "true") {
@@ -167,31 +168,17 @@ export class DatosBancariosComponent implements OnInit {
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "123";
-    let derechoAcceso;
+
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
-        let permisosTree = JSON.parse(data.body);
-        let permisosArray = permisosTree.permisoItems;
-        derechoAcceso = permisosArray[0].derechoacceso;
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
-      () => {
-        if (derechoAcceso >= 2) {
-          this.activacionEditar = true;
-          if (derechoAcceso == 2) {
-            this.camposDesactivados = true;
-          }
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-      }
+      () => {}
     );
   }
 
@@ -281,6 +268,10 @@ export class DatosBancariosComponent implements OnInit {
           sessionStorage.setItem("editar", "false");
         }
 
+        if (this.tarjeta == "2") {
+          sessionStorage.setItem("permisos", "false");
+        }
+
         this.router.navigate(["/consultarDatosBancarios"]);
       } else {
         this.numSelected = this.selectedDatos.length;
@@ -337,8 +328,8 @@ export class DatosBancariosComponent implements OnInit {
         } else {
           this.showSuccess(
             selectedDatos.length +
-            " " +
-            this.translateService.instant("messages.deleted.selected.success")
+              " " +
+              this.translateService.instant("messages.deleted.selected.success")
           );
         }
       },
@@ -358,11 +349,15 @@ export class DatosBancariosComponent implements OnInit {
   abrirFicha() {
     // si no se esta creando una nueva sociedad
     if (
-      this.activacionEditar == true &&
+      (this.tarjeta == "3" || this.tarjeta == "2") &&
       sessionStorage.getItem("crearnuevo") == null
     ) {
       this.openFicha = !this.openFicha;
     }
+  }
+  ngOnDestroy() {
+    sessionStorage.removeItem("idPersona");
+    sessionStorage.removeItem("allBanksData");
   }
 
   showFail(mensaje: string) {
@@ -383,8 +378,4 @@ export class DatosBancariosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
-
-
-
 }

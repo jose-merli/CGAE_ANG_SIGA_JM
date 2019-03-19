@@ -47,7 +47,7 @@
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>Fecha nacimiento</label>
               <p-calendar [formControl]="formBusqueda.controls['fechaNacimiento']" [keepInvalid]="true" selectionMode="range" [locale]="es"
-                icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"></p-calendar>
               <small class="input-error" *ngIf="!formBusqueda.controls['fechaNacimiento'].pristine && formBusqueda.controls['fechaNacimiento'].value==null">
                 El formato correcto es d/m/y - d/m/y</small>
             </div>
@@ -116,7 +116,7 @@
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>Fecha incorporación</label>
               <p-calendar [formControl]="formBusqueda.controls['fechaIncorporacion'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
-                icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"></p-calendar>
               <small class="input-error" *ngIf="!formBusqueda.controls['fechaIncorporacion'].pristine && formBusqueda.controls['fechaIncorporacion'].value==null ">
                 El formato correcto es dd/mm/aa - dd/mm/aa</small>
             </div>
@@ -142,7 +142,7 @@
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>Fecha factura</label>
               <p-calendar [formControl]="formBusqueda.controls['fechaFacturacion'] " [keepInvalid]="true" selectionMode="range" [locale]="es"
-                icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                icon="far fa-calendar-alt" showIcon="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050"></p-calendar>
               <small class="input-error" *ngIf="!formBusqueda.controls['fechaFacturacion'].pristine && formBusqueda.controls['fechaFacturacion'].value==null ">
                 El formato correcto es d/m/y - d/m/y</small>
             </div>

@@ -40,7 +40,7 @@
       <p-pickList [source]="perfilesNoSeleccionados" [target]="perfilesSeleccionados" sourceHeader="Perfiles con acceso" targetHeader="Perfiles sin acceso"
         [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="perfilesSeleccionados" sourceFilterPlaceholder="Buscar perfil"
         targetFilterPlaceholder="Buscar perfil" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ height: '300px' }"
-        [targetStyle]="{ height: '300px' }" disabled>
+        [targetStyle]="{ height: '300px' }">
         <ng-template let-item pTemplate="item">
           <div>{{ item.label }}</div>
         </ng-template>

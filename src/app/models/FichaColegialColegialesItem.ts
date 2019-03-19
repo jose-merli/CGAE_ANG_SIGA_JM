@@ -10,6 +10,7 @@ export class FichaColegialColegialesItem {
   fechaTitulacion: Date;
   fechaEstadoStr: String;
   fechaEstado: Date;
+  fechaEstadoNueva: Date;
   incorporacionDate: Date;
   fechapresentacionDate: Date;
   fechaTitulacionDate: Date;
@@ -20,5 +21,8 @@ export class FichaColegialColegialesItem {
   estadoColegial: String;
   situacionResidente: String;
   comunitario: String;
+  idInstitucion: String;
+  idPersona: String;
+
   constructor() { }
 }

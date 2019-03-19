@@ -54,7 +54,7 @@
           </div>
           <div class="form-row d-flex align-items-end">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} *</label>
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}(*)</label>
               <p-dropdown *ngIf="editar" [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form"
                 [disabled]='soloLectura'></p-dropdown>
               <input *ngIf="!editar" type="text" class="form-control" value="POR DEFECTO" pInputText

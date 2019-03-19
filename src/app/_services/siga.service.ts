@@ -153,6 +153,7 @@ export class SigaServices {
     direcciones_search: "busquedaPerJuridica/datosDireccionesSearch",
     direcciones_update: "tarjetaDirecciones/update",
     direcciones_insert: "tarjetaDirecciones/create",
+    direcciones_duplicate: "tarjetaDirecciones/duplicate",
     direcciones_remove: "tarjetaDirecciones/delete",
     direcciones_codigoPostal: "",
     direcciones_comboPoblacion: "tarjetaDirecciones/poblacion",
@@ -358,6 +359,7 @@ export class SigaServices {
     fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
     fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
     fichaEventos_getTrainersSession: "fichaEventos/getTrainersSession",
+    fichaEventos_uploadFile: "fichaEventos/uploadFile",
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
@@ -380,6 +382,7 @@ export class SigaServices {
       "/fichaDatosColegiales/datosColegialesSearch",
     fichaColegialColegiales_search:
       "fichaDatosColegiales/searchDatosColegiales",
+    fichaDatosColegiales_getNumColegiado: "/fichaDatosColegiales/getNumColegiado",
     alterMutua_estadoSolicitud: "alterMutua/estadoSolicitud",
     alterMutua_estadoColegiado: "alterMutua/estadoColegiado",
     alterMutua_propuestas: "alterMutua/propuestas",
@@ -417,6 +420,8 @@ export class SigaServices {
     solicitudModificacion_denySolModif: "solicitudModificacion/denySolModif",
     solicitudModificacion_searchSolModifDatosBancarios:
       "solicitudModificacion/searchSolModifDatosBancarios",
+    solicitudModificacion_searchSolModifDatosCambiarFoto:
+      "solicitudModificacion/searchSolModifDatosCambiarFoto",
     solicitudModificacion_searchDatosBancariosDetail:
       "solicitudModificacion/searchDatosBancariosDetail",
     solicitudModificacion_searchSolModifDatosBancariosDetail:
@@ -466,6 +471,8 @@ export class SigaServices {
       "solicitudModificacion/denySolModifDatosGenerales",
     solicitudModificacion_searchSolModifDatosGeneralesDetail:
       "solicitudModificacion/searchSolModifDatosGeneralesDetail",
+    solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
+      "solicitudModificacion/searchSolModifDatosCambiarFotoDetail",
     solicitudModificacion_searchDatosGeneralesDetail:
       "solicitudModificacion/searchDatosGeneralesDetail",
     // FOTO
@@ -477,14 +484,16 @@ export class SigaServices {
       "solicitudModificacion/searchSolModifDatosUseFotoDetail",
     solicitudModificacion_processSolModifDatosUseFoto:
       "solicitudModificacion/processSolModifDatosUseFoto",
+    solicitudModificacion_processSolModifDatosCambiarFoto:
+      "solicitudModificacion/processSolModifDatosCambiarFoto",
     solicitudModificacion_denySolModifDatosUseFoto:
       "solicitudModificacion/denySolModifDatosUseFoto",
-
+    solicitudModificacion_denySolModifDatosCambiarFoto:
+      "solicitudModificacion/denySolModifDatosCambiarFoto",
     solicitudModificacionEspecifica_searchSpecificRequest:
       "solicitudModificacionEspecifica/searchSpecificRequest",
     solicitudModificacion_searchDatosDirecciones:
       "solicitudModificacion/searchDatosDirecciones",
-
     solicitudModificacion_insertAuditoria:
       "solicitudModificacion/insertAuditoria",
 
@@ -549,6 +558,12 @@ export class SigaServices {
       "busquedaPerJuridica/solicitudInsertBanksData",
     fichaDatosColegiales_datosColegialesUpdate:
       "/fichaDatosColegiales/datosColegialesUpdate",
+    fichaDatosColegiales_datosColegialesInsertEstado:
+      "/fichaDatosColegiales/datosColegialesInsertEstado",
+    fichaDatosColegiales_datosColegialesUpdateEstados:
+      "/fichaDatosColegiales/datosColegialesUpdateEstados",
+    fichaDatosColegiales_datosColegialesDeleteEstado:
+      "/fichaDatosColegiales/datosColegialesDeleteEstado",
     fichaColegialRegTel_permisos: "fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
@@ -620,7 +635,8 @@ export class SigaServices {
     modelos_borrar: "modelos/borrar",
     modelos_rehabilitar: "modelos/rehabilitar",
     modelos_detalle_datosGenerales: "modelos/detalle/datosGenerales",
-    modelos_detalle_datosGeneralesComprobarNom: "modelos/detalle/datosGenerales/comprobarNom",
+    modelos_detalle_datosGeneralesComprobarNom:
+      "modelos/detalle/datosGenerales/comprobarNom",
     modelos_detalle_perfiles: "modelos/detalle/perfiles",
     modelos_detalle_perfilesModelo: "modelos/detalle/perfilesModelo",
     modelos_detalle_guardarPerfiles: "modelos/detalle/guardarPerfiles",
@@ -663,19 +679,20 @@ export class SigaServices {
     plantillasDoc_descargarPlantilla: "plantillasDoc/descargarPlantilla",
 
     //Diálogo comunicación
-    dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
-    dialogo_claseComunicacion: 'dialogoComunicacion/claseComunicacion',
-    dialogo_fechaProgramada: 'dialogoComunicacion/fechaProgramada',
-    dialogo_modelosComunicacion: 'dialogoComunicacion/modelosSearch',
-    dialogo_plantillasEnvio: 'dialogoComunicacion/plantillasEnvio',
-    dialogo_tipoEnvios: 'dialogoComunicacion/tipoEnvios',
-    dialogo_enviar: 'dialogoComunicacion/enviar',
-    dialogo_descargar: 'dialogoComunicacion/descargar',
-    dialogo_generarEnvios: 'dialogoComunicacion/generarEnvios',
-    dialogo_keys: 'dialogoComunicacion/keys',
-    dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
-    dialogo_envioTest: 'dialogoComunicacion/envioTest',
-    dialogo_maxModelos: 'dialogoComunicacion/maxModelos'
+    dialogo_claseComunicaciones: "dialogoComunicacion/clasesComunicacion",
+    dialogo_claseComunicacion: "dialogoComunicacion/claseComunicacion",
+    dialogo_fechaProgramada: "dialogoComunicacion/fechaProgramada",
+    dialogo_modelosComunicacion: "dialogoComunicacion/modelosSearch",
+    dialogo_plantillasEnvio: "dialogoComunicacion/plantillasEnvio",
+    dialogo_tipoEnvios: "dialogoComunicacion/tipoEnvios",
+    dialogo_enviar: "dialogoComunicacion/enviar",
+    dialogo_descargar: "dialogoComunicacion/descargar",
+    dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
+    dialogo_keys: "dialogoComunicacion/keys",
+    dialogo_obtenerCamposDinamicos:
+      "dialogoComunicacion/obtenerCamposDinamicos",
+    dialogo_envioTest: "dialogoComunicacion/envioTest",
+    dialogo_maxModelos: "dialogoComunicacion/maxModelos"
   };
 
   private menuToggled = new Subject<any>();

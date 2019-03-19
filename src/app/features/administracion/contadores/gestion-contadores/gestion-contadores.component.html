@@ -78,8 +78,8 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.fechaReconfiguracion" | translate}}</label>
-            <p-calendar [monthNavigator]="true" [yearNavigator]="true" [(disabled)]="!editar"  yearRange="1930:2050" 
-            [(ngModel)]="fechareconfiguracion" dateFormat="dd/mm/yy" [utc]="true" [locale]="es" icon="far fa-calendar-alt" [showIcon]="true"></p-calendar>
+            <app-fecha [utc]="true" [disabled]="!editar" [(value)]="fechareconfiguracion" (valueChangeSelected)="fillFechaReconfiguracion($event)"
+              (valueChangeInput)="fillFechaReconfiguracion($event)"></app-fecha>
           </div>
         </div>
         <div *ngIf="fechareconfiguracion!=null" class="form-row">

@@ -49,7 +49,7 @@ export class CargaEtiquetasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private datePipe: DatePipe,
     private domSanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getInfo();
@@ -343,4 +343,14 @@ export class CargaEtiquetasComponent implements OnInit {
       this.isBuscar();
     }
   }
+
+  fillFechaCarga(event) {
+    this.fechaCargaSelect = event;
+  }
+
+  detectFechaCargaInput(event) {
+    this.fechaCargaSelect = event;
+  }
+
+
 }

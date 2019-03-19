@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <!--DATOS REGISTRALES-->
-  <div class="card">
+  <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('registrales')">
       <div *ngIf="!esFichaActiva('registrales')" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -51,37 +51,38 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
-              <input [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.objetoSocial" type="text" class="form-control" (input)="habilitarCheck()"
-                pInputText>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.objetoSocial" type="text" class="form-control"
+                (input)="habilitarCheck()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
-              <input [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.resena" (input)="habilitarCheck()" type="text" class="form-control"
-                pInputText>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena" (input)="habilitarCheck()"
+                type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numPoliza" | translate}} </label>
-              <input [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.numeroPoliza" type="text" [maxLength]="20" class="form-control"
-                pInputText>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.numeroPoliza" type="text" [maxLength]="20"
+                class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Compania" | translate}}</label>
-              <input [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.companiaAseg" type="text" class="form-control" pInputText>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.companiaAseg" type="text" class="form-control"
+                pInputText>
             </div>
 
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
-              <p-calendar [(disabled)]="camposDesactivados || disabledAction" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaConstitucion"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck(); compruebaFechaConstitucion()"></p-calendar>
+              <app-fecha [(value)]="fechaConstitucion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)"
+                (valueChangeInput)="fillFechaConstitucion($event)"></app-fecha>
               <div *ngIf="fechaCorrecta == false">
                 <label class="labelError">La fecha no puede ser superior a la actual</label>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatos.literal.fechaFin" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados || disabledAction" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaFin"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="compruebaFechaFin()"></p-calendar>
+              <app-fecha [(value)]="fechaFin" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaFin($event)"
+                (valueChangeInput)="fillFechaFin($event)"></app-fecha>
               <div *ngIf="fechaFinCorrecta == false">
                 <label class="labelError">La fecha de fin no puede ser anterior a la fecha de constitución</label>
               </div>
@@ -89,9 +90,9 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label>
               <br>
-              <p-multiSelect [(disabled)]="camposDesactivados || disabledAction" [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='selectActividad'
-                [options]="actividadesDisponibles" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
-                [panelStyle]="{width:'100%'}"></p-multiSelect>
+              <p-multiSelect [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [defaultLabel]="textFilter" styleClass="widthAll"
+                [(ngModel)]='selectActividad' [options]="actividadesDisponibles" optionLabel="label" [selectedItemsLabel]="textSelected"
+                maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
         </div>
@@ -105,50 +106,51 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}} (*)</label>
-              <input [(ngModel)]="body.numRegistro" [(disabled)]="camposDesactivados || disabledAction" type="text" class="form-control" (input)="habilitarCheck()"
-                [maxLength]="20" pInputText>
+              <input [(ngModel)]="body.numRegistro" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" type="text" class="form-control"
+                (input)="habilitarCheck()" [maxLength]="20" pInputText>
             </div>
             <div class="form-row p-1 col-lg-6 col-md-6">
               <div class="col-lg-12 col-md-12">
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}} (*)</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(disabled)]="noEditable || camposDesactivados || disabledAction" [(ngModel)]="body.prefijoNumsspp" type="text" class="form-control"
-                  [(disabled)]="prefijoBlock" pInputText>
+                <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
+                  type="text" maxlength="8" class="form-control" [(disabled)]="prefijoBlock" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(disabled)]="noEditable || camposDesactivados || disabledAction" [(ngModel)]="body.contadorNumsspp" type="text" class="form-control"
-                  (ngModelChange)="compruebaRegistro()" [attr.maxlength]="longitudcontador" pInputText>
+                <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
+                  type="text" class="form-control" (ngModelChange)="compruebaRegistro()" [attr.maxlength]="longitudcontador"
+                  pInputText>
                 <div *ngIf="contadorNoCorrecto == true">
                   <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                 </div>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [(disabled)]="noEditable || camposDesactivados || disabledAction" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control"
-                  pInputText>
+                <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
+                  type="text" maxlength="8" class="form-control" pInputText>
               </div>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
-              <input [(disabled)]="camposDesactivados || disabledAction" [(ngModel)]="body.identificacionReg" type="text" class="form-control" (ngModelChange)="habilitarCheck()"
-                [maxLength]="10" pInputText>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
+                class="form-control" (ngModelChange)="habilitarCheck()" [maxLength]="10" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
-              <p-calendar [(disabled)]="camposDesactivados || disabledAction" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaInscripcion"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
+              <app-fecha [(value)]="fechaInscripcion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaInscripcion($event)"
+                (valueChangeInput)="fillFechaInscripcion($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
-              <p-calendar [(disabled)]="camposDesactivados || disabledAction" [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [(ngModel)]="fechaCancelacion"
-                [locale]="es" [utc]="true" icon="far fa-calendar-alt" dateFormat="dd/mm/yy" showIcon="true" (ngModelChange)="habilitarCheck()"></p-calendar>
+              <app-fecha [(value)]="fechaCancelacion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaCancelacion($event)"
+                (valueChangeInput)="fillFechaCancelacion($event)"></app-fecha>
             </div>
 
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()"></p-checkbox>
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" [disabled]="tarjeta == '2' || !habilitarCheck()"></p-checkbox>
             </div>
           </div>
         </div>
@@ -157,8 +159,10 @@
     <div *ngIf="esFichaActiva('registrales')" class="card-footer">
       <div class="text-right main-button ">
 
-        <button (click)="search()" [(disabled)]="camposDesactivados || disabledAction" pButton type="button " icon="fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="desactivadoGuardar() || disabledAction" (click)="guardar()" pButton type="button " icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="search()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton type="button " icon="fa fa-undo "
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="desactivadoGuardar() || disabledAction" (click)="guardar()" pButton type="button " icon="far fa-save "
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

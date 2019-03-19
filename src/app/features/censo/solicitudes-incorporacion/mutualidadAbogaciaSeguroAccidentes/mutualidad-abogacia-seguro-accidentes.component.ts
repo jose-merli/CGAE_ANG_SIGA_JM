@@ -77,7 +77,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private location: Location
-  ) {}
+  ) { }
 
   @ViewChild("poblacion") dropdown: Dropdown;
 
@@ -93,6 +93,23 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     this.body.telefono = this.solicitud.telefono1;
     this.body.cuentaBancaria = this.solicitud.iban;
     this.pagoSelected = "12";
+    if (sessionStorage.getItem("direcciones")) {
+      let direccion = JSON.parse(sessionStorage.getItem("direcciones"));
+      this.body.idPais = direccion.idPais;
+      this.paisSelected = direccion.idPais;
+      this.solicitud.tratamiento = this.solicitud.tratamiento;
+      this.body.domicilio = direccion.domicilio;
+      this.body.codigoPostal = direccion.codigoPostal;
+      this.body.nombrePoblacion = direccion.nombrePoblacion;
+      this.body.pais = direccion.nombrePais;
+      this.body.idPoblacion = direccion.idPoblacion;
+      this.poblacionSelected = direccion.idPoblacion;
+      this.body.telefono = direccion.telefono;
+      this.body.movil = direccion.movil;
+      this.body.correoElectronico = direccion.correoElectronico;
+      this.body.idProvincia = direccion.idProvincia;
+      this.getComboPoblacion(direccion.nombrePoblacion);
+    }
     // Buscamos en cen_solicitudMutualidad
     let mutualidadRequest = new DatosSolicitudMutualidadItem();
     mutualidadRequest.numeroidentificador = this.solicitud.numeroIdentificacion;
@@ -111,11 +128,14 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
             solicitud.numeroIdentificacion = this.solicitud.numeroIdentificacion;
             solicitud.tratamiento = this.solicitud.tratamiento;
             solicitud.idEstadoCivil = this.solicitud.idEstadoCivil;
-            solicitud.naturalDe = this.solicitud.naturalDe;
+            if (this.solicitud.idsolicitudincorporacion != undefined) {
+              solicitud.idsolicitudincorporacion = this.solicitud.idsolicitudincorporacion;
+            } solicitud.naturalDe = this.solicitud.naturalDe;
             this.solicitud = solicitud;
             body.idpais = this.body.idPais;
             body.codigoPostal = this.body.codigoPostal;
             body.idPoblacion = this.body.idPoblacion;
+            body.nombrePoblacion = this.body.nombrePoblacion;
             body.telefono = this.body.telefono;
             body.correoElectronico = this.body.correoElectronico;
             body.bic = this.body.bic;
@@ -153,7 +173,6 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
           console.log(error);
         },
         () => {
-          this.paisSelected = this.solicitud.idPais;
           this.solicitud.duplicado = true;
           this.solicitud.idSolicitud = this.solicitud.idsolicitudincorporacion;
           this.sigaServices
@@ -195,7 +214,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     if (
       this.cedeDatos == true &&
       this.modoLectura == false &&
-      this.solicitud.estadoCivil &&
+      this.solicitud.idEstadoCivil &&
       this.body.idPais != "" &&
       this.body.idPais != undefined &&
       this.poblacionSelected != "" &&
@@ -209,11 +228,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       this.body.telefono != "" &&
       this.body.telefono != undefined &&
       this.body.correoElectronico != "" &&
-      this.body.correoElectronico != undefined &&
-      this.body.cuentaBancaria != "" &&
-      this.body.cuentaBancaria != undefined &&
-      this.body.titular != "" &&
-      this.body.titular != undefined
+      this.body.correoElectronico != undefined
     ) {
       return true;
     } else {
@@ -310,6 +325,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       result => {
         this.estadoCivil = result.combooItems;
         this.progressSpinner = false;
+        this.getEstadoCivilDesc();
       },
       error => {
         console.log(error);
@@ -333,12 +349,14 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       .get("solicitudIncorporacion_tipoIdentificacion")
       .subscribe(
         result => {
-          let tipos = result.combooItems;
-          this.progressSpinner = false;
-          let identificacion = tipos.find(
-            item => item.value === this.solicitud.idTipoIdentificacion
-          );
-          this.solicitud.tipoIdentificacion = identificacion.label;
+          if (this.solicitud.tipoIdentificacion != undefined) {
+            let tipos = result.combooItems;
+            this.progressSpinner = false;
+            let identificacion = tipos.find(
+              item => item.value === this.solicitud.tipoIdentificacion
+            );
+            this.solicitud.tipoIdentificacion = identificacion.label;
+          }
         },
         error => {
           console.log(error);
@@ -359,9 +377,19 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
     );
   }
 
+  getEstadoCivilDesc() {
+    if (this.solicitud.idEstadoCivil != "undefined" && this.solicitud.idEstadoCivil != null) {
+      let estCivil = this.estadoCivil.find(
+        item => item.value === this.solicitud.idEstadoCivil
+      );
+      this.body.estadoCivil = estCivil.label;
+    }
+  }
+
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
     let poblacionBuscada = filtro;
+    console.log(this.body.nombrePoblacion);
     this.sigaServices
       .getParam(
         "direcciones_comboPoblacion",
@@ -373,7 +401,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
           this.getLabelbyFilter(this.poblaciones);
           this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
         },
-        error => {},
+        error => { },
         () => {
           // this.isDisabledPoblacion = false;
           this.progressSpinner = false;
@@ -541,7 +569,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.showFailMensaje(error.valorRespuesta);
           this.progressSpinner = true;
         },
-        () => {}
+        () => { }
       );
   }
 
