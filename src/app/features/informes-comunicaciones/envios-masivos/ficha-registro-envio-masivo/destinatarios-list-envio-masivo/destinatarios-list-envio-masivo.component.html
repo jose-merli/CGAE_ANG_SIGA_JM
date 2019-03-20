@@ -97,8 +97,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button [disabled]="nuevaConsulta || selectMultiple || selectAll" (click)="addConsulta()" pButton type="button"
-          icon="fa fa-plus" iconPos="left" label="Añadir"></button>
+        <button [disabled]="nuevaConsulta || selectMultiple || selectAll || noEditar" (click)="addConsulta()" pButton
+          type="button" icon="fa fa-plus" iconPos="left" label="Añadir"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button [disabled]="!nuevaConsulta" (click)="asociar()" pButton type="button" icon="far fa-save" iconPos="left"

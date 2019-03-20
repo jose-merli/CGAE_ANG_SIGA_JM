@@ -877,14 +877,19 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isPlantillaUnica(){
+    let isUnica = true;
     if(this.body.plantillas != null){
-      this.body.plantillas.forEach(element => {
-        if(element.guardada){
-          return false;
-        }
-      });
+      if(this.body.plantillas.length == 1){
+        isUnica = true;
+      }else{
+        this.body.plantillas.forEach(element => {
+          if(isUnica && element.guardada){
+            isUnica = false;
+          }
+        });
+      }      
     }
-    return true;
+    return isUnica;
   }
 
   eliminarPlantilla(dato) {

@@ -10,5 +10,6 @@ export class ConfigEnviosMasivosItem {
   fechaProgramada: Date;
   fechaCreacion: Date;
   caracteresSMS: String;
+  tipoEnvio: String;
   constructor() { }
 }

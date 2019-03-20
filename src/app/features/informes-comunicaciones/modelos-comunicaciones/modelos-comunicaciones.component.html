@@ -117,14 +117,14 @@
           <button *ngIf="showHistorico" (click)="getHistorico( 'hidden')" pButton type="button" icon="fa fa-undo
          " iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
 
-          <button *ngIf="selectedDatos && selectedDatos !='' && !showHistorico" (click)="onBorrar(selectedDatos)
+          <button [disabled]="!(selectedDatos && selectedDatos !='' && !showHistorico)" (click)="onBorrar(selectedDatos)
          " pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos !='' && showHistorico" (click)="rehabilitar(selectedDatos)
+          <button [disabled]="!(selectedDatos && selectedDatos.length ==1)" (click)="onDuplicar(selectedDatos)" pButton type="button" icon="fa
+          fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+          <button *ngIf="showHistorico" [disabled]="!(selectedDatos && selectedDatos !='')" (click)="rehabilitar(selectedDatos)
          " pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.message.rehabilitar' | translate}}"></button>
           <button *ngIf="!showHistorico" (click)="getHistorico( 'visible')" pButton type="button" icon="fa fa-history
-         " iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length ==1" (click)="onDuplicar(selectedDatos)" pButton type="button" icon="fa
-          fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+         " iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>          
         </div>
       </p-footer>
 

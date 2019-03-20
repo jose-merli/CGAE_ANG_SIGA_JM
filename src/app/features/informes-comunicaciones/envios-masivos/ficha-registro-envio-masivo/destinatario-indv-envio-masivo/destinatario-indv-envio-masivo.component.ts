@@ -94,30 +94,30 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
       },
       {
         field: 'correoElectronico',
-        header: 'Correo electrónico'
+        header: 'censo.datosDireccion.literal.correo'
       },
       {
         field: 'movil',
-        header: 'Movil'
+        header: 'censo.datosDireccion.literal.movil'
       },
       {
         field: 'domicilio',
-        header: 'Domicilio'
+        header: 'solicitudModificacion.especifica.domicilio.literal'
       }
     ];
 
     this.cols2 = [
       {
         field: "domicilio",
-        header: "Domicilio"
+        header: "solicitudModificacion.especifica.domicilio.literal"
       },
       {
         field: 'movil',
-        header: 'Movil'
+        header: 'censo.datosDireccion.literal.movil'
       },
       {
         field: 'correoElectronico',
-        header: 'Correo electrónico'
+        header: 'censo.datosDireccion.literal.correo'
       },
       {
         field: 'cp',
@@ -181,12 +181,14 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
     }
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   desasociar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: this.translateService.instant(
-        "informesycomunicaciones.plantillasenvio.ficha.mensajeDesasociar"
-      ),
+      message: "¿Está seguro de desasociar los destinatarios seleccionados?",
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarDesasociar(dato);
