@@ -23,6 +23,7 @@ export class PerfilesFichaComponent implements OnInit {
   progressSpinner: boolean = false;
   soloLectura: boolean = false;
   editar: boolean = true;
+  numeroPerfilesExistentes: number = 0;
   
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -98,6 +99,7 @@ export class PerfilesFichaComponent implements OnInit {
       n => {
         // coger etiquetas de una persona juridica
         this.perfilesNoSeleccionados = n.combooItems;
+        this.numeroPerfilesExistentes = this.perfilesNoSeleccionados.length;
         this.perfilesNoSeleccionadosInicial = JSON.parse(
           JSON.stringify(this.perfilesNoSeleccionados)
         );
@@ -125,11 +127,12 @@ export class PerfilesFichaComponent implements OnInit {
           //por cada perfil seleccionado lo eliminamos de la lista de existentes
           if(this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial){
             this.perfilesSeleccionados.forEach(element => {
-              let x = this.perfilesNoSeleccionadosInicial.indexOf(element);
+              let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados,element);
               if(x > -1){
-                this.perfilesNoSeleccionadosInicial.splice(x,1);
+                this.perfilesNoSeleccionados.splice(x,1);
               }
             });
+            this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
           }
         },
         err => {
@@ -232,5 +235,14 @@ export class PerfilesFichaComponent implements OnInit {
 
   restablecer() {
     this.getDatos();
+  }
+
+  arrayObjectIndexOf(arr, obj){
+    for(var i = 0; i < arr.length; i++){
+        if(arr[i].value == obj.value){
+            return i;
+        }
+    };
+    return -1;
   }
 }

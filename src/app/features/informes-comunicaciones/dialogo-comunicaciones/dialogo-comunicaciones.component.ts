@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from '../../../models/DialogoComunicacionItem';
 import { ModelosComunicacionesItem } from '../../../models/ModelosComunicacionesItem';
@@ -9,6 +9,7 @@ import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { saveAs } from "file-saver/FileSaver";
 import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
+import { DataTable } from "primeng/datatable";
 
 @Component({
   selector: 'app-dialogo-comunicaciones',
@@ -52,6 +53,9 @@ export class DialogoComunicacionesComponent implements OnInit {
   plantillas: any[] = [];
   idConsulta: string;
   dato: any;
+
+  @ViewChild("table")
+  tableModelos: DataTable;
   
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
@@ -261,6 +265,7 @@ export class DialogoComunicacionesComponent implements OnInit {
         );
     } else {
       this.showFail("No se ha seleccionado nigún dato");
+      this.progressSpinner = false;
     }
   }
 
