@@ -193,10 +193,10 @@ export class DocumentosComponent implements OnInit {
       },
       err => {
         console.log(err);
-        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
-        );
+        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste"));
+        this.progressSpinner = false;
       }, () =>{
-        this.progressSpinner=false
+        this.progressSpinner = false;
       });
   }
 
