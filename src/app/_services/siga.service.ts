@@ -372,6 +372,7 @@ export class SigaServices {
     datosNotificaciones_getTypeWhere: "datosNotificaciones/getTypeWhere",
     datosNotificaciones_getTemplates: "datosNotificaciones/getTemplates",
     datosNotificaciones_getTypeSend: "datosNotificaciones/getTypeSend",
+    datosNotificaciones_getPlantillas: "datosNotificaciones/getPlantillas",
 
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",
