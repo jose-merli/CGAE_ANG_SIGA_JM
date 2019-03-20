@@ -199,7 +199,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("isFormacionCalendarByStartInscripcion");
     sessionStorage.removeItem("isFormacionCalendarByEndInscripcion");
     sessionStorage.removeItem("courseCurrent");
-    sessionStorage.removeItem("curso");
     sessionStorage.removeItem("isInscripcion");
   }
 

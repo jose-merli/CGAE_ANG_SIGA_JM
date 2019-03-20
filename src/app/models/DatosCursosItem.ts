@@ -35,7 +35,7 @@ export class DatosCursosItem {
   adjunto: string;
   adicional: string;
   encuesta: string;
-  tipoServicios: ComboItem[];
+  tipoServicios: String;
 
   flagArchivado: number;
   autovalidacionInscripcion: string;
