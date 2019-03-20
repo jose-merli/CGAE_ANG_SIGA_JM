@@ -9,8 +9,7 @@
             <div class="form-row">
                 <div class="form-group col-lg-2 col-md-2">
                     <label>Fecha programada</label>
-
-                    <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
+                    <app-fecha [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
                         showTime="true"></app-fecha>
                 </div>
             </div>
@@ -28,8 +27,11 @@
                         <th style="width: 3em">
                             <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
                         </th>
-                        <th *ngFor="let col of columns">
+                        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                             {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                            col.field, 'contains')">
                         </th>
                     </tr>
                 </ng-template>
@@ -43,7 +45,7 @@
                         <td *ngFor="let col of columns" pEditableColumn>
                             <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
                             <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillas'"
-                                [(ngModel)]="dato.idPlantillaEnvio" [options]="dato.plantillas" class="select-form"
+                                [(ngModel)]="dato.idPlantillaEnvio" [options]="plantillas" class="select-form"
                                 (onChange)="onChangePlantillaEnvio(dato)"></p-dropdown>
                             <span *ngIf="col.field=='nombre'">{{dato[col.field]}}</span>
                             <span *ngIf="col.field=='tipoEnvio'">{{dato[col.field]}}</span>

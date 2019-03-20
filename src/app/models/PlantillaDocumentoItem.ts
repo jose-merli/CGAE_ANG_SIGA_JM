@@ -4,5 +4,6 @@ export class PlantillaDocumentoItem {
   idioma: String;
   idIdioma: String;
   ruta: String;
+  guardada: boolean;
   constructor() { }
 }

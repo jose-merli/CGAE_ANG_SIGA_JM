@@ -30,7 +30,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   institucionActual: any = [];
   soloLectura: boolean = false;
   editar: boolean = true;
-
+  plantillas: any = [];
   fichasPosibles = [
     {
       key: "generales",
@@ -69,6 +69,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.getClasesComunicaciones();
 
+    this.getPlantillas();
+    
     if (
       sessionStorage.getItem("soloLectura") != null &&
       sessionStorage.getItem("soloLectura") != undefined &&
@@ -161,6 +163,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
                       JSON.stringify(this.body)
                     );
                     sessionStorage.removeItem("crearNuevoModelo");
+                    this.sigaServices.notifyRefreshPerfiles();
                   },
                   err => {
                     console.log(err);
@@ -323,5 +326,39 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       event.currentTarget.value = "";
     }
+  }
+
+  getPlantillas() {
+    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
+      data => {
+        this.plantillas = data.combooItems;
+        this.plantillas.unshift({ label: "Seleccionar", value: "" });
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  };
+
+  onChangePlantilla(e) {
+    let idPlantillaEnvios = e.value;
+    if (idPlantillaEnvios != "") {
+      this.getTipoEnvios(idPlantillaEnvios);
+    }
+  }
+
+  getTipoEnvios(idPlantillaEnvios) {
+    this.sigaServices
+      .post("modelos_detalle_tipoEnvioPlantilla", idPlantillaEnvios)
+      .subscribe(
+        data => {
+          this.body.tipoEnvio = JSON.parse(data["body"]).tipoEnvio;
+          this.body.idTipoEnvio = JSON.parse(data["body"]).idTipoEnvios;
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 }

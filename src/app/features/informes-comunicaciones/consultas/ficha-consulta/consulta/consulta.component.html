@@ -53,7 +53,7 @@
       <div class="text-right main-button">
         <button [disabled]="!editar" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
         <button [disabled]="!editar" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-        <button (click)="obtenerParametros()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="navigateComunicar()" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
       </div>
     </div>
   </div>

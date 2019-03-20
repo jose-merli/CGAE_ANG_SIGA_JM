@@ -41,7 +41,9 @@ export class ConsultaComponent implements OnInit {
   operadoresTexto: any[];
   operadoresNumero: any[];
   editar: boolean = true;
-
+  idClaseComunicacion: String = "";
+  currentRoute: String = "";
+  
   fichasPosibles = [
     {
       key: "generales",
@@ -62,6 +64,7 @@ export class ConsultaComponent implements OnInit {
 
   ngOnInit() {
 
+    this.currentRoute = this.router.url;
     this.sigaServices.consultasRefresh$.subscribe(() => {
       this.getDatos();
     });
@@ -283,6 +286,8 @@ export class ConsultaComponent implements OnInit {
   isButtonDisabled() {
     if (this.consultaEditada) {
       return true;
+    }else if(this.body.idClaseComunicacion != "5" || this.body.idObjetivo != "4"){
+      return true;
     }
     return false;
   }
@@ -452,6 +457,28 @@ export class ConsultaComponent implements OnInit {
       }
 
     ]
+  }
+
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de adminsitracion es 4
+    sessionStorage.setItem("idModulo", '4');
+    this.getDatosComunicar();
+  }
+
+  getDatosComunicar() {
+    let rutaClaseComunicacion = this.currentRoute.toString();
+    sessionStorage.removeItem('datosComunicar');
+    sessionStorage.setItem('idConsulta', this.body.idConsulta);
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.router.navigate(["/dialogoComunicaciones"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   fillFechaValor(event, dato) {

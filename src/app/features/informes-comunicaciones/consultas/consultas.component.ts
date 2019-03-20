@@ -9,10 +9,12 @@ import { DataTable } from "primeng/datatable";
 import { ConsultasItem } from "../../../models/ConsultasItem";
 import { ConsultasSearchItem } from "../../../models/ConsultasSearchItem";
 import { ConsultasObject } from "../../../models/ConsultasObject";
+import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
+import { saveAs } from "file-saver/FileSaver";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -52,6 +54,16 @@ export class ConsultasComponent implements OnInit {
   fichaBusqueda: boolean = false;
   comboGenerica: any = [];
 
+  valores: CampoDinamicoItem[];
+  operadoresTexto: any[];
+  operadoresNumero: any[];
+  camposDinamicos: any [] = [];
+  showValores: boolean = false;
+  sentencia: string;
+
+  idClaseComunicacion: String;
+  currentRoute: String = "";
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -64,6 +76,8 @@ export class ConsultasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentRoute = this.router.url;
+    
     sessionStorage.removeItem("consultasSearch");
     this.getInstitucion();
 
@@ -119,6 +133,59 @@ export class ConsultasComponent implements OnInit {
         value: 40
       }
     ];
+
+    this.valores = [];
+
+    this.operadoresTexto = [
+      {
+        label: '=',
+        value: '='
+      },
+      {
+        label: '!=',
+        value: '!='
+      },
+      {
+        label: 'IS NULL',
+        value: 'IS NULL'
+      },
+      {
+        label: 'LIKE',
+        value: 'LIKE'
+      }
+    ];
+
+    this.operadoresNumero = [
+      {
+        label: '=',
+        value: '='
+      },
+      {
+        label: '!=',
+        value: '!='
+      },
+      {
+        label: '>',
+        value: '>'
+      },
+      {
+        label: '>=',
+        value: '>='
+      },
+      {
+        label: '<',
+        value: '<'
+      },
+      {
+        label: '<=',
+        value: '<='
+      },
+      {
+        label: 'IS NULL',
+        value: 'IS NULL'
+      }
+    ]
+  
   }
 
   recuperarBusqueda() {
@@ -474,5 +541,124 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
+  }
+
+  obtenerParametros(dato) {
+    let consultaEjecutar = dato[0];
+    this.sentencia = consultaEjecutar.sentencia
+    let consulta = {
+      idClaseComunicacion: consultaEjecutar.idClaseComunicacion,
+      sentencia: this.sentencia
+    };
+
+    this.sigaServices.post("consultas_obtenerCamposDinamicos", consulta)
+      .subscribe(data => {
+        console.log(data);
+        this.valores = JSON.parse(data.body).camposDinamicos;
+        if (this.valores != undefined && this.valores != null && this.valores.length > 0) {
+          this.valores.forEach(element => {
+            if (element.valorDefecto != undefined && element.valorDefecto != null) {
+              element.valor = element.valorDefecto;
+            }
+            if (element.valores != undefined && element.valores != null) {
+              let empty = {
+                ID: 0,
+                DESCRIPCION: 'Seleccione una opción...'
+              }
+              element.valores.unshift(empty);
+            }
+            if (element.operacion == "OPERADOR") {
+              element.operacion = this.operadoresNumero[0].value;
+            }
+          });
+          this.showValores = true;
+        } else {
+          this.ejecutar();
+        }
+      }, error => {
+        this.showFail("Error al obtener los parámetros dinámicos disponibles")
+      });
+  }
+  
+  ejecutar() {
+    this.progressSpinner = true;
+
+    this.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
+
+    if (this.camposDinamicos != null && typeof this.camposDinamicos != "undefined") {
+      this.camposDinamicos.forEach(element => {
+        if (element.valor != undefined && typeof element.valor == "object") {
+          element.valor = element.valor.ID;
+        }
+        if (element.ayuda == null || element.ayuda == "undefined") {
+          element.ayuda = "-1";
+        }
+      });
+    }
+
+    let consultaEjecutar = {
+      sentencia : this.sentencia,
+      camposDinamicos: this.camposDinamicos
+    }
+
+    this.sigaServices
+      .postDownloadFiles("consultas_ejecutarConsulta", consultaEjecutar)
+      .subscribe(data => {
+        debugger;
+        this.showValores = false;
+        if (data == null) {
+          this.showInfo("La consulta no devuelve resultados");
+        } else {
+          saveAs(data, "ResultadoConsulta.xlsx");
+        }
+      }, error => {
+        console.log(error);
+        this.progressSpinner = false;
+        this.showFail("Error al ejecutar la consulta");
+      }, () => {
+        this.progressSpinner = false;
+      });
+
+  }
+
+  validarCamposDinamicos() {
+    let valido = true;
+    this.valores.forEach(element => {
+      if (valido) {
+        if (!element.valorNulo) {
+          if (element.valor != undefined && element.valor != null && element.valor != "") {
+            valido = true;
+          } else {
+            valido = false;
+          }
+        } else {
+          valido = true;
+        }
+      }
+    });
+    return valido;
+  }
+
+  navigateComunicar(selectedDatos) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de adminsitracion es 4
+    sessionStorage.setItem("idModulo", '4');
+    this.getDatosComunicar(selectedDatos);
+  }
+
+  getDatosComunicar(selectedDatos) {
+    let dato = selectedDatos[0];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+    sessionStorage.removeItem('datosComunicar');
+    sessionStorage.setItem('idConsulta', dato.idConsulta);
+    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
+      data => {
+        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+        this.router.navigate(["/dialogoComunicaciones"]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 }

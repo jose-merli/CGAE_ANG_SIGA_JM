@@ -96,6 +96,8 @@ export class SigaServices {
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
+    busquedaPer: "busquedaPer",
+    busquedaPer_institucion: "busquedaPerInstitucion",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
     busquedaPer_searchFisica: "busquedaPerJuridica/searchFisica",
     busquedaPerJuridica_etiquetasPersona:
@@ -586,6 +588,15 @@ export class SigaServices {
     enviosMasivos_duplicar: "enviosMasivos/duplicarEnvio ",
     enviosMasivos_etiquetas: "enviosMasivos/detalle/etiquetas",
     enviosMasivos_etiquetasEnvio: "enviosMasivos/detalle/etiquetasEnvio ",
+    enviosMasivos_consultasDestAsociadas: 'enviosMasivos/detalle/ConsultasEnvAsociadas',
+    enviosMasivos_consultasDestDisp: 'enviosMasivos/detalle/consultasDestinatariosDisp',
+    enviosMasivos_consultasDestinatarios: 'enviosMasivos/detalle/consultasDest',
+    enviosMasivos_asociarConsulta: 'enviosMasivos/detalle/asociarConsulta',
+    enviosMasivos_desAsociarConsulta: 'enviosMasivos/detalle/desAsociarConsulta',
+    enviosMasivos_destinatariosIndv: 'enviosMasivos/detalle/destinatariosIndv',
+    enviosMasivos_asociarDestinatariosIndv: 'enviosMasivos/detalle/asociarDestinatariosIndv',
+    enviosMasivos_desAsociarDestinatariosIndv: 'enviosMasivos/detalle/desAsociarDestinatarioIndv',
+    enviosMasivos_direccionesDestinatarioIndv: 'enviosMasivos/detalle/direccionesDestinatarioIndv',
     enviosMasivos_guardarEtiquetas: "enviosMasivos/detalle/guardarEtiquetas",
     enviosMasivos_subirDocumento: "enviosMasivos/detalle/subirDocumento",
     enviosMasivos_detallePlantilla: "enviosMasivos/detalle/detallePlantilla",
@@ -657,6 +668,7 @@ export class SigaServices {
     plantillasDoc_consultas_guardar: "plantillasDoc/consultas/guardar",
     plantillasDoc_consultas_borrar: "plantillasDoc/consultas/borrar",
     plantillasDoc_consultas: "plantillasDoc/consultas",
+    plantillasDoc_consulta: "plantillasDoc/consulta",
     plantillasDoc_consultas_historico: "plantillasDoc/consultas/historico",
     plantillasDoc_plantillas: "plantillasDoc/plantillas",
     plantillasDoc_guardar: "plantillasDoc/guardar",
@@ -664,6 +676,7 @@ export class SigaServices {
     plantillasDoc_insertarPlantilla: "plantillasDoc/insertarPlantilla",
     plantillasDoc_subirPlantilla: "plantillasDoc/subirPlantilla",
     plantillasDoc_plantillas_borrar: "plantillasDoc/borrar",
+    plantillasDoc_descargarPlantilla: "plantillasDoc/descargarPlantilla",
 
     //Diálogo comunicación
     dialogo_claseComunicaciones: "dialogoComunicacion/clasesComunicacion",
@@ -686,10 +699,12 @@ export class SigaServices {
   private iframeRemove = new Subject<any>();
   private consultasRefresh = new Subject<any>();
   private deshabilitarEditar = new Subject<any>();
+  private perfilesRefresh = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
   deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
+  perfilesRefresh$ = this.perfilesRefresh.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -914,6 +929,10 @@ export class SigaServices {
 
   notifyRefreshEditar() {
     this.deshabilitarEditar.next();
+  }
+
+  notifyRefreshPerfiles() {
+    this.perfilesRefresh.next();
   }
 
   postSendContentAndParameter(
