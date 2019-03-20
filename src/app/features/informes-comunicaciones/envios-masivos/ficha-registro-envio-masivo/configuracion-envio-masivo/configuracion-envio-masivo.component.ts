@@ -14,7 +14,7 @@ import { truncate } from 'fs';
 export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
 
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   editar: boolean = false;
@@ -153,8 +153,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
-  onChangeTipoEnvio() {
-    this.getPlantillas();
+  onChangeTipoEnvio(e) {
+    if (e != null) {
+      this.body.tipoEnvio = e.originalEvent.currentTarget.innerText;
+    }
+    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != '')
+      this.getPlantillas();
   }
 
   getPlantillas() {
@@ -298,17 +302,12 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   isGuardarDisabled() {
+
     if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.idPlantillaEnvios != ''
       && this.body.idPlantillaEnvios != null && this.body.descripcion != '' && this.body.descripcion != null) {
       return false;
     }
     return true;
   }
-
-
-
-
-
-
 
 }
