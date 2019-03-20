@@ -14,4 +14,7 @@ export class NotificacionEventoItem {
   fechaInicio: string;
   fechaFin: string;
   fechaBaja: string;
+  descripcionMedida: string;
+  descripcionAntes: string;
+
 }

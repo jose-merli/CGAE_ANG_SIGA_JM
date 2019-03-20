@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, NavigationEnd } from '@angular/router';
 import { saveAs } from "file-saver/FileSaver";
 import {
   AutoComplete,
@@ -19,7 +19,7 @@ import { TranslateService } from "../../../commons/translate";
 import { CalendarItem } from "../../../models/CalendarItem";
 import { EventoItem } from "../../../models/EventoItem";
 import { EventoObject } from "../../../models/EventoObject";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { NotificacionEventoItem } from '../../../models/NotificacionEventoItem';
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { esCalendar } from "../../../utils/calendar";
 import { SigaServices } from "../../../_services/siga.service";
@@ -28,6 +28,7 @@ import { DatosPersonaEventoItem } from "../../../models/DatosPersonaEventoItem";
 import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObject";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { FechaComponent } from "../../../commons/fecha/fecha.component";
+import { find } from "../../../../../node_modules/rxjs/operators";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -50,6 +51,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   selectedTipoLaboral = false;
   path: string;
   disabledIsLetrado;
+  filaEditable: boolean = false;
 
   es: any = esCalendar;
 
@@ -114,6 +116,15 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   rowsPerPage: any = [];
   colsNotifications: any = [];
   sortO: number = 1;
+  comboTemplates;
+  comboMeasureUnit;
+  comboAfterBefore;
+  comboNotifyType;
+  pressNewNotificacion: boolean = false;
+  newNotificacion: NotificacionEventoItem;
+  editNotificacion: boolean = false;
+  updateNotificationList: NotificacionEventoItem[] = [];
+  deleteNotificacion: boolean = false;
 
   historico: boolean = false;
   openFicha: boolean = false;
@@ -169,6 +180,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.getColsResults();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
+    this.getComboNotificaciones();
 
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
@@ -375,20 +387,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       this.path = "formacionInicioInscripcion";
 
-      let curso = JSON.parse(sessionStorage.getItem("curso"));
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      if (curso.idCurso != undefined && curso.idCurso != null) {
-        this.idCurso = curso.idCurso;
-        curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
-        this.searchEvent(curso);
+      if (this.curso.idCurso != undefined && this.curso.idCurso != null) {
+        this.idCurso = this.curso.idCurso;
+        this.curso.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+        this.searchEvent(this.curso);
 
+      } else if (this.curso.idEventoInicioInscripcion != undefined && this.curso.idEventoInicioInscripcion != "undefined") {
+        this.searchEventByIdEvento(this.curso.idEventoInicioInscripcion);
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(curso.fechaInscripcionDesdeDate);
-        this.newEvent.end = new Date(curso.fechaInscripcionDesdeDate);
+        this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
+        this.newEvent.end = new Date(this.curso.fechaInscripcionDesdeDate);
 
         //Indicamos que el limite que puede durar el evento
         this.invalidDateMin = new Date(
@@ -432,20 +446,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.path = "formacionFinInscripcion";
       this.disabledToday = false;
 
-      let curso = JSON.parse(sessionStorage.getItem("curso"));
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
 
-      if (curso.idCurso != undefined && curso.idCurso != null) {
-        this.idCurso = curso.idCurso;
-        curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
-        this.searchEvent(curso);
+      if (this.curso.idCurso != undefined && this.curso.idCurso != null) {
+        this.idCurso = this.curso.idCurso;
+        this.curso.idTipoEvento = this.valorTipoEventoFinInscripcion;
+        this.searchEvent(this.curso);
 
+      } else if (this.curso.idEventoFinInscripcion != undefined && this.curso.idEventoFinInscripcion != "undefined") {
+        this.searchEventByIdEvento(this.curso.idEventoFinInscripcion);
       } else {
         this.newEvent = new EventoItem();
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(curso.fechaInscripcionHastaDate);
-        this.newEvent.end = new Date(curso.fechaInscripcionHastaDate);
+        this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
+        this.newEvent.end = new Date(this.curso.fechaInscripcionHastaDate);
 
         //Indicamos que el limite que puede durar el evento
         this.invalidDateMin = new Date(
@@ -837,6 +853,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         url = "fichaEventos_saveEventCalendar";
         this.callSaveEvent(url);
       }
+    } else if (this.newEvent.idEvento != undefined) {
+      url = "fichaEventos_updateEventCalendar";
+      this.callSaveEvent(url);
     } else {
       url = "fichaEventos_saveEventCalendar";
       this.callSaveEvent(url);
@@ -856,6 +875,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.idEstadoEvento = JSON.parse(
             JSON.stringify(this.initEvent)
           ).idEstadoEvento;
+
         } else {
           this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
@@ -866,21 +886,27 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.modoEdicionEventoByAgenda = true;
             this.createEvent = true;
             sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
-            this.curso = JSON.parse(sessionStorage.getItem("curso"));
+            this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
             if (
               JSON.parse(
                 sessionStorage.getItem("isFormacionCalendarByStartInscripcion")
               )
             ) {
               this.curso.idEventoInicioInscripcion = JSON.parse(data.body).id;
-              this.saveCourse();
+              this.curso.fechaInscripcionDesdeDate = this.newEvent.start;
+              sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
+              // this.saveCourse();
             } else if (
               JSON.parse(
                 sessionStorage.getItem("isFormacionCalendarByEndInscripcion")
               )
             ) {
               this.curso.idEventoFinInscripcion = JSON.parse(data.body).id;
-              this.saveCourse();
+              this.curso.fechaInscripcionHastaDate = this.newEvent.end;
+              sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
+              // this.saveCourse();
             }
             //Obtenemos las notificaciones del evento del calendario especifico, dentro del id se ha guardado el idEvento creado
             if (JSON.parse(data.body).id != "") {
@@ -1110,6 +1136,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     });
   }
 
+
   validateForm() {
     let validateFormDatos: boolean = false;
     let validateFormRepeticion: boolean = false;
@@ -1303,6 +1330,89 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     );
   }
 
+  searchEventByIdEvento(idEvento) {
+    this.sigaServices
+      .getParam(
+        "fichaEventos_searchEventByIdEvento",
+        "?idEvento=" + idEvento
+      )
+      .subscribe(
+        evento => {
+
+          if (evento != "") {
+            this.newEvent = JSON.parse(JSON.stringify(evento));
+            this.getComboCalendar();
+            this.getEventNotifications();
+
+            this.modoEdicionEvento = true;
+            this.createEvent = true;
+            if (
+              sessionStorage.getItem("isFormacionCalendarByStartInscripcion") ==
+              "true"
+            ) {
+              this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
+              this.newEvent.end = new Date(this.curso.fechaInscripcionDesdeDate);
+              this.newEvent.idTipoEvento = this.valorTipoEventoInicioInscripcion;
+              this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+
+              //Indicamos que el limite que puede durar el evento
+              this.invalidDateMin = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+              this.invalidDateMax = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+
+              this.invalidDateMin.setHours(this.newEvent.start.getHours());
+              this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+              this.invalidDateMax.setHours(23);
+              this.invalidDateMax.setMinutes(59);
+            } else if (
+              sessionStorage.getItem("isFormacionCalendarByEndInscripcion") ==
+              "true"
+            ) {
+              this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
+              this.newEvent.end = new Date(this.curso.fechaInscripcionHastaDate);
+              this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
+              this.newEvent.idTipoCalendario = this.valorTipoFormacion;
+
+              //Indicamos que el limite que puede durar el evento
+              this.invalidDateMin = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+              this.invalidDateMax = new Date(
+                JSON.parse(JSON.stringify(this.newEvent.start))
+              );
+
+              this.invalidDateMin.setHours(this.newEvent.start.getHours());
+              this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+              this.invalidDateMax.setHours(23);
+              this.invalidDateMax.setMinutes(59);
+            }
+
+            //Se guarda el evento con los valores iniciales para restablecer los valores
+            this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+            this.initEvent.start = new Date(evento.start);
+            this.initEvent.end = new Date(evento.end);
+
+
+          } else {
+            this.newEvent = new EventoItem();
+            this.createEvent = false;
+            this.getComboCalendar();
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   formadoresDistintosCheck() {
     if (JSON.stringify(this.checkFormadores) != JSON.stringify(this.results)) {
       return true;
@@ -1313,24 +1423,33 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   //FUNCIONES FICHA NOTIFICACIONES
 
   getColsResults() {
+
     this.colsNotifications = [
       {
-        field: "nombreTipoNotificacion",
-        header: "formacion.datosNotificaciones.tipoNotificacion.cabecera"
-      },
-      {
-        field: "descripcionCuando",
-        header: "formacion.datosNotificaciones.cuando.cabecera"
-      },
-      {
-        field: "nombrePlantilla",
-        header: "menu.facturacion.plantillas"
+        field: "idPlantilla",
+        header: "menu.facturacion.plantillas",
+        value: "nombrePlantilla"
       },
       {
         field: "tipoEnvio",
         header: "envios.plantillas.literal.tipoenvio"
+      },
+      {
+        field: "cuando",
+        header: "formacion.datosNotificaciones.cuando.cabecera"
+      },
+      {
+        field: "idUnidadMedida",
+        header: "formacion.datosNotificaciones.unidadMedida.literal",
+        value: "descripcionMedida"
+      },
+      {
+        field: "idTipoCuando",
+        header: "formacion.datosNotificaciones.antesDespues.literal",
+        value: "descripcionAntes"
       }
     ];
+
 
     this.rowsPerPage = [
       {
@@ -1364,6 +1483,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       .subscribe(
         n => {
           this.datosNotificaciones = n.eventNotificationItems;
+
+          this.datosNotificaciones.forEach(noti => {
+            noti.isMod = false;
+          });
+
+          sessionStorage.setItem("datosNotificacionesInit", JSON.stringify(this.datosNotificaciones));
+
           this.progressSpinner = false;
         },
         err => {
@@ -1378,6 +1504,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  editNotificaciones(dato) {
+    this.editNotificacion = true;
+    let datoFind = this.updateNotificationList.find(x => x.idNotificacion == dato.idNotificacion);
+
+    if (datoFind == undefined) {
+      let datoFindOriginal = this.datosNotificaciones.find(x => x.idNotificacion == dato.idNotificacion);
+      this.updateNotificationList.push(datoFindOriginal);
+    } else {
+      let idDatoFind = this.updateNotificationList.findIndex(x => x.idNotificacion == dato.idNotificacion);
+      this.updateNotificationList[idDatoFind] = dato;
+    }
   }
 
   irEditarNotificacion(id) {
@@ -1403,7 +1542,23 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   actualizaSeleccionadosNotifications(selectedDatosNotifications) {
+    this.deleteNotificacion = true;
     this.numSelectedNotification = selectedDatosNotifications.length;
+  }
+
+  actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications) {
+
+    this.datosNotificaciones.forEach(element => {
+      element.isMod = false;
+    });
+
+    if (selectedDatosNotifications.length == 1) {
+      let id = this.datosNotificaciones.findIndex(x => x.idNotificacion == this.selectedDatosNotifications[0].idNotificacion);
+      this.datosNotificaciones[id].isMod = true;
+    }
+
+    this.numSelectedNotification = selectedDatosNotifications.length;
+    this.tableNotifications.reset();
   }
 
   onChangeRowsPerPagesNotifications(event) {
@@ -1419,14 +1574,82 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   newNotification() {
-    sessionStorage.setItem("notificacionByEvento", "true");
-    sessionStorage.setItem("modoEdicionNotify", "false");
-    sessionStorage.setItem("fichaAbierta", "true");
-    sessionStorage.removeItem("isFormacionCalendar");
-    sessionStorage.setItem("isFormacionCalendar", "false");
-    sessionStorage.removeItem("evento");
-    sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
-    this.router.navigate(["/editarNotificacion"]);
+
+    this.pressNewNotificacion = true;
+    this.newNotificacion = new NotificacionEventoItem();
+    this.newNotificacion.idEvento = this.newEvent.idEvento;
+    let tipoEvento;
+    if (this.newEvent.idTipoEvento == this.valorTipoEventoGeneral) {
+      tipoEvento = "General";
+    } else if (this.newEvent.idTipoEvento == this.valorTipoEventoFestivo) {
+      tipoEvento = "Laboral";
+    } else {
+      tipoEvento = this.newEvent.tipoEvento;
+    }
+    let findTipoNotificacion = this.comboNotifyType.find(x => x.label === tipoEvento);
+    this.newNotificacion.idTipoNotificacion = findTipoNotificacion.value;
+
+    let notificacion = {
+      idNotificacion: "",
+      nombreTipoNotificacion: this.newEvent.tipoEvento,
+      idPlantilla: "",
+      tipoEnvio: "",
+      cuando: "",
+      idUnidadMedida: "",
+      idTipoCuando: ""
+    };
+
+    this.datosNotificaciones = [notificacion, ...this.datosNotificaciones];
+    // sessionStorage.setItem("notificacionByEvento", "true");
+    // sessionStorage.setItem("modoEdicionNotify", "false");
+    // sessionStorage.setItem("fichaAbierta", "true");
+    // sessionStorage.removeItem("isFormacionCalendar");
+    // sessionStorage.setItem("isFormacionCalendar", "false");
+    // sessionStorage.removeItem("evento");
+    // sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
+    // this.router.navigate(["/editarNotificacion"]);
+  }
+
+  restNotifications() {
+    this.datosNotificaciones = JSON.parse(sessionStorage.getItem("datosNotificacionesInit"));
+    this.pressNewNotificacion = false;
+    this.editNotificacion = false;
+    this.newNotificacion = undefined;
+    this.numSelectedNotification = 0;
+    this.tableNotifications.reset();
+  }
+
+  saveNotification() {
+    this.progressSpinner = true;
+    let url = "";
+    let notification;
+
+    if (this.pressNewNotificacion) {
+      url = "datosNotificaciones_saveNotification";
+      notification = this.newNotificacion;
+    } else {
+      url = "datosNotificaciones_updateNotification";
+
+      notification = new NotificacionEventoObject();
+      notification.eventNotificationItems = this.updateNotificationList;
+    }
+
+    this.sigaServices.post(url, notification).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.pressNewNotificacion = false;
+        this.editNotificacion = false;
+        this.selectedDatosNotifications = [];
+        this.numSelectedNotification = 0;
+        this.getEventNotifications();
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   onChangeSelectAllNotifications() {
@@ -1434,10 +1657,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.selectMultipleNotifications = true;
       this.selectedDatosNotifications = this.datosNotificaciones;
       this.numSelectedNotification = this.datosNotificaciones.length;
+      this.deleteNotificacion = true;
     } else {
       this.selectedDatosNotifications = [];
       this.numSelectedNotification = 0;
       this.selectMultipleNotifications = false;
+      this.deleteNotificacion = false;
     }
   }
 
@@ -1446,6 +1671,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (!this.selectMultipleNotifications) {
       this.selectedDatosNotifications = [];
       this.numSelectedNotification = 0;
+      this.deleteNotificacion = false;
     } else {
       this.selectAllNotifications = false;
       this.selectedDatosNotifications = [];
@@ -1485,6 +1711,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               this.selectMultipleNotifications = false;
               this.selectAllNotifications = false;
               this.selectedDatosNotifications = [];
+              this.deleteNotificacion = false;
+              this.numSelectedNotification = 0;
             },
             err => {
               this.progressSpinner = false;
@@ -1528,6 +1756,125 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         }
       );
+  }
+
+  getComboNotificaciones() {
+    this.getComboNotifyType();
+    this.getComboTemplate();
+    this.getComboMeasureUnit();
+    this.getComboAfterBefore();
+  }
+
+  getComboNotifyType() {
+    this.sigaServices.get("datosNotificaciones_getTypeNotifications").subscribe(
+      n => {
+        this.comboNotifyType = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboTemplate() {
+    this.progressSpinner = true;
+    this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
+      n => {
+        this.comboTemplates = n.combooItems;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboMeasureUnit() {
+    this.sigaServices.get("datosNotificaciones_getMeasuredUnit").subscribe(
+      n => {
+        this.comboMeasureUnit = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboAfterBefore() {
+    this.sigaServices.get("datosNotificaciones_getTypeWhere").subscribe(
+      n => {
+        this.comboAfterBefore = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeTemplates(event, dato) {
+
+    if (!this.pressNewNotificacion) {
+      this.editNotificacion = true;
+    }
+
+    let plantilla = this.comboTemplates.find(
+      x => x.value === event.value
+    );
+
+    let idPlantillaEnvio = event.value;
+    let idTipoEnvio = plantilla.subValue;
+
+    this.getTypeSend(idPlantillaEnvio, idTipoEnvio, dato);
+  }
+
+  getTypeSend(idPlantillaEnvio, idTipoEnvio, dato) {
+    let typeSend = [];
+    this.sigaServices
+      .getParam(
+        "datosNotificaciones_getTypeSend",
+        "?idPlantillaEnvio=" + idPlantillaEnvio + "&idTipoEnvio=" + idTipoEnvio
+      )
+      .subscribe(
+        n => {
+          typeSend = n.combooItems;
+
+          if (this.newNotificacion != undefined) {
+            this.newNotificacion.idTipoEnvio = typeSend[0].value;
+          }
+          dato.tipoEnvio = typeSend[0].label;
+          dato.idTipoEnvio = typeSend[0].value;
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  validateNotification() {
+    if (this.newNotificacion != undefined) {
+      if (
+        this.newNotificacion.idTipoEnvio == undefined ||
+        this.newNotificacion.idPlantilla == undefined ||
+        this.newNotificacion.idTipoCuando == undefined ||
+        this.newNotificacion.idUnidadMedida == undefined ||
+        this.newNotificacion.idTipoCuando == undefined ||
+        this.newNotificacion.cuando == undefined
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
   }
 
   //FUNCIONES FICHA FORMADORES
@@ -1978,19 +2325,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         "idEventoInicioInscripcion",
         this.newEvent.idEvento
       );
-      sessionStorage.setItem(
-        "fechaEventoInicioIncripcion",
-        JSON.stringify(this.newEvent.start)
-      );
+      this.curso.fechaInscripcionDesdeDate = this.initEvent.start;
+      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+
     } else if (
       this.path == "formacionFinInscripcion" &&
       sessionStorage.getItem("isFormacionCalendarByEndInscripcion") == "true"
     ) {
       sessionStorage.setItem("idEventoFinInscripcion", this.newEvent.idEvento);
-      sessionStorage.setItem(
-        "fechaEventoFinIncripcion",
-        JSON.stringify(this.newEvent.start)
-      );
+      this.curso.fechaInscripcionHastaDate = this.initEvent.end;
+      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+      sessionStorage.setItem("modoEdicionCurso", "true");
+
     } else if (sessionStorage.getItem("isSession") == "true") {
       sessionStorage.setItem("modoEdicionCurso", "true");
     }

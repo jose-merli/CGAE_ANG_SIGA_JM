@@ -355,6 +355,7 @@ export class SigaServices {
       "fichaEventos/getHistoricEventNotifications",
     fichaEventos_getEntryListCourse: "fichaEventos/getEntryListCourse",
     fichaEventos_searchEvent: "fichaEventos/searchEvent",
+    fichaEventos_searchEventByIdEvento: "fichaEventos/searchEventByIdEvento",
     fichaEventos_saveAssistancesCourse: "fichaEventos/saveAssistancesCourse",
     fichaEventos_saveFormadorEvent: "fichaEventos/saveFormadorEvent",
     fichaEventos_updateFormadorEvent: "fichaEventos/updateFormadorEvent",
@@ -371,6 +372,7 @@ export class SigaServices {
     datosNotificaciones_getTypeWhere: "datosNotificaciones/getTypeWhere",
     datosNotificaciones_getTemplates: "datosNotificaciones/getTemplates",
     datosNotificaciones_getTypeSend: "datosNotificaciones/getTypeSend",
+    datosNotificaciones_getPlantillas: "datosNotificaciones/getPlantillas",
 
     fichaColegialSociedades_searchSocieties:
       "fichaColegialSociedades/searchSocieties",

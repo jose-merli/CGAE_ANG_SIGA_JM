@@ -92,9 +92,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   table: DataTable;
   selectedDatos;
 
-  currentRoute: String;  
+  currentRoute: String;
   idClaseComunicacion: String;
-  keys: any []= [];
+  keys: any[] = [];
 
   fichasPosibles = [
     {
@@ -174,7 +174,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.comboColegios = n.combooItems;
-        this.arregloTildesCombo(this.comboColegios);
+        // this.arregloTildesCombo(this.comboColegios);
 
         this.getInstitucion();
 
@@ -913,14 +913,14 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
 
-  navigateComunicar(dato){
-    sessionStorage.setItem("filtrosBusquedaNoColegiadosFichaColegial",JSON.stringify(this.body));
-    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
-    sessionStorage.setItem("idModulo",'3');
-    this.getDatosComunicar();    
+  navigateComunicar(dato) {
+    sessionStorage.setItem("filtrosBusquedaNoColegiadosFichaColegial", JSON.stringify(this.body));
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    sessionStorage.setItem("idModulo", '3');
+    this.getDatosComunicar();
   }
-  
-  getDatosComunicar(){
+
+  getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
@@ -932,26 +932,26 @@ export class BusquedaNoColegiadosComponent implements OnInit {
             this.keys = JSON.parse(data['body']).keysItem;
             this.selectedDatos.forEach(element => {
               let keysValues = [];
-              this.keys.forEach(key =>{
-                if(element[key.nombre] != undefined){
+              this.keys.forEach(key => {
+                if (element[key.nombre] != undefined) {
                   keysValues.push(element[key.nombre]);
-                }            
+                }
               })
               datosSeleccionados.push(keysValues);
             });
-    
+
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
             console.log(err);
           }
-        );   
+        );
       },
       err => {
         console.log(err);
       }
-    );    
+    );
   }
 
   fillFechaNacimientoDesde(event) {

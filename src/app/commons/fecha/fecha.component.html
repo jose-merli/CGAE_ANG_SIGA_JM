@@ -2,7 +2,7 @@
   icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true" #calendar [minDate]="minDate"
   [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="false" (onBlur)="blur($event)">
   <p-footer>
-    <div class="main-button d-flex justify-content-end arreglo-fecha" >
+    <div class="main-button d-flex justify-content-end arreglo-fecha">
       <button [disabled]="disabledToday" (click)="fechaHoy()" pButton type="button" label="{{'general.boton.hoy'| translate }}"
         class="mr-auto"></button>
       <button [disabled]="disabledDelete" (click)="borrarFecha()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>

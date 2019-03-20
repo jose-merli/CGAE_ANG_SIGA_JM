@@ -16,7 +16,7 @@ import { SigaServices } from '../../_services/siga.service';
 @Component({
 	selector: 'app-fecha',
 	templateUrl: './fecha.component.html',
-	styleUrls: [ './fecha.component.scss' ],
+	styleUrls: ['./fecha.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class FechaComponent implements OnInit, AfterViewInit {
@@ -40,7 +40,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 
 	@ViewChild('calendar') calendar: Calendar;
 
-	constructor(private service: SigaServices) {}
+	constructor(private service: SigaServices) { }
 
 	ngOnInit() {
 		this.getRangeYear();
@@ -144,6 +144,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 		this.value = null;
 		this.valueChangeInput.emit(this.value);
 		this.fechaSelectedFromCalendar = true;
+		this.calendar.onClearButtonClick("");
 	}
 
 	fechaHoy() {

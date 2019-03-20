@@ -245,6 +245,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.cargarModoNuevoRegistro();
     }
 
+    if (sessionStorage.getItem("nombreTitular")) {
+      this.body.titular = JSON.parse(sessionStorage.getItem("nombreTitular"));
+    }
     // Listado ficheros anexos
 
     this.rowsPerPage = [
@@ -1107,7 +1110,45 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ) {
       this.formValido = true;
       this.getArrayTipoCuenta();
-      if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta.indexOf("C") !== -1) {
+      if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta != undefined) {
+        if (this.checkBody.tipoCuenta.indexOf("C") !== -1) {
+          let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
+          let numBancos = 0;
+          // let encontrado = 
+          for (let i in bancos) {
+            if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
+              numBancos++;
+            }
+          }
+          if (numBancos <= 1) {
+            this.validarCuentaSJCS();
+          } else if (this.body.tipoCuenta.indexOf("C") !== -1) {
+            this.validarCuentaCargo();
+          } else {
+            this.revisionCuentas = false;
+            this.registroEditable = sessionStorage.getItem("editar");
+            if (this.registroEditable == "false") {
+              if (this.isLetrado) {
+                this.solicitarGuardarRegistro();
+              } else {
+                this.guardarRegistro();
+              }
+            } else {
+              if (this.ocultarMotivo == false) {
+                this.displayAuditoria = true;
+              } else {
+                this.displayAuditoria = false;
+                this.editarRegistro();
+              }
+
+              this.showGuardarAuditoria = false;
+              this.body.motivo = null;
+            }
+          }
+        } else {
+          this.validarCuentaCargo();
+        }
+      } else if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta == undefined) {
         let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
         let numBancos = 0;
         // let encontrado = 
@@ -1141,8 +1182,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.body.motivo = null;
           }
         }
-      } else if (this.body.tipoCuenta.indexOf("C") !== -1) {
-        this.validarCuentaCargo();
       } else {
         this.revisionCuentas = false;
         this.registroEditable = sessionStorage.getItem("editar");
@@ -1806,6 +1845,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ngOnDestroy() {
     sessionStorage.removeItem("idPersona");
     sessionStorage.removeItem("allBanksData");
+    sessionStorage.removeItem("nombreTitular");
   }
   showFail(mensaje: string) {
     this.msgs = [];
