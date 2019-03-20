@@ -19,7 +19,7 @@ import { TranslateService } from "../../../commons/translate";
 import { CalendarItem } from "../../../models/CalendarItem";
 import { EventoItem } from "../../../models/EventoItem";
 import { EventoObject } from "../../../models/EventoObject";
-import { NotificacionEventoItem } from "../../../models/NotificacionEventoItem";
+import { NotificacionEventoItem } from '../../../models/NotificacionEventoItem';
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { esCalendar } from "../../../utils/calendar";
 import { SigaServices } from "../../../_services/siga.service";
@@ -28,6 +28,7 @@ import { DatosPersonaEventoItem } from "../../../models/DatosPersonaEventoItem";
 import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObject";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { FechaComponent } from "../../../commons/fecha/fecha.component";
+import { find } from "../../../../../node_modules/rxjs/operators";
 
 @Component({
   selector: "app-ficha-eventos",
@@ -50,6 +51,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   selectedTipoLaboral = false;
   path: string;
   disabledIsLetrado;
+  filaEditable: boolean = false;
 
   es: any = esCalendar;
 
@@ -114,6 +116,15 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   rowsPerPage: any = [];
   colsNotifications: any = [];
   sortO: number = 1;
+  comboTemplates;
+  comboMeasureUnit;
+  comboAfterBefore;
+  comboNotifyType;
+  pressNewNotificacion: boolean = false;
+  newNotificacion: NotificacionEventoItem;
+  editNotificacion: boolean = false;
+  updateNotificationList: NotificacionEventoItem[] = [];
+  deleteNotificacion: boolean = false;
 
   historico: boolean = false;
   openFicha: boolean = false;
@@ -169,6 +180,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.getColsResults();
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
+    this.getComboNotificaciones();
 
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
@@ -1411,24 +1423,33 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   //FUNCIONES FICHA NOTIFICACIONES
 
   getColsResults() {
+
     this.colsNotifications = [
       {
-        field: "nombreTipoNotificacion",
-        header: "formacion.datosNotificaciones.tipoNotificacion.cabecera"
-      },
-      {
-        field: "descripcionCuando",
-        header: "formacion.datosNotificaciones.cuando.cabecera"
-      },
-      {
-        field: "nombrePlantilla",
-        header: "menu.facturacion.plantillas"
+        field: "idPlantilla",
+        header: "menu.facturacion.plantillas",
+        value: "nombrePlantilla"
       },
       {
         field: "tipoEnvio",
         header: "envios.plantillas.literal.tipoenvio"
+      },
+      {
+        field: "cuando",
+        header: "formacion.datosNotificaciones.cuando.cabecera"
+      },
+      {
+        field: "idUnidadMedida",
+        header: "formacion.datosNotificaciones.unidadMedida.literal",
+        value: "descripcionMedida"
+      },
+      {
+        field: "idTipoCuando",
+        header: "formacion.datosNotificaciones.antesDespues.literal",
+        value: "descripcionAntes"
       }
     ];
+
 
     this.rowsPerPage = [
       {
@@ -1462,6 +1483,13 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       .subscribe(
         n => {
           this.datosNotificaciones = n.eventNotificationItems;
+
+          this.datosNotificaciones.forEach(noti => {
+            noti.isMod = false;
+          });
+
+          sessionStorage.setItem("datosNotificacionesInit", JSON.stringify(this.datosNotificaciones));
+
           this.progressSpinner = false;
         },
         err => {
@@ -1476,6 +1504,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  editNotificaciones(dato) {
+    this.editNotificacion = true;
+    let datoFind = this.updateNotificationList.find(x => x.idNotificacion == dato.idNotificacion);
+
+    if (datoFind == undefined) {
+      let datoFindOriginal = this.datosNotificaciones.find(x => x.idNotificacion == dato.idNotificacion);
+      this.updateNotificationList.push(datoFindOriginal);
+    } else {
+      let idDatoFind = this.updateNotificationList.findIndex(x => x.idNotificacion == dato.idNotificacion);
+      this.updateNotificationList[idDatoFind] = dato;
+    }
   }
 
   irEditarNotificacion(id) {
@@ -1501,7 +1542,23 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   actualizaSeleccionadosNotifications(selectedDatosNotifications) {
+    this.deleteNotificacion = true;
     this.numSelectedNotification = selectedDatosNotifications.length;
+  }
+
+  actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications) {
+
+    this.datosNotificaciones.forEach(element => {
+      element.isMod = false;
+    });
+
+    if (selectedDatosNotifications.length == 1) {
+      let id = this.datosNotificaciones.findIndex(x => x.idNotificacion == this.selectedDatosNotifications[0].idNotificacion);
+      this.datosNotificaciones[id].isMod = true;
+    }
+
+    this.numSelectedNotification = selectedDatosNotifications.length;
+    this.tableNotifications.reset();
   }
 
   onChangeRowsPerPagesNotifications(event) {
@@ -1517,14 +1574,82 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   newNotification() {
-    sessionStorage.setItem("notificacionByEvento", "true");
-    sessionStorage.setItem("modoEdicionNotify", "false");
-    sessionStorage.setItem("fichaAbierta", "true");
-    sessionStorage.removeItem("isFormacionCalendar");
-    sessionStorage.setItem("isFormacionCalendar", "false");
-    sessionStorage.removeItem("evento");
-    sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
-    this.router.navigate(["/editarNotificacion"]);
+
+    this.pressNewNotificacion = true;
+    this.newNotificacion = new NotificacionEventoItem();
+    this.newNotificacion.idEvento = this.newEvent.idEvento;
+    let tipoEvento;
+    if (this.newEvent.idTipoEvento == this.valorTipoEventoGeneral) {
+      tipoEvento = "General";
+    } else if (this.newEvent.idTipoEvento == this.valorTipoEventoFestivo) {
+      tipoEvento = "Laboral";
+    } else {
+      tipoEvento = this.newEvent.tipoEvento;
+    }
+    let findTipoNotificacion = this.comboNotifyType.find(x => x.label === tipoEvento);
+    this.newNotificacion.idTipoNotificacion = findTipoNotificacion.value;
+
+    let notificacion = {
+      idNotificacion: "",
+      nombreTipoNotificacion: this.newEvent.tipoEvento,
+      idPlantilla: "",
+      tipoEnvio: "",
+      cuando: "",
+      idUnidadMedida: "",
+      idTipoCuando: ""
+    };
+
+    this.datosNotificaciones = [notificacion, ...this.datosNotificaciones];
+    // sessionStorage.setItem("notificacionByEvento", "true");
+    // sessionStorage.setItem("modoEdicionNotify", "false");
+    // sessionStorage.setItem("fichaAbierta", "true");
+    // sessionStorage.removeItem("isFormacionCalendar");
+    // sessionStorage.setItem("isFormacionCalendar", "false");
+    // sessionStorage.removeItem("evento");
+    // sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
+    // this.router.navigate(["/editarNotificacion"]);
+  }
+
+  restNotifications() {
+    this.datosNotificaciones = JSON.parse(sessionStorage.getItem("datosNotificacionesInit"));
+    this.pressNewNotificacion = false;
+    this.editNotificacion = false;
+    this.newNotificacion = undefined;
+    this.numSelectedNotification = 0;
+    this.tableNotifications.reset();
+  }
+
+  saveNotification() {
+    this.progressSpinner = true;
+    let url = "";
+    let notification;
+
+    if (this.pressNewNotificacion) {
+      url = "datosNotificaciones_saveNotification";
+      notification = this.newNotificacion;
+    } else {
+      url = "datosNotificaciones_updateNotification";
+
+      notification = new NotificacionEventoObject();
+      notification.eventNotificationItems = this.updateNotificationList;
+    }
+
+    this.sigaServices.post(url, notification).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.pressNewNotificacion = false;
+        this.editNotificacion = false;
+        this.selectedDatosNotifications = [];
+        this.numSelectedNotification = 0;
+        this.getEventNotifications();
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   onChangeSelectAllNotifications() {
@@ -1532,10 +1657,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.selectMultipleNotifications = true;
       this.selectedDatosNotifications = this.datosNotificaciones;
       this.numSelectedNotification = this.datosNotificaciones.length;
+      this.deleteNotificacion = true;
     } else {
       this.selectedDatosNotifications = [];
       this.numSelectedNotification = 0;
       this.selectMultipleNotifications = false;
+      this.deleteNotificacion = false;
     }
   }
 
@@ -1544,6 +1671,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (!this.selectMultipleNotifications) {
       this.selectedDatosNotifications = [];
       this.numSelectedNotification = 0;
+      this.deleteNotificacion = false;
     } else {
       this.selectAllNotifications = false;
       this.selectedDatosNotifications = [];
@@ -1583,6 +1711,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               this.selectMultipleNotifications = false;
               this.selectAllNotifications = false;
               this.selectedDatosNotifications = [];
+              this.deleteNotificacion = false;
+              this.numSelectedNotification = 0;
             },
             err => {
               this.progressSpinner = false;
@@ -1626,6 +1756,125 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         }
       );
+  }
+
+  getComboNotificaciones() {
+    this.getComboNotifyType();
+    this.getComboTemplate();
+    this.getComboMeasureUnit();
+    this.getComboAfterBefore();
+  }
+
+  getComboNotifyType() {
+    this.sigaServices.get("datosNotificaciones_getTypeNotifications").subscribe(
+      n => {
+        this.comboNotifyType = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboTemplate() {
+    this.progressSpinner = true;
+    this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
+      n => {
+        this.comboTemplates = n.combooItems;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboMeasureUnit() {
+    this.sigaServices.get("datosNotificaciones_getMeasuredUnit").subscribe(
+      n => {
+        this.comboMeasureUnit = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboAfterBefore() {
+    this.sigaServices.get("datosNotificaciones_getTypeWhere").subscribe(
+      n => {
+        this.comboAfterBefore = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeTemplates(event, dato) {
+
+    if (!this.pressNewNotificacion) {
+      this.editNotificacion = true;
+    }
+
+    let plantilla = this.comboTemplates.find(
+      x => x.value === event.value
+    );
+
+    let idPlantillaEnvio = event.value;
+    let idTipoEnvio = plantilla.subValue;
+
+    this.getTypeSend(idPlantillaEnvio, idTipoEnvio, dato);
+  }
+
+  getTypeSend(idPlantillaEnvio, idTipoEnvio, dato) {
+    let typeSend = [];
+    this.sigaServices
+      .getParam(
+        "datosNotificaciones_getTypeSend",
+        "?idPlantillaEnvio=" + idPlantillaEnvio + "&idTipoEnvio=" + idTipoEnvio
+      )
+      .subscribe(
+        n => {
+          typeSend = n.combooItems;
+
+          if (this.newNotificacion != undefined) {
+            this.newNotificacion.idTipoEnvio = typeSend[0].value;
+          }
+          dato.tipoEnvio = typeSend[0].label;
+          dato.idTipoEnvio = typeSend[0].value;
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  validateNotification() {
+    if (this.newNotificacion != undefined) {
+      if (
+        this.newNotificacion.idTipoEnvio == undefined ||
+        this.newNotificacion.idPlantilla == undefined ||
+        this.newNotificacion.idTipoCuando == undefined ||
+        this.newNotificacion.idUnidadMedida == undefined ||
+        this.newNotificacion.idTipoCuando == undefined ||
+        this.newNotificacion.cuando == undefined
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
   }
 
   //FUNCIONES FICHA FORMADORES
