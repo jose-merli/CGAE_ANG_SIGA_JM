@@ -400,7 +400,7 @@ export class FichaColegialComponent implements OnInit {
   isEliminarEstadoColegial: boolean = false;
   disabledToday: boolean = false;
   fichaMutua: any;
-  
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -3905,7 +3905,6 @@ export class FichaColegialComponent implements OnInit {
           } else {
             sessionStorage.setItem("permisos", "true");
           }
-
           sessionStorage.setItem("allBanksData", JSON.stringify(this.datosBancarios));
           sessionStorage.setItem("editar", "true");
           sessionStorage.setItem("idPersona", this.idPersona);
@@ -3926,6 +3925,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   nuevaCuentaBancaria() {
+    sessionStorage.setItem("nombreTitular", JSON.stringify(this.generalBody.nombre));
     sessionStorage.removeItem("permisos");
     sessionStorage.setItem("fichaColegial", "true");
     sessionStorage.setItem(
@@ -5044,6 +5044,7 @@ export class FichaColegialComponent implements OnInit {
     this.fechaNacimiento = null;
     this.fechaNacimientoSelected = true;
     this.edadCalculada = 0;
+    this.calendarFechaNacimiento.onClearButtonClick("");
   }
 
   fechaHoyFechaNacimiento() {
@@ -5089,6 +5090,8 @@ export class FichaColegialComponent implements OnInit {
   borrarFechaIncorporacion() {
     this.colegialesBody.incorporacion = null;
     this.fechaIncorporacionSelected = true;
+    this.calendarFechaIncorporacion.onClearButtonClick("");
+
   }
 
   fechaHoyFechaIncorporacion() {
@@ -5135,6 +5138,7 @@ export class FichaColegialComponent implements OnInit {
   borrarFechaPresentacion() {
     this.colegialesBody.fechapresentacion = null;
     this.fechaPresentacionSelected = true;
+    this.calendarFechaPresentacion.onClearButtonClick("");
   }
 
   fechaHoyFechaPresentacion() {
@@ -5181,6 +5185,7 @@ export class FichaColegialComponent implements OnInit {
   borrarFechaJura() {
     this.colegialesBody.fechaJura = null;
     this.fechaJuraSelected = true;
+    this.calendarFechaJura.onClearButtonClick("");
   }
 
   fechaHoyFechaJura() {
@@ -5227,6 +5232,7 @@ export class FichaColegialComponent implements OnInit {
   borrarFechaTitulacion() {
     this.colegialesBody.fechaTitulacion = null;
     this.fechaTitulacionSelected = true;
+    this.calendarFechaTitulacion.onClearButtonClick("");
   }
 
   fechaHoyFechaTitulacion() {

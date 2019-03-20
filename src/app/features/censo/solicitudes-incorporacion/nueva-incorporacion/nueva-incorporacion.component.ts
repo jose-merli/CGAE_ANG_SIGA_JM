@@ -183,7 +183,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.tiposSolicitud = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -193,7 +192,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_estadoSolicitud").subscribe(
       result => {
         this.estadosSolicitud = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -203,7 +201,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tratamiento").subscribe(
       result => {
         this.tratamientos = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -213,7 +210,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_estadoCivil").subscribe(
       result => {
         this.estadoCivil = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -223,7 +219,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -242,7 +237,6 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.tipoIdentificacion[5].label +
           " / " +
           this.tipoIdentificacion[4].label;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -252,7 +246,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tipoColegiacion").subscribe(
       result => {
         this.tipoColegiacion = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -264,7 +257,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           this.modalidadDocumentacion = result.combooItems;
-          this.progressSpinner = false;
         },
         error => {
           console.log(error);
@@ -274,10 +266,11 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
         this.provincias = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
+      }, () => {
+        this.progressSpinner = false;
       }
     );
     if (this.solicitudEditar.nombrePoblacion != undefined) {
@@ -349,7 +342,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          this.progressSpinner = false;
         },
         error => {
           console.log(error);
@@ -377,7 +369,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          this.progressSpinner = false;
           console.log(this.poblaciones);
         },
         error => {
@@ -602,8 +593,8 @@ export class NuevaIncorporacionComponent implements OnInit {
               );
           } else {
             this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
+            this.progressSpinner = false;
           }
-          this.progressSpinner = false;
         },
         error => {
           let resultado = JSON.parse(error["error"]);
@@ -611,7 +602,6 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.progressSpinner = false;
         }
       );
-    this.progressSpinner = true;
   }
 
   denegarSolicitud() {

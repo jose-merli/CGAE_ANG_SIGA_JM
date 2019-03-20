@@ -175,7 +175,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       } else {
         this.checkOtraProvincia = false;
       }
-      
+
       if (
         this.body.idPoblacion !== null &&
         this.body.idPoblacion !== undefined
@@ -378,7 +378,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           });
 
-          
+
         },
         error => {
           this.progressSpinner = false;
@@ -1103,7 +1103,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         (this.body.idTipoDireccion != undefined || this.isLetrado) &&
         !this.igualInicio()
       ) {
-        return false;
+        if (this.body.idTipoDireccion.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
       } else {
         return true;
       }

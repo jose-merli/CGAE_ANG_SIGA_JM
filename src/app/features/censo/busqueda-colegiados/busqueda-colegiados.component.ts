@@ -351,7 +351,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
         this.comboColegios = n.combooItems;
-        this.arregloTildesCombo(this.comboColegios);
+        // this.arregloTildesCombo(this.comboColegios);
 
         this.getInstitucion();
 
