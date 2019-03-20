@@ -3487,4 +3487,8 @@ export class FichaCursoComponent implements OnInit {
     // fecha = new Date(rawDate);
     return arrayDate;
   }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem("isCancelado");
+  }
 }
