@@ -880,7 +880,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.colegiosSeleccionados = [
           {
             label: n.label,
-            value: this.institucionActual
+            value: this.institucionActual,
+            subValue: null
           }
         ];
         this.deshabilitarCombCol = true;
