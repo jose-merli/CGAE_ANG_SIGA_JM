@@ -38,6 +38,7 @@ export class DatosInscripcionItem {
   pagada: string;
   fechaSolicitud: Date;
   fechaSolicitudDate: Date;
+  fechaSolicitudString: string;
   idPersona: string;
   idInstitucion: string;
 
@@ -52,5 +53,5 @@ export class DatosInscripcionItem {
 
   idEstadoCurso: string;
 
-  constructor() {}
+  constructor() { }
 }

@@ -191,6 +191,10 @@ export class FichaInscripcionComponent implements OnInit {
             this.inscripcion.fechaSolicitud
           );
 
+          this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
+            this.inscripcion.fechaSolicitud
+          );
+
           this.inscripcionInsertada = true;
           this.modoEdicion = true;
           sessionStorage.removeItem("inscripcionActual");
@@ -282,6 +286,10 @@ export class FichaInscripcionComponent implements OnInit {
       this.inscripcion.fechaSolicitud
     );
 
+    this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
+      this.inscripcion.fechaSolicitud
+    );
+
     sessionStorage.removeItem("inscripcionActual");
   }
 
@@ -348,6 +356,9 @@ export class FichaInscripcionComponent implements OnInit {
       this.inscripcion.fechaSolicitud == undefined
     ) {
       this.inscripcion.fechaSolicitud = new Date();
+      this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
+        this.inscripcion.fechaSolicitud
+      );
     }
 
     // Guardamos la inscripcion para la funcioanlidad de "restablecer"
@@ -699,6 +710,10 @@ export class FichaInscripcionComponent implements OnInit {
       this.inscripcion.fechaSolicitud
     );
 
+    this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
+      this.inscripcion.fechaSolicitud
+    );
+
     sessionStorage.setItem(
       "inscripcionActual",
       JSON.stringify(this.inscripcion)
@@ -1035,6 +1050,9 @@ export class FichaInscripcionComponent implements OnInit {
       }
 
       this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
+      this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
+        this.inscripcion.fechaSolicitud
+      );
 
       // Si es una persona nueva (no existe en CEN_PERSONA, CEN_CLIENTE, CEN_NO_COLEGIADO), tendremos que crear la persona en las distintas tablas
       if (
@@ -1187,6 +1205,9 @@ export class FichaInscripcionComponent implements OnInit {
     this.inscripcion.fechaSolicitud = this.arreglarFecha(
       this.inscripcion.fechaSolicitud
     );
+    this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
+      this.inscripcion.fechaSolicitud
+    );
   }
 
   arreglarFecha(fecha) {
@@ -1235,6 +1256,16 @@ export class FichaInscripcionComponent implements OnInit {
 
   fillFechaSolicitud(event) {
     this.inscripcion.fechaSolicitud = event;
+  }
+
+  arreglarFechaString(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -15);
+    let splitDate = rawDate.split("-");
+    let arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+    // fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    // fecha = new Date(rawDate);
+    return arrayDate;
   }
 
 }
