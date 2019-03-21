@@ -124,6 +124,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   mySelect: MultiSelect;
 
   ngOnInit() {
+    sessionStorage.removeItem("isCancelado");
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     this.getCombos();
     //Se elimina las variables en la sesion storage para que cuando se busque un nuevo curso
