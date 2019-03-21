@@ -702,11 +702,13 @@ export class SigaServices {
   private consultasRefresh = new Subject<any>();
   private deshabilitarEditar = new Subject<any>();
   private perfilesRefresh = new Subject<any>();
+  private modelosRefresh = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
   deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
   perfilesRefresh$ = this.perfilesRefresh.asObservable();
+  modelosRefresh$ = this.modelosRefresh.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -927,6 +929,10 @@ export class SigaServices {
 
   notifyRefreshConsulta() {
     this.consultasRefresh.next();
+  }
+
+  notifyRefreshModelos() {
+    this.modelosRefresh.next();
   }
 
   notifyRefreshEditar() {

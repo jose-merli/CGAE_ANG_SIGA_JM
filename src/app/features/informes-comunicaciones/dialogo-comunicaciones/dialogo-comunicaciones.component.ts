@@ -10,6 +10,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 import { DataTable } from "primeng/datatable";
+import { truncate } from 'fs';
 
 @Component({
   selector: 'app-dialogo-comunicaciones',
@@ -191,40 +192,54 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.bodyComunicacion.modelos = this.selectedModelos;
     this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
 
-    this.sigaServices.post("dialogo_obtenerCamposDinamicos", this.bodyComunicacion).subscribe(
-      data => {
-        console.log(data);
-        this.valores = [];
-        this.listaConsultas = JSON.parse(data['body']).consultaItem;
-        this.listaConsultas.forEach(element => {
-          if (element.camposDinamicos != null) {
-            element.camposDinamicos.forEach(campo => {
-              this.valores.push(campo);
-            });
-          }
-        })
+    if (accion == "comunicar") {
+      this.comunicar = true;
+    } else {
+      this.comunicar = false;
+    }
 
-        if (accion == "comunicar") {
-          this.comunicar = true;
-        } else {
-          this.comunicar = false;
-        }
-
-        if (this.valores.length > 0) {
-          this.showValores = true;
-        } else {
-          if (this.comunicar) {
-            this.enviarComunicacion();
+    if(this.comunicar && !this.comprobarPlantillas()){
+      this.showFail("Se ha de seleccionar al menos una plantilla de envio por modelo");
+    }else{
+      this.sigaServices.post("dialogo_obtenerCamposDinamicos", this.bodyComunicacion).subscribe(
+        data => {
+          console.log(data);
+          this.valores = [];
+          this.listaConsultas = JSON.parse(data['body']).consultaItem;
+          this.listaConsultas.forEach(element => {
+            if (element.camposDinamicos != null) {
+              element.camposDinamicos.forEach(campo => {
+                this.valores.push(campo);
+              });
+            }
+          })       
+  
+          if (this.valores.length > 0) {
+            this.showValores = true;
           } else {
-            this.descargarComunicacion();
+            if (this.comunicar) {
+              this.enviarComunicacion();
+            } else {
+              this.descargarComunicacion();
+            }
           }
+        },
+        err => {
+          console.log(err);
+          this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"));
         }
-      },
-      err => {
-        console.log(err);
-        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"));
+      );
+    }    
+  }
+
+  comprobarPlantillas(){
+    let envioCorrecto = true;
+    this.bodyComunicacion.modelos.forEach(element => {
+      if(!element.idPlantillaEnvio || element.idPlantillaEnvio == null || element.idPlantillaEnvio==""){
+        envioCorrecto = false;
       }
-    );
+    });
+    return envioCorrecto;
   }
 
   enviarComunicacion() {

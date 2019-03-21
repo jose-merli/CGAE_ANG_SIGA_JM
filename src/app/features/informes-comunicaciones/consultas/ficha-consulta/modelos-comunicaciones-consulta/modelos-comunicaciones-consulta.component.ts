@@ -59,6 +59,10 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
     this.getDatos();
 
+    this.sigaServices.consultasRefresh$.subscribe(() => {
+      this.getDatos();
+    });
+
     if (sessionStorage.getItem("consultasSearch") == null) {
       this.editar = false;
     } else {

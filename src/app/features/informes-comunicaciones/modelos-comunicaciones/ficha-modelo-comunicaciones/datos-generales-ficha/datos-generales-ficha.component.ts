@@ -31,6 +31,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   soloLectura: boolean = false;
   editar: boolean = true;
   plantillas: any = [];
+  isEdicion: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -134,6 +135,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.habilitarBotones();
+      this.isEdicion = true;
     } else {
       this.body.visible = 1;
     }

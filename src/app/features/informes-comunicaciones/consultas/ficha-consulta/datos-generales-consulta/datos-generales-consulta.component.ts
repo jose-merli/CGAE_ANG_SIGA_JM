@@ -377,6 +377,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         this.showSuccess(this.translateService.instant('informesycomunicaciones.consultas.ficha.correctGuardadoConsulta'));
         this.sigaServices.notifyRefreshConsulta();
+        this.sigaServices.notifyRefreshModelos();
       },
       err => {
         this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));

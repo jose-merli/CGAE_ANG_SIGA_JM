@@ -37,7 +37,7 @@
     </div>
     <!--tarjetas destinatario-->
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
-      <p-pickList [source]="perfilesNoSeleccionados" [target]="perfilesSeleccionados" sourceHeader="Perfiles con acceso" targetHeader="Perfiles sin acceso"
+      <p-pickList [source]="perfilesNoSeleccionados" [target]="perfilesSeleccionados" sourceHeader="Perfiles sin acceso" targetHeader="Perfiles con acceso"
         [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="perfilesSeleccionados" sourceFilterPlaceholder="Buscar perfil"
         targetFilterPlaceholder="Buscar perfil" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ height: '300px' }"
         [targetStyle]="{ height: '300px' }">
