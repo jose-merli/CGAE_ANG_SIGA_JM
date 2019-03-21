@@ -1599,7 +1599,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       idTipoCuando: ""
     };
 
-    this.datosNotificaciones = [notificacion, ...this.datosNotificaciones];
+    if (this.datosNotificaciones.length == 0) {
+      this.datosNotificaciones.push(notificacion);
+    } else {
+      this.datosNotificaciones = [notificacion, ...this.datosNotificaciones];
+    }
     // sessionStorage.setItem("notificacionByEvento", "true");
     // sessionStorage.setItem("modoEdicionNotify", "false");
     // sessionStorage.setItem("fichaAbierta", "true");
@@ -1615,6 +1619,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.pressNewNotificacion = false;
     this.editNotificacion = false;
     this.newNotificacion = undefined;
+    this.updateNotificationList = [];
     this.numSelectedNotification = 0;
     this.tableNotifications.reset();
   }
@@ -1641,7 +1646,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.editNotificacion = false;
         this.selectedDatosNotifications = [];
         this.numSelectedNotification = 0;
+        this.updateNotificationList = [];
         this.getEventNotifications();
+        this.showSuccess();
       },
       err => {
         this.progressSpinner = false;
@@ -1846,7 +1853,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           }
           dato.tipoEnvio = typeSend[0].label;
           dato.idTipoEnvio = typeSend[0].value;
-
+          if (!this.pressNewNotificacion) {
+            this.editNotificaciones(dato);
+          }
         },
         err => {
           console.log(err);

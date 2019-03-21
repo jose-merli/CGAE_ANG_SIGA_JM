@@ -848,10 +848,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   showMessageTipos(msg) {
     let icon = "fa fa-edit";
-    this.tiposDirSelected = [];
+    // this.tiposDirSelected = [];
 
     if (this.unSelectedTipoDir) {
-      this.body.idTipoDireccion = JSON.parse(JSON.stringify(this.checkBody)).idTipoDireccion;
+      // this.body.idTipoDireccion = JSON.parse(JSON.stringify(this.checkBody)).idTipoDireccion;
       this.showInfo(msg);
     } else {
 
@@ -865,7 +865,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         reject: () => {
-          this.body.idTipoDireccion = JSON.parse(JSON.stringify(this.checkBody)).idTipoDireccion;
+          // this.body.idTipoDireccion = JSON.parse(JSON.stringify(this.checkBody)).idTipoDireccion;
           this.msgs = [
             {
               severity: "info",
