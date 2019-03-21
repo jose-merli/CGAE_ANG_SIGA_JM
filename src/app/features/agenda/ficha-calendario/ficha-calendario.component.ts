@@ -55,16 +55,29 @@ export class FichaCalendarioComponent implements OnInit {
   // map con los permisos {data, ObjectoPermisosBack}
   permisosChange: PermisosCalendarioItem[] = [];
 
-  @ViewChild("table")
-  table: DataTable;
-  selectedDatos;
-  selectMultiple: boolean = false;
+  @ViewChild("tableNotifications")
+  tableNotifications: DataTable;
+  selectedDatosNotifications;
+  selectMultipleNotifications: boolean = false;
   rowsPerPage: any = [];
-  cols: any = [];
-  datos: any[];
-  selectedItem: number = 10;
+  colsNotifications: any = [];
+  datosNotificaciones = [];
+  selectedNotification: number = 10;
   sortO: number = 1;
-  numSelected: number = 0;
+  numSelectedNotifications: number = 0;
+  comboTemplates;
+  comboMeasureUnit;
+  comboAfterBefore;
+  comboNotifyType;
+  comboNotifyTypeTraining;
+  pressNewNotificacion: boolean = false;
+  newNotificacion: NotificacionEventoItem;
+  editNotificacion: boolean = false;
+  updateNotificationList: NotificacionEventoItem[] = [];
+  deleteNotificacion: boolean = false;
+  valorTipoCalendarioGeneral = "1";
+  valorTipoCalendarioLaboral = "2";
+  valorTipoCalendarioFormacion = "3";
 
   historico: boolean = false;
   openFicha: boolean = false;
@@ -74,6 +87,7 @@ export class FichaCalendarioComponent implements OnInit {
   accesoHistorico: boolean = false;
   accesoSeleccionDatos: boolean = false;
   accesoCalendario: boolean = false;
+  idCalendario;
 
   constructor(
     private sigaServices: SigaServices,
@@ -110,10 +124,12 @@ export class FichaCalendarioComponent implements OnInit {
     //Comprobamos si estamos en modoEdición o en modo Nuevo
     if (sessionStorage.getItem("modoEdicion") == "true") {
       this.modoEdicion = true;
-      this.getCalendar(sessionStorage.getItem("idCalendario"));
+      this.idCalendario = sessionStorage.getItem("idCalendario");
+      this.getCalendar(this.idCalendario);
       this.saveCalendarFlag = true;
       this.getProfiles();
       this.getCalendarNotifications();
+      this.getComboNotificaciones();
     } else {
       this.modoEdicion = false;
       sessionStorage.removeItem("idCalendario");
@@ -151,7 +167,7 @@ export class FichaCalendarioComponent implements OnInit {
     if (!this.modoEdicion) {
       url = "fichaCalendario_saveCalendar";
     } else {
-      this.calendar.idCalendario = sessionStorage.getItem("idCalendario");
+      this.calendar.idCalendario = this.idCalendario;
       url = "fichaCalendario_updateCalendar";
     }
 
@@ -206,7 +222,7 @@ export class FichaCalendarioComponent implements OnInit {
       this.calendar = new CalendarItem();
       this.colorSelect = this.defaultColor;
     } else {
-      this.getCalendar(sessionStorage.getItem("idCalendario"));
+      this.getCalendar(this.idCalendario);
     }
   }
 
@@ -230,11 +246,10 @@ export class FichaCalendarioComponent implements OnInit {
   //Función obtienes los perfiles junto con los permisos del calendario
   getProfiles() {
     this.progressSpinner = true;
-    let idCalendario = sessionStorage.getItem("idCalendario");
     this.sigaServices
       .getParam(
         "fichaCalendario_getProfilesPermissions",
-        "?idCalendario=" + idCalendario
+        "?idCalendario=" + this.idCalendario
       )
       .subscribe(
         n => {
@@ -257,7 +272,7 @@ export class FichaCalendarioComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          console.log(this.datos);
+          console.log(this.datosNotificaciones);
         }
       );
   }
@@ -306,7 +321,7 @@ export class FichaCalendarioComponent implements OnInit {
         let permisosUpdate = new PermisosCalendarioItem();
         permisosUpdate.derechoacceso = changed.derechoacceso;
         permisosUpdate.idPerfil = changed.idPerfil;
-        permisosUpdate.idCalendario = sessionStorage.getItem("idCalendario");
+        permisosUpdate.idCalendario = this.idCalendario;
 
         this.permisosChange.push(permisosUpdate);
       }
@@ -410,22 +425,34 @@ export class FichaCalendarioComponent implements OnInit {
   //FUNCIONES FICHA NOTIFICACIONES
 
   getColsResults() {
-    this.cols = [
+    this.colsNotifications = [
       {
-        field: "nombreTipoNotificacion",
+        value: "nombreTipoNotificacion",
+        field: "idTipoNotificacion",
         header: "formacion.datosNotificaciones.tipoNotificacion.cabecera"
       },
       {
-        field: "descripcionCuando",
-        header: "formacion.datosNotificaciones.cuando.cabecera"
-      },
-      {
-        field: "nombrePlantilla",
-        header: "menu.facturacion.plantillas"
+        field: "idPlantilla",
+        header: "menu.facturacion.plantillas",
+        value: "nombrePlantilla"
       },
       {
         field: "tipoEnvio",
         header: "envios.plantillas.literal.tipoenvio"
+      },
+      {
+        field: "cuando",
+        header: "formacion.datosNotificaciones.cuando.cabecera"
+      },
+      {
+        field: "idUnidadMedida",
+        header: "formacion.datosNotificaciones.unidadMedida.literal",
+        value: "descripcionMedida"
+      },
+      {
+        field: "idTipoCuando",
+        header: "formacion.datosNotificaciones.antesDespues.literal",
+        value: "descripcionAntes"
       }
     ];
 
@@ -461,8 +488,14 @@ export class FichaCalendarioComponent implements OnInit {
       )
       .subscribe(
         n => {
-          this.datos = n.eventNotificationItems;
+          this.datosNotificaciones = n.eventNotificationItems;
           this.progressSpinner = false;
+
+          this.datosNotificaciones.forEach(noti => {
+            noti.isMod = false;
+          });
+
+          sessionStorage.setItem("datosNotificacionesInit", JSON.stringify(this.datosNotificaciones));
         },
         err => {
           this.progressSpinner = false;
@@ -479,53 +512,92 @@ export class FichaCalendarioComponent implements OnInit {
   }
 
   irEditarNotificacion(id) {
-    if (id.length >= 1 && this.selectMultiple == false) {
+    if (id.length >= 1 && this.selectMultipleNotifications == false) {
       sessionStorage.setItem("modoEdicionNotify", "true");
       sessionStorage.removeItem("notifySelected");
       sessionStorage.setItem("notifySelected", JSON.stringify(id));
       this.router.navigate(["/editarNotificacion"]);
       sessionStorage.setItem("fichaAbierta", "true");
     } else {
-      this.numSelected = this.selectedDatos.length;
+      this.numSelectedNotifications = this.selectedDatosNotifications.length;
     }
   }
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
+    this.numSelectedNotifications = selectedDatos.length;
   }
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
+  onChangeRowsPerPagesNotifications(event) {
+    this.selectedNotification = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
+    this.tableNotifications.reset();
   }
 
   newNotification() {
-    sessionStorage.setItem("modoEdicionNotify", "false");
-    sessionStorage.setItem("fichaAbierta", "true");
-    this.router.navigate(["/editarNotificacion"]);
+    // sessionStorage.setItem("modoEdicionNotify", "false");
+    // sessionStorage.setItem("fichaAbierta", "true");
+    // this.router.navigate(["/editarNotificacion"]);
+    this.pressNewNotificacion = true;
+    this.newNotificacion = new NotificacionEventoItem();
+    this.newNotificacion.idCalendario = this.idCalendario;
+
+    let tipoEvento;
+    if (this.calendar.idTipoCalendario == this.valorTipoCalendarioGeneral) {
+      tipoEvento = "General";
+    } else if (this.calendar.idTipoCalendario == this.valorTipoCalendarioLaboral) {
+      tipoEvento = "Laboral";
+    }
+
+    let notificacion = {
+      idNotificacion: "",
+      nombreTipoNotificacion: "",
+      idPlantilla: "",
+      idTipoNotificacion: "",
+      tipoEnvio: "",
+      cuando: "",
+      idUnidadMedida: "",
+      idTipoCuando: ""
+    };
+
+    if (tipoEvento != undefined) {
+      let findTipoNotificacion = this.comboNotifyType.find(x => x.label === tipoEvento);
+      this.newNotificacion.idTipoNotificacion = findTipoNotificacion.value;
+      notificacion.nombreTipoNotificacion = tipoEvento;
+    }
+
+    if (this.datosNotificaciones.length == 0) {
+      this.datosNotificaciones.push(notificacion);
+    } else {
+      this.datosNotificaciones = [notificacion, ...this.datosNotificaciones];
+    }
+
   }
 
   onChangeSelectAllNotifications() {
     if (this.selectAllNotifications === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.selectMultipleNotifications = false;
+      this.selectedDatosNotifications = this.datosNotificaciones;
+      this.numSelectedNotifications = this.datosNotificaciones.length;
+      this.deleteNotificacion = true;
+
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      this.selectedDatosNotifications = [];
+      this.numSelectedNotifications = 0;
+      this.deleteNotificacion = false;
+
     }
   }
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+  isSelectMultipleNotifications() {
+    this.selectMultipleNotifications = !this.selectMultipleNotifications;
+    if (!this.selectMultipleNotifications) {
+      this.selectedDatosNotifications = [];
+      this.numSelectedNotifications = 0;
+      this.deleteNotificacion = false;
     } else {
       this.selectAllNotifications = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      this.selectedDatosNotifications = [];
+      this.numSelectedNotifications = 0;
     }
   }
 
@@ -546,7 +618,9 @@ export class FichaCalendarioComponent implements OnInit {
           this.progressSpinner = false;
           this.showSuccessDelete();
           this.getCalendarNotifications();
-          this.selectMultiple = false;
+          this.selectMultipleNotifications = false;
+          this.deleteNotificacion = false;
+          this.numSelectedNotifications = 0;
         },
         err => {
           this.progressSpinner = false;
@@ -599,7 +673,7 @@ export class FichaCalendarioComponent implements OnInit {
       )
       .subscribe(
         n => {
-          this.datos = n.eventNotificationItems;
+          this.datosNotificaciones = n.eventNotificationItems;
           this.progressSpinner = false;
         },
         err => {
@@ -612,8 +686,221 @@ export class FichaCalendarioComponent implements OnInit {
   }
 
   disabledNotifications() {
-    if (this.selectMultiple || this.selectAllNotifications) return false;
+    if (this.selectMultipleNotifications || this.selectAllNotifications) return false;
     else return true;
+  }
+
+  getComboNotificaciones() {
+    this.getComboNotifyType();
+    this.getComboTemplate();
+    this.getComboMeasureUnit();
+    this.getComboAfterBefore();
+    this.getComboNotifyTypeTraining();
+  }
+
+  getComboNotifyTypeTraining() {
+    this.sigaServices.get("fichaCalendario_getNotificationTypeCalendarTraining").subscribe(
+      n => {
+        this.comboNotifyTypeTraining = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboNotifyType() {
+    this.sigaServices.get("datosNotificaciones_getTypeNotifications").subscribe(
+      n => {
+        this.comboNotifyType = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboTemplate() {
+    this.progressSpinner = true;
+    this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
+      n => {
+        this.comboTemplates = n.combooItems;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboMeasureUnit() {
+    this.sigaServices.get("datosNotificaciones_getMeasuredUnit").subscribe(
+      n => {
+        this.comboMeasureUnit = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboAfterBefore() {
+    this.sigaServices.get("datosNotificaciones_getTypeWhere").subscribe(
+      n => {
+        this.comboAfterBefore = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeTemplates(event, dato) {
+
+    if (!this.pressNewNotificacion) {
+      this.editNotificacion = true;
+    }
+
+    let plantilla = this.comboTemplates.find(
+      x => x.value === event.value
+    );
+
+    let idPlantillaEnvio = event.value;
+    let idTipoEnvio = plantilla.subValue;
+
+    this.getTypeSend(idPlantillaEnvio, idTipoEnvio, dato);
+  }
+
+  getTypeSend(idPlantillaEnvio, idTipoEnvio, dato) {
+    let typeSend = [];
+    this.sigaServices
+      .getParam(
+        "datosNotificaciones_getTypeSend",
+        "?idPlantillaEnvio=" + idPlantillaEnvio + "&idTipoEnvio=" + idTipoEnvio
+      )
+      .subscribe(
+        n => {
+          typeSend = n.combooItems;
+
+          if (this.newNotificacion != undefined) {
+            this.newNotificacion.idTipoEnvio = typeSend[0].value;
+          }
+          dato.tipoEnvio = typeSend[0].label;
+          dato.idTipoEnvio = typeSend[0].value;
+          if (!this.pressNewNotificacion) {
+            this.editNotificaciones(dato);
+          }
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  validateNotification() {
+    if (this.newNotificacion != undefined) {
+      if (
+        this.newNotificacion.idTipoEnvio == undefined ||
+        this.newNotificacion.idPlantilla == undefined ||
+        this.newNotificacion.idTipoCuando == undefined ||
+        this.newNotificacion.idUnidadMedida == undefined ||
+        this.newNotificacion.idTipoCuando == undefined ||
+        this.newNotificacion.cuando == undefined ||
+        this.newNotificacion.idTipoNotificacion == undefined
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }
+
+  actualizaSeleccionadosNotifications(selectedDatosNotifications) {
+    this.deleteNotificacion = true;
+    this.numSelectedNotifications = selectedDatosNotifications.length;
+  }
+
+  actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications) {
+
+    this.datosNotificaciones.forEach(element => {
+      element.isMod = false;
+    });
+
+    if (selectedDatosNotifications.length == 1) {
+      let id = this.datosNotificaciones.findIndex(x => x.idNotificacion == this.selectedDatosNotifications[0].idNotificacion);
+      this.datosNotificaciones[id].isMod = true;
+    }
+
+    this.numSelectedNotifications = selectedDatosNotifications.length;
+    this.tableNotifications.reset();
+  }
+
+  restNotifications() {
+    this.datosNotificaciones = JSON.parse(sessionStorage.getItem("datosNotificacionesInit"));
+    this.pressNewNotificacion = false;
+    this.editNotificacion = false;
+    this.newNotificacion = undefined;
+    this.numSelectedNotifications = 0;
+    this.tableNotifications.reset();
+    this.updateNotificationList = [];
+  }
+
+  saveNotification() {
+    this.progressSpinner = true;
+    let url = "";
+    let notification;
+
+    if (this.pressNewNotificacion) {
+      url = "datosNotificaciones_saveNotification";
+      notification = this.newNotificacion;
+    } else {
+      url = "datosNotificaciones_updateNotification";
+
+      notification = new NotificacionEventoObject();
+      notification.eventNotificationItems = this.updateNotificationList;
+    }
+
+    this.sigaServices.post(url, notification).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.pressNewNotificacion = false;
+        this.editNotificacion = false;
+        this.selectedDatosNotifications = [];
+        this.numSelectedNotifications = 0;
+        this.showSuccess();
+        this.updateNotificationList = [];
+        this.getCalendarNotifications();
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  editNotificaciones(dato) {
+    this.editNotificacion = true;
+    let datoFind = this.updateNotificationList.find(x => x.idNotificacion == dato.idNotificacion);
+
+    if (datoFind == undefined) {
+      let datoFindOriginal = this.datosNotificaciones.find(x => x.idNotificacion == dato.idNotificacion);
+      this.updateNotificationList.push(datoFindOriginal);
+    } else {
+      let idDatoFind = this.updateNotificationList.findIndex(x => x.idNotificacion == dato.idNotificacion);
+      this.updateNotificationList[idDatoFind] = dato;
+    }
   }
 
   //FUNCIONES GENERALES DE LA PANTALLA
@@ -756,8 +1043,8 @@ export class FichaCalendarioComponent implements OnInit {
   }
   checkAccesoSeleccionDatos() {
     if (
-      this.selectedDatos &&
-      this.selectedDatos != "" &&
+      this.selectedDatosNotifications &&
+      this.selectedDatosNotifications != "" &&
       this.calendar.tipoAcceso == 3
     ) {
       this.accesoSeleccionDatos = false;

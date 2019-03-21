@@ -362,6 +362,7 @@ export class SigaServices {
 
     datosNotificaciones_getTypeNotifications:
       "datosNotificaciones/getTypeNotifications",
+    fichaCalendario_getNotificationTypeCalendarTraining: "fichaCalendario/getNotificationTypeCalendarTraining",
     datosNotificaciones_getMeasuredUnit: "datosNotificaciones/getMeasuredUnit",
     datosNotificaciones_saveNotification:
       "datosNotificaciones/saveNotification",
