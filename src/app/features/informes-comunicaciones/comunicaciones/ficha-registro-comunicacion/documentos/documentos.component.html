@@ -63,7 +63,7 @@
               [ngSwitch]="col.field"
               [pSortableColumn]="col.field"
             >
-              {{ col.header }}
+              {{ col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input
                 pDroppable="false"

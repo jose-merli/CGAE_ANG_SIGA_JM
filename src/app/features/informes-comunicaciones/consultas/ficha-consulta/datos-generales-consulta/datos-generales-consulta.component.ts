@@ -340,7 +340,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      if (this.body.generica == "Si") {
+      if (this.body.generica == "Si" || this.body.generica == "S" || this.body.generica == "1") {
         this.generica = "S";
       } else {
         this.generica = "N";
@@ -351,7 +351,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   habilitarBotones() {
-    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "1")) {
+    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "S" || this.body.generica == "1")) {
       this.editar = false;
     } else {
       this.editar = true;

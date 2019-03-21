@@ -576,7 +576,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.ejecutar();
         }
       }, error => {
-        this.showFail("Error al obtener los parámetros dinámicos disponibles")
+        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"))        
       });
   }
   

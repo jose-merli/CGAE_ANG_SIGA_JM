@@ -459,7 +459,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       );
     } else {
-      this.showInfo("El estado de uno o varios envíos no es válido");
+      this.showInfo(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEstado"));      
     }
   }
 

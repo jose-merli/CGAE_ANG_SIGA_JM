@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="form-row">
                 <div class="form-group col-lg-2 col-md-2">
-                    <label>Fecha programada</label>
+                    <label>{{'informesycomunicaciones.comunicaciones.busqueda.fechaProgramada' | translate}}</label>
                     <app-fecha [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate"
                         showTime="true"></app-fecha>
                 </div>
@@ -28,7 +28,7 @@
                             <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
                         </th>
                         <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                            {{col.header}}
+                            {{col.header | translate}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                             <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableModelos.filter($event.target.value,
                             col.field, 'contains')">

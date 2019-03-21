@@ -79,8 +79,8 @@ export class DocumentosComponent implements OnInit {
       }
     ];
     this.cols = [
-      { field: "nombreDocumento", header: "Nombre del documento" },
-      { field: "pathDocumento", header: "Enlace de descarga" }
+      { field: "nombreDocumento", header: "informesycomunicaciones.comunicaciones.documento.nombre" },
+      { field: "pathDocumento", header: "informesycomunicaciones.comunicaciones.documento.nombre" }
     ];
   }
 

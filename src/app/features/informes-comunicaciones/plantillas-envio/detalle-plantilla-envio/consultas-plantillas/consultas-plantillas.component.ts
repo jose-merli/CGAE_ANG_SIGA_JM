@@ -72,6 +72,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 		// this.getDatos();
 		//sessionStorage.removeItem('consultasSearch');
 		this.getInstitucion();
+		this.getDatos();
 		this.textFilter = "Elegir";
 
 		this.selectedItem = 10;
@@ -175,8 +176,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 		console.log(dato);
 		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
 			if (
-				dato[0].generica == "No" ||
-				(this.institucionActual == 2000 && dato[0].generica == "Si")
+				dato[0].generica == "No" || dato[0].generica == "N" || dato[0].generica == "0" ||
+				(this.institucionActual == 2000 && (dato[0].generica == "Si" || dato[0].generica == "S" || dato[0].generica == "1"))
 			) {
 				sessionStorage.setItem("consultaEditable", "S");
 			} else {
@@ -197,9 +198,9 @@ export class ConsultasPlantillasComponent implements OnInit {
 			sessionStorage.getItem("crearNuevaPlantilla") == "false"
 		) {
 			this.openFicha = !this.openFicha;
-			if (this.openFicha) {
+			/*if (this.openFicha) {
 				this.getDatos();
-			}
+			}*/
 		}
 	}
 

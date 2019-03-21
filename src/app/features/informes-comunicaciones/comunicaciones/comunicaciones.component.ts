@@ -385,10 +385,10 @@ para poder filtrar el dato con o sin estos caracteres*/
       .post("enviosMasivos_cancelar", this.eliminarArray)
       .subscribe(
         data => {
-          this.showSuccess("Se ha calcelado el envío correctamente");
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.cancelado"));
         },
         err => {
-          this.showFail("Error al calcelar el envío");
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.cancelar"));
           console.log(err);
         },
         () => {
@@ -416,10 +416,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
     this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
       data => {
-        this.showSuccess("Se ha programado el envío correctamente");
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.programado"));
       },
       err => {
-        this.showFail("Error al programar el envío");
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.programar"));
         console.log(err);
       },
       () => {

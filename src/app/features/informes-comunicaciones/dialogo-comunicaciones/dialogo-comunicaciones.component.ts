@@ -123,9 +123,9 @@ export class DialogoComunicacionesComponent implements OnInit {
     ]
 
     this.colsModelos = [
-      { field: 'nombre', header: 'Modelo' },
-      { field: 'plantillas', header: 'Plantilla Envío' },
-      { field: 'tipoEnvio', header: 'Tipo envío' }
+      { field: 'nombre', header: 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones' },
+      { field: 'plantillas', header: 'enviosMasivos.literal.plantillasEnvio' },
+      { field: 'tipoEnvio', header: 'informesycomunicaciones.comunicaciones.busqueda.tipoEnvio' }
     ]
   }
 
@@ -222,6 +222,7 @@ export class DialogoComunicacionesComponent implements OnInit {
       },
       err => {
         console.log(err);
+        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"));
       }
     );
   }
@@ -250,13 +251,13 @@ export class DialogoComunicacionesComponent implements OnInit {
         .post("dialogo_generarEnvios", datos)
         .subscribe(
           data => {
-            this.showSuccess("Envios generados");
+            this.showSuccess(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.generado"));
             this.showValores = false;
             this.backTo();
           },
           err => {
             console.log(err);
-            this.showFail("Error al generar los envios");
+            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.generar"));
             this.progressSpinner = false;
           },
           () => {
@@ -264,7 +265,7 @@ export class DialogoComunicacionesComponent implements OnInit {
           }
         );
     } else {
-      this.showFail("No se ha seleccionado nigún dato");
+      this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.datos"));
       this.progressSpinner = false;
     }
   }
@@ -345,7 +346,7 @@ export class DialogoComunicacionesComponent implements OnInit {
         },
         err => {
           console.log(err);
-          this.showFail("Error al generar la documentación");
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.descargar.error"));
           this.progressSpinner = false;
         },
         () => {
