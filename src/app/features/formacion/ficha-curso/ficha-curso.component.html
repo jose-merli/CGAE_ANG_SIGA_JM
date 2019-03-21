@@ -20,11 +20,11 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
             </label>
           </div>
-          <div class="d-flex justify-content-between col-lg-12 pr-0">
+          <div class="d-flex justify-content-between">
             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
               <span>{{ curso.nombreCurso }}</span>
             </label>
@@ -304,10 +304,10 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
           </div>
-          <div *ngIf="datosPrices.length < 5 && datosPrices.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosPrices.length < 5 && datosPrices.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let precio of datosPrices">
               {{ 'formacion.fichaCurso.tarjetaPrecios.importe' | translate }}:
               <span>{{ precio.importe }} </span> - {{ 'administracion.parametrosGenerales.literal.descripcion' | translate }}:
@@ -315,13 +315,18 @@
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <div *ngIf="datosPrices.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosPrices.length >= 5" class="d-flex justify-content-between">
             <label>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' | translate }}:
               <span>{{ datosPrices.length }}</span>
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <i *ngIf="datosPrices.length == 0" class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosPrices.length == 0" class="d-flex justify-content-between">
+            <label>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' | translate }}:
+              <span>0</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
 
@@ -379,10 +384,10 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
-          <div *ngIf="datosFormadores.length < 4 && datosFormadores.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosFormadores.length < 4 && datosFormadores.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let formador of datosFormadores">
               {{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
               <span>{{ formador.nombre }} {{ formador.apellidos }}</span> - {{ 'administracion.usuarios.literal.rol' | translate
@@ -391,13 +396,18 @@
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <div *ngIf="datosFormadores.length >= 4" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosFormadores.length >= 4" class="d-flex justify-content-between">
             <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numFormadores' | translate }}:
               <span>{{ datosFormadores.length }}</span>
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <i *ngIf="datosFormadores.length == 0" class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosFormadores.length == 0" class="d-flex justify-content-between">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numFormadores' | translate }}:
+              <span>0</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
 
@@ -677,7 +687,7 @@
             {{ 'formacion.fichaCurso.inscripciones.cabecera' | translate }}
           </label>
         </div>
-        <div class="d-flex justify-content-between col-lg-7">
+        <div class="d-flex justify-content-between">
           <label>{{ 'formacion.fichaCurso.inscripciones.pendientes' | translate }}:
             <span>{{ inscription.pendientes }}</span>
           </label>
@@ -691,7 +701,8 @@
             <span>{{ inscription.canceladas }}</span>
           </label>
           <label>{{ 'formacion.fichaCurso.inscripciones.plazasTotales' | translate }}:
-            <span>{{ curso.plazasDisponibles }}</span>
+            <span *ngIf="curso.plazasDisponibles != undefined">{{ curso.plazasDisponibles }}</span>
+            <span *ngIf="curso.plazasDisponibles == undefined">0</span>
           </label>
         </div>
       </div>
@@ -710,10 +721,10 @@
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mt-2">
+        <div class="d-flex justify-content-start mb-1">
           <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
         </div>
-        <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between col-lg-12 pr-0">
+        <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between">
           <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
             <span>{{ datosCertificates[0].nombreCertificado }}</span>
           </label>
@@ -725,13 +736,18 @@
           </label>
           <i class="fa fa-angle-down float-right"></i>
         </div>
-        <div *ngIf="datosCertificates.length >= 2" class="d-flex justify-content-between col-lg-12 pr-0">
+        <div *ngIf="datosCertificates.length >= 2" class="d-flex justify-content-between">
           <label>{{ 'formacion.fichaCursos.tarjetaCertificados.resumen.numCertificados' | translate }}:
             <span>{{ datosCertificates.length }}</span>
           </label>
           <i class="fa fa-angle-down float-right"></i>
         </div>
-        <i *ngIf="datosCertificates.length == 0" class="fa fa-angle-down float-right"></i>
+        <div *ngIf="datosCertificates.length == 0" class="d-flex justify-content-between">
+          <label>{{ 'formacion.fichaCursos.tarjetaCertificados.resumen.numCertificados' | translate }}:
+            <span>0</span>
+          </label>
+          <i class="fa fa-angle-down float-right"></i>
+        </div>
       </div>
     </div>
     <div *ngIf="esFichaActiva('certificate')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -956,10 +972,10 @@
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mt-2">
+        <div class="d-flex justify-content-start mb-1">
           <label class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
         </div>
-        <div *ngIf="datosSessions.length >= 1" class="d-flex justify-content-between col-lg-12 pr-0">
+        <div *ngIf="datosSessions.length >= 1" class="d-flex justify-content-between">
           <label>{{ 'formacion.fichaCursos.tarjetaSesiones.resumen.numSesiones' | translate }}:
             <span>{{ datosSessions.length }}</span>
           </label>
@@ -974,8 +990,12 @@
           </label>
           <i class="fa fa-angle-down float-right"></i>
         </div>
-        <i *ngIf="datosSessions.length == 0" class="fa fa-angle-down float-right"></i>
-
+        <div *ngIf="datosSessions.length == 0" class="d-flex justify-content-between">
+          <label>{{ 'formacion.fichaCursos.tarjetaSesiones.resumen.numSesiones' | translate }}:
+            <span>0</span>
+          </label>
+          <i class="fa fa-angle-down float-right"></i>
+        </div>
       </div>
     </div>
     <div *ngIf="esFichaActiva('session')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -1044,11 +1064,11 @@
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mt-2 mb-1">
+        <div class="d-flex justify-content-start mb-1">
           <label class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
 
         </div>
-        <div class="d-flex justify-content-between col-lg-12 pr-0">
+        <div class="d-flex justify-content-between">
           <label>{{ 'formacion.fichaCursos.tarjetaCargasMasivas.resumen.numCargas' | translate }}:
             <span>{{ datosCargas.length }}</span>
           </label>
