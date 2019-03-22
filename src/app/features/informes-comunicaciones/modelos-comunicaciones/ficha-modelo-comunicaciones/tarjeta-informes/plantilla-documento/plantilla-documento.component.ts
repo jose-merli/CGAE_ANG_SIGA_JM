@@ -228,7 +228,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   onSelectConsulta(event, dato) {
     console.log(dato);
-    if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.indexOf("dropdown") == -1){
+    if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1){
       this.navigateTo(dato);
     } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
       this.eliminarDisabled = true;
