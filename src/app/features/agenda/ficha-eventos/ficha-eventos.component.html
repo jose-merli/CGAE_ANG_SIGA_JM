@@ -322,7 +322,7 @@
             dataKey="idNotificacion" selectionMode="multiple" [(selection)]="selectedDatosNotifications" [responsive]="true"
             #tableNotifications class="tabla-listado" [paginator]="true" (onRowSelect)="actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications)"
             (onRoUnselect)="actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications)" [value]="datosNotificaciones"
-            [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedNotification" [editable]="!selectMultipleNotifications">
+            [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedNotification" [editable]="!selectMultipleNotifications && !isEventoCumplidoOrCancelado">
 
             <p-column [sortable]="true" [field]="colsNotifications[0].field" [header]="
                   'menu.facturacion.plantillas'
@@ -330,27 +330,28 @@
                 " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-col let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[0].value] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[0].value]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato) ">
                   <span>{{ dato[colsNotifications[0].value] }}</span>
                 </div>
-                <p-dropdown *ngIf="dato.isMod" class="select-form" [(ngModel)]="dato[colsNotifications[0].field]" [options]="comboTemplates"
-                  [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"></p-dropdown>
+                <p-dropdown *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" class="select-form" [(ngModel)]="dato[colsNotifications[0].field]"
+                  [options]="comboTemplates" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
             <p-column [sortable]="true" [field]="colsNotifications[1].field" [header]="'envios.plantillas.literal.tipoenvio' | translate"
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[1].field]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[1].field] }}</span>
                 </div>
-                <span *ngIf="dato.isMod">{{ dato[colsNotifications[1].field] }} </span>
+                <span *ngIf="dato.isMod && !isEventoCumplidoOrCancelado">{{ dato[colsNotifications[1].field] }} </span>
               </ng-template>
             </p-column>
 
@@ -358,14 +359,14 @@
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[2].field] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[2].field]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[2].field] }}</span>
                 </div>
-                <input *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" type="text" class="form-control" [(ngModel)]="dato[colsNotifications[2].field]"
-                  pInputText>
+                <input *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" (ngModelChange)="editNotificaciones(dato)" type="text" class="form-control"
+                  [(ngModel)]="dato[colsNotifications[2].field]" pInputText>
               </ng-template>
             </p-column>
 
@@ -373,15 +374,15 @@
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[3].value] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[3].value]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[3].value] }}</span>
                 </div>
-                <p-dropdown *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" class="select-form" [(ngModel)]="dato[colsNotifications[3].field]"
-                  [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                <p-dropdown *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" (ngModelChange)="editNotificaciones(dato)" class="select-form"
+                  [(ngModel)]="dato[colsNotifications[3].field]" [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -389,15 +390,15 @@
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[4].value] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[4].value]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[4].value] }}</span>
                 </div>
-                <p-dropdown *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" class="select-form" [(ngModel)]="dato[colsNotifications[4].field]"
-                  [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                <p-dropdown *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" (ngModelChange)="editNotificaciones(dato)" class="select-form"
+                  [(ngModel)]="dato[colsNotifications[4].field]" [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -443,8 +444,8 @@
                 <span *ngIf="dato[colsNotifications[0].field] != ''">{{ dato[colsNotifications[0].value] }}
                 </span>
                 <p-dropdown *ngIf="dato[colsNotifications[0].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idPlantilla"
-                  [options]="comboTemplates" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type"
-                  (onChange)="onChangeTemplates($event, dato)"></p-dropdown>
+                  [options]="comboTemplates" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -471,7 +472,7 @@
                 <span *ngIf="dato[colsNotifications[3].field] != ''">{{ dato[colsNotifications[3].value] }} </span>
                 <p-dropdown *ngIf="dato[colsNotifications[3].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idUnidadMedida"
                   [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -482,7 +483,7 @@
 
                 <p-dropdown *ngIf="dato[colsNotifications[4].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idTipoCuando"
                   [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
