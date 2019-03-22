@@ -317,7 +317,7 @@
                   <span>{{ dato[colsNotifications[3].field] }}</span>
                 </div>
                 <input *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" type="text" class="form-control" [(ngModel)]="dato[colsNotifications[3].field]"
-                  pInputText>
+                  type="number" min="0" pInputText>
               </ng-template>
             </p-column>
 
@@ -427,7 +427,7 @@
               <ng-template let-dato="rowData" pTemplate="body">
                 <span *ngIf="dato[colsNotifications[3].field] != ''">{{ dato[colsNotifications[3].field] }}</span>
                 <input *ngIf="dato[colsNotifications[3].field] == ''" type="text" class="form-control" [(ngModel)]="newNotificacion.cuando"
-                  pInputText>
+                  type="number" min="0" pInputText>
               </ng-template>
             </p-column>
 
