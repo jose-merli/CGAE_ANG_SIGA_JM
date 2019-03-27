@@ -5,13 +5,13 @@
             <i class="fa fa-angle-right"></i> {{'censo.busquedaClientes.sociedades.titulo' | translate}}</p>
     </div>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+        <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes>
         <app-datos-generales *ngSwitchCase="'generales'"></app-datos-generales>
         <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
         <app-accesoFichaPersona *ngSwitchCase="'notario'"></app-accesoFichaPersona>
         <app-datos-integrantes *ngSwitchCase="'integrantes'"></app-datos-integrantes>
         <app-datos-bancarios *ngSwitchCase="'bancarios'"></app-datos-bancarios>
         <app-datos-retenciones *ngSwitchCase="'retenciones'"></app-datos-retenciones>
-        <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes>
         <app-datos-direcciones *ngSwitchCase="'direcciones'"></app-datos-direcciones>
     </div>
     <!--END DATOS GENERALES-->

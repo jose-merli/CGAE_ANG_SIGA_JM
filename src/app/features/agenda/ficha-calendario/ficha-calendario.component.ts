@@ -821,7 +821,6 @@ export class FichaCalendarioComponent implements OnInit {
   validateNotification() {
     if (this.newNotificacion != undefined) {
       if (
-        this.newNotificacion.idTipoEnvio == undefined ||
         this.newNotificacion.idPlantilla == undefined ||
         this.newNotificacion.idTipoCuando == undefined ||
         this.newNotificacion.idUnidadMedida == undefined ||

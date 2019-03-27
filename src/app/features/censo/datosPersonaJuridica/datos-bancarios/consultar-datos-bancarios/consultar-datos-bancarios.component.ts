@@ -283,7 +283,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   downloadAnexo(selectedDatos) {
-    let dato = selectedDatos[0];
+    let dato = selectedDatos;
     let filename;
 
     this.sigaServices
@@ -512,16 +512,24 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
+          if (this.bodySearch.error.message != undefined) {
           this.showFail(this.bodySearch.error.message.toString());
+          }else{
+            this.showFailDefecto();
+          }
           console.log(error);
           //Error al insertar los mandatos de las cuentas
-          if (
-            this.bodySearch.error.message.toString() ==
-            "messages.censo.direcciones.facturacion"
-          ) {
-            this.eliminarItem();
+          if (this.bodySearch.error.message != undefined) {
+            if (
+              this.bodySearch.error.message.toString() ==
+              "messages.censo.direcciones.facturacion"
+            ) {
+              this.eliminarItem();
+            }
           }
+
           this.progressSpinner = false;
+
         },
         () => {
           this.location.back();
@@ -535,6 +543,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.activarCamposMandatos();
         }
       );
+  }
+
+  showFailDefecto() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
   }
 
   editarRegistro() {
@@ -1646,6 +1665,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   restablecerDatosFirma() {
     this.firmaLugar = this.datosPrevios.firmaLugar;
     this.firmaFechaDate = this.datosPrevios.firmaFechaDate;
+    this.file = undefined;
     this.checkFirma = true;
   }
 
@@ -1723,7 +1743,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.firmaLugar = this.firmaLugar;
 
     this.actualizar(this.bodyDatosBancariosAnexo);
-    this.restablecerDatosFirma();
+    this.firmaLugar = this.datosPrevios.firmaLugar;
+    this.firmaFechaDate = this.datosPrevios.firmaFechaDate;
+    this.checkFirma = true;
     this.selectMultiple = false;
   }
 
@@ -1735,6 +1757,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.bodyDatosBancariosAnexo.status = data.status;
 
         if (this.file != undefined) {
+          this.progressSpinner = true;
+
           this.sigaServices
             .postSendFileAndParametersDataBank(
               "busquedaPerJuridica_uploadFile",
@@ -1747,12 +1771,27 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             )
             .subscribe(data => {
               this.file = undefined;
-            });
+              this.progressSpinner = false;
+              this.showSuccess("Se han editado correctamente los datos");
+              this.displayFirmar = false;
+            },
+              error => {
+                this.showFailFile(
+                  "Error al cargar el archivo. El tamaño del archivo no puede exceder de 1MB"
+                );
+                console.log(error);
+                this.progressSpinner = false;
+                this.displayFirmar = false;
+              },
+              () => {
+                this.progressSpinner = false;
+                this.displayFirmar = false;
+              }
+            );
+        } else {
+          this.showSuccess("Se han editado correctamente los datos");
+          this.displayFirmar = false;
         }
-
-        this.showSuccess("Se han editado correctamente los datos");
-
-        this.displayFirmar = false;
       },
       error => {
         this.bodyDatosBancariosAnexoSearch = JSON.parse(error["error"]);
@@ -1864,6 +1903,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   showInfo(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+  showFailFile(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "Error", detail: mensaje });
   }
 
   backTo() {
