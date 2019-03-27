@@ -512,16 +512,24 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
+          if (this.bodySearch.error.message != undefined) {
           this.showFail(this.bodySearch.error.message.toString());
+          }else{
+            this.showFailDefecto();
+          }
           console.log(error);
           //Error al insertar los mandatos de las cuentas
-          if (
-            this.bodySearch.error.message.toString() ==
-            "messages.censo.direcciones.facturacion"
-          ) {
-            this.eliminarItem();
+          if (this.bodySearch.error.message != undefined) {
+            if (
+              this.bodySearch.error.message.toString() ==
+              "messages.censo.direcciones.facturacion"
+            ) {
+              this.eliminarItem();
+            }
           }
+
           this.progressSpinner = false;
+
         },
         () => {
           this.location.back();
@@ -535,6 +543,17 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.activarCamposMandatos();
         }
       );
+  }
+
+  showFailDefecto() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "general.message.error.realiza.accion"
+      )
+    });
   }
 
   editarRegistro() {

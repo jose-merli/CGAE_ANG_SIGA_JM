@@ -294,7 +294,11 @@ export class FichaColegialComponent implements OnInit {
   resultsService: any[] = [];
   resultsTopics: any[] = [];
   backgroundColor;
-
+  datePipeIncorporacion: boolean = false;
+  datePipePresentacion: boolean = false;
+  datePipeFechaJura: boolean = false;
+  datePipeFechaTitulacion: boolean = false;
+  fechaNacCambiada: boolean = false;
   yearRange: string;
 
   nuevaFecha: any;
@@ -390,6 +394,20 @@ export class FichaColegialComponent implements OnInit {
   tarjetaMutualidad: string;
   tarjetaAlterMutua: string;
 
+  tarjetaInteresNum: string;
+  tarjetaGeneralesNum: string;
+  tarjetaColegialesNum: string;
+  tarjetaOtrasColegiacionesNum: string;
+  tarjetaCertificadosNum: string;
+  tarjetaSancionesNum: string;
+  tarjetaSociedadesNum: string;
+  tarjetaCurricularesNum: string;
+  tarjetaDireccionesNum: string;
+  tarjetaBancariosNum: string;
+  tarjetaRegtelNum: string;
+  tarjetaMutualidadNum: string;
+  tarjetaAlterMutuaNum: string;
+
   isCrearColegial: boolean = false;
   nuevoEstadoColegial: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   fechaMinimaEstadoColegial: Date;
@@ -400,6 +418,7 @@ export class FichaColegialComponent implements OnInit {
   isEliminarEstadoColegial: boolean = false;
   disabledToday: boolean = false;
   fichaMutua: any;
+  estadoColegial: String;
 
   constructor(
     private location: Location,
@@ -798,20 +817,22 @@ export class FichaColegialComponent implements OnInit {
 
   //CONTROL DE PERMISOS
 
-  checkAccesos() {
-    this.checkAccesoDatosGenerales();
-    this.checkAccesoInteres();
-    this.checkAccesoDatosColegiales();
-    this.checkAccesoOtrasColegiaciones();
-    this.checkAccesoCertificados();
-    this.checkAccesoSanciones();
-    this.checkAccesoSociedades();
-    this.checkAccesoDatosCurriculares();
-    this.checkAccesoDirecciones();
-    this.checkAccesoDatosBancarios();
-    this.checkAccesoRegtel();
-    this.checkAccesoMutualidad();
-    this.checkAccesoAlterMutua();
+  async checkAccesos() {
+    await this.checkAccesoDatosGenerales();
+    await this.checkAccesoInteres();
+    await this.checkAccesoDatosColegiales();
+    await this.checkAccesoOtrasColegiaciones();
+    await this.checkAccesoCertificados();
+    await this.checkAccesoSanciones();
+    await this.checkAccesoSociedades();
+    await this.checkAccesoDatosCurriculares();
+    await this.checkAccesoDirecciones();
+    await this.checkAccesoDatosBancarios();
+    await this.checkAccesoRegtel();
+    await this.checkAccesoMutualidad();
+    await this.checkAccesoAlterMutua();
+
+    this.asignarPermisosTarjetas();
   }
 
   // CONTROL DE PESTAÑAS ABRIR Y CERRAR
@@ -1559,8 +1580,10 @@ export class FichaColegialComponent implements OnInit {
             if (this.file != undefined) {
               this.solicitudGuardarImagen(this.idPersona);
             }
-            if (data.error.description != "") {
-              this.solicitudModificacionMens = data.error.description;
+            if (data.error != undefined) {
+              if (data.error.description != "") {
+                this.solicitudModificacionMens = data.error.description;
+              }
             }
             this.checkGeneralBody = JSON.parse(JSON.stringify(this.generalBody));
             this.activacionGuardarGenerales();
@@ -1688,7 +1711,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   onChangeCalendar(event) {
-
+    this.fechaNacCambiada = true;
     this.fechaNacimientoSelected = true;
     // console.log(new Date(event));
     var hoy = new Date();
@@ -2233,8 +2256,36 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  mostrarFechas() {
+    if (JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
+      this.datePipeIncorporacion = true;
+    } else {
+      this.datePipeIncorporacion = false;
+    }
+    if (JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
+      this.datePipePresentacion = true;
+    } else {
+      this.datePipePresentacion = false;
+    }
+    if (JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
+      this.datePipeFechaJura = true;
+    } else {
+      this.datePipeFechaJura = false;
+    }
+    if (JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
+      this.datePipeFechaTitulacion = true;
+    } else {
+      this.datePipeFechaTitulacion = false;
+    }
+    //   datePipeIncorporacion: boolean = false;
+    // datePipePresentacion: boolean = false;
+    // datePipeFechaJura: boolean = false;
+    // datePipeFechaTitulacion
+  }
+
   activacionGuardarColegiales() {
     this.inscritoAItem();
+    this.mostrarFechas();
     if (
       JSON.stringify(this.checkColegialesBody) !=
       JSON.stringify(this.colegialesBody) &&
@@ -2775,6 +2826,8 @@ export class FichaColegialComponent implements OnInit {
         },
         err => {
           console.log(err);
+        }, () => {
+          this.estadoColegial = this.datosColegiales[0].estadoColegial;
         }
       );
   }
@@ -5288,6 +5341,24 @@ export class FichaColegialComponent implements OnInit {
     this.validateFields();
   }
 
+  asignarPermisosTarjetas() {
+    this.tarjetaInteres = this.tarjetaInteresNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaColegiales = this.tarjetaColegialesNum;
+    this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
+    this.tarjetaCertificados = this.tarjetaCertificadosNum;
+    this.tarjetaSanciones = this.tarjetaSancionesNum;
+    this.tarjetaSociedades = this.tarjetaSociedadesNum;
+    this.tarjetaCurriculares = this.tarjetaCurricularesNum;
+    this.tarjetaDirecciones = this.tarjetaDireccionesNum;
+    this.tarjetaBancarios = this.tarjetaBancariosNum;
+    this.tarjetaRegtel = this.tarjetaRegtelNum;
+    this.tarjetaMutualidad = this.tarjetaMutualidadNum;
+    this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
+
+    this.progressSpinner = false;
+  }
+
   checkAccesoDatosGenerales() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "120";
@@ -5296,7 +5367,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaGenerales = permisosArray[0].derechoacceso;
+        this.tarjetaGeneralesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5314,7 +5385,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaInteres = permisosArray[0].derechoacceso;
+        this.tarjetaInteresNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5332,7 +5403,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaColegiales = permisosArray[0].derechoacceso;
+        this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5350,7 +5421,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaOtrasColegiaciones = permisosArray[0].derechoacceso;
+        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5368,7 +5439,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaCertificados = permisosArray[0].derechoacceso;
+        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5386,7 +5457,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaSanciones = permisosArray[0].derechoacceso;
+        this.tarjetaSancionesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5404,7 +5475,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaSociedades = permisosArray[0].derechoacceso;
+        this.tarjetaSociedadesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5422,7 +5493,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaCurriculares = permisosArray[0].derechoacceso;
+        this.tarjetaCurricularesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5440,7 +5511,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaDirecciones = permisosArray[0].derechoacceso;
+        this.tarjetaDireccionesNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5458,7 +5529,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaBancarios = permisosArray[0].derechoacceso;
+        this.tarjetaBancariosNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5476,7 +5547,7 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaRegtel = permisosArray[0].derechoacceso;
+        this.tarjetaRegtelNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
@@ -5494,12 +5565,13 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaMutualidad = permisosArray[0].derechoacceso;
+        this.tarjetaMutualidadNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
       () => {
+
       }
     );
   }
@@ -5512,12 +5584,13 @@ export class FichaColegialComponent implements OnInit {
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
-        this.tarjetaAlterMutua = permisosArray[0].derechoacceso;
+        this.tarjetaAlterMutuaNum = permisosArray[0].derechoacceso;
       },
       err => {
         console.log(err);
       },
       () => {
+        this.asignarPermisosTarjetas();
       }
     );
   }
