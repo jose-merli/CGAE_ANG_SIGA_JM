@@ -24,7 +24,7 @@
               <div class="col-lg-6 col-md-6">
                 <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}(*)</label>
                 <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion"></p-dropdown>
+                  [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion" [showClear]="true"></p-dropdown>
               </div>
               <div class="col-lg-6 col-md-6 pt-3">
                 <label class="pr-1">{{'formacion.fichaCalendario.color' | translate}}:</label>
@@ -140,10 +140,10 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
           </div>
-          <div *ngIf="datosNotificaciones.length < 5 && datosNotificaciones.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosNotificaciones.length < 5 && datosNotificaciones.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let noti of datosNotificaciones">
               {{ 'envios.plantillas.literal.tipoenvio' | translate }}:
               <span>{{ noti.tipoEnvio }} </span> - {{ 'formacion.datosNotificaciones.cuando.cabecera' | translate }}:
@@ -151,13 +151,18 @@
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <div *ngIf="datosNotificaciones.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosNotificaciones.length >= 5" class="d-flex justify-content-between">
             <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numNotificaciones' | translate }}:
               <span>{{ datosNotificaciones.length }}</span>
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <i *ngIf="datosNotificaciones.length == 0" class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosNotificaciones.length == 0" class="d-flex justify-content-between">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numNotificaciones' | translate }}:
+              <span>0</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -268,7 +273,7 @@
                 </div>
                 <p-dropdown *ngIf="dato.isMod && calendar.idTipoCalendario == valorTipoCalendarioFormacion" class="select-form" [(ngModel)]="dato[colsNotifications[0].field]"
                   [options]="comboNotifyTypeTraining" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type" (onChange)="editNotificaciones(ent, dato)"></p-dropdown>
+                  name="type" (onChange)="editNotificaciones(ent, dato)" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -284,7 +289,8 @@
                   <span>{{ dato[colsNotifications[1].value] }}</span>
                 </div>
                 <p-dropdown *ngIf="dato.isMod" class="select-form" [(ngModel)]="dato[colsNotifications[1].field]" [options]="comboTemplates"
-                  [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"></p-dropdown>
+                  placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -311,7 +317,7 @@
                   <span>{{ dato[colsNotifications[3].field] }}</span>
                 </div>
                 <input *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" type="text" class="form-control" [(ngModel)]="dato[colsNotifications[3].field]"
-                  pInputText>
+                  type="number" min="0" pInputText>
               </ng-template>
             </p-column>
 
@@ -326,7 +332,7 @@
                 </div>
                 <p-dropdown *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" class="select-form" [(ngModel)]="dato[colsNotifications[4].field]"
                   [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -341,7 +347,7 @@
                 </div>
                 <p-dropdown *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" class="select-form" [(ngModel)]="dato[colsNotifications[5].field]"
                   [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -391,7 +397,7 @@
                 </div>
                 <p-dropdown *ngIf="dato[colsNotifications[0].field] == '' && calendar.idTipoCalendario == valorTipoCalendarioFormacion" class="select-form"
                   [(ngModel)]="newNotificacion.idTipoNotificacion" [options]="comboNotifyTypeTraining" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -403,8 +409,8 @@
                 <span *ngIf="dato[colsNotifications[1].field] != ''">{{ dato[colsNotifications[1].value] }}
                 </span>
                 <p-dropdown *ngIf="dato[colsNotifications[1].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idPlantilla"
-                  [options]="comboTemplates" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type"
-                  (onChange)="onChangeTemplates($event, dato)"></p-dropdown>
+                  [options]="comboTemplates" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -421,7 +427,7 @@
               <ng-template let-dato="rowData" pTemplate="body">
                 <span *ngIf="dato[colsNotifications[3].field] != ''">{{ dato[colsNotifications[3].field] }}</span>
                 <input *ngIf="dato[colsNotifications[3].field] == ''" type="text" class="form-control" [(ngModel)]="newNotificacion.cuando"
-                  pInputText>
+                  type="number" min="0" pInputText>
               </ng-template>
             </p-column>
 
@@ -431,7 +437,7 @@
                 <span *ngIf="dato[colsNotifications[4].field] != ''">{{ dato[colsNotifications[4].value] }} </span>
                 <p-dropdown *ngIf="dato[colsNotifications[4].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idUnidadMedida"
                   [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -442,7 +448,7 @@
 
                 <p-dropdown *ngIf="dato[colsNotifications[5].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idTipoCuando"
                   [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 

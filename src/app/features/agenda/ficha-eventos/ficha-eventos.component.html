@@ -16,10 +16,10 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
           </div>
-          <div class="d-flex justify-content-between col-lg-12 pr-0">
+          <div class="d-flex justify-content-between">
             <label>{{ 'agenda.fichaEventos.datosGenerales.calendario' | translate }}:
               <span>{{ newEvent.tipoCalendario }}</span>
             </label>
@@ -215,10 +215,10 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{'formacion.fichaCalendario.notificaciones.cabecera' | translate}}</label>
           </div>
-          <div *ngIf="datosNotificaciones.length < 5 && datosNotificaciones.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosNotificaciones.length < 5 && datosNotificaciones.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let noti of datosNotificaciones">
               {{ 'envios.plantillas.literal.tipoenvio' | translate }}:
               <span>{{ noti.tipoEnvio }} </span> - {{ 'formacion.datosNotificaciones.cuando.cabecera' | translate }}:
@@ -226,13 +226,18 @@
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <div *ngIf="datosNotificaciones.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="datosNotificaciones.length >= 5" class="d-flex justify-content-between">
             <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numNotificaciones' | translate }}:
               <span>{{ datosNotificaciones.length }}</span>
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <i *ngIf="datosNotificaciones.length == 0" class="fa fa-angle-down float-right"></i>
+          <div *ngIf="datosNotificaciones.length == 0" class="d-flex justify-content-between">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numNotificaciones' | translate }}:
+              <span>0</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('notify')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -317,7 +322,7 @@
             dataKey="idNotificacion" selectionMode="multiple" [(selection)]="selectedDatosNotifications" [responsive]="true"
             #tableNotifications class="tabla-listado" [paginator]="true" (onRowSelect)="actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications)"
             (onRoUnselect)="actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications)" [value]="datosNotificaciones"
-            [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedNotification" [editable]="!selectMultipleNotifications">
+            [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedNotification" [editable]="!selectMultipleNotifications && !isEventoCumplidoOrCancelado">
 
             <p-column [sortable]="true" [field]="colsNotifications[0].field" [header]="
                   'menu.facturacion.plantillas'
@@ -325,27 +330,28 @@
                 " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-col let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[0].value] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[0].value]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato) ">
                   <span>{{ dato[colsNotifications[0].value] }}</span>
                 </div>
-                <p-dropdown *ngIf="dato.isMod" class="select-form" [(ngModel)]="dato[colsNotifications[0].field]" [options]="comboTemplates"
-                  [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"></p-dropdown>
+                <p-dropdown *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" class="select-form" [(ngModel)]="dato[colsNotifications[0].field]"
+                  [options]="comboTemplates" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
             <p-column [sortable]="true" [field]="colsNotifications[1].field" [header]="'envios.plantillas.literal.tipoenvio' | translate"
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[1].field]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[1].field] }}</span>
                 </div>
-                <span *ngIf="dato.isMod">{{ dato[colsNotifications[1].field] }} </span>
+                <span *ngIf="dato.isMod && !isEventoCumplidoOrCancelado">{{ dato[colsNotifications[1].field] }} </span>
               </ng-template>
             </p-column>
 
@@ -353,14 +359,14 @@
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[2].field] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[2].field]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[2].field] }}</span>
                 </div>
-                <input *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" type="text" class="form-control" [(ngModel)]="dato[colsNotifications[2].field]"
-                  pInputText>
+                <input *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" (ngModelChange)="editNotificaciones(dato)" type="text" class="form-control"
+                  [(ngModel)]="dato[colsNotifications[2].field]" type="number" min="0" pInputText>
               </ng-template>
             </p-column>
 
@@ -368,15 +374,15 @@
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[3].value] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[3].value]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[3].value] }}</span>
                 </div>
-                <p-dropdown *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" class="select-form" [(ngModel)]="dato[colsNotifications[3].field]"
-                  [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                <p-dropdown *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" (ngModelChange)="editNotificaciones(dato)" class="select-form"
+                  [(ngModel)]="dato[colsNotifications[3].field]" [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -384,15 +390,15 @@
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
                 <!-- <span *ngIf="!dato.isMod">{{ dato[colsNotifications[4].value] }} </span> -->
-                <div *ngIf="!dato.isMod && setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && setItalic(dato)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[colsNotifications[4].value]}}</span>
                 </div>
-                <div *ngIf="!dato.isMod && !setItalic(dato)">
+                <div *ngIf="(!dato.isMod || isEventoCumplidoOrCancelado) && !setItalic(dato)">
                   <span>{{ dato[colsNotifications[4].value] }}</span>
                 </div>
-                <p-dropdown *ngIf="dato.isMod" (ngModelChange)="editNotificaciones(dato)" class="select-form" [(ngModel)]="dato[colsNotifications[4].field]"
-                  [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                <p-dropdown *ngIf="dato.isMod && !isEventoCumplidoOrCancelado" (ngModelChange)="editNotificaciones(dato)" class="select-form"
+                  [(ngModel)]="dato[colsNotifications[4].field]" [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -438,8 +444,8 @@
                 <span *ngIf="dato[colsNotifications[0].field] != ''">{{ dato[colsNotifications[0].value] }}
                 </span>
                 <p-dropdown *ngIf="dato[colsNotifications[0].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idPlantilla"
-                  [options]="comboTemplates" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type"
-                  (onChange)="onChangeTemplates($event, dato)"></p-dropdown>
+                  [options]="comboTemplates" placeholder="{{'tablas.literal.seleccionar' | translate}}" name="type" (onChange)="onChangeTemplates($event, dato)"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -456,7 +462,7 @@
               <ng-template let-dato="rowData" pTemplate="body">
                 <span *ngIf="dato[colsNotifications[2].field] != ''">{{ dato[colsNotifications[2].field] }}</span>
                 <input *ngIf="dato[colsNotifications[2].field] == ''" type="text" class="form-control" [(ngModel)]="newNotificacion.cuando"
-                  pInputText>
+                  type="number" min="0" pInputText>
               </ng-template>
             </p-column>
 
@@ -466,7 +472,7 @@
                 <span *ngIf="dato[colsNotifications[3].field] != ''">{{ dato[colsNotifications[3].value] }} </span>
                 <p-dropdown *ngIf="dato[colsNotifications[3].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idUnidadMedida"
                   [options]="comboMeasureUnit" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -477,7 +483,7 @@
 
                 <p-dropdown *ngIf="dato[colsNotifications[4].field] == ''" class="select-form" [(ngModel)]="newNotificacion.idTipoCuando"
                   [options]="comboAfterBefore" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                  name="type"></p-dropdown>
+                  name="type" [showClear]="true"></p-dropdown>
               </ng-template>
             </p-column>
 
@@ -528,23 +534,28 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2 mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
-          <div *ngIf="results.length < 5 && results.length != 0" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="results.length < 5 && results.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let formador of results">
               {{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
               <span>{{ formador.nombreCompleto }}</span>
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <div *ngIf="results.length >= 5" class="d-flex justify-content-between col-lg-12 pr-0">
+          <div *ngIf="results.length >= 5" class="d-flex justify-content-between">
             <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numFormadores' | translate }}:
               <span>{{ results.length }}</span>
             </label>
             <i class="fa fa-angle-down float-right"></i>
           </div>
-          <i *ngIf="results.length == 0" class="fa fa-angle-down float-right"></i>
+          <div *ngIf="results.length == 0" class="d-flex justify-content-between">
+            <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numFormadores' | translate }}:
+              <span>0</span>
+            </label>
+            <i class="fa fa-angle-down float-right"></i>
+          </div>
         </div>
       </div>
       <div *ngIf="esFichaActiva('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
@@ -600,10 +611,10 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mt-2">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}</label>
           </div>
-          <div class="d-flex justify-content-between col-lg-12 pr-0">
+          <div class="d-flex justify-content-between">
             <label>{{ 'agenda.fichaEvento.tarjetaNotificaciones.resumen.numAsistentes' | translate }}:
               <span>{{ datosAsistencia.length }}</span>
             </label>
