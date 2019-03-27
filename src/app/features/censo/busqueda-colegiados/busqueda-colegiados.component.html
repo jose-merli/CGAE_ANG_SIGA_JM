@@ -211,6 +211,10 @@
                         <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
                     </ng-template>
 
+                    <!-- <ng-template *ngIf="col.field == 'numColegiado'" let-dato="rowData" pTemplate="body">
+                        <label>{{ dato.numColegiado | number }}</label>
+                    </ng-template> -->
+
                     <ng-template *ngIf="col.field == 'noAparecerRedAbogacia'" let-dato="rowData" pTemplate="body">
                         <label *ngIf="dato.noAparecerRedAbogacia == undefined || dato.noAparecerRedAbogacia == null || dato.noAparecerRedAbogacia == '0'">No</label>
                         <label *ngIf="dato.noAparecerRedAbogacia == '1'">Si</label>

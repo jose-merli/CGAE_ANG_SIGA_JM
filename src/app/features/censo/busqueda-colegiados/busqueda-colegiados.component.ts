@@ -213,11 +213,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
 
-      if (id[0].situacion == 30) {
-        sessionStorage.setItem("disabledAction", "true");
-      } else {
-        sessionStorage.setItem("disabledAction", "false");
-      }
+      // if (id[0].situacion == 30) {
+      //   sessionStorage.setItem("disabledAction", "true");
+      // } else {
+      sessionStorage.setItem("disabledAction", "false");
+      // }
 
       this.router.navigate(["/fichaColegial"]);
     } else {
@@ -653,7 +653,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
-        field: "numColegiado",
+        field: "numberColegiado",
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {
