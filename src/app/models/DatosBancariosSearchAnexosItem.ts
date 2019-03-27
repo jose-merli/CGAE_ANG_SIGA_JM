@@ -16,5 +16,6 @@ export class DatosBancariosSearchAnexosItem {
   status: String;
   esquema: String;
   editar: boolean = false;
-  constructor() {}
+  idFicheroFirma: string;
+  constructor() { }
 }

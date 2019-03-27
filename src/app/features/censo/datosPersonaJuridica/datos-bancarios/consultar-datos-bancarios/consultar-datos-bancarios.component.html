@@ -299,8 +299,8 @@
         </div>
       </div>
 
-      <div *ngIf="openFichaListadoFicherosAnexos" class="card mt-3">
-        <div class="card-body p-0" *ngIf="selectMultiple == true">
+      <div *ngIf="openFichaListadoFicherosAnexos" class="card-body card-body-ficha">
+        <div *ngIf="selectMultiple == true">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" [paginator]="activarPaginacion()" selectionMode="single" [responsive]="true" #table
             class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1" (onRowSelect)="controlarEdicion()"
