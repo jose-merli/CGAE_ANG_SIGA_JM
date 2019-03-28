@@ -21,5 +21,6 @@ export class DatosBancariosItem {
   motivo: String;
   denominacion: String;
   fechaModificacion: Date;
+  noRevisarServicios: Boolean;
   constructor() { }
 }

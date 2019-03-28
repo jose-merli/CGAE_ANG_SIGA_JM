@@ -232,6 +232,7 @@ export class FichaColegialComponent implements OnInit {
   valorPreferenteCorreo: string = "11";
   valorPreferenteSMS: string = "12";
   msgDir = "";
+  initSpinner: boolean = true;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -432,7 +433,7 @@ export class FichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.initSpinner = true;
     this.getYearRange();
     this.getLenguage();
     this.checkAccesos();
@@ -532,6 +533,18 @@ export class FichaColegialComponent implements OnInit {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         this.isLetrado = false;
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      } else if (sessionStorage.getItem("nuevoNoColegiado")) {
+        let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
+        this.generalBody = new FichaColegialGeneralesItem();
+        this.colegialesBody = new FichaColegialColegialesItem();
+        this.generalBody.nif = enviar.numeroIdentificacion;
+        this.generalBody.apellidos1 = enviar.apellido1;
+        this.generalBody.soloNombre = enviar.nombre;
+        this.generalBody.idInstitucion = enviar.idInstitucion;
+        this.generalBody.apellidos2 = enviar.apellido2;
+
+        this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
+        this.compruebaDNI();
       } else {
         this.generalBody = new FichaColegialGeneralesItem();
         this.colegialesBody = new FichaColegialColegialesItem();
@@ -824,22 +837,8 @@ export class FichaColegialComponent implements OnInit {
 
   //CONTROL DE PERMISOS
 
-  async checkAccesos() {
-    await this.checkAccesoDatosGenerales();
-    await this.checkAccesoInteres();
-    await this.checkAccesoDatosColegiales();
-    await this.checkAccesoOtrasColegiaciones();
-    await this.checkAccesoCertificados();
-    await this.checkAccesoSanciones();
-    await this.checkAccesoSociedades();
-    await this.checkAccesoDatosCurriculares();
-    await this.checkAccesoDirecciones();
-    await this.checkAccesoDatosBancarios();
-    await this.checkAccesoRegtel();
-    await this.checkAccesoMutualidad();
-    await this.checkAccesoAlterMutua();
-
-    this.asignarPermisosTarjetas();
+  checkAccesos() {
+    this.checkAccesoDatosGenerales();
   }
 
   // CONTROL DE PESTAÑAS ABRIR Y CERRAR
@@ -5361,7 +5360,7 @@ export class FichaColegialComponent implements OnInit {
     this.tarjetaMutualidad = this.tarjetaMutualidadNum;
     this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
 
-    this.progressSpinner = false;
+    this.initSpinner = false;
   }
 
   checkAccesoDatosGenerales() {
@@ -5378,6 +5377,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoInteres();
       }
     );
   }
@@ -5396,6 +5396,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoDatosColegiales();
       }
     );
   }
@@ -5414,6 +5415,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoOtrasColegiaciones();
       }
     );
   }
@@ -5432,6 +5434,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoCertificados();
       }
     );
   }
@@ -5450,6 +5453,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoSanciones();
       }
     );
   }
@@ -5468,6 +5472,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoSociedades();
       }
     );
   }
@@ -5486,6 +5491,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoDatosCurriculares();
       }
     );
   }
@@ -5504,6 +5510,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoDirecciones();
       }
     );
   }
@@ -5522,6 +5529,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoDatosBancarios();
       }
     );
   }
@@ -5540,6 +5548,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoRegtel();
       }
     );
   }
@@ -5558,6 +5567,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.checkAccesoMutualidad();
       }
     );
   }
@@ -5576,7 +5586,7 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
-
+        this.checkAccesoAlterMutua();
       }
     );
   }

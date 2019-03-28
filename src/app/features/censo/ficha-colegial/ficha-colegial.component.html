@@ -478,8 +478,8 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
-              <p-dropdown class="select-form" [(disabled)]="tarjetaColegiales == '2' || disabledAction" [(ngModel)]="colegialesBody.idTiposSeguro"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
+              <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction"
+                [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
@@ -1564,7 +1564,12 @@
   </div> -->
 
   <!-- <div #target *ngIf="progressSpinner" class="overlay-spinner"> -->
-  <div *ngIf="progressSpinner" class="overlay-spinner">
+  <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+    <div class="loader"></div>
+  </div>
+
+  <div *ngIf="initSpinner" class="overlay-spinner">
     <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
     <div class="loader"></div>
   </div>
