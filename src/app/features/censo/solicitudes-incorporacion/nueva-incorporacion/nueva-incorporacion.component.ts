@@ -83,6 +83,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   isLetrado: boolean = true;
   isPoblacionExtranjera: boolean = false;
   poblacionExtranjeraSelected: string;
+  noExistePersona: boolean = false;
+  noEsColegiado: boolean = false;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -134,6 +136,22 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+
+        if (solicitudrecibida.idInstitucion != null && solicitudrecibida.idInstitucion != undefined
+          && solicitudrecibida.idInstitucion != "") {
+          this.noExistePersona = false;
+
+          if (solicitudrecibida.numColegiado != null && solicitudrecibida.numColegiado != undefined
+            && solicitudrecibida.numColegiado != "") {
+            this.noEsColegiado = false;
+          } else {
+            this.noEsColegiado = true;
+          }
+
+        } else {
+          this.noExistePersona = true;
+        }
+
       } else {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("editedSolicitud")
