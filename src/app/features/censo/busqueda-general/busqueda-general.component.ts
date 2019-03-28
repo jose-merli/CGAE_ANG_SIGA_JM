@@ -664,16 +664,33 @@ export class BusquedaGeneralComponent {
               enviar.numColegiado = id[0].numeroColegiado;
               enviar.idInstitucion = id[0].numeroInstitucion;
               enviar.apellido2 = id[0].segundoApellido;
+              if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
+                sessionStorage.setItem(
+                  "nuevoNoColegiado",
+                  JSON.stringify(enviar)
+                );
+                sessionStorage.setItem("esColegiado", "false");
+                sessionStorage.setItem("esNuevoNoColegiado", "true");
+                this.router.navigate(["/fichaColegial"]);
+              } else {
+                sessionStorage.setItem(
+                  "nuevaIncorporacion",
+                  JSON.stringify(enviar)
+                );
+                this.router.navigate(["/nuevaIncorporacion"]);
+              }
 
-              sessionStorage.setItem(
-                "nuevaIncorporacion",
-                JSON.stringify(enviar)
-              );
-              this.router.navigate(["/nuevaIncorporacion"]);
             } else {
-              this.showFail(
-                "No se puede crear una solicitud de modificación a partir de una persona de la misma institución"
-              );
+              if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
+                this.showFail(
+                  "No se puede crear un no colegiado a partir de un colegiado de la misma institución"
+                );
+              } else {
+                this.showFail(
+                  "No se puede crear una solicitud a partir de una persona de la misma institución"
+                );
+              }
+
             }
           }
         );
@@ -750,104 +767,116 @@ export class BusquedaGeneralComponent {
         message: mess,
         icon: icon,
         accept: () => {
-          if (sessionStorage.getItem("abrirNotario") == "true") {
-            let notarioNIF = new DatosNotarioItem();
-            if (
-              this.bodyFisica.nif != null ||
-              this.bodyFisica.nif != undefined
-            ) {
-              notarioNIF.nif = this.bodyFisica.nif;
-            } else {
-              notarioNIF.nif = this.bodyJuridica.nif;
-            }
-
-            notarioNIF.tipoIdentificacion = this.tipoCIF;
-
-            notarioNIF.nombre = "";
-            let notariosNEW = [];
-            notariosNEW.push(notarioNIF);
-
-            sessionStorage.removeItem("notario");
-
-            sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
-            this.location.back();
-          } else if (
-            sessionStorage.getItem("solicitudIncorporacion") == "true"
-          ) {
-            let enviar = new SolicitudIncorporacionItem();
-            if (this.bodyFisica.nif != undefined || this.bodyFisica.nif != "") {
-              enviar.numeroIdentificacion = this.bodyFisica.nif;
-              enviar.nombre = this.bodyFisica.nombre;
-              enviar.apellido1 = this.bodyFisica.primerApellido;
-              enviar.apellido2 = this.bodyFisica.segundoApellido;
-              enviar.numColegiado = this.bodyFisica.numeroColegiado;
-              sessionStorage.setItem(
-                "nuevaIncorporacion",
-                JSON.stringify(enviar)
-              );
-              this.router.navigate(["/nuevaIncorporacion"]);
-            } else {
-              this.showFail(
-                "No se puede crear una solicitud de modificación a partir de una persona jurídica"
-              );
-            }
-          } else if (
-            sessionStorage.getItem("newIntegrante") != null ||
-            sessionStorage.getItem("newIntegrante") != undefined
-          ) {
-            let integranteNew = new DatosIntegrantesItem();
-            if (
-              this.bodyFisica.nif != null ||
-              this.bodyFisica.nif != undefined
-            ) {
-              integranteNew.nifCif = this.bodyFisica.nif;
-            } else {
-              integranteNew.nifCif = this.bodyJuridica.nif;
-            }
-
-            // sirve tanto para ambas busquedas (fisica, juridica)
-            integranteNew.tipoIdentificacion = this.tipoCIF;
-
-            // datos de persona fisica para pasar a pantalla integrante
-            if (this.persona == "f") {
-              integranteNew.nombre = this.bodyFisica.nombre;
-              integranteNew.apellidos1 = this.bodyFisica.primerApellido;
-              integranteNew.apellidos2 = this.bodyFisica.segundoApellido;
-              integranteNew.ejerciente = "NO COLEGIADO";
-            } else {
-              // datos de persona fisica para pasar a pantalla integrante
-              integranteNew.nombre = this.bodyJuridica.denominacion;
-              integranteNew.apellidos1 = this.bodyJuridica.abreviatura;
-              integranteNew.ejerciente = "SOCIEDAD";
-              integranteNew.colegio = this.colegios_seleccionados[0];
-            }
-
-            integranteNew.completo = false;
-            let integrantesNEW = [];
-            integrantesNEW.push(integranteNew);
-
-            sessionStorage.removeItem("nIntegrante");
+          let enviar = new SolicitudIncorporacionItem();
+          if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
             sessionStorage.setItem(
-              "nIntegrante",
-              JSON.stringify(integrantesNEW)
+              "nuevoNoColegiado",
+              JSON.stringify(enviar)
             );
-            this.router.navigate(["detalleIntegrante"]);
-          } else if (
-            sessionStorage.getItem("abrirFormador") != null ||
-            sessionStorage.getItem("abrirFormador") != undefined
-          ) {
-            let formador = new FormadorCursoItem();
-            formador.tipoIdentificacion = this.tipoCIF;
-            formador.nif = this.bodyFisica.nif;
-            sessionStorage.removeItem("abrirFormador");
-            sessionStorage.setItem("formador", JSON.stringify(formador));
-            if (
-              sessionStorage.getItem("backFichaInscripcion") != null &&
-              sessionStorage.getItem("backFichaInscripcion")
-            )
-              this.router.navigate(["/fichaInscripcion"]);
-            else this.router.navigate(["/fichaCurso"]);
+            sessionStorage.setItem("esColegiado", "false");
+            sessionStorage.setItem("esNuevoNoColegiado", "true");
+            this.router.navigate(["/fichaColegial"]);
+          } else {
+            if (sessionStorage.getItem("abrirNotario") == "true") {
+              let notarioNIF = new DatosNotarioItem();
+              if (
+                this.bodyFisica.nif != null ||
+                this.bodyFisica.nif != undefined
+              ) {
+                notarioNIF.nif = this.bodyFisica.nif;
+              } else {
+                notarioNIF.nif = this.bodyJuridica.nif;
+              }
+
+              notarioNIF.tipoIdentificacion = this.tipoCIF;
+
+              notarioNIF.nombre = "";
+              let notariosNEW = [];
+              notariosNEW.push(notarioNIF);
+
+              sessionStorage.removeItem("notario");
+
+              sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
+              this.location.back();
+            } else if (
+              sessionStorage.getItem("solicitudIncorporacion") == "true"
+            ) {
+              let enviar = new SolicitudIncorporacionItem();
+              if (this.bodyFisica.nif != undefined || this.bodyFisica.nif != "") {
+                enviar.numeroIdentificacion = this.bodyFisica.nif;
+                enviar.nombre = this.bodyFisica.nombre;
+                enviar.apellido1 = this.bodyFisica.primerApellido;
+                enviar.apellido2 = this.bodyFisica.segundoApellido;
+                enviar.numColegiado = this.bodyFisica.numeroColegiado;
+                sessionStorage.setItem(
+                  "nuevaIncorporacion",
+                  JSON.stringify(enviar)
+                );
+                this.router.navigate(["/nuevaIncorporacion"]);
+              } else {
+                this.showFail(
+                  "No se puede crear una solicitud de modificación a partir de una persona jurídica"
+                );
+              }
+            } else if (
+              sessionStorage.getItem("newIntegrante") != null ||
+              sessionStorage.getItem("newIntegrante") != undefined
+            ) {
+              let integranteNew = new DatosIntegrantesItem();
+              if (
+                this.bodyFisica.nif != null ||
+                this.bodyFisica.nif != undefined
+              ) {
+                integranteNew.nifCif = this.bodyFisica.nif;
+              } else {
+                integranteNew.nifCif = this.bodyJuridica.nif;
+              }
+
+              // sirve tanto para ambas busquedas (fisica, juridica)
+              integranteNew.tipoIdentificacion = this.tipoCIF;
+
+              // datos de persona fisica para pasar a pantalla integrante
+              if (this.persona == "f") {
+                integranteNew.nombre = this.bodyFisica.nombre;
+                integranteNew.apellidos1 = this.bodyFisica.primerApellido;
+                integranteNew.apellidos2 = this.bodyFisica.segundoApellido;
+                integranteNew.ejerciente = "NO COLEGIADO";
+              } else {
+                // datos de persona fisica para pasar a pantalla integrante
+                integranteNew.nombre = this.bodyJuridica.denominacion;
+                integranteNew.apellidos1 = this.bodyJuridica.abreviatura;
+                integranteNew.ejerciente = "SOCIEDAD";
+                integranteNew.colegio = this.colegios_seleccionados[0];
+              }
+
+              integranteNew.completo = false;
+              let integrantesNEW = [];
+              integrantesNEW.push(integranteNew);
+
+              sessionStorage.removeItem("nIntegrante");
+              sessionStorage.setItem(
+                "nIntegrante",
+                JSON.stringify(integrantesNEW)
+              );
+              this.router.navigate(["detalleIntegrante"]);
+            } else if (
+              sessionStorage.getItem("abrirFormador") != null ||
+              sessionStorage.getItem("abrirFormador") != undefined
+            ) {
+              let formador = new FormadorCursoItem();
+              formador.tipoIdentificacion = this.tipoCIF;
+              formador.nif = this.bodyFisica.nif;
+              sessionStorage.removeItem("abrirFormador");
+              sessionStorage.setItem("formador", JSON.stringify(formador));
+              if (
+                sessionStorage.getItem("backFichaInscripcion") != null &&
+                sessionStorage.getItem("backFichaInscripcion")
+              )
+                this.router.navigate(["/fichaInscripcion"]);
+              else this.router.navigate(["/fichaCurso"]);
+            }
           }
+
         },
         reject: () => {
           this.msgs = [

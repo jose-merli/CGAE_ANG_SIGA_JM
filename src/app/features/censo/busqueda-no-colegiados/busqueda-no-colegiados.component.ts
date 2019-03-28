@@ -550,14 +550,21 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   isCrear() {
-    sessionStorage.removeItem("personaBody");
-    sessionStorage.setItem(
-      "filtrosBusquedaNoColegiados",
-      JSON.stringify(this.body)
-    );
-    sessionStorage.setItem("esColegiado", "false");
-    sessionStorage.setItem("esNuevoNoColegiado", "true");
-    this.router.navigate(["/fichaColegial"]);
+    // sessionStorage.removeItem("personaBody");
+    // sessionStorage.setItem(
+    //   "filtrosBusquedaNoColegiados",
+    //   JSON.stringify(this.body)
+    // );
+    // sessionStorage.setItem("esColegiado", "false");
+    // sessionStorage.setItem("esNuevoNoColegiado", "true");
+    // this.router.navigate(["/fichaColegial"]);
+    sessionStorage.removeItem("editedSolicitud");
+    sessionStorage.setItem("consulta", "false");
+    sessionStorage.setItem("solicitudIncorporacion", "true");
+    sessionStorage.setItem("nuevoNoColegiadoGen", "true");
+
+    // this.router.navigate(["/nuevaIncorporacion"]);
+    this.router.navigate(["/busquedaGeneral"]);
   }
 
   deleteSeleccion(selectedDatos) {

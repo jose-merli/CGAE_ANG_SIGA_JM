@@ -5,15 +5,17 @@
         <i class="fa fa-angle-right"></i>{{"menu.solicitudIncorporacion" | translate}}
     </p>
 </div>
-<div *ngIf="dniDisponible==false" class="info-limit d-flex justify-content-center align-items-center mb-1">
+<div *ngIf="!dniDisponible && !noExistePersona" class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
             <span *ngIf="!vieneDeBusqueda" class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
-            <span *ngIf="vieneDeBusqueda" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda && noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente.sistema" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda && !noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
         </div>
     </div>
 </div>
+
 <div class="busqueda-container">
     <!--DATOS COLEGIACIÓN-->
     <div class="card">

@@ -211,7 +211,7 @@
                 (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
                 [utc]="false" showIcon="true">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end arreglo-fecha">
+                  <div class="main-button d-flex col-lg-12">
                     <button (click)="fechaHoyFechaNacimiento()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaNacimiento()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -255,7 +255,7 @@
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br />
-              <label class="form-group-label">{{ "censo.consultaDatosGenerales.literal.comisionesCargos" | translate }}
+              <label class="form-group-label">{{ "censo.consultaDatosGenerales.literal.comisiones" | translate }}
               </label>
               &nbsp;&nbsp;
               <p-checkbox [(disabled)]="(tarjetaGenerales == 2)  || disabledAction" (onChange)="activacionGuardarGenerales()" [(ngModel)]="comisiones"
@@ -478,8 +478,8 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
-              <p-dropdown class="select-form" [(disabled)]="tarjetaColegiales == '2' || disabledAction" [(ngModel)]="colegialesBody.idTiposSeguro"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
+              <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction"
+                [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
@@ -506,7 +506,7 @@
                 (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end arreglo-fecha">
+                  <div class="main-button d-flex col-lg-12">
                     <button (click)="fechaHoyFechaIncorporacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaIncorporacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -520,7 +520,7 @@
                 (onBlur)="blurFechaPresentacion($event)" [(disabled)]="isLetrado || disabledAction" [(ngModel)]="colegialesBody.fechapresentacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end arreglo-fecha">
+                  <div class="main-button d-flex col-lg-12">
                     <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaPresentacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -528,13 +528,13 @@
               </p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }} (*)</label>
+              <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
               <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="isLetrado || disabledAction"
                 (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
                 (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end arreglo-fecha">
+                  <div class="main-button d-flex col-lg-12">
                     <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaJura()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -549,7 +549,7 @@
                 (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
-                  <div class="main-button d-flex justify-content-end arreglo-fecha">
+                  <div class="main-button d-flex col-lg-12">
                     <button (click)="fechaHoyFechaTitulacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
                     <button (click)="borrarFechaTitulacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
                   </div>
@@ -1564,7 +1564,12 @@
   </div> -->
 
   <!-- <div #target *ngIf="progressSpinner" class="overlay-spinner"> -->
-  <div *ngIf="progressSpinner" class="overlay-spinner">
+  <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+    <div class="loader"></div>
+  </div>
+
+  <div *ngIf="initSpinner" class="overlay-spinner">
     <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
     <div class="loader"></div>
   </div>
