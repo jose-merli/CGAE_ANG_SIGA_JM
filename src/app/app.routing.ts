@@ -21,6 +21,7 @@ import { AlterMutuaOfertasComponent } from "./features/censo/solicitudes-incorpo
 import { NuevaIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component";
 import { DocumentacionSolicitudesComponent } from "./features/censo/documentacion-solicitudes/documentacion-solicitudes.component";
 import { MantenimientoGruposFijosComponent } from "./features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component";
+import { ModificacionDatosComponent } from './features/censo/modificacion-datos/modificacion-datos.component';
 import { MantenimientoMandatosComponent } from "./features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component";
 import { BusquedaSancionesComponent } from "./features/censo/busqueda-sanciones/busqueda-sanciones.component";
 import { BusquedaLetradosComponent } from "./features/censo/busqueda-letrados/busqueda-letrados.component";
@@ -347,6 +348,11 @@ const appRoutes: Routes = [
   {
     path: "documentacionSolicitudes",
     component: DocumentacionSolicitudesComponent,
+    canActivate: [AuthGuard]
+  },
+    {
+    path: "modificacionDatos",
+    component: ModificacionDatosComponent,
     canActivate: [AuthGuard]
   },
   {

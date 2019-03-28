@@ -22,7 +22,7 @@
           <div class="bloque col-lg-5 col-md-3 col-sm-3">
             <div class="row pb-3">
               <div class="col-lg-6 col-md-6">
-                <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}}(*)</label>
+                <label>{{'censo.consultaDatosGenerales.literal.tipoCliente' | translate}} (*)</label>
                 <p-dropdown class="select-form" [options]="comboCalendarType" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [(ngModel)]='calendar.idTipoCalendario' name="type" [disabled]="modoEdicion" [showClear]="true"></p-dropdown>
               </div>
@@ -33,7 +33,7 @@
             </div>
             <div class="row">
               <div class="col-lg-12 col-md-12">
-                <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
+                <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}} (*)</label>
                 <input type="text" class="form-control" [(ngModel)]='calendar.descripcion' pInputText name="descripcion" disabled>
               </div>
             </div>

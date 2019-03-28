@@ -62,7 +62,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("esNuevoNoColegiado");
@@ -301,6 +301,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
               let noColegiado = new NoColegiadoItem();
               noColegiado.nif = selectedDatos.nif;
+              noColegiado.idPersona = selectedDatos.idPersona;
               noColegiado.soloNombre = selectedDatos.nombre;
               noColegiado.apellidos1 = selectedDatos.primerApellido;
               noColegiado.apellidos2 = selectedDatos.segundoApellido;

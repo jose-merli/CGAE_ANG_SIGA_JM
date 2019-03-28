@@ -67,7 +67,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   pendienteAprobacion: boolean = false;
   resultadosPoblaciones: String;
   modalidadDocumentacionSelected: String;
-  tipoIdentificacionSelected: String;
+  tipoIdentificacionSelected: String = "";
   tratamientoSelected: String;
   estadoCivilSelected: String;
   paisSelected: String = "0";
@@ -81,6 +81,11 @@ export class NuevaIncorporacionComponent implements OnInit {
   vieneDeBusqueda: boolean = false;
   solicitarMutualidad: boolean = true;
   isLetrado: boolean = true;
+  isPoblacionExtranjera: boolean = false;
+  poblacionExtranjeraSelected: string;
+  noExistePersona: boolean = false;
+  noEsColegiado: boolean = false;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -108,6 +113,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       sessionStorage.removeItem("pendienteAprobacion");
     }
     if (sessionStorage.getItem("consulta") == "true") {
+      sessionStorage.removeItem("consulta");
       this.solicitudEditar = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
@@ -130,6 +136,22 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+
+        if (solicitudrecibida.idInstitucion != null && solicitudrecibida.idInstitucion != undefined
+          && solicitudrecibida.idInstitucion != "") {
+          this.noExistePersona = false;
+
+          if (solicitudrecibida.numColegiado != null && solicitudrecibida.numColegiado != undefined
+            && solicitudrecibida.numColegiado != "") {
+            this.noEsColegiado = false;
+          } else {
+            this.noEsColegiado = true;
+          }
+
+        } else {
+          this.noExistePersona = true;
+        }
+
       } else {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("editedSolicitud")
@@ -142,6 +164,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.estadoSolicitudSelected = "20";
       this.vieneDeBusqueda = true;
       this.dniDisponible = false;
+
+
     }
 
     if (this.solicitudEditar.apellido2 != undefined) {
@@ -219,6 +243,13 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
+
+        if (this.solicitudEditar.pais == undefined) {
+          this.paisSelected = "191";
+          let paisSpain = this.paises.find(x => x.value == "191");
+          this.solicitudEditar.pais = paisSpain.label;
+        }
+
       },
       error => {
         console.log(error);
@@ -379,11 +410,17 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   onChangePais(event) {
     this.solicitudEditar.idPais = event.value;
-    if (event.value.value != "191") {
+    if (event.value == "191") {
       this.isValidCodigoPostal();
       this.provinciaSelected = null;
       this.poblacionSelected = null;
       this.solicitudEditar.codigoPostal = null;
+      this.poblacionExtranjeraSelected = undefined;
+      this.isPoblacionExtranjera = false;
+    } else {
+      this.isPoblacionExtranjera = true;
+      this.provinciaSelected = undefined;
+      this.poblacionSelected = undefined;
     }
   }
 
@@ -567,7 +604,8 @@ export class NuevaIncorporacionComponent implements OnInit {
               )
               .subscribe(
                 result => {
-                  console.log(result);
+                  sessionStorage.removeItem("editedSolicitud");
+
                   this.progressSpinner = false;
                   this.msgs = [
                     {
@@ -576,8 +614,26 @@ export class NuevaIncorporacionComponent implements OnInit {
                       detail: "Solicitud aprobada."
                     }
                   ];
-                  this.progressSpinner = false;
-                  this.location.back();
+                  this.consulta = true;
+                  this.pendienteAprobacion = false;
+                  sessionStorage.setItem("pendienteAprobacion", "false");
+                  this.solicitudEditar.idEstado = "50";
+                  this.estadoSolicitudSelected = "50";
+                  let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+                  this.solicitudEditar.estadoSolicitud = estado.label;
+                  let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+                  this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+                  let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+                  this.solicitudEditar.modalidad = modalidad.label;
+                  sessionStorage.setItem("consulta", "true");
+
+                  sessionStorage.setItem(
+                    "editedSolicitud",
+                    JSON.stringify(this.solicitudEditar)
+                  );
+                  this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+
+                  this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
                 },
                 error => {
                   console.log(error);
@@ -614,6 +670,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       )
       .subscribe(
         result => {
+          sessionStorage.removeItem("editedSolicitud");
+
           this.progressSpinner = false;
           this.msgs = [
             {
@@ -622,7 +680,27 @@ export class NuevaIncorporacionComponent implements OnInit {
               detail: "Solicitud denegada."
             }
           ];
-          this.location.back();
+
+          this.consulta = true;
+          this.pendienteAprobacion = false;
+          sessionStorage.setItem("pendienteAprobacion", "false");
+          sessionStorage.setItem("consulta", "true");
+          this.solicitudEditar.idEstado = "30";
+          this.estadoSolicitudSelected = "30";
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+          let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+          this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+          let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+          this.solicitudEditar.modalidad = modalidad.label;
+
+          sessionStorage.setItem(
+            "editedSolicitud",
+            JSON.stringify(this.solicitudEditar)
+          );
+          this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+
+          this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
         },
         error => {
           console.log(error);
@@ -706,12 +784,29 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           sessionStorage.removeItem("editedSolicitud");
+
+          this.tratarDatos();
+          this.progressSpinner = false;
+          this.solicitudEditar.idSolicitud = JSON.parse(result.body).id;
+
+          this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+          this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+          this.pendienteAprobacion = true;
+          this.consulta = false;
+          sessionStorage.setItem("pendienteAprobacion", "true");
+          sessionStorage.setItem("consulta", "false");
+          this.estadoSolicitudSelected = this.solicitudEditar.idEstado;
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+          let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+          this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+          let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+          this.solicitudEditar.modalidad = modalidad.label;
+
           sessionStorage.setItem(
             "editedSolicitud",
             JSON.stringify(this.solicitudEditar)
           );
-          this.tratarDatos();
-          this.progressSpinner = false;
 
           if (back == true) {
             this.msgs = [
@@ -721,8 +816,6 @@ export class NuevaIncorporacionComponent implements OnInit {
                 detail: "Solicitud guardada correctamente."
               }
             ];
-            sessionStorage.setItem("solicitudInsertadaConExito", "true");
-            this.router.navigate(["/solicitudesIncorporacion"]);
           }
         },
         error => {
@@ -912,6 +1005,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.solicitudEditar.idTipo = this.tipoSolicitudSelected;
     this.solicitudEditar.idTipoColegiacion = this.tipoColegiacionSelected;
     this.solicitudEditar.idModalidadDocumentacion = this.modalidadDocumentacionSelected;
+    if (this.isPoblacionExtranjera) {
+      this.solicitudEditar.poblacionExtranjera = this.poblacionExtranjeraSelected;
+    } else {
+      this.solicitudEditar.poblacionExtranjera = undefined;
+      this.solicitudEditar.idPoblacion = this.poblacionSelected;
+      this.solicitudEditar.idProvincia = this.provinciaSelected;
+    }
+
     if (
       JSON.stringify(this.checkSolicitudInicio) !=
       JSON.stringify(this.solicitudEditar) &&
@@ -953,7 +1054,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.paisSelected != undefined &&
         this.solicitudEditar.domicilio != null &&
         this.solicitudEditar.domicilio != undefined &&
-        this.isValidCodigoPostal() &&
+        (this.isValidCodigoPostal() || this.isPoblacionExtranjera) &&
         this.solicitudEditar.codigoPostal != null &&
         this.solicitudEditar.codigoPostal != undefined &&
         this.solicitudEditar.telefono1 != null &&
@@ -1076,7 +1177,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   showSuccess(mensaje: string) {
     this.msgs = [];
-    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+    this.msgs.push({ severity: "success", summary: this.translateService.instant("general.message.correct"), detail: mensaje });
   }
 
   showInfo(mensaje: string) {

@@ -21,7 +21,7 @@
           <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
         <div class="form-group col-lg-4 col-md-4">
-          <label>{{'enviosMasivos.literal.fechaCreacion' | translate}}(*)</label>
+          <label>{{'enviosMasivos.literal.fechaCreacion' | translate}} (*)</label>
           <app-fecha [(value)]="bodySearch.fechaCreacion" [utc]="false" (valueChangeSelected)="fillFechaCreacion($event)" (valueChangeInput)="fillFechaCreacion($event)"></app-fecha>
         </div>
         <div class="form-group col-lg-4 col-md-4">
