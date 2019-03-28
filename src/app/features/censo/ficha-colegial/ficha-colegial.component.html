@@ -255,7 +255,7 @@
             </div>
             <div class="form-check col-lg-6 col-md-6">
               <br />
-              <label class="form-group-label">{{ "censo.consultaDatosGenerales.literal.comisionesCargos" | translate }}
+              <label class="form-group-label">{{ "censo.consultaDatosGenerales.literal.comisiones" | translate }}
               </label>
               &nbsp;&nbsp;
               <p-checkbox [(disabled)]="(tarjetaGenerales == 2)  || disabledAction" (onChange)="activacionGuardarGenerales()" [(ngModel)]="comisiones"
@@ -528,7 +528,7 @@
               </p-calendar>
             </div>
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }} (*)</label>
+              <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
               <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="isLetrado || disabledAction"
                 (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
                 (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura"

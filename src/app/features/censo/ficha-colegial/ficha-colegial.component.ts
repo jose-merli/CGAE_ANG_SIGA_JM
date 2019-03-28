@@ -487,6 +487,7 @@ export class FichaColegialComponent implements OnInit {
       // }
       this.desactivarVolver = true;
     }
+
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -538,6 +539,7 @@ export class FichaColegialComponent implements OnInit {
 
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
+
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -546,12 +548,17 @@ export class FichaColegialComponent implements OnInit {
       this.activacionEditar = true;
       this.esNewColegiado = false;
     }
+
     if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
       this.onInitCurriculares();
       this.onInitDirecciones();
       this.onInitDatosBancarios();
       this.comprobarREGTEL();
 
+    }
+
+    if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+      this.generalBody.idTipoIdentificacion = "10";
     }
 
     // this.onInitSociedades();
@@ -2292,9 +2299,7 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.numColegiado != "" &&
       this.colegialesBody.residenteInscrito != "" &&
       this.colegialesBody.incorporacion != null &&
-      this.colegialesBody.fechapresentacion != null &&
-      this.colegialesBody.fechaJura != null
-    ) {
+      this.colegialesBody.fechapresentacion != null) {
 
       if (this.isCrearColegial == false) {
         this.activarGuardarColegiales = true;
