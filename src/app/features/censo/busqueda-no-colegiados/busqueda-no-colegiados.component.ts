@@ -145,6 +145,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
 
     // Obtener Combos
+    this.progressSpinner = true;
     this.getCombos();
   }
 
@@ -202,9 +203,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           }
           sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
         }
+         this.progressSpinner = false;
       },
       err => {
         console.log(err);
+         this.progressSpinner = false;
       }
     );
   }
@@ -685,10 +688,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   getColsResults() {
     this.cols = [
-      {
-        field: "colegioResultado",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
+      // {
+      //   field: "colegioResultado",
+      //   header: "censo.busquedaClientesAvanzada.literal.colegio"
+      // },
       {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"
