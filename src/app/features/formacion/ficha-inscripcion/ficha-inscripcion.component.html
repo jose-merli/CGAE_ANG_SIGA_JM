@@ -90,7 +90,7 @@
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('inscripcion')">
       <div class="form-row lg-12 md-12">
         <div class="col-lg-4 col-md-4">
-          <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
+          <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }} (*)</label>
           <app-fecha [(value)]="inscripcion.fechaSolicitud" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"
             (valueChangeSelected)="fillFechaSolicitud($event)" (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
         </div>

@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     //sessionStorage.removeItem("authenticated");
-   sessionStorage.clear();
+  // sessionStorage.clear();
     this.router.routeReuseStrategy.shouldReuseRoute = function() {
       return false;
     };

@@ -81,6 +81,7 @@ import { SolicitudesEspecificasComponent } from './features/censo/solicitudes-es
 import { SolicitudesIncorporacionComponent } from './features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component';
 import { NuevaIncorporacionComponent } from './features/censo/solicitudes-incorporacion/nueva-incorporacion/nueva-incorporacion.component';
 import { DocumentacionSolicitudesComponent } from './features/censo/documentacion-solicitudes/documentacion-solicitudes.component';
+import { ModificacionDatosComponent } from './features/censo/modificacion-datos/modificacion-datos.component';
 import { MantenimientoGruposFijosComponent } from './features/censo/mantenimiento-grupos-fijos/mantenimiento-grupos-fijos.component';
 import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-mandatos/mantenimiento-mandatos.component';
 import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
@@ -366,6 +367,7 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 		AlterMutuaRetaComponent,
 		AlterMutuaOfertasComponent,
 		NuevaIncorporacionComponent,
+		ModificacionDatosComponent,
 		DocumentacionSolicitudesComponent,
 		MantenimientoGruposFijosComponent,
 		MantenimientoMandatosComponent,
