@@ -513,8 +513,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           if (this.bodySearch.error.message != undefined) {
-          this.showFail(this.bodySearch.error.message.toString());
-          }else{
+            this.showFail(this.bodySearch.error.message.toString());
+          } else {
             this.showFailDefecto();
           }
           console.log(error);
@@ -991,53 +991,145 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     }
   }
 
+  // MENSAJE PARA INCIDENCIA 574 EN CASO DE CAMBIAR.
+  // this.confirmationService.confirm({
+  //   message: "¿Quiere revisar las suscripciones y facturas para asignarlas según corresponda a esta cuenta?",
+  //   icon: "fa fa-info",
+  //   accept: () => {
+  //     this.revisionCuentas = true;
+  //     this.registroEditable = sessionStorage.getItem("editar");
+  //   },
+  //   reject: () => {
+  //     this.revisionCuentas = true;
+  //     this.registroEditable = sessionStorage.getItem("editar");
+  //     if (this.registroEditable == "false") {
+  //       this.body.noRevisarServicios = true;
+  //       // if (this.isLetrado) {
+  //       //   this.solicitarGuardarRegistro();
+  //       // } else {
+  //       //   this.guardarRegistro();
+  //       // }
+  //     } else {
+  //       // dependiendo de esta variable, se muestra o no la auditoria
+  //       this.body.motivo = null;
+  //       if (this.ocultarMotivo) {
+  //         if (this.isLetrado) {
+  //           this.solicitarGuardarRegistro();
+  //         } else {
+  //           this.editarRegistro();
+  //         }
+  //       } else {
+  //         this.displayAuditoria = true;
+  //         this.showGuardarAuditoria = false;
+  //       }
+  //     }
+  //   }
+  // });
+
 
   validarCuentaSJCS() {
-    this.confirmationService.confirm({
-      message: "Se van a revisar las servicios y facturas pendientes para asignar una cuenta en lugar de esta",
-      icon: "fa fa-info",
-      accept: () => {
-        this.revisionCuentas = true;
-        this.registroEditable = sessionStorage.getItem("editar");
-        if (this.registroEditable == "false") {
-          if (this.isLetrado) {
-            this.solicitarGuardarRegistro();
-          } else {
-            this.guardarRegistro();
-          }
-        } else {
-          // dependiendo de esta variable, se muestra o no la auditoria
-          this.body.motivo = null;
-          if (this.ocultarMotivo) {
+    if (this.registroEditable == "true") {
+      this.confirmationService.confirm({
+        message: "Se van a revisar las servicios y facturas pendientes para asignar una cuenta en lugar de esta",
+        icon: "fa fa-info",
+        accept: () => {
+          this.revisionCuentas = true;
+          this.registroEditable = sessionStorage.getItem("editar");
+          if (this.registroEditable == "false") {
             if (this.isLetrado) {
               this.solicitarGuardarRegistro();
             } else {
-              this.editarRegistro();
+              this.guardarRegistro();
             }
           } else {
-            this.displayAuditoria = true;
-            this.showGuardarAuditoria = false;
+            // dependiendo de esta variable, se muestra o no la auditoria
+            this.body.motivo = null;
+            if (this.ocultarMotivo) {
+              if (this.isLetrado) {
+                this.solicitarGuardarRegistro();
+              } else {
+                this.editarRegistro();
+              }
+            } else {
+              this.displayAuditoria = true;
+              this.showGuardarAuditoria = false;
+            }
           }
+        },
+        reject: () => {
+          this.showGuardarAuditoria = false;
         }
-      },
-      reject: () => {
-        this.showGuardarAuditoria = false;
-        // this.revisionCuentas = false;
-        // this.registroEditable = sessionStorage.getItem("editar");
-        // if (this.registroEditable == "false") {
-        //   this.guardarRegistro();
-        // } else {
-        //   // dependiendo de esta variable, se muestra o no la auditoria
-        //   this.body.motivo = undefined;
-        //   if (this.ocultarMotivo) {
-        //     this.editarRegistro();
-        //   } else {
-        //     this.displayAuditoria = true;
-        //     this.showGuardarAuditoria = false;
-        //   }
-        // }
-      }
-    });
+      });
+    } else {
+      this.confirmationService.confirm({
+        message: "¿Quiere revisar las suscripciones y facturas para asignarlas según corresponda a esta cuenta?",
+        icon: "fa fa-info",
+        accept: () => {
+          this.revisionCuentas = true;
+          this.registroEditable = sessionStorage.getItem("editar");
+          if (this.registroEditable == "false") {
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.guardarRegistro();
+            }
+          } else {
+            // dependiendo de esta variable, se muestra o no la auditoria
+            this.body.motivo = null;
+            if (this.ocultarMotivo) {
+              if (this.isLetrado) {
+                this.solicitarGuardarRegistro();
+              } else {
+                this.editarRegistro();
+              }
+            } else {
+              this.displayAuditoria = true;
+              this.showGuardarAuditoria = false;
+            }
+          }
+        },
+        reject: () => {
+          this.revisionCuentas = true;
+          this.registroEditable = sessionStorage.getItem("editar");
+          if (this.registroEditable == "false") {
+            this.body.noRevisarServicios = true;
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.guardarRegistro();
+            }
+          } else {
+            // dependiendo de esta variable, se muestra o no la auditoria
+            this.body.motivo = null;
+            if (this.ocultarMotivo) {
+              if (this.isLetrado) {
+                this.solicitarGuardarRegistro();
+              } else {
+                this.editarRegistro();
+              }
+            } else {
+              this.displayAuditoria = true;
+              this.showGuardarAuditoria = false;
+            }
+          }
+          // this.revisionCuentas = false;
+          // this.registroEditable = sessionStorage.getItem("editar");
+          // if (this.registroEditable == "false") {
+          //   this.guardarRegistro();
+          // } else {
+          //   // dependiendo de esta variable, se muestra o no la auditoria
+          //   this.body.motivo = undefined;
+          //   if (this.ocultarMotivo) {
+          //     this.editarRegistro();
+          //   } else {
+          //     this.displayAuditoria = true;
+          //     this.showGuardarAuditoria = false;
+          //   }
+          // }
+        }
+      });
+    }
+
   }
 
   validarCuentaCargo() {
