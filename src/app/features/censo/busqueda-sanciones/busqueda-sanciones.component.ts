@@ -69,7 +69,8 @@ export class BusquedaSancionesComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -362,6 +363,16 @@ export class BusquedaSancionesComponent implements OnInit {
 
   newRecord() {
     sessionStorage.setItem("nuevaSancion", "true");
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+    
+    let migaPan = this.translateService.instant("menu.expedientes.sanciones");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

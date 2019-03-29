@@ -1,6 +1,19 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <div *ngIf="!remitente" class="header-title">
+    <div *ngIf="!dosMigas" class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{ menuProcede }}
+            <i class="fa fa-angle-right"> </i> {{ migaPan }}
+            <i class="pl-1 fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}}</p>
+    </div>
+    <div *ngIf="dosMigas" class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{ menuProcede }}
+            <i class="fa fa-angle-right"> </i> {{ migaPan }}
+            <i class="fa fa-angle-right"> </i> {{ migaPan2 }}
+            <i class="pl-1 fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}}</p>
+    </div>
+    <!-- <div *ngIf="!remitente" class="header-title">
         <i class="fa fa-square"></i>
         <p>{{"menu.censo" | translate}}
             <i class="fa fa-angle-right"> </i> {{ 'menu.censo.buscarSociedades' | translate}}
@@ -11,7 +24,7 @@
         <p>{{'menu.enviosAGrupos' | translate}}
             <i class="fa fa-angle-right"> </i>{{ 'enviosMasivos.literal.titulo' | translate}}
             <i class="pl-1 fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
-    </div>
+    </div> -->
     <div class="info-limit d-flex justify-content-center align-items-center mb-1">
         <i class="fa fa-info-circle pr-2"></i>
         <div class="d-inline-block">
@@ -36,7 +49,7 @@
                 <div class="col-4">
                     <p-radioButton name="person" value="f" label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
                     <p-radioButton *ngIf="!isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
-                    <p-radioButton *ngIf="isFormador" disabled name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona'></p-radioButton> 
+                    <p-radioButton *ngIf="isFormador" disabled name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona'></p-radioButton>
 
                 </div>
             </div>
@@ -127,19 +140,20 @@
                 pageLinks="4">
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
                     filterMatchMode="contains"></p-column>
-                        <ng-template pTemplate="paginatorLeft">
-                            <div class="mostrar d-flex text-right justify-content-end">
-                              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
-                              <label>{{ "general.message.mostrar" | translate}}</label>
-                              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                            </div>
-                          </ng-template>
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                    </div>
+                </ng-template>
                 <p-footer *ngIf="selectedDatos && selectedDatos != ''">
                     <div class="text-right main-button">
                         <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
-                        <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+                        <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button"
+                            icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
                     </div>
                 </p-footer>
             </p-dataTable>

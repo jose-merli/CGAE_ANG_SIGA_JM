@@ -9,6 +9,7 @@ import { DatosNotarioObject } from "./../../../../../app/models/DatosNotarioObje
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
+import { TranslateService } from "../../../../commons/translate";
 
 @Component({
   selector: "app-accesoFichaPersona",
@@ -45,8 +46,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
     private router: Router,
     private location: Location,
     private sigaServices: SigaServices,
-    private cardService: cardService
-  ) {}
+    private cardService: cardService,
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("disabledAction") == "true") {
@@ -327,7 +329,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     );
   }
   filtrarItemsComboEsquema(comboEsquema, buscarElemento) {
-    return comboEsquema.filter(function(obj) {
+    return comboEsquema.filter(function (obj) {
       return obj.value == buscarElemento;
     });
   }
@@ -345,6 +347,16 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
   isSearch() {
     sessionStorage.setItem("abrirNotario", "true");
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("menu.censo.buscarSociedades");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 
@@ -388,7 +400,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     });
   }
 
-  seleccionarFecha(event) {}
+  seleccionarFecha(event) { }
 
   showFail(mensaje: string) {
     this.msgs = [];
@@ -440,7 +452,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 }

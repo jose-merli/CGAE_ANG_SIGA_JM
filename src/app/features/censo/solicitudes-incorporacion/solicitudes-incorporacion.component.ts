@@ -109,6 +109,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   filtrosSession() {
     if (sessionStorage.getItem("filtros") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtros"));
+      sessionStorage.removeItem("filtros");
       this.body.fechaDesde = new Date(this.body.fechaDesde);
       this.buscarSolicitudes();
 
@@ -180,8 +181,18 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     sessionStorage.setItem("abrirSolicitudIncorporacion", "true");
 
     // this.router.navigate(["/nuevaIncorporacion"]);
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("censo.solicitudincorporacion");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
     this.router.navigate(["/busquedaGeneral"]);
   }
+
   irDetalleSolicitud(item) {
     if (item && item.length > 0) {
       var enviarDatos = null;

@@ -21,6 +21,8 @@ import { Message } from "primeng/components/common/api";
 import { isNumeric } from "rxjs/util/isNumeric";
 
 import { DropdownModule, Dropdown } from "primeng/dropdown";
+import { NoColegiadoItem } from "../../../../models/NoColegiadoItem";
+import { DatosColegiadosItem } from "../../../../models/DatosColegiadosItem";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -85,6 +87,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   poblacionExtranjeraSelected: string;
   noExistePersona: boolean = false;
   noEsColegiado: boolean = false;
+  body;
+  solicitante;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -101,6 +105,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+    sessionStorage.removeItem("esNuevoNoColegiado");
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -596,6 +601,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         data => {
           let resultado = JSON.parse(data["body"]);
+
           if (resultado.numColegiado == "disponible") {
             this.sigaServices
               .post(
@@ -606,7 +612,6 @@ export class NuevaIncorporacionComponent implements OnInit {
                 result => {
                   sessionStorage.removeItem("editedSolicitud");
 
-                  this.progressSpinner = false;
                   this.msgs = [
                     {
                       severity: "success",
@@ -614,6 +619,8 @@ export class NuevaIncorporacionComponent implements OnInit {
                       detail: "Solicitud aprobada."
                     }
                   ];
+
+                  this.searchSolicitante();
                   this.consulta = true;
                   this.pendienteAprobacion = false;
                   sessionStorage.setItem("pendienteAprobacion", "false");
@@ -647,14 +654,50 @@ export class NuevaIncorporacionComponent implements OnInit {
                   this.progressSpinner = false;
                 }
               );
+
+
           } else {
             this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
             this.progressSpinner = false;
           }
+
         },
         error => {
           let resultado = JSON.parse(error["error"]);
           this.showFail(resultado.error.message.toString());
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  searchSolicitante() {
+
+    this.body = new DatosColegiadosItem();
+    this.body.nif = this.solicitudEditar.numeroIdentificacion;
+    sessionStorage.setItem("consulta", "true");
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaColegiados_searchColegiado",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
+          sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
+          sessionStorage.setItem("destinatarioCom", "true");
+          sessionStorage.removeItem("esColegiado");
+          sessionStorage.setItem("esNuevoNoColegiado", "false");
+          this.router.navigate(["/fichaColegial"]);
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
           this.progressSpinner = false;
         }
       );

@@ -622,6 +622,16 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   obtenerFormador() {
     sessionStorage.setItem("abrirFormador", "true");
     sessionStorage.setItem("backInscripcion", "true");
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("formacion.busquedaInscripcion.cabecera");
+    let menuProcede = this.translateService.instant("menu.formacion");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+    
     this.router.navigate(["/busquedaGeneral"]);
   }
 

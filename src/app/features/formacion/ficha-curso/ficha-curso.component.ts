@@ -1784,6 +1784,17 @@ export class FichaCursoComponent implements OnInit {
       "datosFormadores",
       JSON.stringify(this.datosFormadores)
     );
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+    let migaPan = this.translateService.instant("menu.formacion.buscarCursos");
+    let migaPan2 = this.translateService.instant("formacion.fichaCurso.cabecera");
+    let menuProcede = this.translateService.instant("menu.formacion");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("migaPan2", migaPan2);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

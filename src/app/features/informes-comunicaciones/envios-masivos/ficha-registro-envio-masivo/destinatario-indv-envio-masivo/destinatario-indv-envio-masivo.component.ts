@@ -236,6 +236,19 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
 
   addDestinatario() {
     sessionStorage.setItem("AddDestinatarioIndv", "true");
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("menu.informesYcomunicaciones.enviosMasivos");
+    let migaPan2 = this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.fichaEnviosMasivos");
+    let menuProcede = this.translateService.instant("menu.informesYcomunicaciones");
+
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("migaPan2", migaPan2);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

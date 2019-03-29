@@ -89,6 +89,11 @@ export class BusquedaGeneralComponent {
   idClaseComunicacion: String;
   keys: any[] = [];
 
+  migaPan: string = "";
+  migaPan2: string = "";
+  menuProcede: string = "";
+  dosMigas: boolean = false;
+
   fichasPosibles = [
     {
       key: "generales",
@@ -128,6 +133,7 @@ export class BusquedaGeneralComponent {
 
   ngOnInit() {
     this.currentRoute = this.router.url;
+    this.getMigaPan();
     this.getInstitucion();
     this.sigaServices.get("busquedaPer_colegio").subscribe(
       n => {
@@ -293,6 +299,20 @@ export class BusquedaGeneralComponent {
       this.tipoCIF = "50";
       return false;
     }
+  }
+
+  getMigaPan() {
+
+    this.menuProcede = sessionStorage.getItem("menuProcede");
+    this.migaPan = sessionStorage.getItem("migaPan");
+    this.migaPan2 = sessionStorage.getItem("migaPan2");
+
+    if (this.migaPan2 != undefined) {
+      this.dosMigas = true;
+    } else {
+      this.dosMigas = false;
+    }
+
   }
 
   isValidPassport(dni: String): boolean {
@@ -631,6 +651,7 @@ export class BusquedaGeneralComponent {
       // ir a ficha de solicitud de Incorporación
     } else if (sessionStorage.getItem("AddDestinatarioIndv") != null) {
       sessionStorage.setItem("destinatarioIndv", JSON.stringify(id[0]));
+      sessionStorage.removeItem("AddDestinatarioIndv");
       this.location.back();
     } else if (
       sessionStorage.getItem("solicitudIncorporacion") == "true" &&

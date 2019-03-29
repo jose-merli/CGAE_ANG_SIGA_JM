@@ -560,6 +560,15 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     sessionStorage.setItem("solicitudIncorporacion", "true");
     sessionStorage.setItem("nuevoNoColegiadoGen", "true");
 
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("censo.busquedaClientes.busquedaNoColegiados.titulo");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     // this.router.navigate(["/nuevaIncorporacion"]);
     this.router.navigate(["/busquedaGeneral"]);
   }
