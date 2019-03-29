@@ -96,6 +96,7 @@ export class SigaServices {
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
+    busquedaCol_colegio: "busquedaCol/colegio",
     busquedaPer: "busquedaPer",
     busquedaPer_institucion: "busquedaPerInstitucion",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
