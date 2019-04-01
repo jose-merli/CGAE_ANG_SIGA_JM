@@ -2831,7 +2831,9 @@ export class FichaColegialComponent implements OnInit {
         err => {
           console.log(err);
         }, () => {
-          this.estadoColegial = this.datosColegiales[0].estadoColegial;
+          if(this.generalBody.colegiado){
+            this.estadoColegial = this.datosColegiales[0].estadoColegial;
+          }
         }
       );
   }
