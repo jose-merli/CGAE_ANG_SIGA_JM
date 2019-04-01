@@ -891,9 +891,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.esColegiado = JSON.parse(
         sessionStorage.getItem("esColegiado")
       );
-      this.body.idPersona = JSON.parse(
+
+      let usuario = JSON.parse(
         sessionStorage.getItem("usuarioBody")
       );
+      this.body.idPersona = usuario[0].idPersona;
+
       this.body.idProvincia = this.provinciaSelecionada;
       this.sigaServices.post("direcciones_update", this.body).subscribe(
         data => {
