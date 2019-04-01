@@ -3982,6 +3982,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   nuevaCuentaBancaria() {
+    sessionStorage.setItem("allBanksData", JSON.stringify(this.datosBancarios));
     sessionStorage.setItem("nombreTitular", JSON.stringify(this.generalBody.nombre));
     sessionStorage.removeItem("permisos");
     sessionStorage.setItem("fichaColegial", "true");

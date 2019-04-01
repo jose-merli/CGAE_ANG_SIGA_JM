@@ -70,7 +70,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   nifTitular: String;
   titular: String;
   textFilter: String;
-  textSelected: String = "{0} grupos seleccionados";
+  textSelected: String = "{0} registros seleccionados";
   registroEditable: String;
   descripcion: String;
   firmaFechaDate: Date;
@@ -472,7 +472,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       .subscribe(
         data => {
           let searchDatosBancariosIdPersona = JSON.parse(data["body"]);
-          sessionStorage.setItem("allBanksData", searchDatosBancariosIdPersona.datosBancariosItem);
+          sessionStorage.setItem("allBanksData", JSON.stringify(searchDatosBancariosIdPersona.datosBancariosItem));
         },
         error => {
         }
@@ -1058,11 +1058,34 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         },
         reject: () => {
           this.showGuardarAuditoria = false;
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancel",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
         }
       });
     } else {
+      this.validarCuentaCargo();
+    }
+
+  }
+
+  validaCargoEliminado() {
+    let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
+    let numBancos = 0;
+    for (let i in bancos) {
+      if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
+        numBancos++;
+      }
+    }
+    if (numBancos <= 1) {
       this.confirmationService.confirm({
-        message: "¿Quiere revisar las suscripciones y facturas para asignarlas según corresponda a esta cuenta?",
+        message: "Se van a revisar las servicios y facturas pendientes para asignar una cuenta en lugar de esta",
         icon: "fa fa-info",
         accept: () => {
           this.revisionCuentas = true;
@@ -1089,30 +1112,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
         },
         reject: () => {
-          this.revisionCuentas = true;
-          this.registroEditable = sessionStorage.getItem("editar");
-          if (this.registroEditable == "false") {
-            this.body.noRevisarServicios = true;
-            if (this.isLetrado) {
-              this.solicitarGuardarRegistro();
-            } else {
-              this.guardarRegistro();
+          this.revisionCuentas = false;
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancel",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
             }
-          } else {
-            // dependiendo de esta variable, se muestra o no la auditoria
-            this.body.motivo = null;
-            if (this.ocultarMotivo) {
-              if (this.isLetrado) {
-                this.solicitarGuardarRegistro();
-              } else {
-                this.editarRegistro();
-              }
-            } else {
-              this.displayAuditoria = true;
-              this.showGuardarAuditoria = false;
-            }
-          }
-          // this.revisionCuentas = false;
+          ];
           // this.registroEditable = sessionStorage.getItem("editar");
           // if (this.registroEditable == "false") {
           //   this.guardarRegistro();
@@ -1123,20 +1132,34 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           //     this.editarRegistro();
           //   } else {
           //     this.displayAuditoria = true;
-          //     this.showGuardarAuditoria = false;
+          this.showGuardarAuditoria = false;
           //   }
           // }
         }
       });
+    } else {
+      if (this.registroEditable == "false") {
+        if (this.isLetrado) {
+          this.solicitarGuardarRegistro();
+        } else {
+          this.guardarRegistro();
+        }
+      } else {
+        if (this.isLetrado) {
+          this.solicitarGuardarRegistro();
+        } else {
+          this.editarRegistro();
+        }
+      }
     }
-
   }
 
   validarCuentaCargo() {
+    // if (this.registroEditable == "true") {
+
+    // } else {
     this.confirmationService.confirm({
-      message: this.translateService.instant(
-        "censo.tipoCuenta.cargo.confirmacionProcesoAltaCuentaCargos"
-      ),
+      message: "¿Quiere revisar las suscripciones y facturas para asignarlas según corresponda a esta cuenta?",
       icon: "fa fa-info",
       accept: () => {
         this.revisionCuentas = true;
@@ -1163,23 +1186,46 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       },
       reject: () => {
-        this.revisionCuentas = false;
-
+        this.revisionCuentas = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
-          this.guardarRegistro();
+          this.body.noRevisarServicios = true;
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
         } else {
           // dependiendo de esta variable, se muestra o no la auditoria
-          this.body.motivo = undefined;
+          this.body.motivo = null;
           if (this.ocultarMotivo) {
-            this.editarRegistro();
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.editarRegistro();
+            }
           } else {
             this.displayAuditoria = true;
             this.showGuardarAuditoria = false;
           }
         }
+        // this.revisionCuentas = false;
+        // this.registroEditable = sessionStorage.getItem("editar");
+        // if (this.registroEditable == "false") {
+        //   this.guardarRegistro();
+        // } else {
+        //   // dependiendo de esta variable, se muestra o no la auditoria
+        //   this.body.motivo = undefined;
+        //   if (this.ocultarMotivo) {
+        //     this.editarRegistro();
+        //   } else {
+        //     this.displayAuditoria = true;
+        //     this.showGuardarAuditoria = false;
+        //   }
+        // }
       }
     });
+    // }
   }
 
   validarIdentificacion() {
@@ -1223,17 +1269,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.getArrayTipoCuenta();
       if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta != undefined) {
         if (this.checkBody.tipoCuenta.indexOf("C") !== -1) {
-          let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
-          let numBancos = 0;
+          // let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
+          // let numBancos = 0;
           // let encontrado = 
-          for (let i in bancos) {
-            if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
-              numBancos++;
-            }
-          }
-          if (numBancos <= 1) {
-            this.validarCuentaSJCS();
-          } else if (this.body.tipoCuenta.indexOf("C") !== -1) {
+          // for (let i in bancos) {
+          //   if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
+          //     numBancos++;
+          //   }
+          // }
+          // if (numBancos <= 1) {
+          //   this.validarCuentaSJCS();
+          if (this.checkBody.tipoCuenta.indexOf("C") !== -1 && this.body.tipoCuenta.indexOf("C") == -1) {
+            this.validaCargoEliminado();
+          } else if (this.body.tipoCuenta.indexOf("C") !== -1 && this.body.tipoCuenta.indexOf("C") !== -1) {
             this.validarCuentaCargo();
           } else {
             this.revisionCuentas = false;
@@ -1293,6 +1341,34 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.body.motivo = null;
           }
         }
+        // Editando cuenta cargo
+      } else if (this.body.tipoCuenta.indexOf("C") !== -1 && this.checkBody.tipoCuenta != undefined) {
+        if (this.checkBody.tipoCuenta.indexOf("C") == -1) {
+          this.validarCuentaCargo();
+        } else {
+          this.revisionCuentas = false;
+          this.registroEditable = sessionStorage.getItem("editar");
+          if (this.registroEditable == "false") {
+            if (this.isLetrado) {
+              this.solicitarGuardarRegistro();
+            } else {
+              this.guardarRegistro();
+            }
+          } else {
+            if (this.ocultarMotivo == false) {
+              this.displayAuditoria = true;
+            } else {
+              this.displayAuditoria = false;
+              this.editarRegistro();
+            }
+
+            this.showGuardarAuditoria = false;
+            this.body.motivo = null;
+          }
+        }
+        // creando cargo
+      } else if (this.body.tipoCuenta.indexOf("C") !== -1 && this.checkBody.tipoCuenta == undefined) {
+        this.validarCuentaCargo();
       } else {
         this.revisionCuentas = false;
         this.registroEditable = sessionStorage.getItem("editar");
