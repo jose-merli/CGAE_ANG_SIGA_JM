@@ -5,13 +5,14 @@
         <i class="fa fa-angle-right"></i>{{"menu.solicitudIncorporacion" | translate}}
     </p>
 </div>
-<div *ngIf="!dniDisponible && !noExistePersona" class="info-limit d-flex justify-content-center align-items-center mb-1">
+<div *ngIf="!dniDisponible && !noExistePersona && !pendienteAprobacion" class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
             <span *ngIf="!vieneDeBusqueda" class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
             <span *ngIf="vieneDeBusqueda && noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente.sistema" | translate}}.</span>
             <span *ngIf="vieneDeBusqueda && !noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
+            <!-- <span *ngIf="vieneDeBusqueda && pendienteAprobacion" class="pr-2 text-left">Para aprobar una solicitud debe rellenar los datos bancarios.</span> -->
         </div>
     </div>
 </div>
@@ -456,7 +457,7 @@
         <div [hidden]="!fichaBancaria" class="card-body card-body-ficha">
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}} (*)</label>
+                    <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
                     <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
                 </div>
                 <!--<div class="form-group col-lg-3 col-md-3">
@@ -466,7 +467,7 @@
                         defaultLabel="Elegir" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
                 </div>-->
                 <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.mutualidad.literal.iban" | translate}} (*) </label>
+                    <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
                     <input type="text" class="form-control" [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
                         pInputText>
                     <div *ngIf="isValidIBAN() == false">

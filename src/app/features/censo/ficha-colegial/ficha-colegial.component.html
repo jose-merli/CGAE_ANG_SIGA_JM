@@ -1370,14 +1370,18 @@
             <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
               <ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
+                <div *ngIf="setItalicRegtel(datoH)">
                   <span [ngStyle]="{
                     'font-style': 'italic',
-                    'font-weight': 'bold',
-                    'text-decoration': 'line-through'
+                    'font-weight': 'bold'
                   }">{{ datoH[col.field] }}</span>
                 </div>
-                <div *ngIf="!setItalic(datoH)">
+                <div *ngIf="!setItalicRegtel(datoH)">
+                  <span>{{ datoH[col.field] }}</span>
+                </div>
+              </ng-template>
+              <ng-template *ngIf="col.field == 'sizeKB'"   let-datoH="rowData" pTemplate="body">
+                <div *ngIf="!setItalicRegtel(datoH)">
                   <span>{{ datoH[col.field] }}</span>
                 </div>
               </ng-template>

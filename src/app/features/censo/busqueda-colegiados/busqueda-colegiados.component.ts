@@ -345,7 +345,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getComboCategoriaCurricular();
     this.getComboProvincias();
     this.getComboTiposDireccion();
-    
+      
   }
 
   getComboColegios() {
