@@ -725,13 +725,16 @@
             <i class="fa fa-graduation-cap icon-ficha"></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10">
+        <div class="col-lg-11 col-md-6">
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
+            <label *ngIf="esColegiado" class="registros-ficha">{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+              <span>{{ colegialesBody.colegioResultado }}</span>
+            </label>
             <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
               <span>{{ datosColegiaciones.length }}</span>
             </label>
@@ -1367,14 +1370,18 @@
             <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
               <ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
+                <div *ngIf="setItalicRegtel(datoH)">
                   <span [ngStyle]="{
                     'font-style': 'italic',
-                    'font-weight': 'bold',
-                    'text-decoration': 'line-through'
+                    'font-weight': 'bold'
                   }">{{ datoH[col.field] }}</span>
                 </div>
-                <div *ngIf="!setItalic(datoH)">
+                <div *ngIf="!setItalicRegtel(datoH)">
+                  <span>{{ datoH[col.field] }}</span>
+                </div>
+              </ng-template>
+              <ng-template *ngIf="col.field == 'sizeKB'"   let-datoH="rowData" pTemplate="body">
+                <div *ngIf="!setItalicRegtel(datoH)">
                   <span>{{ datoH[col.field] }}</span>
                 </div>
               </ng-template>

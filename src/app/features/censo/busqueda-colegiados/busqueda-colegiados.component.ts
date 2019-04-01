@@ -345,7 +345,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getComboCategoriaCurricular();
     this.getComboProvincias();
     this.getComboTiposDireccion();
-    
+      
   }
 
   getComboColegios() {
@@ -361,8 +361,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       col => {
         this.comboColegios = col.combooItems;
         // this.arregloTildesCombo(this.comboColegios);
-
-        
 
         if (
           sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=

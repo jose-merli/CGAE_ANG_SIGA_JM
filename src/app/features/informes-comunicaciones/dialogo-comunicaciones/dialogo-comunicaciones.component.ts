@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from '../../../models/DialogoComunicacionItem';
 import { ModelosComunicacionesItem } from '../../../models/ModelosComunicacionesItem';
@@ -11,11 +11,13 @@ import { Location } from "@angular/common";
 import { typeSourceSpan } from '@angular/compiler';
 import { DataTable } from "primeng/datatable";
 import { truncate } from 'fs';
+import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dialogo-comunicaciones',
   templateUrl: './dialogo-comunicaciones.component.html',
   styleUrls: ['./dialogo-comunicaciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 
 })
 export class DialogoComunicacionesComponent implements OnInit {
@@ -54,10 +56,11 @@ export class DialogoComunicacionesComponent implements OnInit {
   plantillas: any[] = [];
   idConsulta: string;
   dato: any;
+  selectedModelosSend: any = [];
 
   @ViewChild("table")
   tableModelos: DataTable;
-  
+
   constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
   }
 
@@ -149,9 +152,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   getModelosComunicacion() {
 
-    this.idModulo = sessionStorage.getItem('idModulo');    
+    this.idModulo = sessionStorage.getItem('idModulo');
 
-    if(this.idClaseComunicacion == "5"){
+    if (this.idClaseComunicacion == "5") {
       this.idConsulta = sessionStorage.getItem('idConsulta');
     }
 
@@ -164,6 +167,16 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.sigaServices.post("dialogo_modelosComunicacion", modeloSearch).subscribe(
       data => {
         this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
+
+        for (let index = 0; index < this.modelosComunicacion.length; index++) {
+          const element = this.modelosComunicacion[index];
+
+          if (element.preseleccionar == "SI") {
+            this.selectedModelos.push(element);
+          }
+
+        }
+
       },
       err => {
         console.log(err);
@@ -198,9 +211,9 @@ export class DialogoComunicacionesComponent implements OnInit {
       this.comunicar = false;
     }
 
-    if(this.comunicar && !this.comprobarPlantillas()){
+    if (this.comunicar && !this.comprobarPlantillas()) {
       this.showFail("Se ha de seleccionar al menos una plantilla de envio por modelo");
-    }else{
+    } else {
       this.sigaServices.post("dialogo_obtenerCamposDinamicos", this.bodyComunicacion).subscribe(
         data => {
           console.log(data);
@@ -212,8 +225,8 @@ export class DialogoComunicacionesComponent implements OnInit {
                 this.valores.push(campo);
               });
             }
-          })       
-  
+          })
+
           if (this.valores.length > 0) {
             this.showValores = true;
           } else {
@@ -229,13 +242,13 @@ export class DialogoComunicacionesComponent implements OnInit {
           this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"));
         }
       );
-    }    
+    }
   }
 
-  comprobarPlantillas(){
+  comprobarPlantillas() {
     let envioCorrecto = true;
     this.bodyComunicacion.modelos.forEach(element => {
-      if(!element.idPlantillaEnvio || element.idPlantillaEnvio == null || element.idPlantillaEnvio==""){
+      if (!element.idPlantillaEnvio || element.idPlantillaEnvio == null || element.idPlantillaEnvio == "") {
         envioCorrecto = false;
       }
     });
@@ -291,13 +304,13 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
   onRowSelectModelos(event) {
-    event.data.selected = true;
+    event.data = true;
     return event.data;
   }
 
 
   onUnRowSelectModelos(event) {
-    event.data.selected = false;
+    event.data = false;
     return event.data;
   }
 
@@ -369,7 +382,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
         }
       );
-    
+
   }
 
   getInstitucion() {
@@ -416,7 +429,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 
   backTo() {
-    sessionStorage.setItem("back","true");
+    sessionStorage.setItem("back", "true");
     this.location.back();
   }
 
@@ -429,7 +442,7 @@ export class DialogoComunicacionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   };
 }
