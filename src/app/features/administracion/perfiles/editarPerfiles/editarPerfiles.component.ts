@@ -26,7 +26,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   saveRolesAsignados: any[];
   saveRolesNoAsignados: any[];
   pButton;
-  textSelected: String = "{0} grupos seleccionados";
+  textSelected: String = "{0} registros seleccionados";
   textFilter: String;
   editar: boolean = true;
   enabled: boolean;
@@ -180,18 +180,18 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
         this.body.idGrupo == this.checkBody.idGrupo &&
         this.body.descripcionGrupo == this.checkBody.descripcionGrupo &&
         JSON.stringify(this.rolesAsignados) ===
-          JSON.stringify(this.saveRolesAsignados) &&
+        JSON.stringify(this.saveRolesAsignados) &&
         JSON.stringify(this.rolesNoAsignados) ===
-          JSON.stringify(this.saveRolesNoAsignados)
+        JSON.stringify(this.saveRolesNoAsignados)
       ) {
         return true;
       } else if (
         this.body.idGrupo == this.checkBody.idGrupo &&
         this.body.descripcionGrupo == this.checkBody.descripcionGrupo &&
         JSON.stringify(this.rolesAsignados) ===
-          JSON.stringify(this.saveRolesAsignados) &&
+        JSON.stringify(this.saveRolesAsignados) &&
         JSON.stringify(this.rolesNoAsignados) ===
-          JSON.stringify(this.saveRolesNoAsignados)
+        JSON.stringify(this.saveRolesNoAsignados)
       ) {
         return true;
       } else {
