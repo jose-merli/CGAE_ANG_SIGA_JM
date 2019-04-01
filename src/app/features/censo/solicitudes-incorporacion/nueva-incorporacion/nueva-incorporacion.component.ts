@@ -115,10 +115,8 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.cargarCombos();
     if (JSON.parse(sessionStorage.getItem("pendienteAprobacion")) == true) {
       this.pendienteAprobacion = true;
-      sessionStorage.removeItem("pendienteAprobacion");
     }
     if (sessionStorage.getItem("consulta") == "true") {
-      sessionStorage.removeItem("consulta");
       this.solicitudEditar = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
@@ -180,10 +178,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
     // Se añade cambio de que aparezca po defecto el nombre del colegiado como titular de los datos bancarios
-    if (
-      this.solicitudEditar.titular == null ||
-      this.solicitudEditar.titular == undefined ||
-      this.solicitudEditar.titular == ""
+    if (this.pendienteAprobacion == true &&
+      (this.solicitudEditar.titular == null ||
+        this.solicitudEditar.titular == undefined ||
+        this.solicitudEditar.titular == "")
     ) {
       this.solicitudEditar.titular =
         this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
@@ -590,86 +588,105 @@ export class NuevaIncorporacionComponent implements OnInit {
     });
   }
 
-  aprobarSolicitud() {
-    if (this.isGuardar()) {
-      this.guardar(false);
+  habilitaAceptar() {
+    if (
+      this.isValidIBAN() &&
+      this.solicitudEditar.titular != null &&
+      this.solicitudEditar.titular != undefined &&
+      this.solicitudEditar.iban != null &&
+      this.solicitudEditar.iban != undefined &&
+      (this.cargo || this.abono || this.abonoJCS)
+    ) {
+      return true;
+    } else {
+      return false;
     }
-    this.progressSpinner = true;
-
-    this.sigaServices
-      .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
-      .subscribe(
-        data => {
-          let resultado = JSON.parse(data["body"]);
-
-          if (resultado.numColegiado == "disponible") {
-            this.sigaServices
-              .post(
-                "solicitudIncorporacion_aprobarSolicitud",
-                this.solicitudEditar.idSolicitud
-              )
-              .subscribe(
-                result => {
-                  sessionStorage.removeItem("editedSolicitud");
-
-                  this.msgs = [
-                    {
-                      severity: "success",
-                      summary: "Éxito",
-                      detail: "Solicitud aprobada."
-                    }
-                  ];
-
-                  this.searchSolicitante();
-                  this.consulta = true;
-                  this.pendienteAprobacion = false;
-                  sessionStorage.setItem("pendienteAprobacion", "false");
-                  this.solicitudEditar.idEstado = "50";
-                  this.estadoSolicitudSelected = "50";
-                  let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
-                  this.solicitudEditar.estadoSolicitud = estado.label;
-                  let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
-                  this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
-                  let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
-                  this.solicitudEditar.modalidad = modalidad.label;
-                  sessionStorage.setItem("consulta", "true");
-
-                  sessionStorage.setItem(
-                    "editedSolicitud",
-                    JSON.stringify(this.solicitudEditar)
-                  );
-                  this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
-
-                  this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
-                },
-                error => {
-                  console.log(error);
-                  this.msgs = [
-                    {
-                      severity: "error",
-                      summary: "Error",
-                      detail: "Error al aprobar la solicitud."
-                    }
-                  ];
-                  this.progressSpinner = false;
-                }
-              );
-
-
-          } else {
-            this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
-            this.progressSpinner = false;
-          }
-
-        },
-        error => {
-          let resultado = JSON.parse(error["error"]);
-          this.showFail(resultado.error.message.toString());
-          this.progressSpinner = false;
-        }
-      );
   }
 
+  aprobarSolicitud() {
+    if (this.habilitaAceptar()) {
+      if (this.isGuardar()) {
+        this.guardar(false);
+      }
+
+      this.progressSpinner = true;
+
+      this.sigaServices
+        .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
+        .subscribe(
+          data => {
+            let resultado = JSON.parse(data["body"]);
+
+            if (resultado.numColegiado == "disponible") {
+              this.sigaServices
+                .post(
+                  "solicitudIncorporacion_aprobarSolicitud",
+                  this.solicitudEditar.idSolicitud
+                )
+                .subscribe(
+                  result => {
+                    sessionStorage.removeItem("editedSolicitud");
+
+                    this.msgs = [
+                      {
+                        severity: "success",
+                        summary: "Éxito",
+                        detail: "Solicitud aprobada."
+                      }
+                    ];
+
+                    this.searchSolicitante();
+                    this.consulta = true;
+                    this.pendienteAprobacion = false;
+                    sessionStorage.setItem("pendienteAprobacion", "false");
+                    this.solicitudEditar.idEstado = "50";
+                    this.estadoSolicitudSelected = "50";
+                    let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+                    this.solicitudEditar.estadoSolicitud = estado.label;
+                    let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+                    this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+                    let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+                    this.solicitudEditar.modalidad = modalidad.label;
+                    sessionStorage.setItem("consulta", "true");
+
+                    sessionStorage.setItem(
+                      "editedSolicitud",
+                      JSON.stringify(this.solicitudEditar)
+                    );
+                    this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+
+                    this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+                  },
+                  error => {
+                    console.log(error);
+                    this.msgs = [
+                      {
+                        severity: "error",
+                        summary: "Error",
+                        detail: "Error al aprobar la solicitud."
+                      }
+                    ];
+                    this.progressSpinner = false;
+                  }
+                );
+
+
+            } else {
+              this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
+              this.progressSpinner = false;
+            }
+
+          },
+          error => {
+            let resultado = JSON.parse(error["error"]);
+            this.showFail(resultado.error.message.toString());
+            this.progressSpinner = false;
+          }
+        );
+    } else {
+      this.showFail("censo.alterMutua.literal.datosBancariosObligatorios");
+    }
+  }
   searchSolicitante() {
 
     this.body = new DatosColegiadosItem();
@@ -850,6 +867,15 @@ export class NuevaIncorporacionComponent implements OnInit {
             "editedSolicitud",
             JSON.stringify(this.solicitudEditar)
           );
+
+          if (this.pendienteAprobacion == true &&
+            (this.solicitudEditar.titular == null ||
+              this.solicitudEditar.titular == undefined ||
+              this.solicitudEditar.titular == "")
+          ) {
+            this.solicitudEditar.titular =
+              this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+          }
 
           if (back == true) {
             this.msgs = [
@@ -1103,11 +1129,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.solicitudEditar.telefono1 != null &&
         this.solicitudEditar.telefono1 != undefined &&
         this.solicitudEditar.correoElectronico != null &&
-        this.solicitudEditar.correoElectronico != undefined &&
-        this.solicitudEditar.titular != null &&
-        this.solicitudEditar.titular != undefined &&
-        this.solicitudEditar.iban != null &&
-        this.solicitudEditar.iban != undefined
+        this.solicitudEditar.correoElectronico != undefined
+        // this.solicitudEditar.titular != null &&
+        // this.solicitudEditar.titular != undefined &&
+        // this.solicitudEditar.iban != null &&
+        // this.solicitudEditar.iban != undefined
       ) {
         return true;
       } else {
@@ -1195,6 +1221,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   backTo() {
     sessionStorage.removeItem("editedSolicitud");
+    sessionStorage.removeItem("consulta");
+    sessionStorage.removeItem("pendienteAprobacion");
     this.router.navigate(["/solicitudesIncorporacion"]);
   }
 
@@ -1205,6 +1233,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   //   );
   //   this.router.navigate(["/alterMutua"]);
   // }
+
   clear() {
     this.msgs = [];
   }
