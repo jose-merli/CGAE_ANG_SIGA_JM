@@ -1,0 +1,12 @@
+.ui-table .ui-table-tbody > tr:nth-child(even).ui-state-highlight{
+    background: #fafafb !important;
+    color: inherit;
+}
+.ui-table .ui-table-tbody > tr.ui-state-highlight{
+    background: #FFF !important;
+    color: inherit;
+}
+
+.tabla-listado .ui-table .ui-table-tbody > tr.ui-state-highlight td{
+    color: #595959;
+}

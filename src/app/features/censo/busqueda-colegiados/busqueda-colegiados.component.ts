@@ -362,8 +362,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.comboColegios = col.combooItems;
         // this.arregloTildesCombo(this.comboColegios);
 
-        
-
         if (
           sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
           null
