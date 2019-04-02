@@ -616,14 +616,25 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.fichaIntegrantes.literal.estado"
       },
       {
-        field: "fechaEstadoStr",
-        header: "censo.nuevaSolicitud.fechaEstado"
-      },
-      {
         field: "residenteInscrito",
         header: "censo.ws.literal.residente"
+      },
+      {
+        field: "fechaNacimiento",
+        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+      },
+      {
+        field: "correo",
+        header: "censo.datosDireccion.literal.correo"
+      },
+      {
+        field: "telefono",
+        header: "censo.datosDireccion.literal.telefonoFijo"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.telefonoMovil"
       }
-
     ];
 
     this.colsCertificados = [
@@ -1081,11 +1092,6 @@ export class FichaColegialComponent implements OnInit {
 
   setItalica(datoH) {
     if (datoH.archivada == "No") return false;
-    else return true;
-  }
-
-  setItalicRegtel(datoH) {
-    if (datoH.tipo == 1) return false;
     else return true;
   }
 
@@ -3755,7 +3761,7 @@ export class FichaColegialComponent implements OnInit {
 
           sessionStorage.setItem("editarDireccion", "true");
 
-          sessionStorage.setItem("usuarioBody", JSON.stringify(this.idPersona));
+          sessionStorage.setItem("usuarioBody", JSON.stringify(dato));
           sessionStorage.setItem(
             "esColegiado",
             sessionStorage.getItem("esColegiado")
