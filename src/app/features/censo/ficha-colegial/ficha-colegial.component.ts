@@ -1733,9 +1733,15 @@ export class FichaColegialComponent implements OnInit {
         edad--;
       }
 
-      this.edadCalculada = edad;
+      if(edad < 0 ){
+        this.edadCalculada = 0;
+      }else{
+        this.edadCalculada = edad;
+      }
+      
       this.fechaNacimiento = cumpleanos;
       this.calendarFechaNacimiento.overlayVisible = false;
+      this.generalBody.fechaNacimientoDate = this.fechaNacimiento; 
 
     } else {
       this.edadCalculada = 0;
