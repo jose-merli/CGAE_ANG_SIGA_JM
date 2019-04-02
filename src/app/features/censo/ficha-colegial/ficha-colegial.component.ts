@@ -4962,6 +4962,7 @@ export class FichaColegialComponent implements OnInit {
     }
     this.autocompleteTopics.panelVisible = false;
     this.activacionGuardarGenerales();
+    event.currentTarget.value = "";
   }
 
   filterLabelsMultipleTopics(event) {
