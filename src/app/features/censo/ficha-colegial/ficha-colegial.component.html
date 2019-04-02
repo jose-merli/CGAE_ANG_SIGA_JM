@@ -412,6 +412,9 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
+            <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+              <span>{{ colegialesBody.colegioResultado }}</span>
+            </label>
             <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}
               <span>{{ estadoColegial }}</span>
             </label>
@@ -421,32 +424,10 @@
             <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }}
               <span>{{ inscrito }}</span>
             </label>
-            <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
-              <span>{{ colegialesBody.nMutualista }}</span>
-            </label>
             <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }}
               <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
               <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
             </label>
-
-            <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }}
-              <!-- <span>{{ colegialesBody.fechapresentacion | date: 'dd/MM/yyyy' }}</span> -->
-              <span *ngIf="datePipePresentacion">{{ colegialesBody.fechapresentacion | date: 'dd/MM/yyyy' }}</span>
-              <span *ngIf="!datePipePresentacion">{{ colegialesBody.fechapresentacion}}</span>
-            </label>
-
-            <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}
-              <!-- <span>{{ colegialesBody.fechaJura | date: 'dd/MM/yyyy' }}</span> -->
-              <span *ngIf="datePipeFechaJura">{{ colegialesBody.fechaJura | date: 'dd/MM/yyyy' }}</span>
-              <span *ngIf="!datePipeFechaJura">{{ colegialesBody.fechaJura}}</span>
-            </label>
-
-            <label>{{ "censo.consultaDatosColegiales.literal.fechaTitulacion" | translate }}
-              <!-- <span>{{ colegialesBody.fechaTitulacion | date: 'dd/MM/yyyy' }}</span> -->
-              <span *ngIf="datePipeFechaTitulacion">{{ colegialesBody.fechaTitulacion | date: 'dd/MM/yyyy' }}</span>
-              <span *ngIf="!datePipeFechaTitulacion">{{ colegialesBody.fechaTitulacion}}</span>
-            </label>
-
             <i *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -471,6 +452,10 @@
               <p-dropdown class="select-form" [options]="comboSituacion" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="colegialesBody.situacion"></p-dropdown>
             </div> -->
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
+              <input [(ngModel)]="colegialesBody.colegioResultado" [disabled]="true" type="text" class="form-control" pInputText />
+            </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }} (*)</label>
               <input *ngIf="activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="tarjetaColegiales == '2' || disabledAction || disableNumColegiado"
@@ -739,9 +724,6 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <label *ngIf="esColegiado" class="registros-ficha">{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
-              <span>{{ colegialesBody.colegioResultado }}</span>
-            </label>
             <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
               <span>{{ datosColegiaciones.length }}</span>
             </label>
