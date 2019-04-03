@@ -11,9 +11,9 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
 import { SubtipoCurricularObject } from "../../../../models/SubtipoCurricularObject";
-// export enum KEY_CODE {
-//   ENTER = 13
-// }
+export enum KEY_CODE {
+  ENTER = 13
+}
 @Component({
   selector: "app-subtipo-curricular",
   templateUrl: "./subtipo-curricular.component.html",
@@ -578,10 +578,10 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   //búsqueda con enter
-  // @HostListener("document:keypress", ["$event"])
-  // onKeyPress(event: KeyboardEvent) {
-  //   if (event.keyCode === KEY_CODE.ENTER) {
-  //     this.search();
-  //   }
-  // }
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
+  }
 }

@@ -458,8 +458,14 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }} (*)</label>
-              <input [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="tarjetaColegiales == '2' || disabledAction" (ngModelChange)="activacionGuardarColegiales()"
-                type="text" class="form-control" [maxLength]="20" pInputText />
+              <input *ngIf="activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="tarjetaColegiales == '2' || disabledAction || disableNumColegiado"
+                (ngModelChange)="activacionGuardarColegiales()" type="text" class="col-lg-10 col-md-10" [maxLength]="20" pInputText/>
+              <!-- <label class="form-control col-lg-1 col-md-1">a</label> -->
+              <i *ngIf="!disableNumColegiado && activateNumColegiado" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true"
+                (click)="disableEnableNumCol()"></i>
+              <i *ngIf="disableNumColegiado && activateNumColegiado" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumCol()"></i>
+              <input *ngIf="!activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" disabled (ngModelChange)="activacionGuardarColegiales()"
+                type="text" [maxLength]="20" class="form-control" pInputText/>
               <div *ngIf="identificacionValida == false">
                 <label class="labelError">{{ "El documento es inválido" }}
                 </label>
@@ -491,7 +497,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }} (*)</label>
               <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-                [(disabled)]="isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
+                [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
                 (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>
@@ -506,8 +512,9 @@
               <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }} (*)</label>
               <p-calendar [monthNavigator]="true" #calendarFechaPresentacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
                 (onSelect)="activacionGuardarColegiales(); fechaPresentacionSelected=true" (onInput)="inputFechaPresentacion($event)"
-                (onBlur)="blurFechaPresentacion($event)" [(disabled)]="isLetrado || disabledAction" [(ngModel)]="colegialesBody.fechapresentacion"
-                dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                (onBlur)="blurFechaPresentacion($event)" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+                [(ngModel)]="colegialesBody.fechapresentacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
+                [utc]="false">
                 <p-footer>
                   <div class="main-button d-flex col-lg-12">
                     <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
@@ -518,7 +525,7 @@
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
-              <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="isLetrado || disabledAction"
+              <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
                 (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
                 (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
@@ -534,7 +541,7 @@
               <label>{{ "censo.consultaDatosColegiales.literal.fechaTitulacion" | translate }}
               </label>
               <p-calendar [monthNavigator]="true" #calendarFechaTitulacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-                [(disabled)]="isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
+                [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
                 (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
                 dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
                 <p-footer>

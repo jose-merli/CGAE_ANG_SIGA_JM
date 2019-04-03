@@ -106,7 +106,7 @@ export class FichaColegialComponent implements OnInit {
   buttonVisibleRegtelAtras: boolean = true;
   buttonVisibleRegtelCarpeta: boolean = true;
   buttonVisibleRegtelDescargar: boolean = true;
-
+  activateNumColegiado: boolean = false;
   disabledNif: boolean = false;
 
   // irTurnoOficio: any;
@@ -233,6 +233,7 @@ export class FichaColegialComponent implements OnInit {
   valorPreferenteSMS: string = "12";
   msgDir = "";
   initSpinner: boolean = true;
+  disableNumColegiado: boolean = false;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -890,6 +891,10 @@ export class FichaColegialComponent implements OnInit {
       this.solicitudEditar.idTipoColegiacion = "10";
 
     }
+  }
+
+  disableEnableNumCol() {
+    this.disableNumColegiado = !this.disableNumColegiado;
   }
 
   getInscrito(event) {
@@ -3861,29 +3866,67 @@ export class FichaColegialComponent implements OnInit {
   }
 
   confirmarEliminar(selectedDatos) {
-    let mess = this.translateService.instant("messages.deleteConfirmation");
-    let icon = "fa fa-trash-alt";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.eliminarRegistro(selectedDatos);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-
-        this.selectedDatosBancarios = [];
-        this.selectMultipleBancarios = false;
+    let cargosBorrados = 0;
+    let cargosExistentes = 0;
+    for (let i in selectedDatos) {
+      if (selectedDatos[i].uso != "ABONO/SJCS" && selectedDatos[i].uso != "/SJCS" && selectedDatos[i].uso != "ABONO") {
+        cargosBorrados++;
       }
-    });
+    }
+    for (let i in this.datosBancarios) {
+      if (this.datosBancarios[i].uso != "ABONO/SJCS" && this.datosBancarios[i].uso != "/SJCS" && this.datosBancarios[i].uso != "ABONO") {
+        cargosExistentes++;
+      }
+    }
+    if (cargosExistentes <= cargosBorrados) {
+      let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
+      let icon = "fa fa-trash-alt";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.eliminarRegistro(selectedDatos);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+
+          this.selectedDatosBancarios = [];
+          this.selectMultipleBancarios = false;
+        }
+      });
+    } else {
+      let mess = this.translateService.instant("messages.deleteConfirmation");
+      let icon = "fa fa-trash-alt";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.eliminarRegistro(selectedDatos);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+
+          this.selectedDatosBancarios = [];
+          this.selectMultipleBancarios = false;
+        }
+      });
+    }
   }
 
   eliminarRegistro(selectedDatos) {
@@ -5419,6 +5462,28 @@ export class FichaColegialComponent implements OnInit {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoOtrasColegiaciones();
+      }
+    );
+
+    let numColeAcceso = new ControlAccesoDto();
+    numColeAcceso.idProceso = "12P";
+
+    this.sigaServices.post("acces_control", numColeAcceso).subscribe(
+      data => {
+        let permiso = JSON.parse(data.body);
+        let permisoArray = permiso.permisoItems;
+        let numColegiado = permisoArray[0].derechoacceso;
+        if (numColegiado == 3) {
+          this.activateNumColegiado = true;
+        } else {
+          this.activateNumColegiado = false;
+        }
       },
       err => {
         console.log(err);
