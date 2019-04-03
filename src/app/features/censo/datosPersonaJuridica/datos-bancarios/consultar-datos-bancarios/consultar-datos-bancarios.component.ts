@@ -1079,13 +1079,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
     let numBancos = 0;
     for (let i in bancos) {
-      if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
+      if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "/SJCS" && bancos[i].uso != "ABONO") {
         numBancos++;
       }
     }
     if (numBancos <= 1) {
       this.confirmationService.confirm({
-        message: "Se van a revisar las servicios y facturas pendientes para asignar una cuenta en lugar de esta",
+        message: this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas"),
         icon: "fa fa-info",
         accept: () => {
           this.revisionCuentas = true;
@@ -1159,7 +1159,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     // } else {
     this.confirmationService.confirm({
-      message: "¿Quiere revisar las suscripciones y facturas para asignarlas según corresponda a esta cuenta?",
+      message: this.translateService.instant("censo.alterMutua.literal.preguntaRevisionServiciosyFacturasCuentas"),
       icon: "fa fa-info",
       accept: () => {
         this.revisionCuentas = true;
@@ -1312,7 +1312,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         let numBancos = 0;
         // let encontrado = 
         for (let i in bancos) {
-          if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "SJCS" && bancos[i].uso != "ABONO") {
+          if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "/SJCS" && bancos[i].uso != "ABONO") {
             numBancos++;
           }
         }

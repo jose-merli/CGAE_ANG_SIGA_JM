@@ -692,6 +692,7 @@ export class BusquedaGeneralComponent {
                 );
                 sessionStorage.setItem("esColegiado", "false");
                 sessionStorage.setItem("esNuevoNoColegiado", "true");
+                sessionStorage.setItem("nifNuevo", this.bodyFisica.nif);
                 this.router.navigate(["/fichaColegial"]);
               } else {
                 sessionStorage.setItem(
@@ -796,6 +797,7 @@ export class BusquedaGeneralComponent {
             );
             sessionStorage.setItem("esColegiado", "false");
             sessionStorage.setItem("esNuevoNoColegiado", "true");
+            sessionStorage.setItem("nifNuevo", this.bodyFisica.nif);
             this.router.navigate(["/fichaColegial"]);
           } else {
             if (sessionStorage.getItem("abrirNotario") == "true") {

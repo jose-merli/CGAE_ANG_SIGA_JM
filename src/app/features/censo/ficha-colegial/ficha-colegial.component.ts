@@ -495,6 +495,7 @@ export class FichaColegialComponent implements OnInit {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
+      sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -557,6 +558,10 @@ export class FichaColegialComponent implements OnInit {
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.generalBody.nif = sessionStorage.getItem("nifNuevo");
+      sessionStorage.removeItem("nifNuevo")
+      sessionStorage.removeItem("esNuevoNoColegiado");
       this.onInitGenerales();
     } else {
       this.activacionEditar = true;
@@ -621,7 +626,7 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.nuevaSolicitud.fechaEstado"
 
       },
-      {  
+      {
         field: "residenteInscrito",
         header: "censo.ws.literal.residente"
       }
@@ -1732,15 +1737,15 @@ export class FichaColegialComponent implements OnInit {
         edad--;
       }
 
-      if(edad < 0 ){
+      if (edad < 0) {
         this.edadCalculada = 0;
-      }else{
+      } else {
         this.edadCalculada = edad;
       }
-      
+
       this.fechaNacimiento = cumpleanos;
       this.calendarFechaNacimiento.overlayVisible = false;
-      this.generalBody.fechaNacimientoDate = this.fechaNacimiento; 
+      this.generalBody.fechaNacimientoDate = this.fechaNacimiento;
 
     } else {
       this.edadCalculada = 0;
@@ -3861,29 +3866,67 @@ export class FichaColegialComponent implements OnInit {
   }
 
   confirmarEliminar(selectedDatos) {
-    let mess = this.translateService.instant("messages.deleteConfirmation");
-    let icon = "fa fa-trash-alt";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.eliminarRegistro(selectedDatos);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-
-        this.selectedDatosBancarios = [];
-        this.selectMultipleBancarios = false;
+    let cargosBorrados = 0;
+    let cargosExistentes = 0;
+    for (let i in selectedDatos) {
+      if (selectedDatos[i].uso != "ABONO/SJCS" && selectedDatos[i].uso != "/SJCS" && selectedDatos[i].uso != "ABONO") {
+        cargosBorrados++;
       }
-    });
+    }
+    for (let i in this.datosBancarios) {
+      if (this.datosBancarios[i].uso != "ABONO/SJCS" && this.datosBancarios[i].uso != "/SJCS" && this.datosBancarios[i].uso != "ABONO") {
+        cargosExistentes++;
+      }
+    }
+    if (cargosExistentes <= cargosBorrados) {
+      let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
+      let icon = "fa fa-trash-alt";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.eliminarRegistro(selectedDatos);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+
+          this.selectedDatosBancarios = [];
+          this.selectMultipleBancarios = false;
+        }
+      });
+    } else {
+      let mess = this.translateService.instant("messages.deleteConfirmation");
+      let icon = "fa fa-trash-alt";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.eliminarRegistro(selectedDatos);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+
+          this.selectedDatosBancarios = [];
+          this.selectMultipleBancarios = false;
+        }
+      });
+    }
   }
 
   eliminarRegistro(selectedDatos) {
