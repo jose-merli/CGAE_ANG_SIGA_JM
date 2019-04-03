@@ -648,7 +648,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                     let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
                     this.solicitudEditar.modalidad = modalidad.label;
                     sessionStorage.setItem("consulta", "true");
-
+                    this.solicitudEditar.fechaEstadoSolicitud = new Date();
                     sessionStorage.setItem(
                       "editedSolicitud",
                       JSON.stringify(this.solicitudEditar)
@@ -862,6 +862,8 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
           let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
           this.solicitudEditar.modalidad = modalidad.label;
+
+          this.solicitudEditar.fechaEstadoSolicitud = new Date();
 
           sessionStorage.setItem(
             "editedSolicitud",
@@ -1348,6 +1350,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   fillFechaEstado(event) {
     this.solicitudEditar.fechaEstado = event;
+  }
+
+  fillFechaEstadoSolicitud(event) {
+    this.solicitudEditar.fechaEstadoSolicitud = event;
   }
 
   fillFechaSolicitud(event) {

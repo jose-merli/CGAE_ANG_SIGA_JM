@@ -65,6 +65,7 @@ export class SolicitudIncorporacionItem {
   banco: String;
   idInstitucion: String;
   poblacionExtranjera: string;
+  fechaEstadoSolicitud: Date;
 
   constructor() { }
 }
