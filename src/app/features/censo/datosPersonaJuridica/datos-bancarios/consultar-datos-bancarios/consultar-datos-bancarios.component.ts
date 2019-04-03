@@ -94,7 +94,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   selectedProductoServicio: any = {};
   datosPrevios: any = {};
   tipoIdentificacion: String;
-
+  deshabilitaDescarga: boolean = true;
 
   currentRoute: String;
   idClaseComunicacion: String;
@@ -1030,7 +1030,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   validarCuentaSJCS() {
     if (this.registroEditable == "true") {
       this.confirmationService.confirm({
-        message: "Se van a revisar las servicios y facturas pendientes para asignar una cuenta en lugar de esta",
+        message: this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas"),
         icon: "fa fa-info",
         accept: () => {
           this.revisionCuentas = true;
@@ -2040,7 +2040,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     return ret;
   }
 
-  controlarEdicion() {
+  activaDescarga(evento) {
+    if (evento.data.idFicheroFirma != null) {
+      this.deshabilitaDescarga = false;
+    } else {
+      this.deshabilitaDescarga = true;
+    }
+  }
+
+  controlarEdicion(evento) {
+    this.activaDescarga(evento);
     if (!this.selectMultiple) {
       this.editar = true;
     } else {
