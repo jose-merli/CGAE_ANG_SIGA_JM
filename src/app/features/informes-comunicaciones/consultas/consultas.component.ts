@@ -57,7 +57,7 @@ export class ConsultasComponent implements OnInit {
   valores: CampoDinamicoItem[];
   operadoresTexto: any[];
   operadoresNumero: any[];
-  camposDinamicos: any [] = [];
+  camposDinamicos: any[] = [];
   showValores: boolean = false;
   sentencia: string;
 
@@ -77,7 +77,7 @@ export class ConsultasComponent implements OnInit {
 
   ngOnInit() {
     this.currentRoute = this.router.url;
-    
+
     sessionStorage.removeItem("consultasSearch");
     this.getInstitucion();
 
@@ -185,7 +185,7 @@ export class ConsultasComponent implements OnInit {
         value: 'IS NULL'
       }
     ]
-  
+
   }
 
   recuperarBusqueda() {
@@ -193,7 +193,7 @@ export class ConsultasComponent implements OnInit {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
       this.buscar();
     } else {
-      this.bodySearch.generica = "N";
+      this.bodySearch.generica = "S";
     }
   }
 
@@ -300,13 +300,47 @@ export class ConsultasComponent implements OnInit {
   }
 
   buscar() {
-    this.showResultados = true;
-    this.selectMultiple = false;
-    this.selectedDatos = "";
-    this.progressSpinner = true;
-    sessionStorage.removeItem("consultasSearch");
-    sessionStorage.removeItem("filtrosConsulta");
-    this.getResultados();
+    if (this.checkFilters()) {
+      this.showResultados = true;
+      this.selectMultiple = false;
+      this.selectedDatos = "";
+      this.progressSpinner = true;
+      sessionStorage.removeItem("consultasSearch");
+      sessionStorage.removeItem("filtrosConsulta");
+      this.getResultados();
+    }
+  }
+
+  checkFilters() {
+    if (
+      this.bodySearch.idModulo == null &&
+      this.bodySearch.nombre == null &&
+      this.bodySearch.descripcion == null &&
+      this.bodySearch.idObjetivo == null &&
+      this.bodySearch.idClaseComunicacion == null) {
+      this.showSearchIncorrect();
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.bodySearch.nombre != undefined) {
+        this.bodySearch.nombre = this.bodySearch.nombre.trim();
+      }
+      if (this.bodySearch.descripcion != undefined) {
+        this.bodySearch.descripcion = this.bodySearch.descripcion.trim();
+      }
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
   }
 
   getResultados() {
@@ -430,8 +464,7 @@ export class ConsultasComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (
-      event.keyCode === KEY_CODE.ENTER && !this.isButtonDisabled()
-    ) {
+      event.keyCode === KEY_CODE.ENTER) {
       this.buscar();
     }
   }
@@ -479,15 +512,7 @@ export class ConsultasComponent implements OnInit {
     sessionStorage.setItem("crearNuevaConsulta", JSON.stringify("true"));
   }
 
-  isButtonDisabled() {
-    if ((this.bodySearch.idModulo != null && this.bodySearch.idModulo != "") || (this.bodySearch.nombre != null && this.bodySearch.nombre != "")
-      || (this.bodySearch.descripcion != null && this.bodySearch.descripcion != ""
-        || (this.bodySearch.idObjetivo != null && this.bodySearch.idObjetivo != "")
-        || (this.bodySearch.idClaseComunicacion != null && this.bodySearch.idClaseComunicacion != ""))) {
-      return false;
-    }
-    return true;
-  }
+
 
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
@@ -576,10 +601,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.ejecutar();
         }
       }, error => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"))        
+        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"))
       });
   }
-  
+
   ejecutar() {
     this.progressSpinner = true;
 
@@ -597,7 +622,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
     let consultaEjecutar = {
-      sentencia : this.sentencia,
+      sentencia: this.sentencia,
       camposDinamicos: this.camposDinamicos
     }
 
