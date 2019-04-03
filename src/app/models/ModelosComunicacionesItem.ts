@@ -16,6 +16,6 @@ export class ModelosComunicacionesItem {
   idInforme: String;
   plantillas: any;
 
-  data:boolean;
+  data: boolean;
   constructor() { }
 }

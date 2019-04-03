@@ -57,7 +57,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   idConsulta: string;
   dato: any;
   selectedModelosSend: any = [];
-
+  selectAll: boolean = false;
   @ViewChild("table")
   tableModelos: DataTable;
 
@@ -182,6 +182,14 @@ export class DialogoComunicacionesComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  onChangeSelectAll(){
+    if(this.selectAll){
+      this.selectedModelos = JSON.parse(JSON.stringify(this.modelosComunicacion));
+    }else{
+      this.selectedModelos = [];
+    }
   }
 
   onChangePlantillaEnvio(dato) {

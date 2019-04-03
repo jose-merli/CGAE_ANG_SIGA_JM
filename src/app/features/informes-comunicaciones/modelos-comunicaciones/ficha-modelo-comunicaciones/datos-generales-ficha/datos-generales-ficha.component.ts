@@ -51,17 +51,15 @@ export class DatosGeneralesFichaComponent implements OnInit {
     private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.preseleccionar = [
-      { label: "", value: "" },
       { label: "Sí", value: "SI" },
       { label: "No", value: "NO" }
     ];
 
     this.visible = [
-      { label: "", value: "" },
       { label: "Sí", value: 1 },
       { label: "No", value: 0 }
     ];
@@ -71,7 +69,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.getClasesComunicaciones();
 
     this.getPlantillas();
-    
+
     if (
       sessionStorage.getItem("soloLectura") != null &&
       sessionStorage.getItem("soloLectura") != undefined &&
@@ -339,7 +337,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   };
 

@@ -12,9 +12,12 @@
                     <app-fecha [(value)]="bodyComunicacion.fechaProgramacion" [minDate]="currentDate" showTime="true"></app-fecha>
                 </div>
             </div>
+            <!-- onChangeSelectAll -->
+
             <p-table [value]="modelosComunicacion" [columns]="colsModelos" [(selection)]="selectedModelos" [responsive]="true" #tableModelos
                 class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleComunicar}"
                 paginatorPosition="both" (onRowSelect)="onRowSelectModelos($event)" (onRowUnselect)="onUnRowSelectModelos($event)">
+
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
                         <col *ngFor="let col of columns" [style.width]="col.width">
@@ -60,6 +63,13 @@
                         <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}}
                             de un total de {{tableModelos.totalRecords}}</label>
 
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="paginatorleft" let-state>
+                    <div class="ml-3 selectAll">
+                        <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo'| translate }}"
+                            name="groupname">
+                        </p-checkbox>
                     </div>
                 </ng-template>
             </p-table>
