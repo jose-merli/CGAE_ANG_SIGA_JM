@@ -72,7 +72,7 @@ export class SubtipoCurricularComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Llamada al rest para obtener la categoría curricular
@@ -239,7 +239,7 @@ export class SubtipoCurricularComponent implements OnInit {
       this.body.codigoExterno = e.srcElement.value.trim();
       this.body.codigoExterno = this.body.codigoExterno.trim();
       this.inputCdgoExt.nativeElement.value = e.srcElement.value.trim();
-      
+
     }
 
     this.editar = false;
@@ -339,7 +339,7 @@ export class SubtipoCurricularComponent implements OnInit {
       this.bodyRemove.subtipoCurricularItems.push(value);
     });
 
-    
+
     this.sigaServices
       .post("subtipoCurricular_deleteSubtipoCurricular", this.bodyRemove)
       .subscribe(
@@ -486,7 +486,7 @@ export class SubtipoCurricularComponent implements OnInit {
             value.editar = true;
           }
         });
-        
+
       }
     }
   }

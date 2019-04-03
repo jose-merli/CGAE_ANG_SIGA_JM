@@ -131,6 +131,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.currentRoute = this.router.url;
     sessionStorage.removeItem("busquedaCensoGeneral");
     sessionStorage.removeItem("disabledAction");
+    sessionStorage.removeItem("filtrosBusquedaColegiados");
+    sessionStorage.removeItem("esNuevoNoColegiado");
 
     this.getLetrado();
 
@@ -203,11 +205,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           }
           sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
         }
-         this.progressSpinner = false;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-         this.progressSpinner = false;
+        this.progressSpinner = false;
       }
     );
   }

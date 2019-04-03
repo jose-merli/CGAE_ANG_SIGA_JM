@@ -494,6 +494,7 @@ export class FichaColegialComponent implements OnInit {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
+      sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -556,6 +557,10 @@ export class FichaColegialComponent implements OnInit {
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.generalBody.nif = sessionStorage.getItem("nifNuevo");
+      sessionStorage.removeItem("nifNuevo")
+      sessionStorage.removeItem("esNuevoNoColegiado");
       this.onInitGenerales();
     } else {
       this.activacionEditar = true;
@@ -620,7 +625,7 @@ export class FichaColegialComponent implements OnInit {
         header: "censo.nuevaSolicitud.fechaEstado"
 
       },
-      {  
+      {
         field: "residenteInscrito",
         header: "censo.ws.literal.residente"
       }
@@ -1727,15 +1732,15 @@ export class FichaColegialComponent implements OnInit {
         edad--;
       }
 
-      if(edad < 0 ){
+      if (edad < 0) {
         this.edadCalculada = 0;
-      }else{
+      } else {
         this.edadCalculada = edad;
       }
-      
+
       this.fechaNacimiento = cumpleanos;
       this.calendarFechaNacimiento.overlayVisible = false;
-      this.generalBody.fechaNacimientoDate = this.fechaNacimiento; 
+      this.generalBody.fechaNacimientoDate = this.fechaNacimiento;
 
     } else {
       this.edadCalculada = 0;
@@ -2831,7 +2836,7 @@ export class FichaColegialComponent implements OnInit {
         err => {
           console.log(err);
         }, () => {
-          if(this.generalBody.colegiado){
+          if (this.generalBody.colegiado) {
             this.estadoColegial = this.datosColegiales[0].estadoColegial;
           }
         }
