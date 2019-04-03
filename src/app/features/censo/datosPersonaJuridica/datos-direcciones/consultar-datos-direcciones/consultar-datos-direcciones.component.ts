@@ -1039,7 +1039,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
     this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"))[0].idPersona;
     this.body.idProvincia = this.provinciaSelecionada;
     this.sigaServices
       .post("fichaDatosDirecciones_solicitudCreate", this.body)

@@ -233,7 +233,7 @@ export class FichaColegialComponent implements OnInit {
   valorPreferenteSMS: string = "12";
   msgDir = "";
   initSpinner: boolean = true;
-  disableNumColegiado: boolean = false;
+  disableNumColegiado: boolean = true;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
