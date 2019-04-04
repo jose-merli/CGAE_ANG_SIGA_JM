@@ -87,8 +87,9 @@
           <div class="row mb-3">
             <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [disabledToday]="disabledToday" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || isEventoCumplidoOrCancelado"
-                (valueChangeSelected)="fillStart($event)" [utc]="false"> </app-fecha>
+              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [showTime]="true" [disabledToday]="disabledToday"
+                [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStart($event)"
+                [utc]="false"> </app-fecha>
             </div>
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
