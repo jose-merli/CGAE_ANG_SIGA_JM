@@ -1146,7 +1146,15 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       } else {
         if (this.isLetrado) {
-          this.solicitarGuardarRegistro();
+          if (this.ocultarMotivo == false) {
+            this.displayAuditoria = true;
+          } else {
+            this.displayAuditoria = false;
+            this.editarRegistro();
+          }
+
+          this.showGuardarAuditoria = false;
+          this.body.motivo = null;
         } else {
           this.editarRegistro();
         }
