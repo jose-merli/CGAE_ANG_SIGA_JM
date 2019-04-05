@@ -651,7 +651,7 @@ export class BusquedaGeneralComponent {
       // ir a ficha de solicitud de Incorporación
     } else if (sessionStorage.getItem("AddDestinatarioIndv") != null) {
       sessionStorage.setItem("destinatarioIndv", JSON.stringify(id[0]));
-      sessionStorage.removeItem("AddDestinatarioIndv");
+      // sessionStorage.removeItem("AddDestinatarioIndv");
       this.location.back();
     } else if (
       sessionStorage.getItem("solicitudIncorporacion") == "true" &&

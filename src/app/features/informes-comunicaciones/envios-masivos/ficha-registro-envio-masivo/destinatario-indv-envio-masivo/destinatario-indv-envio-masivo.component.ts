@@ -121,7 +121,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
       },
       {
         field: 'cp',
-        header: 'CP'
+        header: 'censo.ws.literal.codigopostal'
       }
     ];
 
@@ -152,8 +152,8 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
       sessionStorage.removeItem("AddDestinatarioIndv");
       this.obtenerDirecciones(persona);
     }
-
   }
+
   obtenerDirecciones(persona) {
 
     this.sigaServices.post("enviosMasivos_direccionesDestinatarioIndv", persona.idPersona).subscribe(result => {
@@ -253,7 +253,6 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
   }
 
   asociarDireccion(direccion) {
-
     let destinatario = {
       idPersona: direccion[0].idPersona,
       idEnvio: this.body.idEnvio,

@@ -224,6 +224,15 @@ export class ConsultasComponent implements OnInit {
   }
 
   getCombos() {
+    this.sigaServices.get("consultas_claseComunicaciones").subscribe(
+      data => {
+        this.clasesComunicaciones = data.combooItems;
+        this.clasesComunicaciones.unshift({ label: "", value: "" });
+      },
+      err => {
+        console.log(err);
+      }
+    )
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
@@ -257,10 +266,9 @@ export class ConsultasComponent implements OnInit {
               this.bodySearch.idModulo != undefined &&
               this.bodySearch.idModulo != ""
             ) {
-              this.cargaComboClaseCom(null);
             } else {
-              this.clasesComunicaciones = [];
-              this.clasesComunicaciones.unshift({ label: "", value: "" });
+              // this.clasesComunicaciones = [];
+              // this.clasesComunicaciones.unshift({ label: "", value: "" });
             }
           });
         },
@@ -520,41 +528,53 @@ export class ConsultasComponent implements OnInit {
     this.bodySearch.generica = "S";
   }
 
-  cargaComboClaseCom(event) {
-    if (event != null) {
-      this.bodySearch.idModulo = event.value;
-    }
-    this.sigaServices
-      .getParam(
-        "consultas_claseComunicacionesByModulo",
-        "?idModulo=" + this.bodySearch.idModulo
-      )
-      .subscribe(
-        data => {
-          this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: "", value: "" });
-          /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
-          this.clasesComunicaciones.map(e => {
-            let accents =
-              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-            let accentsOut =
-              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-            let i;
-            let x;
-            for (i = 0; i < e.label.length; i++) {
-              if ((x = accents.indexOf(e.label[i])) != -1) {
-                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-                return e.labelSinTilde;
-              }
-            }
-          });
-        },
-        err => {
-          console.log(err);
-        }
-      );
-  }
+  // comboClaseCom() {
+  //   this.sigaServices.get("consultas_claseComunicacion").subscribe(
+  //     data => {
+  //       this.objetivos = data.combooItems;
+  //       this.objetivos.unshift({ label: "", value: "" });
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     }
+  //   ),
+  // }
+
+  // cargaComboClaseCom(event) {
+  //   if (event != null) {
+  //     this.bodySearch.idModulo = event.value;
+  //   }
+  //   this.sigaServices
+  //     .getParam(
+  //       "consultas_claseComunicacionesByModulo",
+  //       "?idModulo=" + this.bodySearch.idModulo
+  //     )
+  //     .subscribe(
+  //         data => {
+  //           this.clasesComunicaciones = data.combooItems;
+  //           this.clasesComunicaciones.unshift({ label: "", value: "" });
+  //           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+  // para poder filtrar el dato con o sin estos caracteres*/
+  //           this.clasesComunicaciones.map(e => {
+  //             let accents =
+  //               "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+  //             let accentsOut =
+  //               "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+  //             let i;
+  //             let x;
+  //             for (i = 0; i < e.label.length; i++) {
+  //               if ((x = accents.indexOf(e.label[i])) != -1) {
+  //                 e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+  //                 return e.labelSinTilde;
+  //               }
+  //             }
+  //           });
+  //         },
+  //         err => {
+  //           console.log(err);
+  //         }
+  //       );
+  //   }
 
   getComboGenerica() {
     this.comboGenerica = [
