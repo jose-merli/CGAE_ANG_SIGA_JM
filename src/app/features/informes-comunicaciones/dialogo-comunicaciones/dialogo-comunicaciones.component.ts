@@ -65,7 +65,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.progressSpinner = true;
     this.datosSeleccionados = JSON.parse(sessionStorage.getItem("datosComunicar"));
     sessionStorage.removeItem("back");
     this.getClaseComunicaciones();
@@ -176,10 +176,11 @@ export class DialogoComunicacionesComponent implements OnInit {
           }
 
         }
-
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

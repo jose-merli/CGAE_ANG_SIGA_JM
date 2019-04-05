@@ -401,21 +401,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
-        this.newEvent.end = new Date(this.curso.fechaInscripcionDesdeDate);
+        this.newEvent.start = undefined;
+        this.newEvent.end = undefined;
 
         //Indicamos que el limite que puede durar el evento
-        this.invalidDateMin = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
-        this.invalidDateMax = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
+        // this.invalidDateMin = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
+        // this.invalidDateMax = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
 
-        this.invalidDateMin.setHours(this.newEvent.start.getHours());
-        this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(23);
-        this.invalidDateMax.setMinutes(59);
+        // this.invalidDateMin.setHours(this.newEvent.start.getHours());
+        // this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+        // this.invalidDateMax.setHours(23);
+        // this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
@@ -460,21 +460,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
-        this.newEvent.end = new Date(this.curso.fechaInscripcionHastaDate);
+        this.newEvent.start = undefined;
+        this.newEvent.end = undefined;
 
         //Indicamos que el limite que puede durar el evento
-        this.invalidDateMin = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
-        this.invalidDateMax = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
+        // this.invalidDateMin = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
+        // this.invalidDateMax = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
 
-        this.invalidDateMin.setHours(this.newEvent.start.getHours());
-        this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(23);
-        this.invalidDateMax.setMinutes(59);
+        // this.invalidDateMin.setHours(this.newEvent.start.getHours());
+        // this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+        // this.invalidDateMax.setHours(23);
+        // this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();

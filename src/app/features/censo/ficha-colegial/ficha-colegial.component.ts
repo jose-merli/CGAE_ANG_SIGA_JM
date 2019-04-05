@@ -545,6 +545,11 @@ export class FichaColegialComponent implements OnInit {
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
 
+        if (sessionStorage.getItem("nifNuevo") != undefined) {
+          this.generalBody.nif = sessionStorage.getItem("nifNuevo");
+          sessionStorage.removeItem("nifNuevo")
+        }
+
         this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
         this.compruebaDNI();
       } else {
@@ -559,8 +564,6 @@ export class FichaColegialComponent implements OnInit {
       this.esNewColegiado = true;
       this.activacionEditar = false;
       this.emptyLoadFichaColegial = false;
-      this.generalBody.nif = sessionStorage.getItem("nifNuevo");
-      sessionStorage.removeItem("nifNuevo")
       sessionStorage.removeItem("esNuevoNoColegiado");
       this.onInitGenerales();
     } else {

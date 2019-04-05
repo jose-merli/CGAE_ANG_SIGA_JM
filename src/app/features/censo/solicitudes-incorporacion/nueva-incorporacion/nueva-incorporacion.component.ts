@@ -140,6 +140,8 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.getItem("nuevaIncorporacion")
         );
 
+        this.compruebaDNI();
+
         if (solicitudrecibida.idInstitucion != null && solicitudrecibida.idInstitucion != undefined
           && solicitudrecibida.idInstitucion != "") {
           this.noExistePersona = false;
@@ -342,7 +344,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.abonoJCS = false;
     }
 
-    if (this.solicitudEditar.abonoCargo != null) {
+    if (this.solicitudEditar.abonoCargo != null && this.solicitudEditar.abonoCargo != "") {
       if (this.solicitudEditar.abonoCargo == "T") {
         this.cargo = true;
         this.abono = true;
@@ -688,6 +690,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
   }
   searchSolicitante() {
+    this.progressSpinner = true;
 
     this.body = new DatosColegiadosItem();
     this.body.nif = this.solicitudEditar.numeroIdentificacion;
@@ -786,8 +789,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     } else {
       if (this.cargo == true) {
         this.solicitudEditar.abonoCargo = "C";
-      } else {
+      } else if (this.abono == true) {
         this.solicitudEditar.abonoCargo = "A";
+      } else {
+        this.solicitudEditar.abonoCargo = "";
       }
     }
   }
@@ -828,8 +833,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     } else {
       if (this.cargo == true) {
         this.solicitudEditar.abonoCargo = "C";
-      } else {
+      } else if (this.abono == true) {
         this.solicitudEditar.abonoCargo = "A";
+      } else {
+        this.solicitudEditar.abonoCargo = "";
       }
     }
 
