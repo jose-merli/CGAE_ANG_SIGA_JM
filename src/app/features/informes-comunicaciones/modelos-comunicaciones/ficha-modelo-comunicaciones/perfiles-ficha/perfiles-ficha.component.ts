@@ -109,13 +109,15 @@ export class PerfilesFichaComponent implements OnInit {
       },
       () => {
         let i = 0;
-        this.perfilesNoSeleccionados.forEach(element => {
-          let find = this.perfilesSeleccionados.findIndex(x => x.label === element.label);
-          if (find != -1) {
-            this.perfilesNoSeleccionados.splice(i, 1);
-          }
-          i++;
-        });
+        if (this.perfilesSeleccionados != undefined) {
+          this.perfilesNoSeleccionados.forEach(element => {
+            let find = this.perfilesSeleccionados.findIndex(x => x.label === element.label);
+            if (find != -1) {
+              this.perfilesNoSeleccionados.splice(i, 1);
+            }
+            i++;
+          });
+        }
         this.progressSpinner = false;
       }
     );
