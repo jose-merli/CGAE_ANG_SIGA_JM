@@ -179,6 +179,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     sessionStorage.setItem("consulta", "false");
     sessionStorage.setItem("solicitudIncorporacion", "true");
     sessionStorage.setItem("abrirSolicitudIncorporacion", "true");
+    sessionStorage.removeItem("nuevoNoColegiado");
+    sessionStorage.removeItem("nuevoNoColegiadoGen");
 
     // this.router.navigate(["/nuevaIncorporacion"]);
 

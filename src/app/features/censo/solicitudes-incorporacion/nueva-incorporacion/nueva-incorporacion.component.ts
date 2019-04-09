@@ -106,6 +106,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem("esNuevoNoColegiado");
+
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -708,7 +709,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
           sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
           sessionStorage.setItem("destinatarioCom", "true");
-          sessionStorage.removeItem("esColegiado");
+          sessionStorage.setItem("esColegiado", "true");
           sessionStorage.setItem("esNuevoNoColegiado", "false");
           this.router.navigate(["/fichaColegial"]);
 

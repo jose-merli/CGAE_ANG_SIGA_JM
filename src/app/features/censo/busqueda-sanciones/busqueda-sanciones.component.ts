@@ -61,9 +61,9 @@ export class BusquedaSancionesComponent implements OnInit {
 
   isLetrado: boolean = false;
 
-  currentRoute: String;  
+  currentRoute: String;
   idClaseComunicacion: String;
-  keys: any []= [];
+  keys: any[] = [];
 
   constructor(
     private sigaServices: SigaServices,
@@ -294,7 +294,7 @@ export class BusquedaSancionesComponent implements OnInit {
 
     this.sigaServices
       .postPaginado(
-        "busquedaSanciones_searchBusquedaSanciones",
+        "busquedaSanciones_searchBusquedaSancionesBBDD",
         "?numPagina=1",
         this.body
       )
@@ -367,7 +367,7 @@ export class BusquedaSancionesComponent implements OnInit {
     sessionStorage.removeItem("menuProcede");
     sessionStorage.removeItem("migaPan");
     sessionStorage.removeItem("migaPan2");
-    
+
     let migaPan = this.translateService.instant("menu.expedientes.sanciones");
     let menuProcede = this.translateService.instant("menu.censo");
     sessionStorage.setItem("migaPan", migaPan);
@@ -400,7 +400,7 @@ export class BusquedaSancionesComponent implements OnInit {
       sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
 
       // Guardamos los datos seleccionados para pasarlos a la otra pantalla
-      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
 
       this.router.navigate(["/detalleSancion"]);
 
@@ -472,14 +472,14 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
 
-  navigateComunicar(dato){
+  navigateComunicar(dato) {
     sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
-    sessionStorage.setItem("rutaComunicacion",this.currentRoute.toString());
-    sessionStorage.setItem("idModulo",'3');
-    this.getDatosComunicar();    
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    sessionStorage.setItem("idModulo", '3');
+    this.getDatosComunicar();
   }
-  
-  getDatosComunicar(){
+
+  getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
@@ -491,27 +491,27 @@ export class BusquedaSancionesComponent implements OnInit {
             this.keys = JSON.parse(data['body']).keysItem;
             this.selectedDatos.forEach(element => {
               let keysValues = [];
-              this.keys.forEach(key =>{
-                if(element[key.nombre] != undefined){
+              this.keys.forEach(key => {
+                if (element[key.nombre] != undefined) {
                   keysValues.push(element[key.nombre]);
-                }            
+                }
               })
               datosSeleccionados.push(keysValues);
             });
-    
+
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
             console.log(err);
           }
-        );   
+        );
       },
       err => {
         console.log(err);
       }
-    );    
-  } 
+    );
+  }
   fillFechaDesdeDate(event) {
     this.body.fechaDesdeDate = event;
   }

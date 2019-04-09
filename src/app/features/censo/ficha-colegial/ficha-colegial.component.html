@@ -899,9 +899,9 @@
       <div *ngIf="esFichaActiva('sanciones')" class="card-body card-body-ficha">
         <div class="row">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-            [(selection)]="selectedDatosSanciones" (onRowSelect)="onRowSelectSanciones(selectedDatosSanciones)" pageLinks="4"
-            [responsive]="true" selectionMode="single" #tableSanciones class="tabla-listado" [value]="dataSanciones" [sortOrder]="sortO"
-            [paginator]="enablePagination()" paginatorPosition="both" [rows]="selectedItemSanciones">
+            [(selection)]="selectedDatosSanciones" pageLinks="4" [responsive]="true" selectionMode="single" #tableSanciones
+            class="tabla-listado" [value]="dataSanciones" [sortOrder]="sortO" [paginator]="enablePagination()" paginatorPosition="both"
+            [rows]="selectedItemSanciones">
             <p-column *ngFor="let col of colsSanciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
             </p-column>
@@ -1034,10 +1034,9 @@
     <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCurriculares" pageLinks="4"
-          [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)" [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }"
-          selectionMode="multiple" #tableCurriculares class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()"
-          paginatorPosition="both" [rows]="selectedItemCurriculares" (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)"
-          (onRowUnselect)="
+          [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }" selectionMode="multiple" #tableCurriculares
+          class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"
+          [rows]="selectedItemCurriculares" (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)" (onRowUnselect)="
             actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
           ">
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"

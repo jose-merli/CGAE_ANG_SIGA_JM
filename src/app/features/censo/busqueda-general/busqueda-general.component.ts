@@ -263,7 +263,7 @@ export class BusquedaGeneralComponent {
   }
 
   ngOnDestroy() {
-    sessionStorage.removeItem("nuevaSancion");
+    // sessionStorage.removeItem("nuevaSancion");
   }
 
   getInstitucion() {
