@@ -491,6 +491,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getColsResults() {
     this.cols = [
+       {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+       {
+        field: "identificacion",
+        header: "censo.consultaDatosColegiacion.literal.numIden"
+      },
       {
         field: "nombreCurso",
         header: "formacion.busquedaInscripcion.nombreCurso"

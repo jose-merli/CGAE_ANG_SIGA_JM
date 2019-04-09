@@ -687,6 +687,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         );
     } else {
       this.showFail("censo.alterMutua.literal.datosBancariosObligatorios");
+      
     }
   }
   searchSolicitante() {
@@ -853,7 +854,10 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.removeItem("editedSolicitud");
 
           this.tratarDatos();
-          this.progressSpinner = false;
+           if (back == true) {
+            this.progressSpinner = false;
+          }
+          
           this.solicitudEditar.idSolicitud = JSON.parse(result.body).id;
 
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
