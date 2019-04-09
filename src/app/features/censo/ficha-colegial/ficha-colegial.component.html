@@ -421,6 +421,9 @@
             <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
               <span>{{ colegialesBody.numColegiado }}</span>
             </label>
+            <label>{{ "censo.ws.literal.residente" | translate }}
+              <span>{{ residente }}</span>
+            </label>
             <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }}
               <span>{{ inscrito }}</span>
             </label>
@@ -486,14 +489,7 @@
                 </label>
               </div>
             </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }} (*)</label>
-              <!--
-                <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
-              -->
-              <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)" [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled"
-                [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
-            </div>
+
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }} (*)</label>
               <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
@@ -551,6 +547,14 @@
                   </div>
                 </p-footer>
               </p-calendar>
+            </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }} (*)</label>
+              <!--
+                <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
+              -->
+              <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)" [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled"
+                [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
             </div>
           </div>
         </div>

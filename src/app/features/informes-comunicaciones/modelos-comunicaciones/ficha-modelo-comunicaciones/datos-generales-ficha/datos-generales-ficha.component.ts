@@ -146,7 +146,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
         .subscribe(
           data => {
             let existe = data.body;
-
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             if (existe == "false") {
               this.sigaServices
                 .post("modelos_detalle_datosGenerales", this.body)
@@ -204,6 +204,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
             this.body.idModeloComunicacion = JSON.parse(data.body).data;
             sessionStorage.setItem("modelosSearch", JSON.stringify(this.body));
             sessionStorage.removeItem("crearNuevoModelo");
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           },
           err => {
             console.log(err);
@@ -241,6 +242,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     if (this.body.porDefecto == "SI") {
       this.body.idInstitucion = "0";
+      this.bodyInicial.idInstitucion = "0";
     }
   }
 
@@ -294,6 +296,25 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
+  activaRestablecer() {
+    if (JSON.stringify(this.body) == JSON.stringify(this.bodyInicial)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  activaGuardar() {
+    if (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) {
+      if (this.body.nombre != "" && this.body.nombre != undefined && this.body.idInstitucion != undefined && this.body.idInstitucion != "" && this.body.orden != "" && this.body.orden != undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }

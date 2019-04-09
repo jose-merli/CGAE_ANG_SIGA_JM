@@ -185,10 +185,10 @@ export class DialogoComunicacionesComponent implements OnInit {
     );
   }
 
-  onChangeSelectAll(){
-    if(this.selectAll){
+  onChangeSelectAll() {
+    if (this.selectAll) {
       this.selectedModelos = JSON.parse(JSON.stringify(this.modelosComunicacion));
-    }else{
+    } else {
       this.selectedModelos = [];
     }
   }
@@ -375,8 +375,14 @@ export class DialogoComunicacionesComponent implements OnInit {
       .postDownloadFiles("dialogo_descargar", datos)
       .subscribe(
         data => {
+          // let a = JSON.parse(data);
           const blob = new Blob([data], { type: "text/csv" });
+
+          // if (blob. != undefined) {
+          //   saveAs(blob, data.nombre);
+          // } else {
           saveAs(blob, "Documentos.zip");
+          // }
           this.progressSpinner = false;
           this.showValores = false;
           this.backTo();

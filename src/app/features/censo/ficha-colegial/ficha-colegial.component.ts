@@ -421,6 +421,7 @@ export class FichaColegialComponent implements OnInit {
   disabledToday: boolean = false;
   fichaMutua: any;
   estadoColegial: String;
+  residente: String;
 
   constructor(
     private location: Location,
@@ -2850,6 +2851,7 @@ export class FichaColegialComponent implements OnInit {
         }, () => {
           if (this.generalBody.colegiado) {
             this.estadoColegial = this.datosColegiales[0].estadoColegial;
+            this.residente = this.datosColegiales[0].residenteInscrito;
           }
         }
       );

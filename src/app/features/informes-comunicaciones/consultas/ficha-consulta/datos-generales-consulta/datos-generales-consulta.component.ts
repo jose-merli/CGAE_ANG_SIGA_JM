@@ -7,6 +7,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Subject } from "rxjs/Subject";
+import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsultasItem';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -36,6 +37,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
+  listaModelos: ModelosComConsultasItem = new ModelosComConsultasItem();
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -66,6 +68,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
     private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService,
     private translateService: TranslateService
   ) { }
 
@@ -79,7 +82,9 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.selectedItem = 4;
 
     this.getIdioma();
-
+    if (sessionStorage.getItem("listadoModelos") != undefined) {
+      this.listaModelos = JSON.parse(sessionStorage.getItem("listadoModelos"));
+    }
     this.cols = [
       {
         field: "consulta",
@@ -153,7 +158,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   getInstitucion() {
-
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       if (sessionStorage.getItem("crearNuevaConsulta") != null) {
@@ -168,6 +172,10 @@ export class DatosGeneralesConsultaComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  asignaGenerica() {
+    this.body.generica = this.generica;
   }
 
   getIdioma() {
@@ -361,9 +369,61 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  confirmEdit() {
+    let mess = "Se va a cambiar el modelo de comunicaciones asociado a esta consulta";
+    let icon = "fa fa-info";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.bodyInicial.generica = this.body.generica;
+        this.guardar();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  // actualizaGenerica() {
+  //   let cuerpo = this.listaModelos[0];
+  // this.sigaServices
+  // .post("modelos_detalle_datosGenerales", cuerpo)
+  // .subscribe(
+  //   data => {
+  //     this.showSuccess(
+  //       this.translateService.instant(
+  //         "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+  //       )
+  //     );
+  //     this.body.idModeloComunicacion = JSON.parse(data.body).data;
+  //     sessionStorage.removeItem("crearNuevoModelo");
+  //     this.sigaServices.notifyRefreshPerfiles();
+  //   },
+  //   err => {
+  //     console.log(err);
+  //     this.showFail(
+  //       this.translateService.instant(
+  //         "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+  //       )
+  //     );
+  //   }
+  // );
+  // }
+
   guardar() {
     this.body.generica = this.generica;
-
+    // if (this.body.generica != this.bodyInicial.generica) {
+    //   this.confirmEdit();
+    // } else {
     this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
       data => {
 
@@ -387,11 +447,34 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       }
     );
+    // }
   }
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.body.generica = "S";
+    this.getDatos();
+    // this.body.generica = "S";
+  }
+
+  activaRestablecer() {
+    if (JSON.stringify(this.body) == JSON.stringify(this.bodyInicial)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  activaGuardar() {
+    if (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) {
+      if (this.body.nombre != "" && this.body.nombre != undefined && this.body.idModulo != undefined && this.body.idModulo != ""
+        && this.body.descripcion != "" && this.body.descripcion != undefined && this.body.idObjetivo != "" && this.body.idObjetivo != undefined) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   isButtonDisabled() {

@@ -53,9 +53,9 @@
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
-              <p-radioButton [disabled]="institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="S" [(ngModel)]="generica"
-                label="Sí"></p-radioButton>
-              <p-radioButton [disabled]="institucionActual != 2000 " name="groupname" value="N" [(ngModel)]="generica" label="No"></p-radioButton>
+              <p-radioButton [(ngModel)]="generica" [disabled]="institucionActual != 2000 " class="mr-2 mt-auto" name="groupname" value="S"
+                label="Sí" (onClick)="body.generica = 'S'"></p-radioButton>
+              <p-radioButton [(ngModel)]="generica" [disabled]="institucionActual != 2000 " name="groupname" value="N" label="No" (onClick)="body.generica = 'N'"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Clases de comunicaciones</label>
@@ -76,12 +76,11 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button [disabled]="!editar || isButtonDisabled()" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="!editar || !activaRestablecer()" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="!editar || isButtonDisabled()" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+        <button [disabled]="!editar || !activaGuardar()" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
-
 </div>
