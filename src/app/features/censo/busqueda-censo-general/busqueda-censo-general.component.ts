@@ -298,7 +298,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
             icon: "fa fa-info",
             accept: () => {
               sessionStorage.setItem("esNuevoNoColegiado", "true");
-
+              sessionStorage.setItem("busquedaCensoGeneral", "true");
               let noColegiado = new NoColegiadoItem();
               noColegiado.nif = selectedDatos.nif;
               noColegiado.idPersona = selectedDatos.idPersona;
@@ -315,6 +315,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
               this.router.navigate(["/fichaColegial"]);
             },
             reject: () => {
+              sessionStorage.setItem("busquedaCensoGeneral", "false");
+
               this.msgs = [
                 {
                   severity: "info",

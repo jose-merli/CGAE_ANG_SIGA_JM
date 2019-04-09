@@ -138,7 +138,6 @@
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
           </div>
-          <i *ngIf="inscripcionInsertada || modoEdicion" class="fa fa-angle-down float-right"></i>
           <div class="d-flex justify-content-between">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}
               <span>{{ persona.nif }}</span>
@@ -146,13 +145,7 @@
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
               <span>{{ persona.nombre }} {{ persona.apellido1 }} {{ persona.apellido2 }}</span>
             </label>
-            <div></div>
-
-            <div>
-              <!-- <i class="fa fa-rotate-right redirect"></i> -->
-              <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('personales'), 'fa fa-angle-down': esFichaActiva('personales')} "></i>
-            </div>
-
+            <i class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -162,8 +155,7 @@
         </div>
         <label class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
         <div class="ml-auto">
-          <!-- <i class="fa fa-rotate-right redirect"></i> -->
-          <i class="fa fa-angle-up "></i>
+          <i class="fa fa-angle-up float-right"></i>
         </div>
       </div>
     </div>

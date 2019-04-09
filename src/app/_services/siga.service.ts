@@ -537,6 +537,7 @@ export class SigaServices {
     //Sanciones
     busquedaSanciones_searchBusquedaSanciones:
       "busquedaSanciones/searchBusquedaSanciones",
+    busquedaSanciones_searchBusquedaSancionesBBDD: "busquedaSanciones/searchBusquedaSancionesBBDD",
     busquedaSanciones_comboTipoSancion: "busquedaSanciones/comboTipoSancion",
     busquedaSanciones_comboTipo: "busquedaSanciones/comboTipo",
     busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",

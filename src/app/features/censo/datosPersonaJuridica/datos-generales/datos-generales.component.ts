@@ -401,9 +401,7 @@ export class DatosGenerales implements OnInit {
             error => {
               let e = JSON.parse(error["error"]).error;
               if (e.message == "messages.censo.nifcifExiste2") {
-                this.showFail(
-                  this.translateService.instant("messages.censo.nifcifExiste2")
-                );
+                this.showFail(e.message);
                 this.progressSpinner = false;
                 this.showGuardar = false;
               }
@@ -784,7 +782,7 @@ export class DatosGenerales implements OnInit {
     this.msgs.push({
       severity: "error",
       summary: "Incorrecto",
-      detail: mensaje
+      detail: this.translateService.instant(mensaje)
     });
   }
 
