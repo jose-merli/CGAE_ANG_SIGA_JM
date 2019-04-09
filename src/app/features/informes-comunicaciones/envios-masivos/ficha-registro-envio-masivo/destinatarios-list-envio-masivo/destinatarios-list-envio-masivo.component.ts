@@ -306,7 +306,14 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         }, error => {
             console.log(error);
             this.progressSpinner = false;
-            this.showFail(this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
+            let errorResponse = JSON.parse(error.error);
+            if (errorResponse.code == 400) {
+                this.showInfo('La lista de destinatarios seleccionada ya ha sido añadida');
+            } else {
+                this.showFail(this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
+                console.log(error);
+            }
+
         });
     }
 
