@@ -667,8 +667,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
       this.body.tipoSancion != "" &&
       this.disabledField == false &&
       this.body.fechaAcuerdoDate != null &&
-      this.body.fechaAcuerdoDate != undefined
-    ) {
+      this.body.fechaAcuerdoDate != undefined) {
       // this.disabledFechaAcuerdo = false;
       this.disabledGuardar = false;
       return false;
