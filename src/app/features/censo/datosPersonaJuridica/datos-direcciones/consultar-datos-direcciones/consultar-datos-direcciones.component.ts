@@ -957,7 +957,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
     this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    let usuario = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idPersona = usuario[0].idPersona;
     this.sigaServices.post("direcciones_duplicate", this.body).subscribe(
       data => {
         this.body.idDireccion = JSON.parse(data["body"]).id;

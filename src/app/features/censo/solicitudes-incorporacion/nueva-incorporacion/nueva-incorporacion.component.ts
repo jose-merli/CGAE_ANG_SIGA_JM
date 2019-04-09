@@ -106,6 +106,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem("esNuevoNoColegiado");
+
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -687,6 +688,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         );
     } else {
       this.showFail("censo.alterMutua.literal.datosBancariosObligatorios");
+      
     }
   }
   searchSolicitante() {
@@ -708,7 +710,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
           sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
           sessionStorage.setItem("destinatarioCom", "true");
-          sessionStorage.removeItem("esColegiado");
+          sessionStorage.setItem("esColegiado", "true");
           sessionStorage.setItem("esNuevoNoColegiado", "false");
           this.router.navigate(["/fichaColegial"]);
 
@@ -853,7 +855,10 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.removeItem("editedSolicitud");
 
           this.tratarDatos();
-          this.progressSpinner = false;
+           if (back == true) {
+            this.progressSpinner = false;
+          }
+          
           this.solicitudEditar.idSolicitud = JSON.parse(result.body).id;
 
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));

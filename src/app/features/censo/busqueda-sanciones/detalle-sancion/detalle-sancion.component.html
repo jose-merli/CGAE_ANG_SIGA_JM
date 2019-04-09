@@ -88,7 +88,7 @@
                 <br />
                 <label>{{ "facturacion.altaAbonos.literal.firmeSinFecha" | translate }}
                 </label>
-                <p-checkbox class="displayInit" name="chkFirmeza" [(ngModel)]="body.chkFirmeza" (onChange)="deshabilitarFechas()" binary="true"
+                <p-checkbox class="displayInit" name="chkFirmeza" [(ngModel)]="body.chkFirmeza" (onChange)="clearFechaFirmeza()" binary="true"
                   [disabled]="disabledChkFirmeza || permisoTarjeta == '2'"></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -113,7 +113,7 @@
               <div class="form-group col-lg-6 col-md-6">
                 <br />
                 <label>{{ "facturacion.altaAbonos.literal.rehabilitadoSinFecha" | translate }}
-                  <p-checkbox class="displayInit" name="chkRehabilitado" (onChange)="deshabilitarFechas()" [(ngModel)]="body.chkRehabilitado"
+                  <p-checkbox class="displayInit" name="chkRehabilitado" (onChange)="clearFechaRehabilitado()" [(ngModel)]="body.chkRehabilitado"
                     binary="true" [disabled]="disabledChkRehabilitado || permisoTarjeta == '2'"></p-checkbox>
                 </label>
               </div>
@@ -127,8 +127,8 @@
                 <br />
                 <label>{{ "facturacion.altaAbonos.literal.archivadaSinFecha" | translate }}
                 </label>
-                <p-checkbox class="displayInit" name="chkArchivadas" [(ngModel)]="body.chkArchivadas" (onChange)="deshabilitarFechas()" binary="true"
-                  [disabled]="disabledChkArchivada || permisoTarjeta == '2'"></p-checkbox>
+                <p-checkbox class="displayInit" name="chkArchivadas" [(ngModel)]="body.chkArchivadas" (onChange)="clearFechaArchivada()"
+                  binary="true" [disabled]="disabledChkArchivada || permisoTarjeta == '2'"></p-checkbox>
               </div>
             </div>
           </div>

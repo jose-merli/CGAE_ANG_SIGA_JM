@@ -18,6 +18,7 @@ import { ComboItem } from "../../../../../app/models/ComboItem";
 import { BusquedaFisicaItem } from "../../../../models/BusquedaFisicaItem";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { NuevaSancionItem } from "../../../../models/NuevaSancionItem";
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: "app-detalle-sancion",
@@ -25,7 +26,8 @@ import { NuevaSancionItem } from "../../../../models/NuevaSancionItem";
   styleUrls: ["./detalle-sancion.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class DetalleSancionComponent implements OnInit {
+export class DetalleSancionComponent implements OnInit, OnDestroy {
+
   showDatosSancion: boolean = true;
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   tipoSancion: SelectItem[];
@@ -41,16 +43,16 @@ export class DetalleSancionComponent implements OnInit {
 
   progressSpinner: boolean = false;
   disabledFechaAcuerdo: boolean = false;
-  disabledFechaFirme: boolean = true;
-  disabledPeriodoDesde: boolean = true;
-  disabledPeriodoHasta: boolean = true;
-  disabledRehabilitado: boolean = true;
-  disabledFechaArchivada: boolean = true;
-  disabledChkFirmeza: boolean = true;
-  disabledChkRehabilitado: boolean = true;
-  disabledChkArchivada: boolean = true;
+  disabledFechaFirme: boolean = false;
+  disabledPeriodoDesde: boolean = false;
+  disabledPeriodoHasta: boolean = false;
+  disabledRehabilitado: boolean = false;
+  disabledFechaArchivada: boolean = false;
+  disabledChkFirmeza: boolean = false;
+  disabledChkRehabilitado: boolean = false;
+  disabledChkArchivada: boolean = false;
   disabledField: boolean = false;
-  isPersona: boolean = true;
+  isPersona: boolean = false;
   disabledGuardar: boolean = false;
 
   fechaMinimaFirmeza: Date;
@@ -67,7 +69,7 @@ export class DetalleSancionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    sessionStorage.removeItem("nuevaSancion");
+    // sessionStorage.removeItem("nuevaSancion");
     this.controlFechas();
     this.getComboColegios();
     this.getComboTipoSancion();
@@ -79,7 +81,8 @@ export class DetalleSancionComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
       //this.body = this.body[0];
 
-      this.transformDates(this.body);
+      this.fillMapperSancion();
+      // this.transformDates(this.body);
       this.bodyToCheckbox();
 
       //Hay que pasarle la del tokem
@@ -100,7 +103,7 @@ export class DetalleSancionComponent implements OnInit {
         this.disabledField = true;
       } else {
         // MODO EDICIÓN
-        this.deshabilitarFechas();
+        // this.deshabilitarFechas();
       }
     } else if (
       sessionStorage.getItem("nSancion") != null &&
@@ -125,7 +128,7 @@ export class DetalleSancionComponent implements OnInit {
       //   this.body.idColegio = this.newBody[0].numeroInstitucion;
       // }
 
-      this.deshabilitarFechas();
+      // this.deshabilitarFechas();
     }
 
     this.permisoTarjeta = sessionStorage.getItem("permisoTarjeta");
@@ -138,6 +141,44 @@ export class DetalleSancionComponent implements OnInit {
     let one_day = 1000 * 60 * 60 * 24;
     let ayer = this.fechaMaxAcuerdo.getMilliseconds() - one_day;
     this.fechaMaxAcuerdo.setMilliseconds(ayer);
+  }
+
+  fillMapperSancion() {
+    if (this.body.fechaDesde != undefined) {
+      this.body.fechaDesdeDate = this.transformaFecha(this.body.fechaDesde);
+    }
+    if (this.body.fechaAcuerdo != undefined) {
+      this.body.fechaAcuerdoDate = this.transformaFecha(this.body.fechaAcuerdo);
+    }
+    if (this.body.fechaArchivada != undefined) {
+      this.body.fechaArchivadaDate = this.transformaFecha(this.body.fechaArchivada);
+    }
+    if (this.body.fechaFirmeza != undefined) {
+      this.body.fechaFirmezaDate = this.transformaFecha(this.body.fechaFirmeza);
+    }
+    if (this.body.fechaHasta != undefined) {
+      this.body.fechaHastaDate = this.transformaFecha(this.body.fechaHasta);
+    }
+    if (this.body.fechaNacimiento != undefined) {
+      this.body.fechaNacimientoDate = this.transformaFecha(this.body.fechaNacimiento);
+    }
+    if (this.body.fechaRehabilitado != undefined) {
+      this.body.fechaRehabilitadoDate = this.transformaFecha(this.body.fechaRehabilitado);
+    }
+    if (this.body.fecha != undefined) {
+      this.body.fechaRehabilitadoDate = this.transformaFecha(this.body.fechaRehabilitado);
+    }
+    this.transformDates(this.body);
+
+  }
+
+
+  transformaFecha(fecha) {
+    let splitDate = fecha.split("/");
+    let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+    fecha = new Date((arrayDate += "T00:00:00.001Z"));
+
+    return fecha;
   }
 
   transformDates(body) {
@@ -181,6 +222,7 @@ export class DetalleSancionComponent implements OnInit {
   fillFieldsInsertMode(body, newBody) {
     body.idPersona = newBody[0].idPersona;
     body.nif = newBody[0].nif;
+    body.chkFirmeza = false;
 
     if (newBody[0].denominacion != undefined) {
       this.isPersona = false;
@@ -193,6 +235,7 @@ export class DetalleSancionComponent implements OnInit {
       body.fechaNacimiento = newBody[0].fechaNacimiento;
       body.idColegio = newBody[0].numeroInstitucion;
     }
+
   }
 
   getComboColegios() {
@@ -220,11 +263,17 @@ export class DetalleSancionComponent implements OnInit {
 
   getValueForCombo() {
     let i = 0;
-    while (this.tipoSancion.length > i) {
-      if (this.tipoSancion[i].label == this.body.tipoSancion) {
-        this.body.tipoSancion = this.tipoSancion[i].value;
+
+    if (this.body.tipoSancion != undefined && this.body.tipoSancion != null) {
+      while (this.tipoSancion.length > i) {
+        if (this.tipoSancion[i].label == this.body.tipoSancion.toUpperCase()) {
+          this.body.tipoSancion = this.tipoSancion[i].value;
+          this.progressSpinner = false;
+        }
+        i++;
       }
-      i++;
+    } else {
+      this.progressSpinner = false;
     }
   }
 
@@ -240,17 +289,17 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   bodyToCheckbox() {
-    if (this.body.rehabilitado == "No") {
+    if (this.body.rehabilitado == "No" || this.body.rehabilitado == "NO") {
       this.body.chkRehabilitado = false;
     } else {
       this.body.chkRehabilitado = true;
     }
-    if (this.body.firmeza == "No") {
+    if (this.body.firmeza == "No" || this.body.firmeza == "NO") {
       this.body.chkFirmeza = false;
     } else {
       this.body.chkFirmeza = true;
     }
-    if (this.body.archivada == "No") {
+    if (this.body.archivada == "No" || this.body.archivada == "NO") {
       this.body.chkArchivadas = false;
     } else {
       this.body.chkArchivadas = true;
@@ -258,6 +307,7 @@ export class DetalleSancionComponent implements OnInit {
   }
 
   getComboTipoSancion() {
+    this.progressSpinner = true;
     this.sigaServices.get("busquedaSanciones_comboTipoSancion").subscribe(
       n => {
         this.tipoSancion = n.combooItems;
@@ -265,6 +315,7 @@ export class DetalleSancionComponent implements OnInit {
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -308,6 +359,24 @@ export class DetalleSancionComponent implements OnInit {
         this.body.fechaDesdeDate = undefined;
         // this.body.chkArchivadas = false;
       }
+    }
+  }
+
+  clearFechaFirmeza() {
+    if (!this.body.chkFirmeza) {
+      this.body.fechaFirmezaDate = undefined;
+    }
+  }
+
+  clearFechaRehabilitado() {
+    if (!this.body.chkRehabilitado) {
+      this.body.fechaRehabilitadoDate = undefined;
+    }
+  }
+
+  clearFechaArchivada() {
+    if (!this.body.chkArchivadas) {
+      this.body.fechaArchivadaDate = undefined;
     }
   }
 
@@ -392,32 +461,35 @@ export class DetalleSancionComponent implements OnInit {
 
   fillFechaAcuerdo(event) {
     this.body.fechaAcuerdoDate = event;
-    this.deshabilitarFechas();
+    // this.deshabilitarFechas();
   }
 
   fillFechaFirmeza(event) {
     this.body.fechaFirmezaDate = event;
-    this.deshabilitarFechas();
+    this.body.chkFirmeza = true;
+    // this.deshabilitarFechas();
   }
 
   fillFechaDesde(event) {
     this.body.fechaDesdeDate = event;
-    this.deshabilitarFechas();
+    // this.deshabilitarFechas();
   }
 
   fillFechaHasta(event) {
     this.body.fechaHastaDate = event;
-    this.deshabilitarFechas();
+    // this.deshabilitarFechas();
   }
 
   fillFechaRehabilitado(event) {
     this.body.fechaRehabilitadoDate = event;
-    this.deshabilitarFechas();
+    this.body.chkRehabilitado = true;
+    // this.deshabilitarFechas();
   }
 
   fillFechaArchivada(event) {
     this.body.fechaArchivadaDate = event;
-    this.deshabilitarFechas();
+    this.body.chkArchivadas = true;
+    // this.deshabilitarFechas();
   }
 
   deshabilitarFechas() {
@@ -430,32 +502,32 @@ export class DetalleSancionComponent implements OnInit {
 
   detectFechaAcuerdoInput(event) {
     this.body.fechaAcuerdoDate = event;
-    this.detectDateInput();
+    // this.detectDateInput();
   }
 
   detectFechaFirmezaInput(event) {
     this.body.fechaFirmezaDate = event;
-    this.detectDateInput();
+    // this.detectDateInput();
   }
 
   detectFechaDesdeInput(event) {
     this.body.fechaDesdeDate = event;
-    this.detectDateInput();
+    // this.detectDateInput();
   }
 
   detectFechaHastaInput(event) {
     this.body.fechaHastaDate = event;
-    this.detectDateInput();
+    // this.detectDateInput();
   }
 
   detectFechaRehabilitadoInput(event) {
     this.body.fechaRehabilitadoDate = event;
-    this.detectDateInput();
+    // this.detectDateInput();
   }
 
   detectFechaArchivadaInput(event) {
     this.body.fechaArchivadaDate = event;
-    this.detectDateInput();
+    // this.detectDateInput();
   }
 
 
@@ -554,29 +626,29 @@ export class DetalleSancionComponent implements OnInit {
       this.getComboTipoSancion();
       this.transformDates(this.body);
       this.bodyToCheckbox();
-      this.deshabilitarFechas();
+      // this.deshabilitarFechas();
     }
   }
 
   restoreInsertMode() {
     this.body.fechaAcuerdoDate = undefined;
-    this.disabledFechaAcuerdo = true;
+    // this.disabledFechaAcuerdo = true;
     this.body.fechaFirmezaDate = undefined;
-    this.disabledFechaFirme = true;
+    // this.disabledFechaFirme = true;
     this.body.fechaDesdeDate = undefined;
-    this.disabledPeriodoDesde = true;
+    // this.disabledPeriodoDesde = true;
     this.body.fechaHastaDate = undefined;
-    this.disabledPeriodoHasta = true;
+    // this.disabledPeriodoHasta = true;
     this.body.fechaRehabilitadoDate = undefined;
-    this.disabledRehabilitado = true;
+    // this.disabledRehabilitado = true;
     this.body.fechaArchivadaDate = undefined;
-    this.disabledFechaArchivada = true;
+    // this.disabledFechaArchivada = true;
     this.body.chkRehabilitado = false;
-    this.disabledChkRehabilitado = true;
+    // this.disabledChkRehabilitado = true;
     this.body.chkFirmeza = false;
-    this.disabledChkFirmeza = true;
+    // this.disabledChkFirmeza = true;
     this.body.chkArchivadas = false;
-    this.disabledChkArchivada = true;
+    // this.disabledChkArchivada = true;
     this.body.texto = "";
     this.body.observaciones = "";
     this.body.refColegio = "";
@@ -593,14 +665,16 @@ export class DetalleSancionComponent implements OnInit {
       this.body.tipoSancion != null &&
       this.body.tipoSancion != undefined &&
       this.body.tipoSancion != "" &&
-      this.disabledField == false
+      this.disabledField == false &&
+      this.body.fechaAcuerdoDate != null &&
+      this.body.fechaAcuerdoDate != undefined
     ) {
-      this.disabledFechaAcuerdo = false;
+      // this.disabledFechaAcuerdo = false;
       this.disabledGuardar = false;
       return false;
     } else {
       this.disabledGuardar = true;
-      this.disabledFechaAcuerdo = true;
+      // this.disabledFechaAcuerdo = true;
       return true;
     }
   }
@@ -642,10 +716,8 @@ export class DetalleSancionComponent implements OnInit {
       } else {
         this.showFail("Fecha período ejecución incorrecta");
       }
-    } else if (this.body.fechaFirmezaDate == null) {
-      this.saveSancion();
     } else {
-      this.showFail("Fecha firmeza incorrecta");
+      this.saveSancion();
     }
   }
 
@@ -742,5 +814,9 @@ export class DetalleSancionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  ngOnDestroy(): void {
+    sessionStorage.removeItem("nuevaSancion");
   }
 }

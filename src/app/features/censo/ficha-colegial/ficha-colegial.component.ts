@@ -421,6 +421,7 @@ export class FichaColegialComponent implements OnInit {
   disabledToday: boolean = false;
   fichaMutua: any;
   estadoColegial: String;
+  residente: String;
 
   constructor(
     private location: Location,
@@ -475,6 +476,8 @@ export class FichaColegialComponent implements OnInit {
       );
     } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
+    }else if( sessionStorage.getItem("fichaColegialByMenu")){
+      this.desactivarVolver = true;
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
       this.desactivarVolver = false;
     } else {
@@ -544,7 +547,7 @@ export class FichaColegialComponent implements OnInit {
         this.generalBody.soloNombre = enviar.nombre;
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
-
+        this.desactivarVolver = false;
         if (sessionStorage.getItem("nifNuevo") != undefined) {
           this.generalBody.nif = sessionStorage.getItem("nifNuevo");
           sessionStorage.removeItem("nifNuevo")
@@ -564,6 +567,8 @@ export class FichaColegialComponent implements OnInit {
       this.esNewColegiado = true;
       this.activacionEditar = false;
       this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+
       sessionStorage.removeItem("esNuevoNoColegiado");
       this.onInitGenerales();
     } else {
@@ -2846,6 +2851,7 @@ export class FichaColegialComponent implements OnInit {
         }, () => {
           if (this.generalBody.colegiado) {
             this.estadoColegial = this.datosColegiales[0].estadoColegial;
+            this.residente = this.datosColegiales[0].residenteInscrito;
           }
         }
       );

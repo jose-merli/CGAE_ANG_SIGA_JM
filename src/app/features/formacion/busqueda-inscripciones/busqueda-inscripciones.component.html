@@ -142,6 +142,13 @@
           </ng-template> -->
 
 
+          <ng-template *ngIf="col.field == 'minimaAsistencia'"  let-dato="rowData" pTemplate="body">
+            <label [style]="{'width': '10%'}" >
+              {{ dato[col.field] }}
+            </label>
+          </ng-template>
+
+
           <ng-template *ngIf="col.field == 'calificacion'" let-dato="rowData" pTemplate="body">
             <label *ngIf="!calificacion">
               {{ dato[col.field] }}
@@ -153,6 +160,7 @@
               [(ngModel)]="dato.calificacion" (input)="editarCompleto($event, dato)" name="calificacion" type="number" min="0"
               max="10" />
           </ng-template>
+          
 
         </p-column>
 
