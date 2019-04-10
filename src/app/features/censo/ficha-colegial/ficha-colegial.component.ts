@@ -172,6 +172,7 @@ export class FichaColegialComponent implements OnInit {
   guiaJudicial: boolean;
   publicidad: boolean;
   partidoJudicial: any;
+  ocultarMotivo: boolean = undefined;
   esNewColegiado: boolean = false;
   esColegiado: boolean;
   archivoDisponible: boolean = false;
@@ -205,6 +206,7 @@ export class FichaColegialComponent implements OnInit {
   inscritoSeleccionado: String = "00";
   inscritoDisabled: boolean = false;
   tratamientoDesc: String;
+  tipoCambioAuditoria: String;
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
@@ -524,7 +526,7 @@ export class FichaColegialComponent implements OnInit {
 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
-
+      this.tipoCambioAuditoria = null;
       // this.checkAcceso();
       this.onInitGenerales();
       this.onInitCurriculares();
@@ -587,6 +589,29 @@ export class FichaColegialComponent implements OnInit {
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";
     }
+
+    // obtener parametro para saber si se oculta la auditoria
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
 
     // this.onInitSociedades();
 
@@ -1385,18 +1410,36 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  comprobarAuditoria() {
+  comprobarAuditoria(tipoCambio) {
     // modo creación
+
+      if (this.ocultarMotivo) {
+        if (tipoCambio == 'solicitudModificacion') {
+          this.solicitarModificacionGenerales();
+        }else if(tipoCambio == 'guardarDatosColegiales'){
+            this.guardarColegiales();
+        }else if(tipoCambio == 'guardarDatosGenerales'){
+            this.generalesGuardar();
+        }
+      } else {
+        if (!this.esNewColegiado) {
+        this.tipoCambioAuditoria = tipoCambio;
+        this.displayAuditoria = true;
+        this.showGuardarAuditoria = false;
+      }else{
+        this.guardarColegiales();
+      }
+      }
 
     // mostrar la auditoria depende de un parámetro que varía según la institución
     this.generalBody.motivo = undefined;
-    this.showGuardarAuditoria = false;
+    // this.showGuardarAuditoria = false;
 
-    if (!this.isLetrado) {
-      this.generalesGuardar();
-    } else {
-      this.displayAuditoria = true;
-    }
+    // if (!this.isLetrado) {
+    //   this.generalesGuardar();
+    // } else {
+    //   this.displayAuditoria = true;
+    // }
   }
 
   generalesGuardar() {
@@ -1470,6 +1513,7 @@ export class FichaColegialComponent implements OnInit {
             // this.body = JSON.parse(data["body"]);
             this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
+            this.cerrarAuditoria();
             this.showSuccess();
           },
           error => {
@@ -2687,6 +2731,7 @@ export class FichaColegialComponent implements OnInit {
 
                         this.obtenerEtiquetasPersonaJuridicaConcreta();
                         this.progressSpinner = false;
+                        this.cerrarAuditoria();
                         this.showSuccess();
                         this.onInitColegiales();
                         this.searchDirecciones();
@@ -2715,6 +2760,7 @@ export class FichaColegialComponent implements OnInit {
                         this.inscritoChange = false;
                         this.filaEditable = false;
                         this.activarGuardarColegiales = false;
+                        this.cerrarAuditoria();
                         this.numSelectedColegiales = 0;
                         this.showFail();
                       }
@@ -2728,6 +2774,7 @@ export class FichaColegialComponent implements OnInit {
                   this.inscritoChange = false;
                   this.filaEditable = false;
                   this.numSelectedColegiales = 0;
+                  this.cerrarAuditoria();
                   this.showSuccess();
                   this.onInitColegiales();
                   this.searchDirecciones();
@@ -2746,6 +2793,7 @@ export class FichaColegialComponent implements OnInit {
                 this.activarGuardarColegiales = false;
                 this.numSelectedColegiales = 0;
                 this.filaEditable = false;
+                this.cerrarAuditoria();
                 this.showFail();
               }
             );
@@ -2759,6 +2807,7 @@ export class FichaColegialComponent implements OnInit {
           this.activarGuardarColegiales = false;
           this.filaEditable = false;
           this.numSelectedColegiales = 0;
+          this.cerrarAuditoria();
           this.showFail();
         }
       );
@@ -5710,4 +5759,18 @@ export class FichaColegialComponent implements OnInit {
       detail: this.translateService.instant(mensaje)
     });
   }
+
+  guardarAuditoria(){
+
+     if (this.tipoCambioAuditoria == 'solicitudModificacion') {
+      this.solicitarModificacionGenerales();
+    }else if(this.tipoCambioAuditoria == 'guardarDatosColegiales'){
+        this.guardarColegiales();
+    }else if(this.tipoCambioAuditoria == 'guardarDatosGenerales'){
+        this.generalesGuardar();
+    }
+    
+
+  }
+  
 }
