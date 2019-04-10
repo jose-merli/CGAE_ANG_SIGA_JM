@@ -493,7 +493,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.cols = [
        {
         field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
       },
        {
         field: "identificacion",
@@ -510,14 +510,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       {
         field: "fechaImparticionDesdeFormat",
         header: "formacion.busquedaInscripcion.inicioCurso"
-      },
-      {
-        field: "fechaImparticionHastaFormat",
-        header: "formacion.busquedaInscripcion.finCurso"
-      },
-      {
-        field: "precioCurso",
-        header: "form.busquedaCursos.literal.precio"
       },
       {
         field: "fechaSolicitud",

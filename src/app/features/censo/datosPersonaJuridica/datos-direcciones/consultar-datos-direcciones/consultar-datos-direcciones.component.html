@@ -176,10 +176,10 @@
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio() || permisoTarjeta == '2'"
             label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-          <button *ngIf="!isLetrado" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar() || permisoTarjeta == '2'"
+          <button *ngIf="!isLetrado" (click)="comprobarAuditoria('noletrado')" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar() || permisoTarjeta == '2'"
             label="{{ 'general.boton.guardar' | translate}}"></button>
 
-          <button *ngIf="isLetrado" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar() || permisoTarjeta == '2'"
+          <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar() || permisoTarjeta == '2'"
             label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
 
           <!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
@@ -214,7 +214,7 @@
   <p-footer>
     <div class="text-right main-button ">
       <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-      <button (click)="guardarLetrado()" [disabled]="!showGuardarAuditoria || permisoTarjeta == '2'" pButton type="button" icon="fa fa-save"
+      <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria || permisoTarjeta == '2'" pButton type="button" icon="fa fa-save"
         iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
 
     </div>

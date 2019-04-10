@@ -5761,10 +5761,11 @@ export class FichaColegialComponent implements OnInit {
   }
 
   guardarAuditoria(){
-
+       
      if (this.tipoCambioAuditoria == 'solicitudModificacion') {
-      this.solicitarModificacionGenerales();
+        this.solicitarModificacionGenerales();
     }else if(this.tipoCambioAuditoria == 'guardarDatosColegiales'){
+        this.colegialesBody.motivo = this.generalBody.motivo;
         this.guardarColegiales();
     }else if(this.tipoCambioAuditoria == 'guardarDatosGenerales'){
         this.generalesGuardar();

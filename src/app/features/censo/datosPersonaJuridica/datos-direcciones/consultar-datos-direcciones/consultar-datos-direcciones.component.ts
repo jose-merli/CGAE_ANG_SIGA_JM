@@ -48,6 +48,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   paisSeleccionado: any;
   provinciaSelecionada: String;
   registroEditable: boolean = false;
+  tipoCambioAuditoria: String;
   idDireccion: String;
   idPersona: String;
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -1142,25 +1143,39 @@ para poder filtrar el dato con o sin estos caracteres*/
       )
     });
   }
-  comprobarAuditoria() {
+  comprobarAuditoria(tipoCambio) {
     // modo edicion
+
     if (this.isLetrado) {
-      this.displayAuditoria = true;
+          if (!this.ocultarMotivo) {
+            this.displayAuditoria = true;
+          }else{
+              this.guardarLetrado();
+          }
     } else {
       if (this.registroEditable) {
         // mostrar la auditoria depende de un parámetro que varía según la institución
         this.body.motivo = undefined;
         if (this.ocultarMotivo) {
-          this.guardar();
-        } else {
+             if (tipoCambio == 'noletrado') {
+                this.guardar();
+            }else if(tipoCambio == 'letrado'){
+                this.guardarLetrado();
+        }
+      } else {
+          this.tipoCambioAuditoria = tipoCambio;
           this.displayAuditoria = true;
           this.showGuardarAuditoria = false;
         }
       }
       // modo creacion
       else {
-        this.guardar();
-      }
+         if (tipoCambio == 'noletrado') {
+                this.guardar();
+            }else if(tipoCambio == 'letrado'){
+                this.guardarLetrado();
+         }
+       }
     }
   }
 
@@ -1281,5 +1296,15 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   clear() {
     this.msgs = [];
+  }
+
+  guardarAuditoria(){
+
+     if (this.tipoCambioAuditoria == 'noletrado') {
+        this.guardar();
+    }else if(this.tipoCambioAuditoria == 'letrado'){
+        this.guardarLetrado();
+    }
+
   }
 }
