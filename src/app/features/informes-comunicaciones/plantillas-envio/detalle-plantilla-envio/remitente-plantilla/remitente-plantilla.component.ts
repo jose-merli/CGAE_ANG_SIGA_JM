@@ -283,7 +283,7 @@ export class RemitentePlantillaComponent implements OnInit {
       "remitenteInicial",
       JSON.stringify(this.remitenteInicial)
     );
-    this.router.navigate(["/busquedaGeneral"]);
+
     if (this.direcciones && this.direcciones.length >= 1) {
       if (this.direcciones.length > 1) {
         this.showComboDirecciones = true;
@@ -298,6 +298,21 @@ export class RemitentePlantillaComponent implements OnInit {
         this.direccion = this.remitente.direccion[0];
       }
     }
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("menu.informesYcomunicaciones.plantillasEnvio");
+    let migaPan2 = this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.plantillaEnvio");
+    let menuProcede = this.translateService.instant("menu.informesYcomunicaciones");
+
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("migaPan2", migaPan2);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
+    this.router.navigate(["/busquedaGeneral"]);
+
   }
 
   onChangeDireccion(e) {

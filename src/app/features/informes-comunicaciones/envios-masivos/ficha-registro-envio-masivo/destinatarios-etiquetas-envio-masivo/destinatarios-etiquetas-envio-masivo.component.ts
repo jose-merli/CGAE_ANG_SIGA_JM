@@ -101,6 +101,14 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           console.log(err);
         },
         () => {
+          let i = 0;
+          this.etiquetasNoSeleccionadas.forEach(element => {
+            let find = this.etiquetasSeleccionadas.findIndex(x => x.label === element.label);
+            if (find != -1) {
+              this.etiquetasNoSeleccionadas.splice(i, 1);
+            }
+            i++;
+          });
           this.progressSpinner = false;
         }
       );
@@ -120,13 +128,13 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           console.log(err);
         },
 
-      );
+    );
   }
 
 
 
   guardar() {
-
+    this.progressSpinner = true;
     let array: any[] = [];
     let arrayNoSel: any[] = [];
     this.etiquetasSeleccionadas.forEach(element => {
@@ -207,6 +215,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   }
 
   restablecer() {
+    this.progressSpinner = true;
     this.getDatos();
   }
 }

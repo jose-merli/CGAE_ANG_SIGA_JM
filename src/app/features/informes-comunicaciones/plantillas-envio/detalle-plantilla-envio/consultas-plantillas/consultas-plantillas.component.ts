@@ -38,8 +38,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 	finalidad: string;
 	objetivo: string;
 	institucionActual: any;
-	resultadosConsultas;
 	consultaBuscada;
+	resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
 
 	@ViewChild("table") table: DataTable;
 	selectedDatos;
@@ -198,9 +198,9 @@ export class ConsultasPlantillasComponent implements OnInit {
 			sessionStorage.getItem("crearNuevaPlantilla") == "false"
 		) {
 			this.openFicha = !this.openFicha;
-			/*if (this.openFicha) {
+			if (this.openFicha) {
 				this.getDatos();
-			}*/
+			}
 		}
 	}
 
@@ -233,7 +233,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 			this.datos = [];
 		}
 
-		this.datos.push(objNewConsulta);
+		this.datos.unshift(objNewConsulta);
 		this.datos = [...this.datos];
 		this.selectedDatos = [];
 	}
@@ -308,7 +308,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 	}
 
 	buscarConsultas(e) {
-		if (e.target.value && e.target.value !== null) {
+		if (e.target.value !== null) {
 			if (e.target.value.length >= 3) {
 				this.getConsultasFiltro(e.target.value);
 			} else {
@@ -332,14 +332,14 @@ export class ConsultasPlantillasComponent implements OnInit {
 		let comboConsultas = this.consultas;
 		for (let dato of this.datos) {
 			if (dato.idConsulta && dato.idConsulta != "" && dato.idConsulta == id) {
-			dato.idConsulta = id;
-			let continua = true;
-			comboConsultas.forEach(element => {
-				if(continua && element.value == id){
-				dato.idInstitucion = element.idInstitucion;
-				continua = false;
-				}
-			});        
+				dato.idConsulta = id;
+				let continua = true;
+				comboConsultas.forEach(element => {
+					if (continua && element.value == id) {
+						dato.idInstitucion = element.idInstitucion;
+						continua = false;
+					}
+				});
 			}
 		}
 		this.datos = [...this.datos];
@@ -347,10 +347,10 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 	asociar() {
 		let objAsociar = {
-			idConsulta: this.datos[this.datos.length - 1].idConsulta,
+			idConsulta: this.datos[0].idConsulta,
 			idTipoEnvios: this.body.idTipoEnvios,
 			idPlantillaEnvios: this.body.idPlantillaEnvios,
-			idInstitucion: this.datos[this.datos.length - 1].idInstitucion
+			idInstitucion: this.datos[0].idInstitucion
 		};
 
 		this.sigaServices

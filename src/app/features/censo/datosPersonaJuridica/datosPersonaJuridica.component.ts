@@ -28,10 +28,14 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     private cardService: cardService,
     private router: Router,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fichasPosibles = [
+      {
+        key: "interes",
+        activa: false
+      },
       {
         key: "generales",
         activa: false
@@ -58,10 +62,6 @@ export class DatosPersonaJuridicaComponent implements OnInit {
       },
       {
         key: "retenciones",
-        activa: false
-      },
-      {
-        key: "interes",
         activa: false
       }
     ];

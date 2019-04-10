@@ -724,6 +724,18 @@ export class FichaInscripcionComponent implements OnInit {
         JSON.stringify(this.persona)
       );
 
+
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("formacion.fichaInscripcion.cabecera");
+
+    sessionStorage.setItem("migaPan", migaPan);
+    let menuProcede = this.translateService.instant("menu.formacion");
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

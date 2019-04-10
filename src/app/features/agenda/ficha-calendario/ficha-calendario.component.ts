@@ -725,6 +725,7 @@ export class FichaCalendarioComponent implements OnInit {
     this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
       n => {
         this.comboTemplates = n.combooItems;
+        this.arregloTildesCombo(this.comboTemplates);
       },
       err => {
         console.log(err);
@@ -775,6 +776,7 @@ export class FichaCalendarioComponent implements OnInit {
   }
 
   getTypeSend(idPlantillaEnvio, idTipoEnvio, dato) {
+    this.progressSpinner = true;
     let typeSend = [];
     this.sigaServices
       .getParam(
@@ -785,15 +787,26 @@ export class FichaCalendarioComponent implements OnInit {
         n => {
           typeSend = n.combooItems;
 
-          if (this.newNotificacion != undefined) {
-            this.newNotificacion.idTipoEnvio = typeSend[0].value;
+          if (typeSend.length != 0) {
+
+            if (this.newNotificacion != undefined) {
+              this.newNotificacion.idTipoEnvio = typeSend[0].value;
+              this.newNotificacion.tipoEnvio = typeSend[0].label;
+            } else {
+              dato.tipoEnvio = typeSend[0].label;
+              dato.idTipoEnvio = typeSend[0].value;
+            }
+
+          } else {
+            dato.tipoEnvio = undefined;
+            dato.idTipoEnvio = undefined;
           }
-          dato.tipoEnvio = typeSend[0].label;
-          dato.idTipoEnvio = typeSend[0].value;
+
           if (!this.pressNewNotificacion) {
             this.editNotificaciones(dato);
           }
 
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);
@@ -808,7 +821,6 @@ export class FichaCalendarioComponent implements OnInit {
   validateNotification() {
     if (this.newNotificacion != undefined) {
       if (
-        this.newNotificacion.idTipoEnvio == undefined ||
         this.newNotificacion.idPlantilla == undefined ||
         this.newNotificacion.idTipoCuando == undefined ||
         this.newNotificacion.idUnidadMedida == undefined ||
@@ -879,6 +891,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.numSelectedNotifications = 0;
         this.showSuccess();
         this.updateNotificationList = [];
+        this.newNotificacion = undefined;
         this.getCalendarNotifications();
       },
       err => {
@@ -1041,6 +1054,7 @@ export class FichaCalendarioComponent implements OnInit {
       this.accesoCalendario = true;
     }
   }
+
   checkAccesoSeleccionDatos() {
     if (
       this.selectedDatosNotifications &&
@@ -1051,5 +1065,22 @@ export class FichaCalendarioComponent implements OnInit {
     } else {
       this.accesoSeleccionDatos = true;
     }
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 }

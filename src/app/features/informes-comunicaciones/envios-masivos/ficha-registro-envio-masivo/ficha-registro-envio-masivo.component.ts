@@ -18,7 +18,6 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
-
     this.fichasPosibles = [
       {
         key: "configuracion",

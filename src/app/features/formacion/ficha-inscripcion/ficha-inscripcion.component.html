@@ -2,7 +2,8 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'formacion.fichaInscripcion.cabecera' | translate }}</p>
+    <p>{{ "menu.formacion" | translate}}
+      <i class="fa fa-angle-right"> </i>{{ 'formacion.fichaInscripcion.cabecera' | translate}}</p>
   </div>
 
 
@@ -90,7 +91,7 @@
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('inscripcion')">
       <div class="form-row lg-12 md-12">
         <div class="col-lg-4 col-md-4">
-          <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}(*)</label>
+          <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }} (*)</label>
           <app-fecha [(value)]="inscripcion.fechaSolicitud" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"
             (valueChangeSelected)="fillFechaSolicitud($event)" (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
         </div>
@@ -137,7 +138,6 @@
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
           </div>
-          <i *ngIf="inscripcionInsertada || modoEdicion" class="fa fa-angle-down float-right"></i>
           <div class="d-flex justify-content-between">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}
               <span>{{ persona.nif }}</span>
@@ -145,13 +145,7 @@
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
               <span>{{ persona.nombre }} {{ persona.apellido1 }} {{ persona.apellido2 }}</span>
             </label>
-            <div></div>
-
-            <div>
-              <!-- <i class="fa fa-rotate-right redirect"></i> -->
-              <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('personales'), 'fa fa-angle-down': esFichaActiva('personales')} "></i>
-            </div>
-
+            <i class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -161,8 +155,7 @@
         </div>
         <label class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
         <div class="ml-auto">
-          <!-- <i class="fa fa-rotate-right redirect"></i> -->
-          <i class="fa fa-angle-up "></i>
+          <i class="fa fa-angle-up float-right"></i>
         </div>
       </div>
     </div>

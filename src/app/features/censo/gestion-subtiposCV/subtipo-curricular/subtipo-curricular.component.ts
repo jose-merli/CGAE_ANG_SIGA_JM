@@ -11,9 +11,9 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
 import { SubtipoCurricularObject } from "../../../../models/SubtipoCurricularObject";
-// export enum KEY_CODE {
-//   ENTER = 13
-// }
+export enum KEY_CODE {
+  ENTER = 13
+}
 @Component({
   selector: "app-subtipo-curricular",
   templateUrl: "./subtipo-curricular.component.html",
@@ -72,7 +72,7 @@ export class SubtipoCurricularComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Llamada al rest para obtener la categoría curricular
@@ -239,7 +239,7 @@ export class SubtipoCurricularComponent implements OnInit {
       this.body.codigoExterno = e.srcElement.value.trim();
       this.body.codigoExterno = this.body.codigoExterno.trim();
       this.inputCdgoExt.nativeElement.value = e.srcElement.value.trim();
-      
+
     }
 
     this.editar = false;
@@ -339,7 +339,7 @@ export class SubtipoCurricularComponent implements OnInit {
       this.bodyRemove.subtipoCurricularItems.push(value);
     });
 
-    
+
     this.sigaServices
       .post("subtipoCurricular_deleteSubtipoCurricular", this.bodyRemove)
       .subscribe(
@@ -486,7 +486,7 @@ export class SubtipoCurricularComponent implements OnInit {
             value.editar = true;
           }
         });
-        
+
       }
     }
   }
@@ -578,10 +578,10 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   //búsqueda con enter
-  // @HostListener("document:keypress", ["$event"])
-  // onKeyPress(event: KeyboardEvent) {
-  //   if (event.keyCode === KEY_CODE.ENTER) {
-  //     this.search();
-  //   }
-  // }
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
+  }
 }

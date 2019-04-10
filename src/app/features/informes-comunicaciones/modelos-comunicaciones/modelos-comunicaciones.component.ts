@@ -59,7 +59,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   ngOnInit() {
     this.getInstitucion();
     this.bodySearch.visible = 1;
-    
+    this.bodySearch.preseleccionar = "SI";
     sessionStorage.removeItem("crearNuevoModelo");
     sessionStorage.removeItem("soloLectura");
 
@@ -230,6 +230,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   buscar() {
+    if (this.bodySearch.nombre != undefined) this.bodySearch.nombre = this.bodySearch.nombre.trim();
     this.showResultados = true;
     this.selectMultiple = false;
     this.selectedDatos = "";

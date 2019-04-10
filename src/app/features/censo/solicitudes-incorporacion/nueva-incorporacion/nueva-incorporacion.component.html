@@ -5,15 +5,18 @@
         <i class="fa fa-angle-right"></i>{{"menu.solicitudIncorporacion" | translate}}
     </p>
 </div>
-<div *ngIf="dniDisponible==false" class="info-limit d-flex justify-content-center align-items-center mb-1">
+<div *ngIf="!dniDisponible && !noExistePersona && !pendienteAprobacion" class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
             <span *ngIf="!vieneDeBusqueda" class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
-            <span *ngIf="vieneDeBusqueda" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda && noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente.sistema" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda && !noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
+            <!-- <span *ngIf="vieneDeBusqueda && pendienteAprobacion" class="pr-2 text-left">Para aprobar una solicitud debe rellenar los datos bancarios.</span> -->
         </div>
     </div>
 </div>
+
 <div class="busqueda-container">
     <!--DATOS COLEGIACIÓN-->
     <div class="card">
@@ -137,13 +140,18 @@
                         [options]="modalidadDocumentacion"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-4">
+                    <label>Fecha Estado de Solicitud</label>
+                    <app-fecha [(value)]="solicitudEditar.fechaEstadoSolicitud" [disabled]="true" [utc]="false" (valueChangeSelected)="fillFechaEstadoSolicitud($event)"
+                        (valueChangeInput)="fillFechaEstadoSolicitud($event)"></app-fecha>
+                </div>
+                <div class="form-group col-lg-3 col-md-4">
                     <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}} (*)</label>
                     <app-fecha [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaIncorporacion($event)"
                         (valueChangeInput)="fillFechaIncorporacion($event)"></app-fecha>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.nuevaSolicitud.numColegiado" | translate}}</label>
-                    <input [(ngModel)]="solicitudEditar.numColegiado" [disabled]="consulta" type="text" class="form-control" [maxLength]="19" 
+                    <input [(ngModel)]="solicitudEditar.numColegiado" [disabled]="consulta" type="text" class="form-control" [maxLength]="20"
                         (input)="onChangeNColegiado($event)" pInputText>
                     <div *ngIf="numColegiadoDisponible == false">
                         <small class="input-error" *ngIf="!numColegiadoDisponible">
@@ -331,28 +339,46 @@
                     <label>
                         {{"censo.ws.literal.codigopostal" | translate}} (*)
                     </label>
-                    <input [disabled]="consulta" type="text" class="form-control" [maxLength]="5" [(ngModel)]="solicitudEditar.codigoPostal"
+                    <input *ngIf="!isPoblacionExtranjera" [disabled]="consulta" type="text" class="form-control" [maxLength]="5" [(ngModel)]="solicitudEditar.codigoPostal"
                         (ngModelChange)="onChangeCodigoPostal()" pInputText>
+                    <input *ngIf="isPoblacionExtranjera" [(ngModel)]="solicitudEditar.codigoPostal" type="text" class="form-control" [maxLength]="5"
+                        [disabled]="consulta" pInputText>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
-                        {{"censo.datosDireccion.literal.provincia" | translate}} (*)
+                        {{"censo.datosDireccion.literal.provincia" | translate}}
                     </label>
                     <p-dropdown class="select-form" [(ngModel)]='provinciaSelected' [options]="provincias" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
                         filterBy="label,labelSinTilde" filterMatchMode="contains" disabled></p-dropdown>
 
                     <!--<input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombreProvincia">-->
                 </div>
-                <div class="form-group col-lg-3 col-md-3">
+                <!-- <div class="form-group col-lg-3 col-md-3"> -->
+                <!-- <label>
+                        {{"censo.consultaDirecciones.literal.poblacion" | translate}}
+                    </label> -->
+                <!-- <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
+                        [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
+                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown> -->
+
+                <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
+                <!-- </div> -->
+                <div *ngIf="!isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                     </label>
-                    <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
-                        [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
-                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                    <p-dropdown #input2 class="select-form" [(ngModel)]='poblacionSelected' [filter]="true" filterBy="label,labelSinTilde" [disabled]="consulta || deshabilitarDireccion()"
+                        [options]="poblaciones" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
+                        id="dropdown">
+                    </p-dropdown>
 
-                    <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 </div>
+
+                <div *ngIf="isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
+                    <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)</label>
+                    <input [(ngModel)]="poblacionExtranjeraSelected" type="text" class="form-control" [maxLength]="99" pInputText>
+                </div>
+
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
@@ -436,7 +462,7 @@
         <div [hidden]="!fichaBancaria" class="card-body card-body-ficha">
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}} (*)</label>
+                    <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
                     <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
                 </div>
                 <!--<div class="form-group col-lg-3 col-md-3">
@@ -446,7 +472,7 @@
                         defaultLabel="Elegir" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
                 </div>-->
                 <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.mutualidad.literal.iban" | translate}} (*) </label>
+                    <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
                     <input type="text" class="form-control" [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
                         pInputText>
                     <div *ngIf="isValidIBAN() == false">

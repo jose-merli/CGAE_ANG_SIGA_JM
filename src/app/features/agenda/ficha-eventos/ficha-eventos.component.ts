@@ -401,21 +401,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
-        this.newEvent.end = new Date(this.curso.fechaInscripcionDesdeDate);
+        this.newEvent.start = undefined;
+        this.newEvent.end = undefined;
 
         //Indicamos que el limite que puede durar el evento
-        this.invalidDateMin = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
-        this.invalidDateMax = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
+        // this.invalidDateMin = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
+        // this.invalidDateMax = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
 
-        this.invalidDateMin.setHours(this.newEvent.start.getHours());
-        this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(23);
-        this.invalidDateMax.setMinutes(59);
+        // this.invalidDateMin.setHours(this.newEvent.start.getHours());
+        // this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+        // this.invalidDateMax.setHours(23);
+        // this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
@@ -460,21 +460,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         //Obligamos a que sea tipo calendario formacion
         this.newEvent.idTipoCalendario = this.valorTipoFormacion;
 
-        this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
-        this.newEvent.end = new Date(this.curso.fechaInscripcionHastaDate);
+        this.newEvent.start = undefined;
+        this.newEvent.end = undefined;
 
         //Indicamos que el limite que puede durar el evento
-        this.invalidDateMin = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
-        this.invalidDateMax = new Date(
-          JSON.parse(JSON.stringify(this.newEvent.start))
-        );
+        // this.invalidDateMin = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
+        // this.invalidDateMax = new Date(
+        //   JSON.parse(JSON.stringify(this.newEvent.start))
+        // );
 
-        this.invalidDateMin.setHours(this.newEvent.start.getHours());
-        this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-        this.invalidDateMax.setHours(23);
-        this.invalidDateMax.setMinutes(59);
+        // this.invalidDateMin.setHours(this.newEvent.start.getHours());
+        // this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+        // this.invalidDateMax.setHours(23);
+        // this.invalidDateMax.setMinutes(59);
 
         //Cargamos los tipo de calendarios que existen
         this.getComboCalendar();
@@ -1616,6 +1616,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       tipoEvento = "General";
     } else if (this.newEvent.idTipoEvento == this.valorTipoEventoFestivo) {
       tipoEvento = "Laboral";
+    } else if (this.newEvent.idTipoEvento == this.valorTipoEventoSesion) {
+      tipoEvento = "Sesión";
     } else {
       tipoEvento = this.newEvent.tipoEvento;
     }
@@ -1678,6 +1680,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.pressNewNotificacion = false;
         this.editNotificacion = false;
         this.selectedDatosNotifications = [];
+        this.newNotificacion = undefined;
         this.numSelectedNotification = 0;
         this.updateNotificationList = [];
         this.getEventNotifications();
@@ -1821,6 +1824,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
       n => {
         this.comboTemplates = n.combooItems;
+        this.arregloTildesCombo(this.comboTemplates);
       },
       err => {
         console.log(err);
@@ -1871,6 +1875,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   getTypeSend(idPlantillaEnvio, idTipoEnvio, dato) {
+    this.progressSpinner = true;
     let typeSend = [];
     this.sigaServices
       .getParam(
@@ -1881,14 +1886,26 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         n => {
           typeSend = n.combooItems;
 
-          if (this.newNotificacion != undefined) {
-            this.newNotificacion.idTipoEnvio = typeSend[0].value;
+          if (typeSend.length != 0) {
+
+            if (this.newNotificacion != undefined) {
+              this.newNotificacion.idTipoEnvio = typeSend[0].value;
+              this.newNotificacion.tipoEnvio = typeSend[0].label;
+            } else {
+              dato.tipoEnvio = typeSend[0].label;
+              dato.idTipoEnvio = typeSend[0].value;
+            }
+
+          } else {
+            dato.tipoEnvio = undefined;
+            dato.idTipoEnvio = undefined;
           }
-          dato.tipoEnvio = typeSend[0].label;
-          dato.idTipoEnvio = typeSend[0].value;
+
           if (!this.pressNewNotificacion) {
             this.editNotificaciones(dato);
           }
+          this.progressSpinner = false;
+
         },
         err => {
           console.log(err);
@@ -1903,7 +1920,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   validateNotification() {
     if (this.newNotificacion != undefined) {
       if (
-        this.newNotificacion.idTipoEnvio == undefined ||
         this.newNotificacion.idPlantilla == undefined ||
         this.newNotificacion.idTipoCuando == undefined ||
         this.newNotificacion.idUnidadMedida == undefined ||
@@ -2482,5 +2498,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
     }
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 }

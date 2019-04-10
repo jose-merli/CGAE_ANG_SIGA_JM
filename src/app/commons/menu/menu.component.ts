@@ -73,6 +73,12 @@ export class MenuComponent implements OnInit {
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;
+        if(ruta == "fichaColegial"){
+          sessionStorage.setItem("fichaColegialByMenu", "true");
+        }else{
+          sessionStorage.removeItem("fichaColegialByMenu");
+        }
+
         this.onCloseMenu();
         this.router.navigate([ruta]);
       }

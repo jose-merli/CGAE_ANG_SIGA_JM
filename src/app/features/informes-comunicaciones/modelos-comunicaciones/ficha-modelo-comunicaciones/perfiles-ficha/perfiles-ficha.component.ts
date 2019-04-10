@@ -24,7 +24,7 @@ export class PerfilesFichaComponent implements OnInit {
   soloLectura: boolean = false;
   editar: boolean = true;
   numeroPerfilesExistentes: number = 0;
-  
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -51,7 +51,7 @@ export class PerfilesFichaComponent implements OnInit {
     // private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDatos();
@@ -108,6 +108,16 @@ export class PerfilesFichaComponent implements OnInit {
         console.log(err);
       },
       () => {
+        let i = 0;
+        if (this.perfilesSeleccionados != undefined) {
+          this.perfilesNoSeleccionados.forEach(element => {
+            let find = this.perfilesSeleccionados.findIndex(x => x.label === element.label);
+            if (find != -1) {
+              this.perfilesNoSeleccionados.splice(i, 1);
+            }
+            i++;
+          });
+        }
         this.progressSpinner = false;
       }
     );
@@ -125,11 +135,11 @@ export class PerfilesFichaComponent implements OnInit {
           );
 
           //por cada perfil seleccionado lo eliminamos de la lista de existentes
-          if(this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial){
+          if (this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial) {
             this.perfilesSeleccionados.forEach(element => {
-              let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados,element);
-              if(x > -1){
-                this.perfilesNoSeleccionados.splice(x,1);
+              let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados, element);
+              if (x > -1) {
+                this.perfilesNoSeleccionados.splice(x, 1);
               }
             });
             this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
@@ -142,6 +152,7 @@ export class PerfilesFichaComponent implements OnInit {
   }
 
   guardar() {
+    this.progressSpinner = true;
     if (
       sessionStorage.getItem("modelosSearch") != null &&
       this.body.idModeloComunicacion == undefined
@@ -234,14 +245,15 @@ export class PerfilesFichaComponent implements OnInit {
   }
 
   restablecer() {
+    this.progressSpinner = true;
     this.getDatos();
   }
 
-  arrayObjectIndexOf(arr, obj){
-    for(var i = 0; i < arr.length; i++){
-        if(arr[i].value == obj.value){
-            return i;
-        }
+  arrayObjectIndexOf(arr, obj) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].value == obj.value) {
+        return i;
+      }
     };
     return -1;
   }

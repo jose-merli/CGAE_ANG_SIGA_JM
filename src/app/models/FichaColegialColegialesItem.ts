@@ -15,6 +15,7 @@ export class FichaColegialColegialesItem {
   fechapresentacionDate: Date;
   fechaTitulacionDate: Date;
   fechaJuraDate: Date;
+  colegioResultado: string;
 
   descripcion: String;
   observaciones: String;

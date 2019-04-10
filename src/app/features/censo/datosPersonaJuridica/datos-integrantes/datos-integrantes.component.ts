@@ -79,7 +79,7 @@ export class DatosIntegrantesComponent implements OnInit {
     private cardService: cardService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkAcceso();
@@ -220,7 +220,7 @@ export class DatosIntegrantesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -255,7 +255,7 @@ export class DatosIntegrantesComponent implements OnInit {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     }
   }
@@ -312,6 +312,16 @@ export class DatosIntegrantesComponent implements OnInit {
     };
     sessionStorage.removeItem("newIntegrante");
     sessionStorage.setItem("newIntegrante", JSON.stringify(dummy));
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+    
+    let migaPan = this.translateService.instant("menu.censo.buscarSociedades");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
   searchHistorico() {
@@ -337,7 +347,7 @@ export class DatosIntegrantesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -351,7 +361,7 @@ export class DatosIntegrantesComponent implements OnInit {
     this.sigaServices
       .post("integrantes_delete", deleteIntegrantes.datosIntegrantesItem)
       .subscribe(
-        data => {},
+        data => { },
         err => {
           console.log(err);
         },

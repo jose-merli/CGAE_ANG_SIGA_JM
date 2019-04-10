@@ -80,9 +80,9 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}} (*)</label>
-              <p-dropdown class="select-form" [disabled]="!activacionEditar"
-                [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
-                (onChange)="onChangeSelectVisibilidad($event)" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              <p-dropdown class="select-form" [disabled]="!activacionEditar" [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad"
+                [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectVisibilidad($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
               </p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -108,9 +108,8 @@
                 </ng-template>  
               </p-autoComplete> -->
 
-              <p-dropdown  [disabled]="!activacionEditar" class="select-form" [(ngModel)]="curso.tipoServicios"
-                 [options]="comboService" [filter]="true" filterBy="label,labelSinTilde" 
-                 placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
+              <p-dropdown [disabled]="!activacionEditar" class="select-form" [(ngModel)]="curso.tipoServicios" [options]="comboService"
+                [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}} (*)</label>
@@ -136,12 +135,12 @@
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioInscripcion' | translate }} (*)</label>
               <app-fecha #fechaInicioInscripcion [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate"
-                (valueChangeInput)="showMessageEditInitInscriptionEvent($event)" [disabled]="!activacionEditar" (valueChangeSelected)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
+                [disabled]="!activacionEditar" (click)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinInscripcion' | translate }} (*)</label>
-              <app-fecha #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueChangeSelected)="showMessageEditEndInscriptionEvent($event)"
-                (valueChangeInput)="showMessageEditEndInscriptionEvent($event)" [disabled]="!activacionEditar"></app-fecha>
+              <app-fecha #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (click)="showMessageEditEndInscriptionEvent($event)"
+                [disabled]="!activacionEditar"></app-fecha>
 
             </div>
           </div>

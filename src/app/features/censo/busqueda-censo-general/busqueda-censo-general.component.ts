@@ -62,7 +62,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("esNuevoNoColegiado");
@@ -298,9 +298,10 @@ export class BusquedaCensoGeneralComponent implements OnInit {
             icon: "fa fa-info",
             accept: () => {
               sessionStorage.setItem("esNuevoNoColegiado", "true");
-
+              sessionStorage.setItem("busquedaCensoGeneral", "true");
               let noColegiado = new NoColegiadoItem();
               noColegiado.nif = selectedDatos.nif;
+              noColegiado.idPersona = selectedDatos.idPersona;
               noColegiado.soloNombre = selectedDatos.nombre;
               noColegiado.apellidos1 = selectedDatos.primerApellido;
               noColegiado.apellidos2 = selectedDatos.segundoApellido;
@@ -314,6 +315,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
               this.router.navigate(["/fichaColegial"]);
             },
             reject: () => {
+              sessionStorage.setItem("busquedaCensoGeneral", "false");
+
               this.msgs = [
                 {
                   severity: "info",

@@ -96,6 +96,7 @@ export class SigaServices {
     datosGenerales_insert: "personaJuridica/create",
     datosGenerales_identificacion: "DatosGenerales/identificacion",
     busquedaPer_colegio: "busquedaPer/colegio",
+    busquedaCol_colegio: "busquedaCol/colegio",
     busquedaPer: "busquedaPer",
     busquedaPer_institucion: "busquedaPerInstitucion",
     busquedaPer_searchJuridica: "busquedaPerJuridica/searchJuridica",
@@ -536,6 +537,7 @@ export class SigaServices {
     //Sanciones
     busquedaSanciones_searchBusquedaSanciones:
       "busquedaSanciones/searchBusquedaSanciones",
+    busquedaSanciones_searchBusquedaSancionesBBDD: "busquedaSanciones/searchBusquedaSancionesBBDD",
     busquedaSanciones_comboTipoSancion: "busquedaSanciones/comboTipoSancion",
     busquedaSanciones_comboTipo: "busquedaSanciones/comboTipo",
     busquedaSanciones_comboEstado: "busquedaSanciones/comboEstado",

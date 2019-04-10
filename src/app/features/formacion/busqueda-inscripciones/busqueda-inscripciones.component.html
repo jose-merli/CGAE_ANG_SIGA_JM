@@ -20,7 +20,7 @@
           <div class="form-group col-lg-3 col-md-2">
             <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}}</label>
             <p-dropdown [disabled]="deshabilitarCombVis" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
-              [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" filterBy="label,labelSinTilde"
+              [(ngModel)]='body.idVisibilidad' [options]="comboVisibilidad" [filter]="true" #dropdown filterBy="label,labelSinTilde"
               (onChange)="onChangeSelectVisibilidad($event)" [showClear]="true"></p-dropdown>
           </div>
 
@@ -142,6 +142,13 @@
           </ng-template> -->
 
 
+          <ng-template *ngIf="col.field == 'minimaAsistencia'"  let-dato="rowData" pTemplate="body">
+            <label [style]="{'width': '10%'}" >
+              {{ dato[col.field] }}
+            </label>
+          </ng-template>
+
+
           <ng-template *ngIf="col.field == 'calificacion'" let-dato="rowData" pTemplate="body">
             <label *ngIf="!calificacion">
               {{ dato[col.field] }}
@@ -153,6 +160,7 @@
               [(ngModel)]="dato.calificacion" (input)="editarCompleto($event, dato)" name="calificacion" type="number" min="0"
               max="10" />
           </ng-template>
+          
 
         </p-column>
 
@@ -213,8 +221,7 @@
   <div class="loader"></div>
 </div>
 
-<p-dialog [(visible)]="displayMotivo" responsive="true" [draggable]="false" modal="modal" resizable="false"  
-  [minWidth]="500">
+<p-dialog [(visible)]="displayMotivo" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
   <p-header class="title">
     <label>{{"general.ventana.cgae" | translate}} - {{'formacion.busquedaInscripcion.cabecera' | translate }}</label>
   </p-header>

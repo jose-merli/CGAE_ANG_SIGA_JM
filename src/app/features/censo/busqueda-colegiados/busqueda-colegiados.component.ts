@@ -135,8 +135,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
     this.currentRoute = this.router.url;
-
+    this.progressSpinner = true;
     this.getCombos();
+    
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
@@ -213,11 +214,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
 
-      if (id[0].situacion == 30) {
-        sessionStorage.setItem("disabledAction", "true");
-      } else {
-        sessionStorage.setItem("disabledAction", "false");
-      }
+      // if (id[0].situacion == 30) {
+      //   sessionStorage.setItem("disabledAction", "true");
+      // } else {
+      sessionStorage.setItem("disabledAction", "false");
+      // }
 
       this.router.navigate(["/fichaColegial"]);
     } else {
@@ -334,6 +335,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   getCombos() {
+    this.getComboColegios();
     this.getComboEtiquetas();
     this.getComboSituacion();
     this.getComboResidencia();
@@ -343,23 +345,31 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getComboCategoriaCurricular();
     this.getComboProvincias();
     this.getComboTiposDireccion();
-    this.getComboColegios();
+      
   }
 
   getComboColegios() {
     // obtener colegios
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
-      n => {
-        this.comboColegios = n.combooItems;
+      this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    
+    this.sigaServices.getParam(
+        "busquedaCol_colegio",
+        "?idInstitucion=" + this.institucionActual
+      )
+    .subscribe(
+      col => {
+        this.comboColegios = col.combooItems;
         // this.arregloTildesCombo(this.comboColegios);
-
-        this.getInstitucion();
 
         if (
           sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
           null
         ) {
+           if (this.institucionActual > "2000" && this.institucionActual < "2100") {
           this.body.colegio.forEach(element => {
+            
+            this.getInstitucion();
             let labelColegio = this.comboColegios.find(
               item => item.value === element
             ).label;
@@ -368,15 +378,36 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
               label: labelColegio,
               value: element
             });
+            
+            this.progressSpinner = false;
           });
           this.isBuscar();
           sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
+           }else{
+             this.progressSpinner = false;
+           }
+        }
+        else{
+            if (this.institucionActual > "2000" && this.institucionActual < "2100") {
+              this.colegiosSeleccionados = [
+                {
+                  label: n.label,
+                  value: this.institucionActual,
+                  subValue: null
+                }
+              ];
+              this.deshabilitarCombCol = true;
+            }
+            this.progressSpinner = false;
+          
         }
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
+    });
   }
 
   getComboEtiquetas() {
@@ -653,7 +684,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "administracion.parametrosGenerales.literal.nombre"
       },
       {
-        field: "numColegiado",
+        field: "numberColegiado",
         header: "censo.busquedaClientesAvanzada.literal.nColegiado"
       },
       {

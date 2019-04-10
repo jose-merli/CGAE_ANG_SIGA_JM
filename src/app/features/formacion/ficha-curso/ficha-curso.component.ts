@@ -122,11 +122,7 @@ export class FichaCursoComponent implements OnInit {
   fechaFinInscripcion;
 
   persistenciaFichaCurso;
-
-
-  @ViewChild("calendarStartInscription") calendarStartInscription: Calendar;
   fechaFinInscripcionSelected: boolean = true;
-  @ViewChild("calendarEndInscription") calendarEndInscription: Calendar;
 
   //Generales
   valorEstadoAbierto = "0";
@@ -1109,6 +1105,8 @@ export class FichaCursoComponent implements OnInit {
   }
 
   showMessageEditInitInscriptionEvent(value) {
+    this.fechaInicioInscripcion.calendar.overlayVisible = false;
+
     let mess = "¿Desea acceder a editar la fecha en el evento asociado?";
 
     let icon = "fa fa-edit";
@@ -1116,7 +1114,7 @@ export class FichaCursoComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
-        this.selectStartDateInscription(value);
+        this.selectStartDateInscription();
       },
       reject: () => {
         if (this.modoEdicion) {
@@ -1144,23 +1142,18 @@ export class FichaCursoComponent implements OnInit {
     });
   }
 
-  selectStartDateInscription(value) {
+  selectStartDateInscription() {
 
-    if (this.comprobarFecha(value)) {
-      if (this.curso.fechaInscripcionDesdeDate != null) {
-        this.curso.idTipoEvento = this.valorTipoInicioIncripcion;
-      }
-
-      this.curso.fechaInscripcionDesdeDate = value;
-      // this.curso.tipoServicios = this.resultsService;
-      this.curso.temasCombo = this.resultsTopics;
-      sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
-      sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
-      this.router.navigate(["/fichaEventos"]);
-    }
+    this.curso.idTipoEvento = this.valorTipoInicioIncripcion;
+    this.curso.temasCombo = this.resultsTopics;
+    sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+    sessionStorage.setItem("isFormacionCalendarByStartInscripcion", "true");
+    this.router.navigate(["/fichaEventos"]);
   }
 
   showMessageEditEndInscriptionEvent(event) {
+    this.fechaFinInscripcion.calendar.overlayVisible = false;
+
     let mess = "¿Desea acceder a editar la fecha en el evento asociado?";
 
     let icon = "fa fa-edit";
@@ -1200,12 +1193,7 @@ export class FichaCursoComponent implements OnInit {
 
   selectEndDateInscription(event) {
 
-    if (this.curso.idEventoFinInscripcion != null) {
-      this.curso.idTipoEvento = this.valorTipoFinIncripcion;
-    }
-
-    this.curso.fechaInscripcionHastaDate = event;
-    // this.curso.tipoServicios = this.resultsService;
+    this.curso.idTipoEvento = this.valorTipoFinIncripcion;
     this.curso.temasCombo = this.resultsTopics;
     sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
     sessionStorage.setItem("isFormacionCalendarByEndInscripcion", "true");
@@ -1784,6 +1772,17 @@ export class FichaCursoComponent implements OnInit {
       "datosFormadores",
       JSON.stringify(this.datosFormadores)
     );
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+    let migaPan = this.translateService.instant("menu.formacion.buscarCursos");
+    let migaPan2 = this.translateService.instant("formacion.fichaCurso.cabecera");
+    let menuProcede = this.translateService.instant("menu.formacion");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("migaPan2", migaPan2);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

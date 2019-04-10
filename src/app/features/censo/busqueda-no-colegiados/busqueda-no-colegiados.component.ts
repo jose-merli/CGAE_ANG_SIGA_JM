@@ -131,6 +131,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.currentRoute = this.router.url;
     sessionStorage.removeItem("busquedaCensoGeneral");
     sessionStorage.removeItem("disabledAction");
+    sessionStorage.removeItem("filtrosBusquedaColegiados");
+    sessionStorage.removeItem("esNuevoNoColegiado");
+    sessionStorage.removeItem("nuevoNoColegiado");
+    sessionStorage.removeItem("nuevoNoColegiadoGen");
+
 
     this.getLetrado();
 
@@ -145,6 +150,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     }
 
     // Obtener Combos
+    this.progressSpinner = true;
     this.getCombos();
   }
 
@@ -202,9 +208,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           }
           sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
         }
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -547,14 +555,30 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   isCrear() {
-    sessionStorage.removeItem("personaBody");
-    sessionStorage.setItem(
-      "filtrosBusquedaNoColegiados",
-      JSON.stringify(this.body)
-    );
-    sessionStorage.setItem("esColegiado", "false");
-    sessionStorage.setItem("esNuevoNoColegiado", "true");
-    this.router.navigate(["/fichaColegial"]);
+    // sessionStorage.removeItem("personaBody");
+    // sessionStorage.setItem(
+    //   "filtrosBusquedaNoColegiados",
+    //   JSON.stringify(this.body)
+    // );
+    // sessionStorage.setItem("esColegiado", "false");
+    // sessionStorage.setItem("esNuevoNoColegiado", "true");
+    // this.router.navigate(["/fichaColegial"]);
+    sessionStorage.removeItem("editedSolicitud");
+    sessionStorage.setItem("consulta", "false");
+    sessionStorage.setItem("solicitudIncorporacion", "true");
+    sessionStorage.setItem("nuevoNoColegiadoGen", "true");
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("censo.busquedaClientes.busquedaNoColegiados.titulo");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
+    // this.router.navigate(["/nuevaIncorporacion"]);
+    this.router.navigate(["/busquedaGeneral"]);
   }
 
   deleteSeleccion(selectedDatos) {
@@ -685,10 +709,10 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   getColsResults() {
     this.cols = [
-      {
-        field: "colegioResultado",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
+      // {
+      //   field: "colegioResultado",
+      //   header: "censo.busquedaClientesAvanzada.literal.colegio"
+      // },
       {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden"

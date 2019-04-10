@@ -158,7 +158,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
     let id = dato[0].id;
     sessionStorage.setItem("modelosSearch", JSON.stringify(dato[0]));
     this.router.navigate(['/fichaModeloComunicaciones']);
-    
+
   }
 
   getDatos() {
@@ -175,6 +175,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
         this.datos = JSON.parse(data["body"]).listadoModelos;
         this.body = this.datos[0];
+        sessionStorage.setItem("listadoModelos", JSON.stringify(this.body));
       },
       err => {
         console.log(err);

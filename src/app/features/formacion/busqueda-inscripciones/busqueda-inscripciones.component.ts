@@ -6,7 +6,7 @@ import {
   HostListener,
   ViewEncapsulation
 } from "@angular/core";
-import { MultiSelect, ConfirmationService } from "primeng/primeng";
+import { Message, MultiSelect, ConfirmationService, Dropdown } from "primeng/primeng";
 import {
   FormBuilder,
   FormControl,
@@ -131,6 +131,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       nombreApellidosFormador: new FormControl(null, Validators.minLength(3))
     });
   }
+  @ViewChild("dropdown")
+  dropdown: Dropdown;
 
   ngOnInit() {
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
@@ -199,10 +201,17 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         this.disabledCalificar = false;
       }
     }
+
+  }
+
+
+  clearFilter(dropdown: Dropdown) {
+    dropdown.focus();
   }
 
   ngAfterViewInit() {
     this.mySelect.ngOnInit();
+    this.clearFilter(this.dropdown);
   }
 
   // control de permisos
@@ -482,6 +491,14 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getColsResults() {
     this.cols = [
+       {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+       {
+        field: "identificacion",
+        header: "censo.consultaDatosColegiacion.literal.numIden"
+      },
       {
         field: "nombreCurso",
         header: "formacion.busquedaInscripcion.nombreCurso"
@@ -622,6 +639,16 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   obtenerFormador() {
     sessionStorage.setItem("abrirFormador", "true");
     sessionStorage.setItem("backInscripcion", "true");
+
+    sessionStorage.removeItem("menuProcede");
+    sessionStorage.removeItem("migaPan");
+    sessionStorage.removeItem("migaPan2");
+
+    let migaPan = this.translateService.instant("formacion.busquedaInscripcion.cabecera");
+    let menuProcede = this.translateService.instant("menu.formacion");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

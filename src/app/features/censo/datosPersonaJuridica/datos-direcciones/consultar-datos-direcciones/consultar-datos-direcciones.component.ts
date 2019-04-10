@@ -58,7 +58,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   bodyCodigoPostal: DatosDireccionesCodigoPostalItem = new DatosDireccionesCodigoPostalItem();
   bodyCodigoPostalSearch: DatosDireccionesCodigoPostalObject = new DatosDireccionesCodigoPostalObject();
   disableCheck: boolean;
-  poblacionExtranjera: boolean;
+  poblacionExtranjera: boolean = false;
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
   ocultarMotivo: boolean = undefined;
@@ -267,7 +267,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
         }
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
-    this.checkBody.idPais = "191";
+    // this.checkBody.idPais = "191";
     this.progressSpinner = false;
 
     this.permisoTarjeta = JSON.parse(sessionStorage.getItem("permisoTarjeta"));
@@ -483,18 +483,19 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
   onChangePais() {
+    //Si se selecciona un pais extranjero
     if (this.body.idPais != "191") {
       this.provinciaSelecionada = "";
       this.body.idProvincia = "";
       this.body.idPoblacion = "";
       this.disableCheck = true;
-      //si al final se pone un campo de texto, solo habrá que usar un ngIf con esta variable para controlar cuando sale cada input distinto.
       this.poblacionExtranjera = true;
       this.body.idPoblacion = "";
       this.isDisabledCodigoPostal = this.historyDisable;
       this.isDisabledPoblacion = true;
       this.body.idPoblacion = "";
       this.comboPoblacion = [];
+      //Si se selecciona españa
     } else {
       this.disableCheck = this.historyDisable;
       this.poblacionExtranjera = false;
@@ -656,8 +657,8 @@ para poder filtrar el dato con o sin estos caracteres*/
           return true;
         }
       } else if (this.body.idPais != "191" && this.body.idPais != undefined) {
-        if (this.body.domicilio == undefined || this.body.domicilio == "" || this.body.idPoblacion == undefined ||
-          this.body.idPoblacion == "" || this.body.codigoPostal == undefined || this.body.codigoPostal == "") {
+        if (this.body.domicilio == undefined || this.body.domicilio == "" || this.body.poblacionExtranjera == undefined ||
+          this.body.poblacionExtranjera == "" || this.body.codigoPostal == undefined || this.body.codigoPostal == "") {
           this.showInfo("Para el tipo dirección añadido es necesario rellenar el domicilio completo");
           return false;
         } else {
@@ -890,9 +891,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.esColegiado = JSON.parse(
         sessionStorage.getItem("esColegiado")
       );
-      this.body.idPersona = JSON.parse(
+
+      let usuario = JSON.parse(
         sessionStorage.getItem("usuarioBody")
       );
+      this.body.idPersona = usuario[0].idPersona;
+
       this.body.idProvincia = this.provinciaSelecionada;
       this.sigaServices.post("direcciones_update", this.body).subscribe(
         data => {
@@ -953,7 +957,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
     this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    let usuario = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idPersona = usuario[0].idPersona;
     this.sigaServices.post("direcciones_duplicate", this.body).subscribe(
       data => {
         this.body.idDireccion = JSON.parse(data["body"]).id;
@@ -1035,7 +1040,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
     this.body.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    this.body.idPersona = JSON.parse(sessionStorage.getItem("usuarioBody"))[0].idPersona;
     this.body.idProvincia = this.provinciaSelecionada;
     this.sigaServices
       .post("fichaDatosDirecciones_solicitudCreate", this.body)
@@ -1099,12 +1104,16 @@ para poder filtrar el dato con o sin estos caracteres*/
       return true;
     } else {
       if (
-        this.codigoPostalValido &&
+        (this.codigoPostalValido || this.poblacionExtranjera) &&
         (this.body.idTipoDireccion != undefined || this.isLetrado) &&
         !this.igualInicio()
       ) {
         if (this.body.idTipoDireccion.length > 0) {
-          return false;
+          if (this.body.poblacionExtranjera == undefined && this.body.poblacionExtranjera == null && this.poblacionExtranjera) {
+            return true;
+          } else {
+            return false;
+          }
         } else {
           return true;
         }
@@ -1202,15 +1211,21 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
-    // this.checkBody = JSON.parse()
     this.body.idPersona = this.usuarioBody[0].idPersona;
-    this.provinciaSelecionada = this.body.idProvincia;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
-    this.comboPoblacion = [];
-    this.comboPoblacion.push({
-      label: this.body.nombrePoblacion,
-      value: this.body.idPoblacion
-    });
+    if (this.body.idPais != "191") {
+      this.poblacionExtranjera = true;
+      this.provinciaSelecionada = undefined;
+    } else {
+      this.provinciaSelecionada = this.body.idProvincia;
+      this.poblacionExtranjera = false;
+      this.comboPoblacion = [];
+      this.comboPoblacion.push({
+        label: this.body.nombrePoblacion,
+        value: this.body.idPoblacion
+      });
+    }
+
     this.generarTabla();
     this.onChangeCodigoPostal();
   }

@@ -14,7 +14,7 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
-import { Message, MultiSelect, ConfirmationService } from "primeng/primeng";
+import { Message, MultiSelect, ConfirmationService, Dropdown } from "primeng/primeng";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
@@ -123,6 +123,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   @ViewChild("mySelect")
   mySelect: MultiSelect;
 
+  @ViewChild("dropdown")
+  dropdown: Dropdown;
+
   ngOnInit() {
     sessionStorage.removeItem("isCancelado");
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
@@ -151,10 +154,16 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     this.selectedDatos = [];
 
     this.checkAcceso();
+    // this.mySelect.focus();
+  }
+
+  clearFilter(dropdown: Dropdown) {
+    dropdown.focus();
   }
 
   ngAfterViewInit() {
     // this.mySelect.ngOnInit();
+    this.clearFilter(this.dropdown);
   }
 
   //CONTROL DE PERMISOS
