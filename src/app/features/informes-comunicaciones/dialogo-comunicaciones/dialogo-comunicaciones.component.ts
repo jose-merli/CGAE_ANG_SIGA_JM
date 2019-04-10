@@ -209,6 +209,9 @@ export class DialogoComunicacionesComponent implements OnInit {
           this.listaConsultas.forEach(element => {
             if (element.camposDinamicos != null) {
               element.camposDinamicos.forEach(campo => {
+                if(campo.tipoDato == 'MV'){
+                  campo.valores.unshift({ label: "", value: "" });
+                }
                 this.valores.push(campo);
               });
             }
@@ -246,8 +249,11 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.progressSpinner = true;
 
     this.valores.forEach(element => {
-      if (element.valor != null && typeof element.valor == "object") {
+      if (element.valor != null && typeof element.valor == "object" && element.tipoDato == 'MV') {
         element.valor = element.valor.ID;
+      }
+      if(!element.operacion || element.operacion == "" || element.operacion == null || element.operacion == "OPERADOR"){
+        element.operacion = this.operadoresTexto[0].value;
       }
     });
 
@@ -335,8 +341,11 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.progressSpinner = true;
 
     this.valores.forEach(element => {
-      if (element.valor != null && typeof element.valor == "object") {
+      if (element.valor != null && typeof element.valor == "object" && element.tipoDato == 'MV') {
         element.valor = element.valor.ID;
+      }
+      if(!element.operacion || element.operacion == "" || element.operacion == null || element.operacion == "OPERADOR"){
+        element.operacion = this.operadoresTexto[0].value;
       }
     });
 

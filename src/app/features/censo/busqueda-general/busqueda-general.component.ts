@@ -150,6 +150,21 @@ export class BusquedaGeneralComponent {
 
           // this.colegios_seleccionados[0].label = this.institucionActual;
           this.colegioDisabled = true;
+        } else if (sessionStorage.getItem("AddDestinatarioIndv") == "true") {
+          for (let colegio of this.colegios_rol) {
+            if (colegio.value == this.institucionActual) {
+              this.colegios_seleccionados = [
+                {
+                  label: colegio.label,
+                  value: this.institucionActual
+                }
+              ];
+              this.labelRemitente = colegio.label;
+            }
+          }
+
+          // this.colegios_seleccionados[0].label = this.institucionActual;
+          this.colegioDisabled = true;
         } else {
           this.colegioDisabled = false;
         }

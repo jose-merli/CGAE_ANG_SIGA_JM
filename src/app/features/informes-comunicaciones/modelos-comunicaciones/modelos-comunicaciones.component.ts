@@ -59,7 +59,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   ngOnInit() {
     this.getInstitucion();
     this.bodySearch.visible = 1;
-
+    
     sessionStorage.removeItem("crearNuevoModelo");
     sessionStorage.removeItem("soloLectura");
 
@@ -73,6 +73,8 @@ export class ModelosComunicacionesComponent implements OnInit {
       { label: "Sí", value: "SI" },
       { label: "No", value: "NO" }
     ];
+
+    this.bodySearch.preseleccionar = "";
 
     this.visible = [
       { label: "", value: "" },
