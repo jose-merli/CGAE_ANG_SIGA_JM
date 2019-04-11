@@ -137,7 +137,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
-
+  progressSpinner2: boolean = true;
   @ViewChild("fubauto") fubauto;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -153,7 +153,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    this.progressSpinner2 = true;
     this.currentRoute = this.router.url;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
@@ -189,24 +189,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
-
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
 
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
@@ -279,6 +261,28 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ];
 
     this.editar = JSON.parse(sessionStorage.getItem("editar"));
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }, () => {
+          this.progressSpinner2 = false;
+        }
+      );
+
+
     this.progressSpinner = false;
   }
 
