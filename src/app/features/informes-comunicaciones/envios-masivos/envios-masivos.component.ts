@@ -324,6 +324,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   enviar(dato) {
     this.enviosArray = [];
     let estadoInvalido = false;
+    let tieneDestiantarios = true;
     dato.forEach(element => {
       let objEnviar = {
         idEnvio: element.idEnvio
@@ -331,25 +332,38 @@ para poder filtrar el dato con o sin estos caracteres*/
       if (element.idEstado == 3 || element.idEstado == 6) {
         estadoInvalido = true;
       }
+      if (element.numDestinatarios == 0) {
+        tieneDestiantarios = false;
+      }
       this.enviosArray.push(objEnviar);
     });
 
-    if (!estadoInvalido) {
+    if(!tieneDestiantarios){
+      this.showInfo(this.translateService.instant(
+        "informesycomunicaciones.enviosMasivos.sinDestinatarios"
+      ));
+      
+    }else if (!estadoInvalido) {
       this.sigaServices.post("enviosMasivos_enviar", this.enviosArray).subscribe(
         data => {
-          this.showSuccess("Se ha lanzado el envio correctamente");
+          this.showSuccess(this.translateService.instant(
+            "informesycomunicaciones.enviosMasivos.envioRealizado"
+          ));
           this.selectedDatos = [];
         },
         err => {
-          this.showFail("Error al procesar el envío");
+          this.showFail(this.translateService.instant(
+            "informesycomunicaciones.enviosMasivos.errorProcesar"
+          ));
           console.log(err);
         },
         () => { }
       );
     } else {
-      this.showInfo("El estado de uno o varios envíos no es válido");
+      this.showInfo(this.translateService.instant(
+        "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
+      ));
     }
-
 
   }
 
