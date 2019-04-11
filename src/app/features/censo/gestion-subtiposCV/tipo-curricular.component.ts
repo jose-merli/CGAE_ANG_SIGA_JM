@@ -30,6 +30,7 @@ export class TipoCurricularComponent {
   history: TipoCurricularItem = new TipoCurricularItem();
 
   datosEditar: TipoCurricularItem[] = [];
+  datosOriginal;
 
   categoriaCurricular: SelectItem[];
   selectedCategoriaCurricular: any;
@@ -45,6 +46,7 @@ export class TipoCurricularComponent {
   table;
   selectedDatos = [];
   cols: any = [];
+  colsCurricular: any = [];
   rowsPerPage: any = [];
   datos: any[];
   datosHist: any[];
@@ -60,7 +62,7 @@ export class TipoCurricularComponent {
   buscar: boolean = false;
   nuevo: boolean = false;
   crear: boolean = false;
-  editar: boolean = false;
+  editar: boolean = true;
   historico: boolean = false;
   blockCrear: boolean = true;
   blockBuscar: boolean = true;
@@ -73,7 +75,7 @@ export class TipoCurricularComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Llamada al rest para obtener la categoría curricular
@@ -108,10 +110,70 @@ export class TipoCurricularComponent {
         value: 40
       }
     ];
+
+    this.colsCurricular = [
+      {
+        field: "codigoExterno",
+        value: "idInstitucion",
+        header: "general.codeext"
+      },
+      {
+        field: "descripcion",
+        value: "idInstitucion",
+        header: "general.description"
+      }
+    ];
+
   }
+
 
   onHideTipoCV() {
     this.showTipoCurricular = !this.showTipoCurricular;
+  }
+
+  onRowSelectTipos(selectedDatos) {
+
+    this.datos.forEach(element => {
+      element.isMod = false;
+    });
+
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo1 ==
+      selectedDatos.idTipoCvSubtipo1 && x.idInstitucion == selectedDatos.idInstitucion);
+    this.datos[id].isMod = true;
+
+  }
+
+  changeInput(selectedDatos) {
+    this.editar = true;
+
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo1 ==
+      selectedDatos.idTipoCvSubtipo1 && x.idInstitucion == selectedDatos.idInstitucion);
+    this.datos[id].editar = true;
+
+    if (selectedDatos.idInstitucion != '2000' && (selectedDatos.codigoExterno != this.datosOriginal[id].codigoExterno) ||
+      (selectedDatos.descripcion != this.datosOriginal[id].descripcion)) {
+
+      let idEdit = this.datosEditar.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo1 ==
+        selectedDatos.idTipoCvSubtipo1 && x.idInstitucion == selectedDatos.idInstitucion);
+
+      if (idEdit == -1) {
+        this.datosEditar.push(this.datos[id]);
+      } else {
+        this.datosEditar[idEdit] = this.datos[id];
+      }
+    }
+
+  }
+
+
+  actualizaSeleccionados(selectedDatos) {
+    this.datos.forEach(element => {
+      element.isMod = false;
+    });
+
+    this.selectedDatos = [];
+    this.table.reset();
+
   }
 
   search() {
@@ -140,6 +202,13 @@ export class TipoCurricularComponent {
           this.bodySearch = JSON.parse(data["body"]);
           this.datos = this.bodySearch.tipoCurricularItems;
 
+          this.datosOriginal = JSON.parse(JSON.stringify(this.datos));
+
+          for (let i in this.datos) {
+            this.datos[i].isMod = false;
+          }
+
+
           this.table.paginator = true;
         },
         err => {
@@ -152,6 +221,7 @@ export class TipoCurricularComponent {
   restore() {
     this.body.tipoCategoriaCurricular = "";
     this.blockBuscar = true;
+    this.datosEditar = [];
   }
 
   // Para la creación de un nuevo elemento
@@ -194,7 +264,16 @@ export class TipoCurricularComponent {
   }
 
   confirmAction() {
-    if (this.body.descripcion) {
+
+    let idCodigoExt = this.datos.findIndex(x => x.codigoExterno == this.body.codigoExterno);
+    let idDescripcion = this.datos.findIndex(x => x.descripcion == this.body.descripcion);
+
+    if (idCodigoExt != -1 || idDescripcion != -1) {
+
+      let message = "Ya existe un registro con el Código Externo o Descripción introducidos";
+      this.showFail(message);
+
+    } else {
       this.nuevoElemento = this.body;
 
       this.sigaServices
@@ -215,8 +294,6 @@ export class TipoCurricularComponent {
             this.showFail(mensaje);
           }
         );
-    } else {
-      this.showFail("La descripción no puede estar vacía");
     }
   }
 
@@ -392,10 +469,15 @@ export class TipoCurricularComponent {
   }
 
   onChangeSelectAll() {
+    this.selectedDatos = [];
     if (this.selectAll) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.datos.forEach(element => {
+        if (element.idInstitucion != "2000") {
+          this.selectedDatos.push(element);
+        }
+      });
+      this.numSelected = this.selectedDatos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -404,7 +486,7 @@ export class TipoCurricularComponent {
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
+    if (!this.selectMultiple && !this.selectAll) {
       this.selectedDatos = [];
       this.numSelected = 0;
     } else {
@@ -420,10 +502,25 @@ export class TipoCurricularComponent {
   }
 
   onRowSelect(selectedDatos) {
-    if (this.selectMultiple) {
-      this.numSelected = this.selectedDatos.length;
-    } else {
-      this.editar = false;
+    if (this.selectMultiple && !this.selectAll) {
+
+      if (selectedDatos[this.selectedDatos.length - 1].idInstitucion == "2000") {
+        this.selectedDatos.splice(this.selectedDatos.length - 1, 1);
+      }
+
+      if (this.selectMultiple) {
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.editar = false;
+        this.numSelected = this.selectedDatos.length;
+      }
+    } else if (!this.selectMultiple && this.selectAll) {
+      this.selectedDatos = [];
+      this.datos.forEach(element => {
+        if (element.idInstitucion != "2000") {
+          this.selectedDatos.push(element);
+        }
+      });
       this.numSelected = this.selectedDatos.length;
     }
   }
@@ -492,27 +589,60 @@ export class TipoCurricularComponent {
   }
 
   confirmEditAction() {
+    let datosRepetidos = [];
+    let datosModificar = [];
+    this.datosEditar = [];
+
     this.datos.forEach((value: TipoCurricularItem, key: number) => {
       if (value.editar) {
         this.datosEditar.push(value);
       }
     });
 
-    this.bodyUpdate.tipoCurricularItems = this.datosEditar;
 
-    this.sigaServices
-      .post("tipoCurricular_updateTipoCurricular", this.bodyUpdate)
-      .subscribe(
-        data => {
-          this.showSuccess();
-        },
-        err => {
-          this.showFail("Error al actualizar");
-        },
-        () => {
-          this.search();
-        }
-      );
+    datosModificar = JSON.parse(JSON.stringify(this.datos));
+
+    this.datosEditar.forEach((value: TipoCurricularItem, key: number) => {
+
+      let idTipo = this.datos.findIndex(x => x.idTipoCV == value.idTipoCV && x.idTipoCvSubtipo1 == value.idTipoCvSubtipo1
+        && x.idInstitucion == value.idInstitucion);
+
+      datosModificar.splice(idTipo, 1);
+
+      let idCodigoExterno = datosModificar.findIndex(x => x.codigoExterno == value.codigoExterno);
+      let idDescripcion = datosModificar.findIndex(x => x.descripcion == value.descripcion);
+
+      if (idCodigoExterno == -1 && idDescripcion == -1) {
+        this.datosEditar.push(value);
+      } else {
+        datosRepetidos.push(value);
+      }
+    });
+
+    if (datosRepetidos.length > 0) {
+      let message = "Ya existe un registro con el código externo o descripción introducidos";
+      this.showFail(message);
+      datosModificar = JSON.parse(JSON.stringify(this.datos));
+
+    } else {
+      this.bodyUpdate.tipoCurricularItems = this.datosEditar;
+
+      this.sigaServices
+        .post("tipoCurricular_updateTipoCurricular", this.bodyUpdate)
+        .subscribe(
+          data => {
+            this.showSuccess();
+            this.datosEditar = [];
+
+          },
+          err => {
+            this.showFail("Error al actualizar");
+          },
+          () => {
+            this.search();
+          }
+        );
+    }
   }
 
   cancelEditAction() {
@@ -550,6 +680,7 @@ export class TipoCurricularComponent {
 
   return() {
     this.editar = false;
+    this.datosEditar = [];
     this.search();
   }
 

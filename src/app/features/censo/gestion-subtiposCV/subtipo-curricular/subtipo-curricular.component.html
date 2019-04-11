@@ -38,17 +38,27 @@
   </div>
   <div *ngIf="buscar" class="card mt-3">
     <div class="card-body p-0">
-      <div *ngIf="selectMultiple">
+      <div *ngIf="selectMultiple || selectAll">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table class="tabla-listado"
           [ngClass]="{'customCursor': selectMultiple}" [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both"
           [rows]="selectedItem" selectionMode="multiple" [(selection)]="selectedDatos" (onRowSelect)="onRowSelect(selectedDatos)"
           (onRowUnselect)="onRowUnselect(selectedDatos)">
 
-          <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExterno" [header]="'general.codeext' | translate" [filter]="true"
-            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+          <p-column [style]="{'width': '20%'}" [sortable]="true" field="codigoExterno" filterPlaceholder="{{'general.boton.search' | translate}}"
+            [header]="colsCurricular[0].header | translate" [filter]="true" filterMatchMode="contains">
+            <ng-template let-dato="rowData" pTemplate="body" let-rowIndex="rowIndex">
+              <span *ngIf="dato[colsCurricular[0].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{dato[colsCurricular[0].field]}}</span>
+              <span *ngIf="dato[colsCurricular[0].value] != '2000'"> {{dato[colsCurricular[0].field]}}</span>
+            </ng-template>
+
           </p-column>
-          <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+
+          <p-column [sortable]="true" field="descripcion" [header]="colsCurricular[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
             filterMatchMode="contains">
+            <ng-template let-dato="rowData" pTemplate="body" let-rowIndex="rowIndex">
+              <span *ngIf="dato[colsCurricular[1].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{dato[colsCurricular[1].field]}}</span>
+              <span *ngIf="dato[colsCurricular[1].value] != '2000'"> {{dato[colsCurricular[1].field]}}</span>
+            </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
@@ -68,27 +78,43 @@
 
           <p-footer>
             <div class="text-right main-button">
-              <button *ngIf="selectedDatos && selectedDatos != '' && !editar" (click)="confirmToRemove(selectedDatos)" pButton type="button"
-                icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-              <button (click)="getHistory(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-              <button (click)="newElement()" (disabled)="!editar" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+              <button [disabled]="selectMultiple || selectAll" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+              <button [disabled]="selectMultiple || selectAll" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+              <button [disabled]="selectMultiple || selectAll" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button [disabled]="selectedDatos ==''" (click)="confirmToRemove(selectedDatos)" pButton type="button" icon="fa fa-trash-alt "
+                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              <button [disabled]="selectMultiple || selectAll" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+              <button [disabled]="selectMultiple || selectAll" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
           </p-footer>
         </p-dataTable>
       </div>
 
-      <div *ngIf="!selectMultiple">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-          pageLinks="4" [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="enablePagination()"
-          paginatorPosition="both" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)" (onEditInit)="editar=true"
-          [(selection)]="selectedDatos">
+      <div *ngIf="!selectMultiple && !selectAll">
+        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectTipos(selectedDatos)"
+          (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{'customCursor': selectMultiple}" pageLinks="4"
+          [responsive]="true" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="enablePagination()"
+          paginatorPosition="both" [rows]="selectedItem" editable="true" selectionMode="single" [(selection)]="selectedDatos">
 
-          <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExterno" [header]="'general.codeext' | translate" [filter]="true"
-            filterMatchMode="contains" [editable]="!selectMultiple" filterPlaceholder="{{'general.boton.search' | translate}}">
+          <p-column [style]="{'width': '20%'}" [sortable]="true" field="codigoExterno" filterPlaceholder="{{'general.boton.search' | translate}}"
+            [header]="colsCurricular[0].header | translate" [filter]="true" filterMatchMode="contains">
+            <ng-template let-dato="rowData" pTemplate="body">
+              <span *ngIf="dato[colsCurricular[0].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{dato[colsCurricular[0].field]}}</span>
+              <span *ngIf="dato[colsCurricular[0].value] != '2000' && !dato.isMod"> {{dato[colsCurricular[0].field]}}</span>
+              <input *ngIf="dato[colsCurricular[0].value] != '2000' && dato.isMod" [(ngModel)]="dato[colsCurricular[0].field]" (input)="changeInput(dato)"
+                type="text" pInputText />
+            </ng-template>
+
           </p-column>
 
-          <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains" [editable]="!selectMultiple">
+          <p-column [sortable]="true" field="descripcion" [header]="colsCurricular[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+            filterMatchMode="contains">
+            <ng-template let-dato="rowData" pTemplate="body">
+              <span *ngIf="dato[colsCurricular[1].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{dato[colsCurricular[1].field]}}</span>
+              <span *ngIf="dato[colsCurricular[1].value] != '2000' &&  !dato.isMod"> {{dato[colsCurricular[1].field]}}</span>
+              <input *ngIf="dato[colsCurricular[1].value] != '2000' &&  dato.isMod" [(ngModel)]="dato[colsCurricular[1].field]" (input)="changeInput(dato)"
+                type="text" pInputText />
+            </ng-template>
           </p-column>
 
           <ng-template pTemplate="paginatorLeft">
@@ -107,24 +133,16 @@
           </ng-template>
 
           <p-footer>
-
-            <div *ngIf="editar" class="text-right main-button">
-
-              <button *ngIf="selectedDatos && selectedDatos != '' && !editar" (click)="confirmToRemove(selectedDatos)" pButton type="button"
-                icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-
-              <button (click)="return();" #input1 pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-              <button (click)="confirmEditAction();" [(disabled)]="blockCrear" pButton type="button" icon="	far fa-save " iconPos="left"
+            <div class="text-right main-button">
+              <button [disabled]="datosEditar != ''" (click)="getHistory(); selectedDatos=[];" pButton type="button" icon="fa fa-history "
+                iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+              <button [disabled]="!selectMultiple && !selectAll" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+              <button (click)="return();" [disabled]="datosEditar.length == 0" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button [disabled]="!selectMultiple && !selectAll" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              <button (click)="confirmEditAction();" [disabled]="datosEditar.length == 0" pButton type="button" icon="	far fa-save " iconPos="left"
                 label="{{ 'general.boton.guardar' | translate}}"></button>
-              <button (click)="getHistory(); selectedDatos=[];" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-              <button (click)="newElement();" (disabled)="!editar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-            </div>
-            <div *ngIf="!editar" class="text-right main-button">
-              <button *ngIf="selectedDatos && selectedDatos != '' && !editar" (click)="confirmToRemove(selectedDatos)" pButton type="button"
-                icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-
-              <button (click)="getHistory(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-              <button (click)="newElement();" pButton (disabled)="!editar" type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+              <button (click)="newElement();" [disabled]="datosEditar.length != 0" pButton type="button" icon="fa fa-plus  " iconPos="left"
+                label="{{ 'general.boton.new' | translate}}"></button>
             </div>
           </p-footer>
         </p-dataTable>
@@ -143,7 +161,8 @@
           filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}">
           <ng-template let-col let-car="rowData" pTemplate="body">
 
-            <span>{{car[col.field]}}</span>
+            <span *ngIf="car[colsCurricular[0].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{car[colsCurricular[0].field]}}</span>
+            <span *ngIf="car[colsCurricular[0].value] != '2000'"> {{car[colsCurricular[0].field]}}</span>
             <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='body.codigoExterno' type="text" class="form-control"
               (ngModelChange)="onChangeFormCdgoExt()" [attr.maxlength]="10" on-focusout="cdgoEvent($event)" (onBlur)="cdgoEvent($event)"
               #inputCdgoExt pInputText>
@@ -153,7 +172,8 @@
           filterMatchMode="contains">
           <ng-template let-col let-car="rowData" pTemplate="body">
 
-            <span>{{car[col.field]}}</span>
+            <span *ngIf="car[colsCurricular[1].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{car[colsCurricular[1].field]}}</span>
+            <span *ngIf="car[colsCurricular[1].value] != '2000'"> {{car[colsCurricular[1].field]}}</span>
             <input *ngIf="car[col.field] == '' " [value]="car[col.field]" [(ngModel)]='body.descripcion' type="text" class="form-control"
               (ngModelChange)="onChangeForm()" [attr.maxlength]="100" on-focusout="descripcionEvent($event)" (onBlur)="descripcionEvent($event)"
               #inputDesc pInputText>
@@ -176,8 +196,13 @@
         </ng-template>
         <p-footer>
           <div class="text-right main-button">
+            <button [disabled]="nuevo" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
             <button (click)="cancelAction()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
-            <button (click)="confirmAction()" pButton type="button " icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button [disabled]="nuevo" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button [disabled]="nuevo" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button (click)="confirmAction()" [disabled]="validateNew()" pButton type="button " icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button [disabled]="nuevo" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+
           </div>
         </p-footer>
       </p-dataTable>
@@ -198,9 +223,10 @@
             <div *ngIf="setItalic(datoH)">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(datoH)">
+            <div *ngIf="!setItalic(datoH) && datoH[colsCurricular[0].value] != '2000'">
               <span>{{datoH[col.field]}}</span>
             </div>
+            <span *ngIf="!setItalic(datoH) && datoH[colsCurricular[0].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{datoH[colsCurricular[0].field]}}</span>
           </ng-template>
         </p-column>
         <p-column [sortable]="true" field="descripcion" [header]="'general.description' | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
@@ -209,9 +235,11 @@
             <div *ngIf="setItalic(datoH)">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(datoH)">
+            <div *ngIf="!setItalic(datoH) && datoH[colsCurricular[1].value] != '2000'">
               <span>{{datoH[col.field]}}</span>
             </div>
+            <span *ngIf="!setItalic(datoH) && datoH[colsCurricular[1].value] == '2000'" [ngStyle]="{'font-style': 'italic'}">{{datoH[colsCurricular[1].field]}}</span>
+
           </ng-template>
         </p-column>
 
@@ -233,6 +261,11 @@
         <p-footer>
           <div class="text-right main-button">
             <button (click)="search(); selectedDatos=[]" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+            <button [disabled]="historico" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+            <button [disabled]="historico" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button [disabled]="historico" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button [disabled]="historico" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button [disabled]="historico" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           </div>
         </p-footer>
       </p-dataTable>

@@ -1529,6 +1529,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         },
         () => {
+          window.scrollTo(0, 0);
           this.progressSpinner = false;
         }
       );
@@ -1823,7 +1824,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.progressSpinner = true;
     this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
       n => {
-        this.comboTemplates = n.combooItems;
+        this.comboTemplates = n.comboPlantillasItems;
         this.arregloTildesCombo(this.comboTemplates);
       },
       err => {

@@ -1593,7 +1593,7 @@ export class FichaColegialComponent implements OnInit {
             this.activacionGuardarGenerales();
             this.generalError = JSON.parse(error["error"]);
             if (this.generalError.error.message.toString()) {
-              this.showFailDetalle(this.generalError.error.message.toString());
+              this.showFailDetalle(this.translateService.instant(this.generalError.error.message.toString()));
             } else {
               this.showFail();
             }
