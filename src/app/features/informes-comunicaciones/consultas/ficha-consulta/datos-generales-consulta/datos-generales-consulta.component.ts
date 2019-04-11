@@ -37,8 +37,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
-  listaModelos: ModelosComConsultasItem = new ModelosComConsultasItem();
-
+  listaModelos: any = [];
+  progressSpinner: Boolean = false;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -140,17 +140,29 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];
-    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+    this.msgs.push({
+      severity: "error",
+      summary: "",
+      detail: this.translateService.instant(mensaje)
+    });
   }
 
   showSuccess(mensaje: string) {
     this.msgs = [];
-    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+    this.msgs.push({
+      severity: "success",
+      summary: "",
+      detail: this.translateService.instant(mensaje)
+    });
   }
 
   showInfo(mensaje: string) {
     this.msgs = [];
-    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+    this.msgs.push({
+      severity: "info",
+      summary: "",
+      detail: this.translateService.instant(mensaje)
+    });
   }
 
   clear() {
@@ -376,8 +388,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       message: mess,
       icon: icon,
       accept: () => {
+        this.progressSpinner = true;
         this.bodyInicial.generica = this.body.generica;
-        this.guardar();
+        this.actualizaGenerica();
       },
       reject: () => {
         this.msgs = [
@@ -393,61 +406,76 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
-  // actualizaGenerica() {
-  //   let cuerpo = this.listaModelos[0];
-  // this.sigaServices
-  // .post("modelos_detalle_datosGenerales", cuerpo)
-  // .subscribe(
-  //   data => {
-  //     this.showSuccess(
-  //       this.translateService.instant(
-  //         "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
-  //       )
-  //     );
-  //     this.body.idModeloComunicacion = JSON.parse(data.body).data;
-  //     sessionStorage.removeItem("crearNuevoModelo");
-  //     this.sigaServices.notifyRefreshPerfiles();
-  //   },
-  //   err => {
-  //     console.log(err);
-  //     this.showFail(
-  //       this.translateService.instant(
-  //         "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
-  //       )
-  //     );
-  //   }
-  // );
-  // }
+  actualizaGenerica() {
+    let cuerpo;
+    if (this.listaModelos != undefined) {
+      for (let i in this.listaModelos) {
+        if (this.listaModelos[i].generacionExcel == '1') {
+          cuerpo = this.listaModelos[i];
+          if (this.body.generica == 'S' || this.body.generica == 'SI') {
+            cuerpo.idInstitucion = '0'
+          } else {
+            cuerpo.idInstitucion = '2000';
+          }
+          this.sigaServices
+            .post("modelos_detalle_datosGenerales", cuerpo)
+            .subscribe(
+              data => {
+                this.showSuccess(
+                  "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+                );
+              },
+              err => {
+                console.log(err);
+                this.showFail(
+                  "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+                );
+              }, () => {
+                this.guardar();
+              }
+            );
+        }
+      }
+    }
+  }
 
   guardar() {
     this.body.generica = this.generica;
-    // if (this.body.generica != this.bodyInicial.generica) {
-    //   this.confirmEdit();
-    // } else {
-    this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
-      data => {
-
-        let result = JSON.parse(data["body"]);
-        this.body.idConsulta = result.message;
-        this.body.sentencia = result.description;
-        this.body.idInstitucion = result.infoURL;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        sessionStorage.removeItem("crearNuevaConsulta");
-        sessionStorage.setItem("consultaEditable", "S");
-        sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
-        this.showSuccess(this.translateService.instant('informesycomunicaciones.consultas.ficha.correctGuardadoConsulta'));
-        this.sigaServices.notifyRefreshConsulta();
-        this.sigaServices.notifyRefreshModelos();
-      },
-      err => {
-        this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));
-        console.log(err);
-      },
-      () => {
-
+    if (this.bodyInicial.generica == undefined) {
+      this.bodyInicial.generica = this.body.generica;
+    }
+    if (this.body.generica != this.bodyInicial.generica[0]) {
+      this.confirmEdit();
+    } else {
+      if (this.body.generica == 'S' || this.body.generica == 'SI') {
+        this.body.idInstitucion = '0'
+      } else {
+        this.body.idInstitucion = '2000';
       }
-    );
-    // }
+      this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
+        data => {
+
+          let result = JSON.parse(data["body"]);
+          this.body.idConsulta = result.message;
+          this.body.sentencia = result.description;
+          this.body.idInstitucion = result.infoURL;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          sessionStorage.removeItem("crearNuevaConsulta");
+          sessionStorage.setItem("consultaEditable", "S");
+          sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+          this.showSuccess('informesycomunicaciones.consultas.ficha.correctGuardadoConsulta');
+          this.sigaServices.notifyRefreshConsulta();
+          this.sigaServices.notifyRefreshModelos();
+        },
+        err => {
+          this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));
+          console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   restablecer() {

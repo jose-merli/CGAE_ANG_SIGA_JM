@@ -175,7 +175,8 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
         this.datos = JSON.parse(data["body"]).listadoModelos;
         this.body = this.datos[0];
-        sessionStorage.setItem("listadoModelos", JSON.stringify(this.body));
+        sessionStorage.setItem("listadoModelos", JSON.stringify(this.datos));
+
       },
       err => {
         console.log(err);
