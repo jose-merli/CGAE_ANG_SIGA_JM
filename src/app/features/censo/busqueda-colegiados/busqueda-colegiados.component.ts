@@ -137,7 +137,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.currentRoute = this.router.url;
     this.progressSpinner = true;
     this.getCombos();
-    
+
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
@@ -345,68 +345,67 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.getComboCategoriaCurricular();
     this.getComboProvincias();
     this.getComboTiposDireccion();
-      
+
   }
 
   getComboColegios() {
     // obtener colegios
-      this.sigaServices.get("institucionActual").subscribe(n => {
+    this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-    
-    this.sigaServices.getParam(
+
+      this.sigaServices.getParam(
         "busquedaCol_colegio",
         "?idInstitucion=" + this.institucionActual
       )
-    .subscribe(
-      col => {
-        this.comboColegios = col.combooItems;
-        // this.arregloTildesCombo(this.comboColegios);
+        .subscribe(
+          col => {
+            this.comboColegios = col.combooItems;
+            // this.arregloTildesCombo(this.comboColegios);
 
-        if (
-          sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
-          null
-        ) {
-           if (this.institucionActual > "2000" && this.institucionActual < "2100") {
-          this.body.colegio.forEach(element => {
-            
-            this.getInstitucion();
-            let labelColegio = this.comboColegios.find(
-              item => item.value === element
-            ).label;
+            if (
+              sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
+              null
+            ) {
+              if (this.institucionActual > "2000" && this.institucionActual < "2100") {
+                this.body.colegio.forEach(element => {
 
-            this.colegiosSeleccionados.push({
-              label: labelColegio,
-              value: element
-            });
-            
-            this.progressSpinner = false;
-          });
-          this.isBuscar();
-          sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
-           }else{
-             this.progressSpinner = false;
-           }
-        }
-        else{
-            if (this.institucionActual > "2000" && this.institucionActual < "2100") {
-              this.colegiosSeleccionados = [
-                {
-                  label: n.label,
-                  value: this.institucionActual,
-                  subValue: null
-                }
-              ];
-              this.deshabilitarCombCol = true;
+                  this.getInstitucion();
+                  let labelColegio = this.comboColegios.find(
+                    item => item.value === element
+                  ).label;
+
+                  this.colegiosSeleccionados.push({
+                    label: labelColegio,
+                    value: element
+                  });
+
+                  this.progressSpinner = false;
+                });
+                this.isBuscar();
+                sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
+              } else {
+                this.progressSpinner = false;
+              }
             }
+            else {
+              if (this.institucionActual > "2000" && this.institucionActual < "2100") {
+                this.colegiosSeleccionados = [
+                  {
+                    label: n.label,
+                    value: this.institucionActual
+                  }
+                ];
+                this.deshabilitarCombCol = true;
+              }
+              this.progressSpinner = false;
+
+            }
+          },
+          err => {
+            console.log(err);
             this.progressSpinner = false;
-          
-        }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    );
+          }
+        );
     });
   }
 
@@ -911,8 +910,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.colegiosSeleccionados = [
           {
             label: n.label,
-            value: this.institucionActual,
-            subValue: null
+            value: this.institucionActual
           }
         ];
         this.deshabilitarCombCol = true;

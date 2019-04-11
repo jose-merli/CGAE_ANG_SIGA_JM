@@ -994,8 +994,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.colegiosSeleccionados = [
           {
             label: n.label,
-            value: this.institucionActual,
-            subValue: null
+            value: this.institucionActual
           }
         ];
         this.deshabilitarCombCol = true;

@@ -724,7 +724,7 @@ export class FichaCalendarioComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.get("datosNotificaciones_getPlantillas").subscribe(
       n => {
-        this.comboTemplates = n.combooItems;
+        this.comboTemplates = n.comboPlantillasItems;
         this.arregloTildesCombo(this.comboTemplates);
       },
       err => {
