@@ -6,5 +6,6 @@ export class SubtipoCurricularItem {
   descripcion: String;
   fechaBaja: Date;
   editar: boolean = false;
-  constructor() {}
+  idInstitucion: string;
+  constructor() { }
 }

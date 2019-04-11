@@ -35,6 +35,8 @@ export class SubtipoCurricularComponent implements OnInit {
   categoriaCurricular: SelectItem[];
   selectedCategoriaCurricular: any;
 
+  colsCurricular;
+
   @ViewChild("input1")
   inputEl: ElementRef;
   @ViewChild("inputDesc")
@@ -56,6 +58,7 @@ export class SubtipoCurricularComponent implements OnInit {
   selectAll: boolean = false;
 
   msgs: any = [];
+  datosOriginal;
 
   showSubtipoCurricular: boolean = true;
   progressSpinner: boolean = false;
@@ -107,6 +110,19 @@ export class SubtipoCurricularComponent implements OnInit {
         value: 40
       }
     ];
+
+    this.colsCurricular = [
+      {
+        field: "codigoExterno",
+        value: "idInstitucion",
+        header: "general.codeext"
+      },
+      {
+        field: "descripcion",
+        value: "idInstitucion",
+        header: "general.description"
+      }
+    ];
   }
 
   onHideSubtipoCV() {
@@ -139,6 +155,12 @@ export class SubtipoCurricularComponent implements OnInit {
           this.progressSpinner = false;
           this.bodySearch = JSON.parse(data["body"]);
           this.datos = this.bodySearch.subtipoCurricularItems;
+
+          this.datosOriginal = JSON.parse(JSON.stringify(this.datos));
+
+          for (let i in this.datos) {
+            this.datos[i].isMod = false;
+          }
 
           this.table.paginator = true;
         },
@@ -194,7 +216,16 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   confirmAction() {
-    if (this.body.descripcion) {
+
+    let idCodigoExt = this.datos.findIndex(x => x.codigoExterno == this.body.codigoExterno);
+    let idDescripcion = this.datos.findIndex(x => x.descripcion == this.body.descripcion);
+
+    if (idCodigoExt != -1 || idDescripcion != -1) {
+
+      let message = "Ya existe un registro con el Código Externo o Descripción introducidos";
+      this.showFail(message);
+
+    } else {
       this.nuevoElemento = this.body;
 
       this.sigaServices
@@ -215,8 +246,6 @@ export class SubtipoCurricularComponent implements OnInit {
             this.showFail(mensaje);
           }
         );
-    } else {
-      this.showFail("La descripción no puede estar vacía");
     }
   }
 
@@ -285,6 +314,16 @@ export class SubtipoCurricularComponent implements OnInit {
       i++;
     }
     return ret;
+  }
+
+  validateNew() {
+    if (this.body.descripcion != null && this.body.descripcion != undefined
+      && this.body.descripcion != "" && this.body.codigoExterno != null
+      && this.body.codigoExterno != undefined && this.body.codigoExterno != "") {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   descripcionEvent(e) {
@@ -392,10 +431,16 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+    this.selectedDatos = [];
+
     if (this.selectAll) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.datos.forEach(element => {
+        if (element.idInstitucion != "2000") {
+          this.selectedDatos.push(element);
+        }
+      });
+      this.numSelected = this.selectedDatos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -404,7 +449,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
+    if (!this.selectMultiple && !this.selectAll) {
       this.selectedDatos = [];
       this.numSelected = 0;
     } else {
@@ -420,12 +465,61 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   onRowSelect(selectedDatos) {
-    if (this.selectMultiple) {
-      this.numSelected = this.selectedDatos.length;
-    } else {
-      this.editar = false;
+    if (this.selectMultiple && !this.selectAll) {
+
+      if (selectedDatos[this.selectedDatos.length - 1].idInstitucion == "2000") {
+        this.selectedDatos.splice(this.selectedDatos.length - 1, 1);
+      }
+
+      if (this.selectMultiple) {
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.editar = false;
+        this.numSelected = this.selectedDatos.length;
+      }
+    } else if (!this.selectMultiple && this.selectAll) {
+      this.selectedDatos = [];
+      this.datos.forEach(element => {
+        if (element.idInstitucion != "2000") {
+          this.selectedDatos.push(element);
+        }
+      });
       this.numSelected = this.selectedDatos.length;
     }
+  }
+
+  onRowSelectTipos(selectedDatos) {
+
+    this.datos.forEach(element => {
+      element.isMod = false;
+    });
+
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo2 ==
+      selectedDatos.idTipoCvSubtipo2 && x.idInstitucion == selectedDatos.idInstitucion);
+    this.datos[id].isMod = true;
+
+  }
+
+  changeInput(selectedDatos) {
+    this.editar = true;
+
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo2 ==
+      selectedDatos.idTipoCvSubtipo2 && x.idInstitucion == selectedDatos.idInstitucion);
+    this.datos[id].editar = true;
+
+    if (selectedDatos.idInstitucion != '2000' && (selectedDatos.codigoExterno != this.datosOriginal[id].codigoExterno) ||
+      (selectedDatos.descripcion != this.datosOriginal[id].descripcion)) {
+
+      let idEdit = this.datosEditar.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo2 ==
+        selectedDatos.idTipoCvSubtipo1 && x.idInstitucion == selectedDatos.idInstitucion);
+
+      if (idEdit == -1) {
+        this.datosEditar.push(this.datos[id]);
+      } else {
+        this.datosEditar[idEdit] = this.datos[id];
+      }
+    }
+
   }
 
   setItalic(datoH) {
@@ -492,28 +586,69 @@ export class SubtipoCurricularComponent implements OnInit {
   }
 
   confirmEditAction() {
+    this.datosEditar = [];
+    let datosModificar = [];
+    let datosRepetidos = [];
+
     this.datos.forEach((value: SubtipoCurricularItem, key: number) => {
       if (value.editar) {
         this.datosEditar.push(value);
       }
     });
 
-    this.bodyUpdate.subtipoCurricularItems = this.datosEditar;
+    datosModificar = JSON.parse(JSON.stringify(this.datos));
+    this.datosEditar.forEach((value: SubtipoCurricularItem, key: number) => {
 
-    this.sigaServices
-      .post("subtipoCurricular_updateSubtipoCurricular", this.bodyUpdate)
-      .subscribe(
-        data => {
-          this.showSuccess();
-        },
-        err => {
-          this.showFail("Error al actualizar");
-        },
-        () => {
-          this.search();
-          this.datosEditar = [];
-        }
-      );
+      let idTipo = datosModificar.findIndex(x => x.idTipoCV == value.idTipoCV && x.idTipoCvSubtipo2 == value.idTipoCvSubtipo2
+        && x.idInstitucion == value.idInstitucion);
+
+      datosModificar.splice(idTipo, 1);
+
+      let idCodigoExterno = datosModificar.findIndex(x => x.codigoExterno == value.codigoExterno);
+      let idDescripcion = datosModificar.findIndex(x => x.descripcion == value.descripcion);
+
+      if (idCodigoExterno == -1 && idDescripcion == -1) {
+        this.datosEditar.push(value);
+      } else {
+        datosRepetidos.push(value);
+      }
+    });
+
+    if (datosRepetidos.length > 0) {
+      let message = "Ya existe un registro con el código externo o descripción introducidos";
+      this.showFail(message);
+      datosModificar = JSON.parse(JSON.stringify(this.datos));
+
+    } else {
+
+      this.bodyUpdate.subtipoCurricularItems = this.datosEditar;
+
+      this.sigaServices
+        .post("subtipoCurricular_updateSubtipoCurricular", this.bodyUpdate)
+        .subscribe(
+          data => {
+            this.showSuccess();
+            this.datosEditar = [];
+          },
+          err => {
+            this.showFail("Error al actualizar");
+          },
+          () => {
+            this.search();
+            this.datosEditar = [];
+          }
+        );
+    }
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.datos.forEach(element => {
+      element.isMod = false;
+    });
+
+    this.selectedDatos = [];
+    this.table.reset();
+
   }
 
   cancelEditAction() {
@@ -551,6 +686,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   return() {
     this.editar = false;
+    this.datosEditar = [];
     this.search();
   }
 
