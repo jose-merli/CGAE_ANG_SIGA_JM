@@ -1427,9 +1427,14 @@ export class FichaColegialComponent implements OnInit {
         this.displayAuditoria = true;
         this.showGuardarAuditoria = false;
       }else{
-        this.guardarColegiales();
+        if(tipoCambio == 'guardarDatosColegiales'){
+            this.guardarColegiales();
+        }else if(tipoCambio == 'guardarDatosGenerales'){
+            this.generalesGuardar();
+        }
+       
       }
-      }
+}
 
     // mostrar la auditoria depende de un parámetro que varía según la institución
     this.generalBody.motivo = undefined;
