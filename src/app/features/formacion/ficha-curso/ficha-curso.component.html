@@ -121,7 +121,7 @@
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}} (*)</label>
-              <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado"></editor>
+              <editor #editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado"></editor>
             </div>
           </div>
         </div>
@@ -135,12 +135,12 @@
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioInscripcion' | translate }} (*)</label>
               <app-fecha #fechaInicioInscripcion [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate"
-                [disabled]="!activacionEditar" (click)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
+                [disabled]="!activacionEditar" (valueFocus)="showMessageEditInitInscriptionEvent($event)" (click)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinInscripcion' | translate }} (*)</label>
-              <app-fecha #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (click)="showMessageEditEndInscriptionEvent($event)"
-                [disabled]="!activacionEditar"></app-fecha>
+              <app-fecha #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueFocus)="showMessageEditEndInscriptionEvent($event)"
+                (click)="showMessageEditEndInscriptionEvent($event)" [disabled]="!activacionEditar"></app-fecha>
 
             </div>
           </div>
@@ -1150,6 +1150,10 @@
   <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
-<div *ngIf="progressSpinner" class="overlay-spinner ">
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader "></div>
+</div>
+
+<div *ngIf="progressSpinner2" class="overlay-spinner">
   <div class="loader "></div>
 </div>

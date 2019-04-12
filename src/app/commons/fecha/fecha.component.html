@@ -1,6 +1,7 @@
 <p-calendar class="arreglo-fecha" [(ngModel)]="value" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="yearRange"
   [locale]="es" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true"
-  #calendar [minDate]="minDate" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="false" (onBlur)="blur($event)">
+  #calendar [minDate]="minDate" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="false" (onBlur)="blur($event)"
+  (onFocus)="focus($event)">
   <p-footer>
     <div class="main-button d-flex col-lg-12">
       <button [disabled]="disabledToday" (click)="fechaHoy()" pButton type="button" label="{{'general.boton.hoy'| translate }}"

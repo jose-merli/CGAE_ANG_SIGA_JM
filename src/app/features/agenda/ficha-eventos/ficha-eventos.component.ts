@@ -52,6 +52,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   path: string;
   disabledIsLetrado;
   filaEditable: boolean = false;
+  progressSpinner2: boolean = false;
 
   es: any = esCalendar;
 
@@ -181,6 +182,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.getFichasPosibles();
     this.getColsResultsAsistencia();
     this.getComboNotificaciones();
+    this.progressSpinner2 = true;
 
     this.newEvent = new EventoItem();
     this.initEvent = new EventoItem();
@@ -271,6 +273,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       this.getEventNotifications();
       this.checkIsEventoCumplidoOrCancelado();
+      this.progressSpinner2 = false;
 
       //2. En caso de venir de agenda pero en modo creación
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
@@ -308,6 +311,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.start != undefined && this.newEvent.end != undefined) {
         this.limitTimeEvent();
       }
+      this.progressSpinner2 = false;
 
       //4. En caso de que venga notificaciones
     } else if (sessionStorage.getItem("isNotificaciones") == "true") {
@@ -376,6 +380,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       //Se guarda el evento con los valores iniciales para restablecer los valores
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+      this.progressSpinner2 = false;
 
       //5. En caso de que venga de creacion de nuevo curso, crear el evento inicio de inscripcion
     } else if (
@@ -428,6 +433,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+        this.progressSpinner2 = false;
 
       }
 
@@ -487,6 +493,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         //Se guarda el evento con los valores iniciales para restablecer los valores
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+        this.progressSpinner2 = false;
 
       }
 
@@ -563,6 +570,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
 
       this.checkIsEventoCumplidoOrCancelado();
+      this.progressSpinner2 = false;
 
       //8. Viene directo
     } else {
@@ -572,6 +580,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       //Obligamos que el tipo de evento sea Manual
       this.newEvent.idTipoEvento = "1";
       this.modoEdicionEvento = false;
+      this.progressSpinner2 = false;
 
       this.getComboCalendar();
     }
@@ -635,6 +644,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.modoEdicionEventoByAgenda = false;
 
     this.limitTimeEvent();
+    this.progressSpinner2 = false;
+
   }
 
   limitTimeEvent() {
@@ -883,7 +894,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.progressSpinner = false;
           } else {
             this.modoEdicionEvento = true;
-            this.modoEdicionEventoByAgenda = true;
             this.createEvent = true;
             sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
             this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
@@ -1347,6 +1357,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       },
       () => {
         this.progressSpinner = false;
+        this.progressSpinner2 = false;
       }
     );
   }
@@ -1442,6 +1453,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         },
         () => {
           this.progressSpinner = false;
+          this.progressSpinner2 = false;
         }
       );
   }

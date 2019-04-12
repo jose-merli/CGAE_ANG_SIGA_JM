@@ -70,6 +70,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   permisos: boolean = true; //true
 
   permisoTarjeta: string;
+  migaPan: string = "";
 
   valorResidencia: string = "1";
   valorDespacho: string = "2";
@@ -109,6 +110,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("provincia")
   checkbox: Checkbox;
   ngOnInit() {
+
+    this.migaPan = sessionStorage.getItem("migaPan");
 
     if (JSON.parse(sessionStorage.getItem("situacionColegialesBody")) == "20") {
       this.isColegiadoEjerciente = true;
@@ -1147,22 +1150,22 @@ para poder filtrar el dato con o sin estos caracteres*/
     // modo edicion
 
     if (this.isLetrado) {
-          if (!this.ocultarMotivo) {
-            this.displayAuditoria = true;
-          }else{
-              this.guardarLetrado();
-          }
+      if (!this.ocultarMotivo) {
+        this.displayAuditoria = true;
+      } else {
+        this.guardarLetrado();
+      }
     } else {
       if (this.registroEditable) {
         // mostrar la auditoria depende de un parámetro que varía según la institución
         this.body.motivo = undefined;
         if (this.ocultarMotivo) {
-             if (tipoCambio == 'noletrado') {
-                this.guardar();
-            }else if(tipoCambio == 'letrado'){
-                this.guardarLetrado();
-        }
-      } else {
+          if (tipoCambio == 'noletrado') {
+            this.guardar();
+          } else if (tipoCambio == 'letrado') {
+            this.guardarLetrado();
+          }
+        } else {
           this.tipoCambioAuditoria = tipoCambio;
           this.displayAuditoria = true;
           this.showGuardarAuditoria = false;
@@ -1170,12 +1173,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
       // modo creacion
       else {
-         if (tipoCambio == 'noletrado') {
-                this.guardar();
-            }else if(tipoCambio == 'letrado'){
-                this.guardarLetrado();
-         }
-       }
+        if (tipoCambio == 'noletrado') {
+          this.guardar();
+        } else if (tipoCambio == 'letrado') {
+          this.guardarLetrado();
+        }
+      }
     }
   }
 
@@ -1298,12 +1301,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
   }
 
-  guardarAuditoria(){
+  guardarAuditoria() {
 
-     if (this.tipoCambioAuditoria == 'noletrado') {
-        this.guardar();
-    }else if(this.tipoCambioAuditoria == 'letrado'){
-        this.guardarLetrado();
+    if (this.tipoCambioAuditoria == 'noletrado') {
+      this.guardar();
+    } else if (this.tipoCambioAuditoria == 'letrado') {
+      this.guardarLetrado();
     }
 
   }

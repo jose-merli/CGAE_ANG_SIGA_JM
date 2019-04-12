@@ -137,6 +137,11 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+
+        this.sexoSelected = this.solicitudEditar.sexo;
+        this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
+        this.tratamientoSelected = this.solicitudEditar.idTratamiento;
+
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
@@ -688,7 +693,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         );
     } else {
       this.showFail("censo.alterMutua.literal.datosBancariosObligatorios");
-      
+
     }
   }
   searchSolicitante() {
@@ -855,10 +860,10 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.removeItem("editedSolicitud");
 
           this.tratarDatos();
-           if (back == true) {
+          if (back == true) {
             this.progressSpinner = false;
           }
-          
+
           this.solicitudEditar.idSolicitud = JSON.parse(result.body).id;
 
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));

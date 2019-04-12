@@ -94,13 +94,13 @@
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
               <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEvent($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
-                [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || modoSesionEdicionEvento || isEventoCumplidoOrCancelado"
-                (valueChangeSelected)="fillStartEvent($event)" [disabledToday]="disabledToday" [utc]="false"></app-fecha>
+                [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStartEvent($event)"
+                [disabledToday]="disabledToday" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
               <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEnd($event)" [showTime]="true" [minDate]="invalidDateMin"
-                [maxDate]="invalidDateMax" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || modoSesionEdicionEvento || isEventoCumplidoOrCancelado"
+                [maxDate]="invalidDateMax" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="fillEnd($event)" [disabledToday]="true" [disabledDelete]="true" [utc]="false"></app-fecha>
             </div>
           </div>
@@ -138,13 +138,13 @@
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
               <app-fecha [(value)]="newEvent.fechaInicioRepeticion" (valueChangeInput)="isCheckFechaInicioRepeticion($event)" [minDate]="newEvent.start"
-                [maxDate]="newEvent.fechaFinRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
+                [maxDate]="newEvent.fechaFinRepeticion" [disabled]="modoEdicionEvento || modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaInicioRepeticion($event)" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
               <app-fecha [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
-                [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
+                [disabled]="modoEdicionEvento || modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaFinRepeticion($event)" [utc]="false"></app-fecha>
             </div>
           </div>
@@ -156,7 +156,7 @@
                 </div>
                 <div class="col-lg-8 col-md-8">
                   <p-dropdown (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                    [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
+                    [disabled]="modoEdicionEvento || modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                     [showClear]="true"></p-dropdown>
                 </div>
               </div>
@@ -164,11 +164,11 @@
           </div>
           <div class="row mb-3">
             <div *ngIf="newEvent.tipoRepeticion == 'S'" class="col-lg-12 col-md-12">
-              <p-selectButton [options]="comboRepeatOn" multiple="multiple" [(ngModel)]="newEvent.valoresRepeticion" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-selectButton>
+              <p-selectButton [options]="comboRepeatOn" multiple="multiple" [(ngModel)]="newEvent.valoresRepeticion" [disabled]="modoEdicionEvento ||modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-selectButton>
             </div>
             <div *ngIf="newEvent.tipoRepeticion == 'D'" class="col-lg-12 col-md-12">
               <p-selectButton class="daysSelectButton" [options]="comboDays" multiple="multiple" [(ngModel)]="newEvent.valoresRepeticion"
-                [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-selectButton>
+                [disabled]="modoEdicionEvento || modoEdicionEventoByAgenda || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"></p-selectButton>
               <p class="mt-2">{{'agenda.fichaEventos.datosRepeticion.diasSeleccionados' | translate}}:
                 <span *ngFor="let d of newEvent.valoresRepeticion">{{d}}, </span>
               </p>
@@ -178,15 +178,15 @@
             <div class="col-lg-12 col-md-12">
               <div class="ui-g-12">
                 <p-radioButton (click)="isCheckTipoDiasRepeticion()" name="laborales" value="L" label="{{ 'fichaEventos.datosRepeticion.tipoDiasRepeticion.diasLaborales' | translate}}"
-                  [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="disabledRadioButton() || isEventoCumplidoOrCancelado"></p-radioButton>
+                  [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="modoEdicionEvento || disabledRadioButton() || isEventoCumplidoOrCancelado"></p-radioButton>
               </div>
               <div class="ui-g-12">
                 <p-radioButton (click)="isCheckTipoDiasRepeticion()" name="festivos" value="F" label="{{ 'fichaEventos.datosRepeticion.tipoDiasRepeticion.diasFestivos' | translate}}"
-                  [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="disabledRadioButton() || isEventoCumplidoOrCancelado"></p-radioButton>
+                  [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="modoEdicionEvento || disabledRadioButton() || isEventoCumplidoOrCancelado"></p-radioButton>
               </div>
               <div class="ui-g-12">
                 <p-radioButton (click)="isCheckTipoDiasRepeticion()" name="ambos" value="A" label="{{ 'fichaEventos.datosRepeticion.tipoDiasRepeticion.ambos' | translate}}"
-                  [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="disabledRadioButton() || isEventoCumplidoOrCancelado"></p-radioButton>
+                  [(ngModel)]="newEvent.tipoDiasRepeticion" [disabled]="modoEdicionEvento || disabledRadioButton() || isEventoCumplidoOrCancelado"></p-radioButton>
               </div>
             </div>
           </div>
@@ -693,5 +693,9 @@
 
   <app-dialog></app-dialog>
   <div *ngIf="progressSpinner " class="overlay-spinner ">
+    <div class="loader "></div>
+  </div>
+
+  <div *ngIf="progressSpinner2" class="overlay-spinner">
     <div class="loader "></div>
   </div>
