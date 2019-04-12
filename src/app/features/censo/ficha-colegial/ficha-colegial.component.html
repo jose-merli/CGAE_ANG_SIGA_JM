@@ -703,8 +703,8 @@
           pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         <button *ngIf="!inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2' || isLetrado"
           pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button *ngIf="inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')" pButton type="button" [disabled]="isLetrado" icon="far fa-save"
-          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button *ngIf="inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')" pButton type="button" [disabled]="isLetrado"
+          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="nuevoColegial()" [disabled]="isCrearColegial || disabledAction || tarjetaColegiales=='2' || isLetrado" pButton
           type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
@@ -1547,11 +1547,31 @@
     <p-footer>
       <div class="text-right main-button ">
         <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-        <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save"
-          iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>
+
+  <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header class="title">
+      <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
+      </label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <span> {{ "mensaje.informacion.noAcceso.fichaColegial" | translate }} </span>
+      </div>
+    </div>
+
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
 
   <app-dialog></app-dialog>
 
