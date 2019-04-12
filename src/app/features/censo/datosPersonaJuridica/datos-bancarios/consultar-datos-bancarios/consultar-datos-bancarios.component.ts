@@ -155,12 +155,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-<<<<<<< HEAD
     this.progressSpinner = true;
     this.migaPan = sessionStorage.getItem("migaPan");
-=======
-    this.progressSpinner2 = true;
->>>>>>> 9b2e39803a368a954f22a250f71998fd7cf0e01c
     this.currentRoute = this.router.url;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
