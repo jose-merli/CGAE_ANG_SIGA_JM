@@ -706,12 +706,16 @@ export class SigaServices {
   private deshabilitarEditar = new Subject<any>();
   private perfilesRefresh = new Subject<any>();
   private modelosRefresh = new Subject<any>();
+  private habilitarDocs = new Subject<any>();
+  private desHabilitarDocs = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
   deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
   perfilesRefresh$ = this.perfilesRefresh.asObservable();
   modelosRefresh$ = this.modelosRefresh.asObservable();
+  habilitarDocs$ = this.habilitarDocs.asObservable();
+  desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -944,6 +948,14 @@ export class SigaServices {
 
   notifyRefreshPerfiles() {
     this.perfilesRefresh.next();
+  }
+
+  notifyHabilitarDocumentos() {
+    this.habilitarDocs.next();
+  }
+
+  notifyDesHabilitarDocumentos() {
+    this.desHabilitarDocs.next();
   }
 
   postSendContentAndParameter(

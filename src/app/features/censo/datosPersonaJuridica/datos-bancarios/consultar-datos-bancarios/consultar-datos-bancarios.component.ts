@@ -137,7 +137,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   @ViewChild("table")
   table: DataTable;
   selectedDatos;
+  migaPan;
   progressSpinner2: boolean = true;
+
   @ViewChild("fubauto") fubauto;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -153,7 +155,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.progressSpinner2 = true;
+    this.progressSpinner = true;
+    this.migaPan = sessionStorage.getItem("migaPan");
     this.currentRoute = this.router.url;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));

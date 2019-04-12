@@ -685,6 +685,13 @@ export class BusquedaGeneralComponent {
               enviar.numColegiado = id[0].numeroColegiado;
               enviar.idInstitucion = id[0].numeroInstitucion;
               enviar.apellido2 = id[0].segundoApellido;
+              enviar.sexo = id[0].sexo;
+              enviar.naturalDe = id[0].naturalDe;
+              enviar.idTipoIdentificacion = id[0].idTipoIdentificacion;
+              enviar.idEstadoCivil = id[0].idEstadoCivil;
+              enviar.fechaNacimiento = id[0].fechaNacimiento;
+              enviar.idTratamiento = id[0].idTratamiento;
+
               if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
                 sessionStorage.setItem(
                   "nuevoNoColegiado",

@@ -13,6 +13,7 @@ import {
 import { Router } from "@angular/router";
 import { cardService } from "./../../../_services/cardSearch.service";
 import { Location } from "@angular/common";
+import { TranslateService } from '../../../commons/translate/translation.service';
 
 // import
 @Component({
@@ -23,14 +24,21 @@ import { Location } from "@angular/common";
 export class DatosPersonaJuridicaComponent implements OnInit {
   fichasPosibles: any[] = [];
   generales: boolean = false;
+  migaPan: string = "";
+
   constructor(
     public sigaServices: OldSigaServices,
     private cardService: cardService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
+
+    this.migaPan = this.translateService.instant("menu.censo.fichaSociedad");
+    sessionStorage.setItem("migaPan", this.migaPan);
+
     this.fichasPosibles = [
       {
         key: "interes",

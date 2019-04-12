@@ -112,6 +112,7 @@ export class FichaColegialComponent implements OnInit {
   // irTurnoOficio: any;
   // irExpedientes: any;
   msgs: Message[];
+  displayColegiado: boolean = false;
 
   colsColegiales: any = [];
   colsColegiaciones: any = [];
@@ -234,7 +235,7 @@ export class FichaColegialComponent implements OnInit {
   valorPreferenteCorreo: string = "11";
   valorPreferenteSMS: string = "12";
   msgDir = "";
-  initSpinner: boolean = true;
+  initSpinner: boolean = false;
   disableNumColegiado: boolean = true;
 
   @ViewChild("autocompleteTopics")
@@ -436,13 +437,29 @@ export class FichaColegialComponent implements OnInit {
     private datepipe: DatePipe
   ) { }
 
+
   ngOnInit() {
+
+    if (sessionStorage.getItem("fichaColegialByMenu")) {
+      this.getColegiadoLogeado();
+    } else {
+      this.OnInit();
+    }
+  }
+
+  returnHome(){
+    this.displayColegiado = false;
+    this.location.back();
+  }
+
+  OnInit() {
     this.initSpinner = true;
     this.getYearRange();
     this.getLenguage();
     this.checkAccesos();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
+    sessionStorage.removeItem("fichaColegial");
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
@@ -478,7 +495,7 @@ export class FichaColegialComponent implements OnInit {
       );
     } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
-    }else if( sessionStorage.getItem("fichaColegialByMenu")){
+    } else if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.desactivarVolver = true;
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
       this.desactivarVolver = false;
@@ -859,8 +876,28 @@ export class FichaColegialComponent implements OnInit {
       }
     ];
 
+  }
 
+  getColegiadoLogeado() {
+    this.generalBody.searchLoggedUser = true;
 
+    this.sigaServices
+      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+      .subscribe(
+        (data) => {
+          let busqueda = JSON.parse(data['body']);
+          if (busqueda.colegiadoItem.length > 0) {
+            this.OnInit();
+            this.displayColegiado = false;
+
+          } else{
+            this.displayColegiado = true;
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 
   //CONTROL DE PERMISOS
@@ -1413,28 +1450,28 @@ export class FichaColegialComponent implements OnInit {
   comprobarAuditoria(tipoCambio) {
     // modo creación
 
-      if (this.ocultarMotivo) {
-        if (tipoCambio == 'solicitudModificacion') {
-          this.solicitarModificacionGenerales();
-        }else if(tipoCambio == 'guardarDatosColegiales'){
-            this.guardarColegiales();
-        }else if(tipoCambio == 'guardarDatosGenerales'){
-            this.generalesGuardar();
-        }
-      } else {
-        if (!this.esNewColegiado) {
+    if (this.ocultarMotivo) {
+      if (tipoCambio == 'solicitudModificacion') {
+        this.solicitarModificacionGenerales();
+      } else if (tipoCambio == 'guardarDatosColegiales') {
+        this.guardarColegiales();
+      } else if (tipoCambio == 'guardarDatosGenerales') {
+        this.generalesGuardar();
+      }
+    } else {
+      if (!this.esNewColegiado) {
         this.tipoCambioAuditoria = tipoCambio;
         this.displayAuditoria = true;
         this.showGuardarAuditoria = false;
-      }else{
-        if(tipoCambio == 'guardarDatosColegiales'){
-            this.guardarColegiales();
-        }else if(tipoCambio == 'guardarDatosGenerales'){
-            this.generalesGuardar();
+      } else {
+        if (tipoCambio == 'guardarDatosColegiales') {
+          this.guardarColegiales();
+        } else if (tipoCambio == 'guardarDatosGenerales') {
+          this.generalesGuardar();
         }
-       
+
       }
-}
+    }
 
     // mostrar la auditoria depende de un parámetro que varía según la institución
     this.generalBody.motivo = undefined;
@@ -1806,6 +1843,7 @@ export class FichaColegialComponent implements OnInit {
 
     } else {
       this.edadCalculada = 0;
+      this.generalBody.fechaNacimientoDate = undefined;
     }
   }
 
@@ -2705,6 +2743,7 @@ export class FichaColegialComponent implements OnInit {
   callServiceGuardarColegiales() {
     this.progressSpinner = true;
 
+    this.colegialesBody.situacionResidente = this.datosColegiales[0].situacionResidente;
     this.sigaServices
       .post("fichaDatosColegiales_datosColegialesUpdate", this.colegialesBody)
       .subscribe(
@@ -3862,7 +3901,18 @@ export class FichaColegialComponent implements OnInit {
           }
         }
 
+
+        let migaPan = "";
+
+        if (this.esColegiado) {
+          migaPan = this.translateService.instant("menu.censo.fichaColegial");
+        } else {
+          migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+        }
+
+        sessionStorage.setItem("migaPan", migaPan);
         this.router.navigate(["/consultarDatosDirecciones"]);
+
       } else {
         this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
       }
@@ -4087,6 +4137,15 @@ export class FichaColegialComponent implements OnInit {
           sessionStorage.setItem("editar", "false");
         }
 
+        let migaPan = "";
+
+        if (this.esColegiado) {
+          migaPan = this.translateService.instant("menu.censo.fichaColegial");
+        } else {
+          migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+        }
+
+        sessionStorage.setItem("migaPan", migaPan);
         this.router.navigate(["/consultarDatosBancarios"]);
       } else {
         this.numSelectedBancarios = this.selectedDatosBancarios.length;
@@ -4104,6 +4163,16 @@ export class FichaColegialComponent implements OnInit {
       sessionStorage.getItem("personaBody")
     );
     sessionStorage.setItem("editar", "false");
+
+    let migaPan = "";
+
+    if (this.esColegiado) {
+      migaPan = this.translateService.instant("menu.censo.fichaColegial");
+    } else {
+      migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+    }
+
+    sessionStorage.setItem("migaPan", migaPan);
     this.router.navigate(["/consultarDatosBancarios"]);
   }
 
@@ -5197,6 +5266,7 @@ export class FichaColegialComponent implements OnInit {
         } else {
           this.calendarFechaNacimiento.overlayVisible = false;
           this.fechaNacimiento = null;
+          this.generalBody.fechaNacimientoDate = undefined;
           this.edadCalculada = 0;
         }
       }
@@ -5214,6 +5284,7 @@ export class FichaColegialComponent implements OnInit {
 
   borrarFechaNacimiento() {
     this.fechaNacimiento = null;
+    this.generalBody.fechaNacimientoDate = undefined;
     this.fechaNacimientoSelected = true;
     this.edadCalculada = 0;
     this.calendarFechaNacimiento.onClearButtonClick("");
@@ -5765,18 +5836,18 @@ export class FichaColegialComponent implements OnInit {
     });
   }
 
-  guardarAuditoria(){
-       
-     if (this.tipoCambioAuditoria == 'solicitudModificacion') {
-        this.solicitarModificacionGenerales();
-    }else if(this.tipoCambioAuditoria == 'guardarDatosColegiales'){
-        this.colegialesBody.motivo = this.generalBody.motivo;
-        this.guardarColegiales();
-    }else if(this.tipoCambioAuditoria == 'guardarDatosGenerales'){
-        this.generalesGuardar();
+  guardarAuditoria() {
+
+    if (this.tipoCambioAuditoria == 'solicitudModificacion') {
+      this.solicitarModificacionGenerales();
+    } else if (this.tipoCambioAuditoria == 'guardarDatosColegiales') {
+      this.colegialesBody.motivo = this.generalBody.motivo;
+      this.guardarColegiales();
+    } else if (this.tipoCambioAuditoria == 'guardarDatosGenerales') {
+      this.generalesGuardar();
     }
-    
+
 
   }
-  
+
 }

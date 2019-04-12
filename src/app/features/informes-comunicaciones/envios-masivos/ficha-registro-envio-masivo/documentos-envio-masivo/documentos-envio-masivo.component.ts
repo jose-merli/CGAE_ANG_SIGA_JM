@@ -28,6 +28,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   eliminarArray: any[];
   progressSpinner: boolean = false;
   noEditar: boolean = false;
+  habilitado: boolean = true;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -97,12 +98,23 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       { field: 'pathDocumento', header: 'Enlace de descarga' }
     ]
 
+    this.sigaServices.habilitarDocs$.subscribe(() => {
+      this.habilitado = true;
+    });
+
+    this.sigaServices.desHabilitarDocs$.subscribe(() => {
+      this.habilitado = false;
+    });
+
   }
 
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       if (this.body.idEstado != '1' && this.body.idEstado != '4') {
+        this.noEditar = true;
+      }
+      if(this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5'){
         this.noEditar = true;
       }
       this.getDocumentos();

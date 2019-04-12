@@ -26,7 +26,12 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
     menubar: false,
     autoresize_on_init: true,
-    statusbar: false
+    statusbar: false,
+    paste_data_images : true,
+    images_upload_handler: function (blobInfo, success, failure) {
+      // no upload, just return the blobInfo.blob() as base64 data
+      success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
+    }
   };
 
   fichasPosibles = [

@@ -34,6 +34,7 @@ import { CertificadoCursoObject } from "../../../models/CertificadoCursoObject";
 import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 
 @Component({
@@ -120,6 +121,9 @@ export class FichaCursoComponent implements OnInit {
 
   @ViewChild("fechaFinInscripcion")
   fechaFinInscripcion;
+
+  @ViewChild("editor")
+  editor: EditorModule;
 
   persistenciaFichaCurso;
   fechaFinInscripcionSelected: boolean = true;
@@ -237,6 +241,7 @@ export class FichaCursoComponent implements OnInit {
   otraInstitucion: boolean = false;
   file: File = undefined;
   apiKey: string = "";
+  progressSpinner2;
 
   editorConfig: any = {
     selector: 'textarea',
@@ -256,13 +261,17 @@ export class FichaCursoComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
     private domSanitizer: DomSanitizer
-  ) { }
+  ) {
+
+    window.scrollTo(0, 0);
+
+  }
 
   ngOnInit() {
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
-    this.progressSpinner = true;
+    this.progressSpinner2 = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
     this.getCombosFormadores();
@@ -308,6 +317,8 @@ export class FichaCursoComponent implements OnInit {
         if (this.curso.idEventoInicioInscripcion == "undefined") {
           this.curso.fechaInscripcionDesdeDate = null;
         }
+        this.progressSpinner2 = false;
+
       }
 
       if (!this.modoEdicion) {
@@ -348,6 +359,8 @@ export class FichaCursoComponent implements OnInit {
         if (this.curso.idEventoFinInscripcion == "undefined") {
           this.curso.fechaInscripcionHastaDate = null;
         }
+        this.progressSpinner2 = false;
+
       }
 
       if (!this.modoEdicion) {
@@ -466,10 +479,11 @@ export class FichaCursoComponent implements OnInit {
       this.resultsTopics = this.curso.temasCombo;
 
       sessionStorage.removeItem("duplicarCurso");
-      this.progressSpinner = false;
+      this.progressSpinner2 = false;
 
       //6. Modo nuevo
     } else {
+      this.progressSpinner2 = false;
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();
       //Obligamos a que sea el curso nuevo privado
@@ -477,7 +491,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEstado = this.valorEstadoAbierto;
       let colegio = 1;
       this.onChangeSelectVisibilidadObligate(colegio);
-      this.progressSpinner = false;
+
     }
 
     if (sessionStorage.getItem("filtrosBusquedaCursos")) {
@@ -487,12 +501,9 @@ export class FichaCursoComponent implements OnInit {
       );
     }
 
+    console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
-  }
-
-  ngAfterViewInit() {
-    window.scrollTo(0, 0);
   }
 
   // Control Permisos
@@ -1250,6 +1261,9 @@ export class FichaCursoComponent implements OnInit {
       () => {
         this.progressSpinner = false;
         this.compruebaInstitucionCurso();
+        this.progressSpinner2 = false;
+        window.scrollTo(0, 0);
+
       }
     );
   }

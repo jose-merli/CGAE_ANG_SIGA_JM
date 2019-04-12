@@ -34,13 +34,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     menubar: false,    
     autoresize_on_init: true,
     statusbar: false,
-
-    images_upload_url: 'postAcceptor.php',
+    paste_data_images : true,
     images_upload_handler: function (blobInfo, success, failure) {
-      setTimeout(function () {
-        /* no matter what you upload, we will turn it into TinyMCE logo :)*/
-        success('http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
-      }, 2000);
+      // no upload, just return the blobInfo.blob() as base64 data
+      success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
     }
   };
 
@@ -167,6 +164,12 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
     if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != '')
       this.getPlantillas();
+
+    if(this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '2'){
+      this.sigaServices.notifyHabilitarDocumentos();
+    }else{
+      this.sigaServices.notifyDesHabilitarDocumentos();
+    }    
   }
 
   getPlantillas() {

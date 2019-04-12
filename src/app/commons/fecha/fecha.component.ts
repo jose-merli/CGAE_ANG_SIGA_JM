@@ -23,6 +23,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	@Input() value: Date;
 	@Output() valueChangeSelected = new EventEmitter();
 	@Output() valueChangeInput = new EventEmitter();
+	@Output() valueFocus = new EventEmitter();
 	@Input() minDate: Date;
 	@Input() maxDate: Date;
 	@Input() disabled: boolean;
@@ -138,6 +139,10 @@ export class FechaComponent implements OnInit, AfterViewInit {
 		if (e.inputType == 'deleteContentBackward') {
 			this.borrarFecha();
 		}
+	}
+
+	focus(e) {
+		this.valueFocus.emit(e);
 	}
 
 	borrarFecha() {

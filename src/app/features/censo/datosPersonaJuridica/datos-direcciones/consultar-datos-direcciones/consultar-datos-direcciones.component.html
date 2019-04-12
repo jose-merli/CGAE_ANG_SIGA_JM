@@ -1,19 +1,10 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container">
 
-  <div *ngIf="!fichaMisDatos" class="header-title">
+  <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ 'menu.censo' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.censo.buscarSociedades' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i> {{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</p>
-  </div>
-  <div *ngIf="fichaMisDatos" class="header-title">
-    <i class="fa fa-square"></i>
-    <p *ngIf="esColegiado">{{ 'menu.censo' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.censo.fichaColegial' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i> {{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</p>
-    <p *ngIf="!esColegiado">{{ 'menu.censo' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.censo.fichaNoColegial' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i> {{ migaPan }}
       <i class="pl-1 fa fa-angle-right"></i> {{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</p>
   </div>
 
@@ -176,11 +167,11 @@
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio() || permisoTarjeta == '2'"
             label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-          <button *ngIf="!isLetrado" (click)="comprobarAuditoria('noletrado')" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar() || permisoTarjeta == '2'"
-            label="{{ 'general.boton.guardar' | translate}}"></button>
+          <button *ngIf="!isLetrado" (click)="comprobarAuditoria('noletrado')" pButton type="button" icon="far fa-save" iconPos="left"
+            [disabled]="desactivaGuardar() || permisoTarjeta == '2'" label="{{ 'general.boton.guardar' | translate}}"></button>
 
-          <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar() || permisoTarjeta == '2'"
-            label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+          <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left"
+            [disabled]="desactivaGuardar() || permisoTarjeta == '2'" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
 
           <!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
             label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->

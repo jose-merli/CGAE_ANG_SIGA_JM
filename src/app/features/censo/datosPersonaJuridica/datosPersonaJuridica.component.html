@@ -2,7 +2,7 @@
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p>{{ "menu.censo" | translate}}
-            <i class="fa fa-angle-right"></i> {{'censo.busquedaClientes.sociedades.titulo' | translate}}</p>
+            <i class="fa fa-angle-right"></i> {{'menu.censo.fichaSociedad' | translate}}</p>
     </div>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
         <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes>
