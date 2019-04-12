@@ -138,6 +138,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   table: DataTable;
   selectedDatos;
   migaPan;
+  progressSpinner2: boolean = true;
 
   @ViewChild("fubauto") fubauto;
 
@@ -154,8 +155,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+<<<<<<< HEAD
     this.progressSpinner = true;
     this.migaPan = sessionStorage.getItem("migaPan");
+=======
+    this.progressSpinner2 = true;
+>>>>>>> 9b2e39803a368a954f22a250f71998fd7cf0e01c
     this.currentRoute = this.router.url;
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
@@ -191,24 +196,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
-
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
 
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
@@ -281,6 +268,28 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ];
 
     this.editar = JSON.parse(sessionStorage.getItem("editar"));
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }, () => {
+          this.progressSpinner2 = false;
+        }
+      );
+
+
     this.progressSpinner = false;
   }
 

@@ -1414,17 +1414,28 @@ export class FichaColegialComponent implements OnInit {
   comprobarAuditoria(tipoCambio) {
     // modo creación
 
-    if (this.ocultarMotivo) {
-      if (tipoCambio == 'solicitudModificacion') {
-        this.solicitarModificacionGenerales();
-      } else if (tipoCambio == 'guardarDatosColegiales') {
-        this.guardarColegiales();
-      } else if (tipoCambio == 'guardarDatosGenerales') {
-        this.generalesGuardar();
+      if (this.ocultarMotivo) {
+        if (tipoCambio == 'solicitudModificacion') {
+          this.solicitarModificacionGenerales();
+        }else if(tipoCambio == 'guardarDatosColegiales'){
+            this.guardarColegiales();
+        }else if(tipoCambio == 'guardarDatosGenerales'){
+            this.generalesGuardar();
+        }
+      } else {
+        if (!this.esNewColegiado) {
+        this.tipoCambioAuditoria = tipoCambio;
+        this.displayAuditoria = true;
+        this.showGuardarAuditoria = false;
+      }else{
+        if(tipoCambio == 'guardarDatosColegiales'){
+            this.guardarColegiales();
+        }else if(tipoCambio == 'guardarDatosGenerales'){
+            this.generalesGuardar();
+        }
+       
       }
-    } else {
-      this.generalesGuardar();
-    }
+}
 
     // mostrar la auditoria depende de un parámetro que varía según la institución
     this.generalBody.motivo = undefined;
