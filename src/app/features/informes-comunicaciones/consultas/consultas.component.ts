@@ -193,7 +193,7 @@ export class ConsultasComponent implements OnInit {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
       this.buscar();
     } else {
-      this.bodySearch.generica = "S";
+      this.bodySearch.generica = "";
     }
   }
 
@@ -298,6 +298,7 @@ export class ConsultasComponent implements OnInit {
 
   SelectAll() {
     if (this.selectAll === true) {
+      this.eliminar = true;
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
@@ -321,11 +322,11 @@ export class ConsultasComponent implements OnInit {
 
   checkFilters() {
     if (
-      this.bodySearch.idModulo == null &&
-      this.bodySearch.nombre == null &&
-      this.bodySearch.descripcion == null &&
-      this.bodySearch.idObjetivo == null &&
-      this.bodySearch.idClaseComunicacion == null) {
+      (this.bodySearch.idModulo == null || this.bodySearch.idModulo == "") &&
+      (this.bodySearch.nombre == null || this.bodySearch.nombre == "") &&
+      (this.bodySearch.descripcion == null || this.bodySearch.descripcion == "") &&
+      (this.bodySearch.idObjetivo == null || this.bodySearch.idObjetivo == "") &&
+      (this.bodySearch.idClaseComunicacion == null || this.bodySearch.idClaseComunicacion == "")) {
       this.showSearchIncorrect();
       return false;
     } else {
@@ -404,7 +405,7 @@ export class ConsultasComponent implements OnInit {
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
         this.translateService.instant("messages.deleteConfirmation.much") +
-        dato.length +
+        dato.length + " " +
         this.translateService.instant(
           "menu.informesYcomunicaciones.consultas"
         ) +
