@@ -292,7 +292,12 @@ función para que no cargue primero las etiquetas de los idiomas*/
 				this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado'));
 			},
 			(err) => {
-				this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado'));
+				let errorResponse = JSON.parse(err.error);
+				if (errorResponse.code == 400) {
+					this.showInfo('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaNoBorrar');
+				}else{
+					this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado'));
+				}				
 				console.log(err);
 			},
 			() => {

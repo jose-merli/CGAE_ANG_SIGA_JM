@@ -460,4 +460,8 @@ export class DialogoComunicacionesComponent implements OnInit {
       () => { }
     );
   };
+
+  fillFechaProgramacionCalendar(event) {
+    this.bodyComunicacion.fechaProgramacion = event;
+  }
 }
