@@ -112,6 +112,7 @@ export class FichaColegialComponent implements OnInit {
   // irTurnoOficio: any;
   // irExpedientes: any;
   msgs: Message[];
+  displayColegiado: boolean = false;
 
   colsColegiales: any = [];
   colsColegiaciones: any = [];
@@ -234,7 +235,7 @@ export class FichaColegialComponent implements OnInit {
   valorPreferenteCorreo: string = "11";
   valorPreferenteSMS: string = "12";
   msgDir = "";
-  initSpinner: boolean = true;
+  initSpinner: boolean = false;
   disableNumColegiado: boolean = true;
 
   @ViewChild("autocompleteTopics")
@@ -436,7 +437,22 @@ export class FichaColegialComponent implements OnInit {
     private datepipe: DatePipe
   ) { }
 
+
   ngOnInit() {
+
+    if (sessionStorage.getItem("fichaColegialByMenu")) {
+      this.getColegiadoLogeado();
+    } else {
+      this.OnInit();
+    }
+  }
+
+  returnHome(){
+    this.displayColegiado = false;
+    this.location.back();
+  }
+
+  OnInit() {
     this.initSpinner = true;
     this.getYearRange();
     this.getLenguage();
@@ -860,8 +876,28 @@ export class FichaColegialComponent implements OnInit {
       }
     ];
 
+  }
 
+  getColegiadoLogeado() {
+    this.generalBody.searchLoggedUser = true;
 
+    this.sigaServices
+      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+      .subscribe(
+        (data) => {
+          let busqueda = JSON.parse(data['body']);
+          if (busqueda.colegiadoItem.length > 0) {
+            this.OnInit();
+            this.displayColegiado = false;
+
+          } else{
+            this.displayColegiado = true;
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 
   //CONTROL DE PERMISOS
@@ -1414,28 +1450,28 @@ export class FichaColegialComponent implements OnInit {
   comprobarAuditoria(tipoCambio) {
     // modo creación
 
-      if (this.ocultarMotivo) {
-        if (tipoCambio == 'solicitudModificacion') {
-          this.solicitarModificacionGenerales();
-        }else if(tipoCambio == 'guardarDatosColegiales'){
-            this.guardarColegiales();
-        }else if(tipoCambio == 'guardarDatosGenerales'){
-            this.generalesGuardar();
-        }
-      } else {
-        if (!this.esNewColegiado) {
+    if (this.ocultarMotivo) {
+      if (tipoCambio == 'solicitudModificacion') {
+        this.solicitarModificacionGenerales();
+      } else if (tipoCambio == 'guardarDatosColegiales') {
+        this.guardarColegiales();
+      } else if (tipoCambio == 'guardarDatosGenerales') {
+        this.generalesGuardar();
+      }
+    } else {
+      if (!this.esNewColegiado) {
         this.tipoCambioAuditoria = tipoCambio;
         this.displayAuditoria = true;
         this.showGuardarAuditoria = false;
-      }else{
-        if(tipoCambio == 'guardarDatosColegiales'){
-            this.guardarColegiales();
-        }else if(tipoCambio == 'guardarDatosGenerales'){
-            this.generalesGuardar();
+      } else {
+        if (tipoCambio == 'guardarDatosColegiales') {
+          this.guardarColegiales();
+        } else if (tipoCambio == 'guardarDatosGenerales') {
+          this.generalesGuardar();
         }
-       
+
       }
-}
+    }
 
     // mostrar la auditoria depende de un parámetro que varía según la institución
     this.generalBody.motivo = undefined;
