@@ -30,6 +30,8 @@ export class OldSigaServices {
 		gestionSubtiposCV: 'Dispatcher.do?proceso=15E',
 		cargaEtiquetas: 'Dispatcher.do?proceso=99E',
 		datosCv: 'Dispatcher.do?proceso=15F',
+		serviciosInteres: 'Dispatcher.do?proceso=234',
+		fichaGeneral: 'Dispatcher.do?proceso=120',
 
 		//Certificados
 		comunicacionInterprofesional: 'Dispatcher.do?proceso=64',

@@ -5551,7 +5551,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoDatosGenerales() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "120";
+    controlAcceso.idProceso = "285";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5589,7 +5589,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoDatosColegiales() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "121";
+    controlAcceso.idProceso = "286";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5649,7 +5649,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoCertificados() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "131";
+    controlAcceso.idProceso = "290";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5706,7 +5706,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoDatosCurriculares() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "124";
+    controlAcceso.idProceso = "289";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5725,7 +5725,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoDirecciones() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "122";
+    controlAcceso.idProceso = "287";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5744,7 +5744,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoDatosBancarios() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "123";
+    controlAcceso.idProceso = "288";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5763,7 +5763,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoRegtel() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "222";
+    controlAcceso.idProceso = "291";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5782,7 +5782,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoMutualidad() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "223";
+    controlAcceso.idProceso = "298";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -5801,7 +5801,7 @@ export class FichaColegialComponent implements OnInit {
 
   checkAccesoAlterMutua() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "226";
+    controlAcceso.idProceso = "299";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {

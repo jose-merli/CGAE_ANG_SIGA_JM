@@ -132,6 +132,7 @@ export class BusquedaGeneralComponent {
   }
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
@@ -155,12 +156,25 @@ export class BusquedaGeneralComponent {
           }
 
           // this.colegios_seleccionados[0].label = this.institucionActual;
-          this.colegioDisabled = true;
-        } else {
           this.colegioDisabled = false;
+           this.progressSpinner = false;
+        } else {
+          for (let colegio of this.colegios_rol) {
+            if (colegio.value == this.institucionActual) {
+              this.colegios_seleccionados = [
+                {
+                  label: colegio.label,
+                  value: this.institucionActual
+                }
+              ];
+            }
+          }
+          this.colegioDisabled = false;
+           this.progressSpinner = false;
         }
       },
       err => {
+        this.progressSpinner = false;
         console.log(err);
       },
       () => {
