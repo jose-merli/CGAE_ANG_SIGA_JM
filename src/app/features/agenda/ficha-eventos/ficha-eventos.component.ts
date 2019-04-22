@@ -1025,7 +1025,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   validatorDates(event) {
 
-    if (this.newEvent.end < this.newEvent.start) {
+    if (event == null || this.newEvent.end < this.newEvent.start) {
       this.newEvent.end = new Date(
         JSON.parse(JSON.stringify(this.newEvent.start))
       );
@@ -1064,11 +1064,43 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   fillStart(event) {
-    this.newEvent.start = event;
+    if (event != null) {
+      this.newEvent.start = event;
+    }
     this.validatorDates(event);
     this.selectInvalidDates();
 
     this.checkCumplido(this.newEvent.start);
+  }
+
+  fillStartEventInput(e) {
+    let fecha = this.newEvent.start;
+    let fechaIntroducida: Date = e;
+
+    if (this.createEvent && e != null && fechaIntroducida.getMonth() == this.invalidDateMaxEditionMode.getMonth() &&
+      fechaIntroducida.getFullYear() == this.invalidDateMaxEditionMode.getFullYear() &&
+      fechaIntroducida.getDate() == this.invalidDateMaxEditionMode.getDate()) {
+      this.newEvent.start = e;
+      this.validatorDates(e);
+    } else if (e == null) {
+      this.newEvent.start = fecha;
+      this.validatorDates(e);
+    } else if (!this.createEvent) {
+      this.newEvent.start = e;
+      this.validatorDates(e);
+    } else {
+      this.newEvent.start = fecha;
+      this.fechaIni.calendar.currentYear = this.fechaFi.calendar.currentYear;
+      this.fechaIni.calendar.currentMonth = this.fechaFi.calendar.currentMonth;
+      this.fechaIni.calendar.currentHour = this.fechaFi.calendar.currentHour;
+      this.fechaIni.calendar.currentMinute = this.fechaFi.calendar.currentMinute;
+      this.fechaIni.calendar.inputfieldViewChild.nativeElement.value = this.fechaFi.calendar.inputfieldViewChild.nativeElement.value;
+      this.fechaIni.calendar.inputFieldValue = this.fechaFi.calendar.inputFieldValue;
+      this.fechaIni.calendar.value = this.fechaFi.calendar.value;
+      this.validatorDates(e);
+
+    }
+
   }
 
   fillStartEvent(event) {
@@ -1098,13 +1130,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   }
 
-  fillEnd(event) {
-    this.newEvent.end = event;
-    this.validatorDates(event);
-    this.unselectInvalidDates(event);
+  fillEndInput(event) {
+
+    let fecha = this.newEvent.end;
+    if (event != null) {
+      this.newEvent.end = event;
+    } else {
+      this.newEvent.end = fecha;
+    }
+  }
+
+  fillEnd(e) {
+
+    this.validatorDates(e);
+    this.unselectInvalidDates(e);
 
     this.checkCumplido(this.newEvent.end);
-
   }
 
 

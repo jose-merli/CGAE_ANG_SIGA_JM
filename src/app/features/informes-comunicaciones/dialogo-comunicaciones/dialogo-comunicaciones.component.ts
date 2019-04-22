@@ -33,7 +33,7 @@ export class DialogoComunicacionesComponent implements OnInit {
   colsModelos: any = [];
   selectMultipleComunicar: boolean = false;
   first: number = 0;
-  currentDate: Date = new Date();
+  currentDate: Date;
   clasesComunicaciones: any = [];
   currentRoute: String;
   selectedModelos: any = [];
@@ -73,6 +73,7 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.getMaxNumeroModelos();
     this.getFechaProgramada();
     this.getPlantillas();
+    this.currentDate = new Date();
 
     this.valores = [];
 
@@ -463,5 +464,12 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   fillFechaProgramacionCalendar(event) {
     this.bodyComunicacion.fechaProgramacion = event;
+    if (this.bodyComunicacion.fechaProgramacion.getHours() > this.currentDate.getHours()) {
+      this.currentDate.setMinutes(0);
+      this.currentDate.setSeconds(0);
+    } else if (this.bodyComunicacion.fechaProgramacion.getHours() == this.currentDate.getHours()) {
+      this.currentDate.setMinutes(this.currentDate.getMinutes());
+      this.currentDate.setSeconds(this.currentDate.getSeconds());
+    }
   }
 }
