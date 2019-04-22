@@ -28,7 +28,7 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
@@ -73,9 +73,9 @@ export class MenuComponent implements OnInit {
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;
-        if(ruta == "fichaColegial"){
+        if (ruta == "fichaColegial") {
           sessionStorage.setItem("fichaColegialByMenu", "true");
-        }else{
+        } else {
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 
@@ -101,7 +101,8 @@ export class MenuComponent implements OnInit {
   }
 
   viewChildOfChild(items, label) {
-    this.showChildOfChild = false;
+    //Linea comentada para que los puntos de menu se cierren si se abren
+    // this.showChildOfChild = false;
     if (items) {
       this.showChildOfChild = !this.showChildOfChild;
       this.selectedItemOfChild = items;
