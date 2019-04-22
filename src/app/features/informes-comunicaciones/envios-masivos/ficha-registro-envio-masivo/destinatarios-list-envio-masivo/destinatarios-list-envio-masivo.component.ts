@@ -198,8 +198,8 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
     }
 
     getDatos() {
-        this.getConsultas();
         if (sessionStorage.getItem("enviosMasivosSearch") != null) {
+            this.getConsultas();
             this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
             this.getResultados();
             if (this.body.idEstado != '1' && this.body.idEstado != '4') {
@@ -222,7 +222,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 });
 
                 this.datosInit = JSON.parse(JSON.stringify(this.datos));
-                this.consultas = [];
+                // this.consultas = [];
             },
             err => {
                 console.log(err);
@@ -292,6 +292,9 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
     }
 
     asociar() {
+        if (sessionStorage.getItem("enviosMasivosSearch") != null) {
+            this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+        }
         let consulta = {
             idEnvio: this.body.idEnvio,
             idConsulta: this.datos[this.datos.length - 1].idConsulta,
@@ -308,13 +311,14 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
             this.progressSpinner = false;
             let errorResponse = JSON.parse(error.error);
             if (errorResponse.code == 400) {
-                this.showInfo('informesycomunicaciones.plantillasenvio.ficha.errorListaDestinatarios');
+                this.showInfo(this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorListaDestinatarios"));
             } else {
                 this.showFail(this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
                 console.log(error);
             }
 
         });
+        this.getConsultas();
     }
 
     desasociar(dato) {
