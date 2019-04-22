@@ -83,21 +83,25 @@ export class FechaComponent implements OnInit, AfterViewInit {
 
 	change(newValue) {
 		//evento que cambia el value de la fecha
-		this.fechaSelectedFromCalendar = true;
-		this.value = new Date(newValue);
-		let year = this.value.getFullYear();
-		if (year >= year - 80 && year <= year + 20) {
-			if (this.minDate) {
-				if (this.value >= this.minDate) {
-					this.valueChangeSelected.emit(this.value);
+		if (!this.showTime) {
+			this.fechaSelectedFromCalendar = true;
+			this.value = new Date(newValue);
+			let year = this.value.getFullYear();
+			if (year >= year - 80 && year <= year + 20) {
+				if (this.minDate) {
+					if (this.value >= this.minDate) {
+						this.valueChangeSelected.emit(this.value);
+					} else {
+						this.borrarFecha();
+					}
 				} else {
-					this.borrarFecha();
+					this.valueChangeSelected.emit(this.value);
 				}
 			} else {
-				this.valueChangeSelected.emit(this.value);
+				this.borrarFecha();
 			}
 		} else {
-			this.borrarFecha();
+			this.valueChangeSelected.emit(this.value);
 		}
 	}
 
@@ -136,7 +140,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 		this.fechaSelectedFromCalendar = false;
 		this.valueChangeInput.emit(this.value);
 		//evento necesario para informar de las fechas que borren manualmente (teclado)
-		if (e.inputType == 'deleteContentBackward') {
+		if (e.inputType == 'deleteContentBackward' && !this.showTime) {
 			this.borrarFecha();
 		}
 	}

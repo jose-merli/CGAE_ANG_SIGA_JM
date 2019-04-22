@@ -686,11 +686,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       if (tipoSelected == this.valorCensoWeb
         || tipoSelected == this.valorTraspaso
         || tipoSelected == this.valorFacturacion
-        || tipoSelected == this.valorGuardia
         || tipoSelected == this.valorGuiaJudicial
         || tipoSelected == this.valorPreferenteCorreo
         || tipoSelected == this.valorPreferenteEmail
-        || tipoSelected == this.valorPreferenteSMS) {
+        || tipoSelected == this.valorPreferenteSMS
+        || (tipoSelected == this.valorGuardia && this.isColegiadoEjerciente)) {
 
         if (!this.nuevo) {
 

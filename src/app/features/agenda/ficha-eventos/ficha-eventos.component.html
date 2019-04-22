@@ -93,13 +93,13 @@
             </div>
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEvent($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
+              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEventInput($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
                 [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStartEvent($event)"
                 [disabledToday]="disabledToday" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-              <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEnd($event)" [showTime]="true" [minDate]="invalidDateMin"
+              <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEndInput($event)" [showTime]="true" [minDate]="invalidDateMin"
                 [maxDate]="invalidDateMax" [disabled]="modoEdicionEventoByAgenda || tipoAccesoLectura || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="fillEnd($event)" [disabledToday]="true" [disabledDelete]="true" [utc]="false"></app-fecha>
             </div>
