@@ -4709,8 +4709,8 @@ export class FichaColegialComponent implements OnInit {
       )
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "application/pdf" });
-          saveAs(blob, this.selectedDatosRegtel.title + ".pdf");
+          const blob = new Blob([data], { type: "application/octet-stream" });
+          saveAs(blob, this.selectedDatosRegtel.originalFilename);
           this.progressSpinner = false;
         },
         err => {
