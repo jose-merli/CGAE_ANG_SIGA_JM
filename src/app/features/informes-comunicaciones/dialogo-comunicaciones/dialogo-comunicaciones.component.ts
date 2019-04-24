@@ -272,7 +272,18 @@ export class DialogoComunicacionesComponent implements OnInit {
       if (element.valor != null && typeof element.valor == "object") {
         element.valor = element.valor.ID;
       }
+      if (element.valores != undefined && element.valores != null) {
+        let empty = {
+          ID: 0,
+          DESCRIPCION: 'Seleccione una opción...'
+        }
+        element.valores.unshift(empty);
+      }
+      if (element.operacion == "OPERADOR") {
+        element.operacion = this.operadoresNumero[0].value;
+      }
     });
+
 
     if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
       let datos = {
@@ -360,6 +371,16 @@ export class DialogoComunicacionesComponent implements OnInit {
     this.valores.forEach(element => {
       if (element.valor != null && typeof element.valor == "object") {
         element.valor = element.valor.ID;
+      }
+      if (element.valores != undefined && element.valores != null) {
+        let empty = {
+          ID: 0,
+          DESCRIPCION: 'Seleccione una opción...'
+        }
+        element.valores.unshift(empty);
+      }
+      if (element.operacion == "OPERADOR") {
+        element.operacion = this.operadoresNumero[0].value;
       }
     });
 
