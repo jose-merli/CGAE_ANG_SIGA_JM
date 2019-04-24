@@ -203,7 +203,10 @@
                 <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-check" [disabled]="!activacionEditar" class="ui-button-warn"></button>
               </div>
               <div *ngIf="!edicionDocumentoAdjunto" class="ui-inputgroup">
-                <a *ngIf="curso.adjunto != undefined && curso.adjunto != ''" [href]="curso.adjunto" class="col-11" target="_blank">{{curso.adjunto}}</a>
+                <a *ngIf="curso.adjunto != undefined && curso.adjunto != '' && curso.adjunto.substring(0,4) == 'http'" [href]="curso.adjunto"
+                  class="col-11" target="_blank">{{curso.adjunto}}</a>
+                <a *ngIf="curso.adjunto != undefined && curso.adjunto != '' && curso.adjunto.substring(0,4) != 'http'" [href]="'http://'+curso.adjunto"
+                  class="col-11" target="_blank">{{curso.adjunto}}</a>
                 <span *ngIf="curso.adjunto == undefined || curso.adjunto == ''" class="col-11">{{curso.adjunto}}</span>
                 <button (click)="editDocumentoAdjunto()" pButton type="button" icon="fas fa-pencil-alt" [disabled]="!activacionEditar" class="ui-button-warn button-edit"></button>
               </div>
