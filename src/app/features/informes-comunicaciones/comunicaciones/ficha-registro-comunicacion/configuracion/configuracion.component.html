@@ -36,7 +36,7 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque"
-          [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-3':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+          [ngClass]="{'col-lg-12': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-3':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
           <div class="form-row">
             <div class="form-group col-lg-12">
               <label>
@@ -44,43 +44,44 @@
               </label>
             </div>
             <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              [ngClass]="{'col-lg-4': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicaciones' | translate }}</label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()" [disabled]="true"
                 [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form">
               </p-dropdown>
             </div>
             <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              [ngClass]="{'col-lg-4': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones' | translate }}</label>
               <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.modeloComunicacion"
                 pInputText>
             </div>
             <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              [ngClass]="{'col-lg-4': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.tipoEnvio' | translate }} (*)</label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="true" [options]="tipoEnvios"
                 [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
             </div>
             <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.plantillasEnvio' | translate }} (*)</label>
               <p-dropdown [disabled]="true" [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios"
                 class="select-form"></p-dropdown>
             </div>
             <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              [ngClass]="{'col-lg-4':body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.descripcion' | translate }} (*)</label>
               <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
 
-        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
+        <div
+          *ngIf="body.idTipoEnvios== '7' || body.idTipoEnvios== '1' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
           class="col-lg-9 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label *ngIf="body.idTipoEnvios=='1'">
+              <label *ngIf="body.idTipoEnvios== '7' || body.idTipoEnvios=='1' ">
                 <strong>{{ 'informesycomunicaciones.plantillasenvio.ficha.datosCorreoElectronico' | translate }}</strong>
               </label>
               <label *ngIf="body.idTipoEnvios=='4'">
@@ -90,11 +91,11 @@
                 <strong>{{ 'informesycomunicaciones.plantillasenvio.ficha.datosBuroSMS' | translate }}</strong>
               </label>
             </div>
-            <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
+            <div *ngIf="body.idTipoEnvios== '7' || body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.asunto' | translate }}</label>
               <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
             </div>
-            <div *ngIf="body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
+            <div *ngIf="body.idTipoEnvios== '7' || body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.cuerpo' | translate }}</label>
               <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.cuerpo" [disabled]="true"></editor>
             </div>
