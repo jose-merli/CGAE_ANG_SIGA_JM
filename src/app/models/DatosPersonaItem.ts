@@ -24,5 +24,6 @@ export class DatosPersonaItem {
   nacionalidad: String;
   residencia: String;
   tipoIdentificacion: String;
-  constructor() {}
+  idAsistenciaSanitaria: String;
+  constructor() { }
 }

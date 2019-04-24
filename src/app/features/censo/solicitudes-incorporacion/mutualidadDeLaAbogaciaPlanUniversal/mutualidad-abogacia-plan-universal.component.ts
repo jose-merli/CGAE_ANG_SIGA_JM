@@ -163,6 +163,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
               this.body.hijos = [];
             }
             this.modoLectura = true;
+            this.cedeDatos = true;
           } else {
             // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
             this.solicitud.idPais = "191";
@@ -666,7 +667,14 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
       solicitud.datosPersona.estadoCivil = this.body.idEstadoCivil;
     }
     solicitud.datosPersona.ejerciente = this.solicitud.idEstado;
-    solicitud.datosPersona.asistenciaSanitaria = this.body.idAsistenciaSanitaria;
+    solicitud.datosPersona.idAsistenciaSanitaria = this.body.idAsistenciaSanitaria;
+    let asistencia = this.asistenciaSanitaria.find(x => x.value == this.body.idAsistenciaSanitaria);
+    solicitud.datosPersona.asistenciaSanitaria = asistencia.label;
+
+    this.paisDesc = this.paises.find(
+      item => item.value === this.paisSelected
+    );
+
     solicitud.datosPersona.nacionalidad = this.paisDesc.label;
     solicitud.datosPersona.NIF = this.solicitud.numeroIdentificacion;
     solicitud.datosPersona.tipoIdentificacion = this.solicitud.idTipoIdentificacion;
@@ -679,11 +687,20 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     solicitud.datosDireccion.email = this.body.correoElectronico;
     solicitud.datosDireccion.movil = this.body.movil;
     solicitud.datosDireccion.num = this.body.telefono;
-    if (this.poblacionDesc != undefined) {
-      solicitud.datosDireccion.poblacion = this.poblacionDesc.label;
+    if (this.poblacionSelected != undefined) {
+      let poblacion = this.poblaciones.find(x => x.value == this.poblacionSelected);
+      solicitud.datosDireccion.poblacion = poblacion.label;
+      solicitud.datosDireccion.idPoblacion = this.poblacionSelected;
     }
+
+    this.provinciaDesc = this.provincias.find(
+      item => item.value === this.provinciaSelected
+    );
+
     solicitud.datosDireccion.provincia = this.provinciaDesc.label;
+    solicitud.datosDireccion.idProvincia = this.provinciaDesc.value;
     solicitud.datosDireccion.pais = this.paisDesc.label;
+    solicitud.datosDireccion.idPais = this.paisDesc.value;
     solicitud.datosDireccion.telefono = this.body.telefono;
 
     solicitud.datosBancarios = JSON.parse(JSON.stringify(this.body));
@@ -693,15 +710,27 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     solicitud.datosBancarios.dc = this.body.iban.substring(12, 14);
     solicitud.datosBancarios.oficina = this.body.iban.substring(8, 12);
     solicitud.datosBancarios.entidad = this.body.iban.substring(4, 8);
+    solicitud.datosBancarios.titular = this.body.titular;
+    let periodicidad = this.formasPago.find(x => x.value == this.pagoSelected);
+    solicitud.datosBancarios.periodicidad = periodicidad.label;
 
     solicitud.datosBeneficiario = JSON.parse(JSON.stringify(this.body));
     solicitud.datosBeneficiario.idPoliza = this.body.idCobertura;
     solicitud.datosBeneficiario.idTipoBeneficiario = this.body.idBeneficiario;
 
+    let bene = this.designacionBeneficiarios.find(x => x.value == this.body.idBeneficiario);
+    solicitud.datosBeneficiario.beneficiario = bene.label;
+
     solicitud.datosPoliza = JSON.parse(JSON.stringify(this.body));
     solicitud.datosPoliza.formaPago = this.pagoSelected;
-    solicitud.datosPoliza.opcionesCobertura = this.body.idCobertura;
+    solicitud.datosPoliza.idCobertura = this.body.idCobertura;
+    let cobertura = this.opcionesCoberturas.find(x => x.value == this.body.idCobertura);
+    solicitud.datosPoliza.opcionesCobertura = cobertura.label;
     solicitud.datosPoliza.idMutualista = this.body.idEstadoMutualista;
+    solicitud.datosPoliza.cuotaMensual = this.body.cuotaMensual;
+    solicitud.datosPoliza.capitalObjetivo = this.body.capitalObjetivo;
+
+
 
     if (solicitud.datosPersona.sexo == "H") {
       solicitud.datosPersona.sexo = "1";

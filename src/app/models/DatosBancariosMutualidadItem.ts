@@ -5,6 +5,8 @@ export class DatosBancariosMutualidadItem {
 	entidad: String;
 	nCuenta: String;
 	oficina: String;
+	titular: String
+	periodicidad: String;
 
-	constructor() {}
+	constructor() { }
 }

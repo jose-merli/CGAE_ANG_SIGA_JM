@@ -146,6 +146,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
               this.body.hijos = [];
             }
             this.modoLectura = true;
+            this.cedeDatos = true;
           } else {
             // Acceso a Web Service para saber si hay una solicitud de Mutualidad.
             this.solicitud.idPais = "191";
@@ -159,6 +160,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
                     this.modoLectura = false;
                   } else {
                     this.modoLectura = true;
+                    this.cedeDatos = true;
                   }
                   this.solicitud.idSolicitudMutualidad = estadoMut.idSolicitud;
                   this.solicitud.estadoMutualidad = estadoMut.valorRespuesta;
@@ -511,23 +513,37 @@ para poder filtrar el dato con o sin estos caracteres*/
     solicitud.datosPersona.edadesHijos = this.body.hijos;
     solicitud.datosPersona.estadoCivil = this.solicitud.idEstadoCivil;
     solicitud.datosPersona.ejerciente = this.solicitud.idEstado;
-    solicitud.datosPersona.asistenciaSanitaria = this.body.idAsistenciaSanitaria;
+
+    this.paisDesc = this.paises.find(
+      item => item.value === this.paisSelected
+    );
+
     solicitud.datosPersona.nacionalidad = this.paisDesc.label;
     solicitud.datosPersona.NIF = this.solicitud.numeroIdentificacion;
     solicitud.datosPersona.tipoIdentificacion = this.solicitud.idTipoIdentificacion;
     solicitud.datosPersona.fechaNacimiento = this.transformaFechaForBack(
       this.fechaNacimiento
     );
+
     solicitud.datosDireccion = JSON.parse(JSON.stringify(this.body));
     solicitud.datosDireccion.cp = this.body.codigoPostal;
     solicitud.datosDireccion.direccion = this.body.domicilio;
     solicitud.datosDireccion.email = this.body.correoElectronico;
     solicitud.datosDireccion.movil = this.body.movil;
     solicitud.datosDireccion.num = this.body.telefono;
+
+    this.poblacionDesc = this.poblaciones.find(item => item.value === this.poblacionSelected);
+    this.provinciaDesc = this.provincias.find(
+      item => item.value === this.provinciaSelected
+    );
+
     solicitud.datosDireccion.poblacion = this.poblacionDesc.label;
     solicitud.datosDireccion.provincia = this.provinciaDesc.label;
     solicitud.datosDireccion.pais = this.paisDesc.label;
     solicitud.datosDireccion.telefono = this.body.telefono;
+    solicitud.datosDireccion.idPoblacion = this.poblacionDesc.value;
+    solicitud.datosDireccion.idProvincia = this.provinciaDesc.value;
+    solicitud.datosDireccion.idPais = this.paisDesc.value;
 
     if (solicitud.datosPersona.sexo == "H") {
       solicitud.datosPersona.sexo = "1";
