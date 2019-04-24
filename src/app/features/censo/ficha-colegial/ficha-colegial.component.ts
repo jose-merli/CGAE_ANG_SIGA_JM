@@ -919,12 +919,66 @@ export class FichaColegialComponent implements OnInit {
     ) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
+    } else if (
+      key == "regtel"
+    ) {
+
+      if (this.generalBody.identificadords != null) {
+        this.activacionEditar = true;
+      } else {
+        this.activacionEditar = false;
+        this.callConfirmationServiceRegtel();
+      }
     }
 
     if (this.activacionEditar) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+  }
+  callConfirmationServiceRegtel() {
+    let mess = "No existe ninguna colección. ¿Desea añadir una nueva?";
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.addCollectionRegtel();
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  addCollectionRegtel(){
+    let url = "";
+
+    if (this.esColegiado) {
+      url = "fichaColegialRegTel_insertCollection";
+    }else{
+      url = "fichaColegialRegTel_insertCollectionNoCol";
+    }
+    
+    this.sigaServices
+          .post(url, this.generalBody.idPersona)
+          .subscribe(
+            data => {
+             
+            },
+            err => {
+              console.log(err);
+            }
+          );
   }
 
   esFichaActiva(key) {

@@ -41,6 +41,6 @@ export class FichaColegialGeneralesItem {
   temasCombo: ComboItem[];
   temas: string[];
   numColegiado: String;
-  
-  constructor() {}
+  identificadords: string;
+  constructor() { }
 }

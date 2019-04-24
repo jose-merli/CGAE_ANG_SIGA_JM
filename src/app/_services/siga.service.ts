@@ -577,6 +577,8 @@ export class SigaServices {
     fichaColegialRegTel_searchListDirNoCol:
       "fichaColegialRegTel/searchListDirNoCol",
     fichaColegialRegTel_downloadDoc: "fichaColegialRegTel/downloadDoc",
+    fichaColegialRegTel_insertCollection:"fichaColegialRegTel/insertCollection",
+    fichaColegialRegTel_insertCollectionNoCol:"fichaColegialRegTel/insertCollectionNoCol",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios",
