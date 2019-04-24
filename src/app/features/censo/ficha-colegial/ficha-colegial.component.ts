@@ -973,7 +973,7 @@ export class FichaColegialComponent implements OnInit {
           .post(url, this.generalBody.idPersona)
           .subscribe(
             data => {
-              this.generalBody.identificadords = JSON.parse(data["body"]);
+              this.generalBody.identificadords = data.body;
               let mess = this.translateService.instant("messages.collectionCreated");
               this.showSuccessDetalle(mess + this.generalBody.identificadords);
             },
