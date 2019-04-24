@@ -1848,7 +1848,7 @@ export class FichaCursoComponent implements OnInit {
       this.formadoresUpdate = [];
       this.sigaServiceSaveTrainer(url, formador);
     } else {
-      if (this.numCheckedTutor == 1 && this.newFormadorCourse.idRol == "1") {
+      if (this.numCheckedTutor > 1 && this.newFormadorCourse.idRol == "1") {
         mess = this.translateService.instant(
           "formacion.fichaCurso.formadores.confirmacion.cambiarTutor"
         );

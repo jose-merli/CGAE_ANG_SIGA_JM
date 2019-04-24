@@ -113,7 +113,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.cols = [
       { field: "objetivo", header: "Objetivo" },
       { field: "idConsulta", header: "Consulta" },
-      { field: "region", header: "Region"}
+      { field: "region", header: "Region" }
     ];
 
     this.consultas = [
@@ -228,7 +228,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   onSelectConsulta(event, dato) {
     console.log(dato);
-    if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1){
+    if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1) {
       this.navigateTo(dato);
     } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
       this.eliminarDisabled = true;
@@ -494,7 +494,7 @@ export class PlantillaDocumentoComponent implements OnInit {
               finalidad: "",
               objetivo: "Multidocumento",
               idObjetivo: "2",
-              idInstitucion: ""              
+              idInstitucion: ""
             });
           }
           if (datos.indexOf(true) == -1) {
@@ -527,15 +527,15 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
 
         this.datos.sort(function (a, b) {
-          if(a.idObjetivo == 3){
+          if (a.idObjetivo == 3) {
             return -1;
-          }else if(a.idObjetivo == 4){
+          } else if (a.idObjetivo == 4) {
             return 1;
-          }else{
-            if(a.idObjetivo > b.idObjetivo){
+          } else {
+            if (a.idObjetivo > b.idObjetivo) {
               return 1;
             }
-            if(a.idObjetivo < b.idObjetivo){
+            if (a.idObjetivo < b.idObjetivo) {
               return -1;
             }
             return 0;
@@ -589,8 +589,24 @@ export class PlantillaDocumentoComponent implements OnInit {
         "La extensión del fichero no es correcta."
       );
     } else {
-      this.addFile(dato);
+      this.validateSizeFile(dato);
     }
+  }
+
+  validateSizeFile(dato) {
+    this.progressSpinner = true;
+    this.sigaServices.get("plantillasDoc_sizeFichero")
+      .subscribe(
+        response => {
+          let tam = response.combooItems[0].value;
+          let tamBytes = tam * 1024 * 1024;
+          if (this.file.size < tamBytes) {
+            this.addFile(dato);
+          } else {
+            this.showFail("Error al cargar el archivo. El tamaño del archivo no puede exceder de " + tam + " MB");
+            this.progressSpinner = false;
+          }
+        });
   }
 
   addFile(dato) {
@@ -602,8 +618,10 @@ export class PlantillaDocumentoComponent implements OnInit {
           plantilla.nombreDocumento = data.nombreDocumento;
           plantilla.idIdioma = dato.idIdioma;
           this.guardarDocumento(plantilla);
+          this.progressSpinner = false;
         },
         err => {
+          this.progressSpinner = false;
           if (err.error.error.code == 400) {
             if (err.error.error.description != null) {
               this.showFail(err.error.error.description);
@@ -615,7 +633,9 @@ export class PlantillaDocumentoComponent implements OnInit {
             console.log(err);
           }
         },
-        () => { }
+        () => {
+          this.progressSpinner = false;
+        }
       );
   }
   guardarDatosGenerales() {
@@ -788,11 +808,11 @@ export class PlantillaDocumentoComponent implements OnInit {
         dato.idConsulta = id;
         let continua = true;
         comboConsultas.forEach(element => {
-          if(continua && element.value == id){
+          if (continua && element.value == id) {
             dato.idInstitucion = element.idInstitucion;
             continua = false;
           }
-        });        
+        });
       }
     }
     this.datos = [...this.datos];
@@ -876,26 +896,26 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  isPlantillaUnica(){
+  isPlantillaUnica() {
     let isUnica = true;
-    if(this.body.plantillas != null){
-      if(this.body.plantillas.length == 1){
+    if (this.body.plantillas != null) {
+      if (this.body.plantillas.length == 1) {
         isUnica = true;
-      }else{
+      } else {
         this.body.plantillas.forEach(element => {
-          if(isUnica && element.guardada){
+          if (isUnica && element.guardada) {
             isUnica = false;
           }
         });
-      }      
+      }
     }
     return isUnica;
   }
 
   eliminarPlantilla(dato) {
-    if(this.isPlantillaUnica()){
+    if (this.isPlantillaUnica()) {
       this.showFail("La plantilla de documento ha de tener al menos una plantilla física");
-    }else{
+    } else {
       this.confirmationService.confirm({
         // message: this.translateService.instant("messages.deleteConfirmation"),
         message:
@@ -918,7 +938,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           ];
         }
       });
-    }    
+    }
   }
 
   confirmarEliminarPlantilla(dato) {
@@ -1049,10 +1069,10 @@ export class PlantillaDocumentoComponent implements OnInit {
     });
   }
 
-  navigateTo(dato){
-    if(this.consultasGuardadas){
+  navigateTo(dato) {
+    if (this.consultasGuardadas) {
       this.confirmarNavegar(dato);
-    }else{
+    } else {
       this.confirmationService.confirm({
         // message: this.translateService.instant("messages.deleteConfirmation"),
         message:
@@ -1073,17 +1093,17 @@ export class PlantillaDocumentoComponent implements OnInit {
           ];
         }
       });
-    }    
+    }
   }
 
   confirmarNavegar(dato) {
-		let idConsulta = dato[0].idConsulta;
-		console.log(dato);
-		if (!this.selectMultiple && idConsulta) {
-      if(!dato[0].sentencia || dato[0].sentencia == null || dato[0].sentencia == ""){
+    let idConsulta = dato[0].idConsulta;
+    console.log(dato);
+    if (!this.selectMultiple && idConsulta) {
+      if (!dato[0].sentencia || dato[0].sentencia == null || dato[0].sentencia == "") {
         // Obtenemos la consulta para ir a ella
         this.getConsulta(dato[0]);
-      }else{
+      } else {
         if (
           dato[0].generica == "No" ||
           (this.institucionActual == 2000 && dato[0].generica == "Si")
@@ -1094,16 +1114,16 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
         this.router.navigate(["/fichaConsulta"]);
-      }		
-		}
-		this.numSelected = this.selectedDatos.length;
+      }
+    }
+    this.numSelected = this.selectedDatos.length;
   }
 
-  getConsulta(consulta){
+  getConsulta(consulta) {
     this.progressSpinner = true;
     let objConsulta = {
-      idConsulta : consulta.idConsulta,
-      idInstitucion : consulta.idInstitucion
+      idConsulta: consulta.idConsulta,
+      idInstitucion: consulta.idInstitucion
     }
     this.sigaServices
       .post("plantillasDoc_consulta", objConsulta)
@@ -1128,19 +1148,19 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
       );
   }
-  
+
   getInstitucionActual() {
-		this.sigaServices.get("institucionActual").subscribe(n => {
-			this.institucionActual = n.value;
-		});
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
   }
-  
+
   downloadDocumento(dato) {
     let objDownload = {
       idPlantillaDocumento: dato[0].idPlantillaDocumento,
       idClaseComunicacion: this.body.idClaseComunicacion
     };
-   this.progressSpinner = true;
+    this.progressSpinner = true;
     this.sigaServices
       .postDownloadFiles("plantillasDoc_descargarPlantilla", objDownload)
       .subscribe(data => {
@@ -1156,12 +1176,12 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
         this.selectedDatos = [];
       },
-      err => {
-        console.log(err);
-        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
-        );
-      }, () =>{
-        this.progressSpinner=false
-      });
+        err => {
+          console.log(err);
+          this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
+          );
+        }, () => {
+          this.progressSpinner = false
+        });
   }
 }

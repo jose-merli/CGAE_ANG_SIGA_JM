@@ -447,8 +447,9 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  returnHome(){
+  returnHome() {
     this.displayColegiado = false;
+    sessionStorage.removeItem("fichaColegialByMenu");
     this.location.back();
   }
 
@@ -890,7 +891,7 @@ export class FichaColegialComponent implements OnInit {
             this.OnInit();
             this.displayColegiado = false;
 
-          } else{
+          } else {
             this.displayColegiado = true;
           }
         },

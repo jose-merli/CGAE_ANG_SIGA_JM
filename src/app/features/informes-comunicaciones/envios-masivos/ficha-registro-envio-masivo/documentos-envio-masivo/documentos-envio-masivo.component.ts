@@ -29,6 +29,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   progressSpinner: boolean = false;
   noEditar: boolean = false;
   habilitado: boolean = true;
+  noMostrar: boolean = false;
 
   @ViewChild('table') table: DataTable;
   selectedDatos
@@ -114,8 +115,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       if (this.body.idEstado != '1' && this.body.idEstado != '4') {
         this.noEditar = true;
       }
-      if(this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5'){
+      if (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
         this.noEditar = true;
+        this.noMostrar = true;
       }
       this.getDocumentos();
     }
