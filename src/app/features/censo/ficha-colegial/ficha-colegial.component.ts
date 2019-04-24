@@ -973,7 +973,7 @@ export class FichaColegialComponent implements OnInit {
           .post(url, this.generalBody.idPersona)
           .subscribe(
             data => {
-              this.generalBody.identificadords = JSON.parse(data["body"]);
+              this.generalBody.identificadords = data.body;
               let mess = this.translateService.instant("messages.collectionCreated");
               this.showSuccessDetalle(mess + this.generalBody.identificadords);
             },
@@ -4323,6 +4323,14 @@ export class FichaColegialComponent implements OnInit {
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
 
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
+
+      if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
+        sessionStorage.setItem("tipollamada", "busquedaNoColegiado");
+      } else if (sessionStorage.getItem("fichaColegialByMenu")) {
+        sessionStorage.setItem("tipollamada", "fichaColegial");
+      } else {
+        sessionStorage.setItem("tipollamada", "busquedaColegiados");
+      } 
     let us =
       this.sigaServices.getOldSigaUrl() +
       "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD=" +
@@ -4334,6 +4342,7 @@ export class FichaColegialComponent implements OnInit {
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");
     sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
+    sessionStorage.setItem("idInstitucionFichaColegial",idInstitucion.toString());
     this.router.navigate(["/turnoOficioCenso"]);
   }
 
