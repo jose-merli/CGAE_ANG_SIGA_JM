@@ -62,6 +62,7 @@ export class DatosColegiadosItem {
 
   //Filtro Busqueda de colegios
   colegio: string[];
+  identificadords: string;
 
-  constructor() {}
+  constructor() { }
 }
