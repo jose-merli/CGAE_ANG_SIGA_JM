@@ -4,6 +4,10 @@ export class DatosPolizaMutualidadItem {
   fEfecto: Date;
   opcionesCobertura: String;
   textoOtros: String;
+  cuotaMensual: String;
+  capitalObjetivo: String;
+  idCobertura:String;
+  
 
-  constructor() {}
+  constructor() { }
 }
