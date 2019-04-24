@@ -937,7 +937,7 @@ export class FichaColegialComponent implements OnInit {
     }
   }
   callConfirmationServiceRegtel() {
-    let mess = "No existe ninguna colección. ¿Desea añadir una nueva?";
+    let mess = this.translateService.instant("messages.creaCollection");
     let icon = "fa fa-edit";
 
     this.confirmationService.confirm({
@@ -973,10 +973,13 @@ export class FichaColegialComponent implements OnInit {
           .post(url, this.generalBody.idPersona)
           .subscribe(
             data => {
-             
+              this.generalBody.identificadords = JSON.parse(data["body"]);
+              let mess = this.translateService.instant("messages.collectionCreated");
+              this.showSuccessDetalle(mess + this.generalBody.identificadords);
             },
             err => {
               console.log(err);
+              this.showFail();
             }
           );
   }
