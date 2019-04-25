@@ -67,5 +67,14 @@ export class SolicitudIncorporacionItem {
   poblacionExtranjera: string;
   fechaEstadoSolicitud: Date;
 
+
+  idestadocivil;
+  idtipoidentificacion: string;
+  numeroidentificador: string;
+  idtratamiento: string;
+  idsolicitud: string;
+  naturalde: string;
+
+
   constructor() { }
 }

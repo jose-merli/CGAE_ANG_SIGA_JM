@@ -603,6 +603,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar.titular != undefined &&
       this.solicitudEditar.iban != null &&
       this.solicitudEditar.iban != undefined &&
+      this.solicitudEditar.bic != null &&
+      this.solicitudEditar.bic != undefined &&
       (this.cargo || this.abono || this.abonoJCS)
     ) {
       return true;

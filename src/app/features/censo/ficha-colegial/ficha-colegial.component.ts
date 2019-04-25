@@ -960,28 +960,28 @@ export class FichaColegialComponent implements OnInit {
     });
   }
 
-  addCollectionRegtel(){
+  addCollectionRegtel() {
     let url = "";
 
     if (this.esColegiado) {
       url = "fichaColegialRegTel_insertCollection";
-    }else{
+    } else {
       url = "fichaColegialRegTel_insertCollectionNoCol";
     }
-    
+
     this.sigaServices
-          .post(url, this.generalBody.idPersona)
-          .subscribe(
-            data => {
-              this.generalBody.identificadords = data.body;
-              let mess = this.translateService.instant("messages.collectionCreated");
-              this.showSuccessDetalle(mess + this.generalBody.identificadords);
-            },
-            err => {
-              console.log(err);
-              this.showFail();
-            }
-          );
+      .post(url, this.generalBody.idPersona)
+      .subscribe(
+        data => {
+          this.generalBody.identificadords = data.body;
+          let mess = this.translateService.instant("messages.collectionCreated");
+          this.showSuccessDetalle(mess + this.generalBody.identificadords);
+        },
+        err => {
+          console.log(err);
+          this.showFail();
+        }
+      );
   }
 
   esFichaActiva(key) {
@@ -4324,13 +4324,13 @@ export class FichaColegialComponent implements OnInit {
 
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
 
-      if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
-        sessionStorage.setItem("tipollamada", "busquedaNoColegiado");
-      } else if (sessionStorage.getItem("fichaColegialByMenu")) {
-        sessionStorage.setItem("tipollamada", "fichaColegial");
-      } else {
-        sessionStorage.setItem("tipollamada", "busquedaColegiados");
-      } 
+    if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
+      sessionStorage.setItem("tipollamada", "busquedaNoColegiado");
+    } else if (sessionStorage.getItem("fichaColegialByMenu")) {
+      sessionStorage.setItem("tipollamada", "fichaColegial");
+    } else {
+      sessionStorage.setItem("tipollamada", "busquedaColegiados");
+    }
     let us =
       this.sigaServices.getOldSigaUrl() +
       "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD=" +
@@ -4342,7 +4342,7 @@ export class FichaColegialComponent implements OnInit {
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");
     sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
-    sessionStorage.setItem("idInstitucionFichaColegial",idInstitucion.toString());
+    sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
     this.router.navigate(["/turnoOficioCenso"]);
   }
 
@@ -4970,17 +4970,19 @@ export class FichaColegialComponent implements OnInit {
                       //  this.modoLectura = true;
                       if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
                         this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+                        this.progressSpinner = false;
 
                       } else {
                         this.showInfo(prueba.valorRespuesta);
+                        this.progressSpinner = false;
+
                       }
                     }
-                    this.progressSpinner = false;
                   },
                   error => {
                     console.log(error);
-                  }, () => {
                     this.progressSpinner = false;
+
                   }
                 );
             } else {
@@ -5015,23 +5017,26 @@ export class FichaColegialComponent implements OnInit {
                       //  this.modoLectura = true;
                       if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
                         this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+                        this.progressSpinner = false;
 
                       } else {
                         this.showInfo(prueba.valorRespuesta);
+                        this.progressSpinner = false;
+
                       }
                     }
                   },
                   error => {
                     console.log(error);
-                  }, () => {
                     this.progressSpinner = false;
+
                   }
                 );
             }
           }, error => {
             console.log(error);
-          }, () => {
             this.progressSpinner = false;
+
           }
         );
     }
@@ -5087,17 +5092,19 @@ export class FichaColegialComponent implements OnInit {
                       //  this.modoLectura = true;
                       if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
                         this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+                        this.progressSpinner = false;
 
                       } else {
                         this.showInfo(prueba.valorRespuesta);
+                        this.progressSpinner = false;
+
                       }
                     }
-                    this.progressSpinner = false;
                   },
                   error => {
                     console.log(error);
-                  }, () => {
                     this.progressSpinner = false;
+
                   }
                 );
             } else {
@@ -5132,23 +5139,26 @@ export class FichaColegialComponent implements OnInit {
                       //  this.modoLectura = true;
                       if (prueba.valorRespuesta == undefined || prueba.valorRespuesta == null || prueba.valorRespuesta == "") {
                         this.showInfo("No se ha podido comprobar si tiene ya un Plan Universal");
+                        this.progressSpinner = false;
 
                       } else {
                         this.showInfo(prueba.valorRespuesta);
+                        this.progressSpinner = false;
+
                       }
                     }
                   },
                   error => {
                     console.log(error);
-                  }, () => {
                     this.progressSpinner = false;
+
                   }
                 );
             }
           }, error => {
             console.log(error);
-          }, () => {
             this.progressSpinner = false;
+
           }
         );
     }
