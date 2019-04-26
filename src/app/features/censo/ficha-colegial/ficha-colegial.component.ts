@@ -113,6 +113,7 @@ export class FichaColegialComponent implements OnInit {
   // irExpedientes: any;
   msgs: Message[];
   displayColegiado: boolean = false;
+  showMessageInscripcion: boolean = false;
 
   colsColegiales: any = [];
   colsColegiaciones: any = [];
@@ -1107,14 +1108,14 @@ export class FichaColegialComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
   }
 
   showSuccessDetalle(mensaje: string) {
     this.msgs = [];
-    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+    this.msgs.push({ severity: "success", summary: this.translateService.instant("general.message.correct"), detail: mensaje });
   }
 
   showSuccess() {
@@ -1130,7 +1131,7 @@ export class FichaColegialComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
@@ -1508,38 +1509,49 @@ export class FichaColegialComponent implements OnInit {
   comprobarAuditoria(tipoCambio) {
     // modo creación
 
-    if (this.ocultarMotivo) {
-      if (tipoCambio == 'solicitudModificacion') {
-        this.solicitarModificacionGenerales();
-      } else if (tipoCambio == 'guardarDatosColegiales') {
-        this.guardarColegiales();
-      } else if (tipoCambio == 'guardarDatosGenerales') {
-        this.generalesGuardar();
+    if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales') {
+
+      if (!this.isCrearColegial) {
+        this.datosColegiales[0].cambioEstado = true;
       }
+      this.callConfirmationServiceUpdate(tipoCambio);
+
     } else {
-      if (!this.esNewColegiado) {
-        this.tipoCambioAuditoria = tipoCambio;
-        this.displayAuditoria = true;
-        this.showGuardarAuditoria = false;
-      } else {
-        if (tipoCambio == 'guardarDatosColegiales') {
+      this.datosColegiales[0].cambioEstado = false;
+
+      if (this.ocultarMotivo) {
+        if (tipoCambio == 'solicitudModificacion') {
+          this.solicitarModificacionGenerales();
+        } else if (tipoCambio == 'guardarDatosColegiales') {
           this.guardarColegiales();
         } else if (tipoCambio == 'guardarDatosGenerales') {
           this.generalesGuardar();
         }
-
+      } else {
+        if (!this.esNewColegiado) {
+          this.tipoCambioAuditoria = tipoCambio;
+          this.displayAuditoria = true;
+          this.showGuardarAuditoria = false;
+        } else {
+          if (tipoCambio == 'guardarDatosColegiales') {
+            this.guardarColegiales();
+          } else if (tipoCambio == 'guardarDatosGenerales') {
+            this.generalesGuardar();
+          }
+        }
       }
+
+      // mostrar la auditoria depende de un parámetro que varía según la institución
+      this.generalBody.motivo = undefined;
+      // this.showGuardarAuditoria = false;
+
+      // if (!this.isLetrado) {
+      //   this.generalesGuardar();
+      // } else {
+      //   this.displayAuditoria = true;
+      // }
+
     }
-
-    // mostrar la auditoria depende de un parámetro que varía según la institución
-    this.generalBody.motivo = undefined;
-    // this.showGuardarAuditoria = false;
-
-    // if (!this.isLetrado) {
-    //   this.generalesGuardar();
-    // } else {
-    //   this.displayAuditoria = true;
-    // }
   }
 
   generalesGuardar() {
@@ -2834,7 +2846,16 @@ export class FichaColegialComponent implements OnInit {
                         this.obtenerEtiquetasPersonaJuridicaConcreta();
                         this.progressSpinner = false;
                         this.cerrarAuditoria();
-                        this.showSuccess();
+
+                        if (JSON.parse(data.body).error != null &&
+                          JSON.parse(data.body).error != undefined &&
+                          JSON.parse(data.body).error != "") {
+                            let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+                            this.showSuccessDetalle(msg);
+                        } else {
+                          this.showSuccess();
+                        }
+
                         this.onInitColegiales();
                         this.searchDirecciones();
                         this.checkColegialesBody = new FichaColegialColegialesItem();
@@ -2857,14 +2878,20 @@ export class FichaColegialComponent implements OnInit {
                       error => {
                         console.log(error);
                         this.progressSpinner = false;
+                        if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
+                          let msg = this.translateService.instant(JSON.parse(error.error).error.message);
+                          this.showFailDetalle(msg);
+                        } else {
+                          this.showFail();
+                        }
                         this.isCrearColegial = false;
                         this.isRestablecer = false;
+                        this.restablecerColegiales();
                         this.inscritoChange = false;
                         this.filaEditable = false;
                         this.activarGuardarColegiales = false;
                         this.cerrarAuditoria();
                         this.numSelectedColegiales = 0;
-                        this.showFail();
                       }
                     );
                 } else {
@@ -2877,9 +2904,18 @@ export class FichaColegialComponent implements OnInit {
                   this.filaEditable = false;
                   this.numSelectedColegiales = 0;
                   this.cerrarAuditoria();
-                  this.showSuccess();
                   this.onInitColegiales();
                   this.searchDirecciones();
+
+                  if (JSON.parse(data.body).error != null &&
+                    JSON.parse(data.body).error != undefined &&
+                    JSON.parse(data.body).error != "") {
+                      let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+                      this.showSuccessDetalle(msg);
+                  } else {
+                    this.showSuccess();
+
+                  }
 
                   this.checkColegialesBody = JSON.parse(
                     JSON.stringify(this.colegialesBody)
@@ -2888,6 +2924,14 @@ export class FichaColegialComponent implements OnInit {
               },
               error => {
                 console.log(error);
+
+                if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
+                  let msg = this.translateService.instant(JSON.parse(error.error).error.message);
+                  this.showFailDetalle(msg);
+                } else {
+                  this.showFail();
+                }
+
                 this.progressSpinner = false;
                 this.isCrearColegial = false;
                 this.isRestablecer = false;
@@ -2896,7 +2940,6 @@ export class FichaColegialComponent implements OnInit {
                 this.numSelectedColegiales = 0;
                 this.filaEditable = false;
                 this.cerrarAuditoria();
-                this.showFail();
               }
             );
         },
@@ -2932,6 +2975,7 @@ export class FichaColegialComponent implements OnInit {
 
   restablecerColegiales() {
     this.selectedDatosColegiales = '';
+    this.showMessageInscripcion = false;
     this.colegialesBody = JSON.parse(JSON.stringify(this.checkColegialesBody));
     // this.colegialesBody = this.colegialesBody[0];
     this.itemAInscrito();
@@ -3035,6 +3079,7 @@ export class FichaColegialComponent implements OnInit {
       selectedDatos.estadoColegial = identificacion.label;
     }
     this.isRestablecer = true;
+    this.showMessageInscripcion = true;
     this.activacionGuardarColegiales();
   }
 
@@ -3059,6 +3104,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   nuevoColegial() {
+    this.showMessageInscripcion = true;
     this.selectedDatosColegiales = '';
     this.isCrearColegial = true;
     this.isRestablecer = true;
@@ -3117,6 +3163,7 @@ export class FichaColegialComponent implements OnInit {
       message: mess,
       icon: icon,
       accept: () => {
+
         this.eliminarEstadoColegial(selectedDatos);
       },
       reject: () => {
@@ -3152,8 +3199,15 @@ export class FichaColegialComponent implements OnInit {
           this.isEliminarEstadoColegial = false;
           this.numSelectedColegiales = 0;
           this.onInitColegiales();
-          this.showSuccess();
-          this.searchDirecciones();
+          if (JSON.parse(data.body).error != null &&
+            JSON.parse(data.body).error != undefined &&
+            JSON.parse(data.body).error != "") {
+              let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+              this.showSuccessDetalle(msg);
+          } else {
+            this.showSuccess();
+
+          } this.searchDirecciones();
         },
         error => {
           console.log(error);
@@ -3165,7 +3219,13 @@ export class FichaColegialComponent implements OnInit {
           this.isEliminarEstadoColegial = false;
           this.onInitColegiales();
           this.numSelectedColegiales = 0;
-          this.showFail();
+
+          if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
+            let msg = this.translateService.instant(JSON.parse(error.error).error.message);
+            this.showFailDetalle(msg);
+          } else {
+            this.showFail();
+          }
         }, () => {
           this.numSelectedColegiales = 0;
         }
@@ -5924,7 +5984,84 @@ export class FichaColegialComponent implements OnInit {
       this.generalesGuardar();
     }
 
+  }
 
+  callConfirmationServiceUpdate(tipoCambio) {
+    let mess = this.translateService.instant("message.fichaColegial.informarBajaInscripciones.cambioEstadoColegial");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.showMessageInscripcion = false;
+
+        if (this.ocultarMotivo) {
+          if (tipoCambio == 'solicitudModificacion') {
+            this.solicitarModificacionGenerales();
+          } else if (tipoCambio == 'guardarDatosColegiales') {
+            this.guardarColegiales();
+          } else if (tipoCambio == 'guardarDatosGenerales') {
+            this.generalesGuardar();
+          }
+        } else {
+          if (!this.esNewColegiado) {
+            this.tipoCambioAuditoria = tipoCambio;
+            this.displayAuditoria = true;
+            this.showGuardarAuditoria = false;
+          } else {
+            if (tipoCambio == 'guardarDatosColegiales') {
+              this.guardarColegiales();
+            } else if (tipoCambio == 'guardarDatosGenerales') {
+              this.generalesGuardar();
+            }
+          }
+        }
+
+        // mostrar la auditoria depende de un parámetro que varía según la institución
+        this.generalBody.motivo = undefined;
+        // this.showGuardarAuditoria = false;
+      },
+      reject: () => {
+        this.showMessageInscripcion = false;
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  callConfirmationServiceDelete(selectedDatosColegiales) {
+    let mess = this.translateService.instant("message.fichaColegial.informarBajaInscripciones.cambioEstadoColegial");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarEstadoColegial(selectedDatosColegiales);
+        this.showMessageInscripcion = false;
+
+      },
+      reject: () => {
+        this.showMessageInscripcion = false;
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
 }

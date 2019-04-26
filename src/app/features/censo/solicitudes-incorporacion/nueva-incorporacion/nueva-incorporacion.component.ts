@@ -146,6 +146,9 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.getItem("nuevaIncorporacion")
         );
 
+        let fecha = this.transformaFecha(this.solicitudEditar.fechaNacimiento);
+        this.solicitudEditar.fechaNacimiento = fecha;
+
         this.compruebaDNI();
 
         if (solicitudrecibida.idInstitucion != null && solicitudrecibida.idInstitucion != undefined
@@ -366,9 +369,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.solicitudEditar.fechaSolicitud = new Date(
       this.solicitudEditar.fechaSolicitud
     );
-    this.solicitudEditar.fechaIncorporacion = new Date(
-      this.solicitudEditar.fechaIncorporacion
-    );
+
     this.solicitudEditar.fechaEstado = new Date(
       this.solicitudEditar.fechaEstado
     );
@@ -401,6 +402,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.poblacionSelected = this.solicitudEditar.idPoblacion;
     this.sexoSelected = this.solicitudEditar.sexo;
   }
+
 
   onChangeProvincia(event) {
     this.sigaServices
@@ -615,88 +617,96 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   aprobarSolicitud() {
     if (this.habilitaAceptar()) {
-      if (this.isGuardar()) {
-        this.guardar(false);
-      }
+      if (this.solicitudEditar.fechaIncorporacion != null &&
+        this.solicitudEditar.fechaIncorporacion != undefined) {
 
-      this.progressSpinner = true;
+        if (this.isGuardar()) {
+          this.guardar(false);
+        }
 
-      this.sigaServices
-        .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
-        .subscribe(
-          data => {
-            let resultado = JSON.parse(data["body"]);
+        this.progressSpinner = true;
 
-            if (resultado.numColegiado == "disponible") {
-              this.sigaServices
-                .post(
-                  "solicitudIncorporacion_aprobarSolicitud",
-                  this.solicitudEditar.idSolicitud
-                )
-                .subscribe(
-                  result => {
-                    sessionStorage.removeItem("editedSolicitud");
+        this.sigaServices
+          .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
+          .subscribe(
+            data => {
+              let resultado = JSON.parse(data["body"]);
 
-                    this.msgs = [
-                      {
-                        severity: "success",
-                        summary: "Éxito",
-                        detail: "Solicitud aprobada."
-                      }
-                    ];
+              if (resultado.numColegiado == "disponible") {
+                this.sigaServices
+                  .post(
+                    "solicitudIncorporacion_aprobarSolicitud",
+                    this.solicitudEditar.idSolicitud
+                  )
+                  .subscribe(
+                    result => {
+                      sessionStorage.removeItem("editedSolicitud");
 
-                    this.searchSolicitante();
-                    this.consulta = true;
-                    this.pendienteAprobacion = false;
-                    sessionStorage.setItem("pendienteAprobacion", "false");
-                    this.solicitudEditar.idEstado = "50";
-                    this.estadoSolicitudSelected = "50";
-                    let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
-                    this.solicitudEditar.estadoSolicitud = estado.label;
-                    let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
-                    this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
-                    let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
-                    this.solicitudEditar.modalidad = modalidad.label;
-                    sessionStorage.setItem("consulta", "true");
-                    this.solicitudEditar.fechaEstadoSolicitud = new Date();
-                    sessionStorage.setItem(
-                      "editedSolicitud",
-                      JSON.stringify(this.solicitudEditar)
-                    );
-                    this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+                      this.msgs = [
+                        {
+                          severity: "success",
+                          summary: "Éxito",
+                          detail: "Solicitud aprobada."
+                        }
+                      ];
 
-                    this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
-                  },
-                  error => {
-                    console.log(error);
-                    this.msgs = [
-                      {
-                        severity: "error",
-                        summary: "Error",
-                        detail: "Error al aprobar la solicitud."
-                      }
-                    ];
-                    this.progressSpinner = false;
-                  }
-                );
+                      this.searchSolicitante();
+                      this.consulta = true;
+                      this.pendienteAprobacion = false;
+                      sessionStorage.setItem("pendienteAprobacion", "false");
+                      this.solicitudEditar.idEstado = "50";
+                      this.estadoSolicitudSelected = "50";
+                      let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+                      this.solicitudEditar.estadoSolicitud = estado.label;
+                      let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+                      this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+                      let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+                      this.solicitudEditar.modalidad = modalidad.label;
+                      sessionStorage.setItem("consulta", "true");
+                      this.solicitudEditar.fechaEstadoSolicitud = new Date();
+                      sessionStorage.setItem(
+                        "editedSolicitud",
+                        JSON.stringify(this.solicitudEditar)
+                      );
+                      this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
 
+                      this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+                    },
+                    error => {
+                      console.log(error);
+                      this.msgs = [
+                        {
+                          severity: "error",
+                          summary: "Error",
+                          detail: "Error al aprobar la solicitud."
+                        }
+                      ];
+                      this.progressSpinner = false;
+                    }
+                  );
 
-            } else {
-              this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
+              } else {
+                this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
+                this.progressSpinner = false;
+              }
+
+            },
+            error => {
+              let resultado = JSON.parse(error["error"]);
+              this.showFail(resultado.error.message.toString());
               this.progressSpinner = false;
             }
+          );
 
-          },
-          error => {
-            let resultado = JSON.parse(error["error"]);
-            this.showFail(resultado.error.message.toString());
-            this.progressSpinner = false;
-          }
-        );
+      } else {
+        this.showFail("censo.alterMutua.literal.fechaIncorporacionObligatorio");
+
+      }
     } else {
       this.showFail("censo.alterMutua.literal.datosBancariosObligatorios");
 
     }
+
   }
   searchSolicitante() {
     this.progressSpinner = true;
@@ -826,6 +836,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
     this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.sexo = this.sexoSelected;
+
     if (this.paisSelected == "191") {
       this.solicitudEditar.idProvincia = this.provinciaSelected;
       this.solicitudEditar.idPoblacion = this.poblacionSelected;
@@ -1113,7 +1124,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         (this.isValidIBAN() ||
           this.solicitudEditar.iban == "" ||
           this.solicitudEditar.iban == undefined) &&
-        // this.provinciaSelected != "" &&
         this.estadoSolicitudSelected != "" &&
         this.estadoSolicitudSelected != undefined &&
         this.solicitudEditar.fechaEstado != null &&
@@ -1126,8 +1136,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.tipoColegiacionSelected != undefined &&
         this.modalidadDocumentacionSelected != "" &&
         this.modalidadDocumentacionSelected != undefined &&
-        this.solicitudEditar.fechaIncorporacion != null &&
-        this.solicitudEditar.fechaIncorporacion != undefined &&
+        this.solicitudEditar.correoElectronico != null &&
+        this.solicitudEditar.correoElectronico != undefined &&
         this.numColegiadoDisponible != false &&
         this.tipoIdentificacionSelected != "" &&
         this.tipoIdentificacionSelected != undefined &&
@@ -1151,10 +1161,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.solicitudEditar.telefono1 != undefined &&
         this.solicitudEditar.correoElectronico != null &&
         this.solicitudEditar.correoElectronico != undefined
-        // this.solicitudEditar.titular != null &&
-        // this.solicitudEditar.titular != undefined &&
-        // this.solicitudEditar.iban != null &&
-        // this.solicitudEditar.iban != undefined
       ) {
         return true;
       } else {
@@ -1385,6 +1391,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   fillFechaNacimiento(event) {
     this.solicitudEditar.fechaNacimiento = event;
+  }
+
+  transformaFecha(fecha) {
+    let splitDate = fecha.split("/");
+    let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+    fecha = new Date((arrayDate += "T00:00:00.001Z"));
+
+    return fecha;
   }
 
   //búsqueda con enter
