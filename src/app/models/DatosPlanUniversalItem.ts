@@ -60,5 +60,27 @@ export class DatosPlanUniversalItem {
 	bic: String;
 	idBeneficiarios: String;
 	dc: String;
+
+
+	capitalcobertura: string;
+	codigopostal: string;
+	correoelectronico: string;
+	cuotacobertura: string;
+	telefono1: string;
+	poblacion: string;
+	cobertura: string;
+	opcionCobertura: string;
+
+	numerohijos: string;
+	edadhijo1: string;
+	edadhijo2: string;
+	edadhijo3: string;
+	edadhijo4: string;
+	edadhijo5: string;
+	edadhijo6: string;
+	edadhijo7: string;
+	edadhijo8: string;
+	fechanacimientoconyuge: string;
+
 	constructor() { }
 }
