@@ -137,7 +137,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
-
+        this.solicitudEditar.fechaSolicitud = new Date();
         this.sexoSelected = this.solicitudEditar.sexo;
         this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
         this.tratamientoSelected = this.solicitudEditar.idTratamiento;

@@ -18,7 +18,7 @@
 </div>
 
 <div class="busqueda-container">
-    <!--DATOS COLEGIACIÓN-->
+<!--FICHA DATOS SOLICITUD-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaColegiacion()">
             <div [hidden]="fichaColegiacion" class="form-row">
@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
+                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
                         <label>{{"censo.nuevaSolicitud.estado" | translate }}
@@ -40,7 +40,7 @@
                             <span>{{solicitudEditar.fechaEstado | date: 'dd/MM/yyyy'}}</span>
                         </label>
                         <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }}
-                            <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
+                            <span>{{solicitudEditar.fechaEstadoSolicitud | date: 'dd/MM/yyyy'}}</span>
                         </label>
                         <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
                     </div>
@@ -51,7 +51,7 @@
                     <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
-                <label class="title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
+                <label class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
                 <i class="fa fa-angle-up ml-auto"></i>
             </div>
         </div>
@@ -65,10 +65,10 @@
                             <label>{{"censo.nuevaSolicitud.estado" | translate }}</label>
                             <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="estadoSolicitudSelected" [options]="estadosSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
                         </div>
-                        <div class="form-group col-lg-4 col-md-5">
-                            <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }} (*)</label>
-                            <app-fecha [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaEstado($event)"
-                                (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
+                        <div class="form-group col-lg-3 col-md-4">
+                            <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }}</label>
+                            <app-fecha [(value)]="solicitudEditar.fechaEstadoSolicitud" [disabled]="true" [utc]="false" (valueChangeSelected)="fillFechaEstadoSolicitud($event)"
+                                (valueChangeInput)="fillFechaEstadoSolicitud($event)"></app-fecha>
                         </div>
                         <div class="form-group col-lg-4 col-md-5" style="float:right">
                             <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
@@ -87,8 +87,7 @@
         </div>
     </div>
 
-
-    <!--FICHA DATOS SOLICITUD-->
+<!--DATOS COLEGIACIÓN-->
     <div class="card">
         <div class="card-header header-ficha" (click)="abreCierraFichaSolicitud()">
             <div [hidden]="fichaSolicitud" class="form-row">
@@ -100,7 +99,7 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
+                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
                         <label>{{ "censo.nuevaSolicitud.tipoSolicitud" | translate}}
@@ -118,7 +117,7 @@
                     <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
-                <label class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
+                <label class="title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
                 <i class="fa fa-angle-up ml-auto"></i>
             </div>
         </div>
@@ -139,12 +138,12 @@
                     <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="modalidadDocumentacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
                         [options]="modalidadDocumentacion"></p-dropdown>
                 </div>
-                <div class="form-group col-lg-3 col-md-4">
-                    <label>Fecha Estado de Solicitud</label>
-                    <app-fecha [(value)]="solicitudEditar.fechaEstadoSolicitud" [disabled]="true" [utc]="false" (valueChangeSelected)="fillFechaEstadoSolicitud($event)"
-                        (valueChangeInput)="fillFechaEstadoSolicitud($event)"></app-fecha>
+                <div class="form-group col-lg-3 col-md-3">
+                    <label>{{"censo.nuevaIncorporacion.literal.fechaPrimerEstado" | translate}} (*)</label>
+                    <app-fecha [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaEstado($event)"
+                        (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
                 </div>
-                <div class="form-group col-lg-3 col-md-4">
+                <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}} (*)</label>
                     <app-fecha [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaIncorporacion($event)"
                         (valueChangeInput)="fillFechaIncorporacion($event)"></app-fecha>
