@@ -87,8 +87,25 @@ export class ComunicacionesComponent implements OnInit {
 
     this.sigaServices.get("usuario_logeado").subscribe(n => {
       this.usuario = n.usuarioLogeadoItem;
-      if (this.usuario[0].perfiles == "Abogado" || this.usuario[0].perfiles == "Abogado Inscrito") {
+      /*if (this.usuario[0].perfiles.indexOf("Abogado") > -1 || this.usuario[0].perfiles.indexOf("Abogado Inscrito") > -1) {
         sessionStorage.setItem("permisoAbogado", "true");
+      }*/
+      if (this.usuario[0].idPerfiles.indexOf("ABG") > -1 || this.usuario[0].perfiles.indexOf("NCL") > -1
+        || this.usuario[0].idPerfiles.indexOf("ABI") > -1) {
+        sessionStorage.setItem("permisoAbogado", "true");
+      }
+      if (this.usuario[0].idPerfiles.indexOf("ADM") == -1 && this.usuario[0].idPerfiles.indexOf("ADG") == -1) {
+        if (sessionStorage.getItem("personaBody") != null) {
+          this.personaBody = JSON.parse(sessionStorage.getItem("personaBody"));
+          // Obtenemos el desatinatario     
+          let persona = this.personaBody.idPersona;
+          let institucionPersona = this.personaBody.idInstitucion;
+  
+          objPersona = {
+            idPersona: persona,
+            idInstitucion: institucionPersona
+          }
+        }
       }
     });
 
