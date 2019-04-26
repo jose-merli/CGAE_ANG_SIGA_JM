@@ -293,7 +293,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.path = "agendaFormacion";
       this.idCurso = sessionStorage.getItem("idCurso");
       this.disabledToday = false;
-
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
       //Cargamos los tipo de calendarios que existen
       this.getComboCalendar();
       //Obligamos a que sea el tipo de calendario formacion
@@ -554,6 +554,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           );
         }
       }
+      this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
       this.idCurso = this.newEvent.idCurso;
       this.getEntryListCourse();
       //Carga los formadores que pertenecen al curso que se va a crear el evento
