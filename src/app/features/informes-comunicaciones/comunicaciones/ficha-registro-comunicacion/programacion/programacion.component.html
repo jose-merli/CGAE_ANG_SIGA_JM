@@ -43,18 +43,17 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} (*)</label>
-          <app-fecha [(value)]="body.fechaProgramada" [minDate]="currentDate" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaProgramada($event)"
+          <app-fecha [(value)]="body.fechaProgramada" [minDate]="currentDate" [disabled]="noEditar" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaProgramada($event)"
             (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
-
         </div>
       </div>
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer() " pButton type="button " icon="fa fa-undo " iconPos="left"
+        <button (click)="restablecer()" [disabled]="isGuardarDisabled()" pButton type="button " icon="fa fa-undo " iconPos="left"
           label="{{'general.boton.restablecer' | translate}} "></button>
-        <button (click)="guardar()" [disabled]=" noEditar || isGuardarDisabled()" pButton type=" button "
-          icon="far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}} "></button>
+        <button (click)="guardar()" [disabled]=" noEditar || isGuardarDisabled()" pButton type=" button " icon="far fa-save " iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}} "></button>
       </div>
     </div>
   </div>

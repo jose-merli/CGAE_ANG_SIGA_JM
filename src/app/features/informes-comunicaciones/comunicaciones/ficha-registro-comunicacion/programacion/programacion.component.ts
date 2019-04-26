@@ -134,6 +134,8 @@ export class ProgramacionComponent implements OnInit {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       if (this.body.idEstado != '1' && this.body.idEstado != '4') {
         this.noEditar = true;
+      } else {
+        this.noEditar = false;
       }
     } else {
       this.noEditar = false;

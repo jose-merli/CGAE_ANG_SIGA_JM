@@ -57,11 +57,11 @@ export class ComunicacionesComponent implements OnInit {
   fichaBusqueda: boolean = false;
   showDatosDestinatarios: boolean = true;
   destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
-  colegios: any [] = [];
-  colegios_seleccionados: any [] = [];
+  colegios: any[] = [];
+  colegios_seleccionados: any[] = [];
   busquedaDestinatarioDisabled: boolean = false;
   personaBody: any;
-
+  usuario: any[] = [];
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -77,7 +77,7 @@ export class ComunicacionesComponent implements OnInit {
     this.selectedItem = 10;
 
     sessionStorage.removeItem("crearNuevaCom");
-    
+
     this.getComboColegios();
     this.getTipoEnvios();
     this.getEstadosEnvios();
@@ -85,37 +85,44 @@ export class ComunicacionesComponent implements OnInit {
 
     let objPersona = null;
 
-    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true){
-      if(sessionStorage.getItem("personaBody") != null){
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+      this.usuario = n.usuarioLogeadoItem;
+      if (this.usuario[0].perfiles == "Abogado" || this.usuario[0].perfiles == "Abogado Inscrito") {
+        sessionStorage.setItem("permisoAbogado", "true");
+      }
+    });
+
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      if (sessionStorage.getItem("personaBody") != null) {
         this.personaBody = JSON.parse(sessionStorage.getItem("personaBody"));
         // Obtenemos el desatinatario     
-        let persona =  this.personaBody.idPersona;
+        let persona = this.personaBody.idPersona;
         let institucionPersona = this.personaBody.idInstitucion;
-        
+
         objPersona = {
-          idPersona : persona,
+          idPersona: persona,
           idInstitucion: institucionPersona
         }
-      }      
+      }
 
-    }else if(sessionStorage.getItem("filtroIdPersona") != null && sessionStorage.getItem("filtroIdInstitucion") != null){
+    } else if (sessionStorage.getItem("filtroIdPersona") != null && sessionStorage.getItem("filtroIdInstitucion") != null) {
       // Obtenemos el desatinatario     
-      let persona =  sessionStorage.getItem("filtroIdPersona");
+      let persona = sessionStorage.getItem("filtroIdPersona");
       let institucionPersona = sessionStorage.getItem("filtroIdInstitucion");
-      
+
       objPersona = {
-        idPersona : persona,
+        idPersona: persona,
         idInstitucion: institucionPersona
-      }     
+      }
     }
 
-    if(objPersona != null){
+    if (objPersona != null) {
       this.sigaServices.post("busquedaPer_institucion", objPersona).subscribe(
         data => {
           let persona = JSON.parse(data["body"]);
-          if(persona && persona.colegiadoItem){
+          if (persona && persona.colegiadoItem) {
             this.destinatario = persona.colegiadoItem[0];
-          }else if(persona && persona.noColegiadoItem){
+          } else if (persona && persona.noColegiadoItem) {
             this.destinatario = persona.noColegiadoItem[0];
           }
 
@@ -199,7 +206,7 @@ export class ComunicacionesComponent implements OnInit {
     this.msgs = [];
   }
 
-  getComboColegios(){
+  getComboColegios() {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
@@ -316,7 +323,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.getResultados();
   }
 
-  getResultados() {    
+  getResultados() {
     this.sigaServices
       .postPaginado("comunicaciones_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -488,7 +495,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
     this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
       data => {
         this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
-        
+
         let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
         datoDuplicado.forEach(element => {
           if (element.fechaProgramada != null) {
@@ -498,7 +505,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
         });
         sessionStorage.setItem("ComunicacionDuplicada", "true");
         sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
-        this.router.navigate(["/fichaRegistroEnvioMasivo"]);       
+        this.router.navigate(["/fichaRegistroEnvioMasivo"]);
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));

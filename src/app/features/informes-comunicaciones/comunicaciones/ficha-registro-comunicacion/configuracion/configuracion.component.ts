@@ -13,11 +13,12 @@ import { saveAs } from "file-saver/FileSaver";
 })
 export class ConfiguracionComponent implements OnInit {
   openFicha: boolean = false;
-  activacionEditar: boolean = true;
+  activacionEditar: boolean = false;
   datos: any[];
   cols: any[];
   first: number = 0;
   body: ConfigComunicacionItem = new ConfigComunicacionItem();
+  bodyInicial: ConfigComunicacionItem = new ConfigComunicacionItem();
   clasesComunicaciones: any[];
   modelos: any[];
   plantillas: any[];
@@ -70,7 +71,7 @@ export class ConfiguracionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(sessionStorage.getItem("tinyApiKey") != null){
+    if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
 
@@ -162,10 +163,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   abreCierraFicha() {
     // let fichaPosible = this.getFichaPosibleByKey(key);
-    if (this.activacionEditar == true) {
-      // fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
+    // if (this.activacionEditar == true) {
+    // fichaPosible.activa = !fichaPosible.activa;
+    this.openFicha = !this.openFicha;
+    // }
   }
 
   esFichaActiva(key) {
@@ -185,19 +186,34 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   getDatos() {
     if (sessionStorage.getItem("comunicacionesSearch") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));      
-      if (this.body.idEstado != '4') {
+      this.body = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+      this.bodyInicial = JSON.parse(sessionStorage.getItem("comunicacionesSearch"));
+      if (this.body.idEstado != '4' && this.body.idEstado != '1') {
         this.editar = true;
-      }else{
-        this.cancelar = true;
+      } else {
+        this.activacionEditar = true;
       }
-      if(this.body.idEstado == '3' || this.body.idEstado == '6'){
+      if (this.body.idEstado == '3' || this.body.idEstado == '6') {
         this.reenviar = true;
       }
       this.getPlantillas();
     } else {
       this.editar = false;
     }
+  }
+
+
+  isGuardarDisabled() {
+    if (JSON.stringify(this.bodyInicial) != JSON.stringify(this.body)) {
+      if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.idPlantillaEnvios != ''
+        && this.body.idPlantillaEnvios != null && this.body.descripcion != '' && this.body.descripcion != null) {
+        return false;
+      }
+      return true;
+    } else {
+      return true;
+    }
+
   }
 
   getModelosComunicacion() {
@@ -245,6 +261,36 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     );
   }
+
+  guardar() {
+    this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
+      data => {
+        this.body.idEstado = '4';
+        let result = JSON.parse(data["body"]);
+        this.body.idEnvio = result.description;
+
+        // if (sessionStorage.getItem("crearNuevoEnvio") != null) {
+        //   this.body.fechaCreacion = new Date();
+        // }
+        // console.log(this.body.fechaCreacion);
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        // sessionStorage.removeItem("crearNuevoEnvio");
+        // sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioCorrect"));
+        // this.editarPlantilla = true;
+      },
+      err => {
+        this.showFail(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioError"));
+        console.log(err);
+      },
+      () => {
+
+      }
+    );
+
+
+  }
+
 
   onCancelar() {
     this.confirmationService.confirm({
@@ -300,7 +346,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         () => { }
       );
-  }  
+  }
 
   descargarJustificante() {
     this.progressSpinner = true;
@@ -318,12 +364,12 @@ para poder filtrar el dato con o sin estos caracteres*/
           saveAs(data, "Justificante_BUROSMS.pdf");
         }
       },
-      err => {
-        console.log(err);
-        this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
-        );
-      }, () =>{
-        this.progressSpinner=false
-      });
-  }  
+        err => {
+          console.log(err);
+          this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
+          );
+        }, () => {
+          this.progressSpinner = false
+        });
+  }
 }
