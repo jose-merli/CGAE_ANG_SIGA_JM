@@ -82,11 +82,11 @@
             </div>
             <div *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7' " class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
+              <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="editar" pInputText>
             </div>
             <div *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7' " class="form-group col-lg-12 col-md-12">
               <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-              <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.cuerpo"></editor>
+              <editor apiKey="{{apiKey}}" [init]="editorConfig" [disabled]="editar" [(ngModel)]="body.cuerpo"></editor>
             </div>
             <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
               <label>{{'enviosMasivos.literal.numCaracteres' | translate}}: </label>
