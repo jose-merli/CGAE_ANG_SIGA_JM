@@ -31,10 +31,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     selector: 'textarea',
     plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
     toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
-    menubar: false,    
+    menubar: false,
     autoresize_on_init: true,
     statusbar: false,
-    paste_data_images : true,
+    paste_data_images: true,
     images_upload_handler: function (blobInfo, success, failure) {
       // no upload, just return the blobInfo.blob() as base64 data
       success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
@@ -110,7 +110,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
   detallePlantilla(event) {
 
-    if (this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
+    if (this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '7') {
       let datosPlantilla = {
         idPlantillaEnvios: event.value,
         idTipoEnvios: this.body.idTipoEnvios
@@ -165,11 +165,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != '')
       this.getPlantillas();
 
-    if(this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '2'){
+    if (this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '2') {
       this.sigaServices.notifyHabilitarDocumentos();
-    }else{
+    } else {
       this.sigaServices.notifyDesHabilitarDocumentos();
-    }    
+    }
   }
 
   getPlantillas() {

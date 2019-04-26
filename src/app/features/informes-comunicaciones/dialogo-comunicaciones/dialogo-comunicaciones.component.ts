@@ -484,12 +484,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 
   fillFechaProgramacionCalendar(event) {
     this.bodyComunicacion.fechaProgramacion = event;
-    if (this.bodyComunicacion.fechaProgramacion.getHours() > this.currentDate.getHours()) {
-      this.currentDate.setMinutes(0);
-      this.currentDate.setSeconds(0);
-    } else if (this.bodyComunicacion.fechaProgramacion.getHours() == this.currentDate.getHours()) {
-      this.currentDate.setMinutes(this.currentDate.getMinutes());
-      this.currentDate.setSeconds(this.currentDate.getSeconds());
-    }
   }
+
 }
