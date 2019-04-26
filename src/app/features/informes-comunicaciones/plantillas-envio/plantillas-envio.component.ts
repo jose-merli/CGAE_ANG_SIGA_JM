@@ -294,10 +294,10 @@ función para que no cargue primero las etiquetas de los idiomas*/
 			(err) => {
 				let errorResponse = JSON.parse(err.error);
 				if (errorResponse.code == 400) {
-					this.showInfo('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaNoBorrar');
-				}else{
+					this.showInfo(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.plantillaNoBorrar'));
+				} else {
 					this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado'));
-				}				
+				}
 				console.log(err);
 			},
 			() => {
