@@ -407,7 +407,6 @@ export class DialogoComunicacionesComponent implements OnInit {
           // }
           this.progressSpinner = false;
           this.showValores = false;
-          this.backTo();
         },
         err => {
           console.log(err);
