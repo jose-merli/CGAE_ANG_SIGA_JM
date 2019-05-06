@@ -708,6 +708,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getDaysWeek").subscribe(
       n => {
         this.comboRepeatOn = n.combooItems;
+        let dom = this.comboRepeatOn[0];
+        this.comboRepeatOn.splice(0, 1);
+        this.comboRepeatOn.push(dom);
       },
       err => {
         console.log(err);
