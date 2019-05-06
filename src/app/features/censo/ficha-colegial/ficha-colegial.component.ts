@@ -108,6 +108,7 @@ export class FichaColegialComponent implements OnInit {
   buttonVisibleRegtelDescargar: boolean = true;
   activateNumColegiado: boolean = false;
   disabledNif: boolean = false;
+  selectedItemDelete;
 
   // irTurnoOficio: any;
   // irExpedientes: any;
@@ -426,6 +427,7 @@ export class FichaColegialComponent implements OnInit {
   fichaMutua: any;
   estadoColegial: String;
   residente: String;
+  displayDelete: boolean;
 
   constructor(
     private location: Location,
@@ -2438,22 +2440,26 @@ export class FichaColegialComponent implements OnInit {
   }
 
   mostrarFechas() {
-    if (JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.incorporacion) != undefined && 
+    JSON.stringify(this.colegialesBody.incorporacion) != null && JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
       this.datePipeIncorporacion = true;
     } else {
       this.datePipeIncorporacion = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechapresentacion) != undefined && 
+    JSON.stringify(this.colegialesBody.fechapresentacion) != null && JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
       this.datePipePresentacion = true;
     } else {
       this.datePipePresentacion = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechaJura) != undefined && 
+    JSON.stringify(this.colegialesBody.fechaJura) != null && JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
       this.datePipeFechaJura = true;
     } else {
       this.datePipeFechaJura = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechaTitulacion) != undefined && 
+    JSON.stringify(this.colegialesBody.fechaTitulacion) != null && JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
       this.datePipeFechaTitulacion = true;
     } else {
       this.datePipeFechaTitulacion = false;
@@ -2685,27 +2691,17 @@ export class FichaColegialComponent implements OnInit {
     });
   }
 
-  callServiceShowMessageDelete(selectedItem) {
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: this.msgDir,
-      icon: icon,
-
-      accept: () => {
-        this.callServiceEliminarEstadoColegial(selectedItem);
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
+  callCancelAction() {
+    this.displayDelete = false;
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "Cancel",
+        detail: this.translateService.instant(
+          "general.message.accion.cancelada"
+        )
       }
-    });
+    ];
   }
 
   comprobarDireccion(isEjerciente) {
@@ -2850,8 +2846,8 @@ export class FichaColegialComponent implements OnInit {
                         if (JSON.parse(data.body).error != null &&
                           JSON.parse(data.body).error != undefined &&
                           JSON.parse(data.body).error != "") {
-                            let msg = this.translateService.instant(JSON.parse(data.body).error.message);
-                            this.showSuccessDetalle(msg);
+                          let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+                          this.showSuccessDetalle(msg);
                         } else {
                           this.showSuccess();
                         }
@@ -2910,8 +2906,8 @@ export class FichaColegialComponent implements OnInit {
                   if (JSON.parse(data.body).error != null &&
                     JSON.parse(data.body).error != undefined &&
                     JSON.parse(data.body).error != "") {
-                      let msg = this.translateService.instant(JSON.parse(data.body).error.message);
-                      this.showSuccessDetalle(msg);
+                    let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+                    this.showSuccessDetalle(msg);
                   } else {
                     this.showSuccess();
 
@@ -3181,6 +3177,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   callServiceEliminarEstadoColegial(selectedItem) {
+    this.displayDelete = false;
     this.progressSpinner = true;
 
     selectedItem.idInstitucion = this.colegialesBody.idInstitucion;
@@ -3202,8 +3199,8 @@ export class FichaColegialComponent implements OnInit {
           if (JSON.parse(data.body).error != null &&
             JSON.parse(data.body).error != undefined &&
             JSON.parse(data.body).error != "") {
-              let msg = this.translateService.instant(JSON.parse(data.body).error.message);
-              this.showSuccessDetalle(msg);
+            let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+            this.showSuccessDetalle(msg);
           } else {
             this.showSuccess();
 
@@ -3241,7 +3238,8 @@ export class FichaColegialComponent implements OnInit {
         this.callServiceEliminarEstadoColegial(selectedItem);
         //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
       } else {
-        this.callServiceShowMessageDelete(selectedItem);
+        this.displayDelete = true;
+        this.selectedItemDelete = selectedItem;
       }
       //Si el cambio es de ejerciente a no ejerciente
     } else if (selectedItem.idEstado == "20" && this.datosColegiales[1].idEstado != "20") {
@@ -3251,7 +3249,8 @@ export class FichaColegialComponent implements OnInit {
         this.callServiceEliminarEstadoColegial(selectedItem);
         //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
       } else {
-        this.callServiceShowMessageDelete(selectedItem);
+        this.displayDelete = true;
+        this.selectedItemDelete = selectedItem;
       }
       //Si el cambio pertenece a un estado no ejerciente, se elimina sin realizar comprobaciones
     } else {

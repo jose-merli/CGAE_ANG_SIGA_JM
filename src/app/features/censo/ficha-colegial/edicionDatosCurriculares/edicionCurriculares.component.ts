@@ -73,6 +73,8 @@ export class EdicionCurricularesComponent implements OnInit {
   @ViewChild("table")
   table;
   selectedDatos;
+  tipoCVSelected;
+  subtipoCVSelected;
 
   constructor(
     private sigaServices: SigaServices,
@@ -320,6 +322,22 @@ export class EdicionCurricularesComponent implements OnInit {
       this.body.fechaMovimiento
     );
 
+    if (this.tipoCVSelected != undefined && this.tipoCVSelected != null) {
+      this.body.idTipoCvSubtipo1 = this.tipoCVSelected.value;
+      this.body.idInsTipoCvSubtipo1 = this.tipoCVSelected.idInstitucion;
+    } else {
+      this.body.idTipoCvSubtipo1 = undefined;
+      this.body.idInsTipoCvSubtipo1 = undefined;
+    }
+
+    if (this.subtipoCVSelected != undefined && this.subtipoCVSelected != null) {
+      this.body.idTipoCvSubtipo2 = this.subtipoCVSelected.value;
+      this.body.idInsTipoCvSubtipo2 = this.subtipoCVSelected.idInstitucion;
+    } else {
+      this.body.idTipoCvSubtipo2 = undefined;
+      this.body.idInsTipoCvSubtipo2 = undefined;
+    }
+
     if (this.nuevo) {
       this.body.idCv = null;
       this.sigaServices
@@ -384,6 +402,22 @@ export class EdicionCurricularesComponent implements OnInit {
     this.body.dateFechaMovimiento = this.arreglarFecha(
       this.body.fechaMovimiento
     );
+
+    if (this.tipoCVSelected != undefined && this.tipoCVSelected != null) {
+      this.body.idTipoCvSubtipo1 = this.tipoCVSelected.value;
+      this.body.idInsTipoCvSubtipo1 = this.tipoCVSelected.idInstitucion;
+    } else {
+      this.body.idTipoCvSubtipo1 = undefined;
+      this.body.idInsTipoCvSubtipo1 = undefined;
+    }
+
+    if (this.subtipoCVSelected != undefined && this.subtipoCVSelected != null) {
+      this.body.idTipoCvSubtipo2 = this.subtipoCVSelected.value;
+      this.body.idInsTipoCvSubtipo2 = this.subtipoCVSelected.idInstitucion;
+    } else {
+      this.body.idTipoCvSubtipo2 = undefined;
+      this.body.idInsTipoCvSubtipo2 = undefined;
+    }
 
     if (this.nuevo) {
       this.sigaServices
@@ -549,16 +583,47 @@ export class EdicionCurricularesComponent implements OnInit {
     }
   }
 
+  onChangeTipoCurricular(event) {
+    if (event) {
+      this.body.idTipoCvSubtipo1 = event.value.value;
+      this.body.idInsTipoCvSubtipo1 = event.value.idInstitucion;
+    }
+  }
+
+  onChangeSubtipoCurricular(event) {
+    if (event) {
+      this.body.idTipoCvSubtipo2 = event.value.value;
+      this.body.idInsTipoCvSubtipo2 = event.value.idInstitucion;
+    }
+  }
+
   //TipoCurricular
   getComboTipoCurricular(idTipoCV) {
+    let historico = false;
+
+    if (this.body.fechaHasta != null) {
+      historico = true;
+    }
+
     this.sigaServices
       .getParam(
         "tipoCurricular_getCurricularTypeCombo",
-        "?idTipoCV=" + idTipoCV
+        "?idTipoCV=" + idTipoCV +
+        "&historico=" +
+        historico
       )
       .subscribe(
         n => {
-          this.tipoCurricularCombo = n.combooItems;
+          this.tipoCurricularCombo = [];
+          let array = n.combooItems;
+
+          array.forEach(element => {
+            let e = { label: element.label, value: { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
+            this.tipoCurricularCombo.push(e);
+          });
+
+          this.tipoCVSelected = array.find(x => x.value == this.body.idTipoCvSubtipo1 && x.idInstitucion == this.body.idInsTipoCvSubtipo1);
+
           this.arregloTildesCombo(this.tipoCurricularCombo);
         },
         error => { },
@@ -568,14 +633,33 @@ export class EdicionCurricularesComponent implements OnInit {
 
   //SubtipoCurricular
   getComboSubtipoCurricular(idTipoCV) {
+    let historico = false;
+
+    if (this.body.fechaHasta != null) {
+      historico = true;
+    }
+
+
+
     this.sigaServices
       .getParam(
         "subtipoCurricular_getCurricularSubtypeCombo",
-        "?idTipoCV=" + idTipoCV
+        "?idTipoCV=" + idTipoCV +
+        "&historico=" + historico
       )
       .subscribe(
         n => {
-          this.subtipoCurricularCombo = n.combooItems;
+
+          this.subtipoCurricularCombo = [];
+          let array = n.combooItems;
+
+          array.forEach(element => {
+            let e = { label: element.label, value: { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
+            this.subtipoCurricularCombo.push(e);
+          });
+
+          this.subtipoCVSelected = array.find(x => x.value == this.body.idTipoCvSubtipo2 && x.idInstitucion == this.body.idInsTipoCvSubtipo2);
+
           this.arregloTildesCombo(this.subtipoCurricularCombo);
         },
         error => { },

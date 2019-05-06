@@ -111,6 +111,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
     this.solicitudEditar = new SolicitudIncorporacionItem();
+    this.checkSolicitudInicio = new SolicitudIncorporacionItem();
+
     this.progressSpinner = true;
     this.es = this.translateService.getCalendarLocale();
     this.cargarCombos();
@@ -146,8 +148,11 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.getItem("nuevaIncorporacion")
         );
 
-        let fecha = this.transformaFecha(this.solicitudEditar.fechaNacimiento);
-        this.solicitudEditar.fechaNacimiento = fecha;
+        if (this.solicitudEditar.fechaNacimiento != undefined && this.solicitudEditar.fechaNacimiento != null) {
+          let fecha = this.transformaFecha(this.solicitudEditar.fechaNacimiento);
+          this.solicitudEditar.fechaNacimiento = fecha;
+        }
+
 
         this.compruebaDNI();
 

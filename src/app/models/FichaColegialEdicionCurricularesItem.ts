@@ -18,5 +18,8 @@ export class FichaColegialEdicionCurricularesItem {
   idTipoCvSubtipo1: String;
   idTipoCvSubtipo2: String;
   tipoSubtipo: String;
-  constructor() {}
+  idInsTipoCvSubtipo1: string;
+  idInsTipoCvSubtipo2: string;
+
+  constructor() { }
 }

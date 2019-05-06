@@ -1572,6 +1572,24 @@
     </p-footer>
   </p-dialog>
 
+  <p-dialog [(visible)]="displayDelete" responsive="true" [draggable]="false" modal="modal" resizable="false" [style]="{'max-width':'500px'}">
+    <p-header class="title">
+      <label>{{ 'general.cabecera.confirmacion' | translate}}
+      </label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <span> {{ msgDir }} </span>
+      </div>
+    </div>
+
+    <p-footer class="text-right main-button">
+      <button (click)="callServiceEliminarEstadoColegial(selectedItemDelete)" pButton type="button" icon="fa fa-check" iconPos="left"
+        label="{{ 'messages.si' | translate }}"></button>
+      <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.no' | translate }}"></button>
+    </p-footer>
+  </p-dialog>
 
   <app-dialog></app-dialog>
 
