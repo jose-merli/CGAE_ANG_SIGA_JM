@@ -2440,22 +2440,26 @@ export class FichaColegialComponent implements OnInit {
   }
 
   mostrarFechas() {
-    if (JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.incorporacion) != undefined && 
+    JSON.stringify(this.colegialesBody.incorporacion) != null && JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
       this.datePipeIncorporacion = true;
     } else {
       this.datePipeIncorporacion = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechapresentacion) != undefined && 
+    JSON.stringify(this.colegialesBody.fechapresentacion) != null && JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
       this.datePipePresentacion = true;
     } else {
       this.datePipePresentacion = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechaJura) != undefined && 
+    JSON.stringify(this.colegialesBody.fechaJura) != null && JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
       this.datePipeFechaJura = true;
     } else {
       this.datePipeFechaJura = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechaTitulacion) != undefined && 
+    JSON.stringify(this.colegialesBody.fechaTitulacion) != null && JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
       this.datePipeFechaTitulacion = true;
     } else {
       this.datePipeFechaTitulacion = false;

@@ -97,6 +97,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.progressSpinner = true;
     this.getDataTable();
 
     if (sessionStorage.getItem("rowData") != null) {
@@ -196,6 +197,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       "censo.ws.literal.codigopostal",
       "solicitudModificacion.especifica.domicilio.literal",
       "censo.ws.literal.telefono",
+      "censo.datosDireccion.literal.movil",
       "censo.ws.literal.fax",
       "censo.datosDireccion.literal.correo",
       "solicitudModificacion.especifica.paginaWeb.literal"
@@ -235,7 +237,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDirecciones = JSON.parse(data["body"]);
           console.log("DIR", this.bodyDirecciones);
         },
-        err => { },
+        err => {
+          this.progressSpinner = false;
+        },
         () => {
           this.data = [
             {
@@ -294,6 +298,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySoliModDirecciones.paginaWeb
             }
           ];
+
+          this.progressSpinner = false;
         }
       );
   }
@@ -375,7 +381,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyFoto = JSON.parse(data["body"]);
           console.log("FOTO", this.bodyFoto);
         },
-        err => { },
+        err => {
+          this.progressSpinner = false;
+        },
         () => {
           this.data = [
             {
@@ -384,6 +392,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySolModiFoto.expFoto
             }
           ];
+          this.progressSpinner = false;
+
         }
       );
   }
@@ -427,7 +437,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDatosBasicos = JSON.parse(data["body"]);
           console.log("DATOS BASICOS", this.bodyDatosBasicos);
         },
-        err => { },
+        err => {
+          this.progressSpinner = false;
+        },
         () => {
           this.data = [
             {
@@ -436,6 +448,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySolDatosBasicos.idioma
             }
           ];
+          this.progressSpinner = false;
+
         }
       );
   }
@@ -485,7 +499,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDatosCV = JSON.parse(data["body"]);
           console.log("DATOS CV", this.bodyDatosCV);
         },
-        err => { },
+        err => {
+          this.progressSpinner = false;
+        },
         () => {
           this.data = [
             {
@@ -519,6 +535,8 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySolDatosCV.descripcion
             }
           ];
+
+          this.progressSpinner = false;
         }
       );
   }
@@ -569,7 +587,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           this.bodyDatosBancarios = JSON.parse(data["body"]);
           console.log("DATOS BANCARIOS", this.bodyDatosBancarios);
         },
-        err => { },
+        err => {
+          this.progressSpinner = false;
+        },
         () => {
           this.data = [
             {
@@ -608,6 +628,9 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
               modificacion: this.bodySolDatosBancarios.titular
             }
           ];
+
+          this.progressSpinner = false;
+
         }
       );
   }

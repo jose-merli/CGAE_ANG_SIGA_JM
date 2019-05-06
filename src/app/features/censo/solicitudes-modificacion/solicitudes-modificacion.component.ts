@@ -124,6 +124,15 @@ export class SolicitudesModificacionComponent implements OnInit {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
         this.isSearch = true;
         this.search();
+
+        if (this.body.fechaDesde != null) {
+          this.body.fechaDesde = new Date(this.body.fechaDesde);
+        }
+
+        if (this.body.fechaHasta != null) {
+          this.body.fechaHasta = new Date(this.body.fechaHasta);
+        }
+       
         sessionStorage.removeItem("processingPerformed");
       } else {
         if (sessionStorage.getItem("search") != null) {
@@ -661,6 +670,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   // Control de fechas
   getFechaHastaCalendar() {
+    let fechaReturn: Date;
     if (
       this.body.fechaHasta != undefined &&
       this.body.fechaHasta != undefined
@@ -668,35 +678,38 @@ export class SolicitudesModificacionComponent implements OnInit {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
-      let fechaDesde = this.body.fechaHasta.getTime();
-      let fechaHasta = this.body.fechaHasta.getTime();
+      let fechaDesde = new Date(this.body.fechaHasta).getTime();
+      let fechaHasta = new Date(this.body.fechaHasta).getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) this.body.fechaHasta = undefined;
+      if (msRangoFechas < 0) fechaReturn = undefined;
+      else fechaReturn = new Date(this.body.fechaHasta);
     }
 
-    return this.body.fechaHasta;
+    return fechaReturn;
   }
 
   getFechaDesdeCalendar() {
+    let fechaReturn: Date;
+
     if (
       this.body.fechaDesde != undefined &&
-      this.body.fechaDesde != undefined
+      this.body.fechaDesde != null
     ) {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
-      let fechaDesde = this.body.fechaDesde.getTime();
-      let fechaHasta = this.body.fechaDesde.getTime();
+      let fechaDesde = new Date(this.body.fechaDesde).getTime();
+      let fechaHasta = new Date(this.body.fechaDesde).getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) this.body.fechaDesde = undefined;
-
+      if (msRangoFechas < 0) fechaReturn = undefined;
+      else fechaReturn = new Date(this.body.fechaDesde);
       // this.body.fechaDesde.setDate(this.body.fechaDesde.getDate() + 1);
       // this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
     }
 
-    return this.body.fechaDesde;
+    return fechaReturn;
   }
 
   showSuccess() {

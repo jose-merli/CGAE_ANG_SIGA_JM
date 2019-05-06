@@ -538,6 +538,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         if (value != this.body.idProvincia) {
           this.body.idProvincia = this.provinciaSelecionada;
           this.body.idPoblacion = "";
+          this.body.nombrePoblacion = "";
           this.comboPoblacion = [];
           this.isDisabledProvincia = true;
           if (this.historyDisable == true) {
@@ -1150,6 +1151,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     // modo edicion
 
     if (this.isLetrado) {
+      this.tipoCambioAuditoria = tipoCambio;
+
       if (!this.ocultarMotivo) {
         this.displayAuditoria = true;
       } else {
