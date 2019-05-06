@@ -503,6 +503,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   crear() {
     sessionStorage.setItem("crearnuevo", JSON.stringify("true"));
     this.body = new PersonaJuridicaItem();
+    sessionStorage.setItem("esColegiado", "false");
     sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
     this.router.navigate(["fichaPersonaJuridica"]);
   }
@@ -566,6 +567,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         "privilegios",
         JSON.stringify(this.activacionEditar)
       );
+      sessionStorage.setItem("esColegiado", "false");
       sessionStorage.setItem("first", JSON.stringify(this.table.first));
       this.router.navigate(["fichaPersonaJuridica"]);
     } else {

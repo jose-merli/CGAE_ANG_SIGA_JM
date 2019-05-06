@@ -1517,12 +1517,12 @@ export class FichaColegialComponent implements OnInit {
       this.callConfirmationServiceUpdate(tipoCambio);
 
     } else {
-      this.datosColegiales[0].cambioEstado = false;
 
       if (this.ocultarMotivo) {
         if (tipoCambio == 'solicitudModificacion') {
           this.solicitarModificacionGenerales();
         } else if (tipoCambio == 'guardarDatosColegiales') {
+          this.datosColegiales[0].cambioEstado = false;
           this.guardarColegiales();
         } else if (tipoCambio == 'guardarDatosGenerales') {
           this.generalesGuardar();
