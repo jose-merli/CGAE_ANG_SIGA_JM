@@ -1,489 +1,497 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { SigaServices } from "./../../../_services/siga.service";
+import { SigaServices } from './../../../_services/siga.service';
 import { DialogoComunicacionesItem } from '../../../models/DialogoComunicacionItem';
 import { ModelosComunicacionesItem } from '../../../models/ModelosComunicacionesItem';
 import { TranslateService } from '../../../commons/translate/translation.service';
 import { esCalendar } from './../../../utils/calendar';
 import { ConsultaConsultasItem } from '../../../models/ConsultaConsultasItem';
 import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
-import { saveAs } from "file-saver/FileSaver";
-import { Location } from "@angular/common";
+import { saveAs } from 'file-saver/FileSaver';
+import { Location } from '@angular/common';
 import { typeSourceSpan } from '@angular/compiler';
-import { DataTable } from "primeng/datatable";
+import { DataTable } from 'primeng/datatable';
 import { truncate } from 'fs';
 import { findIndex } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-dialogo-comunicaciones',
-  templateUrl: './dialogo-comunicaciones.component.html',
-  styleUrls: ['./dialogo-comunicaciones.component.scss'],
-  encapsulation: ViewEncapsulation.None
-
+	selector: 'app-dialogo-comunicaciones',
+	templateUrl: './dialogo-comunicaciones.component.html',
+	styleUrls: [ './dialogo-comunicaciones.component.scss' ],
+	encapsulation: ViewEncapsulation.None
 })
 export class DialogoComunicacionesComponent implements OnInit {
-  msgs: any;
-  selectedItem: number = 10;
-  //Diálogo de comunicación
-  showComunicar: boolean = false;
-  modelosComunicacion: ModelosComunicacionesItem[] = [];
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
-  tiposEnvio: any[];
-  plantillasEnvio: any[];
-  datosModelos: any[];
-  colsModelos: any = [];
-  selectMultipleComunicar: boolean = false;
-  first: number = 0;
-  currentDate: Date;
-  clasesComunicaciones: any = [];
-  currentRoute: String;
-  selectedModelos: any = [];
-  idClaseComunicacion: String;
-  idModulo: String;
-  keys: String[] = [];
-  es: any = esCalendar;
-  showValores: boolean = false;
-  valores: CampoDinamicoItem[];
-  operadoresTexto: any[];
-  operadoresNumero: any[];
-  listaConsultas: ConsultaConsultasItem[];
-  comunicar: boolean = false;
-  idInstitucion: String;
-  datosSeleccionados: any[];
-  maxNumModelos: number = 20;
-  progressSpinner: boolean = false;
-  rutaComunicacion: String;
-  fechaProgramada: Date;
-  plantillas: any[] = [];
-  idConsulta: string;
-  dato: any;
-  selectedModelosSend: any = [];
-  selectAll: boolean = false;
-  @ViewChild("table")
-  tableModelos: DataTable;
+	msgs: any;
+	selectedItem: number = 10;
+	//Diálogo de comunicación
+	showComunicar: boolean = false;
+	modelosComunicacion: ModelosComunicacionesItem[] = [];
+	bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+	tiposEnvio: any[];
+	plantillasEnvio: any[];
+	datosModelos: any[];
+	colsModelos: any = [];
+	selectMultipleComunicar: boolean = false;
+	first: number = 0;
+	currentDate: Date;
+	clasesComunicaciones: any = [];
+	currentRoute: String;
+	selectedModelos: any = [];
+	idClaseComunicacion: String;
+	idModulo: String;
+	keys: String[] = [];
+	es: any = esCalendar;
+	showValores: boolean = false;
+	valores: CampoDinamicoItem[];
+	operadoresTexto: any[];
+	operadoresNumero: any[];
+	listaConsultas: ConsultaConsultasItem[];
+	comunicar: boolean = false;
+	idInstitucion: String;
+	datosSeleccionados: any[];
+	maxNumModelos: number = 20;
+	progressSpinner: boolean = false;
+	rutaComunicacion: String;
+	fechaProgramada: Date;
+	plantillas: any[] = [];
+	idConsulta: string;
+	dato: any;
+	selectedModelosSend: any = [];
+	selectAll: boolean = false;
+	@ViewChild('table') tableModelos: DataTable;
 
-  constructor(public sigaServices: SigaServices, private translateService: TranslateService, private location: Location) {
-  }
+	constructor(
+		public sigaServices: SigaServices,
+		private translateService: TranslateService,
+		private location: Location
+	) {}
 
-  ngOnInit() {
-    this.progressSpinner = true;
-    this.datosSeleccionados = JSON.parse(sessionStorage.getItem("datosComunicar"));
-    sessionStorage.removeItem("back");
-    this.getClaseComunicaciones();
-    this.getInstitucion();
-    this.getMaxNumeroModelos();
-    this.getFechaProgramada();
-    this.getPlantillas();
-    this.currentDate = new Date();
+	ngOnInit() {
+		this.progressSpinner = true;
+		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
+		sessionStorage.removeItem('back');
+		this.getClaseComunicaciones();
+		this.getInstitucion();
+		this.getMaxNumeroModelos();
+		this.getFechaProgramada();
+		this.getPlantillas();
+		this.currentDate = new Date();
 
-    this.valores = [];
+		this.valores = [];
 
-    this.operadoresTexto = [
-      {
-        label: '=',
-        value: '='
-      },
-      {
-        label: '!=',
-        value: '!='
-      },
-      {
-        label: 'IS NULL',
-        value: 'IS NULL'
-      },
-      {
-        label: 'LIKE',
-        value: 'LIKE'
-      }
-    ];
+		this.operadoresTexto = [
+			{
+				label: '=',
+				value: '='
+			},
+			{
+				label: '!=',
+				value: '!='
+			},
+			{
+				label: 'IS NULL',
+				value: 'IS NULL'
+			},
+			{
+				label: 'LIKE',
+				value: 'LIKE'
+			}
+		];
 
-    this.operadoresNumero = [
-      {
-        label: '=',
-        value: '='
-      },
-      {
-        label: '!=',
-        value: '!='
-      },
-      {
-        label: '>',
-        value: '>'
-      },
-      {
-        label: '>=',
-        value: '>='
-      },
-      {
-        label: '<',
-        value: '<'
-      },
-      {
-        label: '<=',
-        value: '<='
-      },
-      {
-        label: 'IS NULL',
-        value: 'IS NULL'
-      }
-    ]
+		this.operadoresNumero = [
+			{
+				label: '=',
+				value: '='
+			},
+			{
+				label: '!=',
+				value: '!='
+			},
+			{
+				label: '>',
+				value: '>'
+			},
+			{
+				label: '>=',
+				value: '>='
+			},
+			{
+				label: '<',
+				value: '<'
+			},
+			{
+				label: '<=',
+				value: '<='
+			},
+			{
+				label: 'IS NULL',
+				value: 'IS NULL'
+			}
+		];
 
-    this.colsModelos = [
-      { field: 'nombre', header: 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones' },
-      { field: 'plantillas', header: 'enviosMasivos.literal.plantillasEnvio' },
-      { field: 'tipoEnvio', header: 'informesycomunicaciones.comunicaciones.busqueda.tipoEnvio' }
-    ]
-  }
+		this.colsModelos = [
+			{
+				field: 'nombre',
+				header:
+					'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.modeloComunicaciones'
+			},
+			{ field: 'plantillas', header: 'enviosMasivos.literal.plantillasEnvio' },
+			{ field: 'tipoEnvio', header: 'informesycomunicaciones.comunicaciones.busqueda.tipoEnvio' }
+		];
+	}
 
-  getClaseComunicaciones() {
-    this.rutaComunicacion = sessionStorage.getItem("rutaComunicacion");
-    this.sigaServices.post("dialogo_claseComunicacion", this.rutaComunicacion).subscribe(
-      data => {
-        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
-        this.getModelosComunicacion();
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
+	getClaseComunicaciones() {
+		this.rutaComunicacion = sessionStorage.getItem('rutaComunicacion');
+		this.sigaServices.post('dialogo_claseComunicacion', this.rutaComunicacion).subscribe(
+			(data) => {
+				this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
+				this.getModelosComunicacion();
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
+	}
 
-  onChangeClaseComunicacion() {
-    this.getModelosComunicacion();
-  }
+	onChangeClaseComunicacion() {
+		this.getModelosComunicacion();
+	}
 
-  getModelosComunicacion() {
+	getModelosComunicacion() {
+		this.idModulo = sessionStorage.getItem('idModulo');
 
-    this.idModulo = sessionStorage.getItem('idModulo');
+		if (this.idClaseComunicacion == '5') {
+			this.idConsulta = sessionStorage.getItem('idConsulta');
+		}
 
-    if (this.idClaseComunicacion == "5") {
-      this.idConsulta = sessionStorage.getItem('idConsulta');
-    }
+		let modeloSearch = {
+			idModulo: this.idModulo,
+			idClaseComunicacion: this.idClaseComunicacion,
+			idConsulta: this.idConsulta
+		};
 
-    let modeloSearch = {
-      idModulo: this.idModulo,
-      idClaseComunicacion: this.idClaseComunicacion,
-      idConsulta: this.idConsulta
-    }
+		this.sigaServices.post('dialogo_modelosComunicacion', modeloSearch).subscribe(
+			(data) => {
+				this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
 
-    this.sigaServices.post("dialogo_modelosComunicacion", modeloSearch).subscribe(
-      data => {
-        this.modelosComunicacion = JSON.parse(data['body']).modelosComunicacionItems;
+				for (let index = 0; index < this.modelosComunicacion.length; index++) {
+					const element = this.modelosComunicacion[index];
 
-        for (let index = 0; index < this.modelosComunicacion.length; index++) {
-          const element = this.modelosComunicacion[index];
+					if (element.preseleccionar == 'SI') {
+						this.selectedModelos.push(element);
+					}
+				}
+				this.progressSpinner = false;
+			},
+			(err) => {
+				console.log(err);
+				this.progressSpinner = false;
+			}
+		);
+	}
 
-          if (element.preseleccionar == "SI") {
-            this.selectedModelos.push(element);
-          }
+	onChangeSelectAll() {
+		if (this.selectAll) {
+			this.selectedModelos = JSON.parse(JSON.stringify(this.modelosComunicacion));
+		} else {
+			this.selectedModelos = [];
+		}
+	}
 
-        }
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    );
-  }
+	onChangePlantillaEnvio(dato) {
+		this.getTipoEnvios(dato);
+	}
 
-  onChangeSelectAll() {
-    if (this.selectAll) {
-      this.selectedModelos = JSON.parse(JSON.stringify(this.modelosComunicacion));
-    } else {
-      this.selectedModelos = [];
-    }
-  }
+	getTipoEnvios(dato) {
+		this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
+			(data) => {
+				let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
+				dato.tipoEnvio = tipoEnvio.tipoEnvio;
+				dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
+	}
 
-  onChangePlantillaEnvio(dato) {
-    this.getTipoEnvios(dato);
-  }
+	obtenerCamposDinamicos(accion) {
+		this.bodyComunicacion.modelos = this.selectedModelos;
+		this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
 
-  getTipoEnvios(dato) {
-    this.sigaServices.post("dialogo_tipoEnvios", dato.idPlantillaEnvio).subscribe(
-      data => {
-        let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
-        dato.tipoEnvio = tipoEnvio.tipoEnvio;
-        dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
+		if (accion == 'comunicar') {
+			this.comunicar = true;
+		} else {
+			this.comunicar = false;
+		}
 
-  obtenerCamposDinamicos(accion) {
-    this.bodyComunicacion.modelos = this.selectedModelos;
-    this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
+		if (this.comunicar && !this.comprobarPlantillas()) {
+			this.showFail('Se ha de seleccionar al menos una plantilla de envio por modelo');
+		} else {
+			this.sigaServices.post('dialogo_obtenerCamposDinamicos', this.bodyComunicacion).subscribe(
+				(data) => {
+					console.log(data);
+					this.valores = [];
+					this.listaConsultas = JSON.parse(data['body']).consultaItem;
+					this.listaConsultas.forEach((element) => {
+						if (element.camposDinamicos != null) {
+							element.camposDinamicos.forEach((campo) => {
+								this.valores.push(campo);
+							});
+						}
+					});
 
-    if (accion == "comunicar") {
-      this.comunicar = true;
-    } else {
-      this.comunicar = false;
-    }
+					if (this.valores.length > 0) {
+						this.showValores = true;
+					} else {
+						if (this.comunicar) {
+							this.enviarComunicacion();
+						} else {
+							this.descargarComunicacion();
+						}
+					}
+				},
+				(err) => {
+					console.log(err);
+					this.showFail(
+						this.translateService.instant(
+							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
+						)
+					);
+				}
+			);
+		}
+	}
 
-    if (this.comunicar && !this.comprobarPlantillas()) {
-      this.showFail("Se ha de seleccionar al menos una plantilla de envio por modelo");
-    } else {
-      this.sigaServices.post("dialogo_obtenerCamposDinamicos", this.bodyComunicacion).subscribe(
-        data => {
-          console.log(data);
-          this.valores = [];
-          this.listaConsultas = JSON.parse(data['body']).consultaItem;
-          this.listaConsultas.forEach(element => {
-            if (element.camposDinamicos != null) {
-              element.camposDinamicos.forEach(campo => {
-                this.valores.push(campo);
-              });
-            }
-          })
+	comprobarPlantillas() {
+		let envioCorrecto = true;
+		this.bodyComunicacion.modelos.forEach((element) => {
+			if (!element.idPlantillaEnvio || element.idPlantillaEnvio == null || element.idPlantillaEnvio == '') {
+				envioCorrecto = false;
+			}
+		});
+		return envioCorrecto;
+	}
 
-          if (this.valores.length > 0) {
-            this.showValores = true;
-          } else {
-            if (this.comunicar) {
-              this.enviarComunicacion();
-            } else {
-              this.descargarComunicacion();
-            }
-          }
-        },
-        err => {
-          console.log(err);
-          this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"));
-        }
-      );
-    }
-  }
+	enviarComunicacion() {
+		this.progressSpinner = true;
 
-  comprobarPlantillas() {
-    let envioCorrecto = true;
-    this.bodyComunicacion.modelos.forEach(element => {
-      if (!element.idPlantillaEnvio || element.idPlantillaEnvio == null || element.idPlantillaEnvio == "") {
-        envioCorrecto = false;
-      }
-    });
-    return envioCorrecto;
-  }
+		this.valores.forEach((element) => {
+			if (element.valor != null && typeof element.valor == 'object') {
+				element.valor = element.valor.ID;
+			}
+			if (element.valores != undefined && element.valores != null) {
+				let empty = {
+					ID: 0,
+					DESCRIPCION: 'Seleccione una opción...'
+				};
+				element.valores.unshift(empty);
+			}
+			if (element.operacion == 'OPERADOR') {
+				element.operacion = this.operadoresNumero[0].value;
+			}
+		});
 
-  enviarComunicacion() {
-    this.progressSpinner = true;
+		if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
+			let datos = {
+				idClaseComunicacion: this.idClaseComunicacion,
+				modelos: this.bodyComunicacion.modelos,
+				selectedDatos: this.datosSeleccionados,
+				idInstitucion: this.idInstitucion,
+				consultas: this.listaConsultas,
+				ruta: this.rutaComunicacion,
+				fechaProgramada: this.bodyComunicacion.fechaProgramacion
+			};
 
-    this.valores.forEach(element => {
-      if (element.valor != null && typeof element.valor == "object") {
-        element.valor = element.valor.ID;
-      }
-      if (element.valores != undefined && element.valores != null) {
-        let empty = {
-          ID: 0,
-          DESCRIPCION: 'Seleccione una opción...'
-        }
-        element.valores.unshift(empty);
-      }
-      if (element.operacion == "OPERADOR") {
-        element.operacion = this.operadoresNumero[0].value;
-      }
-    });
+			this.sigaServices.post('dialogo_generarEnvios', datos).subscribe(
+				(data) => {
+					this.showSuccess(
+						this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.generado')
+					);
+					this.showValores = false;
+					this.backTo();
+				},
+				(err) => {
+					console.log(err);
+					this.showFail(
+						this.translateService.instant(
+							'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
+						)
+					);
+					this.progressSpinner = false;
+				},
+				() => {
+					this.progressSpinner = false;
+				}
+			);
+		} else {
+			this.showFail(
+				this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.error.datos')
+			);
+			this.progressSpinner = false;
+		}
+	}
 
+	enviar() {
+		console.log(this.listaConsultas);
+	}
 
-    if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
-      let datos = {
-        idClaseComunicacion: this.idClaseComunicacion,
-        modelos: this.bodyComunicacion.modelos,
-        selectedDatos: this.datosSeleccionados,
-        idInstitucion: this.idInstitucion,
-        consultas: this.listaConsultas,
-        ruta: this.rutaComunicacion,
-        fechaProgramada: this.bodyComunicacion.fechaProgramacion
-      }
+	onRowSelectModelos(event) {
+		event.data = true;
+		return event.data;
+	}
 
-      this.sigaServices
-        .post("dialogo_generarEnvios", datos)
-        .subscribe(
-          data => {
-            this.showSuccess(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.generado"));
-            this.showValores = false;
-            this.backTo();
-          },
-          err => {
-            console.log(err);
-            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.generar"));
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-          }
-        );
-    } else {
-      this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.datos"));
-      this.progressSpinner = false;
-    }
-  }
+	onUnRowSelectModelos(event) {
+		event.data = false;
+		return event.data;
+	}
 
+	getKeysClaseComunicacion() {
+		this.sigaServices.post('dialogo_keys', this.idClaseComunicacion).subscribe(
+			(data) => {
+				this.keys = JSON.parse(data['body']);
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
+	}
 
-  enviar() {
-    console.log(this.listaConsultas);
-  }
+	validarCamposDinamicos() {
+		let valido = true;
+		this.valores.forEach((element) => {
+			if (valido) {
+				if (!element.valorNulo) {
+					if (element.valor != undefined && element.valor != null && element.valor != '') {
+						valido = true;
+					} else {
+						valido = false;
+					}
+				} else {
+					valido = true;
+				}
+			}
+		});
+		return valido;
+	}
 
-  onRowSelectModelos(event) {
-    event.data = true;
-    return event.data;
-  }
+	descargarComunicacion() {
+		this.progressSpinner = true;
 
+		this.valores.forEach((element) => {
+			if (element.valor != null && typeof element.valor == 'object') {
+				if (element.valor.ID != null && element.valor.ID != undefined) {
+					element.valor = element.valor.ID;
+				}
+			}
+			if (element.valores != undefined && element.valores != null) {
+				let empty = {
+					ID: 0,
+					DESCRIPCION: 'Seleccione una opción...'
+				};
+				element.valores.unshift(empty);
+			}
+			if (element.operacion == 'OPERADOR') {
+				element.operacion = this.operadoresNumero[0].value;
+			}
+		});
 
-  onUnRowSelectModelos(event) {
-    event.data = false;
-    return event.data;
-  }
+		let datos = {
+			idClaseComunicacion: this.idClaseComunicacion,
+			modelos: this.bodyComunicacion.modelos,
+			selectedDatos: this.datosSeleccionados,
+			idInstitucion: this.idInstitucion,
+			consultas: this.listaConsultas,
+			ruta: this.rutaComunicacion
+		};
 
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data['body']);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
+		this.sigaServices.postDownloadFiles('dialogo_descargar', datos).subscribe(
+			(data) => {
+				// let a = JSON.parse(data);
+				const blob = new Blob([ data ], { type: 'text/csv' });
 
-  validarCamposDinamicos() {
-    let valido = true;
-    this.valores.forEach(element => {
-      if (valido) {
-        if (!element.valorNulo) {
-          if (element.valor != undefined && element.valor != null && element.valor != "") {
-            valido = true;
-          } else {
-            valido = false;
-          }
-        } else {
-          valido = true;
-        }
-      }
-    });
-    return valido;
-  }
+				// if (blob. != undefined) {
+				//   saveAs(blob, data.nombre);
+				// } else {
+				saveAs(blob, 'Documentos.zip');
+				// }
+				this.progressSpinner = false;
+				this.showValores = false;
+			},
+			(err) => {
+				console.log(err);
+				this.showFail(
+					this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.descargar.error')
+				);
+				this.progressSpinner = false;
+			},
+			() => {
+				this.progressSpinner = false;
+			}
+		);
+	}
 
-  descargarComunicacion() {
+	getInstitucion() {
+		this.sigaServices.get('institucionActual').subscribe((n) => {
+			this.idInstitucion = n.value;
+		});
+	}
 
-    this.progressSpinner = true;
+	getMaxNumeroModelos() {
+		this.sigaServices.get('dialogo_maxModelos').subscribe((n) => {
+			this.maxNumModelos = n.value;
+		});
+	}
 
-    this.valores.forEach(element => {
-      if (element.valor != null && typeof element.valor == "object") {
-        element.valor = element.valor.ID;
-      }
-      if (element.valores != undefined && element.valores != null) {
-        let empty = {
-          ID: 0,
-          DESCRIPCION: 'Seleccione una opción...'
-        }
-        element.valores.unshift(empty);
-      }
-      if (element.operacion == "OPERADOR") {
-        element.operacion = this.operadoresNumero[0].value;
-      }
-    });
+	getFechaProgramada() {
+		this.sigaServices.get('dialogo_fechaProgramada').subscribe(
+			(n) => {
+				this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
+			},
+			(err) => {
+				console.log(err);
+			}
+		);
+	}
 
-    let datos = {
-      idClaseComunicacion: this.idClaseComunicacion,
-      modelos: this.bodyComunicacion.modelos,
-      selectedDatos: this.datosSeleccionados,
-      idInstitucion: this.idInstitucion,
-      consultas: this.listaConsultas,
-      ruta: this.rutaComunicacion
-    }
+	// Mensajes
+	showFail(mensaje: string) {
+		this.msgs = [];
+		this.msgs.push({ severity: 'error', summary: '', detail: mensaje });
+	}
 
-    this.sigaServices
-      .postDownloadFiles("dialogo_descargar", datos)
-      .subscribe(
-        data => {
-          // let a = JSON.parse(data);
-          const blob = new Blob([data], { type: "text/csv" });
+	showSuccess(mensaje: string) {
+		this.msgs = [];
+		this.msgs.push({ severity: 'success', summary: '', detail: mensaje });
+	}
 
-          // if (blob. != undefined) {
-          //   saveAs(blob, data.nombre);
-          // } else {
-          saveAs(blob, "Documentos.zip");
-          // }
-          this.progressSpinner = false;
-          this.showValores = false;
-        },
-        err => {
-          console.log(err);
-          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.descargar.error"));
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+	showInfo(mensaje: string) {
+		this.msgs = [];
+		this.msgs.push({ severity: 'info', summary: '', detail: mensaje });
+	}
 
-        }
-      );
+	clear() {
+		this.msgs = [];
+	}
 
-  }
+	backTo() {
+		sessionStorage.setItem('back', 'true');
+		this.location.back();
+	}
 
-  getInstitucion() {
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.idInstitucion = n.value;
-    });
-  }
+	getPlantillas() {
+		this.sigaServices.get('modelos_detalle_plantillasComunicacion').subscribe(
+			(data) => {
+				this.plantillas = data.combooItems;
+				this.plantillas.unshift({ label: 'Seleccionar', value: '' });
+			},
+			(err) => {
+				console.log(err);
+			},
+			() => {}
+		);
+	}
 
-  getMaxNumeroModelos() {
-    this.sigaServices.get("dialogo_maxModelos").subscribe(n => {
-      this.maxNumModelos = n.value;
-    });
-  }
-
-  getFechaProgramada() {
-    this.sigaServices.get("dialogo_fechaProgramada").subscribe(n => {
-      this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
-    },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  // Mensajes
-  showFail(mensaje: string) {
-    this.msgs = [];
-    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
-  }
-
-  showSuccess(mensaje: string) {
-    this.msgs = [];
-    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
-  }
-
-  showInfo(mensaje: string) {
-    this.msgs = [];
-    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-
-  backTo() {
-    sessionStorage.setItem("back", "true");
-    this.location.back();
-  }
-
-  getPlantillas() {
-    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
-      data => {
-        this.plantillas = data.combooItems;
-        this.plantillas.unshift({ label: "Seleccionar", value: "" });
-      },
-      err => {
-        console.log(err);
-      },
-      () => { }
-    );
-  };
-
-  fillFechaProgramacionCalendar(event) {
-    this.bodyComunicacion.fechaProgramacion = event;
-  }
-
+	fillFechaProgramacionCalendar(event) {
+		this.bodyComunicacion.fechaProgramacion = event;
+	}
 }
