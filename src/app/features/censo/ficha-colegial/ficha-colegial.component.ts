@@ -2440,26 +2440,26 @@ export class FichaColegialComponent implements OnInit {
   }
 
   mostrarFechas() {
-    if (JSON.stringify(this.colegialesBody.incorporacion) != undefined && 
-    JSON.stringify(this.colegialesBody.incorporacion) != null && JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.incorporacion) != undefined &&
+      JSON.stringify(this.colegialesBody.incorporacion) != null && JSON.stringify(this.colegialesBody.incorporacion).length > 13) {
       this.datePipeIncorporacion = true;
     } else {
       this.datePipeIncorporacion = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechapresentacion) != undefined && 
-    JSON.stringify(this.colegialesBody.fechapresentacion) != null && JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechapresentacion) != undefined &&
+      JSON.stringify(this.colegialesBody.fechapresentacion) != null && JSON.stringify(this.colegialesBody.fechapresentacion).length > 13) {
       this.datePipePresentacion = true;
     } else {
       this.datePipePresentacion = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechaJura) != undefined && 
-    JSON.stringify(this.colegialesBody.fechaJura) != null && JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechaJura) != undefined &&
+      JSON.stringify(this.colegialesBody.fechaJura) != null && JSON.stringify(this.colegialesBody.fechaJura).length > 13) {
       this.datePipeFechaJura = true;
     } else {
       this.datePipeFechaJura = false;
     }
-    if (JSON.stringify(this.colegialesBody.fechaTitulacion) != undefined && 
-    JSON.stringify(this.colegialesBody.fechaTitulacion) != null && JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
+    if (JSON.stringify(this.colegialesBody.fechaTitulacion) != undefined &&
+      JSON.stringify(this.colegialesBody.fechaTitulacion) != null && JSON.stringify(this.colegialesBody.fechaTitulacion).length > 13) {
       this.datePipeFechaTitulacion = true;
     } else {
       this.datePipeFechaTitulacion = false;
@@ -4096,19 +4096,22 @@ export class FichaColegialComponent implements OnInit {
   }
 
   confirmarEliminar(selectedDatos) {
-    let cargosBorrados = 0;
-    let cargosExistentes = 0;
-    for (let i in selectedDatos) {
-      if (selectedDatos[i].uso != "ABONO/SJCS" && selectedDatos[i].uso != "/SJCS" && selectedDatos[i].uso != "ABONO") {
-        cargosBorrados++;
-      }
-    }
-    for (let i in this.datosBancarios) {
-      if (this.datosBancarios[i].uso != "ABONO/SJCS" && this.datosBancarios[i].uso != "/SJCS" && this.datosBancarios[i].uso != "ABONO") {
-        cargosExistentes++;
-      }
-    }
-    if (cargosExistentes <= cargosBorrados) {
+    // let cargosBorrados = 0;
+    // let cargosExistentes = 0;
+    // for (let i in selectedDatos) {
+    //   // if (selectedDatos[i].uso != "ABONO/SJCS" && selectedDatos[i].uso != "/SJCS" && selectedDatos[i].uso != "ABONO") {
+    //   cargosBorrados++;
+    //   // }
+    // }
+    // for (let i in this.datosBancarios) {
+    //   for (let i2 in selectedDatos) {
+    //     if (this.datosBancarios[i].uso == selectedDatos[i2].uso) {
+    //       cargosExistentes++;
+    //     }
+    //   }
+
+    // }
+    // if (cargosExistentes <= cargosBorrados) {
       let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
       let icon = "fa fa-trash-alt";
       this.confirmationService.confirm({
@@ -4132,31 +4135,31 @@ export class FichaColegialComponent implements OnInit {
           this.selectMultipleBancarios = false;
         }
       });
-    } else {
-      let mess = this.translateService.instant("messages.deleteConfirmation");
-      let icon = "fa fa-trash-alt";
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          this.eliminarRegistro(selectedDatos);
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "info",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
+    // } else {
+    //   let mess = this.translateService.instant("messages.deleteConfirmation");
+    //   let icon = "fa fa-trash-alt";
+    //   this.confirmationService.confirm({
+    //     message: mess,
+    //     icon: icon,
+    //     accept: () => {
+    //       this.eliminarRegistro(selectedDatos);
+    //     },
+    //     reject: () => {
+    //       this.msgs = [
+    //         {
+    //           severity: "info",
+    //           summary: "info",
+    //           detail: this.translateService.instant(
+    //             "general.message.accion.cancelada"
+    //           )
+    //         }
+    //       ];
 
-          this.selectedDatosBancarios = [];
-          this.selectMultipleBancarios = false;
-        }
-      });
-    }
+    //       this.selectedDatosBancarios = [];
+    //       this.selectMultipleBancarios = false;
+    //     }
+    //   });
+    // }
   }
 
   eliminarRegistro(selectedDatos) {

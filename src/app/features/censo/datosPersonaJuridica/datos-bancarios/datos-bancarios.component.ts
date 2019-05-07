@@ -59,7 +59,7 @@ export class DatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDatosBancarios") == "true") {
@@ -178,7 +178,7 @@ export class DatosBancariosComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -280,7 +280,7 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   confirmarEliminar(selectedDatos) {
-    let mess = this.translateService.instant("messages.deleteConfirmation");
+    let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
     let icon = "fa fa-trash-alt";
     this.confirmationService.confirm({
       message: mess,
@@ -328,8 +328,8 @@ export class DatosBancariosComponent implements OnInit {
         } else {
           this.showSuccess(
             selectedDatos.length +
-              " " +
-              this.translateService.instant("messages.deleted.selected.success")
+            " " +
+            this.translateService.instant("messages.deleted.selected.success")
           );
         }
       },

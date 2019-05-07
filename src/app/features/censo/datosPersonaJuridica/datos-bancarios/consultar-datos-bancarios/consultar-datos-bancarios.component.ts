@@ -658,6 +658,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         validarTipoCuenta.push(element.code);
       });
 
+      this.body.tipoCuenta = validarTipoCuenta.sort();
+      let orderTipoCuenta = [];
+      if (this.checkBody.tipoCuenta != undefined) {
+        orderTipoCuenta = this.checkBody.tipoCuenta.sort();
+      }
+      this.checkBody.tipoCuenta = orderTipoCuenta;
       if (JSON.stringify(this.body) == JSON.stringify(this.checkBody)) {
         if (this.checkBody.tipoCuenta == null || this.checkBody.tipoCuenta == undefined) {
           if (validarTipoCuenta.length > 0) {
@@ -1083,90 +1089,90 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   validaCargoEliminado() {
-    let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
-    let numBancos = 0;
-    for (let i in bancos) {
-      if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "/SJCS" && bancos[i].uso != "ABONO") {
-        numBancos++;
-      }
-    }
-    if (numBancos <= 1) {
-      this.confirmationService.confirm({
-        message: this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas"),
-        icon: "fa fa-info",
-        accept: () => {
-          this.revisionCuentas = true;
-          this.registroEditable = sessionStorage.getItem("editar");
-          if (this.registroEditable == "false") {
+    // let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
+    // let numBancos = 0;
+    // for (let i in bancos) {
+    //   if (bancos[i].uso != "ABONO/SJCS" && bancos[i].uso != "/SJCS" && bancos[i].uso != "ABONO") {
+    //     numBancos++;
+    //   }
+    // }
+    // if (numBancos <= 1) {
+    this.confirmationService.confirm({
+      message: this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas"),
+      icon: "fa fa-info",
+      accept: () => {
+        this.revisionCuentas = true;
+        this.registroEditable = sessionStorage.getItem("editar");
+        if (this.registroEditable == "false") {
+          if (this.isLetrado) {
+            this.solicitarGuardarRegistro();
+          } else {
+            this.guardarRegistro();
+          }
+        } else {
+          // dependiendo de esta variable, se muestra o no la auditoria
+          this.body.motivo = null;
+          if (this.ocultarMotivo) {
             if (this.isLetrado) {
               this.solicitarGuardarRegistro();
             } else {
-              this.guardarRegistro();
+              this.editarRegistro();
             }
           } else {
-            // dependiendo de esta variable, se muestra o no la auditoria
-            this.body.motivo = null;
-            if (this.ocultarMotivo) {
-              if (this.isLetrado) {
-                this.solicitarGuardarRegistro();
-              } else {
-                this.editarRegistro();
-              }
-            } else {
-              this.displayAuditoria = true;
-              this.showGuardarAuditoria = false;
-            }
-          }
-        },
-        reject: () => {
-          this.revisionCuentas = false;
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancel",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-          // this.registroEditable = sessionStorage.getItem("editar");
-          // if (this.registroEditable == "false") {
-          //   this.guardarRegistro();
-          // } else {
-          //   // dependiendo de esta variable, se muestra o no la auditoria
-          //   this.body.motivo = undefined;
-          //   if (this.ocultarMotivo) {
-          //     this.editarRegistro();
-          //   } else {
-          //     this.displayAuditoria = true;
-          this.showGuardarAuditoria = false;
-          //   }
-          // }
-        }
-      });
-    } else {
-      if (this.registroEditable == "false") {
-        if (this.isLetrado) {
-          this.solicitarGuardarRegistro();
-        } else {
-          this.guardarRegistro();
-        }
-      } else {
-        if (this.isLetrado) {
-          if (this.ocultarMotivo == false) {
             this.displayAuditoria = true;
-          } else {
-            this.displayAuditoria = false;
-            this.editarRegistro();
+            this.showGuardarAuditoria = false;
           }
-
-          this.showGuardarAuditoria = false;
-          this.body.motivo = null;
-        } else {
-          this.editarRegistro();
         }
+      },
+      reject: () => {
+        this.revisionCuentas = false;
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+        // this.registroEditable = sessionStorage.getItem("editar");
+        // if (this.registroEditable == "false") {
+        //   this.guardarRegistro();
+        // } else {
+        //   // dependiendo de esta variable, se muestra o no la auditoria
+        //   this.body.motivo = undefined;
+        //   if (this.ocultarMotivo) {
+        //     this.editarRegistro();
+        //   } else {
+        //     this.displayAuditoria = true;
+        this.showGuardarAuditoria = false;
+        //   }
+        // }
       }
-    }
+    });
+    // } else {
+    //   if (this.registroEditable == "false") {
+    //     if (this.isLetrado) {
+    //       this.solicitarGuardarRegistro();
+    //     } else {
+    //       this.guardarRegistro();
+    //     }
+    //   } else {
+    //     if (this.isLetrado) {
+    //       if (this.ocultarMotivo == false) {
+    //         this.displayAuditoria = true;
+    //       } else {
+    //         this.displayAuditoria = false;
+    //         this.editarRegistro();
+    //       }
+
+    //       this.showGuardarAuditoria = false;
+    //       this.body.motivo = null;
+    //     } else {
+    //       this.editarRegistro();
+    //     }
+    //   }
+    // }
   }
 
   validarCuentaCargo() {
@@ -1201,7 +1207,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         }
       },
       reject: () => {
-        this.revisionCuentas = true;
+        this.revisionCuentas = false;
+        this.body.noRevisarServicios = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
           this.body.noRevisarServicios = true;
@@ -1282,8 +1289,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     ) {
       this.formValido = true;
       this.getArrayTipoCuenta();
-      if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta != undefined) {
-        if (this.checkBody.tipoCuenta.indexOf("C") !== -1) {
+      if (this.checkBody.tipoCuenta != undefined) {
+        if (this.checkBody.tipoCuenta.indexOf("C") !== -1 || this.checkBody.tipoCuenta.indexOf("A") !== -1 ||
+          this.checkBody.tipoCuenta.indexOf("S") !== -1) {
           // let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
           // let numBancos = 0;
           // let encontrado = 
@@ -1294,8 +1302,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           // }
           // if (numBancos <= 1) {
           //   this.validarCuentaSJCS();
-          if (this.checkBody.tipoCuenta.indexOf("C") !== -1 && this.body.tipoCuenta.indexOf("C") == -1) {
+
+          //Si se ha eliminado alguna cuenta muestra un aviso de la revision de las facturas
+          if (this.checkBody.tipoCuenta.indexOf("C") !== -1 && this.body.tipoCuenta.indexOf("C") == -1 ||
+            this.checkBody.tipoCuenta.indexOf("A") !== -1 && this.body.tipoCuenta.indexOf("A") == -1 ||
+            this.checkBody.tipoCuenta.indexOf("S") !== -1 && this.body.tipoCuenta.indexOf("S") == -1) {
             this.validaCargoEliminado();
+            //Si se añade una cuenta de cargo se muestra un mensaje preguntando la revision de las facturas
           } else if (this.body.tipoCuenta.indexOf("C") !== -1 && this.body.tipoCuenta.indexOf("C") !== -1) {
             this.validarCuentaCargo();
           } else {
@@ -1322,7 +1335,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         } else {
           this.validarCuentaCargo();
         }
-      } else if (this.body.tipoCuenta.indexOf("C") == -1 && this.checkBody.tipoCuenta == undefined) {
+      } else if (this.checkBody.tipoCuenta == undefined) {
         let bancos = JSON.parse(sessionStorage.getItem("allBanksData"));
         let numBancos = 0;
         // let encontrado = 

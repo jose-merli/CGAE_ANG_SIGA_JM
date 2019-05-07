@@ -410,31 +410,31 @@ para poder filtrar el dato con o sin estos caracteres*/
     let cuerpo;
     if (this.listaModelos != undefined) {
       for (let i in this.listaModelos) {
-        if (this.listaModelos[i].generacionExcel == '1') {
-          cuerpo = this.listaModelos[i];
-          if (this.body.generica == 'S' || this.body.generica == 'SI') {
-            cuerpo.idInstitucion = '0'
-          } else {
-            cuerpo.idInstitucion = '2000';
-          }
-          this.sigaServices
-            .post("modelos_detalle_datosGenerales", cuerpo)
-            .subscribe(
-              data => {
-                this.showSuccess(
-                  "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
-                );
-              },
-              err => {
-                console.log(err);
-                this.showFail(
-                  "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
-                );
-              }, () => {
-                this.guardar();
-              }
-            );
+        // if (this.listaModelos[i].generacionExcel == '1') {
+        cuerpo = this.listaModelos[i];
+        if (this.body.generica == 'S' || this.body.generica == 'SI') {
+          cuerpo.idInstitucion = '0'
+        } else {
+          cuerpo.idInstitucion = '2000';
         }
+        this.sigaServices
+          .post("modelos_detalle_datosGenerales", cuerpo)
+          .subscribe(
+            data => {
+              this.showSuccess(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.correctGuardado"
+              );
+            },
+            err => {
+              console.log(err);
+              this.showFail(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
+              );
+            }, () => {
+              this.guardar();
+            }
+          );
+        //}
       }
     }
   }
