@@ -900,7 +900,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       let usuario = JSON.parse(
         sessionStorage.getItem("usuarioBody")
       );
-      this.body.idPersona = usuario[0].idPersona;
+
+      if (usuario.length == 1) {
+        this.body.idPersona = usuario[0].idPersona;
+      } else {
+        this.body.idPersona = usuario;
+      }
 
       this.body.idProvincia = this.provinciaSelecionada;
       this.sigaServices.post("direcciones_update", this.body).subscribe(
@@ -911,7 +916,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(this.bodySearch.error.message.toString());
+          if (this.bodySearch.error.message != null &&
+            this.bodySearch.error.message != undefined) {
+            this.showFail(this.bodySearch.error.message.toString());
+          } else {
+            this.showGenericFail();
+          }
           console.log(error);
           this.progressSpinner = false;
         },
@@ -928,9 +938,14 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.esColegiado = JSON.parse(
         sessionStorage.getItem("esColegiado")
       );
-      this.body.idPersona = JSON.parse(
+      let usuario = JSON.parse(
         sessionStorage.getItem("usuarioBody")
       );
+      if (usuario.length == 1) {
+        this.body.idPersona = usuario[0].idPersona;
+      } else {
+        this.body.idPersona = usuario;
+      }
       this.body.motivo = "registro creado";
       this.sigaServices.post("direcciones_insert", this.body).subscribe(
         data => {
@@ -940,7 +955,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         error => {
           this.bodySearch = JSON.parse(error["error"]);
-          this.showFail(this.bodySearch.error.message.toString());
+          if (this.bodySearch.error.message != null && this.bodySearch.error.message != undefined) {
+            this.showFail(this.bodySearch.error.message.toString());
+          } else {
+            this.showGenericFail();
+          }
           console.log(error);
           this.progressSpinner = false;
         },

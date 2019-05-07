@@ -188,6 +188,8 @@ export class SigaServices {
       "busquedaColegiados/getCurricularSubtypeCombo",
     busquedaNoColegiados_searchNoColegiado:
       "/busquedaNocolegiado/searchNoColegiado",
+    busquedaCensoGeneral_searchCliente: "busquedaCensoGeneral/searchCliente",
+    busquedaCensoGeneral_searchColegiado: "busquedaCensoGeneral/searchColegiado",
     busquedaNocolegiado_deleteNoColegiado:
       "/busquedaNocolegiado/deleteNoColegiado",
     busquedaNoColegiados_searchHistoric: "busquedaNocolegiado/searchHistoric",
@@ -577,8 +579,8 @@ export class SigaServices {
     fichaColegialRegTel_searchListDirNoCol:
       "fichaColegialRegTel/searchListDirNoCol",
     fichaColegialRegTel_downloadDoc: "fichaColegialRegTel/downloadDoc",
-    fichaColegialRegTel_insertCollection:"fichaColegialRegTel/insertCollection",
-    fichaColegialRegTel_insertCollectionNoCol:"fichaColegialRegTel/insertCollectionNoCol",
+    fichaColegialRegTel_insertCollection: "fichaColegialRegTel/insertCollection",
+    fichaColegialRegTel_insertCollectionNoCol: "fichaColegialRegTel/insertCollectionNoCol",
     usuario_cambioIdioma: "usuario/cambioIdioma",
     fichaColegialOtrasColegiaciones_getLabelColegios:
       "fichaColegialOtrasColegiaciones/getLabelColegios",

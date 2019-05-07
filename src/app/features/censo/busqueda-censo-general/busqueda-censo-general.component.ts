@@ -220,35 +220,36 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   }
 
   irFichaColegial(selectedDatos) {
+    this.progressSpinner = true;
     sessionStorage.setItem("busquedaCensoGeneral", "true");
 
     sessionStorage.setItem("filtrosBusqueda", JSON.stringify(this.body));
 
-    if (this.authenticationService.getInstitucionSession() == 2000) {
-      this.getNoColegiado(selectedDatos);
-    } else {
-      if (
-        this.selectedDatos.numeroInstitucion ==
-        this.authenticationService.getInstitucionSession()
-      ) {
-        // Colegiado
-        this.getColegiado(selectedDatos);
-      } else if (
-        this.selectedDatos.numeroInstitucion !=
-        this.authenticationService.getInstitucionSession()
-      ) {
-        this.getNoColegiado(selectedDatos);
-      }
-    }
+    // if (this.authenticationService.getInstitucionSession() == 2000) {
+    //   this.getNoColegiado(selectedDatos);
+    // } else {
+    // if (
+    //   this.selectedDatos.numeroInstitucion ==
+    //   this.authenticationService.getInstitucionSession()
+    // ) {
+    // Colegiado
+    this.getColegiado(selectedDatos);
+    // } else if (
+    //   this.selectedDatos.numeroInstitucion !=
+    //   this.authenticationService.getInstitucionSession()
+    // ) {
+    //   this.getNoColegiado(selectedDatos);
+    // }
+    // }
   }
 
   getColegiado(selectedDatos) {
     this.bodyColegiado.nif = selectedDatos.nif;
-    this.bodyColegiado.numColegiado = selectedDatos.numeroColegiado;
+    // this.bodyColegiado.numColegiado = selectedDatos.numeroColegiado;
 
     this.sigaServices
       .postPaginado(
-        "busquedaColegiados_searchColegiado",
+        "busquedaCensoGeneral_searchColegiado",
         "?numPagina=1",
         this.bodyColegiado
       )
@@ -256,12 +257,21 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         this.colegiadoSearch = JSON.parse(data["body"]);
         this.datosColegiados = this.colegiadoSearch.colegiadoItem;
 
-        sessionStorage.setItem(
-          "personaBody",
-          JSON.stringify(this.datosColegiados[0])
-        );
-        this.router.navigate(["/fichaColegial"]);
-      });
+        if (this.datosColegiados == null || this.datosColegiados == undefined ||
+          this.datosColegiados.length == 0) {
+          this.getNoColegiado(selectedDatos);
+        } else {
+          sessionStorage.setItem(
+            "personaBody",
+            JSON.stringify(this.datosColegiados[0])
+          );
+          this.router.navigate(["/fichaColegial"]);
+        }
+      },
+        err => {
+          this.progressSpinner = false;
+
+        });
   }
 
   getNoColegiado(selectedDatos) {
@@ -278,6 +288,44 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         this.progressSpinner = false;
         this.noColegiadoSearch = JSON.parse(data["body"]);
         this.datosNoColegiados = this.noColegiadoSearch.noColegiadoItem;
+
+        if (this.datosNoColegiados.length > 0) {
+          if (this.datosNoColegiados[0].fechaNacimiento != null) {
+            this.datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+              this.datosNoColegiados[0].fechaNacimiento
+            );
+          }
+
+          sessionStorage.setItem(
+            "personaBody",
+            JSON.stringify(this.datosNoColegiados[0])
+          );
+
+          this.router.navigate(["/fichaColegial"]);
+        } else {
+          this.getCliente(selectedDatos);
+        }
+      },
+        err => {
+          this.progressSpinner = false;
+
+        });
+  }
+
+  getCliente(selectedDatos) {
+    this.bodyNoColegiado.nif = selectedDatos.nif;
+
+    this.sigaServices
+      .postPaginado(
+        "busquedaCensoGeneral_searchCliente",
+        "?numPagina=1",
+        this.bodyNoColegiado
+      )
+      .subscribe(data => {
+        this.progressSpinner = false;
+        this.noColegiadoSearch = JSON.parse(data["body"]);
+        this.datosNoColegiados = this.noColegiadoSearch.noColegiadoItem;
+        sessionStorage.setItem("esColegiado", "false");
 
         if (this.datosNoColegiados.length > 0) {
           if (this.datosNoColegiados[0].fechaNacimiento != null) {
@@ -326,13 +374,18 @@ export class BusquedaCensoGeneralComponent implements OnInit {
                   )
                 }
               ];
-
+              this.progressSpinner = false;
               this.selectedDatos = [];
             }
           });
+          this.progressSpinner = false;
           sessionStorage.removeItem("esNuevoNoColegiado");
         }
-      });
+      },
+        err => {
+          this.progressSpinner = false;
+
+        });
   }
 
   personaBodyFecha(fecha) {
