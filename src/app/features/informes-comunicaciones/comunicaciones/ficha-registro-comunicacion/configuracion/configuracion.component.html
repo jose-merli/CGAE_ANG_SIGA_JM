@@ -88,7 +88,7 @@
             </div>
             <div *ngIf="body.idTipoEnvios== '7' || body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.asunto' | translate }}</label>
-              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
+              <input [disabled]="!activacionEditar" type="text" class="form-control" [(ngModel)]="body.asunto" pInputText>
             </div>
             <div *ngIf="body.idTipoEnvios== '7' || body.idTipoEnvios=='1'" class="form-group col-lg-12 col-md-12">
               <label>{{ 'enviosMasivos.literal.cuerpo' | translate }}</label>
