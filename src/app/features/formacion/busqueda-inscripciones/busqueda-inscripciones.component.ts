@@ -112,6 +112,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   calificacionEmitidaAux: String;
   activacionEditar: boolean = false;
 
+
   isCurso: boolean = false;
 
   constructor(
@@ -136,6 +137,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   ngOnInit() {
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+
     this.getCombos();
     if (
       (sessionStorage.getItem("formador") != null ||
@@ -143,6 +145,27 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       sessionStorage.getItem("toBackNewFormador") == "true"
     ) {
       sessionStorage.removeItem("toBackNewFormador");
+
+      if (
+        sessionStorage.getItem("datosTabla") != null &&
+        sessionStorage.getItem("datosTabla") != undefined
+      ) {
+        // this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+        this.buscar = true;
+        let filtros = JSON.parse(
+          sessionStorage.getItem("filtrosBusquedaInscripciones"));
+
+        if (filtros != null && filtros != undefined) {
+          this.body = filtros;
+        }
+
+        this.isBuscar();
+
+        sessionStorage.removeItem("filtrosBusquedaInscripciones");
+        sessionStorage.removeItem("datosTabla");
+      }
+      this.isCurso = true;
+
       this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
     } else if (
       sessionStorage.getItem("cursoSelected") != null ||
@@ -152,6 +175,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         sessionStorage.getItem("cursoSelected")
       ).idCurso;
       this.isCurso = true;
+      sessionStorage.removeItem("cursoSelected");
 
       if (
         sessionStorage.getItem("datosTabla") != null &&
@@ -159,9 +183,13 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       ) {
         // this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
         this.buscar = true;
-        this.body = JSON.parse(
-          sessionStorage.getItem("filtrosBusquedaInscripciones")
-        );
+        let filtros = JSON.parse(
+          sessionStorage.getItem("filtrosBusquedaInscripciones"));
+
+        if (filtros != null && filtros != undefined) {
+          this.body = filtros;
+        }
+
         this.isBuscar();
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
@@ -169,25 +197,31 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       } else {
         this.isBuscar();
       }
+    } else {
+      if (
+        sessionStorage.getItem("datosTabla") != null &&
+        sessionStorage.getItem("datosTabla") != undefined
+      ) {
+        // this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
+        this.buscar = true;
+        let filtros = JSON.parse(
+          sessionStorage.getItem("filtrosBusquedaInscripciones"));
+
+        if (filtros != null && filtros != undefined) {
+          this.body = filtros;
+        }
+
+        this.isBuscar();
+
+        sessionStorage.removeItem("filtrosBusquedaInscripciones");
+        sessionStorage.removeItem("datosTabla");
+      }
     }
 
     this.selectedDatos = [];
     sessionStorage.removeItem("modoEdicionInscripcion");
 
-    if (
-      sessionStorage.getItem("datosTabla") != null &&
-      sessionStorage.getItem("datosTabla") != undefined
-    ) {
-      // this.datos = JSON.parse(sessionStorage.getItem("datosTabla"));
-      this.buscar = true;
-      this.body = JSON.parse(
-        sessionStorage.getItem("filtrosBusquedaInscripciones")
-      );
-      this.isBuscar();
 
-      sessionStorage.removeItem("filtrosBusquedaInscripciones");
-      sessionStorage.removeItem("datosTabla");
-    }
 
     this.checkAcceso();
     if (sessionStorage.getItem("courseCurrent") && this.isCurso) {
@@ -491,11 +525,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getColsResults() {
     this.cols = [
-       {
+      {
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre.apellidos"
       },
-       {
+      {
         field: "identificacion",
         header: "censo.consultaDatosColegiacion.literal.numIden"
       },
@@ -631,7 +665,15 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   obtenerFormador() {
     sessionStorage.setItem("abrirFormador", "true");
     sessionStorage.setItem("backInscripcion", "true");
+    sessionStorage.setItem(
+      "filtrosBusquedaInscripciones",
+      JSON.stringify(this.body)
+    );
 
+    if (this.datos != null && this.datos != undefined) {
+      sessionStorage.setItem("datosTabla", JSON.stringify(this.datos));
+
+    }
     sessionStorage.removeItem("menuProcede");
     sessionStorage.removeItem("migaPan");
     sessionStorage.removeItem("migaPan2");
