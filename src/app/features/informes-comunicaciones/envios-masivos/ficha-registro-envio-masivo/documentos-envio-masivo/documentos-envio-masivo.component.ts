@@ -115,7 +115,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       if (this.body.idEstado != '1' && this.body.idEstado != '4') {
         this.noEditar = true;
       }
-      if (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
+      if (this.body.idTipoEnvios == '4' || (this.body.idTipoEnvios == '5' && this.body.idEstado != '2')) {
         this.noEditar = true;
         this.noMostrar = true;
       }
@@ -222,7 +222,10 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     let objDownload = {
       rutaDocumento: dato[0].pathDocumento,
-      nombreDocumento: dato[0].nombreDocumento
+      nombreDocumento: dato[0].nombreDocumento,
+      idEnvio: dato[0].idEnvio,
+      idDocumento: dato[0].idDocumento,
+      idInstitucion: dato[0].idInstitucion
     };
 
     this.sigaServices
