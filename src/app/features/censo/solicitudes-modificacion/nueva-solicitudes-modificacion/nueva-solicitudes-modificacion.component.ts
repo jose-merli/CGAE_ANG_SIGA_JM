@@ -366,7 +366,7 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
           );
         }
       });
-
+    this.progressSpinner = false;
   }
 
   getPhotoRequest(body) {

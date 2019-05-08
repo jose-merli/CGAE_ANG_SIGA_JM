@@ -416,6 +416,9 @@ export class SolicitudesModificacionComponent implements OnInit {
           } else if (element.idTipoModificacion == "50") {
             pathSpecifica =
               "solicitudModificacion_denySolModifDatosCurriculares";
+          } else if (element.idTipoModificacion == "60") {
+            pathSpecifica =
+              "solicitudModificacion_denySolModifDatosCambiarFoto";
           }
 
           this.especificasCorrectas = false;
@@ -486,6 +489,9 @@ export class SolicitudesModificacionComponent implements OnInit {
           } else if (element.idTipoModificacion == "50") {
             pathSpecifica =
               "solicitudModificacion_processSolModifDatosCurriculares";
+          }else if (element.idTipoModificacion == "60") {
+            pathSpecifica =
+              "solicitudModificacion_processSolModifDatosCambiarFoto";
           }
           this.especificasCorrectas = false;
           this.sigaServices.post(pathSpecifica, element).subscribe(
