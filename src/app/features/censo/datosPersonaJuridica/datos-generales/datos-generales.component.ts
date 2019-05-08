@@ -253,9 +253,9 @@ export class DatosGenerales implements OnInit {
       .subscribe(
         data => {
           let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S") {
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
             this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N") {
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
             this.ocultarMotivo = false;
           } else {
             this.ocultarMotivo = undefined;

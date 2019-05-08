@@ -621,9 +621,9 @@ export class FichaColegialComponent implements OnInit {
       .subscribe(
         data => {
           let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S") {
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
             this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N") {
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
             this.ocultarMotivo = false;
           } else {
             this.ocultarMotivo = undefined;
@@ -2846,7 +2846,7 @@ export class FichaColegialComponent implements OnInit {
                         if (JSON.parse(data.body).error != null &&
                           JSON.parse(data.body).error != undefined &&
                           JSON.parse(data.body).error != "") {
-                          let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+                          let msg = JSON.parse(data.body).error.message;
                           this.showSuccessDetalle(msg);
                         } else {
                           this.showSuccess();
@@ -2875,7 +2875,7 @@ export class FichaColegialComponent implements OnInit {
                         console.log(error);
                         this.progressSpinner = false;
                         if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
-                          let msg = this.translateService.instant(JSON.parse(error.error).error.message);
+                          let msg = JSON.parse(error.error).error.message;
                           this.showFailDetalle(msg);
                         } else {
                           this.showFail();
@@ -2906,7 +2906,7 @@ export class FichaColegialComponent implements OnInit {
                   if (JSON.parse(data.body).error != null &&
                     JSON.parse(data.body).error != undefined &&
                     JSON.parse(data.body).error != "") {
-                    let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+                    let msg = JSON.parse(data.body).error.message;
                     this.showSuccessDetalle(msg);
                   } else {
                     this.showSuccess();
@@ -2922,7 +2922,7 @@ export class FichaColegialComponent implements OnInit {
                 console.log(error);
 
                 if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
-                  let msg = this.translateService.instant(JSON.parse(error.error).error.message);
+                  let msg = JSON.parse(error.error).error.message;
                   this.showFailDetalle(msg);
                 } else {
                   this.showFail();
@@ -3199,7 +3199,7 @@ export class FichaColegialComponent implements OnInit {
           if (JSON.parse(data.body).error != null &&
             JSON.parse(data.body).error != undefined &&
             JSON.parse(data.body).error != "") {
-            let msg = this.translateService.instant(JSON.parse(data.body).error.message);
+            let msg = JSON.parse(data.body).error.message;
             this.showSuccessDetalle(msg);
           } else {
             this.showSuccess();
@@ -3218,7 +3218,7 @@ export class FichaColegialComponent implements OnInit {
           this.numSelectedColegiales = 0;
 
           if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
-            let msg = this.translateService.instant(JSON.parse(error.error).error.message);
+            let msg = JSON.parse(error.error).error.message;
             this.showFailDetalle(msg);
           } else {
             this.showFail();

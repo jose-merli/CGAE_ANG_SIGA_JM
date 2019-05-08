@@ -746,9 +746,9 @@ export class SolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S") {
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
             this.mostrarAuditoria = false;
-          } else if (parametroOcultarMotivo.parametro == "N") {
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
             this.mostrarAuditoria = true;
           } else {
             this.mostrarAuditoria = undefined;
