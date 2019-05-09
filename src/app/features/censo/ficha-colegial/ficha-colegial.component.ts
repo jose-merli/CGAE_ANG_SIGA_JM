@@ -1582,12 +1582,14 @@ export class FichaColegialComponent implements OnInit {
           (valorSeleccionados: any, index: number) => {
             if (
               valorSeleccionados.idGrupo == valorMap.idGrupo &&
-              valorSeleccionados.label == valorMap.label
+              valorSeleccionados.label == valorMap.label &&
+              valorSeleccionados.idInstitucion == valorMap.idInstitucion
             ) {
               finalUpdateItems.push(valorMap);
             } else if (
               valorSeleccionados.value == valorMap.idGrupo &&
-              valorSeleccionados.label == valorMap.label
+              valorSeleccionados.label == valorMap.label &&
+              valorSeleccionados.idInstitucion == valorMap.idInstitucion
             ) {
               finalUpdateItems.push(valorMap);
             }
@@ -2084,7 +2086,7 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         // coger todas las etiquetas
-        let etiquetasSugerencias = this.filterLabel(event.query, n.combooItems);
+        let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
 
         // this.comboEtiquetas = this.comboEtiquetas.filter(function(item) {
         //   return !etiquetasPuestas.includes(item);
@@ -2208,7 +2210,7 @@ export class FichaColegialComponent implements OnInit {
     var keepGoing = true;
     this.updateItems.forEach(element => {
       if (keepGoing) {
-        if (element.idGrupo == event.value) {
+        if (element.idGrupo == event.value && element.idInstitucion == event.idInstitucion) {
           keepGoing = false;
         }
       }
@@ -2241,6 +2243,7 @@ export class FichaColegialComponent implements OnInit {
         this.item = new ComboEtiquetasItem();
         this.item.idGrupo = event.value;
         this.item.label = event.label;
+        this.item.idInstitucion = event.idInstitucion;
 
         // this.mensaje = this.translateService.instant(
         //   "censo.etiquetas.literal.rango"
@@ -2259,14 +2262,16 @@ export class FichaColegialComponent implements OnInit {
             this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined
           ) {
             if (
-              this.etiquetasPersonaJuridicaSelecionados[i].label == event.label
+              this.etiquetasPersonaJuridicaSelecionados[i].label == event.label &&
+              this.etiquetasPersonaJuridicaSelecionados[i].idInstitucion == event.idInstitucion
             ) {
               this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
             }
           } else {
             if (
               this.etiquetasPersonaJuridicaSelecionados[i].idGrupo ==
-              event.value
+              event.value &&
+              this.etiquetasPersonaJuridicaSelecionados[i].idInstitucion == event.idInstitucion
             ) {
               this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
               this.onUnselect(event);
@@ -2300,12 +2305,14 @@ export class FichaColegialComponent implements OnInit {
     this.activacionGuardarGenerales();
     for (let i = 0; i < this.etiquetasPersonaJuridicaSelecionados.length; i++) {
       if (this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined) {
-        if (this.etiquetasPersonaJuridicaSelecionados[i].label == event.label) {
+        if (this.etiquetasPersonaJuridicaSelecionados[i].label == event.label &&
+          this.etiquetasPersonaJuridicaSelecionados[i].idInstitucion == event.idInstitucion) {
           this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
         }
       } else {
         if (
-          this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == event.value
+          this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == event.value &&
+              this.etiquetasPersonaJuridicaSelecionados[i].idInstitucion == event.idInstitucion
         ) {
           this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
           this.onUnselect(event);
@@ -4112,29 +4119,29 @@ export class FichaColegialComponent implements OnInit {
 
     // }
     // if (cargosExistentes <= cargosBorrados) {
-      let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
-      let icon = "fa fa-trash-alt";
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          this.eliminarRegistro(selectedDatos);
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "info",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
+    let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
+    let icon = "fa fa-trash-alt";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.eliminarRegistro(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
 
-          this.selectedDatosBancarios = [];
-          this.selectMultipleBancarios = false;
-        }
-      });
+        this.selectedDatosBancarios = [];
+        this.selectMultipleBancarios = false;
+      }
+    });
     // } else {
     //   let mess = this.translateService.instant("messages.deleteConfirmation");
     //   let icon = "fa fa-trash-alt";
