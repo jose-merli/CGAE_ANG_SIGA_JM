@@ -270,9 +270,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       .subscribe(
         data => {
           let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s" ) {
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
             this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N"|| parametroOcultarMotivo.parametro == "n") {
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
             this.ocultarMotivo = false;
           } else {
             this.ocultarMotivo = undefined;
@@ -433,7 +433,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     //this.body.motivo = "registro creado";
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
-        this.body = JSON.parse(data["body"]);
+        this.idCuenta = JSON.parse(data["body"]).id;
         this.showSuccess("Se han guardado correctamente los datos");
         sessionStorage.setItem("editar", "true");
       },
@@ -455,7 +455,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         if (this.ocultarMotivo == false) {
           this.cerrarAuditoria();
         }
-        this.idCuenta = this.body.id;
+        this.body.idCuenta = this.idCuenta;
         this.selectedTipo = [];
         this.body.motivo = undefined;
         this.registroEditable = "true";
