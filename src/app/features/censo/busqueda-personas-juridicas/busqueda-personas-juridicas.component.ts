@@ -102,8 +102,16 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     );
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
-        this.etiquetas = n.combooItems;
-      },
+
+        this.etiquetas = [];
+        let array = n.comboItems;
+
+        array.forEach(element => {
+          let e = { label: element.label, value: { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
+          this.etiquetas.push(e);
+        });
+      }
+      ,
       err => {
         console.log(err);
       }
