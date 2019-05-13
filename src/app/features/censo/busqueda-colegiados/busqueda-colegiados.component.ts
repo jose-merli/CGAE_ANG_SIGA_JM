@@ -413,7 +413,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // obtener etiquetas
     this.sigaServices.get("busquedaColegiado_etiquetas").subscribe(
       n => {
-        this.comboEtiquetas = n.combooItems;
+        this.comboEtiquetas = [];
+        let array = n.comboItems;
+
+        array.forEach(element => {
+          let e = { label: element.label, value: { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
+          this.comboEtiquetas.push(e);
+        });
+
         this.arregloTildesCombo(this.comboEtiquetas);
       },
       err => {

@@ -4,5 +4,6 @@ export class ComboEtiquetasItem {
   fechaBaja: String;
   label: String;
   backgroundColor: String;
-  constructor() {}
+  idInstitucion: string;
+  constructor() { }
 }
