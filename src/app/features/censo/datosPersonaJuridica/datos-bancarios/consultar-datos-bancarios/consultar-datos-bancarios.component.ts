@@ -2163,30 +2163,30 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let distinto = false;
     let anexo = dato.idAnexo;
 
-    if (dato.length == 1) {
+    // if (dato.length == 1) {
       distinto = false;
       if (anexo == null) {
         tipo = "Orden";
       } else {
         tipo = "Anexo";
       }
-    } else {
-      dato.forEach(element => {
-        if (anexo == null) {
-          tipo = "Orden";
-          if (element.idAnexo != null) {
-            if (!distinto)
-              distinto = true;
-          }
-        } else {
-          tipo = "Anexo";
-          if (element.idAnexo == null) {
-            if (!distinto)
-              distinto = true;
-          }
-        }
-      });
-    }
+    // } else {
+    //   dato.forEach(element => {
+    //     if (anexo == null) {
+    //       tipo = "Orden";
+    //       if (element.idAnexo != null) {
+    //         if (!distinto)
+    //           distinto = true;
+    //       }
+    //     } else {
+    //       tipo = "Anexo";
+    //       if (element.idAnexo == null) {
+    //         if (!distinto)
+    //           distinto = true;
+    //       }
+    //     }
+    //   });
+    // }
 
 
     if (!distinto) {
@@ -2213,15 +2213,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
           data => {
             this.keys = JSON.parse(data['body']).keysItem;
-            this.selectedDatos.forEach(element => {
+
+            // this.selectedDatos.forEach(element => {
               let keysValues = [];
               this.keys.forEach(key => {
-                if (element[key.nombre] != undefined) {
-                  keysValues.push(element[key.nombre]);
+                if (this.selectedDatos[key.nombre] != undefined) {
+                  keysValues.push(this.selectedDatos[key.nombre]);
                 }
               })
               datosSeleccionados.push(keysValues);
-            });
+            // });
 
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
             this.router.navigate(["/dialogoComunicaciones"]);
