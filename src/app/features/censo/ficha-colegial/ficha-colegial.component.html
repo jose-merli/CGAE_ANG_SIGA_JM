@@ -1593,6 +1593,20 @@
     </p-footer>
   </p-dialog>
 
+  <p-dialog [(visible)]="information" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>
+        <strong>{{"general.message.informacion" | translate}}</strong>
+      </label>
+    </p-header>
+
+    {{ msgDir }}
+    <p-footer class="text-right main-button">
+      <button (click)="aceptInformation()" pButton type="button" icon="fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+    </p-footer>
+  </p-dialog>
+
   <app-dialog></app-dialog>
 
   <!-- <div class="mainFrameWrapper">

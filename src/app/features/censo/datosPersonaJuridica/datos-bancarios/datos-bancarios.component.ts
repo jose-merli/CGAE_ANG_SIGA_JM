@@ -167,7 +167,7 @@ export class DatosBancariosComponent implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "123";
+    controlAcceso.idProceso = "288";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
