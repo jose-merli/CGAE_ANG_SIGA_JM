@@ -647,13 +647,13 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button pButton (click)="restTrainer()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"
-          [disabled]="!editFormador && !pressNewFormador"></button>
-        <button pButton (click)="saveTrainers()" type="button" icon="far fa-save" iconPos="left" [disabled]="((pressNewFormador  || !activacionEditar || !editFormador) && validateTrainer()) || !editFormador || !activacionEditar"
+          [disabled]="(!editFormador && !pressNewFormador) || isCursoFinalizado"></button>
+        <button pButton (click)="saveTrainers()" type="button" icon="far fa-save" iconPos="left" [disabled]="((pressNewFormador  || !activacionEditar || !editFormador) && validateTrainer()) || !editFormador || !activacionEditar || isCursoFinalizado"
           label="{{ 'general.boton.guardar' | translate }}"></button>
-        <button pButton (click)="deleteTrainer(selectedDatosFormadores)" type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!activacionEditar || selectedDatosFormadores == ''"
+        <button pButton (click)="deleteTrainer(selectedDatosFormadores)" type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!activacionEditar || selectedDatosFormadores == '' || isCursoFinalizado"
           label="{{ 'general.boton.eliminar'| translate }}"></button>
         <button pButton (click)="newTrainer()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new'| translate }}"
-          [disabled]="editFormador || !activacionEditar || pressNewFormador || selectMultipleFormadores"></button>
+          [disabled]="editFormador || isCursoFinalizado || !activacionEditar || pressNewFormador || selectMultipleFormadores "></button>
       </div>
     </div>
   </div>
@@ -1048,11 +1048,11 @@
   <div class="card-footer" *ngIf="esFichaActiva('session')">
     <div class="text-right main-button">
       <button pButton type="button" icon="fa fa-close" (click)="cancelSessions()" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"
-        [disabled]="selectedDatosSessions == '' || !activacionEditar || isLetrado"></button>
+        [disabled]="selectedDatosSessions == '' || !activacionEditar || isLetrado || isCursoFinalizado"></button>
       <button pButton type="button" icon="fa fa-reply-all" (click)="duplicateSession()" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"
-        [disabled]="disabledDuplicate() || !activacionEditar || isLetrado"></button>
-      <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado" iconPos="left"
-        label="{{ 'general.boton.new' | translate}}"></button>
+        [disabled]="disabledDuplicate() || !activacionEditar || isLetrado || isCursoFinalizado"></button>
+      <button pButton type="button" icon="fa fa-plus" (click)="newSession()" [disabled]="!activacionEditar || isLetrado  || isCursoFinalizado"
+        iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>

@@ -444,30 +444,42 @@ export class DatosGenerales implements OnInit {
           );
       }
     } else {
+      this.body.etiquetas = [];
       this.body.idioma = this.idiomaPreferenciaSociedad;
 
-      let finalUpdateItems: any[] = [];
-      this.updateItems.forEach((valorMap: ComboEtiquetasItem, key: string) => {
-        this.etiquetasPersonaJuridicaSelecionados.forEach(
-          (valorSeleccionados: any, index: number) => {
-            if (
-              valorSeleccionados.idGrupo == valorMap.idGrupo &&
-              valorSeleccionados.label == valorMap.label &&
-              valorSeleccionados.idInstitucion == valorMap.idInstitucion
-            ) {
-              finalUpdateItems.push(valorMap);
-            } else if (
-              valorSeleccionados.value == valorMap.idGrupo &&
-              valorSeleccionados.label == valorMap.label &&
-              valorSeleccionados.idInstitucion == valorMap.idInstitucion
-            ) {
-              finalUpdateItems.push(valorMap);
-            }
-          }
-        );
-      });
+      for (let i in this.etiquetasPersonaJuridicaSelecionados) {
+        this.body.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
+          i
+        ];
 
-      this.body.etiquetas = finalUpdateItems;
+        if (this.body.etiquetas[i].value != "" && this.body.etiquetas[i].value != null &&
+          this.body.etiquetas[i].value != undefined) {
+          this.body.etiquetas[i].idGrupo = this.body.etiquetas[i].value
+        }
+      }
+
+      // let finalUpdateItems: any[] = [];
+      // this.updateItems.forEach((valorMap: ComboEtiquetasItem, key: string) => {
+      //   this.etiquetasPersonaJuridicaSelecionados.forEach(
+      //     (valorSeleccionados: any, index: number) => {
+      //       if (
+      //         valorSeleccionados.idGrupo == valorMap.idGrupo &&
+      //         valorSeleccionados.label == valorMap.label &&
+      //         valorSeleccionados.idInstitucion == valorMap.idInstitucion
+      //       ) {
+      //         finalUpdateItems.push(valorMap);
+      //       } else if (
+      //         valorSeleccionados.value == valorMap.idGrupo &&
+      //         valorSeleccionados.label == valorMap.label &&
+      //         valorSeleccionados.idInstitucion == valorMap.idInstitucion
+      //       ) {
+      //         finalUpdateItems.push(valorMap);
+      //       }
+      //     }
+      //   );
+      // });
+
+      // this.body.etiquetas = finalUpdateItems;
 
       this.body.motivo = "registro actualizado";
 
@@ -1164,7 +1176,7 @@ export class DatosGenerales implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "120";
+    controlAcceso.idProceso = "285";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {

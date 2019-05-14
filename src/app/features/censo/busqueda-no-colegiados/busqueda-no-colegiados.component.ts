@@ -678,7 +678,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           element.fechaNacimiento.length - 11
         );
         var month = element.fechaNacimiento.substring(posIni + 1, posFin);
-        element.fechaNacimientoDate = new Date(year, month, day);
+        element.fechaNacimientoDate = new Date(year, month - 1, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
     });

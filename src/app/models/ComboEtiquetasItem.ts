@@ -5,5 +5,6 @@ export class ComboEtiquetasItem {
   label: String;
   backgroundColor: String;
   idInstitucion: string;
+  value: string;
   constructor() { }
 }

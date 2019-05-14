@@ -625,7 +625,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         var year = element.fechaNacimiento.substring(posFin + 1);
         var day = element.fechaNacimiento.substring(0, posIni);
         var month = element.fechaNacimiento.substring(posIni + 1, posFin);
-        element.fechaNacimientoDate = new Date(year, month, day);
+        element.fechaNacimientoDate = new Date(year, month - 1, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
     });

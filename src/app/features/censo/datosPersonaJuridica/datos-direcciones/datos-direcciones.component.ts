@@ -76,7 +76,7 @@ export class DatosDireccionesComponent implements OnInit {
     private translateService: TranslateService,
     private fichasPosibles: DatosPersonaJuridicaComponent,
     private cardService: cardService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("editarDirecciones") == "true") {
@@ -185,7 +185,7 @@ export class DatosDireccionesComponent implements OnInit {
 
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "122";
+    controlAcceso.idProceso = "287";
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
       data => {
@@ -196,7 +196,7 @@ export class DatosDireccionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -266,7 +266,7 @@ export class DatosDireccionesComponent implements OnInit {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     } else {
       // Sociedad no existente,
@@ -337,7 +337,7 @@ export class DatosDireccionesComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -352,7 +352,7 @@ export class DatosDireccionesComponent implements OnInit {
     });
 
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
-      data => {},
+      data => { },
       err => {
         console.log(err);
       },

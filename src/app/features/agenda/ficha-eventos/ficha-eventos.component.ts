@@ -45,6 +45,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   modoTipoEventoInscripcion: boolean = false;
   modoSesionEdicionEvento: boolean = false;
   isEventoCumplidoOrCancelado: boolean = false;
+  isEventoCancelado: boolean = false;
   idCalendario;
   tipoAccesoLectura: boolean = false;
   blockAsistencia: boolean = false;
@@ -106,6 +107,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   valorEstadoEventoPlanificado = "1";
   valorEstadoEventoCancelado = "3";
   valorEstadoEventoCumplido = "2";
+  valorEstadoCursoFinalizado = "4";
+
 
   //Notificaciones
   selectedDatosNotifications = [];
@@ -620,9 +623,17 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   checkIsEventoCumplidoOrCancelado() {
     if (this.newEvent.idEstadoEvento != undefined && this.newEvent.idEstadoEvento != this.valorEstadoEventoPlanificado) {
       this.isEventoCumplidoOrCancelado = true;
+
+      if (this.newEvent.idEstadoEvento == this.valorEstadoEventoCancelado) {
+        this.isEventoCancelado = true;
+      } else {
+        this.isEventoCancelado = false;
+      }
+
     } else {
       this.isEventoCumplidoOrCancelado = false;
     }
+
   }
 
   newModeConfiguration() {
@@ -1345,6 +1356,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         ) {
 
           this.isEventoCumplidoOrCancelado = false;
+          this.isEventoCancelado = false;
           this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
           this.newEvent.idTipoEvento = this.valorTipoEventoInicioInscripcion;
           this.newEvent.idTipoCalendario = this.valorTipoFormacion;
@@ -1373,6 +1385,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         ) {
 
           this.isEventoCumplidoOrCancelado = false;
+          this.isEventoCancelado = false;
           this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
           this.newEvent.idTipoEvento = this.valorTipoEventoFinInscripcion;
           this.newEvent.idTipoCalendario = this.valorTipoFormacion;
@@ -1440,6 +1453,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             ) {
 
               this.isEventoCumplidoOrCancelado = false;
+              this.isEventoCancelado = false;
+
               this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
               this.newEvent.start = new Date(this.curso.fechaInscripcionDesdeDate);
@@ -1467,6 +1482,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             ) {
 
               this.isEventoCumplidoOrCancelado = false;
+              this.isEventoCancelado = false;
+
               this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
 
               this.newEvent.start = new Date(this.curso.fechaInscripcionHastaDate);
