@@ -157,7 +157,7 @@ export class BusquedaGeneralComponent {
 
           // this.colegios_seleccionados[0].label = this.institucionActual;
           this.colegioDisabled = false;
-           this.progressSpinner = false;
+          this.progressSpinner = false;
         } else {
           for (let colegio of this.colegios_rol) {
             if (colegio.value == this.institucionActual) {
@@ -170,7 +170,7 @@ export class BusquedaGeneralComponent {
             }
           }
           this.colegioDisabled = false;
-           this.progressSpinner = false;
+          this.progressSpinner = false;
         }
       },
       err => {
@@ -657,12 +657,14 @@ export class BusquedaGeneralComponent {
       sessionStorage.setItem("nIntegrante", JSON.stringify(id));
       this.router.navigate(["detalleIntegrante"]);
     } else if (sessionStorage.getItem("abrirRemitente") == "true") {
-      sessionStorage.setItem("remitente", JSON.stringify(id[0]));
-      sessionStorage.removeItem("abrirRemitente");
-      sessionStorage.removeItem("notario");
-      sessionStorage.removeItem("integrante");
-      this.location.back();
-      // ir a ficha de solicitud de Incorporación
+      if (id[0].idPersona != null && id[0].idPersona != null) {
+        sessionStorage.setItem("remitente", JSON.stringify(id[0]));
+        sessionStorage.removeItem("abrirRemitente");
+        sessionStorage.removeItem("notario");
+        sessionStorage.removeItem("integrante");
+        this.location.back();
+        // ir a ficha de solicitud de Incorporación
+      }
     } else if (sessionStorage.getItem("AddDestinatarioIndv") != null) {
       sessionStorage.setItem("destinatarioIndv", JSON.stringify(id[0]));
       // sessionStorage.removeItem("AddDestinatarioIndv");

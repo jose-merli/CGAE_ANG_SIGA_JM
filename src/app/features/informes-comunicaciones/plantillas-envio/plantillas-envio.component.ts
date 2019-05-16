@@ -174,14 +174,52 @@ export class PlantillasEnvioComponent implements OnInit {
 		this.numSelected = selectedDatos.length;
 	}
 
+	// buscar() {
+	// 	this.progressSpinner = true;
+	// 	this.showResultados = true;
+	// 	sessionStorage.removeItem('plantillasEnvioSearch');
+	// 	sessionStorage.removeItem('filtrosPlantillas');
+	// 	sessionStorage.removeItem('remitente');
+	// 	this.getResultados();
+	// }
+
+
 	buscar() {
-		this.progressSpinner = true;
-		this.showResultados = true;
-		sessionStorage.removeItem('plantillasEnvioSearch');
-		sessionStorage.removeItem('filtrosPlantillas');
-		sessionStorage.removeItem('remitente');
-		this.getResultados();
+		if (this.checkFilters()) {
+			this.progressSpinner = true;
+			this.showResultados = true;
+			sessionStorage.removeItem('plantillasEnvioSearch');
+			sessionStorage.removeItem('filtrosPlantillas');
+			sessionStorage.removeItem('remitente');
+			this.getResultados();
+		}
 	}
+
+	checkFilters() {
+		if (
+			(this.bodySearch.nombre == undefined || this.bodySearch.nombre == "") &&
+			(this.bodySearch.idTipoEnvios == undefined || this.bodySearch.idTipoEnvios == "")) {
+			this.showSearchIncorrect();
+			return false;
+		} else {
+			// quita espacios vacios antes de buscar
+			if (this.bodySearch.nombre != undefined) {
+				this.bodySearch.nombre = this.bodySearch.nombre.trim();
+			}
+			return true;
+		}
+	}
+	showSearchIncorrect() {
+		this.msgs = [];
+		this.msgs.push({
+			severity: "error",
+			summary: "Incorrecto",
+			detail: this.translateService.instant(
+				"cen.busqueda.error.busquedageneral"
+			)
+		});
+	}
+
 
 	// Mensajes
 	showFail(mensaje: string) {

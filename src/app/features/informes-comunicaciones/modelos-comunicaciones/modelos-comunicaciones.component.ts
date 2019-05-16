@@ -75,7 +75,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     ];
 
     this.visible = [
-      { label: "", value: "" },
+      { label: "", value: "3" },
       { label: "Sí", value: 1 },
       { label: "No", value: 0 }
     ];
@@ -227,15 +227,47 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+
   buscar() {
-    if (this.bodySearch.nombre != undefined) this.bodySearch.nombre = this.bodySearch.nombre.trim();
-    this.showResultados = true;
-    this.selectMultiple = false;
-    this.selectedDatos = "";
-    this.progressSpinner = true;
-    sessionStorage.removeItem("modelosSearch");
-    sessionStorage.removeItem("filtrosModelos");
-    this.getResultados();
+    if (this.checkFilters()) {
+      if (this.bodySearch.nombre != undefined) this.bodySearch.nombre = this.bodySearch.nombre.trim();
+      this.showResultados = true;
+      this.selectMultiple = false;
+      this.selectedDatos = "";
+      this.progressSpinner = true;
+      sessionStorage.removeItem("modelosSearch");
+      sessionStorage.removeItem("filtrosModelos");
+      this.getResultados();
+    }
+  }
+
+  checkFilters() {
+    if (
+      (this.bodySearch.idClaseComunicacion == undefined || this.bodySearch.idClaseComunicacion == "") &&
+      (this.bodySearch.nombre == undefined || this.bodySearch.nombre == "") &&
+      (this.bodySearch.idInstitucion == undefined || this.bodySearch.idInstitucion == "") &&
+      (this.bodySearch.preseleccionar == undefined || this.bodySearch.preseleccionar == "") &&
+      (this.bodySearch.visible == undefined || (this.bodySearch.visible != 1 && this.bodySearch.visible != 0))) {
+      this.showSearchIncorrect();
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.bodySearch.nombre != undefined) {
+        this.bodySearch.nombre = this.bodySearch.nombre.trim();
+      }
+
+      return true;
+    }
+  }
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
   }
 
   getResultados() {
