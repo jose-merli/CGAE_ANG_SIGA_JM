@@ -132,6 +132,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     sessionStorage.removeItem("busquedaCensoGeneral");
     sessionStorage.removeItem("disabledAction");
     sessionStorage.removeItem("filtrosBusquedaColegiados");
+    sessionStorage.removeItem("busqueda");
     sessionStorage.removeItem("esNuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiadoGen");

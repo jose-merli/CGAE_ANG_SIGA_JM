@@ -1255,6 +1255,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("editedSolicitud");
     sessionStorage.removeItem("consulta");
     sessionStorage.removeItem("pendienteAprobacion");
+    let filtros = JSON.parse(sessionStorage.getItem("filtros"));
+    sessionStorage.setItem("filtrosSolicitudesIncorporacion", JSON.stringify(filtros));
     this.router.navigate(["/solicitudesIncorporacion"]);
   }
 

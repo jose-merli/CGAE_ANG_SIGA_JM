@@ -20,7 +20,7 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
-            <label>{{ "administracion.usuarios.literal.NIF" | translate }} (*)
+            <label>{{ "administracion.usuarios.literal.NIF" | translate }}
             </label>
             <input type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]="body.nif" />
           </div>
@@ -56,7 +56,7 @@
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
-        <button (click)="isBuscar()" [disabled]="disableBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+        <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -75,7 +75,8 @@
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
             <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{ table.first + 1 }} al {{ table.first + table.rows }} de un total de {{ table.totalRecords
-              }}</label>
+              }}
+            </label>
             <label>Mostrar</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label> registros</label>

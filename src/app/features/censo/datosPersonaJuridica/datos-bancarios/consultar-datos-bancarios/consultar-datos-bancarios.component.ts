@@ -1967,6 +1967,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             )
             .subscribe(data => {
               this.file = undefined;
+
+              let idAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.findIndex(x => x.idAnexo == this.selectedDatos.idAnexo &&
+                x.idCuenta == this.selectedDatos.idCuenta && x.idMandato == this.selectedDatos.idMandato &&
+                x.tipoMandato == this.selectedDatos.tipoMandato && x.descripcion == this.selectedDatos.descripcion);
+
+              if (data.id != undefined && data.id != null && data.id != "") {
+                this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[idAnexo].idFicheroFirma = data.id;
+              }
               this.progressSpinner = false;
               this.showSuccess("Se han editado correctamente los datos");
               this.displayFirmar = false;
