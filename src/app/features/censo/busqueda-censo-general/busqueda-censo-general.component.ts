@@ -163,33 +163,38 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   // Métodos
   isBuscar() {
-    if (
-      this.body.numeroColegiado != undefined &&
-      this.body.numeroColegiado != ""
-    ) {
-      if (
-        this.colegios_seleccionados != undefined &&
-        this.colegios_seleccionados.length > 0
-      ) {
-        this.search();
-      } else {
-        this.showFail("Debe introducir un colegio para buscar.");
-      }
-    } else if (
-      this.colegios_seleccionados != undefined &&
-      this.colegios_seleccionados.length > 0
-    ) {
+
+    if (this.checkFilters()) {
       if (
         this.body.numeroColegiado != undefined &&
         this.body.numeroColegiado != ""
       ) {
-        this.search();
+        if (
+          this.colegios_seleccionados != undefined &&
+          this.colegios_seleccionados.length > 0
+        ) {
+          this.search();
+        } else {
+          this.showFail("Debe introducir un colegio para buscar.");
+        }
+      } else if (
+        this.colegios_seleccionados != undefined &&
+        this.colegios_seleccionados.length > 0
+      ) {
+        if (
+          this.body.numeroColegiado != undefined &&
+          this.body.numeroColegiado != ""
+        ) {
+          this.search();
+        } else {
+          this.showFail("Debe introducir un número de colegiado para buscar.");
+        }
       } else {
-        this.showFail("Debe introducir un número de colegiado para buscar.");
+        this.search();
       }
-    } else {
-      this.search();
     }
+
+
   }
 
   search() {
@@ -436,4 +441,61 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       this.isBuscar();
     }
   }
+
+  checkFilters() {
+    if (
+      (this.body.nif == null ||
+        this.body.nif == undefined ||
+        this.body.nif.trim().length < 3) &&
+      (this.body.nombre == null ||
+        this.body.nombre == undefined ||
+        this.body.nombre.trim().length < 3) &&
+      (this.body.primerApellido == null ||
+        this.body.primerApellido == undefined ||
+        this.body.primerApellido.trim().length < 3) &&
+      (this.body.segundoApellido == null ||
+        this.body.segundoApellido == undefined ||
+        this.body.segundoApellido.trim().length < 3) &&
+      (this.body.numeroColegiado == null ||
+        this.body.numeroColegiado == undefined ||
+        this.body.numeroColegiado.trim().length < 3) &&
+      (this.colegios_seleccionados == undefined ||
+        this.colegios_seleccionados.length == 0)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.nif != undefined) {
+        this.body.nif = this.body.nif.trim();
+      }
+      if (this.body.nombre != undefined) {
+        this.body.nombre = this.body.nombre.trim();
+      }
+      if (this.body.primerApellido != undefined) {
+        this.body.primerApellido = this.body.primerApellido.trim();
+      }
+      if (this.body.segundoApellido != undefined) {
+        this.body.segundoApellido = this.body.segundoApellido.trim();
+      }
+      if (this.body.numeroColegiado != undefined) {
+        this.body.numeroColegiado = this.body.numeroColegiado.trim();
+      }
+
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
 }

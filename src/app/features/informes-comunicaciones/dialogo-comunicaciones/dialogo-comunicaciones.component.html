@@ -115,8 +115,8 @@
             <div class="form-group col-lg-3 col-md-3">
                 <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control"
                     [(ngModel)]="dato.valor" pInputText>
-                <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor"
-                    dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar>
+                    <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" [utc]="true"
+                    dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"></p-calendar> 
                 <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores"
                     [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
             </div>

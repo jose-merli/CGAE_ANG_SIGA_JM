@@ -41,7 +41,7 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
                     <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre" [formControl]="formBusqueda.controls['nombre']">
- 
+
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
     <div class="card-footer">
         <div class="text-right main-button ">
             <button (click)="restablecerCampos()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Limpiar"></button>
-            <button (click)="buscarSolicitudes()" [disabled]="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
+            <button (click)="buscarSolicitudes()" pButton type="button" icon="fa fa-search" iconPos="left" label="Buscar"></button>
             <button (click)="irNuevaSolicitud()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
         </div>
     </div>

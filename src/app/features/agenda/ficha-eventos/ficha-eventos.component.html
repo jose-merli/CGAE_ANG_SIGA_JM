@@ -574,7 +574,7 @@
         <div class="col-lg-11 col-md-11">
           <p-autoComplete #autocomplete [(ngModel)]="results" [suggestions]="formadoresSuggest" [minLength]="1" field="nombreCompleto"
             [multiple]="true" (onSelect)="visiblePanelOnSelect()" (onUnselect)="resetSuggestTrainers()" (onBlur)="visiblePanelBlur($event)"
-            [style]="{'width':'100%'}" [disabled]="isEventoCumplidoOrCancelado">
+            [style]="{'width':'100%'}" [disabled]="isEventoCancelado">
             <ng-template let-formadoresSelecionados pTemplate="selectedItem">
               <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                 [ngStyle]="{'background': formadoresSelecionados.color, 'margin': marginPx, 'border': bw }">
@@ -586,7 +586,7 @@
         <div class="col-lg-1 col-md-1">
           <div class="text-left main-button">
             <button pButton (click)="filterTrainersMultiple()" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate }}"
-              [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
+              [disabled]="isEventoCancelado || tipoAccesoLectura"></button>
           </div>
         </div>
       </div>
@@ -594,9 +594,9 @@
     <div class="card-footer" *ngIf="esFichaActiva('formadores')">
       <div class="text-right main-button">
         <button pButton (click)="restTrainers()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"
-          [disabled]="tipoAccesoLectura || !formadoresDistintosCheck() || isEventoCumplidoOrCancelado"></button>
+          [disabled]="tipoAccesoLectura || !formadoresDistintosCheck() || isEventoCancelado"></button>
         <button pButton (click)="guardarFormadores()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="tipoAccesoLectura || !formadoresDistintosCheck() || isEventoCumplidoOrCancelado"></button>
+          [disabled]="tipoAccesoLectura || !formadoresDistintosCheck() || isEventoCancelado"></button>
       </div>
     </div>
   </div>
@@ -644,8 +644,7 @@
 
             <ng-template *ngIf="col.field =='asistencia'" pTemplate="body" let-dato="rowData">
               <p-dropdown class="select-form" [(ngModel)]="dato[col.field]" [options]="comboAsistencia" [filter]="false" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                name="type" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (onChange)="setAssistanceUpdate(dato)"
-                [showClear]="true"></p-dropdown>
+                name="type" [disabled]="tipoAccesoLectura || isEventoCancelado" (onChange)="setAssistanceUpdate(dato)" [showClear]="true"></p-dropdown>
             </ng-template>
 
           </p-column>
@@ -674,16 +673,16 @@
     <div class="card-footer" *ngIf="esFichaActiva('asistencia')">
       <div class="text-right main-button">
         <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
-          multiple="multiple" (onSelect)="getFile($event)" auto="true" [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado">
+          multiple="multiple" (onSelect)="getFile($event)" auto="true" [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCancelado">
         </p-fileUpload>
         <button pButton type="button" (click)="downloadTemplateFile()" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}"
-          [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"></button>
-        <button pButton type="button" (click)="unCheckAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"
+          [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplido"></button>
+        <button pButton type="button" (click)="unCheckAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia || isEventoCancelado"
           icon="fa fa-times" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.desmarcar' | translate }}"></button>
-        <button pButton type="button" (click)="checkAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"
+        <button pButton type="button" (click)="checkAsist()" [disabled]="selectedDatosAsistencia == '' || tipoAccesoLectura || blockAsistencia || isEventoCancelado"
           icon="fa fa-check" iconPos="left" label="{{'agenda.fichaEventos.datosAsistencia.marcar' | translate }}"></button>
         <button pButton type="button" (click)="saveAssistancesCourse()" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCumplidoOrCancelado"></button>
+          [disabled]="tipoAccesoLectura || blockAsistencia || isEventoCancelado"></button>
       </div>
     </div>
   </div>

@@ -1967,6 +1967,14 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             )
             .subscribe(data => {
               this.file = undefined;
+
+              let idAnexo = this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.findIndex(x => x.idAnexo == this.selectedDatos.idAnexo &&
+                x.idCuenta == this.selectedDatos.idCuenta && x.idMandato == this.selectedDatos.idMandato &&
+                x.tipoMandato == this.selectedDatos.tipoMandato && x.descripcion == this.selectedDatos.descripcion);
+
+              if (data.id != undefined && data.id != null && data.id != "") {
+                this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem[idAnexo].idFicheroFirma = data.id;
+              }
               this.progressSpinner = false;
               this.showSuccess("Se han editado correctamente los datos");
               this.displayFirmar = false;
@@ -2163,30 +2171,30 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let distinto = false;
     let anexo = dato.idAnexo;
 
-    if (dato.length == 1) {
+    // if (dato.length == 1) {
       distinto = false;
       if (anexo == null) {
         tipo = "Orden";
       } else {
         tipo = "Anexo";
       }
-    } else {
-      dato.forEach(element => {
-        if (anexo == null) {
-          tipo = "Orden";
-          if (element.idAnexo != null) {
-            if (!distinto)
-              distinto = true;
-          }
-        } else {
-          tipo = "Anexo";
-          if (element.idAnexo == null) {
-            if (!distinto)
-              distinto = true;
-          }
-        }
-      });
-    }
+    // } else {
+    //   dato.forEach(element => {
+    //     if (anexo == null) {
+    //       tipo = "Orden";
+    //       if (element.idAnexo != null) {
+    //         if (!distinto)
+    //           distinto = true;
+    //       }
+    //     } else {
+    //       tipo = "Anexo";
+    //       if (element.idAnexo == null) {
+    //         if (!distinto)
+    //           distinto = true;
+    //       }
+    //     }
+    //   });
+    // }
 
 
     if (!distinto) {
@@ -2213,15 +2221,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
           data => {
             this.keys = JSON.parse(data['body']).keysItem;
-            this.selectedDatos.forEach(element => {
+
+            // this.selectedDatos.forEach(element => {
               let keysValues = [];
               this.keys.forEach(key => {
-                if (element[key.nombre] != undefined) {
-                  keysValues.push(element[key.nombre]);
+                if (this.selectedDatos[key.nombre] != undefined) {
+                  keysValues.push(this.selectedDatos[key.nombre]);
                 }
               })
               datosSeleccionados.push(keysValues);
-            });
+            // });
 
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
             this.router.navigate(["/dialogoComunicaciones"]);

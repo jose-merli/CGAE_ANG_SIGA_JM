@@ -83,9 +83,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.checkAcceso(); //coger tipos
     this.onInitSessionStorage();
 
-    if (sessionStorage.getItem("busqueda") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("busqueda"));
+    if (sessionStorage.getItem("filtrosBusquedaSociedadesFichaSociedad") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaSociedadesFichaSociedad"));
       sessionStorage.removeItem("busqueda");
+      sessionStorage.removeItem("filtrosBusquedaSociedadesFichaSociedad")
       this.Search();
     } else {
       // Poner check "Sociedades Profesionales a activo porque "Sociedades Profesionales a activo por defecto"
@@ -165,6 +166,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("busquedaSociedades");
     sessionStorage.removeItem("crearnuevo");
 
+    sessionStorage.removeItem("filtrosBusquedaNoColegiados")
     sessionStorage.removeItem("filtrosBusquedaColegiados");
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("datosCuenta");
@@ -294,8 +296,10 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
-    this.arreglarFecha();
-    this.Search();
+    if (this.checkFilters()) {
+      this.arreglarFecha();
+      this.Search();
+    }
   }
 
   toHistorico() {
@@ -615,5 +619,67 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
   fillFechaConstitucion(event) {
     this.fechaConstitucion = event;
+  }
+
+  checkFilters() {
+    if (
+      (this.body.tipo == null ||
+        this.body.tipo == undefined ||
+        this.body.tipo == "") &&
+      (this.body.nif == null ||
+        this.body.nif == undefined ||
+        this.body.nif.trim().length < 3) &&
+      (this.body.denominacion == null ||
+        this.body.denominacion == undefined ||
+        this.body.denominacion.trim().length < 3) &&
+      (this.body.abreviatura == null ||
+        this.body.abreviatura == undefined ||
+        this.body.abreviatura.trim().length < 3) &&
+      (this.body.integrante == null ||
+        this.body.integrante == undefined ||
+        this.body.integrante.trim().length < 3) &&
+      (this.fechaConstitucion == null ||
+        this.fechaConstitucion == undefined) &&
+      (this.body.grupos == null ||
+        this.body.grupos == undefined ||
+        this.body.grupos.length == 0)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.denominacion != undefined) {
+        this.body.denominacion = this.body.denominacion.trim();
+      }
+      if (this.body.abreviatura != undefined) {
+        this.body.abreviatura = this.body.abreviatura.trim();
+      }
+      if (this.body.integrante != undefined) {
+        this.body.integrante = this.body.integrante.trim();
+      }
+      if (this.body.nif != undefined) {
+        this.body.nif = this.body.nif.trim();
+      }
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
+
+  isLimpiar() {
+    this.body = new PersonaJuridicaItem();
+    this.body.sociedadesProfesionales = true;
+    this.fechaConstitucion = undefined;
   }
 }

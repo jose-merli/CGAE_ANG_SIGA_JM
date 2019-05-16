@@ -140,6 +140,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
+    sessionStorage.removeItem("busqueda");
+
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
       this.fechaIncorporacionHastaSelect = new Date(
         JSON.parse(sessionStorage.getItem("fechaIncorporacionHastaSelect"))
@@ -625,7 +627,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         var year = element.fechaNacimiento.substring(posFin + 1);
         var day = element.fechaNacimiento.substring(0, posIni);
         var month = element.fechaNacimiento.substring(posIni + 1, posFin);
-        element.fechaNacimientoDate = new Date(year, month, day);
+        element.fechaNacimientoDate = new Date(year, month - 1, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
     });
@@ -756,8 +758,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.body.apellidos == null ||
         this.body.apellidos.trim().length < 3) &&
       (this.body.numColegiado == null ||
-        this.body.numColegiado == null ||
-        this.body.numColegiado.trim().length < 3) &&
+        this.body.numColegiado == null) &&
       (this.body.codigoPostal == null ||
         this.body.codigoPostal == null ||
         this.body.codigoPostal.trim().length < 3) &&

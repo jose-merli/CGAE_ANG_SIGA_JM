@@ -132,7 +132,7 @@ export class SolicitudesModificacionComponent implements OnInit {
         if (this.body.fechaHasta != null) {
           this.body.fechaHasta = new Date(this.body.fechaHasta);
         }
-       
+
         sessionStorage.removeItem("processingPerformed");
       } else {
         if (sessionStorage.getItem("search") != null) {
@@ -253,49 +253,53 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   // SEARCH
   search() {
-    // Vamos a guardar los filtros para cuando vuelva
-    if (this.body.estado == "10") {
-      this.showSelectAll = true;
-      this.selectAll = false;
-    } else {
-      this.showSelectAll = false;
-      this.selectAll = false;
+
+    if (this.checkFilters()) {
+      // Vamos a guardar los filtros para cuando vuelva
+      if (this.body.estado == "10") {
+        this.showSelectAll = true;
+        this.selectAll = false;
+      } else {
+        this.showSelectAll = false;
+        this.selectAll = false;
+      }
+      if (
+        (this.body.tipoModificacion == null &&
+          this.body.tipoModificacion == undefined) ||
+        this.body.tipoModificacion == ""
+      ) {
+        this.searchRequest("solicitudModificacion_searchModificationRequest");
+      } else if (this.body.tipoModificacion == "10") {
+        this.searchRequest("solicitudModificacion_searchSolModifDatosGenerales");
+      } else if (this.body.tipoModificacion == "20") {
+        this.searchRequest("solicitudModificacion_searchSolModif");
+      } else if (this.body.tipoModificacion == "30") {
+        this.searchRequest("solicitudModificacion_searchSolModifDatosDirecciones");
+      } else if (this.body.tipoModificacion == "35") {
+        this.searchRequest("solicitudModificacion_searchSolModifDatosUseFoto");
+      } else if (this.body.tipoModificacion == "60") {
+        this.searchRequest("solicitudModificacion_searchSolModifDatosCambiarFoto");
+      } else if (this.body.tipoModificacion == "40") {
+        this.searchRequest("solicitudModificacion_searchSolModifDatosBancarios");
+      } else if (this.body.tipoModificacion == "50") {
+        this.searchRequest(
+          "solicitudModificacion_searchSolModifDatosCurriculares"
+        );
+      } else if (this.body.tipoModificacion == "70") {
+        this.searchRequest(
+          "solicitudModificacion_searchSolModifDatosFacturacion"
+        );
+      } else if (this.body.tipoModificacion == "80") {
+        this.searchRequest("solicitudModificacion_searchSolModif");
+      } else if (this.body.tipoModificacion == "90") {
+        this.searchRequest(
+          "solicitudModificacion_searchSolModifDatosExpedientes"
+        );
+      } else if (this.body.tipoModificacion == "99") {
+        this.searchRequest("solicitudModificacion_searchSolModif");
+      }
     }
-    if (
-      (this.body.tipoModificacion == null &&
-        this.body.tipoModificacion == undefined) ||
-      this.body.tipoModificacion == ""
-    ) {
-      this.searchRequest("solicitudModificacion_searchModificationRequest");
-    } else if (this.body.tipoModificacion == "10") {
-      this.searchRequest("solicitudModificacion_searchSolModifDatosGenerales");
-    } else if (this.body.tipoModificacion == "20") {
-      this.searchRequest("solicitudModificacion_searchSolModif");
-    } else if (this.body.tipoModificacion == "30") {
-      this.searchRequest("solicitudModificacion_searchSolModifDatosDirecciones");
-    } else if (this.body.tipoModificacion == "35") {
-      this.searchRequest("solicitudModificacion_searchSolModifDatosUseFoto");
-    } else if (this.body.tipoModificacion == "60") {
-      this.searchRequest("solicitudModificacion_searchSolModifDatosCambiarFoto");
-    } else if (this.body.tipoModificacion == "40") {
-      this.searchRequest("solicitudModificacion_searchSolModifDatosBancarios");
-    } else if (this.body.tipoModificacion == "50") {
-      this.searchRequest(
-        "solicitudModificacion_searchSolModifDatosCurriculares"
-      );
-    } else if (this.body.tipoModificacion == "70") {
-      this.searchRequest(
-        "solicitudModificacion_searchSolModifDatosFacturacion"
-      );
-    } else if (this.body.tipoModificacion == "80") {
-      this.searchRequest("solicitudModificacion_searchSolModif");
-    } else if (this.body.tipoModificacion == "90") {
-      this.searchRequest(
-        "solicitudModificacion_searchSolModifDatosExpedientes"
-      );
-    } else if (this.body.tipoModificacion == "99") {
-      this.searchRequest("solicitudModificacion_searchSolModif");
-    }
+
   }
 
   getLetrado() {
@@ -489,7 +493,7 @@ export class SolicitudesModificacionComponent implements OnInit {
           } else if (element.idTipoModificacion == "50") {
             pathSpecifica =
               "solicitudModificacion_processSolModifDatosCurriculares";
-          }else if (element.idTipoModificacion == "60") {
+          } else if (element.idTipoModificacion == "60") {
             pathSpecifica =
               "solicitudModificacion_processSolModifDatosCambiarFoto";
           }
@@ -809,4 +813,35 @@ export class SolicitudesModificacionComponent implements OnInit {
       this.search();
     }
   }
+
+  checkFilters() {
+    if (
+      (this.body.tipoModificacion == null ||
+        this.body.tipoModificacion == undefined) &&
+      (this.body.estado == null ||
+        this.body.estado == undefined) &&
+      (this.body.fechaDesde == null ||
+        this.body.fechaDesde == undefined) &&
+      (this.body.fechaHasta == null ||
+        this.body.fechaHasta == undefined)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
 }

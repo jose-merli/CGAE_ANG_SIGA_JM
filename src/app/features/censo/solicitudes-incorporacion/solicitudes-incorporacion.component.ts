@@ -106,10 +106,11 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     ];
     this.filtrosSession();
   }
+
   filtrosSession() {
-    if (sessionStorage.getItem("filtros") != null) {
-      this.body = JSON.parse(sessionStorage.getItem("filtros"));
-      sessionStorage.removeItem("filtros");
+    if (sessionStorage.getItem("filtrosSolicitudesIncorporacion") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("filtrosSolicitudesIncorporacion"));
+      sessionStorage.removeItem("filtrosSolicitudesIncorporacion");
       this.body.fechaDesde = new Date(this.body.fechaDesde);
       this.buscarSolicitudes();
 
@@ -137,30 +138,32 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   }
 
   buscarSolicitudes() {
-    this.buscar = true;
-    this.progressSpinner = true;
-    this.sigaServices
-      .postPaginado(
-        "solicitudIncorporacion_searchSolicitud",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        result => {
-          this.bodySearch = JSON.parse(result["body"]);
-          this.datos = [];
-          this.datos = this.bodySearch.solIncorporacionItems;
-          this.datos.forEach(element => {
-            element.fechaSolicitud = new Date(element.fechaSolicitud);
-            element.fechaEstado = new Date(element.fechaEstado);
-          });
-          this.progressSpinner = false;
-        },
-        error => {
-          console.log(error);
-        }
-      );
-    sessionStorage.setItem("filtros", JSON.stringify(this.body));
+    if (!this.isBuscar()) {
+      this.buscar = true;
+      this.progressSpinner = true;
+      this.sigaServices
+        .postPaginado(
+          "solicitudIncorporacion_searchSolicitud",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          result => {
+            this.bodySearch = JSON.parse(result["body"]);
+            this.datos = [];
+            this.datos = this.bodySearch.solIncorporacionItems;
+            this.datos.forEach(element => {
+              element.fechaSolicitud = new Date(element.fechaSolicitud);
+              element.fechaEstado = new Date(element.fechaEstado);
+            });
+            this.progressSpinner = false;
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    }
+
   }
 
   isBuscar() {
@@ -169,6 +172,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     ) {
       return false;
     } else {
+      this.showSearchIncorrect();
       return true;
     }
   }
@@ -337,5 +341,14 @@ export class SolicitudesIncorporacionComponent implements OnInit {
 
   fillFechaHasta(event) {
     this.body.fechaHasta = event;
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: "Debe rellenar el campo obligatorio"
+    });
   }
 }

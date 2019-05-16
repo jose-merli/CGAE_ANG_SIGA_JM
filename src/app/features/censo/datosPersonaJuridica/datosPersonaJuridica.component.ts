@@ -85,6 +85,8 @@ export class DatosPersonaJuridicaComponent implements OnInit {
     ) {
       this.router.navigate(["fichaColegial"]);
     } else if (sessionStorage.getItem("busquedaSociedades")) {
+      let body = JSON.parse(sessionStorage.getItem("busqueda"));
+      sessionStorage.setItem("filtrosBusquedaSociedadesFichaSociedad", JSON.stringify(body));
       this.router.navigate(["searchNoColegiados"]);
     } else {
       this.location.back();

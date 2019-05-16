@@ -20,29 +20,29 @@
 
 <!--menu user-->
 <div class="menu-user" [ngClass]="{'menuVisible': !menuHide, 'menuHide': menuHide}">
-  <label class="mb-4">Usuario</label>
+  <label class="mb-4">{{'censo.usuario.usuario' | translate}}</label>
   <ul *ngFor="let item of menuUser">
-    <li>Nombre:
+    <li>{{'censo.usuario.nombre' | translate}}:
       <span>{{item.nombre}}</span>
     </li>
-    <li>DNI:
+    <li>{{'censo.usuario.DNI' | translate}}:
       <span>{{item.dni}}</span>
     </li>
-    <li>Perfiles:
+    <li>{{'censo.usuario.perfiles' | translate}}:
       <span>{{item.perfiles}}</span>
     </li>
-    <li>Institución:
+    <li>{{'censo.usuario.institucion' | translate}}:
       <span>{{item.institucion}}</span>
     </li>
-    <li>Idioma:
+    <li>{{'censo.usuario.idioma' | translate}}:
       <span>{{item.idioma}}
         <i class="fa fa-edit" (click)="mostrarPopUpIdioma()" style="cursor: pointer"></i>
       </span>
     </li>
-    <li>Última conexión:
+    <li>{{'censo.usuario.ultimaConexion' | translate}}:
       <span>{{item.ultimaConex}}</span>
     </li>
-    <li (click)="logout()" class="cerrar-sesion">Cerrar sesión</li>
+    <li (click)="logout()" class="cerrar-sesion">{{'censo.usuario.cerrarSesion' | translate}}</li>
   </ul>
 </div>
 

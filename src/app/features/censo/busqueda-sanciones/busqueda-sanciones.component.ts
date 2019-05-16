@@ -266,48 +266,50 @@ export class BusquedaSancionesComponent implements OnInit {
 
   search() {
     // Llamada al rest
+    if (this.checkFilters()) {
+      if (!this.isHistory) {
+        this.body.chkArchivadas = false;
+      } else {
+        this.body.chkArchivadas = undefined;
+      }
 
-    if (!this.isHistory) {
-      this.body.chkArchivadas = false;
-    } else {
-      this.body.chkArchivadas = undefined;
+      this.progressSpinner = true;
+      this.selectAll = false;
+      this.selectMultiple = false;
+      this.selectedDatos = "";
+      this.isSearch = true;
+
+      if (this.datesType != undefined && this.body.tipoFecha == undefined) {
+        this.body.tipoFecha = "";
+      }
+
+      if (this.colegios_seleccionados != undefined) {
+        this.body.idColegios = [];
+        this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
+          this.body.idColegios.push(value.value);
+        });
+      }
+
+      this.transformDates(this.body);
+
+      this.sigaServices
+        .postPaginado(
+          "busquedaSanciones_searchBusquedaSancionesBBDD",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            this.bodySearch = JSON.parse(data["body"]);
+            this.data = this.bodySearch.busquedaSancionesItem;
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
     }
 
-    this.progressSpinner = true;
-    this.selectAll = false;
-    this.selectMultiple = false;
-    this.selectedDatos = "";
-    this.isSearch = true;
-
-    if (this.datesType != undefined && this.body.tipoFecha == undefined) {
-      this.body.tipoFecha = "";
-    }
-
-    if (this.colegios_seleccionados != undefined) {
-      this.body.idColegios = [];
-      this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
-        this.body.idColegios.push(value.value);
-      });
-    }
-
-    this.transformDates(this.body);
-
-    this.sigaServices
-      .postPaginado(
-        "busquedaSanciones_searchBusquedaSancionesBBDD",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        data => {
-          this.bodySearch = JSON.parse(data["body"]);
-          this.data = this.bodySearch.busquedaSancionesItem;
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-        }
-      );
   }
 
   transformDates(body) {
@@ -518,6 +520,75 @@ export class BusquedaSancionesComponent implements OnInit {
 
   fillFechaHastaDate(event) {
     this.body.fechaHastaDate = event;
+  }
+
+
+
+  checkFilters() {
+    if (
+      (this.body.nif == null ||
+        this.body.nif == undefined ||
+        this.body.nif.trim().length < 3) &&
+      (this.body.nombre == null ||
+        this.body.nombre == undefined ||
+        this.body.nombre.trim().length < 3) &&
+      (this.body.primerApellido == null ||
+        this.body.primerApellido == undefined ||
+        this.body.primerApellido.trim().length < 3) &&
+      (this.body.segundoApellido == null ||
+        this.body.segundoApellido == undefined ||
+        this.body.segundoApellido.trim().length < 3) &&
+      (this.body.refConsejo == null ||
+        this.body.refConsejo == undefined ||
+        this.body.refConsejo.trim().length < 3) &&
+      (this.body.refColegio == null ||
+        this.body.refColegio == undefined ||
+        this.body.refColegio.trim().length < 3) &&
+      (this.body.tipoFecha == null ||
+        this.body.tipoFecha == undefined) &&
+      (this.body.fechaDesdeDate == null ||
+        this.body.fechaDesdeDate == undefined) &&
+      (this.body.fechaHastaDate == null ||
+        this.body.fechaHastaDate == undefined) &&
+      (this.body.tipoSancion == null ||
+        this.body.tipoSancion == undefined)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.nif != undefined) {
+        this.body.nif = this.body.nif.trim();
+      }
+      if (this.body.nombre != undefined) {
+        this.body.nombre = this.body.nombre.trim();
+      }
+      if (this.body.primerApellido != undefined) {
+        this.body.primerApellido = this.body.primerApellido.trim();
+      }
+      if (this.body.segundoApellido != undefined) {
+        this.body.segundoApellido = this.body.segundoApellido.trim();
+      }
+      if (this.body.refColegio != undefined) {
+        this.body.refColegio = this.body.refColegio.trim();
+      }
+      if (this.body.refConsejo != undefined) {
+        this.body.refConsejo = this.body.refConsejo.trim();
+      }
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
   }
 
 }
