@@ -239,7 +239,7 @@ export class FichaColegialComponent implements OnInit {
   msgDir = "";
   initSpinner: boolean = false;
   disableNumColegiado: boolean = true;
-  information:boolean = false;
+  information: boolean = false;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -566,11 +566,15 @@ export class FichaColegialComponent implements OnInit {
         let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
         this.generalBody = new FichaColegialGeneralesItem();
         this.colegialesBody = new FichaColegialColegialesItem();
+        this.generalBody = enviar;
         this.generalBody.nif = enviar.numeroIdentificacion;
         this.generalBody.apellidos1 = enviar.apellido1;
         this.generalBody.soloNombre = enviar.nombre;
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
+        if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
+          this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
+        }
         this.desactivarVolver = false;
         if (sessionStorage.getItem("nifNuevo") != undefined) {
           this.generalBody.nif = sessionStorage.getItem("nifNuevo");
@@ -777,11 +781,11 @@ export class FichaColegialComponent implements OnInit {
 
     this.colsCurriculares = [
       {
-        field: "fechaDesde",
+        field: "dateFechaInicio",
         header: "facturacion.seriesFacturacion.literal.fInicio"
       },
       {
-        field: "fechaHasta",
+        field: "dateFechaFin",
         header: "censo.consultaDatos.literal.fechaFin"
       },
       {
@@ -1572,9 +1576,9 @@ export class FichaColegialComponent implements OnInit {
         i
       ];
 
-      if(this.generalBody.etiquetas[i].value != "" && this.generalBody.etiquetas[i].value != null &&
-      this.generalBody.etiquetas[i].value != undefined ){
-        this.generalBody.etiquetas[i].idGrupo = this.generalBody.etiquetas[i].value 
+      if (this.generalBody.etiquetas[i].value != "" && this.generalBody.etiquetas[i].value != null &&
+        this.generalBody.etiquetas[i].value != undefined) {
+        this.generalBody.etiquetas[i].idGrupo = this.generalBody.etiquetas[i].value
       }
     }
 
@@ -2638,9 +2642,9 @@ export class FichaColegialComponent implements OnInit {
           //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
         } else {
 
-          if(!this.information){
+          if (!this.information) {
             this.callServiceShowMessageUpdate();
-          }else{
+          } else {
             this.progressSpinner = false;
           }
         }
@@ -2652,9 +2656,9 @@ export class FichaColegialComponent implements OnInit {
           this.callServiceGuardarColegiales();
         } else {
           //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
-          if(!this.information){
+          if (!this.information) {
             this.callServiceShowMessageUpdate();
-          }else{
+          } else {
             this.progressSpinner = false;
           }
         }
@@ -2671,9 +2675,9 @@ export class FichaColegialComponent implements OnInit {
           this.callServiceGuardarColegiales();
           //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
         } else {
-          if(!this.information){
+          if (!this.information) {
             this.callServiceShowMessageUpdate();
-          }else{
+          } else {
             this.progressSpinner = false;
           }
         }
@@ -2686,9 +2690,9 @@ export class FichaColegialComponent implements OnInit {
           this.callServiceGuardarColegiales();
           //Si falta se muestra un mensaje indicando que se creara esa direccion que falta automaticamente
         } else {
-          if(!this.information){
+          if (!this.information) {
             this.callServiceShowMessageUpdate();
-          }else{
+          } else {
             this.progressSpinner = false;
           }
         }
@@ -2989,7 +2993,7 @@ export class FichaColegialComponent implements OnInit {
       );
   }
 
-  aceptInformation(){
+  aceptInformation() {
     this.information = false;
     this.displayAuditoria = false;
   }

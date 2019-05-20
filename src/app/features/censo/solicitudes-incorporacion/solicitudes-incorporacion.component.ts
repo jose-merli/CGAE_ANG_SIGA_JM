@@ -138,43 +138,30 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   }
 
   buscarSolicitudes() {
-    if (!this.isBuscar()) {
-      this.buscar = true;
-      this.progressSpinner = true;
-      this.sigaServices
-        .postPaginado(
-          "solicitudIncorporacion_searchSolicitud",
-          "?numPagina=1",
-          this.body
-        )
-        .subscribe(
-          result => {
-            this.bodySearch = JSON.parse(result["body"]);
-            this.datos = [];
-            this.datos = this.bodySearch.solIncorporacionItems;
-            this.datos.forEach(element => {
-              element.fechaSolicitud = new Date(element.fechaSolicitud);
-              element.fechaEstado = new Date(element.fechaEstado);
-            });
-            this.progressSpinner = false;
-          },
-          error => {
-            console.log(error);
-          }
-        );
-    }
+    this.buscar = true;
+    this.progressSpinner = true;
+    this.sigaServices
+      .postPaginado(
+        "solicitudIncorporacion_searchSolicitud",
+        "?numPagina=1",
+        this.body
+      )
+      .subscribe(
+        result => {
+          this.bodySearch = JSON.parse(result["body"]);
+          this.datos = [];
+          this.datos = this.bodySearch.solIncorporacionItems;
+          this.datos.forEach(element => {
+            element.fechaSolicitud = new Date(element.fechaSolicitud);
+            element.fechaEstado = new Date(element.fechaEstado);
+          });
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+        }
+      );
 
-  }
-
-  isBuscar() {
-    if (
-      (this.body.fechaDesde != undefined && this.body.fechaDesde != null)
-    ) {
-      return false;
-    } else {
-      this.showSearchIncorrect();
-      return true;
-    }
   }
 
   irNuevaSolicitud() {
@@ -331,6 +318,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.msgs = [];
   }
 
+
   onHideCard() {
     this.showCard = !this.showCard;
   }
@@ -343,12 +331,14 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.body.fechaHasta = event;
   }
 
-  showSearchIncorrect() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Incorrecto",
-      detail: "Debe rellenar el campo obligatorio"
-    });
+  isBuscar() {
+    if (
+      !this.formBusqueda.invalid &&
+      this.checkIdentificacion(this.body.numeroIdentificacion) && (this.body.fechaDesde != undefined && this.body.fechaDesde != null)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
