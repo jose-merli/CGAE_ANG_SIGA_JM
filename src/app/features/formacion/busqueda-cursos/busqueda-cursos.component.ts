@@ -406,47 +406,99 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   //Busca cursos según los filtros
   isBuscar(flagArchivado: boolean) {
-    this.progressSpinner = true;
-    this.buscar = true;
+    if (this.checkFilters()) {
+      this.progressSpinner = true;
+      this.buscar = true;
 
-    this.selectAll = false;
-    this.selectMultiple = false;
+      this.selectAll = false;
+      this.selectMultiple = false;
 
-    this.selectedDatos = "";
-    this.getColsResults();
-    this.filtrosTrim();
+      this.selectedDatos = "";
+      this.getColsResults();
+      this.filtrosTrim();
 
-    if (flagArchivado) {
-      this.body.flagArchivado = null; // Para que los traiga todos, archivados y no archivados
-      this.modoHistorico = false;
-    } else {
-      this.body.flagArchivado = 0; // Para que traiga solamente los NO archivados
-      this.modoHistorico = true;
+      if (flagArchivado) {
+        this.body.flagArchivado = null; // Para que los traiga todos, archivados y no archivados
+        this.modoHistorico = false;
+      } else {
+        this.body.flagArchivado = 0; // Para que traiga solamente los NO archivados
+        this.modoHistorico = true;
+      }
+
+      //Rellenamos el array de temas a partir de la estructura del p-multiselect
+      this.body.temas = [];
+      this.selectedTemas.forEach(element => {
+        this.body.temas.push(element);
+      });
+
+      this.sigaServices
+        .postPaginado("busquedaCursos_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.cursoEncontrado = JSON.parse(data["body"]);
+            this.datos = this.cursoEncontrado.cursoItem;
+            this.table.paginator = true;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
     }
+  }
 
-    //Rellenamos el array de temas a partir de la estructura del p-multiselect
-    this.body.temas = [];
-    this.selectedTemas.forEach(element => {
-      this.body.temas.push(element);
-    });
-
-    this.sigaServices
-      .postPaginado("busquedaCursos_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.cursoEncontrado = JSON.parse(data["body"]);
-          this.datos = this.cursoEncontrado.cursoItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+  checkFilters() {
+    if (this.body.codigoCurso == undefined) this.body.codigoCurso = "";
+    if (
+      (this.body.visibilidad == undefined || this.body.visibilidad == "") &&
+      (this.body.colegio == undefined || this.body.colegio == "") &&
+      (this.body.codigoCurso == undefined || this.body.codigoCurso == "") &&
+      (this.body.nombreCurso == undefined || this.body.nombreCurso == "") &&
+      (this.body.idEstado == undefined || this.body.idEstado == "") &&
+      (this.body.precioDesde == undefined) &&
+      (this.body.precioHasta == undefined) &&
+      (this.body.plazasDisponibles == undefined) &&
+      (this.body.fechaInscripcionDesdeDate == undefined) &&
+      (this.body.fechaInscripcionHastaDate == undefined) &&
+      (this.body.fechaImparticionDesdeDate == undefined) &&
+      (this.body.fechaImparticionHastaDate == undefined) &&
+      (this.body.nombreApellidosFormador == undefined || this.body.nombreApellidosFormador == "") &&
+      (this.selectedTemas == undefined || this.selectedTemas.length == 0)) {
+      this.showSearchIncorrect();
+      return false;
+    } else {
+      if (!this.formBusqueda.valid && this.body.codigoCurso != "") {
+        this.showSearchIncorrect();
+        return false;
+      } else {
+        // quita espacios vacios antes de buscar
+        if (this.body.nombreCurso != undefined) {
+          this.body.nombreCurso = this.body.nombreCurso.trim();
         }
-      );
+        if (this.body.nombreApellidosFormador != undefined) {
+          this.body.nombreApellidosFormador = this.body.nombreApellidosFormador.trim();
+        }
+        if (this.body.codigoCurso != undefined) {
+          this.body.codigoCurso = this.body.codigoCurso.trim();
+        }
+        return true;
+      }
+
+    }
+  }
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
   }
 
   isLimpiar() {

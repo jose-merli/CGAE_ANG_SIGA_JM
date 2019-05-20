@@ -16,7 +16,7 @@ import { findIndex } from 'rxjs/operators';
 @Component({
 	selector: 'app-dialogo-comunicaciones',
 	templateUrl: './dialogo-comunicaciones.component.html',
-	styleUrls: [ './dialogo-comunicaciones.component.scss' ],
+	styleUrls: ['./dialogo-comunicaciones.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class DialogoComunicacionesComponent implements OnInit {
@@ -63,7 +63,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		public sigaServices: SigaServices,
 		private translateService: TranslateService,
 		private location: Location
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.progressSpinner = true;
@@ -406,16 +406,22 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 		this.sigaServices.postDownloadFiles('dialogo_descargar', datos).subscribe(
 			(data) => {
-				// let a = JSON.parse(data);
-				const blob = new Blob([ data ], { type: 'text/csv' });
+				if (data.size != 0) {
+					// let a = JSON.parse(data);
+					const blob = new Blob([data], { type: 'text/csv' });
 
-				// if (blob. != undefined) {
-				//   saveAs(blob, data.nombre);
-				// } else {
-				saveAs(blob, 'Documentos.zip');
-				// }
-				this.progressSpinner = false;
-				this.showValores = false;
+					// if (blob. != undefined) {
+					//   saveAs(blob, data.nombre);
+					// } else {
+					saveAs(blob, 'Documentos.zip');
+					// }
+					this.progressSpinner = false;
+					this.showValores = false;
+				} else {
+					this.showFail(
+						this.translateService.instant('informes.error.descargaDocumento')
+					);
+				}
 			},
 			(err) => {
 				console.log(err);
@@ -487,7 +493,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			(err) => {
 				console.log(err);
 			},
-			() => {}
+			() => { }
 		);
 	}
 

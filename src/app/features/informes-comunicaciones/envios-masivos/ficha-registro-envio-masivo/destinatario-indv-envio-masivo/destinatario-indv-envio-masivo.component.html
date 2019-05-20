@@ -94,7 +94,7 @@
           iconPos="left" label="Añadir"></button>
         <!-- <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button> -->
-        <button [disabled]="selectedDatos ==''" [disabled]="noEditar" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
+        <button [disabled]="selectedDatos =='' || noEditar" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
           iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
       </div>
     </div>

@@ -587,46 +587,101 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   //Busca inscripciones según los filtros
   isBuscar() {
-    if (this.table != null && this.table != undefined) {
-      this.table.selectionMode = "multiple";
-      this.calificacion = false;
+    if (this.checkFilters()) {
+      if (this.table != null && this.table != undefined) {
+        this.table.selectionMode = "multiple";
+        this.calificacion = false;
+      }
+
+      this.progressSpinner = true;
+      this.buscar = true;
+
+      this.selectAll = false;
+      this.selectMultiple = false;
+      this.numSelected = 0;
+
+      this.selectedDatos = "";
+      this.getColsResults();
+      this.filtrosTrim();
+
+      //Rellenamos el array de temas a partir de la estructura del p-multiselect
+      this.body.temas = [];
+      this.selectedTemas.forEach(element => {
+        this.body.temas.push(element.value);
+      });
+
+      this.sigaServices
+        .postPaginado("busquedaInscripciones_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.inscripcionEncontrado = JSON.parse(data["body"]);
+            this.datos = this.inscripcionEncontrado.inscripcionItem;
+            this.table.paginator = true;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
     }
-
-    this.progressSpinner = true;
-    this.buscar = true;
-
-    this.selectAll = false;
-    this.selectMultiple = false;
-    this.numSelected = 0;
-
-    this.selectedDatos = "";
-    this.getColsResults();
-    this.filtrosTrim();
-
-    //Rellenamos el array de temas a partir de la estructura del p-multiselect
-    this.body.temas = [];
-    this.selectedTemas.forEach(element => {
-      this.body.temas.push(element.value);
-    });
-
-    this.sigaServices
-      .postPaginado("busquedaInscripciones_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.inscripcionEncontrado = JSON.parse(data["body"]);
-          this.datos = this.inscripcionEncontrado.inscripcionItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
   }
+
+  checkFilters() {
+    if (this.body.codigoCurso == undefined) this.body.codigoCurso = "";
+    if (
+      (this.body.visibilidad == undefined || this.body.visibilidad == "") &&
+      (this.body.colegio == undefined || this.body.colegio == "") &&
+      (this.body.codigoCurso == undefined || this.body.codigoCurso == "") &&
+      (this.body.nombreCurso == undefined || this.body.nombreCurso == "") &&
+      (this.body.idEstadoInscripcion == undefined || this.body.idEstadoInscripcion == "") &&
+      (this.body.idEstadoCurso == undefined || this.body.idEstadoCurso == "") &&
+      (this.body.fechaInscripcionDesde == undefined) &&
+      (this.body.fechaInscripcionHasta == undefined) &&
+      (this.body.fechaImparticionDesde == undefined) &&
+      (this.body.fechaImparticionHasta == undefined) &&
+      (this.body.certificadoEmitido == undefined) &&
+      (this.body.calificacion == undefined) &&
+      (this.body.pagada == undefined) &&
+      (this.body.nombreApellidosFormador == undefined || this.body.nombreApellidosFormador == "") &&
+      (this.selectedTemas == undefined || this.selectedTemas.length == 0)) {
+      this.showSearchIncorrect();
+      return false;
+    } else {
+      if (!this.formBusqueda.valid && this.body.codigoCurso != "") {
+        this.showSearchIncorrect();
+        return false;
+      } else {
+        // quita espacios vacios antes de buscar
+        if (this.body.nombreCurso != undefined) {
+          this.body.nombreCurso = this.body.nombreCurso.trim();
+        }
+        if (this.body.nombreApellidosFormador != undefined) {
+          this.body.nombreApellidosFormador = this.body.nombreApellidosFormador.trim();
+        }
+        if (this.body.codigoCurso != undefined) {
+          this.body.codigoCurso = this.body.codigoCurso.trim();
+        }
+        return true;
+      }
+
+    }
+  }
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
+
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
   filtrosTrim() {

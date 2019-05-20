@@ -100,7 +100,7 @@ export class ComunicacionesComponent implements OnInit {
           // Obtenemos el desatinatario     
           let persona = this.personaBody.idPersona;
           let institucionPersona = this.personaBody.idInstitucion;
-  
+
           objPersona = {
             idPersona: persona,
             idInstitucion: institucionPersona
@@ -144,8 +144,9 @@ export class ComunicacionesComponent implements OnInit {
           }
 
           this.bodySearch.nombre = this.destinatario.soloNombre;
-          this.bodySearch.apellidos1 = this.destinatario.apellidos1;
+          this.bodySearch.apellidos = this.destinatario.apellidos1 + " " + this.destinatario.apellidos2;
           this.bodySearch.apellidos2 = this.destinatario.apellidos2;
+          this.bodySearch.apellidos1 = this.destinatario.apellidos1;
           this.bodySearch.nif = this.destinatario.nif;
           this.bodySearch.numColegiado = this.destinatario.numColegiado;
           this.bodySearch.idInstitucion = this.destinatario.idInstitucion;
