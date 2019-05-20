@@ -220,6 +220,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   buscar() {
+    if (this.table != undefined) {
+      this.table.reset();
+    }
     this.showResultados = true;
     this.selectMultiple = false;
     this.selectedDatos = "";

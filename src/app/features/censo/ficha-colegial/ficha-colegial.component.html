@@ -1045,15 +1045,25 @@
           [rows]="selectedItemCurriculares" (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)" (onRowUnselect)="
             actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
           ">
+
           <p-column *ngFor="let col of colsCurriculares" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
-              <div *ngIf="setItalic(datoH)">
-                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+              <div *ngIf="col.field == 'dateFechaInicio' || col.field == 'dateFechaFin'">
+                <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+                <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
               </div>
-              <div *ngIf="!setItalic(datoH)">
-                <span>{{datoH[col.field]}}</span>
+
+              <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'">
+                <div *ngIf="setItalic(datoH)">
+                  <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                </div>
+
+                <div *ngIf="!setItalic(datoH)">
+                  <span>{{datoH[col.field]}}</span>
+                </div>
               </div>
+
             </ng-template>
           </p-column>
 
