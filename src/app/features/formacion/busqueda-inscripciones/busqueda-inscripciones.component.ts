@@ -136,6 +136,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   dropdown: Dropdown;
 
   ngOnInit() {
+
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
 
     this.getCombos();
@@ -157,12 +158,13 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
+          this.isBuscar();
         }
-
-        this.isBuscar();
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
         sessionStorage.removeItem("datosTabla");
+
+        // this.isBuscar();
       }
       this.isCurso = true;
 
@@ -188,14 +190,12 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
-        }
+          this.isBuscar();
 
-        this.isBuscar();
+        }
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
         sessionStorage.removeItem("datosTabla");
-      } else {
-        this.isBuscar();
       }
     } else {
       if (
@@ -209,9 +209,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
+          this.isBuscar();
         }
-
-        this.isBuscar();
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
         sessionStorage.removeItem("datosTabla");
