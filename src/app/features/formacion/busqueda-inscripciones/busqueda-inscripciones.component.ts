@@ -227,7 +227,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       let bodyPerm = JSON.parse(sessionStorage.getItem("courseCurrent"));
       this.body.nombreCurso = bodyPerm.nombreCurso;
       this.body.codigoCurso = bodyPerm.codigoCurso;
-
+      this.isBuscar();
       if (bodyPerm.idEstado == this.valorEstadoCursoFinalizado) {
         this.disabledCalificar = true;
       } else {
