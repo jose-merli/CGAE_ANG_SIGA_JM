@@ -73,10 +73,8 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'"> {{dato[col.field]}}</span>
-              <span
-                *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
-              <span
-                *ngIf="col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'd/M/yyyy, H:mm '}}</span>
+              <span *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
+              <span *ngIf="col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
               <span *ngIf="dato[col.field]==null ||dato[col.field]==''">-</span>
 
             </td>
@@ -92,17 +90,13 @@
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label
-              class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
-              {{table.first + 1}} al {{table.first + table.rows}}
-              {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-              {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados"
-              *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-              {{selectedDatos.length}}</label>
-            <label class="pr-3 numSeleccionados"
-              *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-              0</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+            </label>
 
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
@@ -118,16 +112,15 @@
       </p-table>
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="enviar(selectedDatos)" pButton
-            type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' |
+          <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="enviar(selectedDatos)" pButton type="button" icon="fa fa-send"
+            iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="onShowProgamar(selectedDatos)" pButton
-            type="button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button *ngIf="estado && estado == 4" (click)="cancelar(selectedDatos)" pButton type="button"
-            icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton
-            type="button" icon="fa fa-reply-all" iconPos="left"
-            label="{{ 'general.boton.duplicar' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog"
+            iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
+          <button *ngIf="estado && estado == 4" (click)="cancelar(selectedDatos)" pButton type="button" icon="fa fa-close" iconPos="left"
+            label="{{ 'general.boton.cancel' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton type="button" icon="fa fa-reply-all"
+            iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
       </div>
     </div>

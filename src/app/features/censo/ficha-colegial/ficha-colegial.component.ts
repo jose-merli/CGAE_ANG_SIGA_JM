@@ -15,7 +15,7 @@ import { TranslateService } from "./../../../commons/translate/translation.servi
 import { DataTable } from "primeng/datatable";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Router } from "@angular/router";
-
+import { AuthenticationService } from "../../../_services/authentication.service";
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
@@ -151,6 +151,7 @@ export class FichaColegialComponent implements OnInit {
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
   datosColegiales: any[] = [];
+  datosColegialesActual: any[] = [];
   datosColegialesInit: any[] = [];
   checkDatosColegiales: any[] = [];
   datosColegiaciones: any[] = [];
@@ -434,6 +435,7 @@ export class FichaColegialComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
+    private authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
@@ -3085,8 +3087,25 @@ export class FichaColegialComponent implements OnInit {
           console.log(err);
         }, () => {
           if (this.generalBody.colegiado) {
-            this.estadoColegial = this.datosColegiales[0].estadoColegial;
-            this.residente = this.datosColegiales[0].situacionResidente;
+            this.sigaServices
+      .postPaginado(
+        "fichaDatosColegiales_datosColegialesSearchActual",
+        "?numPagina=1",
+        this.generalBody
+      )
+      .subscribe(
+        data => {
+          // this.datosColegiales = JSON.parse(data["body"]);
+          // this.datosColegiales = this.datosColegiales.colegiadoItem;
+
+          // this.datosColegiales = JSON.parse(data["body"]);
+          this.colegialesObject = JSON.parse(data["body"]);
+          this.datosColegialesActual = this.colegialesObject.colegiadoItem;
+            this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
+            this.residente = this.datosColegialesActual[0].situacionResidente;
+
+              }
+            );
           }
         }
       );
@@ -4436,7 +4455,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   irTurnoOficio() {
-    let idInstitucion = this.generalBody.idInstitucion;
+    let idInstitucion = this.authenticationService.getInstitucionSession(); 
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
 
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
@@ -5302,7 +5321,7 @@ export class FichaColegialComponent implements OnInit {
 
         this.resultsTopics.forEach(e => {
           if (e.color == undefined) {
-            e.color = "#87CEFA";
+            e.color = "#024eff";
           }
         });
 
@@ -5316,7 +5335,7 @@ export class FichaColegialComponent implements OnInit {
       if (this.autocompleteTopics.highlightOption != undefined) {
         this.resultsTopics.forEach(e => {
           if (e.color == undefined) {
-            e.color = "#87CEFA";
+            e.color = "#024eff";
           }
         });
       }
@@ -5336,7 +5355,7 @@ export class FichaColegialComponent implements OnInit {
 
   visiblePanelBlurTopics(event) {
     if (this.autocompleteTopics.highlightOption != undefined) {
-      this.autocompleteTopics.highlightOption.color = "#87CEFA";
+      this.autocompleteTopics.highlightOption.color = "#024eff";
       this.resultsTopics.push(this.autocompleteTopics.highlightOption);
       this.autocompleteTopics.highlightOption = undefined;
     }
@@ -5360,7 +5379,7 @@ export class FichaColegialComponent implements OnInit {
 
     this.resultsTopics.forEach(e => {
       if (e.color == undefined) {
-        e.color = "#87CEFA";
+        e.color = "#024eff";
       }
     });
   }
@@ -5378,7 +5397,7 @@ export class FichaColegialComponent implements OnInit {
 
           this.resultsTopics.forEach(e => {
             if (e.color == undefined) {
-              e.color = "#87CEFA";
+              e.color = "#024eff";
             }
           });
 
@@ -5397,7 +5416,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   getComboTemas() {
-    this.backgroundColor = "#87CEFA";
+    this.backgroundColor = "#024eff";
     // obtener colegios
     this.sigaServices.get("fichaCursos_getTopicsCourse").subscribe(
       n => {

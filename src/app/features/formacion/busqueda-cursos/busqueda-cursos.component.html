@@ -144,6 +144,10 @@
             <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
           </ng-template>
 
+
+            <ng-template *ngIf="col.field =='precioCurso'" let-datoH="rowData" pTemplate="body">
+                <span>{{datoH[col.value1] | number:'1.2-2'}} € - {{datoH[col.value2] | number:'1.2-2'}} €</span>
+            </ng-template> 
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">

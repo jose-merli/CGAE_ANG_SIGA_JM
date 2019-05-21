@@ -2035,7 +2035,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.checkFormadores = JSON.parse(JSON.stringify(this.results));
           this.results.forEach(element => {
             if (element.color == undefined) {
-              element.color = "#87CEFA";
+              element.color = "#024eff";
             }
           });
 
@@ -2074,7 +2074,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.formadores.length != this.results.length
     ) {
       this.autoComplete.panelVisible = true;
-      this.backgroundColor = "#87CEFA";
+      this.backgroundColor = "#024eff";
       if (this.results.length > 0) {
         this.formadoresSuggest = [];
 
@@ -2104,7 +2104,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   visiblePanelBlur(event) {
     if (this.autoComplete.highlightOption != undefined) {
-      this.autoComplete.highlightOption.color = "#87CEFA";
+      this.autoComplete.highlightOption.color = "#024eff";
       this.results.push(this.autoComplete.highlightOption);
       this.autoComplete.highlightOption = undefined;
     }

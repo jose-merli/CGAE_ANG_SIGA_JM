@@ -227,43 +227,82 @@ para poder filtrar el dato con o sin estos caracteres*/
     else return true;
   }
 
+  //Busca inscripciones según los filtros
   isBuscar() {
-    this.buscar = true;
-    this.blockBuscar = false;
-    this.tablaHistorico = false;
-    this.eliminar = false;
-    if (this.body.descripcion == undefined) {
-      this.body.descripcion = "";
-      this.formToBody();
-    }
+    if (this.checkFilters()) {
+      this.buscar = true;
+      this.blockBuscar = false;
+      this.tablaHistorico = false;
+      this.eliminar = false;
+      if (this.body.descripcion == undefined) {
+        this.body.descripcion = "";
+        this.formToBody();
+      }
 
-    if (this.body.idmodulo == "0") {
-      this.body.idmodulo = "";
-    }
+      if (this.body.idmodulo == "0") {
+        this.body.idmodulo = "";
+      }
 
-    this.sigaServices
-      .postPaginado("contadores_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
+      this.sigaServices
+        .postPaginado("contadores_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            console.log(data);
 
-          this.search = JSON.parse(data["body"]);
-          this.datos = this.search.contadorItems;
-          console.log(this.datos);
-          this.table.reset();
-        },
-        err => {
-          console.log(err);
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
+            this.search = JSON.parse(data["body"]);
+            this.datos = this.search.contadorItems;
+            console.log(this.datos);
+            this.table.reset();
+          },
+          err => {
+            console.log(err);
+          },
+          () => {
+            if (sessionStorage.getItem("first") != null) {
+              let first = JSON.parse(sessionStorage.getItem("first")) as number;
+              this.table.first = first;
+              sessionStorage.removeItem("first");
+            }
           }
-        }
-      );
+        );
+    }
   }
+
+  checkFilters() {
+    if (
+      (this.body.idcontador == undefined || this.body.idcontador == "") &&
+      (this.body.nombre == undefined || this.body.nombre == "") &&
+      (this.body.descripcion == undefined || this.body.descripcion == "")) {
+      this.showSearchIncorrect();
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.idcontador != undefined) {
+        this.body.idcontador = this.body.idcontador.trim();
+      }
+      if (this.body.nombre != undefined) {
+        this.body.nombre = this.body.nombre.trim();
+      }
+      if (this.body.descripcion != undefined) {
+        this.body.descripcion = this.body.descripcion.trim();
+      }
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
+
+
   paginate(event) {
     console.log(event);
   }
