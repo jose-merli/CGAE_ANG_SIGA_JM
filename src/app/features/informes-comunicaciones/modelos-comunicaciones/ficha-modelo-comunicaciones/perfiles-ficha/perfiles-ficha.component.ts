@@ -110,10 +110,14 @@ export class PerfilesFichaComponent implements OnInit {
       () => {
         let i = 0;
         if (this.perfilesSeleccionados != undefined) {
-          this.perfilesNoSeleccionados.forEach(element => {
-            let find = this.perfilesSeleccionados.findIndex(x => x.label === element.label);
-            if (find != -1) {
-              this.perfilesNoSeleccionados.splice(i, 1);
+          let perfilesFiltrados = this.perfilesNoSeleccionados;
+          this.perfilesNoSeleccionados = [];
+          perfilesFiltrados.forEach(element => {
+            let find = this.perfilesSeleccionados.find(x => x.value == element.value);
+            if (find != undefined) {
+              // console.log(perfilesFiltrados[i]);
+            } else {
+              this.perfilesNoSeleccionados.push(perfilesFiltrados[i]);
             }
             i++;
           });
@@ -238,8 +242,8 @@ export class PerfilesFichaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
-      this.getPerfilesSeleccionados();
       this.getPerfilesExtistentes();
+      this.getPerfilesSeleccionados();
     }
     this.getPerfilesSeleccionados();
   }

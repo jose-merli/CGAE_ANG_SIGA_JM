@@ -387,7 +387,7 @@ export class DatosGenerales implements OnInit {
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
         this.body.etiquetas = this.createItems;
-        this.body.motivo = "registro creado";
+        // this.body.motivo = "registro creado";
 
         console.log("BODY", this.body);
 
@@ -481,7 +481,7 @@ export class DatosGenerales implements OnInit {
 
       // this.body.etiquetas = finalUpdateItems;
 
-      this.body.motivo = "registro actualizado";
+      // this.body.motivo = "registro actualizado";
 
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => { },
