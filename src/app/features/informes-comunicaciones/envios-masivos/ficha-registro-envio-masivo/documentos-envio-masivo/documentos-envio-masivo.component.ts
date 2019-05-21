@@ -311,7 +311,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     this.progressSpinner = true;
 
-    this.sigaServices.postSendContent("enviosMasivos_subirDocumento", this.file).subscribe(
+    this.sigaServices.postSendContentAndParameter("enviosMasivos_subirDocumento", "?idEnvio=" + this.body.idEnvio, this.file).subscribe(
       data => {
 
         this.body.pathDocumento = data.rutaDocumento;
