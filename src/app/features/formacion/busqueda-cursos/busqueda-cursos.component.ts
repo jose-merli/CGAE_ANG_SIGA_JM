@@ -565,7 +565,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "precioCurso",
-        header: "form.busquedaCursos.literal.precio"
+        header: "form.busquedaCursos.literal.precio",
+        value1:"precioDesde",
+        value2:"precioHasta"
       },
       {
         field: "fechaInscripcion",

@@ -386,6 +386,10 @@ export class SigaServices {
       "/fichaDatosGenerales/partidoJudicialSearch",
     fichaDatosColegiales_datosColegialesSearch:
       "/fichaDatosColegiales/datosColegialesSearch",
+
+    fichaDatosColegiales_datosColegialesSearchActual:
+      "/fichaDatosColegiales/datosColegialesSearchActual",
+
     fichaColegialColegiales_search:
       "fichaDatosColegiales/searchDatosColegiales",
     fichaDatosColegiales_getNumColegiado: "/fichaDatosColegiales/getNumColegiado",

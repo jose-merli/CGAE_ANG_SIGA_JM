@@ -151,6 +151,7 @@ export class FichaColegialComponent implements OnInit {
   searchDireccionIdPersona = new DatosDireccionesObject();
   searchDatosBancariosIdPersona = new DatosBancariosObject();
   datosColegiales: any[] = [];
+  datosColegialesActual: any[] = [];
   datosColegialesInit: any[] = [];
   checkDatosColegiales: any[] = [];
   datosColegiaciones: any[] = [];
@@ -3086,8 +3087,25 @@ export class FichaColegialComponent implements OnInit {
           console.log(err);
         }, () => {
           if (this.generalBody.colegiado) {
-            this.estadoColegial = this.datosColegiales[0].estadoColegial;
-            this.residente = this.datosColegiales[0].situacionResidente;
+            this.sigaServices
+      .postPaginado(
+        "fichaDatosColegiales_datosColegialesSearchActual",
+        "?numPagina=1",
+        this.generalBody
+      )
+      .subscribe(
+        data => {
+          // this.datosColegiales = JSON.parse(data["body"]);
+          // this.datosColegiales = this.datosColegiales.colegiadoItem;
+
+          // this.datosColegiales = JSON.parse(data["body"]);
+          this.colegialesObject = JSON.parse(data["body"]);
+          this.datosColegialesActual = this.colegialesObject.colegiadoItem;
+            this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
+            this.residente = this.datosColegialesActual[0].situacionResidente;
+
+              }
+            );
           }
         }
       );
