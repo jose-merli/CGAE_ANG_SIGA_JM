@@ -963,8 +963,22 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     });
   }
 
+  infoCalificar() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "info",
+      summary: "Info",
+      detail: this.translateService.instant("message.informativo.busquedaInscripciones.calificacion")
+    });
+  }
+
   onCalificacion() {
     this.calificacion = !this.calificacion;
+
+    if (this.calificacion) {
+      this.infoCalificar();
+    }
+
     if (this.calificacion) {
       this.table.selectionMode = "";
       this.selectedDatos = "";

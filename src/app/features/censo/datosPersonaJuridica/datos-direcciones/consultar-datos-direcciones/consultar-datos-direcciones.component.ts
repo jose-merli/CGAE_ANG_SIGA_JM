@@ -95,6 +95,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
 
   isColegiadoEjerciente: boolean = false;
   isNoColegiado: boolean = false;
+  edicionEmail: boolean = false;
 
   constructor(
     private location: Location,
@@ -109,6 +110,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   dropdown: Dropdown;
   @ViewChild("provincia")
   checkbox: Checkbox;
+
+  @ViewChild("mailto")
+  mailto;
   ngOnInit() {
 
     this.migaPan = sessionStorage.getItem("migaPan");
@@ -638,16 +642,16 @@ para poder filtrar el dato con o sin estos caracteres*/
     let idFindTipoDirGuia = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorGuiaJudicial);
     let idFindTipoDirCorreo = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteCorreo);
 
-    if (idFindTipoDirSMS != -1 && this.body.movil == undefined) {
+    if (idFindTipoDirSMS != -1 && (this.body.movil == undefined || this.body.movil == "")) {
       this.showInfo("Para el tipo Preferente SMS/BuroSMS es necesario rellenar el campo móvil");
       return false;
-    } else if (idFindTipoDirFax != -1 && this.body.fax == undefined) {
+    } else if (idFindTipoDirFax != -1 && (this.body.fax == undefined || this.body.fax == "")) {
       this.showInfo("Para el tipo Preferente Fax es necesario rellenar el campo fax");
       return false;
-    } else if (idFindTipoDirEmail != -1 && this.body.correoElectronico == undefined) {
+    } else if (idFindTipoDirEmail != -1 && (this.body.correoElectronico == undefined || this.body.correoElectronico == "")) {
       this.showInfo("Para el tipo Preferente Email es necesario rellenar el campo correo electrónico");
       return false;
-    } else if (idFindTipoDirTel != -1 && this.body.telefono == undefined) {
+    } else if (idFindTipoDirTel != -1 && (this.body.telefono == undefined || this.body.telefono == "")) {
       this.showInfo("Para el tipo Guardia es necesario rellenar el campo teléfono");
       return false;
     } else if (idFindTipoDirCenso != -1 || idFindTipoDirFact != -1 || idFindTipoDirDes != -1 || idFindTipoDirTras != -1 || idFindTipoDirGuia != -1 || idFindTipoDirCorreo != -1) {
@@ -1291,8 +1295,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   showInfo(mensaje: string) {
+    this.displayAuditoria = false;
     this.msgs = [];
-    this.msgs.push({ severity: "info", summary: "Información", detail: mensaje });
+    this.msgs.push({ severity: "error", summary: "Incorrecto", detail: mensaje });
   }
 
   backTo() {
@@ -1331,5 +1336,21 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.guardarLetrado();
     }
 
+  }
+
+  openOutlook(dato) {
+    let correo = dato.valor;
+    let EMAIL_REGEX = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
+    if (correo != undefined && correo != "" && EMAIL_REGEX.test(correo)) {
+      let href = "mailto:" + correo;
+      window.open(href, "_blank");
+    }
+
+  }
+
+  editEmail() {
+    if (this.edicionEmail)
+      this.edicionEmail = false;
+    else this.edicionEmail = true;
   }
 }

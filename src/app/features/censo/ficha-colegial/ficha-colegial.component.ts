@@ -580,7 +580,13 @@ export class FichaColegialComponent implements OnInit {
         this.desactivarVolver = false;
         if (sessionStorage.getItem("nifNuevo") != undefined) {
           this.generalBody.nif = sessionStorage.getItem("nifNuevo");
-          sessionStorage.removeItem("nifNuevo")
+          let bodyNuevo = JSON.parse(sessionStorage.getItem("bodyNuevo"));
+          this.generalBody.soloNombre = bodyNuevo.nombre;
+          this.generalBody.apellidos1 = bodyNuevo.primerApellido;
+          this.generalBody.apellidos2 = bodyNuevo.segundoApellido;
+          sessionStorage.removeItem("nifNuevo");
+          sessionStorage.removeItem("bodyNuevo");
+
         }
 
         this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
@@ -3088,24 +3094,24 @@ export class FichaColegialComponent implements OnInit {
         }, () => {
           if (this.generalBody.colegiado) {
             this.sigaServices
-      .postPaginado(
-        "fichaDatosColegiales_datosColegialesSearchActual",
-        "?numPagina=1",
-        this.generalBody
-      )
-      .subscribe(
-        data => {
-          // this.datosColegiales = JSON.parse(data["body"]);
-          // this.datosColegiales = this.datosColegiales.colegiadoItem;
+              .postPaginado(
+                "fichaDatosColegiales_datosColegialesSearchActual",
+                "?numPagina=1",
+                this.generalBody
+              )
+              .subscribe(
+                data => {
+                  // this.datosColegiales = JSON.parse(data["body"]);
+                  // this.datosColegiales = this.datosColegiales.colegiadoItem;
 
-          // this.datosColegiales = JSON.parse(data["body"]);
-          this.colegialesObject = JSON.parse(data["body"]);
-          this.datosColegialesActual = this.colegialesObject.colegiadoItem;
-            this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
-            this.residente = this.datosColegialesActual[0].situacionResidente;
+                  // this.datosColegiales = JSON.parse(data["body"]);
+                  this.colegialesObject = JSON.parse(data["body"]);
+                  this.datosColegialesActual = this.colegialesObject.colegiadoItem;
+                  this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
+                  this.residente = this.datosColegialesActual[0].situacionResidente;
 
-              }
-            );
+                }
+              );
           }
         }
       );
@@ -4455,7 +4461,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   irTurnoOficio() {
-    let idInstitucion = this.authenticationService.getInstitucionSession(); 
+    let idInstitucion = this.authenticationService.getInstitucionSession();
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
 
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";

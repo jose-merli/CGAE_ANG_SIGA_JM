@@ -177,6 +177,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       data => {
         let comboPlantillas = JSON.parse(data["body"]);
         this.plantillas = comboPlantillas.combooItems;
+        this.progressSpinner = false;
 
         if (this.editar) {
           this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
@@ -184,6 +185,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+
       },
       () => {
       }

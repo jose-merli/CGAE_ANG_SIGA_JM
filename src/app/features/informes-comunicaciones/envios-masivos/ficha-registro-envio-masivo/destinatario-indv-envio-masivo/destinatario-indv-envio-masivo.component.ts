@@ -275,6 +275,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
         let busqueda = JSON.parse(data["body"]);
         this.datos = busqueda.destinatarios;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);

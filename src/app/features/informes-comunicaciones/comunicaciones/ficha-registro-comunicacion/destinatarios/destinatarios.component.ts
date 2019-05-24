@@ -20,7 +20,7 @@ export class DestinatariosComponent implements OnInit {
   destinatarios: any = [];
   fichaDestinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   progressSpinner: boolean = false;
-  
+
   @ViewChild('table') table: DataTable;
   selectedDatos
 
@@ -120,27 +120,29 @@ export class DestinatariosComponent implements OnInit {
       .subscribe(
         n => {
           let persona = JSON.parse(n["body"]);
-          if(persona && persona.colegiadoItem){
+          if (persona && persona.colegiadoItem) {
             this.fichaDestinatario = persona.colegiadoItem[0];
             sessionStorage.setItem("personaBody", JSON.stringify(this.fichaDestinatario));
-            this.router.navigate(['/fichaColegial']);
             sessionStorage.removeItem("busquedaCensoGeneral")
             sessionStorage.removeItem("esColegiado")
             sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
-          }else if(persona && persona.noColegiadoItem){
+            sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
+            this.router.navigate(['/fichaColegial']);
+          } else if (persona && persona.noColegiadoItem) {
             this.fichaDestinatario = persona.noColegiadoItem[0];
             sessionStorage.setItem("personaBody", JSON.stringify(this.fichaDestinatario));
-            this.router.navigate(['/fichaColegial']);
             sessionStorage.removeItem("busquedaCensoGeneral")
             sessionStorage.removeItem("esColegiado")
             sessionStorage.setItem("destinatarioCom", JSON.stringify(this.body));
-          }else{
+            sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
+            this.router.navigate(['/fichaColegial']);
+          } else {
             this.showFail('Error al cargar el destinatario');
-          }      
+          }
         },
         err => {
           console.log(err);
-        },() =>{
+        }, () => {
           this.progressSpinner = false;
         }
 
@@ -159,7 +161,7 @@ export class DestinatariosComponent implements OnInit {
           console.log(err);
         },
 
-      );
+    );
 
   }
 

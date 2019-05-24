@@ -222,6 +222,8 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 });
 
                 this.datosInit = JSON.parse(JSON.stringify(this.datos));
+                this.progressSpinner = false;
+
                 // this.consultas = [];
             },
             err => {

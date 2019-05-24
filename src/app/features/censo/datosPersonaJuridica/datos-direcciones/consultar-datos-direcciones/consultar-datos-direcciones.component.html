@@ -142,10 +142,23 @@
                   (onRowSelect)="onRowSelect($event)" pageLinks="4">
                   <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
                     <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
-                      <span class="input-group">
-                        <input type="text" class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'"
-                          pInputText>
-                      </span>
+                      <!-- <span class="input-group"> -->
+                      <!-- <input *ngIf="dato.tipo == 'Correo-Electrónico'" (click)="openOutlook(dato)" type="text" class="form-control" [(ngModel)]="dato[col.field]"
+                          [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'" pInputText> -->
+                      <input *ngIf="dato.tipo != 'Correo-Electrónico'" type="text" class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud"
+                        [disabled]="historyDisable || permisoTarjeta == '2'" pInputText>
+                      <div *ngIf="dato.tipo == 'Correo-Electrónico'">
+                        <div *ngIf="edicionEmail" class="ui-inputgroup">
+                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" />
+                          <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>
+                        </div>
+                        <div *ngIf="!edicionEmail" class="ui-inputgroup">
+                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
+                          <span *ngIf="dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
+                          <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit col-1"></button>
+                        </div>
+                      </div>
+                      <!-- </span> -->
                     </ng-template>
                     <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">
                       <label>{{dato.tipo}}</label>
