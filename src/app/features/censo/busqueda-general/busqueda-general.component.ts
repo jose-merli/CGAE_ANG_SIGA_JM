@@ -820,6 +820,7 @@ export class BusquedaGeneralComponent {
             sessionStorage.setItem("esColegiado", "false");
             sessionStorage.setItem("esNuevoNoColegiado", "true");
             sessionStorage.setItem("nifNuevo", this.bodyFisica.nif);
+            sessionStorage.setItem("bodyNuevo", JSON.stringify(this.bodyFisica));
             this.router.navigate(["/fichaColegial"]);
           } else {
             if (sessionStorage.getItem("abrirNotario") == "true") {

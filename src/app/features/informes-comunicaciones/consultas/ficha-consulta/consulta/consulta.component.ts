@@ -1,15 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
+import { saveAs } from "file-saver/FileSaver";
+import { Message } from "primeng/components/common/api";
+import { CampoDinamicoItem } from '../../../../../models/CampoDinamicoItem';
+import { ConsultaConsultasItem } from '../../../../../models/ConsultaConsultasItem';
+import { esCalendar } from "../../../../../utils/calendar";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../../../_services/siga.service";
-import { DataTable } from "primeng/datatable";
-import { ConsultaConsultasItem } from '../../../../../models/ConsultaConsultasItem';
-import { CampoDinamicoItem } from '../../../../../models/CampoDinamicoItem';
-import { Message } from "primeng/components/common/api";
-import { saveAs } from "file-saver/FileSaver";
-import { esCalendar } from "../../../../../utils/calendar";
-
 
 
 @Component({
@@ -43,7 +41,7 @@ export class ConsultaComponent implements OnInit {
   editar: boolean = true;
   idClaseComunicacion: String = "";
   currentRoute: String = "";
-  
+
   fichasPosibles = [
     {
       key: "generales",
@@ -209,7 +207,7 @@ export class ConsultaComponent implements OnInit {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       if (this.body.sentencia != 'undefined' && this.body.sentencia != null) {
-        this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
+        // this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
 
       }
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -286,7 +284,7 @@ export class ConsultaComponent implements OnInit {
   isButtonDisabled() {
     if (this.consultaEditada) {
       return true;
-    }else if(this.body.idClaseComunicacion != "5" || this.body.idObjetivo != "4"){
+    } else if (this.body.idClaseComunicacion != "5" || this.body.idObjetivo != "4") {
       return true;
     }
     return false;
@@ -488,5 +486,7 @@ export class ConsultaComponent implements OnInit {
     );
     this.valores[id].valor = event;
   }
+
+
 
 }

@@ -209,9 +209,13 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
         let datos = JSON.parse(data["body"]);
         this.datos = datos.documentoEnvioItem;
+        this.progressSpinner = false;
+
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+
       },
       () => {
         this.progressSpinner = false;
@@ -318,6 +322,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.body.pathDocumento = data.rutaDocumento;
 
         this.guardar(data.nombreDocumento);
+        this.progressSpinner = false;
+
       },
       err => {
         if (err.error.error.code == 400) {
@@ -338,6 +344,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
   }
 
   guardar(nombreDocumento) {
+    this.progressSpinner = true;
+
     let objDoc = {
       idEnvio: this.body.idEnvio,
       rutaDocumento: this.body.pathDocumento,
@@ -346,9 +354,13 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
       data => {
         this.showSuccess('Se ha subido el documento correctamente');
+        this.progressSpinner = false;
+
       },
       err => {
         this.showFail('Error al guardar el documento');
+        this.progressSpinner = false;
+
         console.log(err);
       },
       () => {

@@ -298,7 +298,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       .subscribe(
         data => {
           let a = JSON.parse(data["body"]);
-          filename = a.value + a.label;
+          filename = a.value + "." + a.label;
         },
         error => {
           console.log(error);
@@ -2172,12 +2172,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let anexo = dato.idAnexo;
 
     // if (dato.length == 1) {
-      distinto = false;
-      if (anexo == null) {
-        tipo = "Orden";
-      } else {
-        tipo = "Anexo";
-      }
+    distinto = false;
+    if (anexo == null) {
+      tipo = "Orden";
+    } else {
+      tipo = "Anexo";
+    }
     // } else {
     //   dato.forEach(element => {
     //     if (anexo == null) {
@@ -2223,13 +2223,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.keys = JSON.parse(data['body']).keysItem;
 
             // this.selectedDatos.forEach(element => {
-              let keysValues = [];
-              this.keys.forEach(key => {
-                if (this.selectedDatos[key.nombre] != undefined) {
-                  keysValues.push(this.selectedDatos[key.nombre]);
-                }
-              })
-              datosSeleccionados.push(keysValues);
+            let keysValues = [];
+            this.keys.forEach(key => {
+              if (this.selectedDatos[key.nombre] != undefined) {
+                keysValues.push(this.selectedDatos[key.nombre]);
+              }
+            })
+            datosSeleccionados.push(keysValues);
             // });
 
             sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));

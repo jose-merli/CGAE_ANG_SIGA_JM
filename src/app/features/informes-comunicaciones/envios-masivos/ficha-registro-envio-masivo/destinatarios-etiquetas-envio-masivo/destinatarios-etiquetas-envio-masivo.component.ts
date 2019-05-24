@@ -94,7 +94,14 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasNoSeleccionadas = n.combooItems;
+          this.etiquetasNoSeleccionadas = [];
+          let array = n.comboItems;
+
+          array.forEach(element => {
+            let e = { label: element.label, value: { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
+            this.etiquetasNoSeleccionadas.push(e);
+          });
+
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
         },
         err => {
@@ -104,7 +111,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           let i = 0;
           if (this.etiquetasSeleccionadas != undefined) {
             this.etiquetasNoSeleccionadas.forEach(element => {
-              let find = this.etiquetasSeleccionadas.findIndex(x => x.label === element.label);
+              let find = this.etiquetasSeleccionadas.findIndex(x => x.label === element.label && x.idInstitucion === element.idInstitucion);
               if (find != -1) {
                 this.etiquetasNoSeleccionadas.splice(i, 1);
               }
@@ -117,20 +124,30 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   }
 
   getSeleccionadas() {
+    this.progressSpinner = true;
+
     this.sigaServices
       .post("enviosMasivos_etiquetasEnvio", this.body.idEnvio)
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.etiquetasSeleccionadas = JSON.parse(n["body"]).combooItems;
+          this.etiquetasSeleccionadas = [];
+          this.etiquetasSeleccionadas = JSON.parse(n["body"]).comboItems;
           this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+          this.progressSpinner = false;
 
         },
         err => {
           console.log(err);
-        },
+          this.progressSpinner = false;
 
-    );
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+
+
+      );
   }
 
 
@@ -140,10 +157,26 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
     let array: any[] = [];
     let arrayNoSel: any[] = [];
     this.etiquetasSeleccionadas.forEach(element => {
-      array.push(element.value)
+
+      if (element.idInstitucion != undefined) {
+        array.push(element);
+      } else {
+        let e = element.value;
+        array.push(element.value);
+        element = e;
+      }
+
     });
     this.etiquetasNoSeleccionadas.forEach(element => {
-      arrayNoSel.push(element.value)
+
+      if (element.idInstitucion != undefined) {
+        arrayNoSel.push(element);
+      } else {
+        let e = element.value;
+        arrayNoSel.push(element.value);
+        element = e;
+      }
+
     });
 
     let objEtiquetas = {
@@ -159,10 +192,13 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           this.showSuccess('Se han guardado las etiquetas correctamente');
           this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+          this.progressSpinner = false;
+
         },
         err => {
           this.showSuccess('Error al guardar las etiquetas');
           console.log(err);
+          this.progressSpinner = false;
 
         },
         () => {
@@ -212,8 +248,9 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       if (this.body.idEstado != '1' && this.body.idEstado != '4') {
         this.noEditar = true;
       }
+    } else {
+      this.getSeleccionadas();
     }
-    this.getSeleccionadas();
   }
 
   restablecer() {

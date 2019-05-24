@@ -145,9 +145,9 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
     abreCierraFicha() {
         if (sessionStorage.getItem("crearNuevoEnvio") == null) {
             this.openFicha = !this.openFicha;
-            // if (this.openFicha) {
-            //     this.getDatos();
-            // }
+            if (this.openFicha) {
+                this.getDatos();
+            }
         }
     }
 
@@ -222,6 +222,8 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 });
 
                 this.datosInit = JSON.parse(JSON.stringify(this.datos));
+                this.progressSpinner = false;
+
                 // this.consultas = [];
             },
             err => {

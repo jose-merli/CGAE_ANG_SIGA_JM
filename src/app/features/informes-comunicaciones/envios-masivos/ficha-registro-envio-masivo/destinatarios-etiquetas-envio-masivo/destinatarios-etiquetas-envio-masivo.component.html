@@ -33,13 +33,11 @@
     </div>
     <!--tarjetas destinatario-->
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
-      <p-pickList [source]="etiquetasNoSeleccionadas" [target]="etiquetasSeleccionadas"
-        sourceHeader="{{'enviosMasivos.literal.etiquetasExistentes' | translate}}"
-        targetHeader="{{'enviosMasivos.literal.etiquetasSeleccionadas' | translate}}" [responsive]="true"
-        filterBy="label" dragdrop="true" dragdropScope="etiquetasSeleccionadas"
-        sourceFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}"
-        targetFilterPlaceholder="Buscar etiqueta" [showSourceControls]="false" [showTargetControls]="false"
-        [sourceStyle]="{ 'height': '300px'} " [targetStyle]="{ 'height': '300px'}" [disabled]="noEditar">
+      <p-pickList [source]="etiquetasNoSeleccionadas" [target]="etiquetasSeleccionadas" sourceHeader="{{'enviosMasivos.literal.etiquetasExistentes' | translate}}"
+        targetHeader="{{'enviosMasivos.literal.etiquetasSeleccionadas' | translate}}" [responsive]="true" filterBy="label"
+        dragdrop="true" dragdropScope="etiquetasSeleccionadas" sourceFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}"
+        targetFilterPlaceholder="Buscar etiqueta" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} "
+        [targetStyle]="{ 'height': '300px'}" [disabled]="noEditar">
         <ng-template let-item pTemplate="item">
           <div>{{item.label}}</div>
         </ng-template>
@@ -47,10 +45,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" [disabled]="noEditar" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="guardar()" [disabled]="noEditar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -58,5 +54,5 @@
 
 
 <div *ngIf="progressSpinner " class="overlay-spinner">
-  <div class="loader "></div>
+  <div class="loader"></div>
 </div>
