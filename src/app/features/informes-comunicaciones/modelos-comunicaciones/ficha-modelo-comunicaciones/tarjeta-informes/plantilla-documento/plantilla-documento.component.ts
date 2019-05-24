@@ -685,7 +685,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post("plantillasDoc_insertarPlantilla", plantilla)
       .subscribe(
         data => {
-          this.showSuccess("Plantilla subida correctamente");
+          this.showInfo("Plantilla cargada, no olvide pulsar en guardar para asociar la plantilla correctamente");
           plantilla.idPlantillaDocumento = JSON.parse(
             data["body"]
           ).idPlantillaDocumento;

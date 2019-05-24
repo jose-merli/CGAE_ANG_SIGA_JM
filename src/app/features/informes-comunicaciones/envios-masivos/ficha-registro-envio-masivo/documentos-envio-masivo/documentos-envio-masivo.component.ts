@@ -203,6 +203,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
   getDocumentos() {
     this.progressSpinner = true;
+    this.selectedDatos = "";
     this.sigaServices.post("enviosMasivos_documentos", this.body.idEnvio).subscribe(
       data => {
 
@@ -280,9 +281,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       err => {
         let error = JSON.parse(err.error);
         if (error.code == 400) {
-          this.showInfo('Alguno/s documento/s no se han eliminado');
+          this.showInfo('No se ha encontrado el documento');
         } else {
-          this.showFail('Error al eliminado el envío');
+          this.showFail('Error al eliminar el envío');
           console.log(err);
         }
 
