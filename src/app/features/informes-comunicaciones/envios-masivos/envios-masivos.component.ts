@@ -301,8 +301,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       message:
         this.translateService.instant(
           "informesycomunicaciones.consultas.mensajeSeguroCancelar"
-        ) +
-        dato.length +
+        ) + " " +
+        dato.length + " " +
         this.translateService.instant(
           "informesycomunicaciones.consultas.enviosSeleccionados"
         ),
@@ -381,7 +381,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         idEnvio: element.idEnvio,
         fechaProgramacion: new Date(element.fechaProgramada)
       };
-      if (element.idEstado != 4) {
+      if (element.idEstado != 4 && element.idEstado != 1) {
         estadoInvalido = true;
       }
       this.eliminarArray.push(objEliminar);
