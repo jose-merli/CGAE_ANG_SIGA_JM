@@ -4646,12 +4646,11 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
             } else {
@@ -4659,16 +4658,15 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-            if (this.bodyRegTel.length > 0) {
+            if(this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
             }
           },
-
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
-          }
+          },
         );
     } else {
       this.sigaServices

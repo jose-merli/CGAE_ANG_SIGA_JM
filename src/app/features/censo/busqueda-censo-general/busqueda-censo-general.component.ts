@@ -72,6 +72,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
       if (sessionStorage.getItem("busquedaCensoGeneral") != null) {
         this.body = JSON.parse(sessionStorage.getItem("filtrosBusqueda"));
+        this.colegios_seleccionados = this.body.colegios_seleccionados;
         this.isBuscar();
         sessionStorage.removeItem("busquedaCensoGeneral");
       }
@@ -174,7 +175,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           this.colegios_seleccionados.length > 0
         ) {
           this.search();
-        } else {
+        }else {
           this.showFail("Debe introducir un colegio para buscar.");
         }
       } else if (
@@ -227,7 +228,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   irFichaColegial(selectedDatos) {
     this.progressSpinner = true;
     sessionStorage.setItem("busquedaCensoGeneral", "true");
-
+    this.body.colegios_seleccionados = this.colegios_seleccionados;
     sessionStorage.setItem("filtrosBusqueda", JSON.stringify(this.body));
 
     // if (this.authenticationService.getInstitucionSession() == 2000) {

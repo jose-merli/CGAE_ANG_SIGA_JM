@@ -18,5 +18,6 @@ export class BusquedaFisicaItem {
   domicilio: String;
   fechaEstado: String;
   onlyNif: Boolean;
+  colegios_seleccionados: any[] = [];
   constructor() { }
 }
