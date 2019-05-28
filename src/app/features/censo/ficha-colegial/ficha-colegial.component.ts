@@ -4646,18 +4646,13 @@ export class FichaColegialComponent implements OnInit {
             if(this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
             }
-            
-             
           },
-
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
           },
-            
-          
-       
+        );
     } else {
       this.sigaServices
         .postPaginado(
