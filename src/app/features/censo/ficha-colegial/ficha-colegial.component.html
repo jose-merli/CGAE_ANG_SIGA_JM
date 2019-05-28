@@ -1617,7 +1617,14 @@
     </p-footer>
   </p-dialog>
 
-  <app-dialog></app-dialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" [icon]="icon"></p-confirmDialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" [icon]="icon"></p-confirmDialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" [icon]="icon"></p-confirmDialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" [icon]="icon"></p-confirmDialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" [icon]="icon"></p-confirmDialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" [icon]="icon"></p-confirmDialog>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" [icon]="icon"></p-confirmDialog>
+
 
   <!-- <div class="mainFrameWrapper">
     <iframe

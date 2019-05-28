@@ -27,6 +27,7 @@ import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
 import { StringObject } from "../../../models/StringObject";
 import { NuevaSancionItem } from "../../../models/NuevaSancionItem";
+import { OnDestroy } from '@angular/core';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -37,7 +38,7 @@ export enum KEY_CODE {
   templateUrl: "./busqueda-general.component.html",
   styleUrls: ["./busqueda-general.component.scss"]
 })
-export class BusquedaGeneralComponent {
+export class BusquedaGeneralComponent implements OnDestroy {
   formBusqueda: FormGroup;
   comboIdentificacion: any[];
   cols: any = [];
@@ -277,7 +278,7 @@ export class BusquedaGeneralComponent {
   }
 
   ngOnDestroy() {
-    // sessionStorage.removeItem("nuevaSancion");
+    sessionStorage.removeItem("AddDestinatarioIndv");
   }
 
   getInstitucion() {
@@ -528,7 +529,13 @@ export class BusquedaGeneralComponent {
                   this.bodyFisica.nif != undefined
                 ) {
                   if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
-                    this.noDataFoundWithDNI();
+
+                    if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+                      this.noDataFoundWithDNI();
+                    } else {
+                      sessionStorage.setItem("AddDestinatarioIndvBack", "true");
+                    }
+
                   }
                 }
               } else {
@@ -537,6 +544,10 @@ export class BusquedaGeneralComponent {
                   this.showWarning(
                     "Se ha encontrado una persona con el Núm. de identificación indicado. Revise el resto de los datos, porque al seleccionar este registro se usarán los datos existentes anteriormente y no podrá modificar sus datos generales"
                   );
+                }
+
+                if (sessionStorage.getItem("AddDestinatarioIndv") != undefined) {
+                  sessionStorage.setItem("AddDestinatarioIndvBack", "true");
                 }
               }
             }
@@ -591,7 +602,14 @@ export class BusquedaGeneralComponent {
                 this.datos == undefined
               ) {
                 if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
-                  this.noDataFoundWithDNI();
+                  if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+                    this.noDataFoundWithDNI();
+                  }
+
+                }
+              } else {
+                if (sessionStorage.getItem("AddDestinatarioIndv") != undefined) {
+                  sessionStorage.setItem("AddDestinatarioIndvBack", "true");
                 }
               }
             }

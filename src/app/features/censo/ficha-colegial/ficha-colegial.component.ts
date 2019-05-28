@@ -241,6 +241,7 @@ export class FichaColegialComponent implements OnInit {
   initSpinner: boolean = false;
   disableNumColegiado: boolean = true;
   information: boolean = false;
+  keyConfirmation:string;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -955,8 +956,10 @@ export class FichaColegialComponent implements OnInit {
   callConfirmationServiceRegtel() {
     let mess = this.translateService.instant("messages.creaCollection");
     let icon = "fa fa-edit";
+    let keyConfirmation = "regtel";
 
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {
@@ -2714,7 +2717,10 @@ export class FichaColegialComponent implements OnInit {
   callServiceShowMessageUpdate() {
     this.progressSpinner = false;
     let icon = "fa fa-edit";
+    let keyConfirmation = "direcciones";
+
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: this.msgDir,
       icon: icon,
 
@@ -3224,7 +3230,10 @@ export class FichaColegialComponent implements OnInit {
   confirmarEliminarEstadoColegial(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
+    let keyConfirmation = "deleteEstado";
+
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {
@@ -3577,7 +3586,10 @@ export class FichaColegialComponent implements OnInit {
   deleteCurriculares(selectedDatosCurriculares) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
+    let keyConfirmation = "eliminarCV";
+
     this.confirmationService.confirm({
+      key:keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {
@@ -4194,7 +4206,10 @@ export class FichaColegialComponent implements OnInit {
     // if (cargosExistentes <= cargosBorrados) {
     let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
     let icon = "fa fa-trash-alt";
+    let keyConfirmation = "alterMutua";
+
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {
@@ -6071,8 +6086,10 @@ export class FichaColegialComponent implements OnInit {
   callConfirmationServiceUpdate(tipoCambio) {
     let mess = this.translateService.instant("message.fichaColegial.informarBajaInscripciones.cambioEstadoColegial");
     let icon = "fa fa-edit";
+    let keyConfirmation = "bajaInscripcionesUpdate";
 
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {
@@ -6122,8 +6139,10 @@ export class FichaColegialComponent implements OnInit {
   callConfirmationServiceDelete(selectedDatosColegiales) {
     let mess = this.translateService.instant("message.fichaColegial.informarBajaInscripciones.cambioEstadoColegial");
     let icon = "fa fa-edit";
+    let keyConfirmation = "bajaInscripcionesDelete";
 
     this.confirmationService.confirm({
+      key: keyConfirmation,
       message: mess,
       icon: icon,
       accept: () => {

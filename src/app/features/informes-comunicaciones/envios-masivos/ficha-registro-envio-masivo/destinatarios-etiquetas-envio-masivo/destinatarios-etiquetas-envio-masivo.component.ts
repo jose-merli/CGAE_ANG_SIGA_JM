@@ -109,14 +109,18 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
         },
         () => {
           let i = 0;
+          let etiquetas = [];
           if (this.etiquetasSeleccionadas != undefined) {
             this.etiquetasNoSeleccionadas.forEach(element => {
-              let find = this.etiquetasSeleccionadas.findIndex(x => x.label === element.label && x.idInstitucion === element.idInstitucion);
-              if (find != -1) {
-                this.etiquetasNoSeleccionadas.splice(i, 1);
+              let find = this.etiquetasSeleccionadas.findIndex(x => x.value === element.value.value && x.idInstitucion === element.value.idInstitucion);
+              if (find == -1) {
+                etiquetas.push(this.etiquetasNoSeleccionadas[i]);
               }
               i++;
             });
+
+            this.etiquetasNoSeleccionadas = [];
+            this.etiquetasNoSeleccionadas = etiquetas;
           }
           this.progressSpinner = false;
         }

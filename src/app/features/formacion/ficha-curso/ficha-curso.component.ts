@@ -404,29 +404,27 @@ export class FichaCursoComponent implements OnInit {
         ).idCurso;
         this.searchCourse(this.curso.idCurso);
 
-        if (this.curso.fechaImparticionDesde != null) {
-          this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
-            this.curso.fechaImparticionDesde
-          );
-        }
+        // if (this.curso.fechaImparticionDesde != null) {
+        //   this.curso.fechaImparticionDesdeDate = this.arreglarFecha(
+        //     this.curso.fechaImparticionDesde
+        //   );
+        // }
 
-        if (this.curso.fechaImparticionHasta != null) {
-          this.curso.fechaImparticionHastaDate = this.arreglarFecha(
-            this.curso.fechaImparticionHasta
-          );
-        }
+        // if (this.curso.fechaImparticionHasta != null) {
+        //   this.curso.fechaImparticionHastaDate = this.arreglarFecha(
+        //     this.curso.fechaImparticionHasta
+        //   );
+        // }
 
-        if (this.curso.fechaInscripcionDesde != null) {
-          this.curso.fechaInscripcionDesdeDate = this.arreglarFecha(
-            this.curso.fechaInscripcionDesde
-          );
-        }
+        // if (this.curso.fechaInscripcionDesdeDate != null) {
+        //   let fecha = this.curso.fechaInscripcionDesdeDate;
+        //   this.curso.fechaInscripcionDesdeDate = new Date(fecha);
+        // }
 
-        if (this.curso.fechaInscripcionHasta != null) {
-          this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
-            this.curso.fechaInscripcionHasta
-          );
-        }
+        // if (this.curso.fechaInscripcionHastaDate != null) {
+        //   let fecha = this.curso.fechaInscripcionHastaDate;
+        //   this.curso.fechaInscripcionHastaDate = new Date(fecha);
+        // }
       }
 
       if (this.curso.autovalidacionInscripcion == "1") {
@@ -631,15 +629,13 @@ export class FichaCursoComponent implements OnInit {
     }
 
     if (this.curso.fechaInscripcionDesdeDate != null) {
-      this.curso.fechaInscripcionDesdeDate = this.arreglarFecha(
-        this.curso.fechaInscripcionDesdeDate
-      );
+      let fecha = this.curso.fechaInscripcionDesdeDate;
+      this.curso.fechaInscripcionDesdeDate = new Date(fecha);
     }
 
     if (this.curso.fechaInscripcionHastaDate != null) {
-      this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
-        this.curso.fechaInscripcionHastaDate
-      );
+      let fecha = this.curso.fechaInscripcionHastaDate;
+      this.curso.fechaInscripcionHastaDate = new Date(fecha);
     }
   }
 
@@ -1247,16 +1243,14 @@ export class FichaCursoComponent implements OnInit {
           );
         }
 
-        if (this.curso.fechaInscripcionDesde != null) {
-          this.curso.fechaInscripcionDesdeDate = this.arreglarFecha(
-            this.curso.fechaInscripcionDesde
-          );
+        if (this.curso.fechaInscripcionDesdeDate != null) {
+          let fecha = this.curso.fechaInscripcionDesdeDate;
+          this.curso.fechaInscripcionDesdeDate = new Date(fecha);
         }
 
-        if (this.curso.fechaInscripcionHasta != null) {
-          this.curso.fechaInscripcionHastaDate = this.arreglarFecha(
-            this.curso.fechaInscripcionHasta
-          );
+        if (this.curso.fechaInscripcionHastaDate != null) {
+          let fecha = this.curso.fechaInscripcionHastaDate;
+          this.curso.fechaInscripcionHastaDate = new Date(fecha);
         }
 
         if (this.curso.idEstado == this.valorEstadoFinalizado) {

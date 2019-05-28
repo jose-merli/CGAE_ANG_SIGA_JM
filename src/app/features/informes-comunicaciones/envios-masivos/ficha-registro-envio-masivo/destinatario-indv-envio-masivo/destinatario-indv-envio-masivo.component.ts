@@ -145,11 +145,11 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
     ];
 
     this.getDatos();
-    if (sessionStorage.getItem("destinatarioIndv") != null && sessionStorage.getItem("AddDestinatarioIndv") != null) {
+    if (sessionStorage.getItem("destinatarioIndv") != null && sessionStorage.getItem("AddDestinatarioIndvBack") != null) {
 
       let persona = JSON.parse(sessionStorage.getItem("destinatarioIndv"));
       sessionStorage.removeItem("destinatarioIndv");
-      sessionStorage.removeItem("AddDestinatarioIndv");
+      sessionStorage.removeItem("AddDestinatarioIndvBack");
       this.obtenerDirecciones(persona);
     }
   }
