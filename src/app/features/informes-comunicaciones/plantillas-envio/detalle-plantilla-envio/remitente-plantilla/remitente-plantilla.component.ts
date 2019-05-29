@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { DatosRemitentePlantillaItem } from "../../../../../models/DatosRemitentePlantillaItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
@@ -12,7 +12,7 @@ import { TranslateService } from "../../../../../commons/translate/translation.s
   templateUrl: "./remitente-plantilla.component.html",
   styleUrls: ["./remitente-plantilla.component.scss"]
 })
-export class RemitentePlantillaComponent implements OnInit {
+export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   openFicha: boolean = false;
   activacionEditar: boolean = true;
   body: PlantillaEnvioItem = new PlantillaEnvioItem();
@@ -42,7 +42,8 @@ export class RemitentePlantillaComponent implements OnInit {
   comboTipoDireccion: any = [];
   poblacionBuscada: any = [];
   progressSpinner: boolean = false;
-
+  showDirecciones: boolean = false;
+  cols2: any = [];
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -84,6 +85,44 @@ export class RemitentePlantillaComponent implements OnInit {
       {
         field: "valor",
         header: "administracion.parametrosGenerales.literal.valor"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+
+    this.cols2 = [
+      {
+        field: "domicilio",
+        header: "solicitudModificacion.especifica.domicilio.literal"
+      },
+      {
+        field: 'movil',
+        header: 'censo.datosDireccion.literal.movil'
+      },
+      {
+        field: 'correoElectronico',
+        header: 'censo.datosDireccion.literal.correo'
+      },
+      {
+        field: 'codigoPostal',
+        header: 'censo.ws.literal.codigopostal'
       }
     ];
 
@@ -187,6 +226,7 @@ export class RemitentePlantillaComponent implements OnInit {
           sessionStorage.getItem("remitente")
         ).idPersona;
         this.remitente = JSON.parse(sessionStorage.getItem("remitente"));
+        this.showDirecciones = true;
         this.openFicha = true;
         if (this.body.idPersona != null && this.body.idPersona != "") {
           sessionStorage.removeItem("abrirNotario");
@@ -196,6 +236,10 @@ export class RemitentePlantillaComponent implements OnInit {
         this.getResultados();
       }
     }
+  }
+
+  ngOnDestroy() {
+    sessionStorage.removeItem("remitente");
   }
 
   getResultados() {
@@ -315,6 +359,22 @@ export class RemitentePlantillaComponent implements OnInit {
 
   }
 
+  cambiarDireccion(dir) {
+    if (dir[0] != undefined) {
+      this.direccion = dir[0];
+      // this.remitente = dir[0];
+      this.showDirecciones = false;
+      this.direccionesInicial = dir[0];
+      this.remitenteInicial = this.remitente;
+    } else {
+      this.direccion = dir;
+      // this.remitente = dir;
+      this.showDirecciones = false;
+      this.direccionesInicial = dir;
+      this.remitenteInicial = this.remitente;
+    }
+  }
+
   onChangeDireccion(e) {
     let idDireccion = e.value;
     for (let direccion of this.direcciones) {
@@ -416,6 +476,8 @@ export class RemitentePlantillaComponent implements OnInit {
               "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
             )
           );
+          this.remitenteInicial = JSON.parse(JSON.stringify(this.remitente));
+          this.direccionesInicial = JSON.parse(JSON.stringify(this.direccion));
         },
         err => {
           console.log(err);
@@ -432,23 +494,21 @@ export class RemitentePlantillaComponent implements OnInit {
   restablecer() {
     this.remitente = JSON.parse(JSON.stringify(this.remitenteInicial));
     this.direccion = JSON.parse(JSON.stringify(this.direccionesInicial));
-
     this.direcciones = this.remitente.direccion;
-    this.showComboDirecciones = false;
-    if (this.direcciones && this.direcciones.length >= 1) {
-      if (this.direcciones.length > 1) {
-        this.showComboDirecciones = true;
-        this.direcciones.map(direccion => {
-          this.comboDirecciones.push({
-            label: direccion.domicilio,
-            value: direccion.idDireccion
-          });
-          this.direccion = this.remitente.direccion[0];
-        });
-      } else {
-        this.showComboDirecciones = false;
-        this.direccion = this.remitente.direccion[0];
-      }
-    }
+    // if (this.direcciones && this.direcciones.length >= 1) {
+    //   if (this.direcciones.length > 1) {
+    //     this.showComboDirecciones = true;
+    //     this.direcciones.map(direccion => {
+    //       this.comboDirecciones.push({
+    //         label: direccion.domicilio,
+    //         value: direccion.idDireccion
+    //       });
+    //       this.direccion = this.remitente.direccion[0];
+    //     });
+    //   } else {
+    //     this.showComboDirecciones = false;
+    //     this.direccion = this.remitente.direccion[0];
+    //   }
+    // }
   }
 }
