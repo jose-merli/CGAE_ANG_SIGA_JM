@@ -52,8 +52,8 @@
   <div class="card" *ngIf="showResultados">
     <div class="card-body p-0">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-        paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
+        [paginator]="true" [rows]="selectedItem" dataKey="idEnvio" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
+        selectionMode="multiple" paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
