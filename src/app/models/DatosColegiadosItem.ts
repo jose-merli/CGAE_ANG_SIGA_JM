@@ -10,6 +10,7 @@ export class DatosColegiadosItem {
   institucion: string;
   idProvincia: string;
   idPoblacion: string;
+  idInstitucion: string;
   codigoPostal: string;
   telefono: string;
   movil: string;

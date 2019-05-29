@@ -549,6 +549,16 @@ export class FichaColegialComponent implements OnInit {
         }
       }
 
+      let migaPan = "";
+
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+      }
+  
+      sessionStorage.setItem("migaPan", migaPan);
+
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
       this.tipoCambioAuditoria = null;
