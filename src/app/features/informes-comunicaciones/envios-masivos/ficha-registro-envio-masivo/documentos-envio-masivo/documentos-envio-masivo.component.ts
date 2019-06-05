@@ -238,7 +238,16 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       .subscribe(data => {
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {
-          this.showFail("messages.general.error.ficheroNoExiste");
+          if (this.body.idTipoEnvios == '5') {//burosms
+            this.showFail( this.translateService.instant(
+              "messages.envioMasivo.buroSMS.descarga"
+            ));
+          } else {
+            this.showFail( this.translateService.instant(
+              "messages.general.error.ficheroNoExiste"
+            ));
+          }
+          
         } else {
           saveAs(data, dato[0].nombreDocumento);
         }
