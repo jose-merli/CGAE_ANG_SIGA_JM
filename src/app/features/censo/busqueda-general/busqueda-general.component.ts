@@ -616,7 +616,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
         this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
           this.bodyJuridica.idInstitucion.push(value.value);
         });
-        this.bodyJuridica.addDestinatarioIndv = this.addDestinatarioIndv;
         this.checkTypeCIF(this.bodyJuridica.nif);
         this.sigaServices
           .postPaginado(
