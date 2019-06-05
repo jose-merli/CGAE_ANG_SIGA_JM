@@ -195,7 +195,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeForm(event) {
     this.idModulo = event;
     this.body.idmodulo = this.idModulo;
-    this.isBuscar();
+    // this.isBuscar();
   }
 
   showSuccess() {
@@ -269,7 +269,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   checkFilters() {
-    if (
+    if ((this.body.idmodulo == undefined || this.body.idmodulo == "" || this.body.idmodulo == "0") &&
       (this.body.idcontador == undefined || this.body.idcontador == "") &&
       (this.body.nombre == undefined || this.body.nombre == "") &&
       (this.body.descripcion == undefined || this.body.descripcion == "")) {
@@ -305,15 +305,6 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   paginate(event) {
     console.log(event);
-  }
-
-  isLimpiar() {
-    this.body = new ContadorItem();
-    this.bodyToForm();
-    this.editar = false;
-    this.blockSeleccionar = false;
-    this.blockCrear = true;
-    this.blockBuscar = true;
   }
 
   reset() {

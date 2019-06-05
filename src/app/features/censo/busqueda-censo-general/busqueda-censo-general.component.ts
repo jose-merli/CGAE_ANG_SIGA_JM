@@ -175,7 +175,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           this.colegios_seleccionados.length > 0
         ) {
           this.search();
-        }else {
+        } else {
           this.showFail("Debe introducir un colegio para buscar.");
         }
       } else if (
@@ -207,7 +207,10 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       this.colegios_seleccionados.length > 0
     ) {
       this.body.idInstitucion = [];
-      this.body.idInstitucion.push(this.colegios_seleccionados[0].value);
+      this.colegios_seleccionados.forEach(element => {
+        this.body.idInstitucion.push(element.value);
+      });
+      // this.body.idInstitucion.push(this.colegios_seleccionados[0].value);
     }
 
     this.sigaServices
@@ -251,7 +254,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   getColegiado(selectedDatos) {
     this.bodyColegiado.nif = selectedDatos.nif;
-    // this.bodyColegiado.numColegiado = selectedDatos.numeroColegiado;
+    this.bodyColegiado.idInstitucion = selectedDatos.numeroInstitucion;
 
     this.sigaServices
       .postPaginado(
@@ -270,6 +273,10 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           sessionStorage.setItem(
             "personaBody",
             JSON.stringify(this.datosColegiados[0])
+          );
+          sessionStorage.setItem(
+            "esColegiado",
+            JSON.stringify(true)
           );
           this.router.navigate(["/fichaColegial"]);
         }
@@ -301,6 +308,11 @@ export class BusquedaCensoGeneralComponent implements OnInit {
               this.datosNoColegiados[0].fechaNacimiento
             );
           }
+
+          sessionStorage.setItem(
+            "esColegiado",
+            JSON.stringify(false)
+          );
 
           sessionStorage.setItem(
             "personaBody",
