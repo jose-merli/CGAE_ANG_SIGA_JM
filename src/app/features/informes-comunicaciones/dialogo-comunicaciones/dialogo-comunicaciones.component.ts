@@ -252,10 +252,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 				},
 				(err) => {
 					console.log(err);
+					let message = JSON.parse(err.error).error.message;
+					
+					if (message == null || message == undefined) {
+						message = '';
+					}
+					
 					this.showFail(
 						this.translateService.instant(
 							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
-						)
+						) + ' ' + message
 					);
 				}
 			);
@@ -499,5 +505,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	fillFechaProgramacionCalendar(event) {
 		this.bodyComunicacion.fechaProgramacion = event;
+	}
+
+	fillFecha(event, dato) {
+		dato.valor = event;
 	}
 }

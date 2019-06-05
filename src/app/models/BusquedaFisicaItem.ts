@@ -19,5 +19,6 @@ export class BusquedaFisicaItem {
   fechaEstado: String;
   onlyNif: Boolean;
   colegios_seleccionados: any[] = [];
+  addDestinatarioIndv: boolean;
   constructor() { }
 }
