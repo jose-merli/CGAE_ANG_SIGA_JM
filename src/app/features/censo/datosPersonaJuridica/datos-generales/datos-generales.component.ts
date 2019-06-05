@@ -483,6 +483,11 @@ export class DatosGenerales implements OnInit {
 
       // this.body.motivo = "registro actualizado";
 
+      // pasamos el idPersona creado para la nueva sociedad
+      if (this.file != undefined) {
+        this.guardarImagen(this.idPersona);
+      }
+
       this.sigaServices.post("busquedaPerJuridica_update", this.body).subscribe(
         data => { },
         error => {
@@ -564,6 +569,7 @@ export class DatosGenerales implements OnInit {
       .subscribe(
         data => {
           this.file = undefined;
+          this.cargarImagen(this.idPersona);
         },
         error => {
           console.log(error);

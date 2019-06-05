@@ -44,6 +44,8 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   progressSpinner: boolean = false;
   showDirecciones: boolean = false;
   cols2: any = [];
+  textFilter: String;
+  textSelected: String = "{0} etiquetas seleccionadas";
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -70,10 +72,14 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+
+    this.textFilter = this.translateService.instant("general.boton.seleccionar");
+
     this.getDatos();
     this.getInstitucion();
     this.getComboPais();
     this.getComboProvincias();
+    this.getComboTipoDireccion();
 
     this.selectedItem = 5;
 
@@ -141,6 +147,10 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       }
     ];
 
+
+    if (this.direccion.idTipoDireccion == null || this.direccion.idTipoDireccion == undefined) {
+      this.textFilter = this.translateService.instant('censo.busquedaClientesAvanzada.literal.sinResultados');
+    }
     // this.body.idTipoEnvio = this.tiposEnvio[1].value;
   }
 
@@ -319,6 +329,8 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
         },
         () => { }
       );
+
+    console.log("Direccionon", this.direccion);
   }
 
   buscar() {

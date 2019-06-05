@@ -54,3 +54,5 @@
 ::ng-deep .ui-fileupload-choose .fa-plus::before {
   content: "\F303";
 }
+
+ _:-ms-fullscreen, :root .ie11up { display: none !important; }

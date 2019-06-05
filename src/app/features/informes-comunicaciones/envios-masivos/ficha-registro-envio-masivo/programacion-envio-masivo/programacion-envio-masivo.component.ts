@@ -20,6 +20,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   msgs: Message[];
   arrayProgramar: any[];
   currentDate: Date = new Date();
+  currentDateInitial: Date;
   estados: any[];
   noEditar: boolean = false;
 
@@ -62,11 +63,11 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   ngOnInit() {
 
-
     this.getEstadosEnvios();
 
     this.getDatos();
 
+    this.currentDateInitial = new Date();
 
   }
 
@@ -202,6 +203,22 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   fillFechaProgramada(event) {
     this.body.fechaProgramada = event;
+
+    if (this.body.fechaProgramada != null)
+      if (
+        this.body.fechaProgramada.getHours() > this.currentDate.getHours() &&
+        this.body.fechaProgramada.getDate() == this.currentDate.getDate() &&
+        this.body.fechaProgramada.getMonth() == this.currentDate.getMonth() &&
+        this.body.fechaProgramada.getFullYear() == this.currentDate.getFullYear()) {
+
+        this.currentDate.setMinutes(0);
+      } else if (this.body.fechaProgramada.getDate() == this.currentDate.getDate() &&
+        this.body.fechaProgramada.getMonth() == this.currentDate.getMonth() &&
+        this.body.fechaProgramada.getFullYear() == this.currentDate.getFullYear() &&
+        this.body.fechaProgramada.getHours() == this.currentDate.getHours()) {
+
+        this.currentDate.setMinutes(this.currentDateInitial.getMinutes());
+      }
   }
 
 }
