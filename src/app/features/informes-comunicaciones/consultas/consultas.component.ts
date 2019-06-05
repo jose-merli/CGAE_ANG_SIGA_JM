@@ -650,7 +650,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", consultaEjecutar)
       .subscribe(data => {
-        debugger;
+        // debugger;
         this.showValores = false;
         if (data == null) {
           this.showInfo("La consulta no devuelve resultados");
@@ -686,6 +686,10 @@ export class ConsultasComponent implements OnInit {
   }
 
   navigateComunicar(selectedDatos) {
+    sessionStorage.setItem(
+      "filtrosConsulta",
+      JSON.stringify(this.bodySearch)
+    );
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de adminsitracion es 4
     sessionStorage.setItem("idModulo", '4');

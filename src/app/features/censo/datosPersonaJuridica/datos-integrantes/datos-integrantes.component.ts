@@ -242,7 +242,7 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
-            console.log(this.datos);
+            // console.log(this.datos);
             this.comprobarValidacion();
             if (this.datos.length == 1) {
               this.body = this.datos[0];
@@ -316,7 +316,7 @@ export class DatosIntegrantesComponent implements OnInit {
     sessionStorage.removeItem("menuProcede");
     sessionStorage.removeItem("migaPan");
     sessionStorage.removeItem("migaPan2");
-    
+
     let migaPan = this.translateService.instant("menu.censo.buscarSociedades");
     let menuProcede = this.translateService.instant("menu.censo");
     sessionStorage.setItem("migaPan", migaPan);
@@ -433,7 +433,7 @@ export class DatosIntegrantesComponent implements OnInit {
       data.map(result => {
         result.cardIntegrantes = this.isValidate;
       });
-      console.log(data);
+      // console.log(data);
     });
   }
 
