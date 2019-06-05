@@ -607,11 +607,11 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     if (
       (this.solicitudEditar.iban != null &&
-      this.solicitudEditar.iban != undefined &&
-      this.solicitudEditar.iban != ""  )||
+        this.solicitudEditar.iban != undefined &&
+        this.solicitudEditar.iban != "") ||
       (this.solicitudEditar.bic != null &&
-      this.solicitudEditar.bic != undefined && 
-      this.solicitudEditar.bic !=  "") ||
+        this.solicitudEditar.bic != undefined &&
+        this.solicitudEditar.bic != "") ||
       (this.cargo || this.abono || this.abonoJCS)
     ) {
       if (
@@ -626,15 +626,15 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.bic != "" &&
         (this.cargo || this.abono || this.abonoJCS)
       ) {
-          if (this.isValidIBAN()){
-            return true;
-          }else{
-            return false;
-          }
+        if (this.isValidIBAN()) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
-    }else {
+    } else {
       return true;
     }
   }
@@ -1275,7 +1275,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     sessionStorage.removeItem("consulta");
     sessionStorage.removeItem("pendienteAprobacion");
     let filtros = JSON.parse(sessionStorage.getItem("filtros"));
-    sessionStorage.setItem("filtrosSolicitudesIncorporacion", JSON.stringify(filtros));
+
+    if (filtros != null) {
+      sessionStorage.setItem("filtrosSolicitudesIncorporacion", JSON.stringify(filtros));
+    }
+
     this.router.navigate(["/solicitudesIncorporacion"]);
   }
 
