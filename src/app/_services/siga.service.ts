@@ -142,6 +142,8 @@ export class SigaServices {
     busquedaPerJuridica_uploadFile: "busquedaPerJuridica/uploadFile",
     busquedaPerJuridica_fileDownloadInformation:
       "busquedaPerJuridica/fileDownloadInformation",
+    dialogo_nombredoc:
+      "dialogoComunicacion/nombredoc",
     busquedaPerJuridica_downloadFile: "busquedaPerJuridica/downloadFile",
     retenciones_tipoRetencion: "retenciones/tipoRetencion",
     retenciones_search: "retenciones/search",
