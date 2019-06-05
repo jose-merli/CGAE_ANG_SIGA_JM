@@ -85,6 +85,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   bodyRemitente: any = [];
   institucionActual: string;
   labelRemitente: string;
+  addDestinatarioIndv: boolean = false;
 
   currentRoute: String;
   idClaseComunicacion: String;
@@ -137,53 +138,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
-      n => {
-        this.colegios_rol = n.combooItems;
-        if (sessionStorage.getItem("abrirRemitente") == "true") {
-          this.bodyRemitente = sessionStorage.getItem("plantillasEnvioSearch");
-          this.remitente = true;
-
-          for (let colegio of this.colegios_rol) {
-            if (colegio.value == this.institucionActual) {
-              this.colegios_seleccionados = [
-                {
-                  label: colegio.label,
-                  value: this.institucionActual
-                }
-              ];
-              this.labelRemitente = colegio.label;
-            }
-          }
-
-          // this.colegios_seleccionados[0].label = this.institucionActual;
-          this.colegioDisabled = false;
-          this.progressSpinner = false;
-        } else {
-          for (let colegio of this.colegios_rol) {
-            if (colegio.value == this.institucionActual) {
-              this.colegios_seleccionados = [
-                {
-                  label: colegio.label,
-                  value: this.institucionActual
-                }
-              ];
-            }
-          }
-          this.colegioDisabled = false;
-          this.progressSpinner = false;
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      },
-      () => {
-        // this.sigaServices.get("institucionActual").subscribe(n => {
-        //   this.colegios_seleccionados.push(n);
-        // });
-      }
-    );
 
     this.persona = "f";
 
@@ -284,7 +238,78 @@ export class BusquedaGeneralComponent implements OnDestroy {
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-    });
+
+      this.sigaServices.get("busquedaPer_colegio").subscribe(
+        n => {
+          this.colegios_rol = n.combooItems;
+          if (sessionStorage.getItem("abrirRemitente") == "true") {
+            this.bodyRemitente = sessionStorage.getItem("plantillasEnvioSearch");
+            this.remitente = true;
+
+            for (let colegio of this.colegios_rol) {
+              if (colegio.value == this.institucionActual) {
+                this.colegios_seleccionados = [
+                  {
+                    label: colegio.label,
+                    value: this.institucionActual
+                  }
+                ];
+                this.labelRemitente = colegio.label;
+              }
+            }
+
+            if (sessionStorage.getItem("AddDestinatarioIndv")) {
+              this.addDestinatarioIndv = true;
+            } else {
+              this.addDestinatarioIndv = false;
+            }
+
+            this.colegioDisabled = false;
+            // this.colegios_seleccionados[0].label = this.institucionActual;
+            this.progressSpinner = false;
+          } else {
+            for (let colegio of this.colegios_rol) {
+              if (colegio.value == this.institucionActual) {
+                this.colegios_seleccionados = [
+                  {
+                    label: colegio.label,
+                    value: this.institucionActual
+                  }
+                ];
+              }
+            }
+
+            if (sessionStorage.getItem("AddDestinatarioIndv")) {
+              this.addDestinatarioIndv = true;
+            } else {
+              this.addDestinatarioIndv = false;
+            }
+
+            this.colegioDisabled = false;
+            this.progressSpinner = false;
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        },
+        () => {
+          // this.sigaServices.get("institucionActual").subscribe(n => {
+          //   this.colegios_seleccionados.push(n);
+          // });
+        }
+      );
+
+    },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      },
+      () => {
+        // this.sigaServices.get("institucionActual").subscribe(n => {
+        //   this.colegios_seleccionados.push(n);
+        // });
+      });
   }
 
   isValidDNI(dni: String): boolean {
@@ -355,9 +380,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
   changeColsAndData() {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
-      this.colegios_seleccionados = [];
-      this.datos = [];
 
+      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+        this.colegios_seleccionados = [];
+        this.addDestinatarioIndv = false;
+
+      } else {
+        this.addDestinatarioIndv = true;
+      }
+
+      this.datos = [];
       this.bodyFisica.nif = "";
       this.bodyFisica.nombre = "";
       this.bodyFisica.primerApellido = "";
@@ -365,7 +397,15 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyFisica.numeroColegiado = "";
     } else {
       this.cols = this.colsJuridicas;
-      this.colegios_seleccionados = [];
+
+      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+        this.colegios_seleccionados = [];
+        this.addDestinatarioIndv = false;
+
+      } else {
+        this.addDestinatarioIndv = true;
+      }
+
       this.datos = [];
 
       this.selectedTipo = "";
@@ -501,6 +541,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           this.bodyFisica.numeroColegiado = "";
         }
         this.checkTypeCIF(this.bodyFisica.nif);
+        this.bodyFisica.addDestinatarioIndv = this.addDestinatarioIndv;
         this.sigaServices
           .postPaginado(
             "busquedaPer_searchFisica",

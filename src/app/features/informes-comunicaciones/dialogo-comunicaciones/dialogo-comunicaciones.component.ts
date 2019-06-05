@@ -252,10 +252,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 				},
 				(err) => {
 					console.log(err);
+					let message = JSON.parse(err.error).error.message;
+					
+					if (message == null || message == undefined) {
+						message = '';
+					}
+					
 					this.showFail(
 						this.translateService.instant(
 							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
-						)
+						) + ' ' + message
 					);
 				}
 			);
@@ -404,36 +410,57 @@ export class DialogoComunicacionesComponent implements OnInit {
 			ruta: this.rutaComunicacion
 		};
 
-		this.sigaServices.postDownloadFiles('dialogo_descargar', datos).subscribe(
-			(data) => {
-				if (data.size != 0) {
-					// let a = JSON.parse(data);
-					const blob = new Blob([data], { type: 'text/csv' });
+		let filename;
+		this.sigaServices
+			.post("dialogo_nombredoc", datos)
+			.subscribe(
+				data => {
+					if (data["body"] != "") {
+						let a = JSON.parse(data["body"]);
+						filename = a.label;
+					} else {
+						filename = "Documentos.zip";
+					}
 
-					// if (blob. != undefined) {
-					//   saveAs(blob, data.nombre);
-					// } else {
-					saveAs(blob, 'Documentos.zip');
-					// }
-					this.progressSpinner = false;
-					this.showValores = false;
-				} else {
-					this.showFail(
-						this.translateService.instant('informes.error.descargaDocumento')
+				},
+				error => {
+					console.log(error);
+				},
+				() => {
+					this.sigaServices.postDownloadFiles('dialogo_descargar', datos).subscribe(
+						(data) => {
+							if (data.size != 0) {
+								// let a = JSON.parse(data);
+								const blob = new Blob([data], { type: 'text/csv' });
+
+								if (blob != undefined) {
+									// 	saveAs(blob, data.nombre);
+									// } else {
+									saveAs(blob, filename);
+								}
+								this.progressSpinner = false;
+								this.showValores = false;
+							} else {
+								this.showFail(
+									this.translateService.instant('informes.error.descargaDocumento')
+								);
+							}
+						},
+						(err) => {
+							console.log(err);
+							this.showFail(
+								this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.descargar.error')
+							);
+							this.progressSpinner = false;
+						},
+						() => {
+							this.progressSpinner = false;
+						}
 					);
 				}
-			},
-			(err) => {
-				console.log(err);
-				this.showFail(
-					this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.descargar.error')
-				);
-				this.progressSpinner = false;
-			},
-			() => {
-				this.progressSpinner = false;
-			}
-		);
+			);
+
+
 	}
 
 	getInstitucion() {
@@ -499,5 +526,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	fillFechaProgramacionCalendar(event) {
 		this.bodyComunicacion.fechaProgramacion = event;
+	}
+
+	fillFecha(event, dato) {
+		dato.valor = event;
 	}
 }

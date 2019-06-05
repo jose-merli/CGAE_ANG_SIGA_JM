@@ -156,7 +156,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
 
   obtenerDirecciones(persona) {
 
-    this.sigaServices.post("enviosMasivos_direccionesDestinatarioIndv", persona.idPersona).subscribe(result => {
+    this.sigaServices.post("enviosMasivos_direccionesDestinatarioIndv", persona.nif).subscribe(result => {
       this.showDirecciones = true;
       let busqueda = JSON.parse(result["body"]);
       this.datos2 = busqueda.datosDireccionesItem;

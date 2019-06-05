@@ -604,19 +604,38 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   habilitaAceptar() {
+
     if (
-      this.isValidIBAN() &&
-      this.solicitudEditar.titular != null &&
-      this.solicitudEditar.titular != undefined &&
-      this.solicitudEditar.iban != null &&
+      (this.solicitudEditar.iban != null &&
       this.solicitudEditar.iban != undefined &&
-      this.solicitudEditar.bic != null &&
-      this.solicitudEditar.bic != undefined &&
+      this.solicitudEditar.iban != ""  )||
+      (this.solicitudEditar.bic != null &&
+      this.solicitudEditar.bic != undefined && 
+      this.solicitudEditar.bic !=  "") ||
       (this.cargo || this.abono || this.abonoJCS)
     ) {
+      if (
+        this.solicitudEditar.titular != null &&
+        this.solicitudEditar.titular != undefined &&
+        this.solicitudEditar.titular != "" &&
+        this.solicitudEditar.iban != null &&
+        this.solicitudEditar.iban != undefined &&
+        this.solicitudEditar.iban != "" &&
+        this.solicitudEditar.bic != null &&
+        this.solicitudEditar.bic != undefined &&
+        this.solicitudEditar.bic != "" &&
+        (this.cargo || this.abono || this.abonoJCS)
+      ) {
+          if (this.isValidIBAN()){
+            return true;
+          }else{
+            return false;
+          }
+      } else {
+        return false;
+      }
+    }else {
       return true;
-    } else {
-      return false;
     }
   }
 
