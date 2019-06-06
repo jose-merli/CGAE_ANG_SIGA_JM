@@ -525,8 +525,6 @@ export class ConsultasComponent implements OnInit {
 
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
-    this.datos = [];
-    this.bodySearch.generica = "S";
   }
 
   // comboClaseCom() {
