@@ -3464,9 +3464,10 @@ export class FichaCursoComponent implements OnInit {
 
   controlFechaInscripcion() {
     let fechaActual = new Date();
+    let fechaInicioInscripcion = this.curso.fechaInscripcionDesdeDate;
     let fechaFinIncripcion = this.curso.fechaInscripcionHastaDate;
 
-    if (fechaActual <= fechaFinIncripcion) {
+    if (fechaActual <= fechaFinIncripcion && fechaActual >= fechaInicioInscripcion) {
       return true;
     } else {
       return false;
