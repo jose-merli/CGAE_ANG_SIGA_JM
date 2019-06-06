@@ -108,13 +108,15 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   }
 
   filtrosSession() {
-    if (sessionStorage.getItem("filtrosSolicitudesIncorporacion") != null) {
+    if (JSON.parse(sessionStorage.getItem("filtrosSolicitudesIncorporacion")) != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosSolicitudesIncorporacion"));
       sessionStorage.removeItem("filtrosSolicitudesIncorporacion");
       this.body.fechaDesde = new Date(this.body.fechaDesde);
       this.buscarSolicitudes();
 
       sessionStorage.removeItem("filtros");
+    } else {
+      this.body = new SolicitudIncorporacionItem();
     }
   }
   cargarCombos() {

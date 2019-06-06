@@ -94,7 +94,7 @@ export class DetalleIntegranteComponent implements OnInit {
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("historicoInt") != null) {
@@ -153,13 +153,16 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
-                console.log("colegiaciones", this.colegios);
+                // console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
                     idInstitucion: element.value,
                     nColegiado: element.nColegiado
                   });
+                  if (this.body.colegio == element.value && element.nColegiado != "" && element.nColegiado != undefined) {
+                    this.body.numColegiado = element.nColegiado;
+                  }
                 });
 
                 if (this.colegios.length == 1) {
@@ -596,7 +599,7 @@ export class DetalleIntegranteComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -1080,11 +1083,11 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
-    console.log("dde", this.descripcionProvincia);
+    // console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
-    console.log("fo", event.replace(".", ","));
+    // console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 

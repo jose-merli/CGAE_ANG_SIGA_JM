@@ -274,6 +274,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
             )
           }
         ];
+
+        this.resetTableProperties();
+        this.selectedDatos = [];
       }
     });
   }
@@ -295,6 +298,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         let error = JSON.parse(err.error);
         if (error.code == 400) {
           this.showInfo('No se ha encontrado el documento');
+
+          this.getDocumentos();
+          this.resetTableProperties();
         } else {
           this.showFail('Error al eliminar el envío');
           console.log(err);
@@ -303,10 +309,17 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       },
       () => {
         this.getDocumentos();
+        this.resetTableProperties();
         this.table.reset();
       }
     );
   }
+
+  resetTableProperties() {
+    this.selectAll = false;
+    this.selectMultiple = false;
+  }
+
 
   uploadFile(event: any) {
     let fileList: FileList = event.files;
