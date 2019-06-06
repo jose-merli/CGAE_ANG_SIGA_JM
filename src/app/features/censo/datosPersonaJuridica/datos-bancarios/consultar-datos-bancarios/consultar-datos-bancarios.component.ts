@@ -307,12 +307,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.sigaServices
             .postDownloadFiles("busquedaPerJuridica_downloadFile", dato)
             .subscribe(data => {
-              const blob = new Blob([data], { type: "text/csv" });
+              const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
               if (blob.size == 0) {
                 this.showFail("messages.general.error.ficheroNoExiste");
               } else {
                 //let filename = "2006002472110.pdf";
-                saveAs(data, filename);
+                saveAs(blob, filename);
               }
             });
         }
