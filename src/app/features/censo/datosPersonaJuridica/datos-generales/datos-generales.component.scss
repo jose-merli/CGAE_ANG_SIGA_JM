@@ -54,5 +54,17 @@
 ::ng-deep .ui-fileupload-choose .fa-plus::before {
   content: "\F303";
 }
+ 
+.positionUpload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+}
 
- _:-ms-fullscreen, :root .ie11up { display: none !important; }
+div .card{
+  display: block !important;
+}
+
+ _:-ms-fullscreen, :root .ie11up div.card { display: block !important; }

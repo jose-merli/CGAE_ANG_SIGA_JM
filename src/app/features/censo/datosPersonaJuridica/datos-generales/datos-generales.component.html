@@ -52,7 +52,7 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
-          <div class="img-colegiado text-center my-0 mx-auto">
+          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
             <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica">
             <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
@@ -164,8 +164,10 @@
                 <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
                   <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
                     [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}">
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined || etiquetasPersonaJuridicaSelecionados.backgroundColor == white" style="color: black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != white" style="color: white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined || etiquetasPersonaJuridicaSelecionados.backgroundColor == white"
+                      style="color: black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
+                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != white"
+                      style="color: white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
                   </div>
                 </ng-template>
               </p-autoComplete>

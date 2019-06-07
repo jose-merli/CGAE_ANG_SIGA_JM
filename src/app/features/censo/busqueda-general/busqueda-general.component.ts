@@ -757,7 +757,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
               enviar.numeroIdentificacion = id[0].nif;
               enviar.apellido1 = id[0].primerApellido;
               enviar.nombre = id[0].nombre;
+
               enviar.numColegiado = id[0].numeroColegiado;
+
+
               enviar.idInstitucion = id[0].numeroInstitucion;
               enviar.apellido2 = id[0].segundoApellido;
               enviar.sexo = id[0].sexo;

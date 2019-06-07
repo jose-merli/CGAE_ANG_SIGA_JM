@@ -298,13 +298,39 @@ export class ConsultasComponent implements OnInit {
 
   SelectAll() {
     if (this.selectAll === true) {
-      this.eliminar = true;
+      //this.eliminar = true;
+
+      this.controlBtnEliminar(this.datos);
+
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
+    }
+  }
+
+  controlBtnEliminar(array) {
+    if (this.institucionActual == 2000) {
+      this.eliminar = true;
+    } else {
+      var keepGoing = true;
+
+      array.forEach(element => {
+
+        if (keepGoing) {
+          if (element.generica == 'No') {
+            this.eliminar = true;
+          } else {
+            keepGoing = false;
+          }
+        }
+      });
+
+      if (!keepGoing) {
+        this.eliminar = false;
+      }
     }
   }
 
@@ -503,15 +529,19 @@ export class ConsultasComponent implements OnInit {
         );
       }
     } else {
-      if (
-        (this.selectedInstitucion == this.institucionActual &&
-          dato[0].generica == "No") ||
-        (this.institucionActual == 2000 && dato[0].generica == "Si")
-      ) {
-        this.eliminar = true;
-      } else {
-        this.eliminar = false;
-      }
+
+
+      this.controlBtnEliminar(dato);
+
+      // if (
+      //   (this.selectedInstitucion == this.institucionActual &&
+      //     dato[0].generica == "No") ||
+      //   (this.institucionActual == 2000 && dato[0].generica == "Si")
+      // ) {
+      //   this.eliminar = true;
+      // } else {
+      //   this.eliminar = false;
+      // }
     }
   }
 
