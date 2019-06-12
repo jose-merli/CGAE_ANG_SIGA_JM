@@ -178,6 +178,9 @@ import { AlertasComponent } from './features/expedientes/alertas/alertas.compone
 import { NuevoExpedienteComponent } from './features/expedientes/nuevo-expediente/nuevo-expediente.component';
 
 //Modulo de Justicia Gratuita
+import { DevolucionComponent } from './features/sjcs/devolucion/devolucion.component';
+import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
+import { CertificacionComponent } from './features/sjcs/certificacion/certificacion.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
@@ -631,7 +634,11 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 		TurnoOficioComponent,
 		BusquedaCensoGeneralComponent,
 		DestinatarioIndvEnvioMasivoComponent,
-		FechaComponent
+		FechaComponent,
+		DevolucionComponent,
+		JustificacionComponent,
+		CertificacionComponent
+
 	],
 	imports: [
 		BrowserModule,

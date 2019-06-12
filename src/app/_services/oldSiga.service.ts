@@ -137,6 +137,9 @@ export class OldSigaServices {
 		comunicaCarga: 'Dispatcher.do?proceso=12X',
 		comunicaResoluciones: 'Dispatcher.do?proceso=12F',
 		comunicaDesignaciones: 'Dispatcher.do?proceso=12G',
+		justificacion:	'Dispatcher.do?proceso=710',
+		certificacion:	'Dispatcher.do?proceso=711',
+		devolucion:	'Dispatcher.do?proceso=712',
 
 		//Consultas
 		recuperarConsultas: 'Dispatcher.do?proceso=107',

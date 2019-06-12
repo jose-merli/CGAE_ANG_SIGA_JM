@@ -3,6 +3,7 @@ import { ProgEnviosMasivosItem } from '../../../../../models/ProgramacionEnviosM
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
+import { TranslateService } from "../../../../../commons/translate/translation.service";
 
 @Component({
   selector: 'app-programacion-envio-masivo',
@@ -54,6 +55,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
     private sigaServices: SigaServices
   ) {
 
@@ -80,6 +82,11 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   showSuccess(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showWarning(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "warn", summary: "", detail: mensaje });
   }
 
   showInfo(mensaje: string) {
@@ -149,32 +156,38 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   guardar() {
-    this.arrayProgramar = [];
-    let objProgramar = {
-      idEnvio: this.body.idEnvio,
-      idInstitucion: this.body.idInstitucion,
-      fechaProgramada: new Date(this.body.fechaProgramada),
-      idEstado: this.body.idEstado,
-      idTipoEnvios: this.body.idTipoEnvios,
-      idPlantillaEnvios: this.body.idPlantillaEnvios,
-      descripcion: this.body.descripcion
+    if (this.currentDate > this.body.fechaProgramada) {
+      this.showWarning(this.translateService.instant(
+        "informesycomunicaciones.enviosMasivos.errorFechaInferior"
+      ));
+    } else {
+      this.arrayProgramar = [];
+      let objProgramar = {
+        idEnvio: this.body.idEnvio,
+        idInstitucion: this.body.idInstitucion,
+        fechaProgramada: new Date(this.body.fechaProgramada),
+        idEstado: this.body.idEstado,
+        idTipoEnvios: this.body.idTipoEnvios,
+        idPlantillaEnvios: this.body.idPlantillaEnvios,
+        descripcion: this.body.descripcion
 
-    }
-    this.arrayProgramar.push(objProgramar);
-    this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
-      data => {
-        this.showSuccess('Se ha programado el envío correctamente');
-        this.body.fechaProgramada = objProgramar.fechaProgramada;
-        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      },
-      err => {
-        this.showFail('Error al programar el envío');
-        console.log(err);
-      },
-      () => {
       }
-    );
+      this.arrayProgramar.push(objProgramar);
+      this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
+        data => {
+          this.showSuccess('Se ha programado el envío correctamente');
+          this.body.fechaProgramada = objProgramar.fechaProgramada;
+          sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        },
+        err => {
+          this.showFail('Error al programar el envío');
+          console.log(err);
+        },
+        () => {
+        }
+      );
+    }
   }
 
   getEstadosEnvios() {

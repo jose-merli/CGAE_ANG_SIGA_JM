@@ -44,7 +44,7 @@
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} (*)</label>
-          <app-fecha [(value)]="body.fechaProgramada" showTime="true" [minDate]="currentDate" [utc]="false" (valueChangeSelected)="fillFechaProgramada($event)"
+          <app-fecha [(value)]="body.fechaProgramada" showTime="true" [utc]="false" (valueChangeSelected)="fillFechaProgramada($event)"
             (valueChangeInput)="fillFechaProgramada($event)" [disabled]="noEditar"></app-fecha>
         </div>
       </div>

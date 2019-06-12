@@ -70,6 +70,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   ngOnInit() {
     this.es = this.translateService.getCalendarLocale();
     sessionStorage.removeItem("abrirSolicitudIncorporacion");
+    sessionStorage.removeItem("solicitudIncorporacion");
 
     if (sessionStorage.getItem("solicitudInsertadaConExito")) {
       this.showSuccess();
