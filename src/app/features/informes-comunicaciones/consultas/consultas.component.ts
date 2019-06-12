@@ -191,7 +191,13 @@ export class ConsultasComponent implements OnInit {
   recuperarBusqueda() {
     if (sessionStorage.getItem("filtrosConsulta") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
-      this.buscar();
+
+      if (this.bodySearch == null) {
+        this.bodySearch = new ConsultasSearchItem();
+      } else {
+        this.buscar();
+      }
+
     } else {
       this.bodySearch.generica = "";
     }

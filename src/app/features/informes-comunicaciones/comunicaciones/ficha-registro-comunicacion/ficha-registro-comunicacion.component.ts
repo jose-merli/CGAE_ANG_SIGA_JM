@@ -11,11 +11,18 @@ export class FichaRegistroComunicacionComponent implements OnInit {
 
   idModelo: string;
   fichasPosibles: any[];
+  filtrosCom;
 
   constructor(private activatedRoute: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
     this.idModelo = this.activatedRoute.snapshot.params["id"];
+
+    if (sessionStorage.getItem("filtrosCom")) {
+      this.filtrosCom = JSON.parse(sessionStorage.getItem("filtrosCom"));
+      sessionStorage.setItem("filtrosComCom", JSON.stringify(this.filtrosCom));
+      sessionStorage.removeItem("filtrosCom");
+    }
 
     this.fichasPosibles = [
       {
@@ -39,6 +46,9 @@ export class FichaRegistroComunicacionComponent implements OnInit {
   }
 
   backTo() {
+    let filtros = JSON.parse(sessionStorage.getItem("filtrosComCom"));
+    sessionStorage.setItem("filtrosCom", JSON.stringify(filtros));
+    sessionStorage.removeItem("filtrosComCom");
     this.location.back();
   }
 

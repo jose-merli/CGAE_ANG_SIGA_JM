@@ -74,8 +74,13 @@ export class EnviosMasivosComponent implements OnInit {
       this.buscar();
       sessionStorage.removeItem("ComunicacionDuplicada");
     }
-    if (sessionStorage.getItem("filtros") != null) {
-      this.bodySearch = JSON.parse(sessionStorage.getItem("filtros"));
+    if (sessionStorage.getItem("filtrosEnvioMasivo") != null) {
+      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosEnvioMasivo"));
+
+      if (this.bodySearch == null) {
+        this.bodySearch = new EnviosMasivosSearchItem();
+      }
+
       this.bodySearch.fechaCreacion = this.bodySearch.fechaCreacion
         ? new Date(this.bodySearch.fechaCreacion)
         : null;
@@ -228,7 +233,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.selectedDatos = "";
     this.progressSpinner = true;
     sessionStorage.removeItem("enviosMasivosSearch");
-    sessionStorage.removeItem("filtros");
+    sessionStorage.removeItem("filtrosEnvioMasivo");
     if (sessionStorage.getItem("ComunicacionDuplicada") != null) {
       this.getResultadosComunicacionDuplicada();
       this.showSuccess(
@@ -438,7 +443,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       // this.body.estado = dato[0].estado;
       this.router.navigate(["/fichaRegistroEnvioMasivo"]);
       sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(dato[0]));
-      sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
+      sessionStorage.setItem("filtrosEnvioMasivo", JSON.stringify(this.bodySearch));
     } else if (!this.selectMultiple && this.estado == 5) {
       this.showInfo(this.translateService.instant("informesycomunicaciones.enviosMasivos.envioProcess"));
       this.selectedDatos = [];
@@ -532,7 +537,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
         this.router.navigate(["/fichaRegistroEnvioMasivo"]);
         sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
-        sessionStorage.setItem("filtros", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem("filtrosEnvioMasivo", JSON.stringify(this.bodySearch));
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));

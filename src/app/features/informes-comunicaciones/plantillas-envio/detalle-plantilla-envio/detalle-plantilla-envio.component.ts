@@ -10,15 +10,21 @@ import { Location } from "@angular/common";
 export class DetallePlantillaEnvioComponent implements OnInit {
   idPlantilla: string;
   fichasPosibles: any[];
+  filtrosPlantillas;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.idPlantilla = this.activatedRoute.snapshot.params["id"];
     //llamar con id al servicio para traer el detalle de la plantilla
+    if (sessionStorage.getItem("filtrosPlantillas")) {
+      this.filtrosPlantillas = JSON.parse(sessionStorage.getItem("filtrosPlantillas"));
+      sessionStorage.setItem("filtrosPlantillasPlantillas", JSON.stringify(this.filtrosPlantillas));
+      sessionStorage.removeItem("filtrosPlantillas");
+    }
 
     this.fichasPosibles = [
       {
@@ -37,6 +43,9 @@ export class DetallePlantillaEnvioComponent implements OnInit {
   }
 
   backTo() {
+    let filtros = JSON.parse(sessionStorage.getItem("filtrosPlantillasPlantillas"));
+    sessionStorage.setItem("filtrosPlantillas", JSON.stringify(filtros));
+    sessionStorage.removeItem("filtrosPlantillasPlantillas");
     this.location.back();
   }
 }

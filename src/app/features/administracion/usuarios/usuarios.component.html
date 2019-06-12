@@ -73,8 +73,8 @@
         <button [disabled]="!activacionEditar" (click)="sendEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.edit' | translate}}"></button>
       </div>
       <div *ngIf="editar == false" class="text-right main-button">
-        <button (click)="Search(); selectedDatos = false; buscar = true" pButton type="button " icon="fa fa-search " iconPos="left"
-          label="{{'general.boton.search' | translate}}"></button>
+        <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="Search(); selectedDatos = false;" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}"></button>
         <button *ngIf="activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"
           [disabled]="blockCrear"></button>
         <button *ngIf="!activacionEditar" (click)="crear()" pButton type="button" icon="	fa fa-plus " iconPos="left" label="{{ 'general.boton.new' | translate}}"
