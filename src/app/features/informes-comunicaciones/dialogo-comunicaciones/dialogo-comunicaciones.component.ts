@@ -235,7 +235,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.listaConsultas.forEach((element) => {
 						if (element.camposDinamicos != null) {
 							element.camposDinamicos.forEach((campo) => {
-								this.valores.push(campo);
+
+								let find = this.valores.find(x => x.campo == campo.campo);
+								if (find == undefined) {
+									this.valores.push(campo);
+								}
 							});
 						}
 					});
@@ -253,11 +257,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 				(err) => {
 					console.log(err);
 					let message = JSON.parse(err.error).error.message;
-					
+
 					if (message == null || message == undefined) {
 						message = '';
 					}
-					
+
 					this.showFail(
 						this.translateService.instant(
 							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
@@ -401,6 +405,25 @@ export class DialogoComunicacionesComponent implements OnInit {
 			}
 		});
 
+		if (this.listaConsultas != null) {
+			for (let i = 0; this.listaConsultas.length > i; i++) {
+
+				if (this.listaConsultas[i].camposDinamicos != null) {
+					for (let j = 0; this.listaConsultas[i].camposDinamicos.length > j; j++) {
+
+						let find = this.valores.find(x => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
+						if (find != undefined) {
+							this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+							this.listaConsultas[i].camposDinamicos[j].operacion = find.operacion;
+						}
+					}
+				}
+
+			}
+		}
+
+
+
 		let datos = {
 			idClaseComunicacion: this.idClaseComunicacion,
 			modelos: this.bodyComunicacion.modelos,
@@ -422,11 +445,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 						filename = "Documentos.zip";
 					}
 
-				},
-				error => {
-					console.log(error);
-				},
-				() => {
 					this.sigaServices.postDownloadFiles('dialogo_descargar', datos).subscribe(
 						(data) => {
 							if (data.size != 0) {
@@ -441,6 +459,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 								this.progressSpinner = false;
 								this.showValores = false;
 							} else {
+								this.showValores = false;
 								this.showFail(
 									this.translateService.instant('informes.error.descargaDocumento')
 								);
@@ -457,6 +476,20 @@ export class DialogoComunicacionesComponent implements OnInit {
 							this.progressSpinner = false;
 						}
 					);
+
+				},
+				err => {
+					this.progressSpinner = false;
+					this.showValores = false;
+					console.log(err);
+					if (JSON.parse(err.error).label != undefined && JSON.parse(err.error).label != null) {
+						this.showFail("Error al ejecutar la consulta: " + JSON.parse(err.error).label);
+					} else {
+						this.showFail(
+							this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.descargar.error')
+						);
+					}
+
 				}
 			);
 

@@ -343,7 +343,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.bodySearch.idInstitucion = this.institucionActual;
       } else if (sessionStorage.getItem("filtrosModelos") != null) {
         this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosModelos"));
-        this.buscar();
+        if (this.bodySearch == null) {
+          this.bodySearch = new ModelosComunicacionesItem();
+        } else {
+          this.buscar();
+        }
       }
       this.getComboColegios();
     });

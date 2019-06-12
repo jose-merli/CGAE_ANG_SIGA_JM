@@ -75,7 +75,11 @@ export class PlantillasEnvioComponent implements OnInit {
 	ngAfterViewInit() {
 		if (sessionStorage.getItem('filtrosPlantillas') != null) {
 			this.bodySearch = JSON.parse(sessionStorage.getItem('filtrosPlantillas'));
-			this.buscar();
+			if (this.bodySearch == null) {
+				this.bodySearch = new PlantillaEnvioSearchItem();
+			} else {
+				this.buscar();
+			}
 		}
 	}
 

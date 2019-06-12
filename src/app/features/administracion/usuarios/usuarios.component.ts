@@ -374,51 +374,92 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   Search() {
-    this.buscar = true;
-    this.progressSpinner = true;
-    // if (this.body.nif == "" || this.body.nif == null) {
-    //   this.dniCorrecto = null;
-    // }
-    if (this.body.nombreApellidos == undefined) {
-      this.body.nombreApellidos = "";
-    }
-    // if (UsuarioRequestDto == undefined) {
-    //   this.body.activo = "S";
-    //   this.activo = true;
-    // }
-    if (this.body.grupo == undefined) {
-      this.body.grupo = "";
-    }
-    if (this.body.nif == undefined) {
-      this.body.nif = "";
-    }
-    if (this.body.rol == undefined) {
-      this.body.rol = "";
-    }
-    this.body.idInstitucion = "2000";
-    this.sigaServices
-      .postPaginado("usuarios_search", "?numPagina=1", this.body)
-      .subscribe(
-        data => {
-          console.log(data);
-          this.progressSpinner = false;
-          this.searchUser = JSON.parse(data["body"]);
-          this.datos = this.searchUser.usuarioItem;
-          this.table.paginator = true;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          if (sessionStorage.getItem("first") != null) {
-            let first = JSON.parse(sessionStorage.getItem("first")) as number;
-            this.table.first = first;
-            sessionStorage.removeItem("first");
+    if (this.checkFilters()) {
+
+      this.buscar = true;
+      this.progressSpinner = true;
+      // if (this.body.nif == "" || this.body.nif == null) {
+      //   this.dniCorrecto = null;
+      // }
+      if (this.body.nombreApellidos == undefined) {
+        this.body.nombreApellidos = "";
+      }
+      // if (UsuarioRequestDto == undefined) {
+      //   this.body.activo = "S";
+      //   this.activo = true;
+      // }
+      if (this.body.grupo == undefined) {
+        this.body.grupo = "";
+      }
+      if (this.body.nif == undefined) {
+        this.body.nif = "";
+      }
+      if (this.body.rol == undefined) {
+        this.body.rol = "";
+      }
+      this.body.idInstitucion = "2000";
+      this.sigaServices
+        .postPaginado("usuarios_search", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            console.log(data);
+            this.progressSpinner = false;
+            this.searchUser = JSON.parse(data["body"]);
+            this.datos = this.searchUser.usuarioItem;
+            this.table.paginator = true;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            if (sessionStorage.getItem("first") != null) {
+              let first = JSON.parse(sessionStorage.getItem("first")) as number;
+              this.table.first = first;
+              sessionStorage.removeItem("first");
+            }
           }
-        }
-      );
+        );
+    }
   }
+
+  checkFilters() {
+    if (
+      (this.body.nombreApellidos == null ||
+        this.body.nombreApellidos == undefined ||
+        this.body.nombreApellidos == "") &&
+      (this.body.nif == null ||
+        this.body.nif == undefined ||
+        this.body.nif == "") &&
+      (this.body.rol == null ||
+        this.body.rol == undefined) &&
+      (this.body.grupo == null ||
+        this.body.grupo == undefined)
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showSearchIncorrect() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: "Incorrecto",
+      detail: this.translateService.instant(
+        "cen.busqueda.error.busquedageneral"
+      )
+    });
+  }
+
+  isLimpiar() {
+    this.body = new UsuarioRequestDto();
+
+  }
+
   paginate(event) {
     console.log(event);
   }

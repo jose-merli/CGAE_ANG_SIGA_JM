@@ -10,14 +10,21 @@ import { Location } from "@angular/common";
 export class FichaModeloComunicacionesComponent implements OnInit {
   idModelo: string;
   fichasPosibles: any[];
+  filtrosModelos;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.idModelo = this.activatedRoute.snapshot.params["id"];
+
+    if (sessionStorage.getItem("filtrosModelos")) {
+      this.filtrosModelos = JSON.parse(sessionStorage.getItem("filtrosModelos"));
+      sessionStorage.setItem("filtrosModelosModelos", JSON.stringify(this.filtrosModelos));
+      sessionStorage.removeItem("filtrosModelos");
+    }
 
     this.fichasPosibles = [
       {
@@ -40,6 +47,9 @@ export class FichaModeloComunicacionesComponent implements OnInit {
   }
 
   backTo() {
+    let filtros = JSON.parse(sessionStorage.getItem("filtrosModelosModelos"));
+    sessionStorage.setItem("filtrosModelos", JSON.stringify(filtros));
+    sessionStorage.removeItem("filtrosModelosModelos");
     this.location.back();
   }
 }

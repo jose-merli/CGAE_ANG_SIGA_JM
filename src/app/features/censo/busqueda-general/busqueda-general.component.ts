@@ -28,6 +28,7 @@ import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporaci
 import { StringObject } from "../../../models/StringObject";
 import { NuevaSancionItem } from "../../../models/NuevaSancionItem";
 import { OnDestroy } from '@angular/core';
+import { AuthenticationService } from '../../../_services/authentication.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -123,7 +124,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private location: Location
+    private location: Location,
+    private authenticationService: AuthenticationService
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null,
@@ -233,6 +235,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   ngOnDestroy() {
     sessionStorage.removeItem("AddDestinatarioIndv");
+    sessionStorage.removeItem("abrirRemitente");
   }
 
   getInstitucion() {
@@ -258,8 +261,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }
             }
 
-            if (sessionStorage.getItem("AddDestinatarioIndv")) {
-              this.addDestinatarioIndv = true;
+            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")) {
+              if (this.authenticationService.getInstitucionSession() != "2000") {
+                if (this.authenticationService.getInstitucionSession() > "2001" && this.authenticationService.getInstitucionSession() < "2100") {
+                  this.addDestinatarioIndv = true;
+                } else {
+                  this.addDestinatarioIndv = false;
+                }
+              } else {
+                this.addDestinatarioIndv = false;
+              }
             } else {
               this.addDestinatarioIndv = false;
             }
@@ -279,8 +290,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }
             }
 
-            if (sessionStorage.getItem("AddDestinatarioIndv")) {
-              this.addDestinatarioIndv = true;
+            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")) {
+              if (this.authenticationService.getInstitucionSession() != "2000") {
+                if (this.authenticationService.getInstitucionSession() > "2001" && this.authenticationService.getInstitucionSession() < "2100") {
+                  this.addDestinatarioIndv = true;
+                } else {
+                  this.addDestinatarioIndv = false;
+                }
+              } else {
+                this.addDestinatarioIndv = false;
+              }
             } else {
               this.addDestinatarioIndv = false;
             }
@@ -381,7 +400,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
     if (this.persona == "f") {
       this.cols = this.colsFisicas;
 
-      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined &&
+        sessionStorage.getItem("abrirRemitente") == undefined) {
         this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
 
@@ -398,7 +418,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     } else {
       this.cols = this.colsJuridicas;
 
-      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
         this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
 
@@ -571,10 +591,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 ) {
                   if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
 
-                    if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+                    if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
                       this.noDataFoundWithDNI();
                     } else {
-                      sessionStorage.setItem("AddDestinatarioIndvBack", "true");
+                      if (sessionStorage.getItem("AddDestinatarioIndv")) {
+                        sessionStorage.setItem("AddDestinatarioIndvBack", "true");
+
+                      }
                     }
 
                   }
@@ -590,6 +613,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 if (sessionStorage.getItem("AddDestinatarioIndv") != undefined) {
                   sessionStorage.setItem("AddDestinatarioIndvBack", "true");
                 }
+
               }
             }
           );
@@ -643,7 +667,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 this.datos == undefined
               ) {
                 if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
-                  if (sessionStorage.getItem("AddDestinatarioIndv") == undefined) {
+                  if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
                     this.noDataFoundWithDNI();
                   }
 
