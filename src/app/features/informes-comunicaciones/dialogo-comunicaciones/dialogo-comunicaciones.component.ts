@@ -8,8 +8,10 @@ import { ConsultaConsultasItem } from '../../../models/ConsultaConsultasItem';
 import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { saveAs } from 'file-saver/FileSaver';
 import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { typeSourceSpan } from '@angular/compiler';
 import { DataTable } from 'primeng/datatable';
+import { Observable } from "rxjs/Observable";
 import { truncate } from 'fs';
 import { findIndex } from 'rxjs/operators';
 
@@ -446,12 +448,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 								);
 							}
 						},
-						(err) => {
-							console.log(err);
-							this.showFail(
-								this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.descargar.error')
-							);
+						(error) => {
+							console.log(error);
+							
 							this.progressSpinner = false;
+							if (error.message != null && error.message != undefined) {
+								this.showFail(error.message)
+							} else {
+								this.translateService.instant('informes.error.descargaDocumento');
+							}
+							
 						},
 						() => {
 							this.progressSpinner = false;
@@ -461,6 +467,20 @@ export class DialogoComunicacionesComponent implements OnInit {
 			);
 
 
+	}
+
+	parseErrorBlob(err: HttpErrorResponse): Observable<any> {
+		const reader: FileReader = new FileReader();
+	
+		const obs = Observable.create((observer: any) => {
+		  reader.onloadend = (e) => {
+			observer.error(JSON.parse(reader.result as string));
+			observer.complete();
+			this.showFail(JSON.parse(reader.result as string));
+		  }
+		});
+		reader.readAsText(err.error);
+		return obs;
 	}
 
 	getInstitucion() {
