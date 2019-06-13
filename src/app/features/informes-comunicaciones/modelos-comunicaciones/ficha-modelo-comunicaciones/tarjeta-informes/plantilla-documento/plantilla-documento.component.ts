@@ -983,16 +983,28 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   getValoresSufijo() {
-    for (let sel of this.selectedSufijos) {
-      this.sufijos.map(e => {
-        if (sel.idSufijo == e.idSufijo) {
-          e.idSufijo = "";
-          e.nombreSufijo = "";
+    // for (let sel of this.selectedSufijos) {
+    // this.sufijos.map(e => {
+    //   if (sel.idSufijo == e.idSufijo) {
+    // e.removeItem;
+    let i = 0;
+    if (this.selectedSufijos != undefined) {
+      let perfilesFiltrados = this.sufijos;
+      this.sufijos = [];
+      perfilesFiltrados.forEach(element => {
+        let find = this.selectedSufijos.find(x => x.idSufijo == element.idSufijo);
+        if (find != undefined) {
+          // console.log(perfilesFiltrados[i]);
+        } else {
+          this.sufijos.push(perfilesFiltrados[i]);
         }
-        return e.idSufijo;
+        i++;
+        return element.idSufijo;
+
       });
     }
-
+    // }
+    // });
     this.sufijos = [...this.sufijos];
   }
 

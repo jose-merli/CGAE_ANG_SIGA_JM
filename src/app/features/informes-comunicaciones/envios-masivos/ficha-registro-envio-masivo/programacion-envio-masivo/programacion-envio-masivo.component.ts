@@ -20,7 +20,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   fecha: Date;
   msgs: Message[];
   arrayProgramar: any[];
-  currentDate: Date = new Date();
+  currentDate: Date;
   currentDateInitial: Date;
   estados: any[];
   noEditar: boolean = false;
@@ -70,6 +70,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     this.getDatos();
 
     this.currentDateInitial = new Date();
+    this.currentDate = new Date();
 
   }
 

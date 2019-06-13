@@ -239,17 +239,17 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         const blob = new Blob([data], { type: "application/octet-stream" });
         if (blob.size == 0) {
           if (this.body.idTipoEnvios == '5') {//burosms
-            this.showFail( this.translateService.instant(
+            this.showFail(this.translateService.instant(
               "messages.envioMasivo.buroSMS.descarga"
             ));
           } else {
-            this.showFail( this.translateService.instant(
+            this.showFail(this.translateService.instant(
               "messages.general.error.ficheroNoExiste"
             ));
           }
-          
+
         } else {
-          saveAs(data, dato[0].nombreDocumento);
+          saveAs(data, dato[0].pathDocumento);
         }
         this.selectedDatos = [];
       });
