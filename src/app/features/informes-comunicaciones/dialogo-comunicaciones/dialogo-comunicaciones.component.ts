@@ -441,59 +441,56 @@ export class DialogoComunicacionesComponent implements OnInit {
 			.subscribe(
 				data => {
 					if (data["body"] != "") {
-						let a = JSON.parse(data["body"]);
-						filename = a.label;
-					} else {
-						filename = "Documentos.zip";
-					}
+						let fileInfo = JSON.parse(data["body"]);
+						filename = fileInfo.name;
+					
 
-					this.sigaServices.postDownloadFiles('dialogo_descargar', datos).subscribe(
-						(data) => {
-							if (data.size != 0) {
-								// let a = JSON.parse(data);
-								const blob = new Blob([data], { type: 'text/csv' });
+						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
+							(data) => {
+								if (data.size != 0) {
+									// let a = JSON.parse(data);
+									const blob = new Blob([data], { type: 'text/csv' });
 
-								if (blob != undefined) {
-									// 	saveAs(blob, data.nombre);
-									// } else {
-									saveAs(blob, filename);
+									if (blob != undefined) {
+										// 	saveAs(blob, data.nombre);
+										// } else {
+										saveAs(blob, filename);
+									}
+									this.progressSpinner = false;
+									this.showValores = false;
+								} else {
+									this.showValores = false;
+									this.showFail(
+										this.translateService.instant('informes.error.descargaDocumento')
+									);
 								}
+							},
+							(error) => {
+								console.log(error);
+								
 								this.progressSpinner = false;
-								this.showValores = false;
-							} else {
-								this.showValores = false;
-								this.showFail(
-									this.translateService.instant('informes.error.descargaDocumento')
-								);
+								if (error.message != null && error.message != undefined) {
+									this.showFail(error.message)
+								} else {
+									this.translateService.instant('informes.error.descargaDocumento');
+								}
+								
+							},
+							() => {
+								this.progressSpinner = false;
 							}
-						},
-						(error) => {
-							console.log(error);
-							
-							this.progressSpinner = false;
-							if (error.message != null && error.message != undefined) {
-								this.showFail(error.message)
-							} else {
-								this.translateService.instant('informes.error.descargaDocumento');
-							}
-							
-						},
-						() => {
-							this.progressSpinner = false;
-						}
-					);
+						);
+					}
 
 				},
 				err => {
 					this.progressSpinner = false;
 					this.showValores = false;
 					console.log(err);
-					if (JSON.parse(err.error).label != undefined && JSON.parse(err.error).label != null) {
-						this.showFail("Error al ejecutar la consulta: " + JSON.parse(err.error).label);
+					if (err.message != null && err.message != undefined) {
+						this.showFail(err.message)
 					} else {
-						this.showFail(
-							this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.descargar.error')
-						);
+						this.translateService.instant('informes.error.descargaDocumento');
 					}
 
 				}
