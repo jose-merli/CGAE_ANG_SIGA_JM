@@ -90,6 +90,17 @@ export class NuevaIncorporacionComponent implements OnInit {
   body;
   solicitante;
 
+  editarExt: boolean = false;
+  iban: String;
+  ibanValido: boolean = true;
+  bicValido: boolean;
+  lengthCountryCode: Number = 0;
+  bic: String;
+  registroEditable: String;
+  banco: String;
+  editar: boolean = false;
+  isSave: boolean = true;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -208,8 +219,8 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
     }
 
-    if (this.isValidIBAN()) {
-      this.recuperarBicBanco();
+    if (this.solicitudEditar.iban != undefined && this.solicitudEditar.iban != "") {
+      this.autogenerarDatos();
       this.checkSolicitudInicio = JSON.parse(
         JSON.stringify(this.solicitudEditar)
       );
@@ -447,27 +458,216 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
   }
 
+  validarIban(): boolean {
+    if (!this.isSave || (this.isSave && this.solicitudEditar.iban != null)) {
+      if (
+        (this.solicitudEditar.iban != null ||
+          this.solicitudEditar.iban != undefined ||
+          this.solicitudEditar.iban != "") &&
+        (this.isValidIBAN() || this.isValidIbanExt())
+      ) {
+        this.ibanValido = true;
+        return true;
+      } else {
+        this.ibanValido = false;
+        return false;
+      }
+    } else {
+      return true;
+    }
+
+  }
+
   isValidIBAN(): boolean {
+
+    this.iban = this.solicitudEditar.iban;
+
     if (
       this.solicitudEditar.iban != null ||
       this.solicitudEditar.iban != undefined
     ) {
       this.solicitudEditar.iban = this.solicitudEditar.iban.replace(/\s/g, "");
-      return (
-        this.solicitudEditar.iban &&
-        typeof this.solicitudEditar.iban === "string" &&
-        // /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
-        ///[A-Z]{2}\d{22}?[\d]{0,2}/.test(this.body.iban)
-        /^ES\d{22}$/.test(this.solicitudEditar.iban)
-      );
+      // return (
+      //   this.solicitudEditar.iban &&
+      //   typeof this.solicitudEditar.iban === "string" &&
+      //   // /ES\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}|ES\d{22}/.test(
+      //   ///[A-Z]{2}\d{22}?[\d]{0,2}/.test(this.body.iban)
+      //   /^ES\d{22}$/.test(this.solicitudEditar.iban)
+      // );
+
+      // IBAN ESPAÑOL
+      if (this.solicitudEditar.iban.length != 24) {
+        return false;
+      }
+
+      let firstLetters = this.solicitudEditar.iban.substring(0, 1);
+      let secondfirstLetters = this.solicitudEditar.iban.substring(1, 2);
+      let num1 = this.getnumIBAN(firstLetters);
+      let num2 = this.getnumIBAN(secondfirstLetters);
+
+      let isbanaux = String(num1) + String(num2) + this.solicitudEditar.iban.substring(2);
+      // Se mueve los 6 primeros caracteres al final de la cadena.
+      isbanaux = isbanaux.substring(6) + isbanaux.substring(0, 6);
+
+      //Se calcula el resto, llamando a la función modulo97, definida más abajo
+      let resto = this.modulo97(isbanaux);
+      if (resto == "1") {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
+  getnumIBAN(letter) {
+    let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return letters.search(letter) + 10;
+  }
+
+  modulo97(iban) {
+    var parts = Math.ceil(iban.length / 7);
+    var remainer = "";
+
+    for (var i = 1; i <= parts; i++) {
+      remainer = String(
+        parseFloat(remainer + iban.substr((i - 1) * 7, 7)) % 97
+      );
+    }
+
+    return remainer;
+  }
+
+  // autogenerarDatos() {
+  //   if (this.isValidIBAN()) {
+  //     this.recuperarBicBanco();
+  //   } else {
+  //     this.solicitudEditar.banco = "";
+  //   }
+  // }
+
   autogenerarDatos() {
-    if (this.isValidIBAN()) {
-      this.recuperarBicBanco();
+
+    //Si es una consulta los datos deben venir de la pantalla de busqueda
+    if (this.consulta) {
+      this.solicitudEditar.banco = this.solicitudEditar.nombreBanco;
+
+      //Si no es una consulta que se genere
     } else {
-      this.solicitudEditar.banco = "";
+      if (this.solicitudEditar.iban != undefined && this.solicitudEditar.iban != "") {
+        this.iban = this.solicitudEditar.iban.trim();
+        this.solicitudEditar.iban = this.iban;
+      }
+
+      if (this.solicitudEditar.iban != null && this.solicitudEditar.iban != "") {
+        var ccountry = this.solicitudEditar.iban.substring(0, 2);
+        if (ccountry == "ES") {
+          this.editarExt = false;
+
+          if (this.isValidIBAN()) {
+            this.recuperarBicBanco();
+
+            this.ibanValido = true;
+          } else {
+            this.solicitudEditar.banco = "";
+            this.solicitudEditar.bic = "";
+
+            this.ibanValido = false;
+          }
+        } else {
+          this.checkIbanExt(ccountry);
+        }
+      } else {
+        this.solicitudEditar.banco = "";
+        this.solicitudEditar.bic = "";
+        this.ibanValido = true;
+      }
+    }
+
+
+
+  }
+
+  checkIbanExt(ccountry) {
+    this.sigaServices
+      .post("datosCuentaBancaria_getLengthCodCountry", ccountry)
+      .subscribe(
+        data => {
+          this.lengthCountryCode = JSON.parse(data["body"]);
+
+        },
+        error => {
+          this.ibanValido = false;
+          this.solicitudEditar.banco = "";
+          this.solicitudEditar.bic = "";
+        },
+        () => {
+          if (this.isValidIbanExt()) {
+            this.ibanValido = true;
+            // Habilitamos el BIC
+
+            this.editarExt = true;
+
+            if (this.solicitudEditar.bic == undefined) {
+              // if (this.registroEditable == "false") {
+              this.solicitudEditar.banco = "BANCO EXTRANJERO";
+              // } else {
+              // this.solicitudEditar.banco = "";
+              // }
+              this.solicitudEditar.bic = "";
+            } else {
+              if (this.iban.substring(0, 2) != "ES") {
+
+                if (this.solicitudEditar.bic == undefined) {
+                  this.solicitudEditar.bic = "";
+                } else {
+                  if (
+                    this.solicitudEditar.bic.charAt(4) !=
+                    this.iban.substring(0, 2).charAt(0) &&
+                    this.solicitudEditar.bic.charAt(5) !=
+                    this.iban.substring(0, 2).charAt(1)
+                  ) {
+                    this.solicitudEditar.bic = "";
+                  }
+                }
+                // } else {
+                //   this.body.bic = this.bic;
+                // }
+
+                // if (this.registroEditable == "false") {
+                // this.solicitudEditar.bic = "";
+                // }
+
+                this.solicitudEditar.banco = "BANCO EXTRANJERO";
+              } else {
+                this.solicitudEditar.bic = this.bic;
+                this.solicitudEditar.banco = this.banco;
+                this.editarExt = false;
+              }
+            }
+          } else {
+            this.solicitudEditar.banco = "";
+            this.solicitudEditar.bic = "";
+            this.editarExt = false;
+            this.ibanValido = false;
+          }
+
+          if (this.editarExt) {
+            this.editar = true;
+          } else {
+            this.editar = false;
+          }
+
+          //sessionStorage.removeItem("bic");
+        }
+      );
+  }
+
+  isValidIbanExt(): boolean {
+    if (this.solicitudEditar.iban != null && this.solicitudEditar.iban != undefined &&
+      this.solicitudEditar.iban != "" && this.solicitudEditar.iban.length == this.lengthCountryCode) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -555,6 +755,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.dniDisponible = undefined;
     }
   }
+
   showFailGenerico() {
     this.msgs = [];
     this.msgs.push({
@@ -565,24 +766,80 @@ export class NuevaIncorporacionComponent implements OnInit {
       )
     });
   }
-  recuperarBicBanco() {
-    this.sigaServices
-      .post("datosCuentaBancaria_BIC_BANCO", this.solicitudEditar)
-      .subscribe(
-        data => {
-          let bodyBancoBicSearch = JSON.parse(data["body"]);
-          let bodyBancoBic = bodyBancoBicSearch.bancoBicItem[0];
 
-          this.solicitudEditar.banco = bodyBancoBic.banco;
-          this.solicitudEditar.bic = bodyBancoBic.bic;
-          this.checkSolicitudInicio.banco = bodyBancoBic.banco;
-          this.checkSolicitudInicio.bic = bodyBancoBic.bic;
-        },
-        error => {
-          // let bodyBancoBicSearch = JSON.parse(error["error"]);
-          this.showFailGenerico();
-        }
-      );
+  // recuperarBicBanco() {
+  //   this.sigaServices
+  //     .post("datosCuentaBancaria_BIC_BANCO", this.solicitudEditar)
+  //     .subscribe(
+  //       data => {
+  //         let bodyBancoBicSearch = JSON.parse(data["body"]);
+  //         let bodyBancoBic = bodyBancoBicSearch.bancoBicItem[0];
+
+  //         this.solicitudEditar.banco = bodyBancoBic.banco;
+  //         this.solicitudEditar.bic = bodyBancoBic.bic;
+  //         this.checkSolicitudInicio.banco = bodyBancoBic.banco;
+  //         this.checkSolicitudInicio.bic = bodyBancoBic.bic;
+  //       },
+  //       error => {
+  //         // let bodyBancoBicSearch = JSON.parse(error["error"]);
+  //         this.showFailGenerico();
+  //       }
+  //     );
+  // }
+
+  recuperarBicBanco() {
+    if (this.editarExt) {
+      if (this.validarBIC()) {
+        this.bicValido = true;
+      } else {
+        this.bicValido = false;
+      }
+    } else {
+      this.sigaServices
+        .post("datosCuentaBancaria_BIC_BANCO", this.solicitudEditar)
+        .subscribe(
+          data => {
+
+            let bodyBancoBicSearch = JSON.parse(data["body"]);
+            let bodyBancoBic = bodyBancoBicSearch.bancoBicItem[0];
+
+            this.solicitudEditar.banco = bodyBancoBic.banco;
+            this.solicitudEditar.bic = bodyBancoBic.bic;
+            this.checkSolicitudInicio.banco = bodyBancoBic.banco;
+            this.checkSolicitudInicio.bic = bodyBancoBic.bic;
+
+
+            this.iban = this.solicitudEditar.iban.replace(/\s/g, "");
+
+            // this.editar = false;
+          },
+          error => {
+            this.ibanValido = false;
+            this.solicitudEditar.banco = "";
+            this.solicitudEditar.bic = "";
+            let bodyBancoBicSearch = JSON.parse(error["error"]);
+            this.showFail(bodyBancoBicSearch.error.message.toString());
+          }
+        );
+    }
+  }
+
+  validarBIC(): boolean {
+    var ccountry = this.solicitudEditar.iban.substring(0, 2);
+    if (
+      this.solicitudEditar.bic != null &&
+      this.solicitudEditar.bic != undefined &&
+      this.solicitudEditar.bic != "" &&
+      this.solicitudEditar.bic.length == 11 &&
+      this.solicitudEditar.bic.charAt(4) == ccountry.charAt(0) &&
+      this.solicitudEditar.bic.charAt(5) == ccountry.charAt(1)
+    ) {
+      this.bicValido = true;
+      return true;
+    } else {
+      this.bicValido = false;
+      return false;
+    }
   }
 
   deshabilitarDireccion(): boolean {
@@ -631,7 +888,14 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.bic != "" &&
         (this.cargo || this.abono || this.abonoJCS)
       ) {
-        if (this.isValidIBAN()) {
+        if (this.validarIban()) {
+          if (this.editarExt) {
+            if (this.validarBIC()) {
+              return true;
+            } else {
+              return false;
+            }
+          }
           return true;
         } else {
           return false;
@@ -649,6 +913,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       if (this.solicitudEditar.fechaIncorporacion != null &&
         this.solicitudEditar.fechaIncorporacion != undefined) {
 
+        this.isSave = false;
         if (this.isGuardar()) {
           this.guardar(false);
         }
@@ -737,6 +1002,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
   }
+
   searchSolicitante() {
     this.progressSpinner = true;
 
@@ -1150,9 +1416,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     ) {
       if (
         this.compruebaDNI() &&
-        (this.isValidIBAN() ||
+        (this.validarIban() ||
           this.solicitudEditar.iban == "" ||
-          this.solicitudEditar.iban == undefined) &&
+          this.solicitudEditar.iban == undefined &&
+          this.solicitudEditar.bic == "" ||
+          this.solicitudEditar.bic == undefined) &&
         this.estadoSolicitudSelected != "" &&
         this.estadoSolicitudSelected != undefined &&
         this.solicitudEditar.fechaEstado != null &&

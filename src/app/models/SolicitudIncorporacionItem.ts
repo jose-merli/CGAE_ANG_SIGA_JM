@@ -74,7 +74,7 @@ export class SolicitudIncorporacionItem {
   idtratamiento: string;
   idsolicitud: string;
   naturalde: string;
-
+  nombreBanco: string;
 
   constructor() { }
 }
