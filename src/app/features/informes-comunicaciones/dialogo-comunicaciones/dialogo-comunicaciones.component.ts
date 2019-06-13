@@ -472,7 +472,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 								if (error.message != null && error.message != undefined) {
 									this.showFail(error.message)
 								} else {
-									this.translateService.instant('informes.error.descargaDocumento');
+									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
 								
 							},
@@ -481,16 +481,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 							}
 						);
 					}
-
 				},
 				err => {
 					this.progressSpinner = false;
 					this.showValores = false;
 					console.log(err);
-					if (err.message != null && err.message != undefined) {
-						this.showFail(err.message)
+					let errDTO = JSON.parse(err.error);
+					if (errDTO.message != null && errDTO.message != undefined) {
+						this.showFail(errDTO.message)
 					} else {
-						this.translateService.instant('informes.error.descargaDocumento');
+						this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 					}
 
 				}
