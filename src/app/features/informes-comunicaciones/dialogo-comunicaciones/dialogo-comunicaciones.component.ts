@@ -229,6 +229,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		if (this.comunicar && !this.comprobarPlantillas()) {
 			this.showFail('Se ha de seleccionar al menos una plantilla de envio por modelo');
 		} else {
+			this.progressSpinner = true;
 			this.sigaServices.post('dialogo_obtenerCamposDinamicos', this.bodyComunicacion).subscribe(
 				(data) => {
 					console.log(data);
@@ -269,7 +270,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
 						) + ' ' + message
 					);
+				},
+				() => {
+					this.progressSpinner = false;
 				}
+				
 			);
 		}
 	}
@@ -486,12 +491,14 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.progressSpinner = false;
 					this.showValores = false;
 					console.log(err);
-					let errDTO = JSON.parse(err.error);
-					if (errDTO.message != null && errDTO.message != undefined) {
-						this.showFail(errDTO.message)
-					} else {
-						this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+					let mensaje = this.translateService.instant('informes.error.descargaDocumento');
+					if (err != null && err != undefined && err.error != null && err.error != undefined) {
+						let errDTO = JSON.parse(err.error);
+						if (errDTO.message != null && errDTO.message != undefined) {
+							mensaje = errDTO.message;
+						}
 					}
+					this.showFail(mensaje);
 
 				}
 			);
