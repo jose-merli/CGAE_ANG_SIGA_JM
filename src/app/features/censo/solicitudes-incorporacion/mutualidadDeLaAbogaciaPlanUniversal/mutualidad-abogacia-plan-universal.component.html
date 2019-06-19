@@ -225,17 +225,27 @@
             <div class="form-group col-lg-3 col-md-3">
                 <label>
                     {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                <input [disabled]="modoLectura" type="number" class="form-control" pInputText [(ngModel)]="body.telefono">
+                <input [disabled]="modoLectura" type="text" class="form-control" [(ngModel)]="body.telefono" (input)="changeTelefono()" pInputText>
+                <div *ngIf="!tlfValido">
+                    <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>
                     {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
-                <input [disabled]="modoLectura" type="number" class="form-control" pInputText [(ngModel)]="body.movil">
+                <input [disabled]="modoLectura" type="text" class="form-control" [(ngModel)]="body.movil" (input)="changeMovil()" pInputText>
+                <div *ngIf="!mvlValido">
+                    <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
+                </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
                 <label>
                     {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
-                <input [disabled]="modoLectura" type="text" class="form-control" pInputText [(ngModel)]="body.correoElectronico">
+                <input [disabled]="modoLectura" type="text" class="form-control" [(ngModel)]="body.correoElectronico" (input)="changeEmail()"
+                    pInputText>
+                <div *ngIf="!emailValido">
+                    <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                </div>
             </div>
         </div>
     </div>

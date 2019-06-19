@@ -18,6 +18,7 @@ import { Message } from "primeng/components/common/api";
 import { DomSanitizer } from "../../../../../../../node_modules/@angular/platform-browser";
 import { DropdownModule, Dropdown } from "primeng/dropdown";
 import { ConfirmationService } from "primeng/api";
+import { CommonsService } from "../../../../../_services/commons.service";
 
 @Component({
   selector: "app-alter-mutua-ofertas",
@@ -121,6 +122,13 @@ export class AlterMutuaOfertasComponent implements OnInit {
   ibanValido: boolean;
   provinciaDesc: any;
   poblacionDesc: any;
+
+  emailValido: boolean = true;
+  tlf1Valido: boolean = true;
+  tlf2Valido: boolean = true;
+  faxValido: boolean = true;
+  mvlValido: boolean = true;
+
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -129,7 +137,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
     public datepipe: DatePipe,
     private location: Location,
     private domSanitizer: DomSanitizer,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
   ) { }
   @ViewChild("poblacion") dropdown: Dropdown;
 
@@ -1052,6 +1061,26 @@ export class AlterMutuaOfertasComponent implements OnInit {
 
   fillFechaNacimientoHeredero(event) {
     this.datosHeredero.fechaNacimiento = event;
+  }
+
+  changeEmail() {
+    this.emailValido = this.commonsService.validateEmail(this.asegurado.mail);
+  }
+
+  changeTelefono1() {
+    this.tlf1Valido = this.commonsService.validateTelefono(this.asegurado.telefono);
+  }
+
+  changeTelefono2() {
+    this.tlf2Valido = this.commonsService.validateTelefono(this.asegurado.telefono2);
+  }
+
+  changeMovil() {
+    this.mvlValido = this.commonsService.validateMovil(this.asegurado.movil);
+  }
+
+  changeFax1() {
+    this.faxValido = this.commonsService.validateFax(this.asegurado.fax);
   }
 }
 

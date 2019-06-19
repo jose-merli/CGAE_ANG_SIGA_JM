@@ -259,6 +259,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				},
 				(err) => {
 					console.log(err);
+					this.progressSpinner = false;
 					let message = JSON.parse(err.error).error.message;
 
 					if (message == null || message == undefined) {
@@ -274,7 +275,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				() => {
 					this.progressSpinner = false;
 				}
-				
+
 			);
 		}
 	}
@@ -448,7 +449,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 					if (data["body"] != "") {
 						let fileInfo = JSON.parse(data["body"]);
 						filename = fileInfo.name;
-					
+
 
 						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
 							(data) => {
@@ -460,11 +461,12 @@ export class DialogoComunicacionesComponent implements OnInit {
 										// 	saveAs(blob, data.nombre);
 										// } else {
 										saveAs(blob, filename);
+										this.progressSpinner = false;
 									}
-									this.progressSpinner = false;
 									this.showValores = false;
 								} else {
 									this.showValores = false;
+									this.progressSpinner = false;
 									this.showFail(
 										this.translateService.instant('informes.error.descargaDocumento')
 									);
@@ -472,14 +474,14 @@ export class DialogoComunicacionesComponent implements OnInit {
 							},
 							(error) => {
 								console.log(error);
-								
+
 								this.progressSpinner = false;
 								if (error.message != null && error.message != undefined) {
 									this.showFail(error.message)
 								} else {
 									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
-								
+
 							},
 							() => {
 								this.progressSpinner = false;
@@ -508,13 +510,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	parseErrorBlob(err: HttpErrorResponse): Observable<any> {
 		const reader: FileReader = new FileReader();
-	
+
 		const obs = Observable.create((observer: any) => {
-		  reader.onloadend = (e) => {
-			observer.error(JSON.parse(reader.result as string));
-			observer.complete();
-			this.showFail(JSON.parse(reader.result as string));
-		  }
+			reader.onloadend = (e) => {
+				observer.error(JSON.parse(reader.result as string));
+				observer.complete();
+				this.showFail(JSON.parse(reader.result as string));
+			}
 		});
 		reader.readAsText(err.error);
 		return obs;
