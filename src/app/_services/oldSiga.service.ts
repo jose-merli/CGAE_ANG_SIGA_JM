@@ -60,7 +60,7 @@ export class OldSigaServices {
 		cobrosRecobros: 'Dispatcher.do?proceso=2F0',
 		facturasEmitidas: 'Dispatcher.do?proceso=2A1',
 
-		//Productos y Servicios
+    	//Productos y Servicios
 		categoriasProducto: 'Dispatcher.do?proceso=400',
 		categoriasServicios: 'Dispatcher.do?proceso=401',
 		mantenimientoProductos: 'Dispatcher.do?proceso=34',
@@ -137,9 +137,9 @@ export class OldSigaServices {
 		comunicaCarga: 'Dispatcher.do?proceso=12X',
 		comunicaResoluciones: 'Dispatcher.do?proceso=12F',
 		comunicaDesignaciones: 'Dispatcher.do?proceso=12G',
-		justificacion:	'Dispatcher.do?proceso=710',
-		certificacion:	'Dispatcher.do?proceso=711',
-		devolucion:	'Dispatcher.do?proceso=712',
+		justificacion: 'Dispatcher.do?proceso=710',
+		certificacion: 'Dispatcher.do?proceso=711',
+		devolucion: 'Dispatcher.do?proceso=712',
 
 		//Consultas
 		recuperarConsultas: 'Dispatcher.do?proceso=107',

@@ -112,6 +112,8 @@ import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridic
 import { DatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component';
 import { ConsultarDatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component';
 import { MutualidadAbogaciaPlanUniversal } from './features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component';
+import { FacturacionSociedadesCensoComponent } from './features/censo/facturacionSociedadesCenso/facturacion-sociedades-censo.component';
+import { ComunicacionSociedadesComponent } from './features/censo/comunicacionSociedades/comunicacion-sociedades.component';
 
 // Modulo de administracion
 import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
@@ -395,6 +397,8 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 		DatosRetencionesComponent,
 		DetalleIntegranteComponent,
 		ServiciosInteresComponent,
+		FacturacionSociedadesCensoComponent,
+		ComunicacionSociedadesComponent,
 
 		//SJRS
 		DesignacionesComponent,
