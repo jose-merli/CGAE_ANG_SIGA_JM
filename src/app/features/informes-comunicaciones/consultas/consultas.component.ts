@@ -404,6 +404,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   duplicar(dato) {
+    this.progressSpinner = true;
     this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
         this.showSuccess(
@@ -419,9 +420,11 @@ export class ConsultasComponent implements OnInit {
           "filtrosConsulta",
           JSON.stringify(this.bodySearch)
         );
+        this.progressSpinner = false;
         this.router.navigate(["/fichaConsulta"]);
       },
       err => {
+        this.progressSpinner = false;
         this.showFail(
           this.translateService.instant(
             "informesycomunicaciones.consultas.errorDuplicado"

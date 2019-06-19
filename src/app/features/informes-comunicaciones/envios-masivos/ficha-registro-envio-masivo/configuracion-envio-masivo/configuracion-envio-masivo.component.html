@@ -97,8 +97,8 @@
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
         <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"
-          [disabled]="body.idEstado == 6"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          [disabled]="body.idEstado == 6 || editar"></button>
+        <button (click)="restablecer()" [disabled]="editar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="guardar()" [disabled]="isGuardarDisabled() || editar" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>

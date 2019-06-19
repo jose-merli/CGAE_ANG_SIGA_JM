@@ -262,15 +262,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             }
 
             if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")) {
-              if (this.authenticationService.getInstitucionSession() != "2000") {
-                if (this.authenticationService.getInstitucionSession() > "2001" && this.authenticationService.getInstitucionSession() < "2100") {
-                  this.addDestinatarioIndv = true;
-                } else {
-                  this.addDestinatarioIndv = false;
-                }
-              } else {
-                this.addDestinatarioIndv = false;
-              }
+              this.addDestinatarioIndv = true;
             } else {
               this.addDestinatarioIndv = false;
             }
@@ -291,15 +283,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             }
 
             if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")) {
-              if (this.authenticationService.getInstitucionSession() != "2000") {
-                if (this.authenticationService.getInstitucionSession() > "2001" && this.authenticationService.getInstitucionSession() < "2100") {
-                  this.addDestinatarioIndv = true;
-                } else {
-                  this.addDestinatarioIndv = false;
-                }
-              } else {
-                this.addDestinatarioIndv = false;
-              }
+              this.addDestinatarioIndv = true;
             } else {
               this.addDestinatarioIndv = false;
             }

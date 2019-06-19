@@ -339,6 +339,7 @@ import { DocumentosEnvioMasivoComponent } from './features/informes-comunicacion
 import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatarios-etiquetas-envio-masivo/destinatarios-etiquetas-envio-masivo.component'
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
+import { CommonsService } from './_services/commons.service';
 
 
 @NgModule({
@@ -702,6 +703,7 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 
 		OldSigaServices,
 		SigaServices,
+		CommonsService,
 		cardService,
 		HeaderGestionEntidadService,
 		MessageService,

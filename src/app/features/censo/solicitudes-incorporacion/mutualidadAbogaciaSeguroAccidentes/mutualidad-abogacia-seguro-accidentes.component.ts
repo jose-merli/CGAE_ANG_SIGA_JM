@@ -21,6 +21,7 @@ import { DatosSolicitudGratuitaObject } from "../../../../models/DatosSolicitudG
 import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
 import { DatosSolicitudMutualidadItem } from "../../../../models/DatosSolicitudMutualidadItem";
 import { DropdownModule, Dropdown } from "primeng/dropdown";
+import { CommonsService } from "../../../../_services/commons.service";
 
 @Component({
   selector: "app-mutualidad-abogacia-seguro-accidentes",
@@ -73,13 +74,18 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
   comboTiposIdentificacion: any;
   naturalDesc: any;
 
+  emailValido: boolean = true;
+  tlfValido: boolean = true;
+  mvlValido: boolean = true;
+
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private commonsService: CommonsService
   ) { }
 
   @ViewChild("poblacion") dropdown: Dropdown;
@@ -114,6 +120,14 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       this.body.correoElectronico = direccion.correoElectronico;
       this.body.idProvincia = direccion.idProvincia;
       this.getComboPoblacion(direccion.nombrePoblacion);
+    } else {
+      if (this.body.idPais != undefined && this.body.idPais != null) {
+        this.paisSelected = this.body.idPais;
+      }
+
+      if (this.body.idPoblacion != undefined && this.body.idPoblacion != null) {
+        this.poblacionSelected = this.body.idPoblacion;
+      }
     }
     // Buscamos en cen_solicitudMutualidad
     let mutualidadRequest = new DatosSolicitudMutualidadItem();
@@ -233,7 +247,9 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
       this.body.telefono != "" &&
       this.body.telefono != undefined &&
       this.body.correoElectronico != "" &&
-      this.body.correoElectronico != undefined
+      this.body.correoElectronico != undefined &&
+      this.tlfValido &&
+      this.emailValido && this.mvlValido
     ) {
       return true;
     } else {
@@ -644,4 +660,17 @@ para poder filtrar el dato con o sin estos caracteres*/
   backTo() {
     this.location.back();
   }
+
+  changeEmail() {
+    this.emailValido = this.commonsService.validateEmail(this.body.correoElectronico);
+  }
+
+  changeTelefono() {
+    this.tlfValido = this.commonsService.validateTelefono(this.body.telefono);
+  }
+
+  changeMovil() {
+    this.mvlValido = this.commonsService.validateMovil(this.body.movil);
+  }
+
 }
