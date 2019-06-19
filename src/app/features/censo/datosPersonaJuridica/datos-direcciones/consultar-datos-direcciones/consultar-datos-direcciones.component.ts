@@ -15,6 +15,7 @@ import { TranslateService } from "../../../../../commons/translate";
 import { Browser } from "../../../../../../../node_modules/protractor";
 import { Checkbox } from "../../../../../../../node_modules/primeng/primeng";
 import { findIndex } from 'rxjs/operators';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -96,6 +97,11 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   isColegiadoEjerciente: boolean = false;
   isNoColegiado: boolean = false;
   edicionEmail: boolean = false;
+  emailValido: boolean = true;
+  webValido: boolean = true;
+  tlfValido: boolean = true;
+  faxValido: boolean = true;
+  mvlValido: boolean = true;
 
   constructor(
     private location: Location,
@@ -103,7 +109,9 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
     public datepipe: DatePipe,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
+
   ) { }
 
   @ViewChild("input2")
@@ -1060,6 +1068,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.body.paginaWeb = this.datosContacto[4].valor;
       }
     }
+
+
   }
 
   guardarLetrado() {
@@ -1134,7 +1144,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       if (
         (this.codigoPostalValido || this.poblacionExtranjera) &&
         (this.body.idTipoDireccion != undefined || this.isLetrado) &&
-        !this.igualInicio()
+        !this.igualInicio() && this.emailValido && this.tlfValido && this.mvlValido
+        && this.faxValido && this.webValido
       ) {
         if (this.body.idTipoDireccion.length > 0) {
           if (this.body.poblacionExtranjera == undefined && this.body.poblacionExtranjera == null && this.poblacionExtranjera) {
@@ -1255,6 +1266,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
+
+    this.emailValido = true;
+    this.faxValido = true;
+    this.mvlValido = true;
+    this.tlfValido = true;
+    this.webValido = true;
+
     this.body.idPersona = this.usuarioBody[0].idPersona;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
     if (this.body.idPais != "191") {
@@ -1347,6 +1365,27 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
   }
+
+  changeEmail(value) {
+    this.emailValido = this.commonsService.validateEmail(value.valor);
+  }
+
+  changeWeb(value) {
+    this.webValido = this.commonsService.validateWeb(value.valor);
+  }
+
+  changeTelefono(value) {
+    this.tlfValido = this.commonsService.validateTelefono(value.valor);
+  }
+
+  changeMovil(value) {
+    this.mvlValido = this.commonsService.validateMovil(value.valor);
+  }
+
+  changeFax(value) {
+    this.faxValido = this.commonsService.validateFax(value.valor);
+  }
+
 
   editEmail() {
     if (this.edicionEmail)

@@ -23,6 +23,7 @@ import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorpor
 import { DatosSolicitudMutualidadItem } from "../../../../models/DatosSolicitudMutualidadItem";
 
 import { DropdownModule, Dropdown } from "primeng/dropdown";
+import { CommonsService } from "../../../../_services/commons.service";
 
 @Component({
   selector: "app-mutualidad-abogacia-plan-universal",
@@ -76,13 +77,18 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   comboTiposIdentificacion: any;
   naturalDesc: any;
 
+  emailValido: boolean = true;
+  tlfValido: boolean = true;
+  mvlValido: boolean = true;
+
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private commonsService: CommonsService
   ) { }
 
   @ViewChild("poblacion") dropdown: Dropdown;
@@ -117,7 +123,17 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
       this.body.correoElectronico = direccion.correoElectronico;
       this.body.idProvincia = direccion.idProvincia;
       this.getComboPoblacion(direccion.nombrePoblacion);
+    } else {
+
+      if (this.body.idPais != undefined && this.body.idPais != null) {
+        this.paisSelected = this.body.idPais;
+      }
+
+      if (this.body.idPoblacion != undefined && this.body.idPoblacion != null) {
+        this.poblacionSelected = this.body.idPoblacion;
+      }
     }
+
     if (sessionStorage.getItem("cuentas")) {
       let cuenta = JSON.parse(sessionStorage.getItem("cuentas"));
       this.body.titular = cuenta.titular;
@@ -263,7 +279,9 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
       this.body.cuentaBancaria != "" &&
       this.body.cuentaBancaria != undefined &&
       this.body.titular != "" &&
-      this.body.titular != undefined
+      this.body.titular != undefined &&
+      this.tlfValido &&
+      this.emailValido && this.mvlValido
     ) {
       return true;
     } else {
@@ -849,5 +867,17 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
   ngOnDestroy() {
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("cuentas");
+  }
+
+  changeEmail() {
+    this.emailValido = this.commonsService.validateEmail(this.body.correoElectronico);
+  }
+
+  changeTelefono() {
+    this.tlfValido = this.commonsService.validateTelefono(this.body.telefono);
+  }
+
+  changeMovil() {
+    this.mvlValido = this.commonsService.validateMovil(this.body.movil);
   }
 }

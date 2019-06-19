@@ -145,12 +145,45 @@
                       <!-- <span class="input-group"> -->
                       <!-- <input *ngIf="dato.tipo == 'Correo-Electrónico'" (click)="openOutlook(dato)" type="text" class="form-control" [(ngModel)]="dato[col.field]"
                           [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'" pInputText> -->
-                      <input *ngIf="dato.tipo != 'Correo-Electrónico'" type="text" class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud"
-                        [disabled]="historyDisable || permisoTarjeta == '2'" pInputText>
+
+                      <div *ngIf="dato.tipo == 'Telefono'">
+                        <input class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'"
+                          (input)="changeTelefono(dato)" pInputText>
+                        <div *ngIf="!tlfValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
+                      </div>
+
+                      <div *ngIf="dato.tipo == 'Fax'">
+                        <input class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'"
+                          (input)="changeFax(dato)" pInputText>
+                        <div *ngIf="!faxValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                        </div>
+                      </div>
+                      <div *ngIf="dato.tipo == 'Móvil'">
+                        <input class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'"
+                          (input)="changeMovil(dato)" pInputText>
+                        <div *ngIf="!mvlValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
+                        </div>
+                      </div>
+
+                      <div *ngIf="dato.tipo == 'Página Web'">
+                        <input type="text" class="form-control" [(ngModel)]="dato[col.field]" [maxLength]="dato.longitud" [disabled]="historyDisable || permisoTarjeta == '2'"
+                          (input)="changeWeb(dato)" pInputText>
+                        <div *ngIf="!webValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.paginaWeb' | translate}}</small>
+                        </div>
+                      </div>
+
                       <div *ngIf="dato.tipo == 'Correo-Electrónico'">
                         <div *ngIf="edicionEmail" class="ui-inputgroup">
-                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" />
+                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" />
                           <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>
+                        </div>
+                        <div *ngIf="!emailValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
                         </div>
                         <div *ngIf="!edicionEmail" class="ui-inputgroup">
                           <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
