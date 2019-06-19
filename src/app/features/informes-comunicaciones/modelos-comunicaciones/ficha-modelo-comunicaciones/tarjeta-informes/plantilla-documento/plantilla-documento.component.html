@@ -194,7 +194,7 @@
 
     <div *ngIf="showConsultas" class="card-body p-0 py-2">
       <p-steps [model]="steps" [readonly]="false" [(activeIndex)]="activeStep"></p-steps>
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
+      <p-table [value]="datos" [columns]="cols" dataKey="idConsulta" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}
             " paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onSelectConsulta($event,selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>

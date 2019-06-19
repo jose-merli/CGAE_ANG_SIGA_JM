@@ -134,6 +134,14 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
+      if (this.solicitudEditar.fechaIncorporacion != null)
+        if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
+          this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+        }
+      if (this.solicitudEditar.fechaEstado != null)
+        if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+          this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+        }
       this.checkSolicitudInicio = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
@@ -150,6 +158,15 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+
+        if (this.solicitudEditar.fechaIncorporacion != null)
+          if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
+            this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+          }
+        if (this.solicitudEditar.fechaEstado != null)
+          if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+            this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+          }
 
         if (sessionStorage.getItem("solicitudIncorporacion") == "true") {
           this.solicitudEditar.numColegiado = "";
@@ -194,6 +211,14 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("editedSolicitud")
         );
+        if (this.solicitudEditar.fechaIncorporacion != null)
+          if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
+            this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+          }
+        if (this.solicitudEditar.fechaEstado != null)
+          if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+            this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+          }
         this.tratarDatos();
       }
       this.estadoSolicitudSelected = "20";
