@@ -40,6 +40,9 @@ import { DatosDireccionesComponent } from "./features/censo/datosPersonaJuridica
 import { ConsultarDatosDireccionesComponent } from "./features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component";
 import { MutualidadAbogaciaPlanUniversal } from "./features/censo/solicitudes-incorporacion/mutualidadDeLaAbogaciaPlanUniversal/mutualidad-abogacia-plan-universal.component";
 import { BusquedaCensoGeneralComponent } from './features/censo/busqueda-censo-general/busqueda-censo-general.component';
+import { FacturacionSociedadesCensoComponent } from './features/censo/facturacionSociedadesCenso/facturacion-sociedades-censo.component';
+import { ComunicacionSociedadesComponent } from './features/censo/comunicacionSociedades/comunicacion-sociedades.component';
+
 
 //Certificados
 import { ComunicacionInterprofesionalComponent } from "./features/certificados/comunicacion-interprofesional/comunicacion-interprofesional.component";
@@ -550,6 +553,17 @@ const appRoutes: Routes = [
     component: FacturasComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "facturasSociedad",
+    component: FacturacionSociedadesCensoComponent,
+    canActivate: [AuthGuard]
+  },
+    {
+    path: "comunicacionesSociedades",
+    component: ComunicacionSociedadesComponent,
+    canActivate: [AuthGuard]
+  },
+  
   {
     path: "ficherosAdeudos",
     component: FicherosAdeudosComponent,

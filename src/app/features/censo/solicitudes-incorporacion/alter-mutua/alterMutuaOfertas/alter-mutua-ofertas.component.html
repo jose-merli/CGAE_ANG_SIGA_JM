@@ -194,23 +194,38 @@
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>{{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.telefono" pInputText>
+                        <input type="text" class="form-control" [(ngModel)]="asegurado.telefono" (input)="changeTelefono1()" pInputText>
+                        <div *ngIf="!tlf1Valido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>{{"censo.ws.literal.telefono" | translate}} 2</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.telefono2" pInputText>
+                        <input type="text" class="form-control" [(ngModel)]="asegurado.telefono2" (input)="changeTelefono2()" pInputText>
+                        <div *ngIf="!tlf2Valido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>{{"censo.datosDireccion.literal.telefonoMovil" | translate}} (*)</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.movil" pInputText>
+                        <input type="text" class="form-control" [(ngModel)]="asegurado.movil" (input)="changeMovil()" pInputText>
+                        <div *ngIf="!mvlValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
+                        </div>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>{{"censo.ws.literal.fax" | translate}}</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.fax" pInputText>
+                        <input type="text" class="form-control" [(ngModel)]="asegurado.fax" (input)="changeFax()" pInputText>
+                        <div *ngIf="!faxValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                        </div>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>{{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
-                        <input type="text" class="form-control" [(ngModel)]="asegurado.mail" pInputText>
+                        <input type="text" class="form-control" [(ngModel)]="asegurado.mail" (input)="changeEmail()" pInputText>
+                        <div *ngIf="!emailValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                        </div>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <br>

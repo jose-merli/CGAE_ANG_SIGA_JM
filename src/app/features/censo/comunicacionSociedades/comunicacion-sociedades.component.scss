@@ -1,0 +1,49 @@
+iframe {
+	margin: 0 auto;
+	border: none;
+}
+.mainFrameWrapper {
+	height: 86vh;
+	// height: 100%;
+	visibility: visible;
+	opacity: 100;
+	#mainWorkArea {
+		// min-height: 500px;
+		height: 100%;
+		width: 100%;
+		display: block;
+	}
+}
+.mainFrameWrapper2 {
+	height: 86vh;
+	// height: 100%;
+	visibility: collapse;
+	opacity: 0;
+	#mainWorkArea {
+		// min-height: 500px;
+		height: 100%;
+		width: 100%;
+		display: block;
+	}
+}
+.configButton  {
+	text-align:  right;
+	margin-top:  -2em;
+}
+@media screen and (max-width: 1200px) {
+	.mainFrameWrapper {
+		height: 81vh;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.mainFrameWrapper {
+		height: 81vh;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.mainFrameWrapper {
+		height: 81vh;
+	}
+}

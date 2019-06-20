@@ -23,6 +23,7 @@ import { isNumeric } from "rxjs/util/isNumeric";
 import { DropdownModule, Dropdown } from "primeng/dropdown";
 import { NoColegiadoItem } from "../../../../models/NoColegiadoItem";
 import { DatosColegiadosItem } from "../../../../models/DatosColegiadosItem";
+import { CommonsService } from "../../../../_services/commons.service";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -101,6 +102,13 @@ export class NuevaIncorporacionComponent implements OnInit {
   editar: boolean = false;
   isSave: boolean = true;
 
+  emailValido: boolean = true;
+  tlf1Valido: boolean = true;
+  tlf2Valido: boolean = true;
+  fax1Valido: boolean = true;
+  fax2Valido: boolean = true;
+  mvlValido: boolean = true;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -109,6 +117,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private location: Location,
     private formBuilder: FormBuilder,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -134,6 +143,14 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
+      if (this.solicitudEditar.fechaIncorporacion != null)
+        if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
+          this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+        }
+      if (this.solicitudEditar.fechaEstado != null)
+        if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+          this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+        }
       this.checkSolicitudInicio = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
@@ -150,6 +167,15 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+
+        if (this.solicitudEditar.fechaIncorporacion != null)
+          if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
+            this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+          }
+        if (this.solicitudEditar.fechaEstado != null)
+          if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+            this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+          }
 
         if (sessionStorage.getItem("solicitudIncorporacion") == "true") {
           this.solicitudEditar.numColegiado = "";
@@ -194,6 +220,14 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("editedSolicitud")
         );
+        if (this.solicitudEditar.fechaIncorporacion != null)
+          if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
+            this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
+          }
+        if (this.solicitudEditar.fechaEstado != null)
+          if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+            this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+          }
         this.tratarDatos();
       }
       this.estadoSolicitudSelected = "20";
@@ -1435,6 +1469,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.modalidadDocumentacionSelected != undefined &&
         this.solicitudEditar.correoElectronico != null &&
         this.solicitudEditar.correoElectronico != undefined &&
+        this.emailValido &&
         this.numColegiadoDisponible != false &&
         this.tipoIdentificacionSelected != "" &&
         this.tipoIdentificacionSelected != undefined &&
@@ -1456,6 +1491,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.solicitudEditar.codigoPostal != undefined &&
         this.solicitudEditar.telefono1 != null &&
         this.solicitudEditar.telefono1 != undefined &&
+        this.tlf1Valido && this.tlf2Valido && this.fax1Valido &&
+        this.fax2Valido && this.mvlValido &&
         this.solicitudEditar.correoElectronico != null &&
         this.solicitudEditar.correoElectronico != undefined
       ) {
@@ -1712,5 +1749,29 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.guardar(true);
       }
     }
+  }
+
+  changeEmail() {
+    this.emailValido = this.commonsService.validateEmail(this.solicitudEditar.correoElectronico);
+  }
+
+  changeTelefono1() {
+    this.tlf1Valido = this.commonsService.validateTelefono(this.solicitudEditar.telefono1);
+  }
+
+  changeTelefono2() {
+    this.tlf2Valido = this.commonsService.validateTelefono(this.solicitudEditar.telefono2);
+  }
+
+  changeMovil() {
+    this.mvlValido = this.commonsService.validateMovil(this.solicitudEditar.movil);
+  }
+
+  changeFax1() {
+    this.fax1Valido = this.commonsService.validateFax(this.solicitudEditar.fax1);
+  }
+
+  changeFax2() {
+    this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
   }
 }
