@@ -325,7 +325,47 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     let fileList: FileList = event.files;
     this.file = fileList[0];
 
-    this.addFile();
+    let longitudMaximaNombreFichero = 62;
+
+    if (this.file != null) {
+      let longitudMaximaNombreFichero = 60;
+      
+      if (this.file.name.length > longitudMaximaNombreFichero) {
+        this.confirmationService.confirm({
+          message: this.translateService.instant("mensaje.enviomasivo.adjunto.longitudnombre"),
+          icon: "fa fa-trash-alt",
+          accept: () => {
+            this.addFile();
+          },
+          reject: () => {
+            this.msgs = [
+              {
+                severity: "info",
+                summary: "info",
+                detail: this.translateService.instant(
+                  "general.message.accion.cancelada"
+                )
+              }
+            ];
+          }
+        });
+      } else {
+        this.addFile();
+      }
+      /*let longitudMaximaNombreFichero = 60;
+      if (this.file.name.length > longitudMaximaNombreFichero) {
+        let arrayany : any[];
+        arrayany[0]=longitudMaximaNombreFichero;
+
+        this.showFail(this.translateService.instantParam('messages.envioMasivo.longitudNombreFichero', arrayany));// 'Nombre del fichero demasiado largo. No puede exceder de ' + longitudMaximaNombreFichero + ' caracteres.');
+        
+      } else {
+        this.addFile();
+      }*/
+      
+    }
+
+    
   }
 
   navigateTo(dato) {
@@ -348,7 +388,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
       },
       err => {
-        if (err.error.error.code == 400) {
+        if (err.error != null && err.error.error != null && err.error.error.code == 400) {
           if (err.error.error.description != null) {
             this.showFail(err.error.error.description);
           } else {
