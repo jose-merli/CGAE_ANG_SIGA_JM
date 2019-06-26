@@ -1081,7 +1081,7 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.mvlValido = this.commonsService.validateMovil(this.asegurado.movil);
   }
 
-  changeFax1() {
+  changeFax() {
     this.faxValido = this.commonsService.validateFax(this.asegurado.fax);
   }
 }

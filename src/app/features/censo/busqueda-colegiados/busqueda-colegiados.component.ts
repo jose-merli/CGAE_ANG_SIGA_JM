@@ -154,6 +154,20 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       );
       sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
     }
+
+    if (sessionStorage.getItem("fechaNacimientoDesdeSelect") != null) {
+      this.fechaNacimientoDesdeSelect = new Date(
+        JSON.parse(sessionStorage.getItem("fechaNacimientoDesdeSelect"))
+      );
+      sessionStorage.removeItem("fechaNacimientoDesdeSelect");
+    }
+    if (sessionStorage.getItem("fechaNacimientoHastaSelect") != null) {
+      this.fechaNacimientoHastaSelect = new Date(
+        JSON.parse(sessionStorage.getItem("fechaNacimientoHastaSelect"))
+      );
+      sessionStorage.removeItem("fechaNacimientoHastaSelect");
+    }
+
     if (
       sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") != null
     ) {
@@ -211,6 +225,21 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         sessionStorage.setItem(
           "fechaIncorporacionHastaSelect",
           JSON.stringify(this.fechaIncorporacionHastaSelect)
+        );
+      }
+
+      if (this.fechaNacimientoDesdeSelect != null ||
+        this.fechaNacimientoDesdeSelect != undefined) {
+        sessionStorage.setItem(
+          "fechaNacimientoDesdeSelect",
+          JSON.stringify(this.fechaNacimientoDesdeSelect)
+        );
+      }
+      if (this.fechaNacimientoHastaSelect != null ||
+        this.fechaNacimientoHastaSelect != undefined) {
+        sessionStorage.setItem(
+          "fechaNacimientoHastaSelect",
+          JSON.stringify(this.fechaNacimientoHastaSelect)
         );
       }
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));

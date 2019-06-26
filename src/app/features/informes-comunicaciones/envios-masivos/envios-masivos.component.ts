@@ -202,6 +202,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   isSelectMultiple() {
+    this.estado = "";
     this.selectMultiple = !this.selectMultiple;
     if (!this.selectMultiple) {
       this.selectedDatos = [];
@@ -214,6 +215,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeSelectAll() {
+    this.estado = "";
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
@@ -221,6 +223,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
+    }
+    if (this.selectedDatos.length > 0) {
+      this.estado = this.selectedDatos[0].idEstado;
+      for (let i in this.selectedDatos) {
+        if (this.selectedDatos[i].idEstado == 2 || this.selectedDatos[i].idEstado == 3 || this.selectedDatos[i].idEstado == 6) {
+          this.estado = this.selectedDatos[i].idEstado;
+        }
+      }
     }
   }
 
@@ -436,8 +446,21 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  showButtons(datos) {
+    if (this.estado == "") {
+      this.estado = datos[0].idEstado;
+    } else {
+      this.estado = 1;
+      for (let i in datos) {
+        if (datos[i].idEstado == 2 || datos[i].idEstado == 3 || datos[i].idEstado == 6) {
+          this.estado = datos[i].idEstado;
+        }
+      }
+    }
+  }
+
   navigateTo(dato) {
-    this.estado = dato[0].idEstado;
+    this.showButtons(dato);
     console.log(dato);
     if (!this.selectMultiple && this.estado != 5) {
       // this.body.estado = dato[0].estado;
