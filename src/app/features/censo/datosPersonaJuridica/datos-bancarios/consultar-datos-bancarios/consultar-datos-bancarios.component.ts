@@ -994,7 +994,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.body.bic != null &&
       this.body.bic != undefined &&
       this.body.bic != "" &&
-      this.body.bic.length == 11 &&
+      (this.body.bic.length >= 8) &&
       this.body.bic.charAt(4) == ccountry.charAt(0) &&
       this.body.bic.charAt(5) == ccountry.charAt(1)
     ) {

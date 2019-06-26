@@ -85,7 +85,7 @@
                 <!-- (ngModelChange)="recuperarBicBanco()" -->
                 <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}} (*)</label>
                 <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar || !permisos || disabledAction"
-                  pInputText>
+                  [attr.maxlength]="11" [attr.minlength]="8" pInputText>
                 <div *ngIf="bicValido == false">
                   <label class="labelError">{{"BIC incorrecto"}}</label>
                 </div>

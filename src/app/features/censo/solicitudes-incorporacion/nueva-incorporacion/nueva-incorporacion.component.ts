@@ -864,7 +864,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar.bic != null &&
       this.solicitudEditar.bic != undefined &&
       this.solicitudEditar.bic != "" &&
-      this.solicitudEditar.bic.length == 11 &&
+      this.solicitudEditar.bic.length >= 8 &&
       this.solicitudEditar.bic.charAt(4) == ccountry.charAt(0) &&
       this.solicitudEditar.bic.charAt(5) == ccountry.charAt(1)
     ) {
