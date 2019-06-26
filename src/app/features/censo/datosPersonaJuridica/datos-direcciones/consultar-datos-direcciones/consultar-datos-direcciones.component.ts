@@ -719,17 +719,24 @@ para poder filtrar el dato con o sin estos caracteres*/
 
           //Si no se encuentra y se encontraba antes --> buscamos si se encuentra en otra direccion 
           if (idFindTipoDir == -1 && idFindTipoDirAntes != -1) {
+            let encontrado = false;
+
             this.datosDirecciones.forEach(dir => {
+              //Es en otra direccion
               if (dir.idDireccion != this.body.idDireccion) {
+                //Si se encuentra en otra direccion indicamos que se ha encontrado...
                 let tipoChange = dir.idTipoDireccion.find(tipoDir => tipoDir == tipoSelected);
 
                 if (tipoChange != undefined) {
-                  this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
+                  encontrado = true;
                 }
-              } else {
-                this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
               }
             });
+            //... si no se encuentra pues lo añadimos a tiposChangeUnSelected indicando que no se puede eliminar porque es obligatoria y 
+            //debe existir en otra dirección y no se puede eliminar
+            if (!encontrado) {
+              this.tiposChangeUnSelected.push(this.comboTipoDireccion.find(tipoDir => tipoDir.value == tipoSelected));
+            }
 
           }
 
