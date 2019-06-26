@@ -414,12 +414,12 @@
       <div class="row">
         <div class="form-group col-lg-6 col-md-6">
           <br>
-          <p-checkbox name="groupname" binary="true" [(disabled)]="!permisos" label="{{ 'censo.fichaCliente.bancos.mandatos.anexos.documentoFirmado' | translate}} (*)"
+          <p-checkbox name="groupname" binary="true" [(disabled)]="!permisos  || disabledFirma" label="{{ 'censo.fichaCliente.bancos.mandatos.anexos.documentoFirmado' | translate}} (*)"
             [(ngModel)]="checkFirma"></p-checkbox>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada" | translate}} (*)</label>
-          <app-fecha [(value)]="firmaFechaDate" [utc]="false" [disabled]="!permisos || disabledAction" (valueChangeSelected)="fillFechaFirmada($event)"
+          <app-fecha [(value)]="firmaFechaDate" [utc]="false" [disabled]="!permisos || disabledAction  || disabledFirma" (valueChangeSelected)="fillFechaFirmada($event)"
             (valueChangeInput)="detectFechaFirmadaInput($event)"></app-fecha>
 
           <!-- <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [(disabled)]="!permisos || disabledAction"
@@ -429,7 +429,7 @@
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.lugarFirma" | translate}} (*)</label>
-          <input type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction" class="form-control" pInputText>
+          <input type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control" pInputText>
         </div>
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>

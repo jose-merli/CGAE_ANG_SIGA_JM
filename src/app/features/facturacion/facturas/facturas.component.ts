@@ -10,7 +10,7 @@ export class FacturasComponent implements OnInit {
 	url;
 
 	constructor(public sigaServices: OldSigaServices) {
-		this.url = sigaServices.getOldSigaUrl('facturasSociedad');
+		this.url = sigaServices.getOldSigaUrl('facturas');
 	}
 
 	ngOnInit() {}

@@ -484,7 +484,7 @@ export class ConsultasComponent implements OnInit {
         } else {
           this.showSuccess(
             this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctConsultaEliminado"
             )
           );
         }

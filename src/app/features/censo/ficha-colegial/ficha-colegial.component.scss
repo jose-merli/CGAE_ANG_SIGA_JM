@@ -59,13 +59,7 @@ iframe {
   margin: 0 auto;
   border: none;
 }
-.positionUpload {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 0;
-  padding: 0;
-}
+
 .mainFrameWrapper {
   height: 86vh;
   // height: 100%;
@@ -102,3 +96,16 @@ iframe {
 span .ui-autocomplete-token-icon {
   margin-right: 4px;
 }
+
+.positionUpload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+}
+
+div .card{
+  display: block !important;
+}
+_:-ms-fullscreen, :root .ie11up div.card { display: block !important; }

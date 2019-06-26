@@ -125,7 +125,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   displayAuditoria: boolean = false;
   showGuardarAuditoria: boolean = false;
   disabledAction: boolean = false;
-
+  disabledFirma: boolean = false;
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
   showComunicar: boolean = false;
@@ -1814,7 +1814,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     let dato = selectedDatos;
 
     this.displayFirmar = true;
-
+    this.disabledFirma = false;
     this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
     this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
     // if(dato.idAnexo != undefined)
@@ -1825,6 +1825,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
     if (dato.firmaLugar != null) {
       this.firmaLugar = dato.firmaLugar;
+      this.disabledFirma = true;
     } else {
       this.firmaLugar = null;
     }
