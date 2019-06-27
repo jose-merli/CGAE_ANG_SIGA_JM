@@ -86,23 +86,23 @@
         </div>
     </div>
 </div>
-<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="625">
+<p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="850">
 
     <p-header>
         <label>Valores</label>
     </p-header>
     <div *ngIf="valores">
         <div class="form-row" *ngFor="let dato of valores">
-            <div class="form-group col-lg-5 col-md-5">
+            <div class="form-group col-lg-4 col-md-4">
                 <input [disabled]="true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
             </div>
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-2 col-md-2">
                 <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" placeholder="{{'general.boton.seleccionar' | translate}}"
                     [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
                 <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" placeholder="{{'general.boton.seleccionar' | translate}}"
                     class="select-form"></p-dropdown>
             </div>
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-6 col-md-6">
                 <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
                 <app-fecha  *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="dato.valor" [utc]="true" (valueChangeSelected)="fillFecha($event,dato)"
                     (valueChangeInput)="fillFecha($event, dato)"></app-fecha>
