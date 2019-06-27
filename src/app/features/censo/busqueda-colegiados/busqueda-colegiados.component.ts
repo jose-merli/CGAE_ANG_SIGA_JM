@@ -397,26 +397,23 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
               sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
               null
             ) {
-              if (this.institucionActual > "2000" && this.institucionActual < "2100") {
-                this.body.colegio.forEach(element => {
+              this.body.colegio.forEach(element => {
 
-                  this.getInstitucion();
-                  let labelColegio = this.comboColegios.find(
-                    item => item.value === element
-                  ).label;
+                this.getInstitucion();
+                let labelColegio = this.comboColegios.find(
+                  item => item.value === element
+                ).label;
 
-                  this.colegiosSeleccionados.push({
-                    label: labelColegio,
-                    value: element
-                  });
-
-                  this.progressSpinner = false;
+                this.colegiosSeleccionados.push({
+                  label: labelColegio,
+                  value: element
                 });
-                this.isBuscar();
-                sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
-              } else {
+
                 this.progressSpinner = false;
-              }
+              });
+              this.isBuscar();
+              sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
+
             }
             else {
               if (this.institucionActual > "2000" && this.institucionActual < "2100") {
@@ -669,6 +666,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaIncorporacionHastaSelect = undefined;
     this.fechaNacimientoDesdeSelect = undefined;
     this.fechaNacimientoHastaSelect = undefined;
+    this.colegiosSeleccionados = [];
   }
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
