@@ -261,7 +261,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }
             }
 
-            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")) {
+            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")
+              || sessionStorage.getItem("nuevoNoColegiadoGen")) {
               this.addDestinatarioIndv = true;
             } else {
               this.addDestinatarioIndv = false;
@@ -282,7 +283,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }
             }
 
-            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")) {
+            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")
+              || sessionStorage.getItem("nuevoNoColegiadoGen")) {
               this.addDestinatarioIndv = true;
             } else {
               this.addDestinatarioIndv = false;
@@ -385,7 +387,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.cols = this.colsFisicas;
 
       if (sessionStorage.getItem("AddDestinatarioIndv") == undefined &&
-        sessionStorage.getItem("abrirRemitente") == undefined) {
+        sessionStorage.getItem("abrirRemitente") == undefined && sessionStorage.getItem("nuevoNoColegiadoGen") == undefined) {
         this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
 
@@ -402,7 +404,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
     } else {
       this.cols = this.colsJuridicas;
 
-      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
+      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined
+        && sessionStorage.getItem("nuevoNoColegiadoGen") == undefined) {
         this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
 
@@ -545,7 +548,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
           this.bodyFisica.numeroColegiado = "";
         }
         this.checkTypeCIF(this.bodyFisica.nif);
-        this.bodyFisica.addDestinatarioIndv = this.addDestinatarioIndv;
+
+        if (sessionStorage.getItem("nuevoNoColegiadoGen")) {
+          this.bodyFisica.addDestinatarioIndv = false;
+        } else {
+          this.bodyFisica.addDestinatarioIndv = this.addDestinatarioIndv;
+        }
+
         this.sigaServices
           .postPaginado(
             "busquedaPer_searchFisica",

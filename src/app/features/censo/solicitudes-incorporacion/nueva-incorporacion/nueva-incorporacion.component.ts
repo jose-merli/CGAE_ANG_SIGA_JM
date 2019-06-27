@@ -147,10 +147,10 @@ export class NuevaIncorporacionComponent implements OnInit {
         if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
           this.solicitudEditar.fechaIncorporacion = new Date(this.solicitudEditar.fechaIncorporacion);
         }
-      if (this.solicitudEditar.fechaEstado != null)
-        if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
-          this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
-        }
+      // if (this.solicitudEditar.fechaEstado != null)
+      // if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
+      //   this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
+      // }
       this.checkSolicitudInicio = JSON.parse(
         sessionStorage.getItem("editedSolicitud")
       );
@@ -421,16 +421,28 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     }
 
-    this.solicitudEditar.fechaSolicitud = new Date(
-      this.solicitudEditar.fechaSolicitud
-    );
+    if (this.solicitudEditar.fechaSolicitud != undefined &&
+      this.solicitudEditar.fechaSolicitud != null) {
+      this.solicitudEditar.fechaSolicitud = new Date(
+        this.solicitudEditar.fechaSolicitud
+      );
+    }
 
-    this.solicitudEditar.fechaEstado = new Date(
-      this.solicitudEditar.fechaEstado
-    );
-    this.solicitudEditar.fechaNacimiento = new Date(
-      this.solicitudEditar.fechaNacimiento
-    );
+    if (this.solicitudEditar.fechaEstado != undefined &&
+      this.solicitudEditar.fechaEstado != null) {
+      this.solicitudEditar.fechaEstado = new Date(
+        this.solicitudEditar.fechaEstado
+      );
+
+      this.solicitudEditar.fechaEstadoSolicitud = this.solicitudEditar.fechaEstado;
+    }
+
+    if (this.solicitudEditar.fechaNacimiento != undefined &&
+      this.solicitudEditar.fechaNacimiento != null) {
+      this.solicitudEditar.fechaNacimiento = new Date(
+        this.solicitudEditar.fechaNacimiento
+      );
+    }
 
     this.sigaServices
       .getParam(
@@ -503,7 +515,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.ibanValido = true;
         return true;
       } else {
-        this.ibanValido = false;
+        this.ibanValido = true;
         return false;
       }
     } else {
@@ -605,7 +617,7 @@ export class NuevaIncorporacionComponent implements OnInit {
             this.solicitudEditar.banco = "";
             this.solicitudEditar.bic = "";
 
-            this.ibanValido = false;
+            this.ibanValido = true;
           }
         } else {
           this.checkIbanExt(ccountry);

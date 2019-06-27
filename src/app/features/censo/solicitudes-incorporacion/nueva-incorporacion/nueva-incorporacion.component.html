@@ -37,10 +37,10 @@
                             <span>{{solicitudEditar.estadoSolicitud}}</span>
                         </label>
                         <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }}
-                            <span>{{solicitudEditar.fechaEstado | date: 'dd/MM/yyyy'}}</span>
+                            <span>{{solicitudEditar.fechaEstadoSolicitud | date: 'dd/MM/yyyy'}}</span>
                         </label>
                         <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }}
-                            <span>{{solicitudEditar.fechaEstadoSolicitud | date: 'dd/MM/yyyy'}}</span>
+                            <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
                         </label>
                         <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
                     </div>
@@ -461,9 +461,14 @@
                         </label>
                         <label>
                             {{"facturacion.cuentasBancarias.uso" | translate}}
-                            <span *ngIf="solicitudEditar.abonoCargo =='C'">Cargo</span>
-                            <span *ngIf="solicitudEditar.abonoCargo =='A'">Abono</span>
-                            <span *ngIf="solicitudEditar.abonoCargo =='T'">Todas</span>
+                            <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='C'">Cargo</span>
+                            <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='A'">Abono</span>
+                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='T'">Todas</span>
+                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo !='T'
+                            && solicitudEditar.abonoCargo !='C' && solicitudEditar.abonoCargo !='A'">Cuenta SJCS</span>
+                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='C'">Cargo, Cuenta SJCS</span>
+                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='A'">Abono, Cuenta SJCS</span>
+                            <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='T'">Cargo, Abono</span>
                         </label>
                         <i *ngIf="!fichaDireccion" class="fa fa-angle-down float-right"></i>
                     </div>
