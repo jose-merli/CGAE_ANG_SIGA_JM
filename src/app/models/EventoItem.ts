@@ -24,7 +24,7 @@ export class EventoItem {
 
   idRepeticionEvento: String;
   valoresRepeticion: number[];
-  valoresRepeticionString: String;
+  valoresRepeticionString: string;
   tipoDiasRepeticion: String;
   tipoRepeticion: String;
   fechaInicioRepeticion: Date;
@@ -37,6 +37,7 @@ export class EventoItem {
   fechaHoraFin: string;
 
   formadores: string;
+  idEventoOriginal: string;
 
   constructor() { }
 }

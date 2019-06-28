@@ -55,6 +55,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   filaEditable: boolean = false;
   progressSpinner2: boolean = false;
 
+  tipoInscripcionEvento: boolean = false;
+
   es: any = esCalendar;
 
   @ViewChild("tableAsistencia")
@@ -224,6 +226,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       //Se genera el combo tipo de Calendario,
       //Si el evento pertenece al calendario formacion
       if (this.newEvent.idTipoCalendario == this.valorTipoFormacion) {
+
+        if (this.newEvent.idTipoEvento == this.valorTipoEventoInicioInscripcion ||
+          this.newEvent.idTipoEvento == this.valorTipoEventoFinInscripcion) {
+          this.tipoInscripcionEvento = true;
+        } else {
+          this.tipoInscripcionEvento = false;
+        }
+
         this.getComboCalendar();
         this.limitTimeEvent();
         this.idCurso = this.newEvent.idCurso;
@@ -244,7 +254,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.getTrainers();
         this.getTrainersSession();
         this.getEntryListCourse();
-
+        this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
         //si no pertenece al calendario de formacion se genera el combo con solo laboral-general
       } else if (this.newEvent.idTipoCalendario == this.valorTipoGeneral) {
         this.getComboCalendarLaboralGeneral();
@@ -261,6 +271,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.newEvent.fechaFinRepeticion
           );
         }
+        this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
       } else {
         this.getComboCalendarLaboralGeneral();
       }
@@ -277,7 +288,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.getEventNotifications();
       this.checkIsEventoCumplidoOrCancelado();
       this.progressSpinner2 = false;
-
       //2. En caso de venir de agenda pero en modo creación
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
       this.modoEdicionEventoByAgenda = false;
@@ -517,7 +527,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       //Obtenemos el evento que recibimos de la pantalla calendario
       this.newEvent = JSON.parse(sessionStorage.getItem("eventoSelected"));
-
+      this.newEvent.valoresRepeticion = JSON.parse(this.newEvent.valoresRepeticionString);
       this.idCalendario = this.newEvent.idCalendario;
 
       this.modoEdicionEvento = true;
@@ -525,6 +535,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       this.newEvent.start = new Date(this.newEvent.start);
       this.newEvent.end = new Date(this.newEvent.end);
+
+      if (this.newEvent.fechaInicioRepeticion != null) {
+        this.newEvent.fechaInicioRepeticion = new Date(
+          this.newEvent.fechaInicioRepeticion
+        );
+      }
+
+      if (this.newEvent.fechaFinRepeticion != null) {
+        this.newEvent.fechaFinRepeticion = new Date(
+          this.newEvent.fechaFinRepeticion
+        );
+      }
 
       //Se comprueba el tipo de acceso que tiene el evento
       this.checkAcceso();
@@ -544,19 +566,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idTipoCalendario == this.valorTipoFormacion) {
         this.getComboCalendar();
         this.limitTimeEvent();
-
-        if (this.newEvent.fechaInicioRepeticion != null) {
-          this.newEvent.fechaInicioRepeticion = new Date(
-            this.newEvent.fechaInicioRepeticion
-          );
-        }
-
-        if (this.newEvent.fechaFinRepeticion != null) {
-          this.newEvent.fechaFinRepeticion = new Date(
-            this.newEvent.fechaFinRepeticion
-          );
-        }
       }
+
       this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
       this.idCurso = this.newEvent.idCurso;
       this.getEntryListCourse();
@@ -849,34 +860,20 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     ) {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
-        this.callSaveEvent(url);
+        if (this.newEvent.idEventoOriginal != null && this.newEvent.idEventoOriginal != undefined) {
+          let dateStart = new Date(this.newEvent.start);
+          let utcStart = new Date(dateStart.getUTCFullYear(), dateStart.getUTCMonth(), dateStart.getUTCDate(), dateStart.getUTCHours(), dateStart.getUTCMinutes(), dateStart.getUTCSeconds());
+          let dateEnd = new Date(this.newEvent.end);
+          let utcEnd = new Date(dateEnd.getUTCFullYear(), dateEnd.getUTCMonth(), dateEnd.getUTCDate(), dateEnd.getUTCHours(), dateEnd.getUTCMinutes(), dateEnd.getUTCSeconds());
 
-        // if (this.newEvent.idEstadoEvento == this.valorEstadoEventoPlanificado) {
-        //   let mess = "¿Desea enviar un aviso del cambio realizado?";
-
-        //   let icon = "fa fa-edit";
-        //   this.confirmationService.confirm({
-        //     message: mess,
-        //     icon: icon,
-        //     accept: () => {
-        //       this.callSaveEvent(url);
-        //     },
-        //     reject: () => {
-        //       this.msgs = [
-        //         {
-        //           severity: "info",
-        //           summary: this.translateService.instant(
-        //             "general.message.cancelado"
-        //           ),
-        //           detail: "Aviso cancelado"
-        //         }
-        //       ];
-        //       this.callSaveEvent(url);
-        //     }
-        //   });
-        // }else{
-        //   this.callSaveEvent(url);
-        // }
+          if (this.newEvent.start.toString() != dateStart.toString() || this.newEvent.end.toString() != dateEnd.toString()) {
+            this.checkRepeatedEvents(url);
+          } else {
+            this.callSaveEvent(url);
+          }
+        } else {
+          this.callSaveEvent(url);
+        }
       } else {
         url = "fichaEventos_saveEventCalendar";
         this.callSaveEvent(url);
@@ -890,7 +887,83 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     }
   }
 
-  callSaveEvent(url) {
+
+  checkRepeatedEvents(url) {
+
+    this.sigaServices
+      .getParam(
+        "fichaEventos_getRepeteadEvents",
+        "?idEvento=" + this.newEvent.idEvento
+      ).subscribe(
+        res => {
+          if (res.eventos.length != 0) {
+            this.progressSpinner = false;
+            this.callServiceConfirmation(url);
+          } else {
+            this.callSaveEvent(url);
+          }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+
+        }
+      );
+  }
+
+  callServiceConfirmation(url) {
+    let mess = this.translateService.instant("message.confirmacion.eventos.datosRepeticion");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.callSaveEvent(url);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  callServiceConfirmationModifyEvent(url) {
+    this.progressSpinner = false;
+    let mess = this.translateService.instant("message.confirmacion.eventos.datosRepeticion");
+    let icon = "fa fa-edit";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.callEventSaveService(url);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+
+        this.progressSpinner = false;
+      }
+    });
+  }
+
+  callEventSaveService(url) {
+    this.progressSpinner = true;
     this.sigaServices.post(url, this.newEvent).subscribe(
       data => {
         this.progressSpinner = false;
@@ -960,6 +1033,71 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.progressSpinner = false;
       }
     );
+  }
+
+  callSaveEvent(url) {
+
+    if (this.checkFechasInscripcion()) {
+
+      if (this.initEvent.fechaInicioRepeticion != null && this.initEvent.fechaInicioRepeticion != undefined) {
+        this.initEvent.fechaInicioRepeticion = this.transformaFecha(this.initEvent.fechaInicioRepeticion);
+      }
+
+      if (this.initEvent.fechaFinRepeticion != null && this.initEvent.fechaFinRepeticion != undefined) {
+        this.initEvent.fechaFinRepeticion = this.transformaFecha(this.initEvent.fechaFinRepeticion);
+      }
+
+      if (((this.initEvent.fechaInicioRepeticion != null && this.initEvent.fechaInicioRepeticion != undefined && this.newEvent.fechaFinRepeticion.getDate() != this.initEvent.fechaFinRepeticion.getDate())
+        || (this.initEvent.fechaFinRepeticion != null && this.initEvent.fechaFinRepeticion != undefined && this.newEvent.fechaInicioRepeticion.getDate() != this.initEvent.fechaInicioRepeticion.getDate())
+        || JSON.stringify(this.newEvent.valoresRepeticion) != JSON.stringify(this.initEvent.valoresRepeticion)
+        || JSON.stringify(this.newEvent.tipoDiasRepeticion) != JSON.stringify(this.initEvent.tipoDiasRepeticion)
+        || this.newEvent.tipoRepeticion != this.initEvent.tipoRepeticion) && this.newEvent.idRepeticionEvento != null && this.newEvent.idRepeticionEvento != undefined) {
+        this.callServiceConfirmationModifyEvent(url);
+      } else {
+        this.callEventSaveService(url);
+      }
+
+    } else {
+      this.progressSpinner = false;
+    }
+
+
+  }
+
+  checkFechasInscripcion() {
+
+    if (sessionStorage.getItem("isFormacionCalendarByStartInscripcion")) {
+      if (this.curso.fechaInscripcionHastaDate != null &&
+        this.curso.fechaInscripcionHastaDate != undefined) {
+        let date = new Date(this.curso.fechaInscripcionHastaDate);
+        let utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+
+        if (utc >= this.newEvent.start) {
+          return true;
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("message.error.fechaInscripcionInicio"));
+          return false;
+        }
+      }
+
+    } else if (sessionStorage.getItem("isFormacionCalendarByEndInscripcion")) {
+
+      if (this.curso.fechaInscripcionDesdeDate != null &&
+        this.curso.fechaInscripcionDesdeDate != undefined) {
+        let date = new Date(this.curso.fechaInscripcionDesdeDate);
+        let utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+
+        if (utc <= this.newEvent.start) {
+          return true;
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("message.error.fechaInscripcionFin"));
+          return false;
+        }
+      }
+
+    } else {
+      return true;
+    }
   }
 
   saveCourse() {
@@ -1034,7 +1172,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       );
     }
 
-    if (this.newEvent.end < this.newEvent.start) {
+    if (!(this.newEvent.end.getDay() == this.newEvent.start.getDay() && this.newEvent.end.getMonth() == this.newEvent.start.getMonth() &&
+      this.newEvent.end.getFullYear() == this.newEvent.start.getFullYear()) || this.newEvent.end < this.newEvent.start) {
       this.newEvent.end = new Date(
         JSON.parse(JSON.stringify(this.newEvent.start))
       );
@@ -1291,6 +1430,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   isCheckTipoRepeticion() {
+    this.newEvent.valoresRepeticion = [];
     if (this.newEvent.tipoRepeticion != null) {
       this.checkTipoRepeticion = true;
     } else {
@@ -2602,4 +2742,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
+  }
+
 }

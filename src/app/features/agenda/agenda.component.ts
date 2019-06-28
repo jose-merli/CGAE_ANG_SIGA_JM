@@ -203,6 +203,8 @@ export class AgendaComponent implements OnInit {
     evento.tipoCalendario = event.calEvent.tipoCalendario;
     evento.tipoEvento = event.calEvent.tipoEvento;
     evento.fechaInicioString = event.calEvent.fechaInicioString;
+    evento.idEventoOriginal = event.calEvent.idEventoOriginal;
+    evento.idRepeticionEvento = event.calEvent.idRepeticionEvento;
 
     if (event.calEvent.realEnd) {
       evento.end = event.calEvent.realEnd;

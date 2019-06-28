@@ -5,7 +5,11 @@ import {
   OnInit,
   ViewChild,
   ViewEncapsulation,
-  Input
+  Input,
+  AfterContentInit,
+  AfterContentChecked,
+  AfterViewInit,
+  AfterViewChecked
 } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
@@ -44,6 +48,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
   encapsulation: ViewEncapsulation.None
 })
 export class FichaCursoComponent implements OnInit {
+
   openFicha;
   fichasPosibles;
   msgs;
@@ -320,8 +325,6 @@ export class FichaCursoComponent implements OnInit {
         if (this.curso.idEventoInicioInscripcion == "undefined") {
           this.curso.fechaInscripcionDesdeDate = null;
         }
-        this.progressSpinner2 = false;
-
       }
 
       if (!this.modoEdicion) {
@@ -362,7 +365,7 @@ export class FichaCursoComponent implements OnInit {
         if (this.curso.idEventoFinInscripcion == "undefined") {
           this.curso.fechaInscripcionHastaDate = null;
         }
-        this.progressSpinner2 = false;
+        // this.progressSpinner2 = false;
 
       }
 
@@ -478,13 +481,12 @@ export class FichaCursoComponent implements OnInit {
 
       // this.resultsService = this.curso.tipoServicios;
       this.resultsTopics = this.curso.temasCombo;
+      this.progressSpinner2 = false;
 
       sessionStorage.removeItem("duplicarCurso");
-      this.progressSpinner2 = false;
 
       //6. Modo nuevo
     } else {
-      this.progressSpinner2 = false;
       this.modoEdicion = false;
       this.curso = new DatosCursosItem();
       //Obligamos a que sea el curso nuevo privado
@@ -492,6 +494,7 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEstado = this.valorEstadoAbierto;
       let colegio = 1;
       this.onChangeSelectVisibilidadObligate(colegio);
+      this.progressSpinner2 = false;
 
     }
 
@@ -599,7 +602,6 @@ export class FichaCursoComponent implements OnInit {
     }
 
     this.progressSpinner = false;
-
   }
 
   getCombosDatosGenerales() {
@@ -637,6 +639,8 @@ export class FichaCursoComponent implements OnInit {
       let fecha = this.curso.fechaInscripcionHastaDate;
       this.curso.fechaInscripcionHastaDate = new Date(fecha);
     }
+    this.progressSpinner2 = false;
+
   }
 
   getComboVisibilidad() {
@@ -1543,6 +1547,7 @@ export class FichaCursoComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {
+          this.progressSpinner2 = false;
           this.progressSpinner = false;
         }
       );
@@ -2340,6 +2345,11 @@ export class FichaCursoComponent implements OnInit {
     let session = this.selectedDatosSessions[0];
     session.idEvento = null;
     session.idCurso = this.curso.idCurso;
+
+    if (session.idRepeticionEvento != null && session.idRepeticionEvento != undefined) {
+      session.valoresRepeticion = JSON.parse(session.valoresRepeticionString);
+
+    }
 
     this.sigaServices
       .post("fichaCursos_duplicateSessionsCourse", session)
