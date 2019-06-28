@@ -3712,8 +3712,6 @@ export class FichaColegialComponent implements OnInit {
       )
       .subscribe(
         data => {
-          console.log(data);
-
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
           // this.table.reset();

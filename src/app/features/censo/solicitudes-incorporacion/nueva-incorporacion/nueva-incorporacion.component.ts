@@ -444,19 +444,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       );
     }
 
-    this.sigaServices
-      .getParam(
-        "direcciones_comboPoblacion",
-        "?idProvincia=" + this.solicitudEditar.idProvincia
-      )
-      .subscribe(
-        result => {
-          this.poblaciones = result.combooItems;
-        },
-        error => {
-          console.log(error);
-        }
-      );
     this.estadoSolicitudSelected = this.solicitudEditar.idEstado;
     this.tipoSolicitudSelected = this.solicitudEditar.idTipo;
     this.tipoColegiacionSelected = this.solicitudEditar.idTipoColegiacion;
@@ -468,6 +455,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.provinciaSelected = this.solicitudEditar.idProvincia;
     this.poblacionSelected = this.solicitudEditar.idPoblacion;
     this.sexoSelected = this.solicitudEditar.sexo;
+
   }
 
 
