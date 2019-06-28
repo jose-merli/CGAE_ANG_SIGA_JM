@@ -7,5 +7,6 @@ export class DialogoComunicacionesItem {
   fechaProgramacion: Date;
   idPlantillaEnvios: String;
   modelos: any [];
+  comunicar: Boolean;
   constructor() { }
 }

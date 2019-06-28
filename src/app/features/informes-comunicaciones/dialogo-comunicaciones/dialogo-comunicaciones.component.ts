@@ -226,6 +226,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.comunicar = false;
 		}
 
+		this.bodyComunicacion.comunicar = this.comunicar;
+
 		if (this.comunicar && !this.comprobarPlantillas()) {
 			this.showFail('Se ha de seleccionar al menos una plantilla de envio por modelo');
 		} else {
@@ -316,6 +318,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				selectedDatos: this.datosSeleccionados,
 				idInstitucion: this.idInstitucion,
 				consultas: this.listaConsultas,
+				comunicar: this.comunicar,
 				ruta: this.rutaComunicacion,
 				fechaProgramada: this.bodyComunicacion.fechaProgramacion
 			};
@@ -438,6 +441,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			selectedDatos: this.datosSeleccionados,
 			idInstitucion: this.idInstitucion,
 			consultas: this.listaConsultas,
+			comunicar: this.comunicar,
 			ruta: this.rutaComunicacion
 		};
 
