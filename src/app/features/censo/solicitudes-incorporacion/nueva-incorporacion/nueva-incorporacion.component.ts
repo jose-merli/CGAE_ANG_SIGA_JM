@@ -914,6 +914,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.titular != null &&
         this.solicitudEditar.titular != undefined &&
         this.solicitudEditar.titular != "" &&
+        this.solicitudEditar.titular.trim() &&
         this.solicitudEditar.iban != null &&
         this.solicitudEditar.iban != undefined &&
         this.solicitudEditar.iban != "" &&
@@ -1454,7 +1455,9 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.solicitudEditar.iban == "" ||
           this.solicitudEditar.iban == undefined &&
           this.solicitudEditar.bic == "" ||
-          this.solicitudEditar.bic == undefined) &&
+          this.solicitudEditar.bic == undefined &&
+          this.solicitudEditar.titular == "" ||
+          this.solicitudEditar.titular == undefined && this.solicitudEditar.titular.trim() != "") &&
         this.estadoSolicitudSelected != "" &&
         this.estadoSolicitudSelected != undefined &&
         this.solicitudEditar.fechaEstado != null &&

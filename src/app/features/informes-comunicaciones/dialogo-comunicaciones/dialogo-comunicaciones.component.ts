@@ -452,7 +452,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 				data => {
 					if (data["body"] != "") {
 						let fileInfo = JSON.parse(data["body"]);
-						filename = fileInfo.name;
+						if (fileInfo.name != "ResultadoConsulta.xlsx") {
+							filename = fileInfo.name;
+						} else {
+							if (sessionStorage.getItem('nombreConsulta') != undefined) {
+								filename = sessionStorage.getItem('nombreConsulta');
+								filename += ".xlsx"
+							} else {
+								filename = fileInfo.name;
+							}
+						}
 
 
 						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
