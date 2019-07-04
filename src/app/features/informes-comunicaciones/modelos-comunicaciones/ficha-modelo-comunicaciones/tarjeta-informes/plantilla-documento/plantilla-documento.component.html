@@ -52,7 +52,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <p-table [value]="documentos" [columns]="colsDocumentos" [(selection)]="selectedDocs" [responsive]="true" #tableDocs class="tabla-listado"
-                dataKey="nombreDocumento" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleDocs}"
+                dataKey="idioma" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleDocs}"
                 paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onRowSelect()">
                 <ng-template pTemplate="colgroup" let-columns>
                   <colgroup>

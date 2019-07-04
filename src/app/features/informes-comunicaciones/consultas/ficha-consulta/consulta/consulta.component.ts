@@ -61,7 +61,9 @@ export class ConsultaComponent implements OnInit {
     private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-
+    if (sessionStorage.getItem('nombreConsulta') != undefined) {
+      sessionStorage.removeItem('nombreConsulta');
+    }
     this.currentRoute = this.router.url;
     this.sigaServices.consultasRefresh$.subscribe(() => {
       this.getDatos();
@@ -465,9 +467,14 @@ export class ConsultaComponent implements OnInit {
   }
 
   getDatosComunicar() {
+    let bodynombre;
+    if (sessionStorage.getItem("consultasSearch") != null) {
+      bodynombre = JSON.parse(sessionStorage.getItem("consultasSearch"));
+    }
     let rutaClaseComunicacion = this.currentRoute.toString();
     sessionStorage.removeItem('datosComunicar');
     sessionStorage.setItem('idConsulta', this.body.idConsulta);
+    sessionStorage.setItem('nombreConsulta', bodynombre.nombre);
     this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
       data => {
         this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
