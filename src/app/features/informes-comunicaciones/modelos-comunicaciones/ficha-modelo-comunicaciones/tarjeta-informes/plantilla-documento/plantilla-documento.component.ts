@@ -210,12 +210,14 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isSelectMultipleDocs() {
-    this.selectMultipleDocs = !this.selectMultipleDocs;
-    if (!this.selectMultipleDocs) {
-      this.selectedDocs = [];
-    } else {
-      this.selectAll = false;
-      this.selectedDocs = [];
+    if (!this.esPorDefecto) {
+      this.selectMultipleDocs = !this.selectMultipleDocs;
+      if (!this.selectMultipleDocs) {
+        this.selectedDocs = [];
+      } else {
+        this.selectAll = false;
+        this.selectedDocs = [];
+      }
     }
   }
 
