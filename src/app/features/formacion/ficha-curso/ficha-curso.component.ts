@@ -248,6 +248,7 @@ export class FichaCursoComponent implements OnInit {
   apiKey: string = "";
   progressSpinner2;
   isCursoFinalizado: boolean = false;
+  historico: boolean = false;
 
   editorConfig: any = {
     selector: 'textarea',
@@ -2948,8 +2949,37 @@ export class FichaCursoComponent implements OnInit {
     ];
   }
 
+  setItalic(datoH) {
+    if (datoH != null && datoH.fechaBaja == null) return false;
+    else return true;
+  }
+
+  getHistoricoCargas() {
+    this.progressSpinner = true;
+    this.historico = true;
+
+    this.sigaServices
+      .getParam(
+        "fichaCursos_getHistoricMassiveLoadInscriptions",
+        "?idCurso=" + this.curso.idCurso
+      )
+      .subscribe(
+        n => {
+          this.datosCargas = n.cargaMasivaInscripcionesItem;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   getMassiveLoadInscriptions() {
     this.progressSpinner = true;
+    this.historico = false;
     this.sigaServices
       .getParam(
         "fichaCursos_getMassiveLoadInscriptions",
@@ -2977,9 +3007,10 @@ export class FichaCursoComponent implements OnInit {
       .postDownloadFiles("fichaCursos_downloadTemplateFile", this.curso)
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaInscripciones.xls");
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "PlantillaInscripciones.xls");
           this.progressSpinner = false;
+
         },
         err => {
           console.log(err);
@@ -2999,9 +3030,17 @@ export class FichaCursoComponent implements OnInit {
       .postDownloadFiles("fichaCursos_downloadFile", downloadFileInscriptions)
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "FicheroCargaInscripciones.xls");
+
+          if (data.size != 0) {
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "FicheroCargaInscripciones.xls");
+          } else {
+            let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
+            this.showFail(msg);
+          }
+
           this.progressSpinner = false;
+
         },
         err => {
           console.log(err);
@@ -3141,6 +3180,7 @@ export class FichaCursoComponent implements OnInit {
           this.progressSpinner = false;
 
           this.getCountInscriptions();
+          this.getMassiveLoadInscriptions();
 
           if (JSON.parse(data.body).error.code == null) {
             this.showMessage(

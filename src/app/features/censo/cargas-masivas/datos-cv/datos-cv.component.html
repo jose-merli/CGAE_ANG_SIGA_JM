@@ -63,7 +63,9 @@
         <div *ngIf="selectedDatos != ''" class="text-right main-button">
           <button [disabled]="downloadFileDisable" (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-download"
             iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate}}"></button>
-          <button [disabled]="downloadFileLogDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download"
+          <!-- <button [disabled]="downloadFileLogDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download"
+            iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button> -->
+          <button [disabled]="downloadFileDisable" (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download"
             iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
         </div>
       </p-footer>

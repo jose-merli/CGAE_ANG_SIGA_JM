@@ -283,6 +283,7 @@ export class SigaServices {
     fichaCursos_uploadFile: "fichaCursos/uploadFile",
     fichaCursos_getMassiveLoadInscriptions:
       "fichaCursos/getMassiveLoadInscriptions",
+    fichaCursos_getHistoricMassiveLoadInscriptions: "fichaCursos/getHistoricMassiveLoadInscriptions",
     fichaCursos_cancelCourse: "fichaCursos/cancelCourse",
     fichaCursos_finishCourse: "fichaCursos/finishCourse",
     fichaCursos_getPricesCourse: "fichaCursos/getPricesCourse",

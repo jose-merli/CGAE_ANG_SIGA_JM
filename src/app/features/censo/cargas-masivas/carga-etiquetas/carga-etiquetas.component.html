@@ -63,7 +63,7 @@
         <div class="text-right main-button">
           <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadOriginalFile(selectedDatos)"
             pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate}}"></button>
-          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileLogDisable || selectedDatos == ''" (click)="downloadLogFile(selectedDatos)"
+          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadLogFile(selectedDatos)"
             pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
         </div>
       </p-footer>
@@ -106,7 +106,7 @@
         <div class="text-right main-button">
           <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadOriginalFile(selectedDatos)"
             pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate}}"></button>
-          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileLogDisable || selectedDatos == ''" (click)="downloadLogFile(selectedDatos)"
+          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadLogFile(selectedDatos)"
             pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
         </div>
       </p-footer>
