@@ -19,6 +19,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   openFicha: boolean = true;
   editar: boolean;
+  editMode: boolean = false;
   datos: any[];
   cols: any[];
   first: number = 0;
@@ -73,6 +74,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.getMode();
     this.getInstitucion();
     this.getDatos();
     this.getModulos();
@@ -137,6 +140,14 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     // this.body.idConsulta = this.consultas[1].value;
   }
 
+  getMode() {
+    if (sessionStorage.getItem("soloLectura") === 'true') {
+      this.editMode = true;
+    } else {
+      this.editMode = false;
+    }
+  }
+
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];
@@ -175,6 +186,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       if (sessionStorage.getItem("crearNuevaConsulta") != null) {
         if (this.institucionActual != '2000')
           this.generica = 'N';
+
         else
           this.generica = 'S';
       }
@@ -440,6 +452,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+
     this.body.generica = this.generica;
     if (this.bodyInicial.generica == undefined) {
       this.bodyInicial.generica = this.body.generica;
@@ -452,6 +465,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else {
         this.body.idInstitucion = '2000';
       }
+
+      this.progressSpinner = true;
+
       this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
         data => {
 

@@ -79,6 +79,8 @@ export class ConsultasComponent implements OnInit {
     this.currentRoute = this.router.url;
 
     sessionStorage.removeItem("consultasSearch");
+
+    sessionStorage.removeItem("soloLectura");
     this.getInstitucion();
 
     sessionStorage.removeItem("crearNuevaConsulta");
@@ -524,6 +526,9 @@ export class ConsultasComponent implements OnInit {
         (this.institucionActual == 2000 && dato[0].generica == "Si")
       ) {
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
+
+
+
         sessionStorage.setItem(
           "filtrosConsulta",
           JSON.stringify(this.bodySearch)
@@ -551,6 +556,12 @@ export class ConsultasComponent implements OnInit {
       // } else {
       //   this.eliminar = false;
       // }
+    }
+
+    if (this.institucionActual != 2000 && dato[0].idInstitucion == '2000' && dato[0].generica == "Si") {
+      sessionStorage.setItem("soloLectura", "true");
+    } else {
+      sessionStorage.setItem("soloLectura", "false");
     }
   }
 
