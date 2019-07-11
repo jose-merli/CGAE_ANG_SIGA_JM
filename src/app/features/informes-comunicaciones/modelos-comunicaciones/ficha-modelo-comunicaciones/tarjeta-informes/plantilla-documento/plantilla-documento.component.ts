@@ -80,6 +80,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   formatoAccept: string;
   institucionActual: number;
   consultasGuardadas: boolean = true;
+  esPorDefecto: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -97,6 +98,14 @@ export class PlantillaDocumentoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("esPorDefecto") == 'SI') {
+      this.esPorDefecto = true;
+    } else {
+      this.esPorDefecto = false;
+    }
+
+    //sessionStorage.removeItem('esPorDefecto');
     this.getInstitucionActual();
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
@@ -185,24 +194,30 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+
+    if (!this.esPorDefecto) {
+      this.selectMultiple = !this.selectMultiple;
+
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
   }
 
   isSelectMultipleDocs() {
-    this.selectMultipleDocs = !this.selectMultipleDocs;
-    if (!this.selectMultipleDocs) {
-      this.selectedDocs = [];
-    } else {
-      this.selectAll = false;
-      this.selectedDocs = [];
+    if (!this.esPorDefecto) {
+      this.selectMultipleDocs = !this.selectMultipleDocs;
+      if (!this.selectMultipleDocs) {
+        this.selectedDocs = [];
+      } else {
+        this.selectAll = false;
+        this.selectedDocs = [];
+      }
     }
   }
 
@@ -228,30 +243,35 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   onSelectConsulta(event, dato) {
     console.log(dato);
-    if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1) {
-      this.navigateTo(dato);
-    } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
-      this.eliminarDisabled = true;
-    } else if (
-      this.selectMultiple &&
-      dato[0].idObjetivo == "4" &&
-      dato[0].idConsulta != "" &&
-      dato[0].idConsulta != null
-    ) {
-      this.eliminarDisabled = false;
-    } else if (
-      this.selectMultiple &&
-      dato[0].idObjetivo == "4" &&
-      (dato[0].idConsulta == "" || dato[0].idConsulta == null)
-    ) {
-      this.eliminarDisabled = true;
+    if (!this.esPorDefecto) {
+      if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1
+      ) {
+        this.navigateTo(dato);
+      } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
+        this.eliminarDisabled = true;
+      } else if (
+        this.selectMultiple &&
+        dato[0].idObjetivo == "4" &&
+        dato[0].idConsulta != "" &&
+        dato[0].idConsulta != null
+      ) {
+        this.eliminarDisabled = false;
+      } else if (
+        this.selectMultiple &&
+        dato[0].idObjetivo == "4" &&
+        (dato[0].idConsulta == "" || dato[0].idConsulta == null)
+      ) {
+        this.eliminarDisabled = true;
+      }
     }
   }
 
   onRowSelect(dato) {
+
     if (!this.selectMultipleDocs) {
       this.selectedDocs = [];
     }
+
   }
   addDocumento() {
     let obj = {
@@ -1064,7 +1084,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.body.nombreFicheroSalida != "" &&
       this.body.nombreFicheroSalida != null &&
       this.documentos &&
-      this.documentos.length > 0
+      this.documentos.length > 0 && !this.esPorDefecto
     ) {
       return false;
     } else {

@@ -4,9 +4,10 @@ export class DialogoComunicacionesItem {
   idTipoEnvios: String;
   tipoEnvio: String;
   id: String;
+  idInstitucion: String;
   fechaProgramacion: Date;
   idPlantillaEnvios: String;
-  modelos: any [];
+  modelos: any[];
   comunicar: Boolean;
   constructor() { }
 }

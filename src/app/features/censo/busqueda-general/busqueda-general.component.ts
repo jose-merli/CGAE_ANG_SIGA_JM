@@ -71,6 +71,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   institucion: ComboItem = new ComboItem();
   nifCif: StringObject = new StringObject();
   continue: boolean = false;
+  existe: boolean = false;
 
   resultado: string = "";
   remitente: boolean = false;
@@ -420,6 +421,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyJuridica.nif = "";
       this.bodyJuridica.denominacion = "";
       this.bodyJuridica.abreviatura = "";
+
     }
   }
 
@@ -517,6 +519,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   search() {
+    this.existe = false;
     this.progressSpinner = true;
     this.buscar = true;
 
@@ -565,22 +568,32 @@ export class BusquedaGeneralComponent implements OnDestroy {
             data => {
               this.progressSpinner = false;
               this.searchFisica = JSON.parse(data["body"]);
-              this.datos = [];
-              this.datos = this.searchFisica.busquedaFisicaItems;
+
+              if (this.searchFisica.busquedaFisicaItems.length == 0) {
+                if (this.searchFisica.error != null && this.searchFisica.error.message != null) {
+                  this.showInfo(this.searchFisica.error.message);
+                  this.existe = true;
+                }
+                this.datos = [];
+
+              } else {
+                this.datos = [];
+                this.datos = this.searchFisica.busquedaFisicaItems;
+              }
+
             },
             err => {
               console.log(err);
               this.progressSpinner = false;
             },
             () => {
-              if (
-                this.datos.length == 0 ||
+              if (this.datos.length == 0 ||
                 this.datos == null ||
                 this.datos == undefined
               ) {
                 if (
                   this.bodyFisica.nif != "" &&
-                  this.bodyFisica.nif != undefined
+                  this.bodyFisica.nif != undefined && !this.existe
                 ) {
                   if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
 
@@ -644,8 +657,18 @@ export class BusquedaGeneralComponent implements OnDestroy {
             data => {
               this.progressSpinner = false;
               this.searchJuridica = JSON.parse(data["body"]);
-              this.datos = [];
-              this.datos = this.searchJuridica.busquedaPerJuridicaItems;
+
+              if (this.searchJuridica.busquedaPerJuridicaItems.length == 0) {
+                if (this.searchJuridica.error != null && this.searchJuridica.error.message != null) {
+                  this.showInfo(this.searchJuridica.error.message);
+                  this.existe = true;
+                }
+                this.datos = [];
+
+              } else {
+                this.datos = [];
+                this.datos = this.searchJuridica.busquedaPerJuridicaItems;
+              }
 
               // this.table.paginator = true;
             },
@@ -657,7 +680,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
               if (
                 this.datos.length == 0 ||
                 this.datos == null ||
-                this.datos == undefined
+                this.datos == undefined && !this.existe
               ) {
                 if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
                   if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
@@ -1156,4 +1179,15 @@ export class BusquedaGeneralComponent implements OnDestroy {
     );
 
   }
+
+
+  showInfo(message) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "info",
+      summary: this.translateService.instant("general.message.informacion"),
+      detail: this.translateService.instant(message)
+    });
+  }
+
 }

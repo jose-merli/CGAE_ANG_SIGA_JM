@@ -11,6 +11,7 @@ import { DatePipe } from "../../../../../../node_modules/@angular/common";
 import { ErrorItem } from "../../../../models/ErrorItem";
 import { esCalendar } from "../../../../utils/calendar";
 import { Pipe, PipeTransform } from "@angular/core";
+import { TranslateService } from "../../../../commons/translate";
 
 // @Pipe({ name: "replaceLineBreaks" })
 // export class ReplaceLineBreaks implements PipeTransform {
@@ -62,7 +63,8 @@ export class DatosCvComponent implements OnInit {
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
     private domSanitizer: DomSanitizer,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -263,8 +265,14 @@ export class DatosCvComponent implements OnInit {
       )
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosCV_Original.xls");
+
+          if (data.size != 0) {
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "PlantillaMasivaDatosCV_Original.xls");
+          } else {
+            let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
+            this.showFail(msg);
+          }
           this.progressSpinner = false;
         },
         err => {
@@ -288,8 +296,15 @@ export class DatosCvComponent implements OnInit {
       )
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosCV_Errores.xls");
+
+          if (data.size != 0) {
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "PlantillaMasivaDatosCV_Errores.xls");
+          } else {
+            let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
+            this.showFail(msg);
+          }
+
           this.progressSpinner = false;
         },
         err => {

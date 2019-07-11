@@ -38,6 +38,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	clasesComunicaciones: any = [];
 	currentRoute: String;
 	selectedModelos: any = [];
+	listaModelos: any = [];
 	idClaseComunicacion: String;
 	idModulo: String;
 	keys: String[] = [];
@@ -68,6 +69,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+
+		if (sessionStorage.getItem("listadoModelos") != undefined) {
+			this.listaModelos = JSON.parse(sessionStorage.getItem("listadoModelos"));
+		}
+
 		this.progressSpinner = true;
 		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
 		sessionStorage.removeItem('back');
@@ -168,7 +174,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 		let modeloSearch = {
 			idModulo: this.idModulo,
 			idClaseComunicacion: this.idClaseComunicacion,
-			idConsulta: this.idConsulta
+			idConsulta: this.idConsulta,
+			idInstitucion: this.listaModelos[0].idInstitucion
 		};
 
 		this.sigaServices.post('dialogo_modelosComunicacion', modeloSearch).subscribe(
@@ -219,6 +226,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	obtenerCamposDinamicos(accion) {
 		this.bodyComunicacion.modelos = this.selectedModelos;
 		this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
+		this.bodyComunicacion.idInstitucion = this.listaModelos[0].idInstitucion;
 
 		if (accion == 'comunicar') {
 			this.comunicar = true;
@@ -316,7 +324,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				idClaseComunicacion: this.idClaseComunicacion,
 				modelos: this.bodyComunicacion.modelos,
 				selectedDatos: this.datosSeleccionados,
-				idInstitucion: this.idInstitucion,
+				idInstitucion: this.listaModelos[0].idInstitucion,
 				consultas: this.listaConsultas,
 				comunicar: this.comunicar,
 				ruta: this.rutaComunicacion,
@@ -439,7 +447,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			idClaseComunicacion: this.idClaseComunicacion,
 			modelos: this.bodyComunicacion.modelos,
 			selectedDatos: this.datosSeleccionados,
-			idInstitucion: this.idInstitucion,
+			idInstitucion: this.listaModelos[0].idInstitucion,
 			consultas: this.listaConsultas,
 			comunicar: this.comunicar,
 			ruta: this.rutaComunicacion

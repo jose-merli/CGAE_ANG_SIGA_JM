@@ -9,6 +9,7 @@ import { CargaMasivaObject } from "../../../../models/CargaMasivaObject";
 import { DatePipe } from "../../../../../../node_modules/@angular/common";
 import { esCalendar } from "../../../../utils/calendar";
 import { DomSanitizer } from "../../../../../../node_modules/@angular/platform-browser";
+import { TranslateService } from '../../../../commons/translate/translation.service';
 
 @Component({
   selector: "app-carga-etiquetas",
@@ -48,7 +49,8 @@ export class CargaEtiquetasComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private datePipe: DatePipe,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -245,8 +247,13 @@ export class CargaEtiquetasComponent implements OnInit {
       .postDownloadFiles("cargasMasivas_downloadOriginalFile", this.body)
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosGF_Original.xls");
+          if (data.size != 0) {
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "PlantillaMasivaDatosGF_Original.xls");
+          } else {
+            let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
+            this.showFail(msg);
+          }
           this.progressSpinner = false;
         },
         err => {
@@ -266,8 +273,13 @@ export class CargaEtiquetasComponent implements OnInit {
       .postDownloadFiles("cargasMasivas_downloadLogFile", this.body)
       .subscribe(
         data => {
-          const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosGF_Errores.xls");
+          if (data.size != 0) {
+            const blob = new Blob([data], { type: "text/csv" });
+            saveAs(blob, "PlantillaMasivaDatosGF_Errores.xls");
+          } else {
+            let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
+            this.showFail(msg);
+          }
           this.progressSpinner = false;
         },
         err => {
