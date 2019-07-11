@@ -3,7 +3,8 @@ export class ConsultaConsultasItem {
   idInstitucion: String;
   idClaseComunicacion: String;
   sentencia: string;
-  camposDinamicos: any [] = [];
+  camposDinamicos: any[] = [];
   idObjetivo: string;
+  generica: String;
   constructor() { }
 }

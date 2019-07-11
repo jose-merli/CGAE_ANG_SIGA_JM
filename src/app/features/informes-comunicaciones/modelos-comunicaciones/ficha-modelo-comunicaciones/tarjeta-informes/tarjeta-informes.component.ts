@@ -171,14 +171,16 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (!this.soloLectura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
   }
 
@@ -195,11 +197,13 @@ export class TarjetaInformesComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
-    if (!this.selectMultiple && !this.soloLectura) {
-      this.router.navigate(["/fichaPlantillaDocumento"]);
-      sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
-    } else {
-      this.numSelected = this.selectedDatos.length;
+    if (!this.soloLectura) {
+      if (!this.selectMultiple) {
+        this.router.navigate(["/fichaPlantillaDocumento"]);
+        sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
+      } else {
+        this.numSelected = this.selectedDatos.length;
+      }
     }
   }
 
@@ -207,7 +211,7 @@ export class TarjetaInformesComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.modelo = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.getInformes();
-    }    
+    }
   }
 
   getInformes() {

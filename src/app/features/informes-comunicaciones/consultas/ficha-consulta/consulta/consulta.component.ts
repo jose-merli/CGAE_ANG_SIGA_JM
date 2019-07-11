@@ -21,6 +21,7 @@ export class ConsultaComponent implements OnInit {
   activacionEditar: boolean = true;
   derechoAcceso: any;
   permisos: any;
+  institucionActual: any;
   permisosArray: any[];
   controlAcceso: ControlAccesoDto = new ControlAccesoDto();
   cuerpo: String;
@@ -39,8 +40,10 @@ export class ConsultaComponent implements OnInit {
   operadoresTexto: any[];
   operadoresNumero: any[];
   editar: boolean = true;
+  editMode: boolean;
   idClaseComunicacion: String = "";
   currentRoute: String = "";
+
 
   fichasPosibles = [
     {
@@ -61,6 +64,7 @@ export class ConsultaComponent implements OnInit {
     private sigaServices: SigaServices, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.getMode();
     if (sessionStorage.getItem('nombreConsulta') != undefined) {
       sessionStorage.removeItem('nombreConsulta');
     }
@@ -73,7 +77,7 @@ export class ConsultaComponent implements OnInit {
       this.editar = false;
     });
 
-    this.getDatos();
+    this.getInstitucion();
     this.getAyuda();
     this.valores = [];
 
@@ -126,6 +130,24 @@ export class ConsultaComponent implements OnInit {
         value: 'IS NULL'
       }
     ]
+  }
+
+  getMode() {
+    if (sessionStorage.getItem("soloLectura") === 'true') {
+      this.editMode = true;
+    } else {
+      this.editMode = false;
+    }
+  }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    },
+      err => {
+        console.log(err);
+      }, () => { this.getDatos(); }
+    );
   }
 
   // Mensajes
@@ -212,6 +234,7 @@ export class ConsultaComponent implements OnInit {
         // this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
 
       }
+
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
@@ -284,9 +307,9 @@ export class ConsultaComponent implements OnInit {
   }
 
   isButtonDisabled() {
-    if (this.consultaEditada) {
+    if (this.consultaEditada && this.body.idObjetivo != '1') {
       return true;
-    } else if (this.body.idClaseComunicacion != "5" || this.body.idObjetivo != "4") {
+    } else if ((this.body.idClaseComunicacion != "5" || this.body.idObjetivo != "4") && this.body.idObjetivo != '1') {
       return true;
     }
     return false;
