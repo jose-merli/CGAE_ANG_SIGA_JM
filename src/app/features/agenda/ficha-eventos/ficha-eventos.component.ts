@@ -1078,6 +1078,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("message.error.fechaInscripcionInicio"));
           return false;
         }
+      } else {
+        return true;
       }
 
     } else if (sessionStorage.getItem("isFormacionCalendarByEndInscripcion")) {
@@ -1093,6 +1095,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("message.error.fechaInscripcionFin"));
           return false;
         }
+      } else {
+        return true;
       }
 
     } else {
