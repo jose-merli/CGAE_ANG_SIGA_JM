@@ -57,6 +57,8 @@ export class ModelosComunicacionesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    sessionStorage.removeItem("esPorDefecto");
     this.getInstitucion();
     this.bodySearch.visible = 1;
     this.bodySearch.preseleccionar = "";
@@ -548,6 +550,13 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.selectMultiple) {
       if (dato[0].fechaBaja) {
         sessionStorage.setItem("soloLectura", "true");
+      }
+
+      if (
+        dato[0].porDefecto == "SI") {
+        sessionStorage.setItem("esPorDefecto", "SI");
+      } else {
+        sessionStorage.setItem("esPorDefecto", "NO");
       }
 
       this.router.navigate(["/fichaModeloComunicaciones"]);
