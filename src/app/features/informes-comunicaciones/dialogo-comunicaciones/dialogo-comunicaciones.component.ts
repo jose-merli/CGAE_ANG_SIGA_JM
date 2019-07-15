@@ -30,6 +30,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
 	tiposEnvio: any[];
 	plantillasEnvio: any[];
+	datos: any[];
 	datosModelos: any[];
 	colsModelos: any = [];
 	selectMultipleComunicar: boolean = false;
@@ -77,8 +78,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.progressSpinner = true;
 		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
 		sessionStorage.removeItem('back');
-		this.getClaseComunicaciones();
 		this.getInstitucion();
+		this.getClaseComunicaciones();
 		this.getMaxNumeroModelos();
 		this.getFechaProgramada();
 		this.getPlantillas();
@@ -171,11 +172,15 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.idConsulta = sessionStorage.getItem('idConsulta');
 		}
 
+		if (this.listaModelos != undefined && this.listaModelos.length > 0) {
+			this.idInstitucion = this.listaModelos[0].idInstitucion;
+		}
+
 		let modeloSearch = {
 			idModulo: this.idModulo,
 			idClaseComunicacion: this.idClaseComunicacion,
 			idConsulta: this.idConsulta,
-			idInstitucion: this.listaModelos[0].idInstitucion
+			idInstitucion: this.idInstitucion
 		};
 
 		this.sigaServices.post('dialogo_modelosComunicacion', modeloSearch).subscribe(
@@ -226,7 +231,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 	obtenerCamposDinamicos(accion) {
 		this.bodyComunicacion.modelos = this.selectedModelos;
 		this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
-		this.bodyComunicacion.idInstitucion = this.listaModelos[0].idInstitucion;
+
+		if (this.listaModelos != undefined && this.listaModelos.length > 0) {
+			this.bodyComunicacion.idInstitucion = this.listaModelos[0].idInstitucion;
+		} else {
+			this.bodyComunicacion.idInstitucion = this.idInstitucion;
+		}
+
 
 		if (accion == 'comunicar') {
 			this.comunicar = true;
@@ -320,11 +331,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 		});
 
 		if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
+
+			if (this.listaModelos != undefined && this.listaModelos.length > 0) {
+				this.idInstitucion = this.listaModelos[0].idInstitucion;
+			}
+
 			let datos = {
 				idClaseComunicacion: this.idClaseComunicacion,
 				modelos: this.bodyComunicacion.modelos,
 				selectedDatos: this.datosSeleccionados,
-				idInstitucion: this.listaModelos[0].idInstitucion,
+				idInstitucion: this.idInstitucion,
 				consultas: this.listaConsultas,
 				comunicar: this.comunicar,
 				ruta: this.rutaComunicacion,
@@ -441,13 +457,15 @@ export class DialogoComunicacionesComponent implements OnInit {
 			}
 		}
 
-
+		if (this.listaModelos != undefined && this.listaModelos.length > 0) {
+			this.idInstitucion = this.listaModelos[0].idInstitucion;
+		}
 
 		let datos = {
 			idClaseComunicacion: this.idClaseComunicacion,
 			modelos: this.bodyComunicacion.modelos,
 			selectedDatos: this.datosSeleccionados,
-			idInstitucion: this.listaModelos[0].idInstitucion,
+			idInstitucion: this.idInstitucion,
 			consultas: this.listaConsultas,
 			comunicar: this.comunicar,
 			ruta: this.rutaComunicacion

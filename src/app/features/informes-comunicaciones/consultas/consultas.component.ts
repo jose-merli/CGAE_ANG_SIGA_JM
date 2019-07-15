@@ -406,6 +406,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   duplicar(dato) {
+    sessionStorage.setItem("soloLectura", "false");
     this.progressSpinner = true;
     this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
@@ -570,8 +571,6 @@ export class ConsultasComponent implements OnInit {
     sessionStorage.removeItem("consultasSearch");
     sessionStorage.setItem("crearNuevaConsulta", JSON.stringify("true"));
   }
-
-
 
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();

@@ -309,7 +309,7 @@ export class ConsultaComponent implements OnInit {
   isButtonDisabled() {
     if (this.consultaEditada && this.body.idObjetivo != '1') {
       return true;
-    } else if ((this.body.idClaseComunicacion != "5" || this.body.idObjetivo != "4") && this.body.idObjetivo != '1') {
+    } else if ((this.body.idClaseComunicacion != "5" && this.body.idObjetivo != "4")) {
       return true;
     }
     return false;
