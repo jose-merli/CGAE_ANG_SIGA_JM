@@ -79,7 +79,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
 		sessionStorage.removeItem('back');
 		this.getInstitucion();
-		this.getClaseComunicaciones();
+		
 		this.getMaxNumeroModelos();
 		this.getFechaProgramada();
 		this.getPlantillas();
@@ -562,9 +562,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	getInstitucion() {
-		this.sigaServices.get('institucionActual').subscribe((n) => {
-			this.idInstitucion = n.value;
-		});
+        this.sigaServices.get('institucionActual').subscribe((n) => {
+            this.idInstitucion = n.value;
+            this.getClaseComunicaciones();
+        });
 	}
 
 	getMaxNumeroModelos() {
