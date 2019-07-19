@@ -135,7 +135,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
 
-    sessionStorage.removeItem('listadoModelos');
+    sessionStorage.removeItem('consultasSearch');
 
     this.currentRoute = this.router.url;
     this.progressSpinner = true;

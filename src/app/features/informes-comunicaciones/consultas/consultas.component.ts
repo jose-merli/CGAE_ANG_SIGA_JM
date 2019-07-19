@@ -79,7 +79,7 @@ export class ConsultasComponent implements OnInit {
     this.currentRoute = this.router.url;
 
     sessionStorage.removeItem("consultasSearch");
-
+    sessionStorage.removeItem('idInstitucion');
     sessionStorage.removeItem("soloLectura");
     this.getInstitucion();
 
@@ -744,7 +744,9 @@ export class ConsultasComponent implements OnInit {
   }
 
   getDatosComunicar(selectedDatos) {
+    
     let dato = selectedDatos[0];
+    sessionStorage.setItem('idInstitucion', dato.idInstitucion); 
     let rutaClaseComunicacion = this.currentRoute.toString();
     sessionStorage.removeItem('datosComunicar');
     sessionStorage.setItem('idConsulta', dato.idConsulta);
