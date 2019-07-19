@@ -99,14 +99,12 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   ngOnInit() {
 
-    if (sessionStorage.getItem("esPorDefecto") == 'SI') {
-      this.esPorDefecto = true;
-    } else {
-      this.esPorDefecto = false;
-    }
+    this.getInstitucionActual();
+
+
 
     //sessionStorage.removeItem('esPorDefecto');
-    this.getInstitucionActual();
+
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
@@ -194,7 +192,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isSelectMultiple() {
-    if (!this.esPorDefecto) {
+
+    if (!this.esPorDefecto && this.institucionActual == 2000) {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
@@ -213,7 +212,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   isSelectMultipleDocs() {
     if (!this.nuevoDocumento) {
 
-      if (!this.esPorDefecto) {
+      if (!this.esPorDefecto && this.institucionActual == 2000) {
         this.selectMultipleDocs = !this.selectMultipleDocs;
         if (!this.selectMultipleDocs) {
           this.selectedDocs = [];
@@ -228,23 +227,23 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onChangeSelectAll(key) {
-      if (key != "docs") {
-        if (this.selectAll === true) {
-          this.selectMultiple = false;
-          this.selectedDatos = this.datos;
-          this.numSelected = this.datos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-        }
+    if (key != "docs") {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
       } else {
-        if (this.selectAllDocs === true) {
-          this.selectMultipleDocs = false;
-          this.selectedDocs = this.documentos;
-        } else {
-          this.selectedDocs = [];
-        }
+        this.selectedDatos = [];
+        this.numSelected = 0;
       }
+    } else {
+      if (this.selectAllDocs === true) {
+        this.selectMultipleDocs = false;
+        this.selectedDocs = this.documentos;
+      } else {
+        this.selectedDocs = [];
+      }
+    }
   }
 
   onSelectConsulta(event, dato) {
@@ -429,11 +428,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       err => {
         this.showFail("Error al cargar las consultas");
         console.log(err);
-      }, ()=>{
+      }, () => {
         this.progressSpinner = false;
       }
     );
-    
+
   }
 
   restablecerDatosGenerales() {
@@ -1093,7 +1092,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.body.nombreFicheroSalida != "" &&
       this.body.nombreFicheroSalida != null &&
       this.documentos &&
-      this.documentos.length > 0 && !this.esPorDefecto
+      this.documentos.length > 0 && (!this.esPorDefecto && (this.institucionActual != 2000 || this.institucionActual == 2000))
     ) {
       return false;
     } else {
@@ -1193,6 +1192,12 @@ export class PlantillaDocumentoComponent implements OnInit {
   getInstitucionActual() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
+        this.esPorDefecto = true;
+      } else {
+        this.esPorDefecto = false;
+      }
     });
   }
 

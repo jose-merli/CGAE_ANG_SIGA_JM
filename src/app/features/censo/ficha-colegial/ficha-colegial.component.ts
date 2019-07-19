@@ -334,13 +334,13 @@ export class FichaColegialComponent implements OnInit {
   ];
 
   comboInscrito = [
-    { label: "Si", value: "1" },
-    { label: "No", value: "0" }
+    { label: "No", value: "0" },
+    { label: "Si", value: "1" }
   ];
 
   comboResidente = [
-    { label: "Si", value: "1" },
-    { label: "No", value: "0" }
+    { label: "No", value: "0" },
+    { label: "Si", value: "1" }
   ];
 
   fichasPosibles = [
