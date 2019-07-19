@@ -55,7 +55,7 @@
 
 
                 <p-table [value]="documentos" [columns]="colsDocumentos" [(selection)]="selectedDocs" [responsive]="true" #tableDocs class="tabla-listado"
-                  dataKey="idioma" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleDocs}"
+                  dataKey="idPlantillaDocumento" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleDocs}"
                   paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onRowSelect()">
                   <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>

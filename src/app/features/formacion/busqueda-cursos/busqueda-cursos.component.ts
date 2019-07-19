@@ -347,8 +347,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   getComboDisponibilidadPlazas() {
     this.comboDisponibilidadPlazas = [
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 0 },
+      { label: "Sí", value: 1 }
     ];
 
     this.arregloTildesCombo(this.comboDisponibilidadPlazas);
@@ -566,8 +566,8 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       {
         field: "precioCurso",
         header: "form.busquedaCursos.literal.precio",
-        value1:"precioDesde",
-        value2:"precioHasta"
+        value1: "precioDesde",
+        value2: "precioHasta"
       },
       {
         field: "fechaInscripcion",

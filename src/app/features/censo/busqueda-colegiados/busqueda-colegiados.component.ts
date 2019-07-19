@@ -669,7 +669,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaIncorporacionHastaSelect = undefined;
     this.fechaNacimientoDesdeSelect = undefined;
     this.fechaNacimientoHastaSelect = undefined;
-    this.colegiosSeleccionados = [];
+
+    if(!this.deshabilitarCombCol){
+      this.colegiosSeleccionados = [];
+    }
   }
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros

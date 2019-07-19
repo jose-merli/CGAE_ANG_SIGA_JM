@@ -630,6 +630,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   addFile(dato) {
+    this.progressSpinner = true;
     this.sigaServices
       .postSendContentAndParameter("plantillasDoc_subirPlantilla", "?idClaseComunicacion=" + this.body.idClaseComunicacion, this.file)
       .subscribe(
@@ -701,6 +702,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   guardarDocumento(plantilla) {
+    this.progressSpinner = true;
     this.sigaServices
       .post("plantillasDoc_insertarPlantilla", plantilla)
       .subscribe(
@@ -712,8 +714,11 @@ export class PlantillaDocumentoComponent implements OnInit {
           this.body.plantillas.push(plantilla);
           this.documentos = this.body.plantillas;
           this.documentos = [...this.documentos];
+
+          this.progressSpinner = false;
         },
         err => {
+          this.progressSpinner = false;
           this.showFail("Error al subir el documento");
           console.log(err);
         }
@@ -1190,7 +1195,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   downloadDocumento(dato) {
     let objDownload = {
       idPlantillaDocumento: dato[0].idPlantillaDocumento,
-      idClaseComunicacion: this.body.idClaseComunicacion
+      idClaseComunicacion: this.body.idClaseComunicacion,
+      idIdioma: dato[0].idIdioma
     };
     this.progressSpinner = true;
     this.sigaServices
