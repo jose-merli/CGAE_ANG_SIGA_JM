@@ -99,14 +99,12 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   ngOnInit() {
 
-    if (sessionStorage.getItem("esPorDefecto") == 'SI') {
-      this.esPorDefecto = true;
-    } else {
-      this.esPorDefecto = false;
-    }
+    this.getInstitucionActual();
+
+
 
     //sessionStorage.removeItem('esPorDefecto');
-    this.getInstitucionActual();
+
     this.textFilter = "Elegir";
     this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
@@ -195,7 +193,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.esPorDefecto) {
+    if (!this.esPorDefecto && this.institucionActual == 2000) {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
@@ -207,17 +205,24 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.numSelected = 0;
       }
     }
+
+
   }
 
   isSelectMultipleDocs() {
-    if (!this.esPorDefecto) {
-      this.selectMultipleDocs = !this.selectMultipleDocs;
-      if (!this.selectMultipleDocs) {
-        this.selectedDocs = [];
-      } else {
-        this.selectAll = false;
-        this.selectedDocs = [];
+    if (!this.nuevoDocumento) {
+
+      if (!this.esPorDefecto && this.institucionActual == 2000) {
+        this.selectMultipleDocs = !this.selectMultipleDocs;
+        if (!this.selectMultipleDocs) {
+          this.selectedDocs = [];
+        } else {
+          this.selectAll = false;
+          this.selectedDocs = [];
+        }
       }
+    } else {
+      this.selectMultiple = false;
     }
   }
 
@@ -423,8 +428,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       err => {
         this.showFail("Error al cargar las consultas");
         console.log(err);
+      }, () => {
+        this.progressSpinner = false;
       }
     );
+
   }
 
   restablecerDatosGenerales() {
@@ -660,7 +668,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
   guardarDatosGenerales() {
-
+    this.progressSpinner = true;
     this.body.sufijos = [];
     let orden: number = 1;
     this.selectedSufijos.forEach(element => {
@@ -1089,7 +1097,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.body.nombreFicheroSalida != "" &&
       this.body.nombreFicheroSalida != null &&
       this.documentos &&
-      this.documentos.length > 0 && !this.esPorDefecto
+      this.documentos.length > 0 && (!this.esPorDefecto && (this.institucionActual != 2000 || this.institucionActual == 2000))
     ) {
       return false;
     } else {
@@ -1189,6 +1197,12 @@ export class PlantillaDocumentoComponent implements OnInit {
   getInstitucionActual() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
+        this.esPorDefecto = true;
+      } else {
+        this.esPorDefecto = false;
+      }
     });
   }
 

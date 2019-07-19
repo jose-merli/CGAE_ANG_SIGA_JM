@@ -25,6 +25,7 @@ export class TarjetaInformesComponent implements OnInit {
   cols: any[];
   first: number = 0;
   selectedItem: number;
+  institucionActual: number;
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   numSelected: number = 0;
@@ -34,6 +35,7 @@ export class TarjetaInformesComponent implements OnInit {
   msgs: Message[];
   eliminarArray: any[];
   soloLectura: boolean = false;
+  continuar: boolean;
   editar: boolean = true;
 
   @ViewChild("table") table: DataTable;
@@ -112,6 +114,20 @@ export class TarjetaInformesComponent implements OnInit {
     ) {
       this.soloLectura = true;
     }
+
+    this.getInstitucionActual();
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+
+      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
+        this.soloLectura = true;
+      } else {
+        this.soloLectura = false;
+      }
+    });
   }
 
   abreCierraFicha() {
@@ -204,6 +220,9 @@ export class TarjetaInformesComponent implements OnInit {
       } else {
         this.numSelected = this.selectedDatos.length;
       }
+    } else {
+      this.router.navigate(["/fichaPlantillaDocumento"]);
+      sessionStorage.setItem("modelosInformesSearch", JSON.stringify(dato[0]));
     }
   }
 

@@ -221,6 +221,13 @@ export class DatosGeneralesFichaComponent implements OnInit {
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
+        this.soloLectura = true;
+      } else {
+        this.soloLectura = false;
+      }
+
       this.body.idInstitucion = this.institucionActual;
       this.getComboColegios();
       this.getDatos();
