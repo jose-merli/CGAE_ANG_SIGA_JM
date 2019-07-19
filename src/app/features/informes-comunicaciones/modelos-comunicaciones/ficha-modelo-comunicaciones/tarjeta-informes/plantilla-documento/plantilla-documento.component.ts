@@ -194,7 +194,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isSelectMultiple() {
-
     if (!this.esPorDefecto) {
       this.selectMultiple = !this.selectMultiple;
 
@@ -207,38 +206,45 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.numSelected = 0;
       }
     }
+
+
   }
 
   isSelectMultipleDocs() {
-    if (!this.esPorDefecto) {
-      this.selectMultipleDocs = !this.selectMultipleDocs;
-      if (!this.selectMultipleDocs) {
-        this.selectedDocs = [];
-      } else {
-        this.selectAll = false;
-        this.selectedDocs = [];
+    if (!this.nuevoDocumento) {
+
+      if (!this.esPorDefecto) {
+        this.selectMultipleDocs = !this.selectMultipleDocs;
+        if (!this.selectMultipleDocs) {
+          this.selectedDocs = [];
+        } else {
+          this.selectAll = false;
+          this.selectedDocs = [];
+        }
       }
+    } else {
+      this.selectMultiple = false;
     }
   }
 
   onChangeSelectAll(key) {
-    if (key != "docs") {
-      if (this.selectAll === true) {
-        this.selectMultiple = false;
-        this.selectedDatos = this.datos;
-        this.numSelected = this.datos.length;
+      if (key != "docs") {
+        if (this.selectAll === true) {
+          this.selectMultiple = false;
+          this.selectedDatos = this.datos;
+          this.numSelected = this.datos.length;
+        } else {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+        }
       } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
+        if (this.selectAllDocs === true) {
+          this.selectMultipleDocs = false;
+          this.selectedDocs = this.documentos;
+        } else {
+          this.selectedDocs = [];
+        }
       }
-    } else {
-      if (this.selectAllDocs === true) {
-        this.selectMultipleDocs = false;
-        this.selectedDocs = this.documentos;
-      } else {
-        this.selectedDocs = [];
-      }
-    }
   }
 
   onSelectConsulta(event, dato) {
@@ -423,8 +429,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       err => {
         this.showFail("Error al cargar las consultas");
         console.log(err);
+      }, ()=>{
+        this.progressSpinner = false;
       }
     );
+    
   }
 
   restablecerDatosGenerales() {
@@ -659,7 +668,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
   guardarDatosGenerales() {
-
+    this.progressSpinner = true;
     this.body.sufijos = [];
     let orden: number = 1;
     this.selectedSufijos.forEach(element => {
