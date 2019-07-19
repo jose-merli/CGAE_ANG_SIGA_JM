@@ -242,7 +242,7 @@ export class FichaColegialComponent implements OnInit {
   initSpinner: boolean = false;
   disableNumColegiado: boolean = true;
   information: boolean = false;
-  keyConfirmation:string;
+  keyConfirmation: string;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -334,13 +334,13 @@ export class FichaColegialComponent implements OnInit {
   ];
 
   comboInscrito = [
-    { label: "Si", value: "1" },
-    { label: "No", value: "0" }
+    { label: "No", value: "0" },
+    { label: "Si", value: "1" }
   ];
 
   comboResidente = [
-    { label: "Si", value: "1" },
-    { label: "No", value: "0" }
+    { label: "No", value: "0" },
+    { label: "Si", value: "1" }
   ];
 
   fichasPosibles = [
@@ -557,7 +557,7 @@ export class FichaColegialComponent implements OnInit {
       } else {
         migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
       }
-  
+
       sessionStorage.setItem("migaPan", migaPan);
 
       this.generalBody.colegiado = this.esColegiado;
@@ -3600,7 +3600,7 @@ export class FichaColegialComponent implements OnInit {
     let keyConfirmation = "eliminarCV";
 
     this.confirmationService.confirm({
-      key:keyConfirmation,
+      key: keyConfirmation,
       message: mess,
       icon: this.icon,
       accept: () => {
@@ -4667,7 +4667,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-            if(this.bodyRegTel.length > 0) {
+            if (this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
             }
           },
@@ -4676,7 +4676,7 @@ export class FichaColegialComponent implements OnInit {
               "general.message.no.registros"
             );
           },
-        );
+      );
     } else {
       this.sigaServices
         .postPaginado(

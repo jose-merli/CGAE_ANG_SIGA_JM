@@ -135,7 +135,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   ngOnInit() {
 
-    sessionStorage.removeItem('listadoModelos');
+    sessionStorage.removeItem('consultasSearch');
 
     this.currentRoute = this.router.url;
     this.progressSpinner = true;
@@ -474,15 +474,15 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   getComboResidencia() {
     this.comboResidencia = [
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 0 },
+      { label: "Sí", value: 1 }
     ];
 
     this.arregloTildesCombo(this.comboResidencia);
   }
 
   getComboInscrito() {
-    this.comboInscrito = [{ label: "Sí", value: 1 }, { label: "No", value: 0 }];
+    this.comboInscrito = [{ label: "No", value: 0 }, { label: "Sí", value: 1 }];
 
     this.arregloTildesCombo(this.comboInscrito);
   }
