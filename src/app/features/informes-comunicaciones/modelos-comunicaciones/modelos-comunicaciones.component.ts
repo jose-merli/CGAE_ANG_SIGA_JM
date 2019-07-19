@@ -72,14 +72,15 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.preseleccionar = [
       { label: "", value: "" },
-      { label: "Sí", value: "SI" },
-      { label: "No", value: "NO" }
+      { label: "No", value: "NO" },
+      { label: "Sí", value: "SI" }
     ];
 
     this.visible = [
       { label: "", value: "3" },
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 0 },
+      { label: "Sí", value: 1 }
+
     ];
 
     this.cols = [

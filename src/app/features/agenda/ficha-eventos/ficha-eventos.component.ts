@@ -2293,8 +2293,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   getComboAsistencia() {
     this.comboAsistencia = [
-      { label: "Sí", value: "1" },
-      { label: "No", value: "0" }
+      { label: "No", value: "0" },
+      { label: "Sí", value: "1" }
     ];
   }
 

@@ -1045,6 +1045,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.body.nif = this.solicitudEditar.numeroIdentificacion;
     sessionStorage.setItem("consulta", "true");
 
+    if (this.solicitudEditar.idEstado == "50") {
+      sessionStorage.setItem("solicitudAprobada", "true");
+    }
+
     this.sigaServices
       .postPaginado(
         "busquedaColegiados_searchColegiado",
@@ -1777,4 +1781,5 @@ para poder filtrar el dato con o sin estos caracteres*/
   changeFax2() {
     this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
   }
+
 }

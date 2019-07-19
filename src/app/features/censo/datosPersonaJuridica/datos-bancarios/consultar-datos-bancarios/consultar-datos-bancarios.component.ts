@@ -158,7 +158,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.progressSpinner = true;
     this.migaPan = sessionStorage.getItem("migaPan");
     this.currentRoute = this.router.url;
-    sessionStorage.removeItem('listadoModelos');
+    sessionStorage.removeItem('consultasSearch');
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }

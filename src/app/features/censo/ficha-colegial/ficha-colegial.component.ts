@@ -1196,9 +1196,10 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaCensoGeneral"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    } else if (sessionStorage.getItem("esColegiado") == "true") {
+    } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true") {
       this.router.navigate(["/busquedaColegiados"]);
     } else {
+      sessionStorage.removeItem("solicitudAprobada")
       this.location.back();
     }
   }

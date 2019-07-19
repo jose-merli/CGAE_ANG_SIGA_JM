@@ -39,7 +39,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	clasesComunicaciones: any = [];
 	currentRoute: String;
 	selectedModelos: any = [];
-	listaModelos: any = [];
+	consultasSearch: any ;
 	idClaseComunicacion: String;
 	idModulo: String;
 	keys: String[] = [];
@@ -71,8 +71,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	ngOnInit() {
 
-		if (sessionStorage.getItem("listadoModelos") != undefined) {
-			this.listaModelos = JSON.parse(sessionStorage.getItem("listadoModelos"));
+		if (sessionStorage.getItem("consultasSearch") != undefined) {
+			this.consultasSearch = JSON.parse(sessionStorage.getItem("consultasSearch"));
 		}
 
 		this.progressSpinner = true;
@@ -172,10 +172,12 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.idConsulta = sessionStorage.getItem('idConsulta');
 		}
 
-		if (this.listaModelos != undefined && this.listaModelos.length > 0) {
-			this.idInstitucion = this.listaModelos[0].idInstitucion;
+		if (this.consultasSearch != undefined) {
+			this.idInstitucion = this.consultasSearch.idInstitucion;
 		}
-
+ 		if (sessionStorage.getItem('idInstitucion') != undefined) {
+            this.idInstitucion = sessionStorage.getItem('idInstitucion');
+        } 
 		let modeloSearch = {
 			idModulo: this.idModulo,
 			idClaseComunicacion: this.idClaseComunicacion,
@@ -232,8 +234,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.bodyComunicacion.modelos = this.selectedModelos;
 		this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
 
-		if (this.listaModelos != undefined && this.listaModelos.length > 0) {
-			this.bodyComunicacion.idInstitucion = this.listaModelos[0].idInstitucion;
+		if (this.consultasSearch != undefined ) {
+			this.bodyComunicacion.idInstitucion = this.consultasSearch.idInstitucion;
 		} else {
 			this.bodyComunicacion.idInstitucion = this.idInstitucion;
 		}
@@ -332,8 +334,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 		if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
 
-			if (this.listaModelos != undefined && this.listaModelos.length > 0) {
-				this.idInstitucion = this.listaModelos[0].idInstitucion;
+			if (this.consultasSearch != undefined) {
+				this.idInstitucion = this.consultasSearch.idInstitucion;
 			}
 
 			let datos = {
@@ -457,8 +459,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 			}
 		}
 
-		if (this.listaModelos != undefined && this.listaModelos.length > 0) {
-			this.idInstitucion = this.listaModelos[0].idInstitucion;
+		if (this.consultasSearch != undefined) {
+			this.idInstitucion = this.consultasSearch.idInstitucion;
 		}
 
 		let datos = {

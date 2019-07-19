@@ -33,7 +33,7 @@ export class CargasMasivasComponent implements OnInit, AfterContentInit {
 			{
 				label: this.cargaMasivaGF,
 				value: 'GF'
-			}
+			},
 		];
 	}
 
