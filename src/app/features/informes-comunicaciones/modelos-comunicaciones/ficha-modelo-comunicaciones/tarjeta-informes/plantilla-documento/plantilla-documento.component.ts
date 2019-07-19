@@ -193,7 +193,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.esPorDefecto && this.institucionActual == 2000) {
+    if (!this.esPorDefecto) {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
@@ -212,7 +212,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   isSelectMultipleDocs() {
     if (!this.nuevoDocumento) {
 
-      if (!this.esPorDefecto && this.institucionActual == 2000) {
+      if (!this.esPorDefecto) {
         this.selectMultipleDocs = !this.selectMultipleDocs;
         if (!this.selectMultipleDocs) {
           this.selectedDocs = [];
