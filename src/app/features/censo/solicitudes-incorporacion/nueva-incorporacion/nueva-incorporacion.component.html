@@ -195,6 +195,13 @@
                             {{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
                             <span>{{solicitudEditar.apellidos}}</span>
                         </label>
+                        <label class="mr-3" *ngIf="solicitudEditar.idEstado == '50'">
+                            <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                            <a (click)="searchSolicitante();$event.stopPropagation();">
+                                <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                                </span>
+                            </a>
+                        </label>
                         <i *ngIf="!fichaPersonal" class="fa fa-angle-down float-right"></i>
                     </div>
                 </div>

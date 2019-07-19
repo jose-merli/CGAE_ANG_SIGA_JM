@@ -627,8 +627,9 @@ export class ConsultasComponent implements OnInit {
   getComboGenerica() {
     this.comboGenerica = [
       { label: "", value: "" },
-      { label: "Sí", value: "S" },
-      { label: "No", value: "N" }
+      { label: "No", value: "N" },
+      { label: "Sí", value: "S" }
+
     ];
   }
 

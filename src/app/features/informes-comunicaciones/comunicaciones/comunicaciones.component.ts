@@ -489,8 +489,17 @@ función para que no cargue primero las etiquetas de los idiomas*/
   }
 
   limpiar() {
-    this.bodySearch = new ComunicacionesSearchItem();
-    this.datos = [];
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.bodySearch.descripcion = "";
+      this.bodySearch.fechaCreacion = undefined;
+      this.bodySearch.fechaProgramacion = undefined;
+      this.bodySearch.idClaseComunicacion = "";
+      this.bodySearch.idEstado = "";
+      this.datos = [];
+    } else {
+      this.bodySearch = new ComunicacionesSearchItem();
+      this.datos = [];
+    }
   }
 
   abreCierraFicha() {

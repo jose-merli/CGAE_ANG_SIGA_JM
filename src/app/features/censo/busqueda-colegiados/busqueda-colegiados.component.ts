@@ -474,15 +474,15 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   getComboResidencia() {
     this.comboResidencia = [
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 0 },
+      { label: "Sí", value: 1 }
     ];
 
     this.arregloTildesCombo(this.comboResidencia);
   }
 
   getComboInscrito() {
-    this.comboInscrito = [{ label: "Sí", value: 1 }, { label: "No", value: 0 }];
+    this.comboInscrito = [{ label: "No", value: 0 }, { label: "Sí", value: 1 }];
 
     this.arregloTildesCombo(this.comboInscrito);
   }
@@ -669,7 +669,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaIncorporacionHastaSelect = undefined;
     this.fechaNacimientoDesdeSelect = undefined;
     this.fechaNacimientoHastaSelect = undefined;
-    this.colegiosSeleccionados = [];
+
+    if(!this.deshabilitarCombCol){
+      this.colegiosSeleccionados = [];
+    }
   }
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros

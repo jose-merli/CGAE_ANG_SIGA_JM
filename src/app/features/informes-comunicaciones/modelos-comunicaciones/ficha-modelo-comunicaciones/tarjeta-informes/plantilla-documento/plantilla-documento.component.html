@@ -55,7 +55,7 @@
 
 
                 <p-table [value]="documentos" [columns]="colsDocumentos" [(selection)]="selectedDocs" [responsive]="true" #tableDocs class="tabla-listado"
-                  dataKey="idioma" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleDocs}"
+                  dataKey="idPlantillaDocumento" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultipleDocs}"
                   paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onRowSelect()">
                   <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
@@ -101,7 +101,8 @@
                       <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                       <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                       <div class="ml-3 selectAll">
-                        <p-checkbox (onChange)="onChangeSelectAll('docs')" [(ngModel)]="selectAllDocs" binary="true" label="Seleccionar
+                        <p-checkbox (onChange)="onChangeSelectAll('docs')" [disabled]="nuevoDocumento" [(ngModel)]="selectAllDocs" binary="true"
+                          label="Seleccionar
                       todo" name="groupname"></p-checkbox>
                       </div>
                       <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleDocs}" (click)="isSelectMultipleDocs()">
@@ -117,7 +118,8 @@
                     <button *ngIf="!showHistorico" [disabled]="!(selectedDocs && selectedDocs !='' && selectedDocs.length == 1) || esPorDefecto"
                       (click)="downloadDocumento(selectedDocs)
                     " pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.plantilla' | translate}}"></button>
-                    <button [disabled]="esPorDefecto" (click)="addDocumento()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button>
+                    <button [disabled]="esPorDefecto || nuevoDocumento" (click)="addDocumento()" pButton type="button" icon="fa fa-plus" iconPos="left"
+                      label="{{'general.boton.new' | translate}}"></button>
                   </div>
                 </p-footer>
               </div>

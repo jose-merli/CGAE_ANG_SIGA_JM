@@ -350,16 +350,19 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   getComboCertificadoEmitido() {
     this.comboCertificadoEmitido = [
-      { label: "Todos", value: "" },
+      { label: "No", value: 2 },
       { label: "Sí", value: 1 },
-      { label: "No", value: 2 }
+      { label: "Todos", value: "" }
     ];
 
     this.arregloTildesCombo(this.comboCertificadoEmitido);
   }
 
   getComboPagada() {
-    this.comboPagada = [{ label: "Sí", value: 1 }, { label: "No", value: 2 }];
+    this.comboPagada = [
+      { label: "No", value: 2 },
+      { label: "Sí", value: 1 }
+    ];
 
     this.arregloTildesCombo(this.comboPagada);
   }
