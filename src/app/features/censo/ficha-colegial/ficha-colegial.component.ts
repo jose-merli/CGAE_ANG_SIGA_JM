@@ -3276,8 +3276,16 @@ export class FichaColegialComponent implements OnInit {
     this.displayDelete = false;
     this.progressSpinner = true;
 
+
+    let estadoCol = JSON.parse(JSON.stringify(selectedItem));
+    selectedItem = JSON.parse(JSON.stringify(this.colegialesBody));
+    selectedItem.fechaEstado = estadoCol.fechaEstado;
+    selectedItem.observaciones = estadoCol.observaciones;
+    selectedItem.situacionResidente = estadoCol.situacionResidente;
     selectedItem.idInstitucion = this.colegialesBody.idInstitucion;
     selectedItem.idPersona = this.colegialesBody.idPersona;
+    selectedItem.situacionResidente = this.datosColegiales[1].situacionResidente;
+    selectedItem.idEstado = this.datosColegiales[1].idEstado;
 
     this.sigaServices
       .post("fichaDatosColegiales_datosColegialesDeleteEstado", selectedItem)
@@ -3352,8 +3360,6 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.callServiceEliminarEstadoColegial(selectedItem);
     }
-
-
 
   }
 
