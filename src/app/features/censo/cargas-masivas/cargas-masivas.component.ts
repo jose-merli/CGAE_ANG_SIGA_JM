@@ -27,13 +27,13 @@ export class CargasMasivasComponent implements OnInit, AfterContentInit {
 
 		this.cargasMasivas = [
 			{
+				label: this.cargaMasivaCV,
+				value: 'CV'
+			},
+			{
 				label: this.cargaMasivaGF,
 				value: 'GF'
 			},
-			{
-				label: this.cargaMasivaCV,
-				value: 'CV'
-			}
 		];
 	}
 

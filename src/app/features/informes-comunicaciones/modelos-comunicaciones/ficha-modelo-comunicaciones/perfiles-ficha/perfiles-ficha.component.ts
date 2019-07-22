@@ -24,6 +24,7 @@ export class PerfilesFichaComponent implements OnInit {
   soloLectura: boolean = false;
   editar: boolean = true;
   numeroPerfilesExistentes: number = 0;
+  institucionActual: number;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -71,6 +72,20 @@ export class PerfilesFichaComponent implements OnInit {
     ) {
       this.soloLectura = true;
     }
+
+    this.getInstitucionActual();
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+
+      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
+        this.soloLectura = true;
+      } else {
+        this.soloLectura = false;
+      }
+    });
   }
 
   // Mensajes

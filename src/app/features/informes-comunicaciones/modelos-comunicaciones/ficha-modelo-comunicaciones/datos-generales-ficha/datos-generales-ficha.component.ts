@@ -55,13 +55,13 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   ngOnInit() {
     this.preseleccionar = [
-      { label: "Sí", value: "SI" },
-      { label: "No", value: "NO" }
+      { label: "No", value: "NO" },
+      { label: "Sí", value: "SI" }
     ];
 
     this.visible = [
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 0 },
+      { label: "Sí", value: 1 }
     ];
 
     this.getInstitucion();
@@ -221,6 +221,13 @@ export class DatosGeneralesFichaComponent implements OnInit {
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
+        this.soloLectura = true;
+      } else {
+        this.soloLectura = false;
+      }
+
       this.body.idInstitucion = this.institucionActual;
       this.getComboColegios();
       this.getDatos();
