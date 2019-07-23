@@ -57,13 +57,13 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
   ngOnInit() {
     this.preseleccionar = [
-      { label: "Sí", value: "SI" },
-      { label: "No", value: "NO" }
+      { label: "No", value: "NO" },
+      { label: "Sí", value: "SI" }
     ];
 
     this.visible = [
-      { label: "Sí", value: 1 },
-      { label: "No", value: 0 }
+      { label: "No", value: 0 },
+      { label: "Sí", value: 1 }
     ];
 
     this.getInstitucion();

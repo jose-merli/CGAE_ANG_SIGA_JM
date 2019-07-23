@@ -1196,9 +1196,10 @@ export class FichaColegialComponent implements OnInit {
       this.router.navigate(["/busquedaCensoGeneral"]);
     } else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
-    } else if (sessionStorage.getItem("esColegiado") == "true") {
+    } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true") {
       this.router.navigate(["/busquedaColegiados"]);
     } else {
+      sessionStorage.removeItem("solicitudAprobada")
       this.location.back();
     }
   }
@@ -2888,8 +2889,14 @@ export class FichaColegialComponent implements OnInit {
               data => {
                 // En el caso de que se haya insertado un nuevo estado colegial en la tabla, habrá que realizar el insert
                 if (this.isCrearColegial == true) {
+                  let estadoCol = JSON.parse(JSON.stringify(this.nuevoEstadoColegial));
+                  this.nuevoEstadoColegial = JSON.parse(JSON.stringify(this.colegialesBody));
                   this.nuevoEstadoColegial.idInstitucion = this.colegialesBody.idInstitucion;
                   this.nuevoEstadoColegial.idPersona = this.colegialesBody.idPersona;
+                  this.nuevoEstadoColegial.fechaEstado = estadoCol.fechaEstado;
+                  this.nuevoEstadoColegial.observaciones = estadoCol.observaciones;
+                  this.nuevoEstadoColegial.situacion = estadoCol.situacion;
+                  this.nuevoEstadoColegial.situacionResidente = estadoCol.situacionResidente;
 
                   this.sigaServices
                     .post("fichaDatosColegiales_datosColegialesInsertEstado", this.nuevoEstadoColegial)
@@ -3269,8 +3276,16 @@ export class FichaColegialComponent implements OnInit {
     this.displayDelete = false;
     this.progressSpinner = true;
 
+
+    let estadoCol = JSON.parse(JSON.stringify(selectedItem));
+    selectedItem = JSON.parse(JSON.stringify(this.colegialesBody));
+    selectedItem.fechaEstado = estadoCol.fechaEstado;
+    selectedItem.observaciones = estadoCol.observaciones;
+    selectedItem.situacionResidente = estadoCol.situacionResidente;
     selectedItem.idInstitucion = this.colegialesBody.idInstitucion;
     selectedItem.idPersona = this.colegialesBody.idPersona;
+    selectedItem.situacionResidente = this.datosColegiales[1].situacionResidente;
+    selectedItem.idEstado = this.datosColegiales[1].idEstado;
 
     this.sigaServices
       .post("fichaDatosColegiales_datosColegialesDeleteEstado", selectedItem)
@@ -3345,8 +3360,6 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.callServiceEliminarEstadoColegial(selectedItem);
     }
-
-
 
   }
 

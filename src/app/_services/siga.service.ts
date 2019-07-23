@@ -624,8 +624,9 @@ export class SigaServices {
     enviosMasivos_guardarDocumento:
       "enviosMasivos/detalle/guardarDocumentoEnvio",
     enviosMasivos_borrarDocumento: "enviosMasivos/detalle/borrarDocumentoEnvio",
-    enviosMasivos_descargarDocumento:
-      "enviosMasivos/detalle/descargarDocumento",
+    enviosMasivos_descargarDocumento: "enviosMasivos/detalle/descargarDocumento",
+    enviosMasivos_nombreFicheroLog: "enviosMasivos/detalle/nombreFicheroLog",
+    enviosMasivos_descargarLog: "enviosMasivos/detalle/descargarLog",
     consultas_comboObjetivos: "consultas/objetivo",
     consultas_comboModulos: "consultas/modulo",
     comunicaciones_claseComunicaciones: "comunicaciones/clasesComunicacion",

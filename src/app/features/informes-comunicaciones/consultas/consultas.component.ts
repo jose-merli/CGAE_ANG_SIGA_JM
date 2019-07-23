@@ -629,8 +629,9 @@ export class ConsultasComponent implements OnInit {
   getComboGenerica() {
     this.comboGenerica = [
       { label: "", value: "" },
-      { label: "Sí", value: "S" },
-      { label: "No", value: "N" }
+      { label: "No", value: "N" },
+      { label: "Sí", value: "S" }
+
     ];
   }
 
@@ -746,7 +747,9 @@ export class ConsultasComponent implements OnInit {
   }
 
   getDatosComunicar(selectedDatos) {
+
     let dato = selectedDatos[0];
+    sessionStorage.setItem('idInstitucion',  dato.idInstitucion);
     let rutaClaseComunicacion = this.currentRoute.toString();
     sessionStorage.removeItem('datosComunicar');
     sessionStorage.setItem('idConsulta', dato.idConsulta);
