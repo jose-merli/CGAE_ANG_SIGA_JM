@@ -193,7 +193,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.esPorDefecto && this.institucionActual == 2000) {
+    if (!this.esPorDefecto) {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
@@ -208,7 +208,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isSelectMultipleDocs() {
-    if (!this.esPorDefecto && this.institucionActual == 2000) {
+    if (!this.esPorDefecto) {
       this.selectMultipleDocs = !this.selectMultipleDocs;
       if (!this.selectMultipleDocs) {
         this.selectedDocs = [];
@@ -1183,10 +1183,23 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
 
-      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
-        this.esPorDefecto = true;
+      if (sessionStorage.getItem("esPorDefecto") != undefined) {
+        if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000 || sessionStorage.getItem("soloLectura") === 'true') {
+          this.esPorDefecto = true;
+        } else {
+          this.esPorDefecto = false;
+        }
       } else {
-        this.esPorDefecto = false;
+        this.modeloItem = JSON.parse(sessionStorage.getItem('modelosSearch'));
+        if (this.modeloItem.porDefecto == 'SI' && this.institucionActual != 2000) {
+          if (
+            sessionStorage.getItem("soloLectura") != null &&
+            sessionStorage.getItem("soloLectura") != undefined &&
+            sessionStorage.getItem("soloLectura") == "true"
+          ) {
+            this.esPorDefecto = true;
+          }
+        }
       }
     });
   }

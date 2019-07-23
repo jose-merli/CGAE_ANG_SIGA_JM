@@ -107,14 +107,6 @@ export class TarjetaInformesComponent implements OnInit {
       }
     ];
 
-    if (
-      sessionStorage.getItem("soloLectura") != null &&
-      sessionStorage.getItem("soloLectura") != undefined &&
-      sessionStorage.getItem("soloLectura") == "true"
-    ) {
-      this.soloLectura = true;
-    }
-
     this.getInstitucionActual();
   }
 
@@ -125,7 +117,16 @@ export class TarjetaInformesComponent implements OnInit {
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
       } else {
-        this.soloLectura = false;
+        this.modelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
+        if (this.modelo.porDefecto == 'SI' && this.institucionActual != 2000) {
+          if (
+            sessionStorage.getItem("soloLectura") != null &&
+            sessionStorage.getItem("soloLectura") != undefined &&
+            sessionStorage.getItem("soloLectura") == "true"
+          ) {
+            this.soloLectura = true;
+          }
+        }
       }
     });
   }

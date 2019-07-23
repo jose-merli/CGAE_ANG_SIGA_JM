@@ -3,6 +3,7 @@ import { DatosGeneralesPlantillaItem } from "../../../../../models/DatosGenerale
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 
 @Component({
   selector: "app-datos-generales-plantilla",
@@ -14,12 +15,15 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   activacionEditar: boolean = true;
   body: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
   bodyInicial: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
+  bodyPlantilla: PlantillaEnvioItem = new PlantillaEnvioItem();
   tiposEnvio: any[];
   msgs: Message[];
   editar: boolean = false;
   nuevo: boolean = false;
+  soloLectura: boolean = false;
   apiKey: string = "";
 
+  institucionActual: any;
   editorConfig: any = {
     selector: 'textarea',
     plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
@@ -27,7 +31,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     menubar: false,
     autoresize_on_init: true,
     statusbar: false,
-    paste_data_images : true,
+    paste_data_images: true,
     images_upload_handler: function (blobInfo, success, failure) {
       // no upload, just return the blobInfo.blob() as base64 data
       success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
@@ -55,11 +59,14 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(sessionStorage.getItem("tinyApiKey") != null){
+    if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
     this.getTipoEnvios();
     this.getDatos();
+
+    this.getInstitucion();
+
     if (sessionStorage.getItem("crearNuevaPlantilla") != undefined) {
       this.nuevo = JSON.parse(sessionStorage.getItem("crearNuevaPlantilla"));
     }
@@ -78,6 +85,24 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
         value: "2"
       }
     ];
+  }
+
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+
+      this.bodyPlantilla = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
+      if (this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
+        if (
+          sessionStorage.getItem("soloLectura") != null &&
+          sessionStorage.getItem("soloLectura") != undefined &&
+          sessionStorage.getItem("soloLectura") == "true"
+        ) {
+          this.soloLectura = true;
+        }
+      }
+
+    });
   }
 
   // Mensajes
@@ -203,7 +228,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.descripcion != "" &&
       this.body.descripcion != null &&
       this.body.nombre != "" &&
-      this.body.nombre != null
+      this.body.nombre != null && !this.soloLectura
     ) {
       return false;
     }
