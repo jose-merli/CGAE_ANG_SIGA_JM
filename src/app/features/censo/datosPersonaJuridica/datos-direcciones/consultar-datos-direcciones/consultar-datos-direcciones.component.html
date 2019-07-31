@@ -109,7 +109,7 @@
                   {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                 </label>
                 <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || permisoTarjeta == '2'"
-                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
                   id="dropdown">
                 </p-dropdown>
 

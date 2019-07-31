@@ -448,7 +448,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

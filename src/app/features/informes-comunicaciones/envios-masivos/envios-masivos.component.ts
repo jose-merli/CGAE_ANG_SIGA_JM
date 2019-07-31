@@ -139,7 +139,7 @@ export class EnviosMasivosComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tiposEnvio = data.combooItems;
-        this.tiposEnvio.unshift({ label: "Seleccionar", value: "" });
+        // this.tiposEnvio.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tiposEnvio.map(e => {
@@ -167,7 +167,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        this.estados.unshift({ label: "Seleccionar", value: "" });
+        // this.estados.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);

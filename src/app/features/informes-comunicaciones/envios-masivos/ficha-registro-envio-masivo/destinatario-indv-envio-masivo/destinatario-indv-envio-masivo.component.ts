@@ -164,8 +164,10 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
     }, error => {
       this.showDirecciones = false;
       let err = JSON.parse(error.error);
-      if (err.error.code == 400)
-        this.showInfo("No existen direcciones disponibles para la persona seleccionada.");
+      if (err.error.code == 400) {
+        let msg = this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.noDirecciones");
+        this.showInfo(msg);
+      }
       else
         console.log(error);
     })
@@ -188,7 +190,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
   desasociar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: "¿Está seguro de desasociar los destinatarios seleccionados?",
+      message: this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.desasociar.destinatarios"),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarDesasociar(dato);
@@ -220,12 +222,13 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
       .post("enviosMasivos_desAsociarDestinatariosIndv", this.eliminarArray)
       .subscribe(
         data => {
-          this.showSuccess("Destinatarios borrados correctamente.");
+          let msg = this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.borrar.destinatarios.ok");
+          this.showSuccess(msg);
           this.selectedDatos = [];
         },
         err => {
           this.showFail(
-            this.translateService.instant("Error al borrar destinatarios"));
+            this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.error.borrar.destinatarios"));
           console.log(err);
         },
         () => {
@@ -259,7 +262,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
       idDireccion: direccion[0].idDireccion
     };
     this.sigaServices.post("enviosMasivos_asociarDestinatariosIndv", destinatario).subscribe(result => {
-      this.showSuccess("Destinatario añadido");
+      this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.destinatario.añadido"));
       this.showDirecciones = false;
       this.selectMultiple = false;
       this.getResultados();

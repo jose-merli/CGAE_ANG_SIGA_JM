@@ -300,9 +300,10 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{tableNotifications.first + 1}} al {{tableNotifications.first + tableNotifications.rows}}
-                  de un total de {{tableNotifications.totalRecords}}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedNotification}}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableNotifications.first
+                  + 1}} al {{tableNotifications.first + tableNotifications.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{tableNotifications.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelectedNotification}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -405,9 +406,11 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{ tableNotifications.first + 1 }} al {{ tableNotifications.first + tableNotifications.rows
-                  }} de un total de {{ tableNotifications.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedNotification }}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableNotifications.first
+                  + 1 }} al {{ tableNotifications.first + tableNotifications.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{ tableNotifications.totalRecords }}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedNotification
+                  }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1">
@@ -490,9 +493,11 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{ tableNotifications.first + 1 }} al {{ tableNotifications.first + tableNotifications.rows
-                  }} de un total de {{ tableNotifications.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedNotification }}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableNotifications.first
+                  + 1 }} al {{ tableNotifications.first + tableNotifications.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{ tableNotifications.totalRecords }}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedNotification
+                  }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1">
@@ -651,9 +656,9 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{tableAsistencia.first + 1}} al {{tableAsistencia.first + tableAsistencia.rows}} de
-                un total de {{tableAsistencia.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedAsistencia}}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableAsistencia.first
+                + 1}} al {{tableAsistencia.first + tableAsistencia.rows}} de un total de {{tableAsistencia.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelectedAsistencia}}</label>
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedAsistencia" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesAsistencia($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>

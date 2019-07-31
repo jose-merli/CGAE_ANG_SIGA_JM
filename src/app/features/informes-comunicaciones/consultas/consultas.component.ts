@@ -381,7 +381,7 @@ export class ConsultasComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )
@@ -703,14 +703,14 @@ export class ConsultasComponent implements OnInit {
         // debugger;
         this.showValores = false;
         if (data == null) {
-          this.showInfo("La consulta no devuelve resultados");
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
         } else {
           saveAs(data, "ResultadoConsulta.xlsx");
         }
       }, error => {
         console.log(error);
         this.progressSpinner = false;
-        this.showFail("Error al ejecutar la consulta");
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
       }, () => {
         this.progressSpinner = false;
       });

@@ -218,7 +218,7 @@
                 </label>
                 <p-dropdown #poblacion [disabled]="deshabilitarDireccion() || modoLectura" (input)="buscarPoblacion($event)" class="select-form"
                     [(ngModel)]="poblacionSelected" [options]="poblaciones" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                    (onChange)="obtenerPoblacionDesc($event)" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                    (onChange)="obtenerPoblacionDesc($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"></p-dropdown>
 
                 <!-- <input type="text" class="form-control" pInputText [(ngModel)]="body.nombrePoblacion">-->
             </div>

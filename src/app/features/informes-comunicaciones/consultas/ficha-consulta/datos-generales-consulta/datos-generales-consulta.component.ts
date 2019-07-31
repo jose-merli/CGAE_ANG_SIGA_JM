@@ -214,11 +214,12 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   getClasesComunicaciones() {
+    let msg = "Seleccionar todo";
     if (this.body.idModulo != undefined && this.body.idModulo != "") {
       this.cargaComboClaseCom(null);
     } else {
       this.clasesComunicaciones = [];
-      this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+      this.clasesComunicaciones.unshift({ label: msg, value: '' });
     }
   }
 
@@ -394,7 +395,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   confirmEdit() {
-    let mess = "Se va a cambiar el modelo de comunicaciones asociado a esta consulta";
+    let mess = this.translateService.instant("informesYcomunicaciones.consultas.datosGenerales.mensaje.cambio.modeloComunicacion");
     let icon = "fa fa-info";
     this.confirmationService.confirm({
       message: mess,

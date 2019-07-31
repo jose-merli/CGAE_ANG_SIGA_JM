@@ -383,9 +383,9 @@
 
               <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
-                  <label class="pr-3 registros-totales">Mostrando registros del {{ tableCertificates.first + 1 }} al {{ tableCertificates.first + tableCertificates.rows
-                    }} de un total de {{ tableCertificates.totalRecords }}</label>
-                  <!-- <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedCertificates }}</label> -->
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCertificates.first + 1 }} al {{ tableCertificates.first + tableCertificates.rows
+                    }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{ tableCertificates.totalRecords }}</label>
+                  <!-- <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedCertificates }}</label> -->
                   <label>{{ "general.message.mostrar" | translate }}</label>
                   <p-dropdown [(ngModel)]="selectedCertificates" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                   <label class="pl-1">
