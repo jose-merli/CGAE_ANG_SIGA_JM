@@ -616,7 +616,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.sigaServices.get('modelos_detalle_plantillasComunicacion').subscribe(
 			(data) => {
 				this.plantillas = data.combooItems;
-				this.plantillas.unshift({ label: 'Seleccionar', value: '' });
+				this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
 			},
 			(err) => {
 				console.log(err);

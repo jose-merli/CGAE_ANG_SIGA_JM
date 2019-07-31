@@ -27,7 +27,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     menubar: false,
     autoresize_on_init: true,
     statusbar: false,
-    paste_data_images : true,
+    paste_data_images: true,
     images_upload_handler: function (blobInfo, success, failure) {
       // no upload, just return the blobInfo.blob() as base64 data
       success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
@@ -55,7 +55,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(sessionStorage.getItem("tinyApiKey") != null){
+    if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
     this.getTipoEnvios();
@@ -136,7 +136,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       n => {
         this.tiposEnvio = n.combooItems;
-        this.tiposEnvio.unshift({ label: "Seleccionar", value: "" });
+        // this.tiposEnvio.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tiposEnvio.map(e => {

@@ -126,7 +126,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        this.tipoEnvios.unshift({ label: 'Seleccionar', value: '' });
+        this.tipoEnvios.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
         this.tipoEnvios.map(e => {
           if (this.body.idTipoEnvios == e.value) {
             this.tipoEnvio = e.label;

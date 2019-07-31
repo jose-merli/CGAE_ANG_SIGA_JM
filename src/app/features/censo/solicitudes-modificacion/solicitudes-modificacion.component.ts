@@ -735,7 +735,7 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
@@ -837,7 +837,7 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

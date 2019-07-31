@@ -122,7 +122,7 @@
               </p-dropdown> -->
 
 
-              <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
+              <p-multiSelect defaultLabel="{{ textFilter | translate}}" styleClass="widthAll" [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
                 [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="true"></p-multiSelect>
 
 
@@ -148,7 +148,7 @@
                 <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
                   <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                     <td *ngFor="let col of columns">
-                      <span *ngIf="col.field !='valor'">{{dato[col.field]}}</span>
+                      <span *ngIf="col.field !='valor'">{{ dato[col.field] | translate }}</span>
                       <span *ngIf="col.field =='valor' && dato.value== 'tlf'">{{direccion.telefono}}</span>
                       <span *ngIf="col.field =='valor' && dato.value== 'fax'">{{direccion.fax}}</span>
                       <span *ngIf="col.field =='valor' && dato.value== 'mvl'">{{direccion.movil}}</span>
@@ -195,7 +195,8 @@
 
     <ng-template pTemplate="paginatorLeft">
       <div class="mostrar">
-        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+          + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
         <label>{{ 'general.message.mostrar' | translate}}</label>
         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
         <label>{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>

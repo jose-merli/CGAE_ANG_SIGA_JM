@@ -245,13 +245,13 @@ export class ConsultaComponent implements OnInit {
       data => {
         sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.showSuccess('Se ha guardado la consulta correctamente');
+        this.showSuccess(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.guardar.consulta.correcto"));
         this.consultaEditada = false;
 
       },
       err => {
         let error = JSON.parse(err.error);
-        this.showFail('Error al guardar la consulta: ' + error.message);
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.guardarConsulta") + ': ' + error.message);
         console.log(err);
       },
       () => {
@@ -286,7 +286,7 @@ export class ConsultaComponent implements OnInit {
             if (element.valores != undefined && element.valores != null) {
               let empty = {
                 ID: 0,
-                DESCRIPCION: 'Seleccione una opción...'
+                DESCRIPCION: this.translateService.instant("general.literal.seleccioneUnaOpcion") + '...'
               }
               element.valores.unshift(empty);
             }
@@ -302,7 +302,7 @@ export class ConsultaComponent implements OnInit {
         console.log(this.valores);
       }, error => {
         console.log(error);
-        this.showFail("Error al obtener los parámetros dinámicos disponibles")
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.parametrosDinamicos"))
       });
   }
 
@@ -345,14 +345,14 @@ export class ConsultaComponent implements OnInit {
         debugger;
         this.showValores = false;
         if (data == null) {
-          this.showInfo("La consulta no devuelve resultados");
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
         } else {
           saveAs(data, "ResultadoConsulta.xlsx");
         }
       }, error => {
         console.log(error);
         this.progressSpinner = false;
-        this.showFail("Error al ejecutar la consulta");
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
       }, () => {
         this.progressSpinner = false;
       });
@@ -378,105 +378,67 @@ export class ConsultaComponent implements OnInit {
   }
 
   getAyuda() {
+
     this.ayuda = [
       {
-        texto: "1.La sentencia debe ir etiquetada con los siguientes etiquetas para indicar el comienzo y fin de las diferentes partes de la sentencia:" +
-          "<SELECT> </SELECT>%%, donde se indica la clausula SELECT.<FROM> </FROM>, donde se indica la clausula FROM de la sentencia principal." +
-          "<WHERE> </WHERE>, donde se indica la clausula WHERE de la sentencia principal." +
-          "<UNION> </UNION>, donde se indica la clausula UNION de la sentencia principal." +
-          "<UNIONALL> </UNIONALL>, donde se indica la clausula UNION ALL de la sentencia principal." +
-          "<GROUPBY> </GROUPBY>, donde se indica la clausula GROUP BY de la sentencia principal." +
-          "<ORDERBY> </ORDERBY>, donde se indica la clausula ORDER BY de la sentencia principal."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto1"
       },
       {
-        texto: "2.Los campos de salida deben tener ALIAS y con el siguiente formato: CAMPO AS 'ALIAS_CAMPO'."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto2"
       },
       {
-        texto: "3.Los criterios dinámicos deben ir delimitados por los delimitadores %%OPERADOR%% %%CRITERIO%%, CRITERIO es el formato del campo."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto3"
       },
       {
-        texto: "4.Los formatos de criterios dinámicos admitidos son:" +
-          "%%NUMERO%%, para campos numéricos." +
-          "%%TEXTO%%, para campos alfanuméricos." +
-          "%%FECHA%%, para fechas." +
-          "%%MULTIVALOR@CONSULTA%%, para campos multivalor. CONSULTA es una consulta con campos de salida ID y DESCRIPCION que no debe ir encerrada entre paréntesis."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto4"
       },
       {
-        texto: "4.Los formatos de criterios dinámicos admitidos son:" +
-          "%%NUMERO%%, para campos numéricos." +
-          "%%TEXTO%%, para campos alfanuméricos." +
-          "%%FECHA%%, para fechas." +
-          "%%MULTIVALOR@CONSULTA%%, para campos multivalor. CONSULTA es una consulta con campos de salida ID y DESCRIPCION que no debe ir encerrada entre paréntesis."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto5"
       },
       {
-        texto: "5.Si se utiliza como criterio dinámico %%TEXTO%% para los campos alfanuméricos.Recuerde que puede usar los comodines %Y _ tanto en la consulta como en los criterios dinámicos con el operador COMO. Si queremos hacer una búsqueda aproximada por nombre de colegiado ya que se desconoce su nombre exacto utilizaremos el comodín %NOMBRE COLEGIADO% y la consulta nos devolverá los resultados de esa cadena por ejemplo %JOSE% nos devolverá Maria Jose, Jose Maria. "
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto6"
       },
       {
-        texto: "6.Para que los criterios dinámicos del campo de texto sean independientes de mayúsculas y minúsculas puede utilizar la función UPPER delante de los campos usados en la consulta. Ejemplo: Si queremos buscar dinámicamente por el nombre de un colegiado para que nos ignore las mayúsculas y minúsculas haremos UPPER(Cen_persona.Nombre)%%OPERADOR%%UPPER(%%TEXTO%%). "
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto7"
       },
       {
-        texto: "7.Los campos de salida correspondientes a descripciones 'multi-idioma' deben tener el siguiente formato: F_SIGA_GETRECURSO(campo , %%IDIOMA%%) as 'alias_campo'"
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto8"
       },
       {
-        texto: "8.La cláusula ORDER BY no se comprueba al guardar, por lo que podría ser causa de error en la ejecución."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto9"
       },
       {
-        texto: "9.La consulta, una vez construida, no se debe finalizar con ';'."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto10"
       },
       {
-        texto: "10.Cuando se utiliza %%FECHA%% como criterio dinámicos, se puede utilizar la función TRUNC cuando se desee hacer las comparaciones sin horas/min/seg."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto11"
       },
       {
-        texto: "11.Puede utilizar la función F_SIGA_GETDIRECCION (IDINSTITUCION, IDPERSONA, TIPOENVIO) para obtener una dirección a donde se harán los envíos." +
-          "Esta dirección será siempre la preferente por tipo de envío, si no hay ninguna configurada, devolverá la de tipo correo, si no la de despacho y si no cualquier dirección dada de alta. TIPOENVIO puede tomar los siguientes valores:" +
-          "1, si el tipo de envío es por correo electrónico." +
-          "2, si el tipo de envío es por correo ordinario." +
-          "3, si el tipo de envío es por fax."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto12"
       },
       {
-        texto: "12.En el caso en que las consultas sean de Envíos a Grupos, la condición del tipo de dirección se añade automáticamente y cuando se ejecuta la consulta se pide el tipo de envío."
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto13"
       },
       {
-        texto: "13.	Las consultas de tipo 'Facturación' o 'Envío a Grupos' tienen las siguientes restricciones:" +
-          "No puede incorporar solicitudes de criterios dinámicos por interfaz." +
-          "Para las consultas de tipo 'Facturación' los siguientes campos son obligatorios: IDINSTITUCION , IDPERSONA." +
-          "Para las consultas de tipo 'Envío a Grupos': IDINSTITUCION, IDPERSONA, CODIGOPOSTAL, CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX1, IDPAIS, IDPROVINCIA, IDPOBLACION."
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto14"
       },
       {
-        texto: "14.	Las consultas de tipo 'Envío a Grupos' tiene las siguientes restricciones:" +
-          "Las consultas listas para envíos han de llevar la tabla CEN_CLIENTE y CEN_DIRECCIONES sin alias." +
-          "NO se debe añadir condiciones para filtrar la dirección, ya que eso se hace automáticamente."
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto15"
       },
       {
-        texto: "15.	Se han añadido los nuevos operadores =,!=,IS NULL,LIKE al formato de los criterios TEXTO. A estos operadores se añaden >,>=,<,<= cuando el formato sea NUMERO, FECHA o MULTIVALOR. Estos operadores funcionan del mismo modo que %%OPERADOR%%"
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto16"
       },
       {
-        texto: "16.	Se ha añadido la cláusula DEFECTO para los operadores. La notación será %%OPERADOR%% %%CRITERIO%% DEFECTO 'VALOR'. Estos valores aparecerán por defecto en la pantalla de criterios dinámicos. Si el criterio es FECHA el formato será dd/mm/yyyy y también acepta SYSDATE para la fecha actual."
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto17"
       },
       {
-        texto: "17. Se ha añadido la cláusula NULO para los operadores. La notación será %%OPERADOR%% %%CRITERIO%% NULO 'VALOR'. Donde valor es 'SI' y 'NO'. En caso que no exista será 'NO'. En el caso de que exista la cláusula DEFECTO debe ir siempre detrás de ella. En caso de que admita nulos no será obligatorio dar ningún valor al criterio dinámico en la pantalla de criterios dinámicos y filtrará como IS NULL"
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto18"
       },
       {
-        texto: "18. Si la consulta pertenece a una clase de comunicación será obligatorio introducir en la etiqueta <WHERE> de la consulta las claves asociadas a dicha clase de comunicación." +
-          "Informes genéricos de censo: %%IDPERSONA%%, %%IDINSTITUCION%%. " +
-          "Informes de sanciones de letrados: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDSANCION%%. " +
-          "Plantilla de Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%. " +
-          "Plantilla de Anexo a la Orden de domiciliación de adeudo directo SEPA: %%IDPERSONA%%, %%IDINSTITUCION%%, %%IDCUENTA%%, %%IDMANDATO%%, %%IDANEXO%%."
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto19"
       },
       {
-        texto: "19. Es obligatorio introducir en la etiqueta <WHERE> la clave %%IDINSTITUCION%%."
-
-      },
-      {
-        texto: "20. Si el objetivo de la consulta es 'DESTINATARIOS' se debe añadir dentro de la etiqueta <SELECT> los siguientes campos:" +
-          "IDINSTITUCION, IDPERSONA, CODIGOPOSTAL, CORREOELECTRONICO, DOMICILIO, MOVIL, FAX1, FAX2, IDPAIS, IDPROVINCIA, IDPOBLACION"
-
+        texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto20"
       }
 
     ]

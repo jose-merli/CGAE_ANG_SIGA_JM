@@ -332,14 +332,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     if (e.target.value && e.target.value !== null && e.target.value !== "") {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
       }
     } else {
       this.comboPoblacion = [];
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
 
@@ -855,7 +855,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

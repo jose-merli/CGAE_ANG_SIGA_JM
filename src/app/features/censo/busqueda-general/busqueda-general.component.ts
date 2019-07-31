@@ -1045,7 +1045,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
   }
@@ -1063,7 +1063,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

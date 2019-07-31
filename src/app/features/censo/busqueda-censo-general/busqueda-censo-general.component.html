@@ -12,39 +12,51 @@
   <div class="card">
     <!-- Datos generales -->
     <div class="card-body">
+      <div class="form-row">
+        <div class="col-4">
+          <p-radioButton class="mr-2" name="exacta" value="aprox" label="{{ 'censo.busquedaCensoGeneral.boton.radio.busquedaAproximada' | translate }}"
+            [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+          <p-radioButton class="ml-2" name="aprox" value="exacta" label="{{ 'censo.busquedaCensoGeneral.boton.radio.busquedaExacta' | translate }}"
+            [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+        </div>
+      </div>
       <p (click)="onHideDatosGenerales()" class="title-module">
         {{ "censo.consultaDatosGenerales.cabecera" | translate }}
         <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
-      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+      <div *ngIf="showDatosGenerales && modoBusquedaAprox" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <!-- <div class="form-group col-lg-3 col-md-3">
             <label>{{ "administracion.usuarios.literal.NIF" | translate }}
             </label>
             <input type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]="body.nif" />
-          </div>
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-            </label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre" />
-          </div>
-          <div class="form-group col-lg-3 col-md-3">
+          </div> -->
+
+          <div class="form-group col-lg-3 col-md-2">
             <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }}
             </label>
             <input type="text" class="form-control" pInputText [(ngModel)]="body.primerApellido" />
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group col-lg-3 col-md-2">
             <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
             </label>
             <input type="text" class="form-control" pInputText [(ngModel)]="body.segundoApellido" />
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+
+          <div class="form-group col-lg-3 col-md-2">
+            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+            </label>
+            <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre" />
+          </div>
+
+          <div class="form-group col-lg-3 col-md-2">
             <label>{{ "censo.resultadoDuplicados.numeroColegiado" | translate }}
             </label>
             <input type="text" class="form-control" pInputText [(ngModel)]="body.numeroColegiado" />
           </div>
-          <div class="form-group col-lg-6 col-md-6">
+
+          <div class="form-group col-lg-3 col-md-2">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
             </label>
             <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="colegios_seleccionados" [options]="colegios" optionLabel="label"
@@ -52,11 +64,20 @@
           </div>
         </div>
       </div>
+      <div *ngIf="showDatosGenerales && !modoBusquedaAprox" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ "administracion.usuarios.literal.NIF" | translate }}
+            </label>
+            <input type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]="body.nif" />
+          </div>
+        </div>
+      </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
-        <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+        <button (click)="isBuscarAprox()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -74,7 +95,7 @@
           filterPlaceholder="{{ 'general.boton.search' | translate }}" filterMatchMode="contains"></p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
-            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{ table.first + 1 }} al {{ table.first + table.rows }} de un total de {{ table.totalRecords
+            <label class="mt-2 pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ table.first + 1 }} al {{ table.first + table.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{ table.totalRecords
               }}
             </label>
             <label>Mostrar</label>

@@ -476,14 +476,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.poblaciones = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
       }
     } else {
       this.poblaciones = [];
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
   obtenerProvinciaDesc(e) {
@@ -627,7 +627,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )

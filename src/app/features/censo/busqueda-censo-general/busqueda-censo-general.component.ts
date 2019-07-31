@@ -49,7 +49,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
   colegiadoSearch = new DatosColegiadosObject();
-
+  modoBusqueda: string = "aprox";
+  modoBusquedaAprox: boolean = true;
   selectedItem: number = 10;
   @ViewChild("table")
   table;
@@ -73,7 +74,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       if (sessionStorage.getItem("busquedaCensoGeneral") != null) {
         this.body = JSON.parse(sessionStorage.getItem("filtrosBusqueda"));
         this.colegios_seleccionados = this.body.colegios_seleccionados;
-        this.isBuscar();
+        this.isBuscarAprox();
         sessionStorage.removeItem("busquedaCensoGeneral");
       }
 
@@ -176,19 +177,25 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         ) {
           this.search();
         } else {
-          this.showFail("Debe introducir un colegio para buscar.");
+          this.showFail(this.translateService.instant("censo.busquedaCensoGeneral.mensaje.introducir.colegio"));
         }
       } else if (
         this.colegios_seleccionados != undefined &&
         this.colegios_seleccionados.length > 0
       ) {
         if (
-          this.body.numeroColegiado != undefined &&
-          this.body.numeroColegiado != ""
+          (this.body.numeroColegiado != undefined &&
+            this.body.numeroColegiado != "") ||
+          (this.body.nombre != null &&
+            this.body.nombre != undefined) ||
+          (this.body.primerApellido != null &&
+            this.body.primerApellido) ||
+          (this.body.segundoApellido != null &&
+            this.body.segundoApellido != undefined)
         ) {
           this.search();
         } else {
-          this.showFail("Debe introducir un número de colegiado para buscar.");
+          this.showFail("Debe introducir un campo más");
         }
       } else {
         this.search();
@@ -196,6 +203,39 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     }
 
 
+  }
+
+  isBuscarAprox() {
+    if (this.modoBusquedaAprox) {
+      this.isBuscar();
+    } else {
+      this.isBuscarExacta();
+    }
+  }
+
+  isBuscarExacta() {
+
+    if (this.checkFiltersExact()) {
+      this.progressSpinner = true;
+      this.buscar = true;
+
+      this.sigaServices
+        .postPaginado("busquedaCensoGeneral_searchExact", "?numPagina=1", this.body)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.bodySearch = JSON.parse(data["body"]);
+            this.datos = this.bodySearch.busquedaFisicaItems;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          }
+        );
+
+    } else {
+      this.showFail(this.translateService.instant("censo.busquedaCensoGeneral.mensaje.introducir.numero.colegiado"));
+    }
   }
 
   search() {
@@ -360,7 +400,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           this.router.navigate(["/fichaColegial"]);
         } else {
           this.confirmationService.confirm({
-            message: "¿Desea crear un no colegiado?",
+            message: this.translateService.instant("censo.busquedaCensoGeneral.mensaje.crear.noColegiado"),
             icon: "fa fa-info",
             accept: () => {
               sessionStorage.setItem("esNuevoNoColegiado", "true");
@@ -451,15 +491,31 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      this.isBuscarAprox();
+    }
+  }
+
+  checkFiltersExact() {
+    if (
+      this.body.nif == null ||
+      this.body.nif == undefined ||
+      this.body.nif.trim().length < 3
+    ) {
+      this.showSearchIncorrect();
+      this.progressSpinner = false;
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.body.nif != undefined) {
+        this.body.nif = this.body.nif.trim();
+      }
+
+      return true;
     }
   }
 
   checkFilters() {
     if (
-      (this.body.nif == null ||
-        this.body.nif == undefined ||
-        this.body.nif.trim().length < 3) &&
       (this.body.nombre == null ||
         this.body.nombre == undefined ||
         this.body.nombre.trim().length < 3) &&
@@ -480,9 +536,6 @@ export class BusquedaCensoGeneralComponent implements OnInit {
       return false;
     } else {
       // quita espacios vacios antes de buscar
-      if (this.body.nif != undefined) {
-        this.body.nif = this.body.nif.trim();
-      }
       if (this.body.nombre != undefined) {
         this.body.nombre = this.body.nombre.trim();
       }
@@ -504,11 +557,23 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )
     });
+  }
+
+  changeFilters() {
+    this.datos = [];
+    this.buscar = false;
+    this.isLimpiar();
+
+    if (this.modoBusqueda == "aprox") {
+      this.modoBusquedaAprox = true;
+    } else if (this.modoBusqueda == "exacta") {
+      this.modoBusquedaAprox = false;
+    }
   }
 
 }

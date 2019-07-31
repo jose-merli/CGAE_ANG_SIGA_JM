@@ -15,7 +15,7 @@
       <label class="proceso-generico">Proceso Genérico Sistema SIGA ({{numSeleccionados}}/árbol)</label>
       <div class="mt-2">
         <p-checkbox *ngIf="activacionEditar" (onChange)="onChangeSelectAll(node)" [(ngModel)]="selectAll" class="d-inline-block mr-2"
-          binary="true" label="Seleccionar todo"></p-checkbox>
+          binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"></p-checkbox>
         <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo
           <i class="fa fa-angle-down"></i>
         </label>
