@@ -43,6 +43,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   poblacionBuscada: any = [];
   progressSpinner: boolean = false;
   showDirecciones: boolean = false;
+  soloLectura: boolean = false;
   cols2: any = [];
   textFilter: String;
   textSelected: String = this.translateService.instant("general.mensaje.0.etiquetas.seleccionadas");
@@ -224,6 +225,18 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
+      if (this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
+        if (
+          sessionStorage.getItem("soloLectura") != null &&
+          sessionStorage.getItem("soloLectura") != undefined &&
+          sessionStorage.getItem("soloLectura") == "true"
+        ) {
+          this.soloLectura = true;
+        }
+      }
+
     });
   }
 
@@ -254,6 +267,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
 
   getResultados() {
     let objRemitente = {
+      idInstitucion: this.body.idInstitucion,
       idTipoEnvios: this.body.idTipoEnvios,
       idPlantillaEnvios: this.body.idPlantillaEnvios
     };

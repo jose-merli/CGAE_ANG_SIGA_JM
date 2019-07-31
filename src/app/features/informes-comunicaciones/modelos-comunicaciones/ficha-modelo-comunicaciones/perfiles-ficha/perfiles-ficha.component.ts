@@ -65,14 +65,6 @@ export class PerfilesFichaComponent implements OnInit {
       this.getDatos();
     });
 
-    if (
-      sessionStorage.getItem("soloLectura") != null &&
-      sessionStorage.getItem("soloLectura") != undefined &&
-      sessionStorage.getItem("soloLectura") == "true"
-    ) {
-      this.soloLectura = true;
-    }
-
     this.getInstitucionActual();
   }
 
@@ -83,7 +75,16 @@ export class PerfilesFichaComponent implements OnInit {
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
       } else {
-        this.soloLectura = false;
+        this.body = JSON.parse(sessionStorage.getItem('modelosSearch'));
+        if (this.body.porDefecto == 'SI' && this.institucionActual != 2000) {
+          if (
+            sessionStorage.getItem("soloLectura") != null &&
+            sessionStorage.getItem("soloLectura") != undefined &&
+            sessionStorage.getItem("soloLectura") == "true"
+          ) {
+            this.soloLectura = true;
+          }
+        }
       }
     });
   }

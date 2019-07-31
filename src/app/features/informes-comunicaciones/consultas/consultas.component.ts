@@ -80,7 +80,9 @@ export class ConsultasComponent implements OnInit {
 
     sessionStorage.removeItem("consultasSearch");
     sessionStorage.removeItem('idInstitucion');
+    sessionStorage.removeItem('esPorDefecto');
     sessionStorage.removeItem("soloLectura");
+
     this.getInstitucion();
 
     sessionStorage.removeItem("crearNuevaConsulta");
@@ -751,6 +753,7 @@ export class ConsultasComponent implements OnInit {
     let rutaClaseComunicacion = this.currentRoute.toString();
     sessionStorage.removeItem('datosComunicar');
     sessionStorage.setItem('idConsulta', dato.idConsulta);
+    sessionStorage.setItem('idInstitucion', dato.idInstitucion);
     this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
       data => {
         this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;

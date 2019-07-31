@@ -190,7 +190,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.esPorDefecto && this.institucionActual == 2000) {
+    if (!this.esPorDefecto) {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
@@ -207,20 +207,20 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   isSelectMultipleDocs() {
-    // if (!this.nuevoDocumento) {
+    if (!this.nuevoDocumento) {
 
-    //   if (!this.esPorDefecto && this.institucionActual == 2000) {
-    this.selectMultipleDocs = !this.selectMultipleDocs;
-    //     if (!this.selectMultipleDocs) {
-    //       this.selectedDocs = [];
-    //     } else {
-    //       this.selectAll = false;
-    //       this.selectedDocs = [];
-    //     }
-    //   }
-    // } else {
-    //   this.selectMultiple = false;
-    // }
+      if (!this.esPorDefecto) {
+        this.selectMultipleDocs = !this.selectMultipleDocs;
+        if (!this.selectMultipleDocs) {
+          this.selectedDocs = [];
+        } else {
+          this.selectAll = false;
+          this.selectedDocs = [];
+        }
+      }
+    } else {
+      this.selectMultiple = false;
+    }
   }
 
   onChangeSelectAll(key) {
@@ -876,12 +876,12 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   eliminar(dato) {
-    let msg = this.translateService.instantParams("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.eliminar", dato.length);
+
+    let msg = this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.eliminar") + dato.length +
+      this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.eliminar.consultas");
 
     this.confirmationService.confirm({
-      // message: this.translateService.instant("messages.deleteConfirmation"),
-      message:
-        "¿Está seguro de eliminar " + dato.length + " consultas seleccionadas?",
+      message: msg,
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -1188,10 +1188,23 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
 
-      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
-        this.esPorDefecto = true;
+      if (sessionStorage.getItem("esPorDefecto") != undefined) {
+        if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000 || sessionStorage.getItem("soloLectura") === 'true') {
+          this.esPorDefecto = true;
+        } else {
+          this.esPorDefecto = false;
+        }
       } else {
-        this.esPorDefecto = false;
+        this.modeloItem = JSON.parse(sessionStorage.getItem('modelosSearch'));
+        if (this.modeloItem.porDefecto == 'SI' && this.institucionActual != 2000) {
+          if (
+            sessionStorage.getItem("soloLectura") != null &&
+            sessionStorage.getItem("soloLectura") != undefined &&
+            sessionStorage.getItem("soloLectura") == "true"
+          ) {
+            this.esPorDefecto = true;
+          }
+        }
       }
     });
   }

@@ -58,6 +58,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
 	ngOnInit() {
 		sessionStorage.removeItem('crearNuevaPlantilla');
+		sessionStorage.removeItem('soloLectura');
 
 		this.cols = [
 			{ field: 'nombre', header: 'administracion.parametrosGenerales.literal.nombre', width: '25%' },

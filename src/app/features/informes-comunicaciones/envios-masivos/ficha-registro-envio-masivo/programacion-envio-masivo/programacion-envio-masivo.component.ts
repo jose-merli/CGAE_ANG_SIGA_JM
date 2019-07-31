@@ -4,6 +4,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-programacion-envio-masivo',
@@ -233,6 +234,41 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
         this.currentDate.setMinutes(this.currentDateInitial.getMinutes());
       }
+  }
+
+  downloadLogFile() {
+
+    let objDownload = {      
+      idEnvio: this.body.idEnvio,
+      idInstitucion: this.body.idInstitucion
+    };
+
+    this.sigaServices.post("enviosMasivos_nombreFicheroLog", objDownload).subscribe(
+      response => {
+        let fileInfo = JSON.parse(response["body"]);
+
+        this.sigaServices
+            .postDownloadFiles("enviosMasivos_descargarLog", objDownload)
+            .subscribe(data => {
+              const blob = new Blob([data], { type: "application/octet-stream" });
+              if (blob.size == 0) {          
+                this.showFail(this.translateService.instant(
+                  "messages.general.error.ficheroNoExiste"
+                ));          
+
+              } else {
+                saveAs(data, fileInfo.name);
+              }
+            });
+        },
+        err => {
+          this.showFail(this.translateService.instant(
+            "messages.general.error.ficheroNoExiste"
+          ));  
+        }
+    );
+
+    
   }
 
 }

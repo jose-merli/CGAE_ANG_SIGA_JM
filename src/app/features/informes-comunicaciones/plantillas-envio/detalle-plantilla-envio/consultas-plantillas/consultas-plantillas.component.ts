@@ -32,7 +32,9 @@ export class ConsultasPlantillasComponent implements OnInit {
 	progressSpinner: boolean = false;
 	consultas: any = [];
 	selectedConsulta: string;
+	mode: string;
 	nuevaConsulta: boolean = false;
+	soloLectura: boolean = false;
 	eliminarArray: any[];
 	msgs: Message[];
 	finalidad: string;
@@ -72,6 +74,11 @@ export class ConsultasPlantillasComponent implements OnInit {
 	ngOnInit() {
 		// this.getDatos();
 		//sessionStorage.removeItem('consultasSearch');
+
+		if (!this.soloLectura) {
+			this.mode = "single";
+		}
+
 		this.getInstitucion();
 		this.getDatos();
 		this.textFilter = "Elegir";
@@ -143,15 +150,17 @@ export class ConsultasPlantillasComponent implements OnInit {
 	}
 
 	isSelectMultiple() {
-		this.selectMultiple = !this.selectMultiple;
-		this.nuevaConsulta = false;
-		if (!this.selectMultiple) {
-			this.selectedDatos = [];
-			this.numSelected = 0;
-		} else {
-			this.selectAll = false;
-			this.selectedDatos = [];
-			this.numSelected = 0;
+		if (!this.soloLectura) {
+			this.selectMultiple = !this.selectMultiple;
+			this.nuevaConsulta = false;
+			if (!this.selectMultiple) {
+				this.selectedDatos = [];
+				this.numSelected = 0;
+			} else {
+				this.selectAll = false;
+				this.selectedDatos = [];
+				this.numSelected = 0;
+			}
 		}
 	}
 
@@ -169,28 +178,40 @@ export class ConsultasPlantillasComponent implements OnInit {
 	getInstitucion() {
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.institucionActual = n.value;
+
+			this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
+			if (this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
+				if (
+					sessionStorage.getItem("soloLectura") != null &&
+					sessionStorage.getItem("soloLectura") != undefined &&
+					sessionStorage.getItem("soloLectura") == "true"
+				) {
+					this.soloLectura = true;
+				}
+			}
+
 		});
 	}
 
 	navigateTo(dato) {
-		let idConsulta = dato[0].idConsulta;
+		let idConsulta = dato.idConsulta;
 		console.log(dato);
 		if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
 			if (
-				dato[0].generica == "No" || dato[0].generica == "N" || dato[0].generica == "0" ||
-				(this.institucionActual == 2000 && (dato[0].generica == "Si" || dato[0].generica == "S" || dato[0].generica == "1"))
+				dato.generica == "No" || dato.generica == "N" || dato.generica == "0" ||
+				(this.institucionActual == 2000 && (dato.generica == "Si" || dato.generica == "S" || dato.generica == "1"))
 			) {
 				sessionStorage.setItem("consultaEditable", "S");
 			} else {
 				sessionStorage.setItem("consultaEditable", "N");
 			}
-			sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
+			sessionStorage.setItem("consultasSearch", JSON.stringify(dato));
 			this.router.navigate(["/fichaConsulta"]);
 		}
-		this.numSelected = this.selectedDatos.length;
+		this.numSelected = 1;
 	}
-	actualizaSeleccionados(selectedDatos) {
-		this.numSelected = selectedDatos.length;
+	actualizaSeleccionados() {
+		this.numSelected = 0;
 	}
 	abreCierraFicha() {
 		if (
@@ -378,6 +399,11 @@ export class ConsultasPlantillasComponent implements OnInit {
 					this.getResultados();
 				}
 			);
+
+		console.log("selectedDatos", this.selectedDatos);
+		console.log("nuevaConsulta", this.nuevaConsulta);
+		console.log("soloLectura", this.soloLectura);
+
 	}
 
 	desasociar(dato) {
@@ -406,14 +432,22 @@ export class ConsultasPlantillasComponent implements OnInit {
 
 	confirmarDesasociar(dato) {
 		this.eliminarArray = [];
-		dato.forEach(element => {
-			let objEliminar = {
-				idConsulta: element.idConsulta,
-				idTipoEnvios: this.body.idTipoEnvios,
-				idPlantillaEnvios: this.body.idPlantillaEnvios
-			};
-			this.eliminarArray.push(objEliminar);
-		});
+		// dato.forEach(element => {
+		// 	let objEliminar = {
+		// 		idConsulta: element.idConsulta,
+		// 		idTipoEnvios: this.body.idTipoEnvios,
+		// 		idPlantillaEnvios: this.body.idPlantillaEnvios
+		// 	};
+		// 	this.eliminarArray.push(objEliminar);
+		// });
+
+		let objEliminar = {
+			idConsulta: dato.idConsulta,
+			idTipoEnvios: this.body.idTipoEnvios,
+			idPlantillaEnvios: this.body.idPlantillaEnvios
+		};
+		this.eliminarArray.push(objEliminar);
+
 		this.sigaServices
 			.post("plantillasEnvio_desaociarConsulta", this.eliminarArray)
 			.subscribe(
@@ -423,6 +457,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 							"informesycomunicaciones.plantillasenvio.ficha.correctDesasociar"
 						)
 					);
+
+					this.selectMultiple = false;
 				},
 				err => {
 					this.showFail(

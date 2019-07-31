@@ -7,6 +7,7 @@ import { DatosGeneralesFicha } from "../../../../../models/DatosGeneralesFichaIt
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { InputMaskModule } from "primeng/inputmask";
 import { isNumber } from "util";
+import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
 
 @Component({
   selector: "app-datos-generales-ficha",
@@ -24,6 +25,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   colegios: any[];
   bodyInicial: DatosGeneralesFicha = new DatosGeneralesFicha();
   body: DatosGeneralesFicha = new DatosGeneralesFicha();
+  bodyModelo: ModelosComunicacionesItem = new ModelosComunicacionesItem();
   msgs: Message[];
   preseleccionar: any = [];
   visible: any = [];
@@ -70,13 +72,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.getPlantillas();
 
-    if (
-      sessionStorage.getItem("soloLectura") != null &&
-      sessionStorage.getItem("soloLectura") != undefined &&
-      sessionStorage.getItem("soloLectura") == "true"
-    ) {
-      this.soloLectura = true;
-    }
+
   }
 
   abreCierraFicha() {
@@ -225,7 +221,17 @@ export class DatosGeneralesFichaComponent implements OnInit {
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
       } else {
-        this.soloLectura = false;
+
+        this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
+        if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
+          if (
+            sessionStorage.getItem("soloLectura") != null &&
+            sessionStorage.getItem("soloLectura") != undefined &&
+            sessionStorage.getItem("soloLectura") == "true"
+          ) {
+            this.soloLectura = true;
+          }
+        }
       }
 
       this.body.idInstitucion = this.institucionActual;
