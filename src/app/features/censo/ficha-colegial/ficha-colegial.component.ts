@@ -2823,33 +2823,33 @@ export class FichaColegialComponent implements OnInit {
       this.information = true;
 
       if (isEjerciente) {
-        this.msgDir = "Antes de pasar el colegiado a Ejerciente, tendrá que introducir una dirección para el colegiado.";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.direccion.pasarColegiado");
         return false;
       } else {
-        this.msgDir = "Antes de cambiar la situación, tendrá que introducir una dirección para el colegiado.";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.cambiar.situacion.pasarColegiado");
         return false;
       }
     } else {
       this.information = false;
 
       if (isEjerciente) {
-        this.msgDir = "Para finalizar el cambio a Ejerciente ";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.finalizar.cambio.ejerciente");
       } else {
-        this.msgDir = "Para finalizar el cambio ";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.finalizar.cambio");
       }
 
       if (tipos.length == 0) {
         return true;
       } else if (tipos.length == 1) {
-        this.msgDir += "es necesaria una dirección de ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.necesaria.direccion");
         this.msgDir += tipos[0];
-        this.msgDir += ". Se asignará automáticamente el tipo ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.asignar.automaticamente.tipoDireccion");
         this.msgDir += tipos[0];
-        this.msgDir += " a la actual dirección de Censo Web ¿Desea continuar?";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.actual.censoWeb.deseaContinuar");
         return false;
       } else if (tipos.length > 1) {
 
-        this.msgDir += "son necesarias las direcciones de ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.necesaria.direccion.plural");
         let msgTipos = "";
         for (const key in tipos) {
           let x = key;
@@ -2863,9 +2863,9 @@ export class FichaColegialComponent implements OnInit {
         }
 
         this.msgDir += msgTipos;
-        this.msgDir += " .Se asignará automáticamente los tipos ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.asignar.automaticamente.tipoDireccion.plural");
         this.msgDir += msgTipos;
-        this.msgDir += " a la actual dirección de Censo Web ¿Desea continuar?";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.actual.censoWeb.deseaContinuar");
         return false;
       }
     }
@@ -2947,7 +2947,7 @@ export class FichaColegialComponent implements OnInit {
                         this.progressSpinner = false;
                         if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
                           let msg = JSON.parse(error.error).error.message;
-                          this.showFailDetalle(msg);
+                          this.showFailDetalle(this.translateService.instant(msg));
                         } else {
                           this.showFail();
                         }

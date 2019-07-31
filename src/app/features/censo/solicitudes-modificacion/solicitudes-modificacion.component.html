@@ -70,7 +70,7 @@
         </p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{ table.first + 1 }} al {{ table.first + table.rows }} de un total de {{ table.totalRecords
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ table.first + 1 }} al {{ table.first + table.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{ table.totalRecords
               }}
             </label>
             <label>{{ "general.message.mostrar" | translate }}</label>

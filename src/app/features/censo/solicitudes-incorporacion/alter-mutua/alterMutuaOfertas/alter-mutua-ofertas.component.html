@@ -269,7 +269,7 @@
                         </label>
                         <p-dropdown #poblacion (input)="buscarPoblacion($event)" class="select-form" [(ngModel)]="asegurado.poblacion" [options]="poblaciones"
                             [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" (onChange)="obtenerPoblacionDesc($event)"
-                            [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown>
+                            emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>{{"censo.datosDireccion.literal.tipo.direccion" | translate}} (*)</label>
@@ -444,7 +444,9 @@
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar">
-                        <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label class="mt-2 pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
                         <label>{{ "general.message.mostrar" | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem1" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                         <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}
@@ -584,7 +586,9 @@
 
                     <ng-template pTemplate="paginatorLeft">
                         <div class="mostrar">
-                            <label class="mt-2 pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                            <label class="mt-2 pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                                + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                                | translate }} {{table.totalRecords}}</label>
                             <label>{{ "general.message.mostrar" | translate}}</label>
                             <p-dropdown [(ngModel)]="selectedItem2" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}

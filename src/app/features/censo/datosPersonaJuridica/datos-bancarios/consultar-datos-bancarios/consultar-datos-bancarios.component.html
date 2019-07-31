@@ -77,17 +77,17 @@
                 <input type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()"
                   pInputText>
                 <div *ngIf="ibanValido == false">
-                  <label class="labelError">{{"IBAN incorrecto"}}</label>
+                  <label class="labelError">{{ "censo.datosBancarios.mensaje.control.ibanIncorrecto" | translate }}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
 
                 <!-- (ngModelChange)="recuperarBicBanco()" -->
-                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}} (*)</label>
+                <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate }} (*)</label>
                 <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar || !permisos || disabledAction"
                   [attr.maxlength]="11" [attr.minlength]="8" pInputText>
                 <div *ngIf="bicValido == false">
-                  <label class="labelError">{{"BIC incorrecto"}}</label>
+                  <label class="labelError">{{"censo.datosBancarios.mensaje.control.bicIncorrecto" | translate }}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
@@ -100,7 +100,7 @@
                   [options]="tipoCuenta" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
                   maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
                 <div *ngIf="tipoCuentaSeleccionado == false">
-                  <label class="labelError">{{"Debe seleccionar al menos 1 elemento"}}</label>
+                  <label class="labelError">{{ "censo.datosBancarios.mensaje.seleccionar.almenosUno" | translate }}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
@@ -321,7 +321,9 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al
+                  {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+                  }} {{table.totalRecords}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -369,7 +371,9 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al
+                  {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+                  }} {{table.totalRecords}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -429,7 +433,8 @@
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.lugarFirma" | translate}} (*)</label>
-          <input type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control" pInputText>
+          <input type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control"
+            pInputText>
         </div>
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>

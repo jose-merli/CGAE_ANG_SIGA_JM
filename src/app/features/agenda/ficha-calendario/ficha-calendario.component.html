@@ -232,9 +232,10 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{tableNotifications.first + 1}} al {{tableNotifications.first + tableNotifications.rows}}
-                  de un total de {{tableNotifications.totalRecords}}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedNotifications}}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableNotifications.first
+                  + 1}} al {{tableNotifications.first + tableNotifications.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{tableNotifications.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelectedNotifications}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
@@ -353,9 +354,11 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{ tableNotifications.first + 1 }} al {{ tableNotifications.first + tableNotifications.rows
-                  }} de un total de {{ tableNotifications.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedNotifications }}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableNotifications.first
+                  + 1 }} al {{ tableNotifications.first + tableNotifications.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{ tableNotifications.totalRecords }}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedNotifications
+                  }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedNotification" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1">
@@ -454,9 +457,11 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{ tableNotifications.first + 1 }} al {{ tableNotifications.first + tableNotifications.rows
-                  }} de un total de {{ tableNotifications.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedNotifications }}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableNotifications.first
+                  + 1 }} al {{ tableNotifications.first + tableNotifications.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{ tableNotifications.totalRecords }}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedNotifications
+                  }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1">

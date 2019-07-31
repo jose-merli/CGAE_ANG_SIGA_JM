@@ -58,7 +58,7 @@
                 label="Sí" (onClick)="body.generica = 'S'"></p-radioButton>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ 'informesycomunicaciones.comunicaciones.busqueda.claseComunicacion' | translate }}</label>
+              <label>{{ 'comunicaciones.literal.claseComunicaciones' | translate }}</label>
               <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
                 class="select-form" [disabled]="editMode"></p-dropdown>
             </div>

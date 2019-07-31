@@ -366,7 +366,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
         this.plantillas = data.combooItems;
-        this.plantillas.unshift({ label: "Seleccionar", value: "" });
+        // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);
