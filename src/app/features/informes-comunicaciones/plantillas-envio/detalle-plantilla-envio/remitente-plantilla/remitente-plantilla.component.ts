@@ -225,7 +225,9 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
-
+      if (this.body.idPersona != null) {
+        this.direccion.idPersona = this.body.idPersona;
+      }
       this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
       if (this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
         if (
@@ -482,7 +484,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
 
   guardar() {
     let objGuardar = {
-      idPersona: this.body.idPersona,
+      idPersona: this.direccion.idPersona,
       idDireccion: this.direccion.idDireccion,
       idPlantillaEnvios: this.body.idPlantillaEnvios,
       idTipoEnvios: this.body.idTipoEnvios,
