@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatosCVComponent2 } from './datosCV.component';
+import { ZonaComponent } from './zona.component';
 
-describe('DatosCVComponent', () => {
-  let component: DatosCVComponent2;
-  let fixture: ComponentFixture<DatosCVComponent2>;
+describe('ZonaComponent', () => {
+  let component: ZonaComponent;
+  let fixture: ComponentFixture<ZonaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DatosCVComponent2]
+      declarations: [ ZonaComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatosCVComponent2);
+    fixture = TestBed.createComponent(ZonaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -35,7 +35,6 @@ import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
-import { TranslatePipe, TranslateService } from './commons/translate';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
 import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
@@ -340,12 +339,16 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
 import { CommonsService } from './_services/commons.service';
+import { SjcsModule } from './features/sjcs/sjcs.module';
+import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { TranslateService } from './commons/translate/translation.service';
+
+
 
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		TranslatePipe,
 		ImagePipe,
 
 		MyIframeComponent,
@@ -643,11 +646,9 @@ import { CommonsService } from './_services/commons.service';
 		DevolucionComponent,
 		JustificacionComponent,
 		CertificacionComponent
-
 	],
 	imports: [
 		BrowserModule,
-
 		BrowserAnimationsModule,
 		HttpClientModule,
 		FormsModule,
@@ -684,6 +685,7 @@ import { CommonsService } from './_services/commons.service';
 		ProgressSpinnerModule,
 		FileUploadModule,
 		DialogModule,
+		PipeTranslationModule,
 
 		KeyFilterModule,
 		StepsModule,
@@ -691,16 +693,16 @@ import { CommonsService } from './_services/commons.service';
 
 		SelectButtonModule,
 		ColorPickerModule,
-		EditorModule
+		EditorModule,
+
+		SjcsModule
 	],
+
+	exports: [],
 	providers: [
 		// { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
-		TranslateService,
 		ImagePipe,
 		DatePipe,
-
-		TrimPipePipe,
-
 		OldSigaServices,
 		SigaServices,
 		CommonsService,
@@ -725,6 +727,7 @@ import { CommonsService } from './_services/commons.service';
 		CookieService,
 		{ provide: LOCALE_ID, useValue: 'es-ES' }
 	],
+
 
 	bootstrap: [AppComponent]
 

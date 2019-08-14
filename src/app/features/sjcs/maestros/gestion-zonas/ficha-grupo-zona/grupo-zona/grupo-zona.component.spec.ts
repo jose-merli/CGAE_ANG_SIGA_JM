@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatosCVComponent2 } from './datosCV.component';
+import { GrupoZonaComponent } from './grupo-zona.component';
 
-describe('DatosCVComponent', () => {
-  let component: DatosCVComponent2;
-  let fixture: ComponentFixture<DatosCVComponent2>;
+describe('GrupoZonaComponent', () => {
+  let component: GrupoZonaComponent;
+  let fixture: ComponentFixture<GrupoZonaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DatosCVComponent2]
+      declarations: [ GrupoZonaComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatosCVComponent2);
+    fixture = TestBed.createComponent(GrupoZonaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

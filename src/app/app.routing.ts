@@ -7,12 +7,9 @@ import { LoginDevelopComponent } from "./commons/login-develop/login-develop.com
 import { HomeComponent } from "./features/home/home.component";
 
 // Censo
-import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
-import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
 import { BusquedaNoColegiadosComponent } from "./features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component";
 import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
 import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
-import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
 import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
@@ -29,7 +26,6 @@ import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento
 import { MediadoresComponent } from "./features/censo/mediadores/mediadores.component";
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
-import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
@@ -233,6 +229,7 @@ import { FichaRegistroComunicacionComponent } from './features/informes-comunica
 import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
 import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
+import { SjcsModule } from './features/sjcs/sjcs.module';
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -356,7 +353,7 @@ const appRoutes: Routes = [
     component: DocumentacionSolicitudesComponent,
     canActivate: [AuthGuard]
   },
-    {
+  {
     path: "modificacionDatos",
     component: ModificacionDatosComponent,
     canActivate: [AuthGuard]
@@ -558,12 +555,12 @@ const appRoutes: Routes = [
     component: FacturacionSociedadesCensoComponent,
     canActivate: [AuthGuard]
   },
-    {
+  {
     path: "comunicacionesSociedades",
     component: ComunicacionSociedadesComponent,
     canActivate: [AuthGuard]
   },
-  
+
   {
     path: "ficherosAdeudos",
     component: FicherosAdeudosComponent,
@@ -672,7 +669,8 @@ const appRoutes: Routes = [
   //Justicia Gratuita
   {
     path: "zonasYsubzonas",
-    component: ZonasYSubzonasComponent,
+    // component: ZonasYSubzonasComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {
@@ -1263,13 +1261,13 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
-    {
+  {
     path: "justificacion",
     component: JustificacionComponent,
     canActivate: [AuthGuard]
   },
 
-    {
+  {
     path: "certificacion",
     component: CertificacionComponent,
     canActivate: [AuthGuard]
@@ -1282,4 +1280,5 @@ const appRoutes: Routes = [
 
   { path: " ", redirectTo: "home" }
 ];
+
 export const routing = RouterModule.forRoot(appRoutes);

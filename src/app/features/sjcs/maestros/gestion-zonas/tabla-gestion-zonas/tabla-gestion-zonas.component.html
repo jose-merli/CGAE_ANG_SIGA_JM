@@ -1,0 +1,59 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+    <!-- TABLA RESULTADOS -->
+    <p-dataTable emptyMessage="No registros" [ngClass]="{'customCursor': selectMultipleZona}" [(selection)]="selectedDatosZona"
+      pageLinks="4" dataKey="idzona" [responsive]="true" selectionMode="multiple" #tablaZonas class="tabla-listado" [value]="datos"
+      [paginator]="true" paginatorPosition="both" [rows]="selectedItemZona" (onRowSelect)="openZonegroupTab(selectedDatosZona)"
+      (onRowUnselect)="actualizaSeleccionados(selectedDatosZona)">
+
+      <p-column *ngFor="let col of colsZona" [sortable]="true" [field]="col.field" [header]="col.header" filterPlaceholder="Buscar"
+        [filter]="true" filterMatchMode="contains">
+
+        <ng-template let-dato="rowData" pTemplate="body">
+          <div *ngIf="setItalic(dato)">
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+          </div>
+          <div *ngIf="!setItalic(dato)">
+            <span>{{dato[col.field]}}</span>
+          </div>
+        </ng-template>
+
+
+      </p-column>
+
+      <ng-template pTemplate="paginatorLeft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{tablaZonas.first + 1}} al {{tablaZonas.first + tablaZonas.rows}} de un total de {{tablaZonas.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedZona}}</label>
+          <label>Mostrar</label>
+          <p-dropdown [(ngModel)]="selectedItemZona" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true"
+            [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+          <label class="pl-1">Registros</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAllZonas()" [(ngModel)]="selectAllZona" binary="true" label="Seleccionar todo"></p-checkbox>
+          </div>
+          <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultipleZona}" (click)="isSelectMultipleZona()">
+            <i class="pr-2 fa fa-mouse-pointer"></i>Selección múltiple</label>
+        </div>
+      </ng-template>
+    </p-dataTable>
+
+  </div>
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button *ngIf="!historico" (click)="searchZonas()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+      <button *ngIf="historico" (click)="searchZonas()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+      <button *ngIf="!historico" pButton [disabled]="(!selectMultipleZona || !selectAllZona) && selectedDatosZona.length == 0"
+        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button *ngIf="historico" pButton [disabled]="(!selectMultipleZona || !selectAllZona) && selectedDatosZona.length == 0" (click)="activate()"
+        type="button" icon="fa fa-trash-alt" iconPos="left" label="Activar"></button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
+</div>
