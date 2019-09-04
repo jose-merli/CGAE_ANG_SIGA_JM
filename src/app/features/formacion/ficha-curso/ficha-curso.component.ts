@@ -276,6 +276,7 @@ export class FichaCursoComponent implements OnInit {
 
   ngOnInit() {
 
+    sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")

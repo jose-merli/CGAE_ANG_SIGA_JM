@@ -218,6 +218,12 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
 
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (this.institucionActual != '2000' && sessionStorage.getItem("permisoModoLectura") == 'true') {
+        this.soloLectura = true;
+      }
+
+      // El modo de la pantalla viene por las restricción del tipo de colegio y/o campo genérico 
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
       } else {
