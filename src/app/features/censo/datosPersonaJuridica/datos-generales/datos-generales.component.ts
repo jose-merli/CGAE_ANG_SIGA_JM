@@ -77,7 +77,7 @@ export class DatosGenerales implements OnInit {
   comboIdentificacion: any[];
   comboTipo: any[] = [];
   idiomas: any[];
-  usuarioBody: any[];
+  usuarioBody: any;
   edadCalculada: String;
   textSelected: String = "{0} etiquetas seleccionados";
   idPersona: String;
@@ -204,6 +204,8 @@ export class DatosGenerales implements OnInit {
     }
 
     this.checkAcceso();
+
+    this.getComboIdentificacion();
   }
   continueOnInit() {
     this.busquedaIdioma();
@@ -217,31 +219,31 @@ export class DatosGenerales implements OnInit {
       this.abreCierraFicha();
     }
 
-    if (this.usuarioBody[0] != undefined) {
-      this.idPersona = this.usuarioBody[0].idPersona;
+    if (sessionStorage.getItem("nuevoRegistro") == null) {
+      if (this.usuarioBody[0] != undefined) {
+        this.idPersona = this.usuarioBody[0].idPersona;
+        this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+      }
+
+      // estamos en modo edicion (NO en creacion)
+      if (this.idPersona != undefined) {
+        this.editar = true;
+        this.datosGeneralesSearch();
+        this.cargarImagen(this.body.idPersona);
+      }
+      this.textFilter = "Elegir";
+
+      if (this.body.idPersona != undefined || this.body.idPersona != null) {
+        this.obtenerEtiquetasPersonaJuridicaConcreta();
+      }
+    } else {
+      this.body.nif = this.usuarioBody[0].nif;
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+      this.body.denominacion = this.usuarioBody[0].denominacion;
+      this.body.abreviatura = this.usuarioBody[0].abreviatura;
+
+      this.getComboIdentificacion();
     }
-
-    // estamos en modo edicion (NO en creacion)
-    if (this.idPersona != undefined) {
-      this.datosGeneralesSearch();
-      this.cargarImagen(this.body.idPersona);
-    }
-    this.textFilter = "Elegir";
-
-    if (this.body.idPersona != undefined || this.body.idPersona != null) {
-      this.obtenerEtiquetasPersonaJuridicaConcreta();
-    }
-
-    // Combo de identificación
-    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
-      n => {
-        this.comboIdentificacion = n.combooItems;
-      },
-      error => { }
-    );
-
-    this.comboTipo.push(this.tipoPersonaJuridica);
 
     // obtener parametro para saber si se oculta la auditoria
     let parametro = {
@@ -265,6 +267,22 @@ export class DatosGenerales implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  getComboIdentificacion() {
+    // Combo de identificación
+    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
+      n => {
+        this.comboIdentificacion = n.combooItems;
+      },
+      error => { }, () => {
+        if (sessionStorage.getItem("nuevoRegistro") != null && sessionStorage.getItem("nuevoRegistro") === "true") {
+          this.onChangeForm();
+        }
+      }
+    );
+
+    this.comboTipo.push(this.tipoPersonaJuridica);
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
@@ -380,7 +398,7 @@ export class DatosGenerales implements OnInit {
 
   guardar() {
     this.progressSpinner = true;
-    if (sessionStorage.getItem("crearnuevo") != null) {
+    if (sessionStorage.getItem("nuevoRegistro") != null) {
       // comprobacion de cif
       if (this.isValidCIF(this.body.nif)) {
         this.body.idPersona = this.idPersona;
@@ -407,7 +425,8 @@ export class DatosGenerales implements OnInit {
               }
             },
             () => {
-              sessionStorage.removeItem("crearnuevo");
+
+              sessionStorage.removeItem("nuevoRegistro");
               this.cerrarAuditoria();
               let arrayPersonaJuridica = new Array<PersonaJuridicaItem>();
               this.bodyPersonaJuridica = new PersonaJuridicaItem();
@@ -507,6 +526,8 @@ export class DatosGenerales implements OnInit {
         }
       );
     }
+
+    //sessionStorage.removeItem("crearnuevo");
   }
 
   restablecer() {

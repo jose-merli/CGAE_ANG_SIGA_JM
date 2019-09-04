@@ -47,7 +47,9 @@
         <div class="card-body">
             <div class="form-row">
                 <div class="col-4">
-                    <p-radioButton name="person" value="f" label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+                    <p-radioButton *ngIf="!isSociedad" name="person" [disabled]="esSociedad" value="f" label="Personas Fisicas" [(ngModel)]='persona'
+                        (click)="changeColsAndData();"></p-radioButton>
+                    <p-radioButton *ngIf="isSociedad" name="person" disabled value="f" label="Personas Fisicas" [(ngModel)]='persona'></p-radioButton>
                     <p-radioButton *ngIf="!isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
                     <p-radioButton *ngIf="isFormador" disabled name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona'></p-radioButton>
 

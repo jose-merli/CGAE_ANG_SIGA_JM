@@ -15,6 +15,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -64,6 +65,12 @@ export class ConsultasComponent implements OnInit {
   idClaseComunicacion: String;
   currentRoute: String = "";
 
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisosArray: any[];
+  derechoAcceso: any;
+  permisos: any;
+  activacionEditar: boolean;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -76,12 +83,14 @@ export class ConsultasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkAcceso();
     this.currentRoute = this.router.url;
 
     sessionStorage.removeItem("consultasSearch");
     sessionStorage.removeItem('idInstitucion');
     sessionStorage.removeItem('esPorDefecto');
     sessionStorage.removeItem("soloLectura");
+    sessionStorage.removeItem("permisoModoLectura");
 
     this.getInstitucion();
 
@@ -190,6 +199,32 @@ export class ConsultasComponent implements OnInit {
       }
     ]
 
+  }
+
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = "30C";
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else if (this.derechoAcceso == 2) {
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
   }
 
   recuperarBusqueda() {
@@ -561,10 +596,12 @@ export class ConsultasComponent implements OnInit {
       // }
     }
 
-    if (this.institucionActual != 2000 && dato[0].idInstitucion == '2000' && dato[0].generica == "Si") {
+    if (this.institucionActual != 2000 && dato[0].idInstitucion == '2000' && dato[0].generica == "Si" || !this.activacionEditar) {
       sessionStorage.setItem("soloLectura", "true");
+      sessionStorage.setItem("permisoModoLectura", "true");
     } else {
       sessionStorage.setItem("soloLectura", "false");
+      sessionStorage.setItem("permisoModoLectura", "false");
     }
   }
 
@@ -749,7 +786,7 @@ export class ConsultasComponent implements OnInit {
   getDatosComunicar(selectedDatos) {
 
     let dato = selectedDatos[0];
-    sessionStorage.setItem('idInstitucion',  dato.idInstitucion);
+    sessionStorage.setItem('idInstitucion', dato.idInstitucion);
     let rutaClaseComunicacion = this.currentRoute.toString();
     sessionStorage.removeItem('datosComunicar');
     sessionStorage.setItem('idConsulta', dato.idConsulta);

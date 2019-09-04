@@ -18,5 +18,6 @@ export class DatosRegistralesItem {
   numRegistro: String;
   combooItems: ComboItem[];
   sociedadProfesional: String;
+  cif: String;
   constructor() { }
 }

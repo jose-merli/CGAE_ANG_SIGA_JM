@@ -11,6 +11,10 @@ import { Checkbox, Schedule } from "primeng/primeng";
 import { SigaServices } from "../../_services/siga.service";
 import { EventoItem } from "../../models/EventoItem";
 import { findIndex } from "rxjs/operators";
+import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../utils/calendar';
+import { TranslateService } from "../../commons/translate";
+import { months } from "../../../../node_modules/moment";
+
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
@@ -25,6 +29,7 @@ export class AgendaComponent implements OnInit {
   listLecturaSelect;
   listAcceso;
   listAccesoSelect;
+  currentLang;
   lectura: boolean = true;
   acceso: boolean = true;
 
@@ -39,13 +44,15 @@ export class AgendaComponent implements OnInit {
   selectedCalendario: any;
   color: any;
   selectedCalendarios: any[];
+  es: any;
+  week: any;
 
   @ViewChild("calendario") calendarioSchedule;
 
   checked: boolean = true;
 
   fechaActual: Date = new Date();
-  constructor(private router: Router, private sigaServices: SigaServices) { }
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.listLecturaSelect = [];
@@ -56,14 +63,21 @@ export class AgendaComponent implements OnInit {
       header: {
         left: "prev,next",
         center: "title",
-        right: "month,agendaWeek,agendaDay",
-        locale: "es"
+        right: "month,agendaWeek,agendaDay"
       },
-      editable: false
-    };
+      editable: false,
+      views: {
+        month: { buttonText: this.translateService.instant("menu.agenda.mes.literal") },
+        agendaDay: {
+          buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.dia")
+        },
+        agendaWeek: { buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.semana") }
+      }
+    }
+
+    this.getLenguage();
 
     this.calendarioSchedule.timezone = "local";
-
     this.events = [];
     sessionStorage.removeItem("eventoEdit");
     sessionStorage.removeItem("modoEdicionEventoByAgenda");
@@ -72,9 +86,26 @@ export class AgendaComponent implements OnInit {
     this.getCalendarios();
   }
 
-  // ngOnDestroy() {
-  //   sessionStorage.removeItem("calendarEdit");
-  // }
+  getLenguage() {
+
+    this.sigaServices.get('usuario').subscribe((response) => {
+      this.currentLang = response.usuarioItem[0].idLenguaje;
+
+      if (this.currentLang == 1) {
+        this.es = "es";
+      } else if (this.currentLang == 2) {
+        this.es = "ca_ES";
+      } else if (this.currentLang == 3) {
+        this.es = "eu_ES";
+      } else if (this.currentLang == 4) {
+        this.es = "gl_ES";
+      } else {
+        this.es = "es";
+      }
+
+    });
+
+  }
 
   onClickCheckBox(calendario) {
     calendario.checked = !calendario.checked;
@@ -235,7 +266,7 @@ export class AgendaComponent implements OnInit {
     while (!encontrado && contador < this.calendarios.length) {
       calendar = this.calendarios[contador];
       if (
-        calendar.descripcion == "Calendario General" &&
+        calendar.idTipoCalendario == '1' &&
         calendar.tipoAcceso == 3
       )
         encontrado = true;

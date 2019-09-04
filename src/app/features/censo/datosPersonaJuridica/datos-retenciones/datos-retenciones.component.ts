@@ -681,7 +681,7 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   abrirFicha() {
-    if (sessionStorage.getItem("crearnuevo") == null) {
+    if (sessionStorage.getItem("nuevoRegistro") == null) {
       this.openFicha = !this.openFicha;
     }
   }
@@ -733,7 +733,7 @@ export class DatosRetencionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 }

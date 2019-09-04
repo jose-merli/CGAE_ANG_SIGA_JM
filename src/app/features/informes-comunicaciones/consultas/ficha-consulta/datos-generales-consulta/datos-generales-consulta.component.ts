@@ -384,7 +384,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   habilitarBotones() {
-    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "S" || this.body.generica == "1")) {
+    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "S" || this.body.generica == "1" || sessionStorage.getItem("permisoModoLectura") == 'true')) {
       this.editar = false;
     } else {
       this.editar = true;

@@ -586,6 +586,7 @@ export class FichaColegialComponent implements OnInit {
         this.generalBody.soloNombre = enviar.nombre;
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
+        this.situacionPersona = enviar.idEstado;
         if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
           this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
         }
@@ -3131,7 +3132,7 @@ export class FichaColegialComponent implements OnInit {
                   // this.datosColegiales = JSON.parse(data["body"]);
                   this.colegialesObject = JSON.parse(data["body"]);
                   this.datosColegialesActual = this.colegialesObject.colegiadoItem;
-                  this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
+                  //this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
                   this.residente = this.datosColegialesActual[0].situacionResidente;
 
                 }
