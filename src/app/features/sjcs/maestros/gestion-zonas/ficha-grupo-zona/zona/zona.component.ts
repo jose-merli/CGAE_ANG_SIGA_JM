@@ -5,6 +5,8 @@ import { ZonasItem } from '../../../../../../models/sjcs/ZonasItem';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
 import { ZonasObject } from '../../../../../../models/sjcs/ZonasObject';
 import { findIndex } from 'rxjs/operators';
+import { MultiSelect } from 'primeng/primeng';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-zona',
@@ -15,17 +17,18 @@ export class ZonaComponent implements OnInit {
 
   textSelected: String = "{label}";
 
-  selectedItemZona: number = 10;
-  selectAllZona;
-  selectedDatosZona = [];
-  numSelectedZona = 0;
-  selectMultipleZona: boolean = false;
-  seleccionZonas: boolean = false;
-  colsZona;
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  cols;
   rowsPerPage;
 
   datos = [];
 
+  historico: boolean = false;
 
   comboPJ;
 
@@ -37,17 +40,19 @@ export class ZonaComponent implements OnInit {
   updateZonas = [];
 
   selectedBefore;
+  overlayVisible: boolean = false;
+  selectionMode: string = "single";
 
   //Resultados de la busqueda
   @Input() idZona;
   //Resultados de la busqueda
   @Input() modoEdicion: boolean = false;
 
-  @ViewChild("tablaZonas") tablaZonas;
-
+  @ViewChild("table") table;
+  @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe) { }
+    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
     this.getCols();
@@ -94,8 +99,11 @@ export class ZonaComponent implements OnInit {
         res => {
           this.datos = res.zonasItems;
 
+          this.validateHistorical();
+
           this.datos.forEach(element => {
             element.editable = false
+            element.overlayVisible = false;
           });
 
           this.progressSpinner = false;
@@ -108,6 +116,20 @@ export class ZonaComponent implements OnInit {
 
         }
       );
+  }
+
+  validateHistorical() {
+    if (this.datos != undefined && this.datos.length > 0) {
+
+      if (this.datos[0].fechabaja != null) {
+        this.historico = true;
+      } else {
+        this.historico = false;
+      }
+
+      this.persistenceService.historico = this.historico;
+
+    }
   }
 
   getPartidosJudiciales() {
@@ -168,13 +190,12 @@ export class ZonaComponent implements OnInit {
         }
 
         this.getZonas();
-        this.selectedDatosZona = [];
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
 
-        if (JSON.parse(err.error).error.description != "") {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -182,6 +203,8 @@ export class ZonaComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.selectedDatos = [];
+        this.updateZonas = [];
         this.progressSpinner = false;
       }
     );
@@ -190,7 +213,7 @@ export class ZonaComponent implements OnInit {
 
   newZone() {
     this.nuevo = true;
-    this.seleccionZonas = false;
+    this.seleccion = false;
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -232,7 +255,7 @@ export class ZonaComponent implements OnInit {
         this.editarDescripcionZona(dato);
       }
 
-      this.seleccionZonas = false;
+      this.seleccion = false;
     }
   }
 
@@ -243,6 +266,7 @@ export class ZonaComponent implements OnInit {
 
     if (findDato != undefined) {
       this.showMessage("info", "Informacion", "Ya existe un zona con ese nombre");
+      this.progressSpinner = false;
     } else {
       this.body = zona;
       this.callSaveZoneService(url);
@@ -260,7 +284,7 @@ export class ZonaComponent implements OnInit {
       }
 
     } else {
-      if (this.updateZonas != undefined && this.updateZonas.length > 0) {
+      if (!this.historico && (this.updateZonas != undefined && this.updateZonas.length > 0)) {
         return false;
       } else {
         return true;
@@ -268,21 +292,28 @@ export class ZonaComponent implements OnInit {
     }
   }
 
-  editZonas(selectedDatosZona) {
+  editZonas(evento) {
 
     if (this.nuevo) {
-      this.seleccionZonas = false;
+      this.seleccion = false;
     } else {
 
-      if (!this.selectAllZona && !this.selectMultipleZona) {
+      if (!this.selectAll && !this.selectMultiple) {
+
         this.datos.forEach(element => {
           element.editable = false;
+          element.overlayVisible = false;
         });
 
-        selectedDatosZona[0].editable = true;
-        this.seleccionZonas = true;
+        evento.data.editable = true;
 
-        let findDato = this.datosInicial.find(item => item.idzona === selectedDatosZona[0].idzona && item.idsubzona === selectedDatosZona[0].idsubzona);
+
+        this.selectedDatos = [];
+        this.selectedDatos.push(evento.data);
+
+        this.seleccion = true;
+
+        let findDato = this.datosInicial.find(item => item.idzona === this.selectedDatos[0].idzona && item.idsubzona === this.selectedDatos[0].idsubzona);
 
         this.selectedBefore = findDato;
       }
@@ -311,36 +342,46 @@ export class ZonaComponent implements OnInit {
 
     if (!this.nuevo) {
 
-      let findUpdate = this.updateZonas.find(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
-
-      if (findUpdate == undefined) {
-        this.updateZonas.push(dato);
-      } else {
+      if (dato.partidosJudiciales.length == 0) {
+        this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
         let findUpdate = this.updateZonas.findIndex(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
-        this.updateZonas[findUpdate].partidosJudiciales = dato.partidosJudiciales;
+
+        if (findUpdate != undefined) {
+          this.updateZonas.splice(findUpdate);
+        }
+
+      } else {
+        let findUpdate = this.updateZonas.find(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
+
+        if (findUpdate == undefined) {
+          this.updateZonas.push(dato);
+        } else {
+          let findUpdate = this.updateZonas.findIndex(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
+          this.updateZonas[findUpdate].partidosJudiciales = dato.partidosJudiciales;
+        }
       }
     } else {
-      this.selectedDatosZona = [];
+      this.selectedDatos = [];
     }
 
   }
 
   delete() {
     this.body = new ZonasObject();
-    this.body.zonasItems = this.selectedDatosZona;
+    this.body.zonasItems = this.selectedDatos;
 
     this.sigaServices.post("fichaZonas_deleteZones", this.body).subscribe(
       data => {
 
         this.nuevo = false;
-        this.selectedDatosZona = [];
+        this.selectedDatos = [];
         this.getZonas();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
 
-        if (JSON.parse(err.error).error.description != "") {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -361,6 +402,7 @@ export class ZonaComponent implements OnInit {
       this.datos = [];
     }
 
+    this.selectedDatos = [];
     this.updateZonas = [];
     this.nuevo = false;
   }
@@ -376,9 +418,9 @@ export class ZonaComponent implements OnInit {
 
   getCols() {
 
-    this.colsZona = [
-      { field: "descripcionsubzona", header: "Zona" },
-      { field: "jurisdiccion", header: "Partidos Judiciales" }
+    this.cols = [
+      { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
+      { field: "jurisdiccion", header: "menu.justiciaGratuita.maestros.partidosJudiciales" }
     ];
 
     this.rowsPerPage = [
@@ -402,44 +444,57 @@ export class ZonaComponent implements OnInit {
   }
 
   onChangeRowsPerPages(event) {
-    this.selectedItemZona = event.value;
+    this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.tablaZonas.reset();
+    this.table.reset();
   }
 
-  onChangeSelectAllZonas() {
-    if (this.selectAllZona) {
-      this.selectMultipleZona = true;
-      this.selectedDatosZona = this.datos;
-      this.numSelectedZona = this.datos.length;
+  onChangeSelectAll() {
+
+    if (this.selectAll) {
+      this.selectMultiple = true;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+      this.selectionMode = "multiple";
     } else {
-      this.selectedDatosZona = [];
-      this.numSelectedZona = 0;
-      this.selectMultipleZona = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = false;
+      this.selectionMode = "single";
     }
   }
 
-  isSelectMultipleZona() {
-    this.selectMultipleZona = !this.selectMultipleZona;
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
 
-    if (!this.selectMultipleZona) {
-      this.selectedDatosZona = [];
-      this.numSelectedZona = 0;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectionMode = "single";
+
     } else {
-      this.selectAllZona = false;
-      this.selectedDatosZona = [];
-      this.numSelectedZona = 0;
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectionMode = "multiple";
+
     }
     // this.volver();
   }
 
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelectedZona = selectedDatos.length;
-    this.seleccionZonas = false;
+    this.numSelected = selectedDatos.length;
+    this.seleccion = false;
   }
 
   clear() {
     this.msgs = [];
   }
+
+  openMultiSelect(dato) {
+    console.log(this.multiSelect);
+    dato.overlayVisible = true;
+  }
+
 }

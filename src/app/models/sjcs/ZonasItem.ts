@@ -10,6 +10,7 @@ export class ZonasItem {
   historico: boolean;
   fechabaja: string;
   idsConjuntoSubzonas: string;
-  idPartidosJudiciales:string;
+  idPartidosJudiciales: string;
+  overlayVisible: boolean;
   constructor() { }
 }

@@ -342,6 +342,7 @@ import { CommonsService } from './_services/commons.service';
 import { SjcsModule } from './features/sjcs/sjcs.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { TranslateService } from './commons/translate/translation.service';
+import { PersistenceService } from './_services/persistence.service';
 
 
 
@@ -711,6 +712,8 @@ import { TranslateService } from './commons/translate/translation.service';
 		MessageService,
 		AuthenticationService,
 		ConfirmationService,
+
+		PersistenceService,
 
 		TrimPipePipe,
 

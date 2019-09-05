@@ -1,8 +1,8 @@
-import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList, OnDestroy } from '@angular/core';
 import { FiltroGestionZonasComponent } from './filtro-gestion-zonas/filtro-gestion-zonas.component';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
-import { TablaGestionZonasComponent } from './tabla-gestion-zonas/tabla-gestion-zonas.component';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-gestion-zonas',
@@ -11,8 +11,10 @@ import { TablaGestionZonasComponent } from './tabla-gestion-zonas/tabla-gestion-
 })
 export class GestionZonasComponent implements OnInit, AfterViewInit {
 
+
   buscar: boolean = false;
   messageShow: string;
+  historico: boolean = false;
 
   datos;
   progressSpinner: boolean = false;
@@ -30,7 +32,7 @@ export class GestionZonasComponent implements OnInit, AfterViewInit {
 
 
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices) { }
 
 
   ngOnInit() {
@@ -41,7 +43,7 @@ export class GestionZonasComponent implements OnInit, AfterViewInit {
   }
 
   isOpenReceive(event) {
-    this.filtros.filtros.historico = false;
+    this.filtros.filtros.historico = event;
     this.searchZonas();
   }
 
@@ -66,6 +68,7 @@ export class GestionZonasComponent implements OnInit, AfterViewInit {
 
   searchZonasSend(event) {
     this.filtros.filtros.historico = event;
+
     this.searchZonas();
   }
 

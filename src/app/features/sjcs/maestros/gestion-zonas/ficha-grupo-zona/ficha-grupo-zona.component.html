@@ -2,8 +2,8 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>SJSC
-      <i class="pl-1 fa fa-angle-right"></i>Maestros
-      <i class="pl-1 fa fa-angle-right"></i>Ficha Grupo Zona
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.maestros' | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'justiciaGratuita.maestros.zonasYSubzonas.fichaGrupoZona.cabecera' | translate }}
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">

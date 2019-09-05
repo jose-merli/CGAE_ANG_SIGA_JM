@@ -4,6 +4,8 @@ import { findIndex } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ZonasObject } from '../../../../../models/sjcs/ZonasObject';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { DataTable } from 'primeng/primeng';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-tabla-gestion-zonas',
@@ -14,16 +16,15 @@ export class TablaGestionZonasComponent implements OnInit {
 
 
   rowsPerPage: any = [];
-  colsZona;
-  colsPartidoJudicial;
+  cols;
   msgs;
 
-  selectedItemZona: number = 10;
-  selectAllZona;
-  selectedDatosZona = [];
-  numSelectedZona = 0;
-  selectMultipleZona: boolean = false;
-  seleccionZonas: boolean = false;
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
   historico: boolean = false;
 
   message;
@@ -39,36 +40,48 @@ export class TablaGestionZonasComponent implements OnInit {
 
   @Output() searchZonasSend = new EventEmitter<boolean>();
 
-  @ViewChild("tablaZonas") tablaZonas;
+  @ViewChild("table") table: DataTable;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
+
+
+    if (this.persistenceService.historico != undefined) {
+      this.historico = this.persistenceService.historico;
+    }
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }
 
-  openZonegroupTab(selectedDatos) {
+  openZonegroupTab(evento) {
 
-    if (!this.selectAllZona && !this.selectMultipleZona) {
-      this.router.navigate(["/fichaGrupoZonas"], { queryParams: { idZona: this.selectedDatosZona[0].idzona } });
+    if (!this.selectAll && !this.selectMultiple) {
+      this.persistenceService.historico = this.historico;
+      this.router.navigate(["/fichaGrupoZonas"], { queryParams: { idZona: this.selectedDatos[0].idzona } });
+    } else {
+
+      if (evento.data.fechabaja == undefined && this.historico) {
+        this.selectedDatos.pop();
+      }
+
     }
-
   }
 
   delete() {
 
     let zonasDelete = new ZonasObject();
-    zonasDelete.zonasItems = this.selectedDatosZona
+    zonasDelete.zonasItems = this.selectedDatos
     this.sigaServices.post("fichaZonas_deleteGroupZones", zonasDelete).subscribe(
       data => {
 
-        this.selectedDatosZona = [];
+        this.selectedDatos = [];
         this.searchZonasSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -90,11 +103,11 @@ export class TablaGestionZonasComponent implements OnInit {
 
   activate() {
     let zonasActivate = new ZonasObject();
-    zonasActivate.zonasItems = this.selectedDatosZona
+    zonasActivate.zonasItems = this.selectedDatos
     this.sigaServices.post("fichaZonas_activateGroupZones", zonasActivate).subscribe(
       data => {
 
-        this.selectedDatosZona = [];
+        this.selectedDatos = [];
         this.searchZonasSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -116,6 +129,7 @@ export class TablaGestionZonasComponent implements OnInit {
 
   searchZonas() {
     this.historico = !this.historico;
+    this.persistenceService.historico = this.historico;
     this.searchZonasSend.emit(this.historico);
 
   }
@@ -127,10 +141,10 @@ export class TablaGestionZonasComponent implements OnInit {
 
   getCols() {
 
-    this.colsZona = [
-      { field: "descripcionzona", header: "Grupo Zona" },
-      { field: "descripcionsubzona", header: "Zona" },
-      { field: "descripcionpartido", header: "Partidos Judiciales" }
+    this.cols = [
+      { field: "descripcionzona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" },
+      { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
+      { field: "descripcionpartido", header: "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" }
     ];
 
     this.rowsPerPage = [
@@ -154,41 +168,41 @@ export class TablaGestionZonasComponent implements OnInit {
   }
 
   onChangeRowsPerPages(event) {
-    this.selectedItemZona = event.value;
+    this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.tablaZonas.reset();
+    this.table.reset();
   }
 
-  onChangeSelectAllZonas() {
-    if (this.selectAllZona) {
-      this.selectMultipleZona = true;
-      this.selectedDatosZona = this.datos;
-      this.numSelectedZona = this.datos.length;
+  onChangeSelectAll() {
+    if (this.selectAll) {
+      this.selectMultiple = true;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
     } else {
-      this.selectedDatosZona = [];
-      this.numSelectedZona = 0;
-      this.selectMultipleZona = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = false;
     }
   }
 
-  isSelectMultipleZona() {
-    this.selectMultipleZona = !this.selectMultipleZona;
-    if (!this.selectMultipleZona) {
-      this.selectedDatosZona = [];
-      this.numSelectedZona = 0;
+  isSelectMultiple() {
+    this.selectMultiple = !this.selectMultiple;
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
     } else {
       // this.pressNew = false;
-      this.selectAllZona = false;
-      this.selectedDatosZona = [];
-      this.numSelectedZona = 0;
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
     }
     // this.volver();
   }
 
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelectedZona = selectedDatos.length;
-    this.seleccionZonas = false;
+    this.numSelected = selectedDatos.length;
+    this.seleccion = false;
   }
 
   showMessage(severity, summary, msg) {

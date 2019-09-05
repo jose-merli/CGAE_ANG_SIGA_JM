@@ -1,12 +1,9 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { ZonaComponent } from './ficha-grupo-zona/zona/zona.component';
-import { GrupoZonaComponent } from './ficha-grupo-zona/grupo-zona/grupo-zona.component';
-import { FichaGrupoZonaComponent } from './ficha-grupo-zona/ficha-grupo-zona.component';
 import { TablaGestionZonasComponent } from './tabla-gestion-zonas/tabla-gestion-zonas.component';
 import { FiltroGestionZonasComponent } from './filtro-gestion-zonas/filtro-gestion-zonas.component';
 import { GestionZonasComponent } from './gestion-zonas.component';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -22,12 +19,17 @@ import { environment } from '../../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from 'ngx-cookie-service';
-import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
+import { TableModule } from 'primeng/table';
+import { GrupoZonaComponent } from './ficha-grupo-zona/grupo-zona/grupo-zona.component';
+import { ZonaComponent } from './ficha-grupo-zona/zona/zona.component';
+import { FichaGrupoZonaComponent } from './ficha-grupo-zona/ficha-grupo-zona.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    DataTableModule,
+    TableModule,
     PaginatorModule,
     InputTextModule,
     ButtonModule,
@@ -37,13 +39,16 @@ import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module
     GrowlModule,
     PipeTranslationModule,
     MenubarModule,
-    FichaGrupoZonaModule
+    MultiSelectModule
 
   ],
   declarations: [
     GestionZonasComponent,
     FiltroGestionZonasComponent,
-    TablaGestionZonasComponent
+    TablaGestionZonasComponent,
+    FichaGrupoZonaComponent,
+    GrupoZonaComponent,
+    ZonaComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -58,6 +63,8 @@ import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module
     MessageService,
     AuthenticationService,
     ConfirmationService,
+    PersistenceService,
+
 
     AuthGuard,
     {

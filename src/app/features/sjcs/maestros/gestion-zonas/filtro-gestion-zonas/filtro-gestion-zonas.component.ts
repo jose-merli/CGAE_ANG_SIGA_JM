@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ZonasItem } from '../../../../../models/sjcs/ZonasItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-filtro-gestion-zonas',
@@ -14,20 +15,33 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 export class FiltroGestionZonasComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
-  buscar: boolean = false;
+  msgs = [];
+
   // grupoZona:string;
   // zona:string;
   // partidoJudicial:string;
 
   filtros: ZonasItem = new ZonasItem();
-
+  historico: boolean = false;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() isOpen = new EventEmitter<boolean>();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private translateService: TranslateService, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.filtros != undefined) {
+      this.filtros = this.persistenceService.filtros;
+      if (this.persistenceService.historico != undefined) {
+        this.historico = this.persistenceService.historico;
+      }
+      this.isOpen.emit(this.historico)
+
+    } else {
+      this.filtros = new ZonasItem();
+    }
+
   }
 
   onHideDatosGenerales() {
@@ -35,21 +49,11 @@ export class FiltroGestionZonasComponent implements OnInit {
   }
 
   isBuscar() {
-    this.buscar = true;
 
-    if (this.filtros.descripcionzona != undefined && this.filtros.descripcionzona != null) {
-      this.filtros.descripcionzona = this.filtros.descripcionzona.trim();
+    if (this.checkFilters()) {
+      this.persistenceService.filtros = this.filtros;
+      this.isOpen.emit(this.historico)
     }
-
-    if (this.filtros.descripcionsubzona != undefined && this.filtros.descripcionsubzona != null) {
-      this.filtros.descripcionsubzona = this.filtros.descripcionsubzona.trim();
-    }
-
-    if (this.filtros.descripcionpartido != undefined && this.filtros.descripcionpartido != null) {
-      this.filtros.descripcionpartido = this.filtros.descripcionpartido.trim();
-    }
-
-    this.isOpen.emit(this.buscar)
 
   }
 
@@ -58,8 +62,45 @@ export class FiltroGestionZonasComponent implements OnInit {
 
   }
 
+  checkFilters() {
+    if (
+      (this.filtros.descripcionzona == null || this.filtros.descripcionzona == "" || this.filtros.descripcionzona.length < 3) &&
+      (this.filtros.descripcionsubzona == null || this.filtros.descripcionsubzona == "" || this.filtros.descripcionsubzona.length < 3) &&
+      (this.filtros.descripcionpartido == null || this.filtros.descripcionpartido == "" || this.filtros.descripcionpartido.length < 3)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.filtros.descripcionzona != undefined && this.filtros.descripcionzona != null) {
+        this.filtros.descripcionzona = this.filtros.descripcionzona.trim();
+      }
+
+      if (this.filtros.descripcionsubzona != undefined && this.filtros.descripcionsubzona != null) {
+        this.filtros.descripcionsubzona = this.filtros.descripcionsubzona.trim();
+      }
+
+      if (this.filtros.descripcionpartido != undefined && this.filtros.descripcionpartido != null) {
+        this.filtros.descripcionpartido = this.filtros.descripcionpartido.trim();
+      }
+      return true;
+    }
+  }
+
   clearFilters() {
     this.filtros = new ZonasItem();
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   //búsqueda con enter

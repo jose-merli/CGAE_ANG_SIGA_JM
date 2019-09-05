@@ -1,14 +1,16 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="header-title">
   <i class="fa fa-square"></i>
   <p>SJCS
-    <i class="fa fa-angle-right"></i> Maestros
-    <i class="fa fa-angle-right"></i> Grupo Zona y Zonas
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros' | translate }}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.zonasYSubzonas' | translate }}
     <!-- {{ 'censo.busquedaClientes.busquedaNoColegiados.titulo' | translate}}-->
   </p>
 </div>
 <div class="card">
   <div class="card-body">
-    <p (click)="onHideDatosGenerales()" class="title-module"> Datos Generales
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
       <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
     </p>
@@ -17,17 +19,17 @@
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
-          <label>Grupo Zona</label>
+          <label>{{ 'justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera' | translate }}</label>
           <input type="text" name="grupoZona" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionzona' pInputText
-            maxLength="200" pInputText>
+            maxLength="60" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Zona</label>
+          <label>{{ 'justiciaGratuita.maestros.zonasYSubzonas.zona' | translate }}</label>
           <input type="text" name="zona" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionsubzona' pInputText
-            maxLength="200" pInputText>
+            maxLength="60" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Partido Judicial</label>
+          <label>{{ 'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate }}</label>
           <input type="text" name="partidoJudicial" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionpartido'
             maxLength="200" pInputText>
         </div>

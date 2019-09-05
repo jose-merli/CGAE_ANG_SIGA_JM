@@ -1,6 +1,6 @@
 import { Location } from "@angular/common";
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { GrupoZonaComponent } from './grupo-zona/grupo-zona.component';
 import { ZonaComponent } from "./zona/zona.component";
 

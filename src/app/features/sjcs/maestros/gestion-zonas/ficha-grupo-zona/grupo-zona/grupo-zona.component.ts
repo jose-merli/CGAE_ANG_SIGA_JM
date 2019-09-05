@@ -16,6 +16,8 @@ export class GrupoZonaComponent implements OnInit {
   modoEdicion: boolean = false;
   msgs;
 
+  historico: boolean = false;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   //Resultados de la busqueda
@@ -43,6 +45,8 @@ export class GrupoZonaComponent implements OnInit {
       .subscribe(
         n => {
           this.body = n;
+          this.validateHistorical();
+
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           this.progressSpinner = false;
         },
@@ -57,6 +61,18 @@ export class GrupoZonaComponent implements OnInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
+
+  validateHistorical() {
+    if (this.body != undefined) {
+
+      if (this.body.fechabaja != null) {
+        this.historico = true;
+      } else {
+        this.historico = false;
+      }
+
+    }
   }
 
   save() {
@@ -96,7 +112,7 @@ export class GrupoZonaComponent implements OnInit {
       },
       err => {
 
-        if (JSON.parse(err.error).error.description != "") {
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -124,7 +140,7 @@ export class GrupoZonaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.body.descripcionzona != "" && this.body.descripcionzona != undefined && this.body.descripcionzona != null) {
+    if (!this.historico && (this.body.descripcionzona != "" && this.body.descripcionzona != undefined && this.body.descripcionzona != null)) {
       return false;
     } else {
       return true;
