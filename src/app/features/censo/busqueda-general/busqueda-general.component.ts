@@ -177,7 +177,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
     if (sessionStorage.getItem("abrirSociedad") != null ||
       sessionStorage.getItem("abrirSociedad") != undefined) {
       this.isSociedad = true;
-      sessionStorage.removeItem("abrirSociedad");
     }
 
     this.colsFisicas = [
@@ -866,6 +865,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       let cuerpo = [];
       cuerpo.push(id[0]);
       sessionStorage.setItem("usuarioBody", JSON.stringify(cuerpo));
+      sessionStorage.removeItem("abrirSociedad");
       this.router.navigate(["fichaPersonaJuridica"]);
     } else if (this.isFormador) {
       // ir a ficha de formador

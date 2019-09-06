@@ -365,10 +365,13 @@ export class DatosGenerales implements OnInit {
           // si esta en modo edicion y guarda => rellenar tipo
           if (this.editar) {
             this.comboTipo = [];
-            let newTipo = this.comboIdentificacion.find(
-              item => item.value == this.body.tipo
-            );
-            this.comboTipo.push(newTipo.label);
+
+            if (this.body.tipo != undefined) {
+              let newTipo = this.comboIdentificacion.find(
+                item => item.value == this.body.tipo
+              );
+              this.comboTipo.push(newTipo.label);
+            }
           }
           this.showGuardar = false;
           this.editar = false;
@@ -833,7 +836,7 @@ export class DatosGenerales implements OnInit {
 
   comprobarValidacion() {
     if (
-      this.body.nif.length == 9 &&
+      (this.body.nif != undefined && this.body.nif.length == 9) &&
       this.isValidCIF(this.body.nif) &&
       !this.onlySpaces(this.body.denominacion) &&
       (this.body.fechaConstitucion != undefined ||

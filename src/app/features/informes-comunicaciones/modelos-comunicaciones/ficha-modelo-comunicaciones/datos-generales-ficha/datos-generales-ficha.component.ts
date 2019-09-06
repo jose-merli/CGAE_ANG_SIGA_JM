@@ -229,13 +229,15 @@ export class DatosGeneralesFichaComponent implements OnInit {
       } else {
 
         this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
-          if (
-            sessionStorage.getItem("soloLectura") != null &&
-            sessionStorage.getItem("soloLectura") != undefined &&
-            sessionStorage.getItem("soloLectura") == "true"
-          ) {
-            this.soloLectura = true;
+        if (this.bodyModelo != undefined && this.bodyModelo != null) {
+          if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
+            if (
+              sessionStorage.getItem("soloLectura") != null &&
+              sessionStorage.getItem("soloLectura") != undefined &&
+              sessionStorage.getItem("soloLectura") == "true"
+            ) {
+              this.soloLectura = true;
+            }
           }
         }
       }
