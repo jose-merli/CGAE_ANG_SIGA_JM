@@ -253,7 +253,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
               const blob = new Blob([data], { type: "application/octet-stream" });
               if (blob.size == 0) {          
                 this.showFail(this.translateService.instant(
-                  "messages.general.error.ficheroNoExiste"
+                  "message.enviomasivo.log.noexiste"
                 ));          
 
               } else {
@@ -263,7 +263,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
         },
         err => {
           this.showFail(this.translateService.instant(
-            "messages.general.error.ficheroNoExiste"
+            "message.enviomasivo.log.noexiste"
           ));  
         }
     );
