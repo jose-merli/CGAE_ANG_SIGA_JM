@@ -3,6 +3,7 @@ import { CommonModule, DatePipe, APP_BASE_HREF } from '@angular/common';
 
 import { routingMaestros } from './maestros-routing.module';
 import { GestionZonasModule } from './gestion-zonas/gestion-zonas.module';
+import { GestionAreasModule } from './areas/gestion-areas.module';
 import { MenubarModule } from 'primeng/menubar';
 
 
@@ -14,8 +15,8 @@ import { MenubarModule } from 'primeng/menubar';
     CommonModule,
     routingMaestros,
     GestionZonasModule,
+    GestionAreasModule,
     MenubarModule
-
   ],
 
   providers: []

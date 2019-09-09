@@ -1,0 +1,16 @@
+<div class="ficha-comunicacion-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i> {{'menu.justiciaGratuita.maestros' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros.AreasYMaterias' | translate}}
+    </p>
+  </div>
+  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <app-edicion-areas *ngSwitchCase="'edicionAreas'" [idArea]="idArea" (modoEdicionSend)="modoEdicionSend($event)"></app-edicion-areas>
+    <app-tabla-materias *ngSwitchCase="'tablaMaterias'" [idArea]="idArea" [modoEdicion]="modoEdicion"></app-tabla-materias>
+  </div>
+</div>
+<div class="mt-3 text-right main-button ">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>

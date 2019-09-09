@@ -1,5 +1,5 @@
 export let endpoints_maestros: any = {
-    fichaZonas_gePartidosJudiciales: "maestros/fichaZonas/partidosJudiciales",
+    fichaZonas_getPartidosJudiciales: "maestros/fichaZonas/partidosJudiciales",
     gestionZonas_searchZones: "maestros/gestionZonas/searchZones",
     fichaZonas_createZones: "maestros/fichaZonas/createZones",
     fichaZonas_searchSubzones: "maestros/fichaZonas/searchSubzones",
@@ -10,6 +10,10 @@ export let endpoints_maestros: any = {
     fichaZonas_createZone: "maestros/fichaZonas/createZone",
     fichaZonas_deleteZones: "maestros/fichaZonas/deleteZones",
     fichaZonas_deleteGroupZones: "maestros/fichaZonas/deleteGroupZones",
-    fichaZonas_activateGroupZones: "maestros/fichaZonas/activateGroupZones"
+    fichaZonas_activateGroupZones: "maestros/fichaZonas/activateGroupZones",
+    fichaAreas_getJurisdicciones: "maestros/areasMaterias/jurisdicciones",
+    fichaAreas_searchAreas: "maestros/areasMaterias/searchAreas",
+    fichaAreas_deleteAreas: "maestros/areasMaterias/deleteAreas"
+
 
 }
