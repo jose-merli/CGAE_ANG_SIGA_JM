@@ -9,6 +9,10 @@ const routesSjcs: Routes = [
   {
     path: "mantenimientoJuzgados",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "areasYMaterias",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   }
 ];
 

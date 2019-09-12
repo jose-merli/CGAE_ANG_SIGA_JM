@@ -675,7 +675,8 @@ const appRoutes: Routes = [
   },
   {
     path: "areasYMaterias",
-    component: AreasYMateriasComponent,
+    // component: AreasYMateriasComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {

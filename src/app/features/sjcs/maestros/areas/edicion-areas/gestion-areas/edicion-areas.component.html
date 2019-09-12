@@ -1,0 +1,44 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{"menu.justiciaGratuita.maestros.Area" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div class="card-body card-body-ficha">
+      <div class="row">
+        <div class="col-lg-9 col-md-9">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText maxLength="200" />
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ "maestros.areasmaterias.literal.contenido" | translate }}
+              </label>
+              <input type="text" class="form-control" [(ngModel)]="body.contenido" pInputText maxLength="4000" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="disabledSave()" (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
