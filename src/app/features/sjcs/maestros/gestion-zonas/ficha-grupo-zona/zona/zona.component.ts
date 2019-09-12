@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEm
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { ZonasItem } from '../../../../../../models/sjcs/ZonasItem';
-import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { ZonasObject } from '../../../../../../models/sjcs/ZonasObject';
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect } from 'primeng/primeng';
@@ -127,7 +127,7 @@ export class ZonaComponent implements OnInit {
         this.historico = false;
       }
 
-      this.persistenceService.historico = this.historico;
+      this.persistenceService.setHistorico(this.historico);
 
     }
   }

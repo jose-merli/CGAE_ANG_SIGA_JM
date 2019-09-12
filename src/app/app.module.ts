@@ -40,7 +40,6 @@ import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
-import { FechaComponent } from './commons/fecha/fecha.component'
 
 //PRIMENG
 
@@ -343,6 +342,7 @@ import { SjcsModule } from './features/sjcs/sjcs.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
+import { FechaModule } from './commons/fecha/fecha.module';
 
 
 
@@ -643,7 +643,6 @@ import { PersistenceService } from './_services/persistence.service';
 		TurnoOficioComponent,
 		BusquedaCensoGeneralComponent,
 		DestinatarioIndvEnvioMasivoComponent,
-		FechaComponent,
 		DevolucionComponent,
 		JustificacionComponent,
 		CertificacionComponent
@@ -687,6 +686,7 @@ import { PersistenceService } from './_services/persistence.service';
 		FileUploadModule,
 		DialogModule,
 		PipeTranslationModule,
+		FechaModule,
 
 		KeyFilterModule,
 		StepsModule,

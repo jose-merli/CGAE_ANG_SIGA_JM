@@ -5,6 +5,10 @@ const routesSjcs: Routes = [
   {
     path: "zonasYsubzonas",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "mantenimientoJuzgados",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   }
 ];
 

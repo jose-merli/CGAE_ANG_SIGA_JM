@@ -10,6 +10,16 @@ export let endpoints_maestros: any = {
     fichaZonas_createZone: "maestros/fichaZonas/createZone",
     fichaZonas_deleteZones: "maestros/fichaZonas/deleteZones",
     fichaZonas_deleteGroupZones: "maestros/fichaZonas/deleteGroupZones",
-    fichaZonas_activateGroupZones: "maestros/fichaZonas/activateGroupZones"
+    fichaZonas_activateGroupZones: "maestros/fichaZonas/activateGroupZones",
 
+    busquedaJuzgados_searchJudged: "maestros/busquedaJuzgados/searchJudged",
+    busquedaJuzgados_provinces: "maestros/busquedaJuzgados/provinces",
+    busquedaJuzgados_population: "maestros/busquedaJuzgados/population",
+    busquedaJuzgados_deleteJudged: "maestros/busquedaJuzgados/deleteJudged",
+    busquedaJuzgados_activateJudged: "maestros/busquedaJuzgados/activateJudged",
+    gestionJuzgados_searchProcess: "maestros/gestionJuzgados/searchProcess",
+    gestionJuzgados_searchProcJudged: "maestros/gestionJuzgados/searchProcJudged",
+    gestionJuzgados_createJudged: "maestros/gestionJuzgados/createJudged",
+    gestionJuzgados_updateJudged: "maestros/gestionJuzgados/updateJudged",
+    gestionJuzgados_associateProcess: "maestros/gestionJuzgados/associateProcess"
 }

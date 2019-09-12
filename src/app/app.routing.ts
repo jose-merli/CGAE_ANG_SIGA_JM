@@ -720,7 +720,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoJuzgados",
-    component: MantenimientoJuzgadosComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {
