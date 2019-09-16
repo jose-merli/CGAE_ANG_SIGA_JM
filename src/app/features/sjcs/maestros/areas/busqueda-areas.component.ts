@@ -34,10 +34,10 @@ export class BusquedaAreasComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
+    this.buscar = this.filtros.buscar
   }
 
   ngAfterViewInit() {
-    this.buscar = this.filtros.buscar
   }
 
   // busquedaReceive(event) {

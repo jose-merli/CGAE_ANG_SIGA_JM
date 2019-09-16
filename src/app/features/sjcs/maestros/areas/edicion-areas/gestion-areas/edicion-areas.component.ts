@@ -19,16 +19,37 @@ export class EdicionAreasComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   //Resultados de la busqueda
-  @Input() idArea;
+  @Input() areasItem: AreasItem;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
-
   ngOnInit() {
-    // if (this.idZona != undefined) {
-    //   this.getGrupoZona();
-    //   this.modoEdicion = true;
+    // if (this.areasItem != undefined) {
+
+    // this.areasItem = new AreasItem();
+    if (this.areasItem != undefined) {
+      this.body = this.areasItem;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
+    } else {
+      this.areasItem = new AreasItem();
+    }
+    if (this.body.idArea == undefined) {
+      this.modoEdicion = false;
+    } else {
+      this.modoEdicion = true;
+    }
+  }
+
+  ngAfterViewInit() {
+    // if (this.areasItem != undefined) {
+    //   this.body = this.areasItem;
+    //   this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
     // } else {
+    //   this.areasItem = new AreasItem();
+    // }
+    // if (this.body.idArea == undefined) {
     //   this.modoEdicion = false;
+    // } else {
+    //   this.modoEdicion = true;
     // }
   }
 
@@ -52,38 +73,43 @@ export class EdicionAreasComponent implements OnInit {
   // }
 
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.modoEdicion) {
+      this.areasItem = JSON.parse(JSON.stringify(this.bodyInicial));
+    } else {
+      this.areasItem = new AreasItem();
+    }
   }
 
   save() {
     this.progressSpinner = true;
     let url = "";
     if (!this.modoEdicion) {
-      url = "fichaZonas_createGroupZone";
+      url = "fichaAreas_createAreas";
       this.callSaveService(url);
     } else {
-      url = "fichaZonas_updateGroupZone";
+      url = "fichaAreas_updateAreas";
       this.callSaveService(url);
     }
 
   }
 
   callSaveService(url) {
-
-    this.sigaServices.post(url, this.body).subscribe(
+    this.sigaServices.post(url, this.areasItem).subscribe(
       data => {
 
         if (!this.modoEdicion) {
           this.modoEdicion = true;
-          this.idArea = JSON.parse(data.body).idArea;
+          let areas = JSON.parse(data.body);
+          // this.areasItem = JSON.parse(data.body);
+          this.areasItem.idArea = areas.id;
           let send = {
             modoEdicion: this.modoEdicion,
-            idArea: this.idArea
+            idArea: this.areasItem.idArea
           }
           this.modoEdicionSend.emit(send);
         }
 
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -91,7 +117,7 @@ export class EdicionAreasComponent implements OnInit {
       err => {
 
         if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -118,10 +144,10 @@ export class EdicionAreasComponent implements OnInit {
   }
 
   disabledSave() {
-    //   if (this.body.descripcionzona != "" && this.body.descripcionzona != undefined && this.body.descripcionzona != null) {
-    //     return false;
-    //   } else {
-    //     return true;
-    //   }
+    if (this.areasItem.nombreArea != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

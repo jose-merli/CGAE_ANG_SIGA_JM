@@ -6,6 +6,7 @@ import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-filtro-busqueda-areas',
@@ -28,10 +29,13 @@ export class FiltroBusquedaAreasComponent implements OnInit {
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      this.isBuscar();
+    }
     this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
       n => {
         this.jurisdicciones = n.combooItems;
@@ -56,9 +60,11 @@ export class FiltroBusquedaAreasComponent implements OnInit {
         console.log(err);
       }
     );
+  }
 
-
-
+  newArea() {
+    this.persistenceService.setFiltros(this.filtros);
+    this.router.navigate(["/fichaGrupoAreas"]);
   }
 
   onHideDatosGenerales() {
@@ -66,6 +72,7 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   }
 
   isBuscar() {
+    this.persistenceService.setFiltros(this.filtros);
     if ((this.filtros.nombreArea == undefined || this.filtros.nombreArea == "" || this.filtros.nombreArea.trim().length < 3) && (this.filtros.nombreMateria == undefined || this.filtros.nombreMateria == "" || this.filtros.nombreMateria.trim().length < 3) && (this.filtros.jurisdiccion == undefined || this.filtros.jurisdiccion == "")) {
       this.showSearchIncorrect();
     } else {
@@ -93,10 +100,6 @@ export class FiltroBusquedaAreasComponent implements OnInit {
       )
     });
   }
-  // newZoneGroup() {
-  //   this.router.navigate(["/fichaGrupoZonas"]);
-
-  // }
 
   clearFilters() {
     this.filtros = new AreasItem();

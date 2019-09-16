@@ -1,6 +1,6 @@
 export class AreasItem {
   idArea: string;
-  idinstitucion: string;
+  idInstitucion: string;
   contenido: string;
   nombreMateria: string;
   nombreArea: string;

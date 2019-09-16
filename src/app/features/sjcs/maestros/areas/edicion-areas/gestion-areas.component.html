@@ -7,7 +7,7 @@
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-edicion-areas *ngSwitchCase="'edicionAreas'" [idArea]="idArea" (modoEdicionSend)="modoEdicionSend($event)"></app-edicion-areas>
+    <app-edicion-areas *ngSwitchCase="'edicionAreas'" [areasItem]="areasItem" (modoEdicionSend)="modoEdicionSend($event)"></app-edicion-areas>
     <app-tabla-materias *ngSwitchCase="'tablaMaterias'" [idArea]="idArea" [modoEdicion]="modoEdicion"></app-tabla-materias>
   </div>
 </div>
