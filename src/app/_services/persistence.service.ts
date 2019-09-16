@@ -1,14 +1,13 @@
 
 import { Injectable } from '../../../node_modules/@angular/core';
 import { Subject } from '../../../node_modules/rxjs';
+
 @Injectable()
 export class PersistenceService {
 
-    // pendiente de comentar
-    historico: boolean;
-    filtros: any;
-    datos: any;
-    // pendiente de comentar
+    // historico: boolean;
+    // filtros: any;
+    // datos: any;
 
     private filtrosName: string = "filtros";
     private datosName: string = "datos";

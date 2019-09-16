@@ -4,7 +4,7 @@ import { GestionZonasComponent } from '../gestion-zonas.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { ZonasItem } from '../../../../../models/sjcs/ZonasItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
-import { Router } from '../../../../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
@@ -31,10 +31,10 @@ export class FiltroGestionZonasComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.persistenceService.filtros != undefined) {
-      this.filtros = this.persistenceService.filtros;
-      if (this.persistenceService.historico != undefined) {
-        this.historico = this.persistenceService.historico;
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      if (this.persistenceService.getHistorico() != undefined) {
+        this.historico = this.persistenceService.getHistorico();
       }
       this.isOpen.emit(this.historico)
 
@@ -51,7 +51,7 @@ export class FiltroGestionZonasComponent implements OnInit {
   isBuscar() {
 
     if (this.checkFilters()) {
-      this.persistenceService.filtros = this.filtros;
+      this.persistenceService.setFiltros(this.filtros);
       this.isOpen.emit(this.historico)
     }
 

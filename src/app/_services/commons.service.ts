@@ -4,7 +4,7 @@ import {
 } from "@angular/http";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
-import { HttpBackend, HttpClient } from "../../../node_modules/@angular/common/http";
+import { HttpBackend, HttpClient } from "@angular/common/http";
 
 @Injectable()
 export class CommonsService {
@@ -99,6 +99,23 @@ export class CommonsService {
         return false;
       }
     }
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 
 }

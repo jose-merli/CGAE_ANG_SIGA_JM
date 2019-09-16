@@ -1,19 +1,17 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, Output, EventEmitter, AfterContentInit, AfterViewInit } from '@angular/core';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { findIndex } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { ZonasObject } from '../../../../../models/sjcs/ZonasObject';
+import { Component, OnInit, Input, Output, ChangeDetectorRef, ViewChild, EventEmitter } from '@angular/core';
+import { TranslateService } from '../../../../../commons/translate';
+import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
+import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
 
 @Component({
-  selector: 'app-tabla-gestion-zonas',
-  templateUrl: './tabla-gestion-zonas.component.html',
-  styleUrls: ['./tabla-gestion-zonas.component.scss']
+  selector: 'app-tabla-juzgados',
+  templateUrl: './tabla-juzgados.component.html',
+  styleUrls: ['./tabla-juzgados.component.scss']
 })
-export class TablaGestionZonasComponent implements OnInit {
-
+export class TablaJuzgadosComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
@@ -35,12 +33,11 @@ export class TablaGestionZonasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-  //Combo partidos judiciales
-  @Input() comboPJ;
-
-  @Output() searchZonasSend = new EventEmitter<boolean>();
 
   @ViewChild("table") table: DataTable;
+
+  @Output() searchHistoricalSend = new EventEmitter<boolean>();
+
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -51,20 +48,29 @@ export class TablaGestionZonasComponent implements OnInit {
 
   ngOnInit() {
 
+    this.getCols();
+    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
-
-    this.getCols();
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
   }
 
-  openZonegroupTab(evento) {
+  searchHistorical() {
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchHistoricalSend.emit(this.historico);
+
+  }
+
+
+  openTab(evento) {
+
 
     if (!this.selectAll && !this.selectMultiple) {
-      this.persistenceService.setHistorico(this.historico);
-      this.router.navigate(["/fichaGrupoZonas"], { queryParams: { idZona: this.selectedDatos[0].idzona } });
+      this.progressSpinner = true;
+      this.persistenceService.setDatos(evento.data);
+      this.router.navigate(["/gestionJuzgados"]);
     } else {
 
       if (evento.data.fechabaja == undefined && this.historico) {
@@ -76,13 +82,13 @@ export class TablaGestionZonasComponent implements OnInit {
 
   delete() {
 
-    let zonasDelete = new ZonasObject();
-    zonasDelete.zonasItems = this.selectedDatos
-    this.sigaServices.post("fichaZonas_deleteGroupZones", zonasDelete).subscribe(
+    let judgeDelete = new JuzgadoObject();
+    judgeDelete.juzgadoItems = this.selectedDatos;
+    this.sigaServices.post("busquedaJuzgados_deleteJudged", judgeDelete).subscribe(
       data => {
 
         this.selectedDatos = [];
-        this.searchZonasSend.emit(false);
+        this.searchHistoricalSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -102,13 +108,13 @@ export class TablaGestionZonasComponent implements OnInit {
   }
 
   activate() {
-    let zonasActivate = new ZonasObject();
-    zonasActivate.zonasItems = this.selectedDatos
-    this.sigaServices.post("fichaZonas_activateGroupZones", zonasActivate).subscribe(
+    let judgedActivate = new JuzgadoObject();
+    judgedActivate.juzgadoItems = this.selectedDatos;
+    this.sigaServices.post("busquedaJuzgados_activateJudged", judgedActivate).subscribe(
       data => {
 
         this.selectedDatos = [];
-        this.searchZonasSend.emit(true);
+        this.searchHistoricalSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -127,12 +133,7 @@ export class TablaGestionZonasComponent implements OnInit {
     );
   }
 
-  searchZonas() {
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchZonasSend.emit(this.historico);
 
-  }
 
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -142,9 +143,12 @@ export class TablaGestionZonasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripcionzona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" },
-      { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
-      { field: "descripcionpartido", header: "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" }
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "codigoExt", header: "administracion.parametrosGenerales.literal.codigo" },
+      { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
+      { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
+      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
+
     ];
 
     this.rowsPerPage = [
@@ -191,12 +195,10 @@ export class TablaGestionZonasComponent implements OnInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     } else {
-      // this.pressNew = false;
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
     }
-    // this.volver();
   }
 
 
@@ -217,6 +219,5 @@ export class TablaGestionZonasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 
 }

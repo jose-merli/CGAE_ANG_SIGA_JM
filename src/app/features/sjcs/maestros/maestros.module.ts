@@ -5,20 +5,20 @@ import { routingMaestros } from './maestros-routing.module';
 import { GestionZonasModule } from './gestion-zonas/gestion-zonas.module';
 import { GestionAreasModule } from './areas/gestion-areas.module';
 import { MenubarModule } from 'primeng/menubar';
+import { JuzgadosModule } from './juzgados/juzgados.module';
 
 
 @NgModule({
-  declarations: [
+    declarations: [],
+    imports: [
+        CommonModule,
+        routingMaestros,
+        GestionZonasModule,
+        MenubarModule,
+        JuzgadosModule,
+        GestionAreasModule
+    ],
 
-  ],
-  imports: [
-    CommonModule,
-    routingMaestros,
-    GestionZonasModule,
-    GestionAreasModule,
-    MenubarModule
-  ],
-
-  providers: []
+    providers: []
 })
 export class MaestrosModule { }

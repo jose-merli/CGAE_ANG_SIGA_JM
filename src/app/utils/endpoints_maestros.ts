@@ -11,6 +11,7 @@ export let endpoints_maestros: any = {
     fichaZonas_deleteZones: "maestros/fichaZonas/deleteZones",
     fichaZonas_deleteGroupZones: "maestros/fichaZonas/deleteGroupZones",
     fichaZonas_activateGroupZones: "maestros/fichaZonas/activateGroupZones",
+
     fichaAreas_getJurisdicciones: "maestros/areasMaterias/jurisdicciones",
     fichaAreas_searchAreas: "maestros/areasMaterias/searchAreas",
     fichaAreas_deleteAreas: "maestros/areasMaterias/deleteAreas",
@@ -19,8 +20,16 @@ export let endpoints_maestros: any = {
     fichaAreas_searchMaterias: "maestros/areasMaterias/searchMaterias",
     fichaAreas_updateMaterias: "maestros/areasMaterias/updateMaterias",
     fichaAreas_createMaterias: "maestros/areasMaterias/createMaterias",
-    fichaAreas_deleteMaterias: "maestros/areasMaterias/deleteMaterias"
+    fichaAreas_deleteMaterias: "maestros/areasMaterias/deleteMaterias",
 
-
-
+    busquedaJuzgados_searchJudged: "maestros/busquedaJuzgados/searchJudged",
+    busquedaJuzgados_provinces: "maestros/busquedaJuzgados/provinces",
+    busquedaJuzgados_population: "maestros/busquedaJuzgados/population",
+    busquedaJuzgados_deleteJudged: "maestros/busquedaJuzgados/deleteJudged",
+    busquedaJuzgados_activateJudged: "maestros/busquedaJuzgados/activateJudged",
+    gestionJuzgados_searchProcess: "maestros/gestionJuzgados/searchProcess",
+    gestionJuzgados_searchProcJudged: "maestros/gestionJuzgados/searchProcJudged",
+    gestionJuzgados_createJudged: "maestros/gestionJuzgados/createJudged",
+    gestionJuzgados_updateJudged: "maestros/gestionJuzgados/updateJudged",
+    gestionJuzgados_associateProcess: "maestros/gestionJuzgados/associateProcess"
 }
