@@ -390,6 +390,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   savePermisos() {
+        let permisosUpdate = new PermisosAplicacionesDto();
+        permisosUpdate.derechoacceso = "3";
+        permisosUpdate.idGrupo = this.idGrupo;
+        permisosUpdate.id = 0;
+
+        this.permisosChange.set("0", permisosUpdate);
     this.permisosChange.forEach(
       (value: PermisosAplicacionesDto, key: String) => {
         this.sigaServices.post("permisos_update", value).subscribe(
