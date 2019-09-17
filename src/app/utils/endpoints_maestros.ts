@@ -16,14 +16,24 @@ export let endpoints_maestros: any = {
     fichaAreas_searchAreas: "maestros/areasMaterias/searchAreas",
     fichaAreas_deleteAreas: "maestros/areasMaterias/deleteAreas",
 
-    busquedaJuzgados_searchJudged: "maestros/busquedaJuzgados/searchJudged",
+    busquedaJuzgados_searchCourt: "maestros/busquedaJuzgados/searchCourt",
     busquedaJuzgados_provinces: "maestros/busquedaJuzgados/provinces",
     busquedaJuzgados_population: "maestros/busquedaJuzgados/population",
-    busquedaJuzgados_deleteJudged: "maestros/busquedaJuzgados/deleteJudged",
-    busquedaJuzgados_activateJudged: "maestros/busquedaJuzgados/activateJudged",
+    busquedaJuzgados_deleteCourt: "maestros/busquedaJuzgados/deleteCourt",
+    busquedaJuzgados_activateCourt: "maestros/busquedaJuzgados/activateCourt",
     gestionJuzgados_searchProcess: "maestros/gestionJuzgados/searchProcess",
-    gestionJuzgados_searchProcJudged: "maestros/gestionJuzgados/searchProcJudged",
-    gestionJuzgados_createJudged: "maestros/gestionJuzgados/createJudged",
-    gestionJuzgados_updateJudged: "maestros/gestionJuzgados/updateJudged",
-    gestionJuzgados_associateProcess: "maestros/gestionJuzgados/associateProcess"
+    gestionJuzgados_searchProcCourt: "maestros/gestionJuzgados/searchProcCourt",
+    gestionJuzgados_createCourt: "maestros/gestionJuzgados/createCourt",
+    gestionJuzgados_updateCourt: "maestros/gestionJuzgados/updateCourt",
+    gestionJuzgados_associateProcess: "maestros/gestionJuzgados/associateProcess",
+
+    gestionCostesFijos_getCosteFijos: "maestros/gestionCostesFijos/comboCosteFijos",
+    gestionCostesFijos_getComboAsistencia: "maestros/gestionCostesFijos/comboAsistencia",
+    gestionCostesFijos_getComboActuacion: "maestros/gestionCostesFijos/comboActuacion",
+    gestionCostesFijos_searchCosteFijos: "maestros/gestionCostesFijos/searchCostesFijos",
+    gestionCostesFijos_createCosteFijo: "maestros/gestionCostesFijos/createCosteFijo",
+    gestionCostesFijos_deleteCostesFijos: "maestros/gestionCostesFijos/deleteCostesFijos",
+    gestionCostesFijos_activateCostesFijos: "maestros/gestionCostesFijos/activateCostesFijos",
+    gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos"
+
 }
