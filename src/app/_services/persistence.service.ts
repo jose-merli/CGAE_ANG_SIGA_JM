@@ -5,13 +5,10 @@ import { Subject } from '../../../node_modules/rxjs';
 @Injectable()
 export class PersistenceService {
 
-    // historico: boolean;
-    // filtros: any;
-    // datos: any;
-
     private filtrosName: string = "filtros";
     private datosName: string = "datos";
     private historicoName: string = "historico";
+    private permisosName: string = "permisos";
 
     private obtenerDatos = new Subject<any>();
     obtenerDatos$ = this.obtenerDatos.asObservable();
@@ -57,11 +54,24 @@ export class PersistenceService {
         localStorage.removeItem(this.historicoName);
     }
 
+    setPermisos(data: any) {
+        localStorage.setItem(this.permisosName, JSON.stringify(data));
+    }
+
+    getPermisos() {
+        let data = localStorage.getItem(this.permisosName);
+        return JSON.parse(data);
+    }
+
+    clearPermisos() {
+        localStorage.removeItem(this.permisosName);
+    }
 
     clearPersistence() {
         this.clearFiltros();
         this.clearHistorico();
         this.clearDatos();
+        this.clearPermisos();
     }
 
     notifyObtenerDatos(datos) {
