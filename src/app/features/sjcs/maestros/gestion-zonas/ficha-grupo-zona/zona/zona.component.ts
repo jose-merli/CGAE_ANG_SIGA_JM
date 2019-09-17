@@ -46,7 +46,7 @@ export class ZonaComponent implements OnInit {
   //Resultados de la busqueda
   @Input() idZona;
   //Resultados de la busqueda
-  @Input() modoEdicion: boolean = false;
+  @Input() modoEdicion: boolean;
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
@@ -63,14 +63,12 @@ export class ZonaComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
-
-
   }
 
   getComboPartidosJudiciales() {
     this.progressSpinner = true;
 
-    this.sigaServices.get("fichaZonas_gePartidosJudiciales").subscribe(
+    this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
       n => {
         this.comboPJ = n.combooItems;
 

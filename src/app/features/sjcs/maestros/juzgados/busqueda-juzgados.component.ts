@@ -2,6 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FiltroJuzgadosComponent } from './filtro-juzgados/filtro-juzgados.component';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { CommonsService } from '../../../../_services/commons.service';
+import { procesos_maestros } from '../../../../permisos/procesos_maestros';
+import { TranslateService } from '../../../../commons/translate/translation.service';
+import { Router } from '../../../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-busqueda-juzgados',
@@ -14,6 +18,9 @@ export class BusquedaJuzgadosComponent implements OnInit {
   historico: boolean = false;
 
   datos;
+
+
+
   progressSpinner: boolean = false;
 
   @ViewChild(FiltroJuzgadosComponent) filtros;
@@ -22,12 +29,36 @@ export class BusquedaJuzgadosComponent implements OnInit {
   comboPJ;
   msgs;
 
+  permisoEscritura;
 
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices) { }
+
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+    private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
 
   ngOnInit() {
+
+    this.commonsService.checkAcceso(procesos_maestros.juzgados)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if (this.permisoEscritura) {
+
+        }
+
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error => console.error(error));
   }
 
 
@@ -39,8 +70,8 @@ export class BusquedaJuzgadosComponent implements OnInit {
   search(event) {
     this.filtros.filtros.historico = event;
     this.progressSpinner = true;
-    
-    this.sigaServices.post("busquedaJuzgados_searchJudged", this.filtros.filtros).subscribe(
+
+    this.sigaServices.post("busquedaJuzgados_searchCourt", this.filtros.filtros).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).juzgadoItems;

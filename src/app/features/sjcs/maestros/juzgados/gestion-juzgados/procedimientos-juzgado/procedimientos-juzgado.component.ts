@@ -32,6 +32,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   openFicha: boolean = false;
   selectionMode = "multiple";
 
+  permisoEscritura;
+
   procedimientos = [];
 
   initSelectedDatos;
@@ -40,6 +42,11 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+
+    }
 
     this.validateHistorical();
     this.getCols();
@@ -75,7 +82,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   getProcJuged() {
 
     this.sigaServices
-      .getParam("gestionJuzgados_searchProcJudged", "?idJuzgado=" + this.datos.idJuzgado).subscribe(
+      .getParam("gestionJuzgados_searchProcCourt", "?idJuzgado=" + this.datos.idJuzgado).subscribe(
         n => {
           this.selectedDatos = n.procedimientosItems;
           this.initSelectedDatos = JSON.parse(JSON.stringify((this.selectedDatos)));
@@ -198,7 +205,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.historico) {
+    if (!this.historico && this.permisoEscritura) {
       if (this.selectedDatos != undefined && this.selectedDatos.length == 0) {
         this.selectMultiple = !this.selectMultiple;
         if (!this.selectMultiple) {
@@ -216,15 +223,21 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   actualizaSeleccionados() {
 
-    if (this.selectedDatos == undefined || this.selectedDatos.length == 0) {
-      this.numSelected = 0;
-      this.selectMultiple = false;
-
+    if (this.permisoEscritura) {
+      if (this.selectedDatos == undefined || this.selectedDatos.length == 0) {
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      } else {
+        this.numSelected = this.selectedDatos.length;
+        this.selectMultiple = true;
+      }
     } else {
-      this.numSelected = this.selectedDatos.length;
-      this.selectMultiple = true;
-
+      this.selectedDatos = [];
+      this.selectionMode = "null";
+      this.selectedDatos = JSON.parse(JSON.stringify(this.initSelectedDatos));
+      this.table.reset();
     }
+
   }
 
   showMessage(severity, summary, msg) {

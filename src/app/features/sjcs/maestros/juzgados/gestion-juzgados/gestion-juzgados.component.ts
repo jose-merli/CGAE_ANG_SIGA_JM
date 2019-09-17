@@ -12,7 +12,7 @@ export class GestionJuzgadosComponent implements OnInit {
 
   fichasPosibles;
   datos: JuzgadoItem = new JuzgadoItem();
-  modoEdicion: boolean = true;;
+  modoEdicion: boolean = true;
 
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
