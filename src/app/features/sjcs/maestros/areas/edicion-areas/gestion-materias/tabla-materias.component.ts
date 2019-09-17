@@ -1,10 +1,13 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
-import { AreasItem } from '../../../../../../models/sjcs/AreasItem';
+import { MateriasItem } from '../../../../../../models/sjcs/MateriasItem';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
 import { AreasObject } from '../../../../../../models/sjcs/AreasObject';
 import { findIndex } from 'rxjs/operators';
+import { MultiSelect } from 'primeng/primeng';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+
 
 @Component({
   selector: 'app-tabla-materias',
@@ -12,6 +15,8 @@ import { findIndex } from 'rxjs/operators';
   styleUrls: ['./tabla-materias.component.scss']
 })
 export class TablaMateriasComponent implements OnInit {
+
+
 
   textSelected: String = "{label}";
 
@@ -24,36 +29,430 @@ export class TablaMateriasComponent implements OnInit {
   cols;
   rowsPerPage;
 
-  datos = [];
+  datos: any[];
+  listaTabla: MateriasItem = new MateriasItem();
 
 
-  comboPJ;
+  comboJurisdicciones: any[] = [];
 
   progressSpinner: boolean = false;
   msgs;
   body;
   nuevo: boolean = false;
   datosInicial = [];
-  update = [];
+  updateAreas = [];
 
-  selectedBefore;
+  // selectedBefore;
+  overlayVisible: boolean = false;
+  selectionMode: string = "single";
 
   //Resultados de la busqueda
   @Input() idArea;
   //Resultados de la busqueda
   @Input() modoEdicion: boolean = false;
 
-  @ViewChild("tabla") tablaAreas;
-
+  @ViewChild("table") table;
+  @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe) { }
+    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+    this.getCols();
+    this.getComboJurisdicciones();
+
+    if (this.idArea != undefined) {
+      this.modoEdicion = true;
+      this.getMaterias();
+    } else {
+      this.modoEdicion = false;
+    }
+
+  }
+
+  getComboJurisdicciones() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
+      n => {
+        this.comboJurisdicciones = n.combooItems;
+
+        if (this.idArea != undefined) {
+          this.getMaterias();
+        } else {
+          this.progressSpinner = false;
+        }
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+
+      }
+    );
+  }
+
+  getMaterias() {
+    this.sigaServices
+      .getParam(
+        "fichaAreas_searchMaterias",
+        "?idArea=" + this.idArea
+      )
+      .subscribe(
+        res => {
+          this.datos = res.materiasItems;
+          this.listaTabla = JSON.parse(JSON.stringify(this.datos));
+
+          this.validateHistorical();
+
+          this.datos.forEach(element => {
+            let seleccionados = [];
+            element.editable = false
+            element.overlayVisible = false;
+
+            if (element.jurisdicciones != null) {
+              element.jurisdicciones.forEach(element => {
+                seleccionados.push(this.comboJurisdicciones.find(x => x.value == element));
+              });
+              element.jurisdiccionesReal = seleccionados;
+            } else {
+              element.jurisdiccionesReal = [];
+            }
+
+
+          });
+
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+          this.progressSpinner = false;
+
+          this.getJurisdicciones();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+
+        }
+      );
+  }
+
+  validateHistorical() {
+    // if (this.datos != undefined && this.datos.length > 0) {
+
+    //   if (this.datos[0].fechabaja != null) {
+    //     this.historico = true;
+    //   } else {
+    //     this.historico = false;
+    //   }
+
+    //   this.persistenceService.setHistorico(this.historico);
+
+    // }
+  }
+
+  getJurisdicciones() {
+
+    // for (let i = 0; i < this.datos.length; i++) {
+    //   this.datos[i].jurisdicciones = [];
+    //   this.datos[i].jurisdiccion.forEach(partido => {
+    //     let findPartido = this.comboJurisdicciones.find(x => x.value === partido);
+
+    //     if (findPartido != undefined) {
+    //       this.datos[i].jurisdicciones.push(findPartido);
+    //     }
+
+    //   });
+
+    //   if (i == this.datos.length - 1) {
+    //     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    //   }
+
+    // }
+
+    // if (this.datos.length == 0) {
+    //   this.datosInicial = [];
+    // }
+
+  }
+
+  save() {
+    this.progressSpinner = true;
+    let url = "";
+
+    if (this.nuevo) {
+      url = "fichaAreas_createMaterias";
+      this.validatenewMateria(url);
+
+    } else {
+      url = "fichaAreas_updateMaterias";
+      this.body = new AreasObject();
+      this.body.areasItems = this.updateAreas;
+      this.callSaveService(url);
+    }
+
+  }
+
+  callSaveService(url) {
+
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        if (this.nuevo) {
+          this.nuevo = false;
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        }
+
+        this.getMaterias();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.selectedDatos = [];
+        this.updateAreas = [];
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+
+  newMateria() {
+    this.nuevo = true;
+    this.seleccion = false;
+
+    if (this.datosInicial != undefined && this.datosInicial != null) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+
+    let materia = {
+      nombreMateria: "",
+      contenido: "",
+      jurisdicciones: "",
+      jurisdiccion: "",
+      idArea: this.idArea,
+      areaNueva: true
+    };
+
+    if (this.datos.length == 0) {
+      this.datos.push(materia);
+    } else {
+      this.datos = [materia, ...this.datos];
+    }
+
+  }
+
+  validateArea(e) {
+
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idMateria === this.selectedDatos[0].idMateria);
+
+      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.nombreMateria) === this.upperCasePipe.transform(e.srcElement.value.trim()));
+
+      if (findDato.length > 1) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+        this.progressSpinner = false;
+        this.datos[datoId].nombreMateria = this.selectedDatos[0].nombreMateria;
+      } else {
+        let dato = this.datos[datoId];
+        this.editarMateria(dato);
+      }
+
+      // this.seleccion = false;
+    }
+  }
+
+  validatenewMateria(url) {
+    let materia = this.datos[0];
+
+    let findDato = this.datosInicial.find(item => item.idArea === materia.idArea && item.contenido === materia.contenido);
+
+    let jurisdiccionesString = "";
+    for (let i in materia.jurisdiccionesReal) {
+      jurisdiccionesString += ";" + materia.jurisdiccionesReal[i].value;
+    }
+
+    materia.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
+    materia.jurisdicciones = "";
+
+    if (findDato != undefined) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+      this.progressSpinner = false;
+    } else {
+      this.body = materia;
+      this.callSaveService(url);
+    }
+
+  }
+
+  disabledSave() {
+    if (this.nuevo) {
+      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != ""
+        && this.datos[0].contenido != "" && this.datos[0].contenido != undefined) {
+        return false;
+      } else {
+        return true;
+      }
+
+    } else {
+      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  editAreas(evento) {
+
+    if (this.nuevo) {
+      this.seleccion = false;
+    } else {
+
+      if (!this.selectAll && !this.selectMultiple) {
+
+        this.datos.forEach(element => {
+          element.editable = false;
+          element.overlayVisible = false;
+        });
+
+        evento.data.editable = true;
+
+        this.selectedDatos = [];
+        this.selectedDatos.push(evento.data);
+
+        this.seleccion = true;
+
+      }
+
+    }
+  }
+
+  editarMateria(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idMateria === dato.idMateria && item.idArea === dato.idArea);
+
+    if (findDato != undefined) {
+      if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
+
+        let findUpdate = this.updateAreas.find(item => item.idMateria === dato.idMateria && item.idArea === dato.idArea);
+
+        if (findUpdate == undefined) {
+          let dato2 = dato;
+          dato2.jurisdicciones = "";
+          this.updateAreas.push(dato2);
+        }
+      }
+    }
+
+  }
+
+  editJurisdicciones(dato) {
+
+    if (!this.nuevo) {
+
+      // if (dato.jurisdicciones.length == 0) {
+      //   this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
+      //   let findUpdate = this.updateZonas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+
+      //   if (findUpdate != undefined) {
+      //     this.updateZonas.splice(findUpdate);
+      //   }
+
+      // } else {
+      let findUpdate = this.updateAreas.find(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+
+      if (findUpdate == undefined) {
+        let dato2 = dato;
+        let jurisdiccionesString = "";
+        for (let i in dato2.jurisdiccionesReal) {
+          jurisdiccionesString += ";" + dato2.jurisdiccionesReal[i].value;
+        }
+
+        dato2.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
+        dato2.jurisdicciones = "";
+        this.updateAreas.push(dato2);
+      } else {
+        let findUpdate = this.updateAreas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+        this.updateAreas[findUpdate].jurisdiccionesReal = dato.jurisdiccionesReal;
+      }
+      // }
+    } else {
+      this.selectedDatos = [];
+    }
+  }
+
+  delete() {
+    this.body = new AreasObject();
+    for (let i in this.selectedDatos) {
+      this.selectedDatos[i].jurisdicciones = "";
+    }
+    this.body.areasItems = this.selectedDatos;
+
+    this.sigaServices.post("fichaAreas_deleteMaterias", this.body).subscribe(
+      data => {
+
+        this.nuevo = false;
+        this.selectedDatos = [];
+        this.getMaterias();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {//areasmaterias.materias.ficha.materiaEnUso
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  rest() {
+    if (this.datosInicial != undefined) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+
+    this.selectedDatos = [];
+    this.updateAreas = [];
+    this.nuevo = false;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  getCols() {
 
     this.cols = [
-      { field: "descripcionsub", header: "" },
-      { field: "jurisdiccion", header: "Partidos Judiciales" }
+      { field: "nombreMateria", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "contenido", header: "maestros.areasmaterias.literal.contenido" },
+      { field: "jurisdicciones", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
     ];
 
     this.rowsPerPage = [
@@ -74,345 +473,26 @@ export class TablaMateriasComponent implements OnInit {
         value: 40
       }
     ];
-    this.getComboPartidosJudiciales();
-
-    if (this.idArea != undefined) {
-      this.modoEdicion = true;
-    } else {
-      this.modoEdicion = false;
-    }
-
-
   }
-
-  getComboPartidosJudiciales() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("fichaAreas_getPartidosJudiciales").subscribe(
-      n => {
-        this.comboPJ = n.combooItems;
-
-        if (this.idArea != undefined) {
-          this.getAreas();
-        } else {
-          this.progressSpinner = false;
-        }
-
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-
-      }
-    );
-  }
-
-  getAreas() {
-    this.sigaServices
-      .getParam(
-        "fichaAreas_searchSubzones",
-        "?idArea=" + this.idArea
-      )
-      .subscribe(
-        res => {
-          this.datos = res.AreasItems;
-
-          this.datos.forEach(element => {
-            element.editable = false
-          });
-
-          this.progressSpinner = false;
-
-          this.getPartidosJudiciales();
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-
-        }
-      );
-  }
-
-  getPartidosJudiciales() {
-
-    for (let i = 0; i < this.datos.length; i++) {
-      this.datos[i].partidosJudiciales = [];
-      this.datos[i].jurisdiccion.forEach(partido => {
-        let findPartido = this.comboPJ.find(x => x.value === partido);
-
-        if (findPartido != undefined) {
-          this.datos[i].partidosJudiciales.push(findPartido);
-        }
-
-      });
-
-      if (i == this.datos.length - 1) {
-        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-      }
-
-    }
-
-    if (this.datos.length == 0) {
-      this.datosInicial = [];
-    }
-
-
-  }
-
-
-  save() {
-    // this.progressSpinner = true;
-    // let url = "";
-
-    // if (this.nuevo) {
-    //   url = "fichaAreas_createZone";
-    //   this.validateNewZone(url);
-
-    // } else {
-    //   url = "fichaAreas_updateZones";
-    //   this.body = new AreasObject();
-    //   this.body.areasItems = this.updateAreas;
-    //   this.callSaveZoneService(url)
-    // }
-
-
-  }
-
-
-  // callSaveZoneService(url) {
-
-
-  // this.sigaServices.post(url, this.body).subscribe(
-  //   data => {
-
-  //     if (this.nuevo) {
-  //       this.nuevo = false;
-  //       this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-  //     }
-
-  //     this.getAreas();
-  //     this.selectedDatos = [];
-  //     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  //     this.progressSpinner = false;
-  //   },
-  //   err => {
-
-  //     if (JSON.parse(err.error).error.description != "") {
-  //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-  //     } else {
-  //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //     }
-  //     this.progressSpinner = false;
-  //   },
-  //   () => {
-  //     this.progressSpinner = false;
-  //   }
-  // );
-
-  // }
-
-  // newZone() {
-  //   this.nuevo = true;
-  //   this.seleccionAreas = false;
-
-  //   if (this.datosInicial != undefined && this.datosInicial != null) {
-  //     this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-  //   } else {
-  //     this.datos = [];
-  //   }
-
-  //   let  = {
-  //     descripcion: "",
-  //     descripcionsub: "",
-  //     partidosJudiciales: [],
-  //     jurisdiccion: [],
-  //     id: this.id,
-  //     Nueva: true
-  //   };
-
-  //   if (this.datos.length == 0) {
-  //     this.datos.push();
-  //   } else {
-  //     this.datos = [, ...this.datos];
-  //   }
-
-  // }
-
-  // validateZone(e) {
-
-  //   if (!this.nuevo) {
-  //     let datoId = this.datos.findIndex(item => item.idsub === this.selectedBefore.idsub);
-
-  //     let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsub) === this.upperCasePipe.transform(e.srcElement.value.trim()));
-
-  //     if (findDato.length > 1) {
-  //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Ya existe una sub con esa descripción");
-  //       this.progressSpinner = false;
-  //       this.datos[datoId].descripcionsub = this.selectedBefore.descripcionsub;
-
-  //     } else {
-  //       let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsub) === this.upperCasePipe.transform(e.srcElement.value.trim()));
-  //       this.editarDescripcion(dato);
-  //     }
-
-  //     this.seleccionAreas = false;
-  //   }
-  // }
-
-  // validateNewZone(url) {
-  //   let  = this.datos[0];
-
-  //   let findDato = this.datosInicial.find(item => item.id === .id && item.descripcionsub === .descripcionsub);
-
-  //   if (findDato != undefined) {
-  //     this.showMessage("info", "Informacion", "Ya existe un  con ese nombre");
-  //   } else {
-  //     this.body = ;
-  //     this.callSaveZoneService(url);
-  //   }
-
-  // }
-
-  disabledSave() {
-    // if (this.nuevo) {
-    //   if (this.datos[0].descripcionsub != undefined && this.datos[0].descripcionsub != null
-    //     && this.datos[0].descripcionsub != "" && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
-    //     return false;
-    //   } else {
-    //     return true;
-    //   }
-
-    // } else {
-    //   if (this.updateAreas != undefined && this.updateAreas.length > 0) {
-    //     return false;
-    //   } else {
-    //     return true;
-    //   }
-    // }
-  }
-
-  editAreas(selectedDatos) {
-
-    // if (this.nuevo) {
-    //   this.seleccionAreas = false;
-    // } else {
-
-    //   if (!this.selectAll && !this.selectMultiple) {
-    //     this.datos.forEach(element => {
-    //       element.editable = false;
-    //     });
-
-    //     selectedDatos[0].editable = true;
-    //     this.seleccionAreas = true;
-
-    //     let findDato = this.datosInicial.find(item => item.id === selectedDatos[0].id && item.idsub === selectedDatos[0].idsub);
-
-    //     this.selectedBefore = findDato;
-    //   }
-
-    // }
-  }
-
-  editarDescripcion(dato) {
-
-    // let findDato = this.datosInicial.find(item => item.id === dato.id && item.idsub === dato.idsub);
-
-    // if (findDato != undefined) {
-    //   if (dato.descripcionsub != findDato.descripcionsub) {
-
-    //     let findUpdate = this.updateAreas.find(item => item.id === dato.id && item.idsub === dato.idsub);
-
-    //     if (findUpdate == undefined) {
-    //       this.updateAreas.push(dato);
-    //     }
-    //   }
-    // }
-
-  }
-
-  editPartidosJudiciales(dato) {
-
-    // if (!this.nuevo) {
-
-    //   let findUpdate = this.updateAreas.find(item => item.id === dato.id && item.idsub === dato.idsub);
-
-    //   if (findUpdate == undefined) {
-    //     this.updateAreas.push(dato);
-    //   } else {
-    //     let findUpdate = this.updateAreas.findIndex(item => item.id === dato.id && item.idsub === dato.idsub);
-    //     this.updateAreas[findUpdate].partidosJudiciales = dato.partidosJudiciales;
-    //   }
-    // } else {
-    //   this.selectedDatos = [];
-    // }
-
-  }
-
-  delete() {
-    // this.body = new AreasObject();
-    // this.body.AreasItems = this.selectedDatos;
-
-    // this.sigaServices.post("fichaAreas_deleteZones", this.body).subscribe(
-    //   data => {
-
-    //     this.nuevo = false;
-    //     this.selectedDatos = [];
-    //     this.getAreas();
-    //     this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-    //     this.progressSpinner = false;
-    //   },
-    //   err => {
-
-    //     if (JSON.parse(err.error).error.description != "") {
-    //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-    //     } else {
-    //       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    //     }
-    //     this.progressSpinner = false;
-    //   },
-    //   () => {
-    //     this.progressSpinner = false;
-    //   }
-    // );
-  }
-
-
-  rest() {
-    // if (this.datosInicial != undefined) {
-    //   this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    // } else {
-    //   this.datos = [];
-    // }
-
-    // this.updateAreas = [];
-    // this.nuevo = false;
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
-
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.tablaAreas.reset();
+    this.table.reset();
   }
 
-  onChangeSelectAllAreas() {
+  onChangeSelectAll() {
+
     if (this.selectAll) {
       this.selectMultiple = true;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
+      this.selectionMode = "multiple";
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
       this.selectMultiple = false;
+      this.selectionMode = "single";
     }
   }
 
@@ -422,21 +502,33 @@ export class TablaMateriasComponent implements OnInit {
     if (!this.selectMultiple) {
       this.selectedDatos = [];
       this.numSelected = 0;
+      this.selectionMode = "single";
+
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
+      this.selectionMode = "multiple";
+
     }
     // this.volver();
   }
 
-
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    // this.seleccionAreas = false;
+    if (selectedDatos != undefined)
+      this.numSelected = selectedDatos.length;
+    // this.seleccion = false;
   }
 
   clear() {
     this.msgs = [];
   }
+
+  openMultiSelect(dato) {
+    console.log(this.multiSelect);
+    dato.overlayVisible = true;
+  }
+
 }
+
+

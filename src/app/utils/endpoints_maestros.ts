@@ -15,6 +15,12 @@ export let endpoints_maestros: any = {
     fichaAreas_getJurisdicciones: "maestros/areasMaterias/jurisdicciones",
     fichaAreas_searchAreas: "maestros/areasMaterias/searchAreas",
     fichaAreas_deleteAreas: "maestros/areasMaterias/deleteAreas",
+    fichaAreas_updateAreas: "maestros/areasMaterias/updateAreas",
+    fichaAreas_createAreas: "maestros/areasMaterias/createAreas",
+    fichaAreas_searchMaterias: "maestros/areasMaterias/searchMaterias",
+    fichaAreas_updateMaterias: "maestros/areasMaterias/updateMaterias",
+    fichaAreas_createMaterias: "maestros/areasMaterias/createMaterias",
+    fichaAreas_deleteMaterias: "maestros/areasMaterias/deleteMaterias",
 
     busquedaJuzgados_searchCourt: "maestros/busquedaJuzgados/searchCourt",
     busquedaJuzgados_provinces: "maestros/busquedaJuzgados/provinces",
