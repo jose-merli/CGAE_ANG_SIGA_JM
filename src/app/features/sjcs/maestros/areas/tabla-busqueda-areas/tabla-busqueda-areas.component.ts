@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { AreasObject } from '../../../../../models/sjcs/AreasObject';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TableModule } from 'primeng/table';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+
 
 @Component({
   selector: 'app-tabla-busqueda-areas',
@@ -28,6 +30,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   historico: boolean = false;
 
   message;
+  permisos: boolean = false;
 
   initDatos;
   nuevo: boolean = false;
@@ -45,17 +48,24 @@ export class TablaBusquedaAreasComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
-
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    if (this.persistenceService.getPermisos()) {
+      this.permisos = true;
+    } else {
+      this.permisos = false;
+    }
   }
 
   seleccionaFila(evento) {
     if (!this.selectAll && !this.selectMultiple) {
+      this.persistenceService.setHistorico(this.historico);
+      this.persistenceService.setDatos(this.selectedDatos[0]);
       this.router.navigate(["/fichaGrupoAreas"], { queryParams: { idArea: this.selectedDatos[0].idArea } });
     } else {
       if (evento.data.fechabaja == undefined && this.historico == true) {
@@ -101,32 +111,6 @@ export class TablaBusquedaAreasComponent implements OnInit {
       this.numSelected = 0;
     }
   }
-
-  // activate() {
-  //   let AreasActivate = new AreasObject();
-  //   AreasActivate.areasItems = this.selectedDatos
-  //   this.sigaServices.post("fichaAreas_activateGroupZones", AreasActivate).subscribe(
-  //     data => {
-
-  //       this.selectedDatos = [];
-  //       this.searchAreasSend.emit(true);
-  //       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  //       this.progressSpinner = false;
-  //     },
-  //     err => {
-
-  //       if (err != undefined && JSON.parse(err.error).error.description != "") {
-  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-  //       } else {
-  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //       }
-  //       this.progressSpinner = false;
-  //     },
-  //     () => {
-  //       this.progressSpinner = false;
-  //     }
-  //   );
-  // }
 
   searchAreas() {
     this.historico = !this.historico;
@@ -174,15 +158,17 @@ export class TablaBusquedaAreasComponent implements OnInit {
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      // this.pressNew = false;
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.permisos) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        // this.pressNew = false;
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
     // this.volver();
   }

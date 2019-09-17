@@ -32,7 +32,7 @@ export class TablaMateriasComponent implements OnInit {
   datos: any[];
   listaTabla: MateriasItem = new MateriasItem();
 
-
+  disableAll: boolean = false;
   comboJurisdicciones: any[] = [];
 
   progressSpinner: boolean = false;
@@ -68,6 +68,15 @@ export class TablaMateriasComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
+
+    let datos = this.persistenceService.getDatos();
+    if (datos.fechabaja != undefined) {
+      this.disableAll = true;
+    }
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true;
+    }
+
 
   }
 
@@ -274,7 +283,7 @@ export class TablaMateriasComponent implements OnInit {
   validatenewMateria(url) {
     let materia = this.datos[0];
 
-    let findDato = this.datosInicial.find(item => item.idArea === materia.idArea && item.contenido === materia.contenido);
+    let findDato = this.datosInicial.find(item => item.idArea === materia.idArea && item.nombreMateria === materia.nombreMateria);
 
     let jurisdiccionesString = "";
     for (let i in materia.jurisdiccionesReal) {
@@ -296,8 +305,7 @@ export class TablaMateriasComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != ""
-        && this.datos[0].contenido != "" && this.datos[0].contenido != undefined) {
+      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
         return false;
       } else {
         return true;
@@ -382,8 +390,14 @@ export class TablaMateriasComponent implements OnInit {
         dato2.jurisdicciones = "";
         this.updateAreas.push(dato2);
       } else {
-        let findUpdate = this.updateAreas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-        this.updateAreas[findUpdate].jurisdiccionesReal = dato.jurisdiccionesReal;
+        let updateFind = this.updateAreas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+        let jurisdiccionesString = "";
+        for (let i in findUpdate.jurisdiccionesReal) {
+          jurisdiccionesString += ";" + dato.jurisdiccionesReal[i].value;
+        }
+        this.updateAreas[updateFind].jurisdiccionesReal = dato.jurisdiccionesReal;
+        this.updateAreas[updateFind].jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
+        this.updateAreas[updateFind].jurisdicciones = "";
       }
       // }
     } else {
@@ -482,34 +496,43 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+    if (!this.disableAll) {
 
-    if (this.selectAll) {
-      this.selectMultiple = true;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-      this.selectionMode = "multiple";
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+        this.selectionMode = "multiple";
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+        this.selectionMode = "single";
+      }
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-      this.selectionMode = "single";
+      this.selectionMode = undefined;
     }
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
+    if (!this.disableAll) {
 
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "single";
+      this.selectMultiple = !this.selectMultiple;
 
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single";
+
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "multiple";
+
+      }
     } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "multiple";
-
+      this.selectionMode = undefined;
     }
     // this.volver();
   }
