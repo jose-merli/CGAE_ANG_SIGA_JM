@@ -4,6 +4,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { PermisosAplicacionesDto } from '../../../../../../models/PermisosAplicacionesDto';
 
 @Component({
   selector: 'app-datos-generales-juzgado',
@@ -30,6 +31,8 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones;
 
+  permisoEscritura: boolean = true;
+
   visibleMovilValue: boolean = false;
   esDecanoValue: boolean = false;
   isCodigoEjisValue: boolean = false;
@@ -46,6 +49,12 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     private translateService: TranslateService, private commonsServices: CommonsService) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+
+    }
+
     this.getComboProvincias();
 
     this.validateHistorical();
@@ -167,11 +176,11 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     let url = "";
 
     if (!this.modoEdicion) {
-      url = "gestionJuzgados_createJudged";
+      url = "gestionJuzgados_createCourt";
       this.callSaveService(url);
 
     } else {
-      url = "gestionJuzgados_updateJudged";
+      url = "gestionJuzgados_updateCourt";
       this.getInfo();
       this.callSaveService(url);
     }
@@ -245,7 +254,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   disabledSave() {
     if (!this.historico && (this.body.nombre != "" && this.body.nombre != undefined && this.body.idProvincia != undefined &&
       this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && this.emailValido && this.tlf1Valido
-      && this.tlf2Valido && this.faxValido && this.mvlValido)) {
+      && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura) {
       return false;
     } else {
       return true;
@@ -270,7 +279,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   changeMovil() {
     this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
   }
-  
+
   clear() {
     this.msgs = [];
   }

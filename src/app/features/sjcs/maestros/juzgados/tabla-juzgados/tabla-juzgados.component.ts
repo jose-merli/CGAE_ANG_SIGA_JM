@@ -30,6 +30,7 @@ export class TablaJuzgadosComponent implements OnInit {
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
+  permisoEscritura: boolean = false;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -47,6 +48,10 @@ export class TablaJuzgadosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -84,7 +89,8 @@ export class TablaJuzgadosComponent implements OnInit {
 
     let judgeDelete = new JuzgadoObject();
     judgeDelete.juzgadoItems = this.selectedDatos;
-    this.sigaServices.post("busquedaJuzgados_deleteJudged", judgeDelete).subscribe(
+    this.sigaServices.post("busquedaJuzgados_deleteCourt", judgeDelete).subscribe(
+
       data => {
 
         this.selectedDatos = [];
@@ -110,7 +116,7 @@ export class TablaJuzgadosComponent implements OnInit {
   activate() {
     let judgedActivate = new JuzgadoObject();
     judgedActivate.juzgadoItems = this.selectedDatos;
-    this.sigaServices.post("busquedaJuzgados_activateJudged", judgedActivate).subscribe(
+    this.sigaServices.post("busquedaJuzgados_activateCourt", judgedActivate).subscribe(
       data => {
 
         this.selectedDatos = [];
@@ -180,27 +186,35 @@ export class TablaJuzgadosComponent implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll) {
       this.selectMultiple = true;
-      this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
+
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
+      } else {
+        this.selectedDatos = this.datos;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
       this.selectMultiple = false;
     }
+
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
   }
-
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;

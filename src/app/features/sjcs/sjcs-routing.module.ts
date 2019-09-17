@@ -13,7 +13,11 @@ const routesSjcs: Routes = [
   {
     path: "areasYMaterias",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
-  }
+  },
+  {
+    path: "costesFijos",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
 ];
 
 @NgModule({

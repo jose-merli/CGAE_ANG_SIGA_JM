@@ -680,6 +680,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "costesFijos",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: "partidas",
     component: PartidasComponent,
     canActivate: [AuthGuard]
