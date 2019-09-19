@@ -7,6 +7,8 @@ import { BusquedaJuzgadosComponent } from './juzgados/busqueda-juzgados.componen
 import { GestionJuzgadosComponent } from './juzgados/gestion-juzgados/gestion-juzgados.component';
 import { BusquedaAreasComponent } from './areas/busqueda-areas.component';
 import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.component';
+import { MaestrosModulosComponent } from './maestros-modulos/maestros-modulos.component';
+
 import { GestionCostesfijosComponent } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.component';
 
 const routesMaestros: Routes = [
@@ -44,7 +46,12 @@ const routesMaestros: Routes = [
     path: "costesFijos",
     component: GestionCostesfijosComponent,
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: "maestrosModulos",
+    component: MaestrosModulosComponent,
+    canActivate: [AuthGuard]
+  },
 
 
 ];

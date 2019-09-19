@@ -187,7 +187,6 @@ import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias
 import { PartidasComponent } from './features/sjcs/maestros/partidas/partidas.component';
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component';
 import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
-import { MaestrosModulosComponent } from './features/sjcs/maestros/maestros-modulos/maestros-modulos.component';
 import { CalendarioLaboralComponent } from './features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
@@ -458,7 +457,6 @@ import { FechaModule } from './commons/fecha/fecha.module';
 		PartidasComponent,
 		PartidosJudicialesComponent,
 		RetencionesIRPFComponent,
-		MaestrosModulosComponent,
 		CalendarioLaboralComponent,
 		MantenimientoProcuradoresComponent,
 		MantenimientoPrisionesComponent,

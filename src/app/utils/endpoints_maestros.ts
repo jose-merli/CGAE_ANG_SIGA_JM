@@ -40,6 +40,8 @@ export let endpoints_maestros: any = {
     gestionCostesFijos_createCosteFijo: "maestros/gestionCostesFijos/createCosteFijo",
     gestionCostesFijos_deleteCostesFijos: "maestros/gestionCostesFijos/deleteCostesFijos",
     gestionCostesFijos_activateCostesFijos: "maestros/gestionCostesFijos/activateCostesFijos",
-    gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos"
+    gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos",
 
+    modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
+    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos"
 }

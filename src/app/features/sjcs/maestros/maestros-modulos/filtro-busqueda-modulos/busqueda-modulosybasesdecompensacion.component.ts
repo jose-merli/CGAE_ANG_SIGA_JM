@@ -1,19 +1,19 @@
 import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
-import { TablaBusquedaAreasComponent } from '../tabla-busqueda-areas/tabla-busqueda-areas.component';
-import { BusquedaAreasComponent } from '../busqueda-areas.component';
+// import { TablaBusquedaModulosComponent } from '../tabla-busqueda-modulos/tabla-busqueda-modulos.component';
+import { MaestrosModulosComponent } from '../maestros-modulos.component';
 import { TranslateService } from '../../../../../commons/translate';
-import { AreasItem } from '../../../../../models/sjcs/AreasItem';
+import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-filtro-busqueda-areas',
-  templateUrl: './filtro-busqueda-areas.component.html',
-  styleUrls: ['./filtro-busqueda-areas.component.scss']
+  selector: 'app-busqueda-modulosybasesdecompensacion',
+  templateUrl: './busqueda-modulosybasesdecompensacion.component.html',
+  styleUrls: ['./busqueda-modulosybasesdecompensacion.component.scss']
 })
-export class FiltroBusquedaAreasComponent implements OnInit {
+export class BusquedaModulosYBasesDeCompensacion implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
@@ -21,7 +21,7 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   // zona:string;
   // partidoJudicial:string;
   msgs: any[] = [];
-  filtros: AreasItem = new AreasItem();
+  filtros: ModulosItem = new ModulosItem();
   jurisdicciones: any[] = [];
   permisos: boolean = false;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
@@ -47,35 +47,11 @@ export class FiltroBusquedaAreasComponent implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
       this.isBuscar();
     }
-    this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
-      n => {
-        this.jurisdicciones = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.jurisdicciones.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
 
-  newArea() {
+  newModulo() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/fichaGrupoAreas"]);
+    this.router.navigate(["/fichaGrupomodulos"]);
   }
 
   onHideDatosGenerales() {
@@ -84,17 +60,19 @@ export class FiltroBusquedaAreasComponent implements OnInit {
 
   isBuscar() {
     this.persistenceService.setFiltros(this.filtros);
-    if ((this.filtros.nombreArea == undefined || this.filtros.nombreArea == "" || this.filtros.nombreArea.trim().length < 3) && (this.filtros.nombreMateria == undefined || this.filtros.nombreMateria == "" || this.filtros.nombreMateria.trim().length < 3) && (this.filtros.jurisdiccion == undefined || this.filtros.jurisdiccion == "")) {
+    if ((this.filtros.nombre == undefined || this.filtros.nombre == "" ||
+      this.filtros.nombre.trim().length < 3) && (this.filtros.codigo == undefined || this.filtros.codigo == ""
+        || this.filtros.codigo.trim().length < 3)) {
       this.showSearchIncorrect();
     } else {
       this.buscar = true;
       this.filtros.historico = false;
-      if (this.filtros.nombreArea != undefined && this.filtros.nombreArea != null) {
-        this.filtros.nombreArea = this.filtros.nombreArea.trim();
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+        this.filtros.nombre = this.filtros.nombre.trim();
       }
 
-      if (this.filtros.nombreMateria != undefined && this.filtros.nombreMateria != null) {
-        this.filtros.nombreMateria = this.filtros.nombreMateria.trim();
+      if (this.filtros.codigo != undefined && this.filtros.codigo != null) {
+        this.filtros.codigo = this.filtros.codigo.trim();
       }
 
       this.busqueda.emit(false);
@@ -113,7 +91,7 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   }
 
   clearFilters() {
-    this.filtros = new AreasItem();
+    this.filtros = new ModulosItem();
   }
 
   //búsqueda con enter
