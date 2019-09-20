@@ -40,7 +40,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   fichaBusqueda: boolean = false;
   labelColegio: any; // = this.translateService.instant("informesYcomunicaciones.plantillasEnvios.modelos.porDefecto");
   isReload: boolean = false;
-  navigation: boolean = false;
+  anotherPage: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -366,6 +366,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onDuplicar(dato) {
+    this.anotherPage = true;
     this.progressSpinner = true;
 
     let modelo = {
@@ -554,7 +555,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   navigateTo(dato) {
-    this.navigation = true;
+    this.anotherPage = true;
     let id = dato[0].id;
     this.body = dato[0];
     console.log(dato);
@@ -577,6 +578,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   addModelo() {
+    this.anotherPage = true;
     this.router.navigate(["/fichaModeloComunicaciones"]);
     sessionStorage.removeItem("modelosSearch");
     sessionStorage.setItem("crearNuevoModelo", JSON.stringify("true"));
@@ -592,7 +594,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   ngOnDestroy() {
-    if (!this.navigation) {
+    if (!this.anotherPage) {
       localStorage.removeItem("recoverLabel");
     }
   }
