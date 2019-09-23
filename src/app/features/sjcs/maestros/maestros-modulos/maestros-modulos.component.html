@@ -1,1 +1,10 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-busqueda-modulosybasesdecompensacion (busqueda)="searchModulos($event)"></app-busqueda-modulosybasesdecompensacion>
+    <app-gestion-modulosybasesdecompensacion *ngIf="buscar" [datos]="datos" (searchModulos)="searchModulos($event)"></app-gestion-modulosybasesdecompensacion>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

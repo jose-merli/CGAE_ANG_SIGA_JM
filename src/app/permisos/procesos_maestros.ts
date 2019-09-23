@@ -4,8 +4,7 @@ export const procesos_maestros: any = {
     areasMaterias: "912",
     costesFijos: "915",
     juzgados: "91I",
-    fundamentoResolucion: "917"
-
-
+    fundamentoResolucion: "917",
+    modulo: "91D"
 
 }

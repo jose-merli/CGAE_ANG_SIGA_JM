@@ -1,0 +1,201 @@
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
+import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
+import { ModulosObject } from '../../../../../models/sjcs/ModulosObject';
+import { findIndex } from 'rxjs/operators';
+import { MultiSelect } from 'primeng/primeng';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Router } from '../../../../../../../node_modules/@angular/router';
+
+
+@Component({
+  selector: 'app-gestion-modulosybasesdecompensacion',
+  templateUrl: './gestion-modulosybasesdecompensacion.component.html',
+  styleUrls: ['./gestion-modulosybasesdecompensacion.component.scss']
+})
+export class TablaModulosComponent implements OnInit {
+
+
+  rowsPerPage: any = [];
+  cols;
+  colsPartidoJudicial;
+  msgs;
+
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  historico: boolean = false;
+
+  message;
+  permisos: boolean = false;
+
+  initDatos;
+  nuevo: boolean = false;
+  progressSpinner: boolean = false;
+
+  //Resultados de la busqueda
+  @Input() datos;
+  //Combo partidos judiciales
+  @Input() comboPJ;
+
+  @Output() searchModulos = new EventEmitter<boolean>();
+
+  @ViewChild("tabla") tabla;
+
+  constructor(private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService
+  ) { }
+
+  ngOnInit() {
+    this.getCols();
+    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    if (this.persistenceService.getPermisos()) {
+      this.permisos = true;
+    } else {
+      this.permisos = false;
+    }
+  }
+
+  seleccionaFila(evento) {
+    if (!this.selectAll && !this.selectMultiple) {
+      this.persistenceService.setHistorico(this.historico);
+      this.persistenceService.setDatos(this.selectedDatos[0]);
+      this.router.navigate(["/fichaGrupoAreas"], { queryParams: { idArea: this.selectedDatos[0].idArea } });
+    } else {
+      if (evento.data.fechabaja == undefined && this.historico == true) {
+        this.selectedDatos.pop();
+      }
+    }
+
+  }
+
+  delete() {
+    let ModulosDelete = new ModulosObject();
+    ModulosDelete.modulosItem = this.selectedDatos
+    this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
+      data => {
+        this.selectedDatos = [];
+        this.searchModulos.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectAll = false;
+      }
+    );
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      // this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  searchModulo() {
+    this.historico = !this.historico;
+    this.searchModulos.emit(this.historico);
+
+  }
+
+  setItalic(dato) {
+    if (dato.fechabaja == null) return false;
+    else return true;
+  }
+
+  getCols() {
+
+    this.cols = [
+      { field: "codigo", header: "general.boton.code" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio" },
+      { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin" },
+      { field: "precio", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tabla.reset();
+  }
+
+  isSelectMultiple() {
+    if (this.permisos) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        // this.pressNew = false;
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+    }
+    // this.volver();
+  }
+
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+    this.seleccion = false;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+
+}

@@ -49,6 +49,6 @@ export let endpoints_maestros: any = {
     gestionFundamentosResolucion_createFundamentoResolucion: "maestros/gestionFundamentosResolucion/createFundamentoResolucion",
     gestionFundamentosResolucion_updateFundamentoResolucion: "maestros/gestionFundamentosResolucion/updateFundamentoResolucion",
 
-
-
+    modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
+    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos"
 }
