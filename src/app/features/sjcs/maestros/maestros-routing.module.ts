@@ -8,6 +8,8 @@ import { GestionJuzgadosComponent } from './juzgados/gestion-juzgados/gestion-ju
 import { BusquedaAreasComponent } from './areas/busqueda-areas.component';
 import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.component';
 import { GestionCostesfijosComponent } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.component';
+import { BusquedaFundamentosresolucionComponent } from './fundamentos-resolucion/busqueda-fundamentosresolucion/busqueda-fundamentosresolucion.component';
+import { GestionFundamentosresolucionComponent } from './fundamentos-resolucion/busqueda-fundamentosresolucion/gestion-fundamentosresolucion/gestion-fundamentosresolucion.component';
 
 const routesMaestros: Routes = [
   {
@@ -43,6 +45,16 @@ const routesMaestros: Routes = [
   {
     path: "costesFijos",
     component: GestionCostesfijosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fundamentosResolucion",
+    component: BusquedaFundamentosresolucionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionFundamentosResolucion",
+    component: GestionFundamentosresolucionComponent,
     canActivate: [AuthGuard]
   }
 

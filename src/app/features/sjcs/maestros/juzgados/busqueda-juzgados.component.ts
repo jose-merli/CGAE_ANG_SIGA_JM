@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FiltroJuzgadosComponent } from './filtro-juzgados/filtro-juzgados.component';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -44,10 +44,6 @@ export class BusquedaJuzgadosComponent implements OnInit {
         this.permisoEscritura = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscritura);
-
-        if (this.permisoEscritura) {
-
-        }
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");

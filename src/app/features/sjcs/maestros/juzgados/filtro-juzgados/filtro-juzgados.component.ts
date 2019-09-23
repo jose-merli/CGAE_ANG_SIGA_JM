@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, Output, EventEmitter, Input } from '@angular/core';
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -23,6 +23,8 @@ export class FiltroJuzgadosComponent implements OnInit {
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones: any;
 
+  @Input() permisoEscritura;
+
   comboProvincias = [];
   comboPoblacion = [];
 
@@ -34,6 +36,10 @@ export class FiltroJuzgadosComponent implements OnInit {
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
 
     this.getComboProvincias();
 
@@ -119,7 +125,7 @@ export class FiltroJuzgadosComponent implements OnInit {
 
   }
 
-  newJudge() {
+  newCourt() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionJuzgados"]);
   }

@@ -7,6 +7,7 @@ import { GestionAreasModule } from './areas/gestion-areas.module';
 import { MenubarModule } from 'primeng/menubar';
 import { JuzgadosModule } from './juzgados/juzgados.module';
 import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.module';
+import { FundamentosResolucionModule } from './fundamentos-resolucion/fundamentos-resolucion.module';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/ges
         MenubarModule,
         JuzgadosModule,
         GestionAreasModule,
-        GestionCostesfijosModule
+        GestionCostesfijosModule,
+        FundamentosResolucionModule
     ],
 
     providers: []

@@ -40,6 +40,15 @@ export let endpoints_maestros: any = {
     gestionCostesFijos_createCosteFijo: "maestros/gestionCostesFijos/createCosteFijo",
     gestionCostesFijos_deleteCostesFijos: "maestros/gestionCostesFijos/deleteCostesFijos",
     gestionCostesFijos_activateCostesFijos: "maestros/gestionCostesFijos/activateCostesFijos",
-    gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos"
+    gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos",
+
+    gestionFundamentosResolucion_searchFundamentosResolucion: "maestros/gestionFundamentosResolucion/searchFundamentosResolucion",
+    gestionFundamentosResolucion_deleteFundamentosResolucion: "maestros/gestionFundamentosResolucion/deleteFundamentosResolucion",
+    gestionFundamentosResolucion_activateFundamentosResolucion: "maestros/gestionFundamentosResolucion/activateFundamentosResolucion",
+    gestionFundamentosResolucion_getResoluciones: "maestros/gestionFundamentosResolucion/getResoluciones",
+    gestionFundamentosResolucion_createFundamentoResolucion: "maestros/gestionFundamentosResolucion/createFundamentoResolucion",
+    gestionFundamentosResolucion_updateFundamentoResolucion: "maestros/gestionFundamentosResolucion/updateFundamentoResolucion",
+
+
 
 }
