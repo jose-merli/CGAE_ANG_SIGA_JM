@@ -1,29 +1,27 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { FiltroJuzgadosComponent } from './filtro-juzgados/filtro-juzgados.component';
-import { PersistenceService } from '../../../../_services/persistence.service';
-import { SigaServices } from '../../../../_services/siga.service';
-import { CommonsService } from '../../../../_services/commons.service';
-import { procesos_maestros } from '../../../../permisos/procesos_maestros';
-import { TranslateService } from '../../../../commons/translate/translation.service';
-import { Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FiltroPrisionesComponent } from './filtro-prisiones/filtro-prisiones.component';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../commons/translate';
+import { Router } from '../../../../../../../node_modules/@angular/router';
+import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 
 @Component({
-  selector: 'app-busqueda-juzgados',
-  templateUrl: './busqueda-juzgados.component.html',
-  styleUrls: ['./busqueda-juzgados.component.scss']
+  selector: 'app-busqueda-prisiones',
+  templateUrl: './busqueda-prisiones.component.html',
+  styleUrls: ['./busqueda-prisiones.component.scss']
 })
-export class BusquedaJuzgadosComponent implements OnInit {
+export class BusquedaPrisionesComponent implements OnInit {
 
   buscar: boolean = false;
   historico: boolean = false;
 
   datos;
 
-
-
   progressSpinner: boolean = false;
 
-  @ViewChild(FiltroJuzgadosComponent) filtros;
+  @ViewChild(FiltroPrisionesComponent) filtros;
 
   //comboPartidosJudiciales
   comboPJ;
@@ -31,16 +29,15 @@ export class BusquedaJuzgadosComponent implements OnInit {
 
   permisoEscritura;
 
-
-
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_maestros.juzgados)
+    this.commonsService.checkAcceso(procesos_maestros.prisiones)
       .then(respuesta => {
+
         this.permisoEscritura = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscritura);
@@ -67,10 +64,10 @@ export class BusquedaJuzgadosComponent implements OnInit {
     this.filtros.filtros.historico = event;
     this.progressSpinner = true;
 
-    this.sigaServices.post("busquedaJuzgados_searchCourt", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaPrisiones_searchPrisiones", this.filtros.filtros).subscribe(
       n => {
 
-        this.datos = JSON.parse(n.body).juzgadoItems;
+        this.datos = JSON.parse(n.body).prisionItems;
         this.buscar = true;
         this.progressSpinner = false;
 

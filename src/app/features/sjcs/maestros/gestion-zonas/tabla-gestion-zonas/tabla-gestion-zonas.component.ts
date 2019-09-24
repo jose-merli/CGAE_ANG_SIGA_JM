@@ -178,29 +178,40 @@ export class TablaGestionZonasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+
     if (this.selectAll) {
-      this.selectMultiple = true;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+      } else {
+        this.selectedDatos = this.datos;
+      }
+
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
       this.selectMultiple = false;
     }
+
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      // this.pressNew = false;
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
-    // this.volver();
   }
 
 

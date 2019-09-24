@@ -50,5 +50,13 @@ export let endpoints_maestros: any = {
     gestionFundamentosResolucion_updateFundamentoResolucion: "maestros/gestionFundamentosResolucion/updateFundamentoResolucion",
 
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
-    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos"
+    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
+
+    busquedaPrisiones_searchPrisiones: "maestros/busquedaPrisiones/searchPrisiones",
+    busquedaPrisiones_provinces: "maestros/busquedaPrisiones/provinces",
+    busquedaPrisiones_population: "maestros/busquedaPrisiones/population",
+    busquedaPrisiones_deletePrisiones: "maestros/busquedaPrisiones/deletePrisiones",
+    busquedaPrisiones_activatePrisiones: "maestros/busquedaPrisiones/activatePrisiones",
+    gestionPrisiones_createPrision: "maestros/gestionPrisiones/createPrision",
+    gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
 }

@@ -1,17 +1,17 @@
-import { Component, OnInit, Input, Output, ChangeDetectorRef, ViewChild, EventEmitter } from '@angular/core';
-import { TranslateService } from '../../../../../commons/translate';
-import { Router } from '../../../../../../../node_modules/@angular/router';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
-import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { TranslateService } from '../../../../../../commons/translate';
+import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { PrisionObject } from '../../../../../../models/sjcs/PrisionObject';
 
 @Component({
-  selector: 'app-tabla-juzgados',
-  templateUrl: './tabla-juzgados.component.html',
-  styleUrls: ['./tabla-juzgados.component.scss']
+  selector: 'app-tabla-prisiones',
+  templateUrl: './tabla-prisiones.component.html',
+  styleUrls: ['./tabla-prisiones.component.scss']
 })
-export class TablaJuzgadosComponent implements OnInit {
+export class TablaPrisionesComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
@@ -80,10 +80,10 @@ export class TablaJuzgadosComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/gestionJuzgados"]);
+      this.router.navigate(["/gestionPrisiones"]);
     } else {
 
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (evento.data.fechaBaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
 
@@ -92,9 +92,9 @@ export class TablaJuzgadosComponent implements OnInit {
 
   delete() {
 
-    let judgeDelete = new JuzgadoObject();
-    judgeDelete.juzgadoItems = this.selectedDatos;
-    this.sigaServices.post("busquedaJuzgados_deleteCourt", judgeDelete).subscribe(
+    let prisionDelete = new PrisionObject();
+    prisionDelete.prisionItems = this.selectedDatos;
+    this.sigaServices.post("busquedaPrisiones_deletePrisiones", prisionDelete).subscribe(
 
       data => {
 
@@ -119,9 +119,9 @@ export class TablaJuzgadosComponent implements OnInit {
   }
 
   activate() {
-    let judgedActivate = new JuzgadoObject();
-    judgedActivate.juzgadoItems = this.selectedDatos;
-    this.sigaServices.post("busquedaJuzgados_activateCourt", judgedActivate).subscribe(
+    let prisionActivate = new PrisionObject();
+    prisionActivate.prisionItems = this.selectedDatos;
+    this.sigaServices.post("busquedaPrisiones_activatePrisiones", prisionActivate).subscribe(
       data => {
 
         this.selectedDatos = [];
@@ -147,7 +147,7 @@ export class TablaJuzgadosComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
+    if (dato.fechaBaja == null) return false;
     else return true;
   }
 
@@ -190,8 +190,9 @@ export class TablaJuzgadosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+
       if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
       } else {
         this.selectedDatos = this.datos;
       }

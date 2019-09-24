@@ -3,7 +3,7 @@ import { FundamentoResolucionItem } from '../../../../../../models/sjcs/Fundamen
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { KEY_CODE } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
-import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filtros-fundamentosresolucion',

@@ -26,6 +26,10 @@ const routesSjcs: Routes = [
     path: "maestrosModulos",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   },
+  {
+    path: "mantenimientoPrisiones",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  }
 ];
 
 @NgModule({

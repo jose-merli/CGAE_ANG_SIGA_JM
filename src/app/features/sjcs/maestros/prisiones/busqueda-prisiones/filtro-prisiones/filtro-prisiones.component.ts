@@ -1,35 +1,34 @@
-import { Component, OnInit, HostListener, Output, EventEmitter, Input } from '@angular/core';
-import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
-import { TranslateService } from '../../../../../commons/translate';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
+import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
+import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '@angular/router';
-import { PersistenceService } from '../../../../../_services/persistence.service';
-import { JuzgadoItem } from '../../../../../models/sjcs/JuzgadoItem';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { CommonsService } from '../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { KEY_CODE } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 
 @Component({
-  selector: 'app-filtro-juzgados',
-  templateUrl: './filtro-juzgados.component.html',
-  styleUrls: ['./filtro-juzgados.component.scss']
+  selector: 'app-filtro-prisiones',
+  templateUrl: './filtro-prisiones.component.html',
+  styleUrls: ['./filtro-prisiones.component.scss']
 })
-export class FiltroJuzgadosComponent implements OnInit {
+export class FiltroPrisionesComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
   msgs = [];
 
-  filtros: JuzgadoItem = new JuzgadoItem();
+  filtros: PrisionItem = new PrisionItem();
   historico: boolean = false;
 
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones: any;
 
   @Input() permisoEscritura;
+  @ViewChild("prueba") prueba;
 
   comboProvincias = [];
   comboPoblacion = [];
 
-  /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
-    por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() isOpen = new EventEmitter<boolean>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
@@ -51,13 +50,13 @@ export class FiltroJuzgadosComponent implements OnInit {
       this.isOpen.emit(this.historico)
 
     } else {
-      this.filtros = new JuzgadoItem();
+      this.filtros = new PrisionItem();
     }
 
   }
 
   getComboProvincias() {
-    this.sigaServices.get("busquedaJuzgados_provinces").subscribe(
+    this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboProvincias);
@@ -99,7 +98,7 @@ export class FiltroJuzgadosComponent implements OnInit {
   getComboPoblacion(dataFilter) {
     this.sigaServices
       .getParam(
-        "busquedaJuzgados_population",
+        "busquedaPrisiones_population",
         "?idProvincia=" + this.filtros.idProvincia + "&dataFilter=" + dataFilter
       )
       .subscribe(
@@ -125,9 +124,9 @@ export class FiltroJuzgadosComponent implements OnInit {
 
   }
 
-  newCourt() {
+  nuevo() {
     this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionJuzgados"]);
+    this.router.navigate(["/gestionPrisiones"]);
   }
 
   checkFilters() {
@@ -153,7 +152,7 @@ export class FiltroJuzgadosComponent implements OnInit {
   }
 
   clearFilters() {
-    this.filtros = new JuzgadoItem();
+    this.filtros = new PrisionItem();
     this.persistenceService.clearFiltros();
     this.isDisabledPoblacion = true;
   }

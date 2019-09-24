@@ -721,7 +721,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoPrisiones",
-    component: MantenimientoPrisionesComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {

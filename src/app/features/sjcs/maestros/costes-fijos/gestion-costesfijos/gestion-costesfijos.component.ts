@@ -569,7 +569,11 @@ export class GestionCostesfijosComponent implements OnInit {
 
       }
 
-      this.numSelected = this.datos.length;
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
+      }
+
       this.selectionMode = "multiple";
     } else {
       this.selectedDatos = [];
