@@ -6,6 +6,7 @@ import { TablaMateriasComponent } from "./gestion-materias/tabla-materias.compon
 import { TranslateService } from './../../../../../commons/translate';
 import { SigaServices } from './../../../../../_services/siga.service';
 import { AreasItem } from "../../../../../models/sjcs/AreasItem";
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-gestion-areas',
@@ -26,7 +27,8 @@ export class GestionAreasComponent implements OnInit {
     private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
-    private sigaServices: SigaServices) { }
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
     this.getFichasPosibles();
@@ -43,15 +45,21 @@ export class GestionAreasComponent implements OnInit {
     }
   }
 
-
   searchAreas() {
     // this.filtros.filtros.historico = event;
     // this.progressSpinner = true;
     let filtros: AreasItem = new AreasItem;
     filtros.idArea = this.idArea;
+    filtros.historico = false;
+    if (this.persistenceService.getHistorico() != undefined) {
+      filtros.historico = this.persistenceService.getHistorico();
+    }
     this.sigaServices.post("fichaAreas_searchAreas", filtros).subscribe(
       n => {
         this.areasItem = JSON.parse(n.body).areasItems[0];
+        if (this.areasItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+          this.areasItem.historico = true;
+        }
         this.buscar = true;
       },
       err => {
@@ -59,7 +67,6 @@ export class GestionAreasComponent implements OnInit {
       }
     );
   }
-
 
   modoEdicionSend(event) {
     this.modoEdicion = event.modoEdicion;

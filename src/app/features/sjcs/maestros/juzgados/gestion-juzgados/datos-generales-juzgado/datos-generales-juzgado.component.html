@@ -42,14 +42,16 @@
               <label>
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nombre" type="text" class="form-control" [maxLength]="200" [disabled]="historico" pInputText>
+              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{"censo.consultaDirecciones.literal.direccion" | translate}}
               </label>
-              <input [(ngModel)]="body.domicilio" type="text" class="form-control" [maxLength]="200" [disabled]="historico" pInputText>
+              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -59,7 +61,7 @@
               <!--  -->
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [disabled]="historico" [showClear]="true">
+                [disabled]="!permisoEscritura || historico" [showClear]="true">
               </p-dropdown>
             </div>
 
@@ -68,7 +70,7 @@
               <label>
                 {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || historico"
+              <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || historico || !permisoEscritura"
                 [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
               </p-dropdown>
@@ -79,14 +81,15 @@
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}}
               </label>
-              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" [disabled]="historico" pInputText>
+              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" [disabled]="historico || !permisoEscritura"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 1
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico"
+              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
                 pInputText>
               <div *ngIf="!tlf1Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
@@ -97,8 +100,8 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 2
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono2" (input)="changeTelefono2()" [disabled]="historico"
-                pInputText>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.telefono2"
+                (input)="changeTelefono2()" pInputText>
               <div *ngIf="!tlf2Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
@@ -108,8 +111,8 @@
               <label>
                 {{"censo.ws.literal.fax" | translate}}
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.fax" (input)="changeFax()" [disabled]="historico"
-                pInputText>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.fax"
+                (input)="changeFax()" pInputText>
               <div *ngIf="!faxValido">
                 <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
               </div>
@@ -118,21 +121,21 @@
               <label>
                 {{"censo.datosDireccion.literal.movil" | translate}}
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.movil" (input)="changeMovil()" [disabled]="historico"
-                pInputText>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.movil"
+                (input)="changeMovil()" pInputText>
               <div *ngIf="!mvlValido">
                 <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               {{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate }}
-              <p-checkbox [(ngModel)]="visibleMovilValue" binary="true" [disabled]="historico"></p-checkbox>
+              <p-checkbox [(ngModel)]="visibleMovilValue" [disabled]="historico || !permisoEscritura" binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
-              <input type="text" class="form-control" maxLength="200" [(ngModel)]="body.email" (input)="changeEmail()" [disabled]="historico"
+              <input type="text" class="form-control" maxLength="200" [(ngModel)]="body.email" (input)="changeEmail()" [disabled]="historico || !permisoEscritura"
                 pInputText>
               <div *ngIf="!emailValido">
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
@@ -140,13 +143,14 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               {{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.decano' | translate }}
-              <p-checkbox [(ngModel)]="esDecanoValue" binary="true" [disabled]="historico"></p-checkbox>
+              <p-checkbox [(ngModel)]="esDecanoValue" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.codigoSeleccion' | translate }}
               </label>
-              <input type="text" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt2" [disabled]="historico" pInputText>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt2"
+                pInputText>
             </div>
           </div>
         </div>
@@ -163,19 +167,21 @@
               <label>
                 {{"administracion.parametrosGenerales.literal.codigo" | translate}}
               </label>
-              <input type="text" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt" [disabled]="historico" pInputText>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-12 col-md-12">
               <label>
                 {{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.codigoProcuradores" | translate }}
               </label>
-              <input type="text" class="form-control" maxLength="10" [(ngModel)]="body.codigoProcurador" [disabled]="historico" pInputText>
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="body.codigoProcurador"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-12 col-md-12 selectAll">
               <label>{{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.isCodigoEjis" | translate }}</label>
-              <p-checkbox [(ngModel)]="isCodigoEjisValue" binary="true" [disabled]="historico"></p-checkbox>
+              <p-checkbox [disabled]="historico || !permisoEscritura" [(ngModel)]="isCodigoEjisValue" binary="true"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-12 col-md-12">
@@ -183,14 +189,15 @@
                 {{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.fechaCodigoEjis' | translate }}
               </label>
               <app-fecha [utc]="false" [(value)]="body.fechaCodigoEjis" (valueChangeSelected)="fillFechaCodigoEjis($event)" (valueChangeInput)="fillFechaCodigoEjis($event)"
-                [disabled]="historico"></app-fecha>
+                [disabled]="historico || !permisoEscritura"></app-fecha>
             </div>
 
             <div class="form-group col-lg-12 col-md-12">
               <label>
                 {{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.codigoEjis' | translate }}
               </label>
-              <input type="text" class="form-control" maxLength="10" [(ngModel)]="body.codigoEjis" [disabled]="historico" pInputText>
+              <input type="text" class="form-control" maxLength="10" [(ngModel)]="body.codigoEjis" [disabled]="historico || !permisoEscritura"
+                pInputText>
             </div>
           </div>
         </div>
@@ -199,7 +206,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

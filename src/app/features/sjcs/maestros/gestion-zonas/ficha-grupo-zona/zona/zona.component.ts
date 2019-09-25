@@ -46,7 +46,7 @@ export class ZonaComponent implements OnInit {
   //Resultados de la busqueda
   @Input() idZona;
   //Resultados de la busqueda
-  @Input() modoEdicion: boolean = false;
+  @Input() modoEdicion: boolean;
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
@@ -63,14 +63,12 @@ export class ZonaComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
-
-
   }
 
   getComboPartidosJudiciales() {
     this.progressSpinner = true;
 
-    this.sigaServices.get("fichaZonas_gePartidosJudiciales").subscribe(
+    this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
       n => {
         this.comboPJ = n.combooItems;
 
@@ -196,7 +194,7 @@ export class ZonaComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -246,7 +244,7 @@ export class ZonaComponent implements OnInit {
       let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e.srcElement.value.trim()));
 
       if (findDato.length > 1) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Ya existe una subzona con esa descripción");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.existeZonaMismaDescripcion"));
         this.progressSpinner = false;
         this.datos[datoId].descripcionsubzona = this.selectedBefore.descripcionsubzona;
 
@@ -265,7 +263,7 @@ export class ZonaComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idzona === zona.idzona && item.descripcionsubzona === zona.descripcionsubzona);
 
     if (findDato != undefined) {
-      this.showMessage("info", "Informacion", "Ya existe un zona con ese nombre");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.existeZonaMismaDescripcion"));
       this.progressSpinner = false;
     } else {
       this.body = zona;
@@ -343,7 +341,7 @@ export class ZonaComponent implements OnInit {
     if (!this.nuevo) {
 
       if (dato.partidosJudiciales.length == 0) {
-        this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.seleccionarPartidoJudicial"));
         let findUpdate = this.updateZonas.findIndex(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
 
         if (findUpdate != undefined) {
@@ -382,7 +380,7 @@ export class ZonaComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -451,35 +449,41 @@ export class ZonaComponent implements OnInit {
 
   onChangeSelectAll() {
 
-    if (this.selectAll) {
-      this.selectMultiple = true;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-      this.selectionMode = "multiple";
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-      this.selectionMode = "single";
+    if (!this.nuevo) {
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+        this.selectionMode = "multiple";
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+        this.selectionMode = "single";
+      }
     }
+   
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
 
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "single";
+    if (!this.nuevo) {
+      this.selectMultiple = !this.selectMultiple;
 
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "multiple";
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single";
 
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "multiple";
+
+      }
     }
-    // this.volver();
+
   }
 
 

@@ -92,7 +92,6 @@ import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
 import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
-import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/maestros-modulos.component";
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
@@ -680,7 +679,17 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "costesFijos",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: "funcamentosCalificacion",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fundamentosResolucion",
     loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
@@ -701,7 +710,8 @@ const appRoutes: Routes = [
   },
   {
     path: "maestrosModulos",
-    component: MaestrosModulosComponent,
+    // component: MaestrosModulosComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {
@@ -716,7 +726,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoPrisiones",
-    component: MantenimientoPrisionesComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {

@@ -62,22 +62,22 @@
               </div>
 
               <div *ngIf="col.field == 'nombreMateria'">
-                <span *ngIf="!((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)) || selectMultiple">
+                <span *ngIf="disableAll || ( !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)) || selectMultiple)">
                   {{ dato[col.field] }} </span>
 
-                <input *ngIf="((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text" class="form-control paddingInput"
-                  [(ngModel)]="dato.nombreMateria" name="nombreMateria" type="text" on-focusout="validateArea($event)" (onBlur)="validateArea($event)"
-                  maxLength="60" />
+                <input *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)))"
+                  type="text" class="form-control paddingInput" [(ngModel)]="dato.nombreMateria" name="nombreMateria" type="text"
+                  on-focusout="validateArea($event)" (input)="validateArea($event)" maxLength="60" />
               </div>
 
               <div *ngIf="col.field == 'contenido'">
-                <span *ngIf="!((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)) || selectMultiple">
+                <span *ngIf="disableAll || !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)) || selectMultiple">
                   {{ dato[col.field] }}
                 </span>
 
-                <input *ngIf="((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text" class="form-control paddingInput"
-                  [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="validateArea($event)" (onBlur)="validateArea($event)"
-                  maxLength="60" />
+                <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text"
+                  class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="validateArea($event)"
+                  (input)="validateArea($event)" maxLength="60" />
               </div>
             </td>
 
@@ -103,7 +103,7 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              <p-checkbox [disabled]="disableAll" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
@@ -114,12 +114,13 @@
     </div>
     <div *ngIf="modoEdicion" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="((!selectMultiple && !selectAll) || nuevo) || selectedDatos == undefined || !selectedDatos.length > 0"
+        <button [disabled]="disableAll || ((!selectMultiple && !selectAll) || nuevo) || selectedDatos == undefined || !selectedDatos.length > 0"
           (click)="delete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button [disabled]="(updateAreas.length == 0 && !nuevo)" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton [disabled]="disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button pButton [disabled]="selectMultiple || selectAll || nuevo" (click)="newMateria()" type="button" icon="fa fa-plus"
+        <button [disabled]="disableAll || (updateAreas.length == 0 && !nuevo)" (click)="rest()" pButton type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton [disabled]="disableAll || disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton [disabled]="disableAll || selectMultiple || selectAll || nuevo" (click)="newMateria()" type="button" icon="fa fa-plus"
           iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>

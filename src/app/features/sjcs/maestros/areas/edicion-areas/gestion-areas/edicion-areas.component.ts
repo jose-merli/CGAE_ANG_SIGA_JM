@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { AreasItem } from '../../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-edicion-areas',
@@ -21,7 +22,24 @@ export class EdicionAreasComponent implements OnInit {
   //Resultados de la busqueda
   @Input() areasItem: AreasItem;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private persistenceService: PersistenceService) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.areasItem != undefined) {
+      this.body = this.areasItem;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
+    } else {
+      this.areasItem = new AreasItem();
+    }
+    if (this.body.idArea == undefined) {
+      this.modoEdicion = false;
+    } else {
+      this.modoEdicion = true;
+    }
+  }
+
   ngOnInit() {
     // if (this.areasItem != undefined) {
 
@@ -40,41 +58,11 @@ export class EdicionAreasComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // if (this.areasItem != undefined) {
-    //   this.body = this.areasItem;
-    //   this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
-    // } else {
-    //   this.areasItem = new AreasItem();
-    // }
-    // if (this.body.idArea == undefined) {
-    //   this.modoEdicion = false;
-    // } else {
-    //   this.modoEdicion = true;
-    // }
   }
-
-  // getGrupoZona() {
-  //   this.progressSpinner = true;
-  //   this.sigaServices
-  //     .getParam("fichaZonas_searchGroupZone", "?idZona=" + this.idZona)
-  //     .subscribe(
-  //       n => {
-  //         this.body = n;
-  //         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-  //         this.progressSpinner = false;
-  //       },
-  //       err => {
-  //         console.log(err);
-  //         this.progressSpinner = false;
-  //       },
-  //       () => {
-  //       }
-  //     );
-  // }
 
   rest() {
     if (this.modoEdicion) {
-      this.areasItem = JSON.parse(JSON.stringify(this.bodyInicial));
+      if (this.bodyInicial != undefined) this.areasItem = JSON.parse(JSON.stringify(this.bodyInicial));
     } else {
       this.areasItem = new AreasItem();
     }
@@ -110,7 +98,7 @@ export class EdicionAreasComponent implements OnInit {
         }
 
         this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
-
+        this.persistenceService.setDatos(this.areasItem);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

@@ -2,7 +2,11 @@ import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, Event
 import { FiltroBusquedaAreasComponent } from './filtro-busqueda-areas/filtro-busqueda-areas.component';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
+import { CommonsService } from '../../../../_services/commons.service';
 import { TablaBusquedaAreasComponent } from './tabla-busqueda-areas/tabla-busqueda-areas.component';
+import { PersistenceService } from '../../../../_services/persistence.service';
+import { procesos_maestros } from '../../../../permisos/procesos_maestros';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-busqueda-areas',
@@ -27,14 +31,36 @@ export class BusquedaAreasComponent implements OnInit, AfterViewInit {
   //comboPartidosJudiciales
   comboPJ;
   msgs;
+  permisoEscritura: any;
 
 
 
-  constructor(private translateService: TranslateService, private sigaServices: SigaServices) { }
+  constructor(private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private persistenceService: PersistenceService,
+    private router: Router) { }
 
 
   ngOnInit() {
     this.buscar = this.filtros.buscar
+
+    this.commonsService.checkAcceso(procesos_maestros.areasMaterias)
+      .then(respuesta  =>  {
+        this.permisoEscritura  =  respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if  (this.permisoEscritura  ==  undefined) {
+          sessionStorage.setItem("codError",  "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error  =>  console.error(error));
   }
 
   ngAfterViewInit() {

@@ -59,7 +59,8 @@
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisos" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
+              name="groupname"></p-checkbox>
           </div>
           <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
             <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
@@ -107,10 +108,10 @@
         label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
       <button *ngIf="historico" (click)="searchAreas(); selectedDatos = []" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historico" pButton [disabled]="(!selectMultiple || !selectAll) && selectedDatos.length == 0" (click)="delete()"
-        type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <button *ngIf="historico" pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || selectAll || !selectMultiple"
-        (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="Activar"></button>
+      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
+        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button *ngIf="historico" pButton [disabled]="!permisos || selectedDatos.length == 0 || selectedDatos == undefined || selectAll || !selectMultiple"
+        (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.activar' | translate}}"></button>
     </div>
   </div>
 </div>

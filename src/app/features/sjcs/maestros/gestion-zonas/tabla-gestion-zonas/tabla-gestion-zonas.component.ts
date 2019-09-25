@@ -28,6 +28,7 @@ export class TablaGestionZonasComponent implements OnInit {
   historico: boolean = false;
 
   message;
+  permisoEscritura: boolean = false;
 
   initDatos;
   nuevo: boolean = false;
@@ -51,6 +52,9 @@ export class TablaGestionZonasComponent implements OnInit {
 
   ngOnInit() {
 
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
@@ -89,7 +93,7 @@ export class TablaGestionZonasComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -115,7 +119,7 @@ export class TablaGestionZonasComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -174,29 +178,40 @@ export class TablaGestionZonasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+
     if (this.selectAll) {
-      this.selectMultiple = true;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+      } else {
+        this.selectedDatos = this.datos;
+      }
+
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
       this.selectMultiple = false;
     }
+
   }
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      // this.pressNew = false;
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
-    // this.volver();
   }
 
 

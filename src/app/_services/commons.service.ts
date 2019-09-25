@@ -5,6 +5,8 @@ import {
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
 import { HttpBackend, HttpClient } from "@angular/common/http";
+import { ControlAccesoDto } from "../models/ControlAccesoDto";
+import { SigaServices } from "./siga.service";
 
 @Injectable()
 export class CommonsService {
@@ -12,7 +14,8 @@ export class CommonsService {
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
-    private httpbackend: HttpClient
+    private httpbackend: HttpClient,
+    private sigaServices: SigaServices
   ) {
     this.httpbackend = new HttpClient(handler);
   }
@@ -116,6 +119,53 @@ export class CommonsService {
         }
       }
     });
+  }
+
+  checkAcceso = (idProceso) => {
+    let activacionEditar = undefined;
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = idProceso;
+    let derechoAcceso;
+
+    activacionEditar = new Promise((resolve, reject) => {
+
+      this.sigaServices.post("acces_control", controlAcceso).subscribe(
+        data => {
+          let permisosTree = JSON.parse(data.body);
+          let permisosArray = permisosTree.permisoItems;
+          derechoAcceso = permisosArray[0].derechoacceso;
+        },
+        err => {
+          console.log(err);
+          reject(undefined);
+        },
+        () => {
+          if (derechoAcceso == 3) {
+            //permiso total
+            resolve(true);
+          } else if (derechoAcceso == 2) {
+            // solo lectura
+            resolve(false);
+          } else {
+            resolve(undefined);
+          }
+
+        }
+      );
+    });
+
+    return activacionEditar;
+
+  }
+
+  openOutlook(correo) {
+
+    let EMAIL_REGEX = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
+    if (correo != undefined && correo != "" && EMAIL_REGEX.test(correo)) {
+      let href = "mailto:" + correo;
+      window.open(href, "_blank");
+    }
+
   }
 
 }

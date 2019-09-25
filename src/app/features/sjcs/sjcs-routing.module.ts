@@ -15,7 +15,23 @@ const routesSjcs: Routes = [
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   },
   {
+    path: "costesFijos",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
     path: "fundamentosCalificacion",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "fundamentosResolucion",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "maestrosModulos",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "mantenimientoPrisiones",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   }
 ];
