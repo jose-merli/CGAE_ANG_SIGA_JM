@@ -7,6 +7,8 @@ import { BusquedaJuzgadosComponent } from './juzgados/busqueda-juzgados.componen
 import { GestionJuzgadosComponent } from './juzgados/gestion-juzgados/gestion-juzgados.component';
 import { BusquedaAreasComponent } from './areas/busqueda-areas.component';
 import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.component';
+import { FundamentosCalificacionComponent } from './fundamentos-calificacion/fundamentos-calificacion.component';
+import { GestionFundamentosCalificacionComponent } from './fundamentos-calificacion/gestion-fundamentos-calificacion/gestion-fundamentos-calificacion.component';
 
 const routesMaestros: Routes = [
   {
@@ -30,6 +32,11 @@ const routesMaestros: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "gestionFundamentos",
+    component: GestionFundamentosCalificacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "fichaGrupoAreas",
     component: GestionAreasComponent,
     canActivate: [AuthGuard]
@@ -37,6 +44,11 @@ const routesMaestros: Routes = [
   {
     path: "areasYMaterias",
     component: BusquedaAreasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fundamentosCalificacion",
+    component: FundamentosCalificacionComponent,
     canActivate: [AuthGuard]
   }
 

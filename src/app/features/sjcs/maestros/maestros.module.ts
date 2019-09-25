@@ -6,6 +6,7 @@ import { GestionZonasModule } from './gestion-zonas/gestion-zonas.module';
 import { GestionAreasModule } from './areas/gestion-areas.module';
 import { MenubarModule } from 'primeng/menubar';
 import { JuzgadosModule } from './juzgados/juzgados.module';
+import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { JuzgadosModule } from './juzgados/juzgados.module';
         GestionZonasModule,
         MenubarModule,
         JuzgadosModule,
-        GestionAreasModule
+        GestionAreasModule,
+        FundamentosCalificacionModule
     ],
 
     providers: []
