@@ -52,6 +52,11 @@ export let endpoints_maestros: any = {
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
     modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
 
+    gestionPartidasPres_searchPartidasPres: "maestros/gestionPartidasPres/searchPartidasPres",
+    gestionPartidasPres_eliminatePartidasPres: "maestros/gestionPartidasPres/eliminatePartidasPres",
+    gestionPartidasPres_updatePartidasPres: "maestros/gestionPartidasPres/updatePartidasPres",
+    gestionPartidasPres_createPartidasPres: "maestros/gestionPartidasPres/createPartidasPres",
+
     busquedaPrisiones_searchPrisiones: "maestros/busquedaPrisiones/searchPrisiones",
     busquedaPrisiones_provinces: "maestros/busquedaPrisiones/provinces",
     busquedaPrisiones_population: "maestros/busquedaPrisiones/population",

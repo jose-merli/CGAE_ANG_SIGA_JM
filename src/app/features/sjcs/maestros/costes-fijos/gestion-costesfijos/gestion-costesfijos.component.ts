@@ -184,7 +184,7 @@ export class GestionCostesfijosComponent implements OnInit {
 
     } else {
       url = "gestionCostesFijos_updateCostesFijos";
-
+      this.editMode = false;
       if (this.validateUpdate()) {
         this.body = new CosteFijoObject();
         this.body.costeFijoItems = this.updateCosteFijo;

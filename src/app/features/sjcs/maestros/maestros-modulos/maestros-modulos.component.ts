@@ -5,7 +5,6 @@ import { TablaModulosComponent } from './gestion-modulos/gestion-modulosybasesde
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
-// import { BusquedaModulosYBasesDeCompensacion } from './tabla-busqueda-modulos/tabla-busqueda-modulos.component';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';

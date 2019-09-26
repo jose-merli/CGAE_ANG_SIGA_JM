@@ -12,7 +12,8 @@ import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/ges
 import { FundamentosResolucionModule } from './fundamentos-resolucion/fundamentos-resolucion.module';
 import { PrisionesModule } from './prisiones/prisiones.module';
 import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
-
+import { GestionPartidasComponent } from './partidas/partidas.module';
+import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 
 @NgModule({
         declarations: [],
@@ -27,7 +28,8 @@ import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundam
                 FundamentosResolucionModule,
                 GestionModulosModule,
                 PrisionesModule,
-                FundamentosCalificacionModule
+                FundamentosCalificacionModule,
+                GestionPartidasComponent
         ],
 
         providers: []

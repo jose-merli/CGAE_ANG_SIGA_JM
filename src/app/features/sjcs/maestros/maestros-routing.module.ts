@@ -10,8 +10,8 @@ import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.compo
 import { FundamentosCalificacionComponent } from './fundamentos-calificacion/fundamentos-calificacion.component';
 import { GestionFundamentosCalificacionComponent } from './fundamentos-calificacion/gestion-fundamentos-calificacion/gestion-fundamentos-calificacion.component';
 import { MaestrosModulosComponent } from './maestros-modulos/maestros-modulos.component';
-
 import { GestionCostesfijosComponent } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.component';
+import { PartidasComponent } from './partidas/partidas.component';
 import { BusquedaFundamentosresolucionComponent } from './fundamentos-resolucion/busqueda-fundamentosresolucion/busqueda-fundamentosresolucion.component';
 import { GestionFundamentosresolucionComponent } from './fundamentos-resolucion/busqueda-fundamentosresolucion/gestion-fundamentosresolucion/gestion-fundamentosresolucion.component';
 import { BusquedaPrisionesComponent } from './prisiones/busqueda-prisiones/busqueda-prisiones.component';
@@ -76,6 +76,11 @@ const routesMaestros: Routes = [
   {
     path: "maestrosModulos",
     component: MaestrosModulosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "partidas",
+    component: PartidasComponent,
     canActivate: [AuthGuard]
   },
   {
