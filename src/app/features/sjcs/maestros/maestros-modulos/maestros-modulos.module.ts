@@ -23,6 +23,7 @@ import { TablaModulosComponent } from './gestion-modulos/gestion-modulosybasesde
 import { MaestrosModulosComponent } from './maestros-modulos.component';
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
+import { PartidasComponent } from '../partidas/partidas.component';
 
 // import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
@@ -48,7 +49,7 @@ import { MultiSelectModule } from "primeng/multiselect";
   declarations: [
     BusquedaModulosYBasesDeCompensacion,
     MaestrosModulosComponent,
-    TablaModulosComponent
+    TablaModulosComponent,
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

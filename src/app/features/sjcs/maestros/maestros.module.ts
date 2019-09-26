@@ -9,6 +9,8 @@ import { GestionModulosModule } from './maestros-modulos/maestros-modulos.module
 import { MenubarModule } from 'primeng/menubar';
 import { JuzgadosModule } from './juzgados/juzgados.module';
 import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.module';
+import { GestionPartidasComponent } from './partidas/partidas.module';
+import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 
 
 @NgModule({
@@ -21,7 +23,8 @@ import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/ges
         JuzgadosModule,
         GestionAreasModule,
         GestionCostesfijosModule,
-        GestionModulosModule
+        GestionModulosModule,
+        GestionPartidasComponent
     ],
 
     providers: []

@@ -8,8 +8,8 @@ import { GestionJuzgadosComponent } from './juzgados/gestion-juzgados/gestion-ju
 import { BusquedaAreasComponent } from './areas/busqueda-areas.component';
 import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.component';
 import { MaestrosModulosComponent } from './maestros-modulos/maestros-modulos.component';
-
 import { GestionCostesfijosComponent } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.component';
+import { PartidasComponent } from './partidas/partidas.component';
 
 const routesMaestros: Routes = [
   {
@@ -52,8 +52,11 @@ const routesMaestros: Routes = [
     component: MaestrosModulosComponent,
     canActivate: [AuthGuard]
   },
-
-
+  {
+    path: "partidas",
+    component: PartidasComponent,
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

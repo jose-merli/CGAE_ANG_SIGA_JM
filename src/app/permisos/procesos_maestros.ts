@@ -4,6 +4,6 @@ export const procesos_maestros: any = {
     areasMaterias: "912",
     costesFijos: "915",
     juzgados: "91I",
-    modulo: "91D"
-
+    modulo: "91D",
+    partidaPresupuesto: "113"
 }

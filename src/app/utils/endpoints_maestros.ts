@@ -43,5 +43,10 @@ export let endpoints_maestros: any = {
     gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos",
 
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
-    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos"
+    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
+
+    gestionPartidasPres_searchPartidasPres: "maestros/gestionPartidasPres/searchPartidasPres",
+    gestionPartidasPres_eliminatePartidasPres: "maestros/gestionPartidasPres/eliminatePartidasPres",
+    gestionPartidasPres_updatePartidasPres: "maestros/gestionPartidasPres/updatePartidasPres",
+    gestionPartidasPres_createPartidasPres: "maestros/gestionPartidasPres/createPartidasPres"
 }
