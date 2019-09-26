@@ -184,13 +184,13 @@ export class GestionCostesfijosComponent implements OnInit {
 
     } else {
       url = "gestionCostesFijos_updateCostesFijos";
-
+      this.editMode = false;
       if (this.validateUpdate()) {
         this.body = new CosteFijoObject();
         this.body.costeFijoItems = this.updateCosteFijo;
         this.callSaveService(url);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de los costes fijos modificados ya se encuentran registrados");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionCostesFijos.constesFijosModificadosYaRegistrados"));
         this.progressSpinner = false;
       }
 
@@ -235,7 +235,7 @@ export class GestionCostesfijosComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -443,7 +443,7 @@ export class GestionCostesfijosComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -471,7 +471,7 @@ export class GestionCostesfijosComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -569,7 +569,11 @@ export class GestionCostesfijosComponent implements OnInit {
 
       }
 
-      this.numSelected = this.datos.length;
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
+      }
+
       this.selectionMode = "multiple";
     } else {
       this.selectedDatos = [];

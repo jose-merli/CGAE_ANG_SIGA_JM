@@ -128,7 +128,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }

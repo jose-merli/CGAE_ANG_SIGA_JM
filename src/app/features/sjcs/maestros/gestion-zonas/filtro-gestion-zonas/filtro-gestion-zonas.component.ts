@@ -23,6 +23,8 @@ export class FiltroGestionZonasComponent implements OnInit {
 
   filtros: ZonasItem = new ZonasItem();
   historico: boolean = false;
+  @Input() permisoEscritura;
+
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() isOpen = new EventEmitter<boolean>();

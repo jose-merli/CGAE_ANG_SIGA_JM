@@ -12,5 +12,6 @@ export class ZonasItem {
   idsConjuntoSubzonas: string;
   idPartidosJudiciales: string;
   overlayVisible: boolean;
+  nombrePartidosJudiciales: string;
   constructor() { }
 }

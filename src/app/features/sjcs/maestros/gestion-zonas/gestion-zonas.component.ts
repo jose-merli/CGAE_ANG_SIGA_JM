@@ -3,6 +3,9 @@ import { FiltroGestionZonasComponent } from './filtro-gestion-zonas/filtro-gesti
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { CommonsService } from '../../../../_services/commons.service';
+import { procesos_maestros } from '../../../../permisos/procesos_maestros';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-zonas',
@@ -29,13 +32,32 @@ export class GestionZonasComponent implements OnInit, AfterViewInit {
   //comboPartidosJudiciales
   comboPJ;
   msgs;
+  permisoEscritura: boolean = false;
 
 
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices) { }
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+    private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
 
   ngOnInit() {
+
+    this.commonsService.checkAcceso(procesos_maestros.fundamentoResolucion)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error => console.error(error));
   }
 
   ngAfterViewInit() {

@@ -9,21 +9,29 @@ import { GestionModulosModule } from './maestros-modulos/maestros-modulos.module
 import { MenubarModule } from 'primeng/menubar';
 import { JuzgadosModule } from './juzgados/juzgados.module';
 import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.module';
-
+import { FundamentosResolucionModule } from './fundamentos-resolucion/fundamentos-resolucion.module';
+import { PrisionesModule } from './prisiones/prisiones.module';
+import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
+import { GestionPartidasComponent } from './partidas/partidas.module';
+import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 
 @NgModule({
-    declarations: [],
-    imports: [
-        CommonModule,
-        routingMaestros,
-        GestionZonasModule,
-        MenubarModule,
-        JuzgadosModule,
-        GestionAreasModule,
-        GestionCostesfijosModule,
-        GestionModulosModule,
-    ],
+        declarations: [],
+        imports: [
+                CommonModule,
+                routingMaestros,
+                GestionZonasModule,
+                MenubarModule,
+                JuzgadosModule,
+                GestionAreasModule,
+                GestionCostesfijosModule,
+                FundamentosResolucionModule,
+                GestionModulosModule,
+                PrisionesModule,
+                FundamentosCalificacionModule,
+                GestionPartidasComponent
+        ],
 
-    providers: []
+        providers: []
 })
 export class MaestrosModule { }

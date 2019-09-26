@@ -62,6 +62,11 @@ export class TablaJuzgadosComponent implements OnInit {
   }
 
   searchHistorical() {
+
+    this.selectAll = false;
+    this.selectedDatos = [];
+    this.selectMultiple = false;
+
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
@@ -101,7 +106,7 @@ export class TablaJuzgadosComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -127,7 +132,7 @@ export class TablaJuzgadosComponent implements OnInit {
       err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -185,13 +190,15 @@ export class TablaJuzgadosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
-      this.selectMultiple = true;
-      this.numSelected = this.datos.length;
-
       if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
       } else {
         this.selectedDatos = this.datos;
+      }
+
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
       }
 
     } else {

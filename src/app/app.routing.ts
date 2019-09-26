@@ -229,7 +229,6 @@ import { EnviosMasivosComponent } from './features/informes-comunicaciones/envio
 import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { SjcsModule } from './features/sjcs/sjcs.module';
-
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
@@ -684,8 +683,19 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "funcamentosCalificacion",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fundamentosResolucion",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: "partidas",
-    component: PartidasComponent,
+    // component: PartidasPresupuestarias,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {
@@ -716,7 +726,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoPrisiones",
-    component: MantenimientoPrisionesComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {
