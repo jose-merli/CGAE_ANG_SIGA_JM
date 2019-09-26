@@ -21,7 +21,7 @@ import { GestionCostesfijosModule } from './costes-fijos/gestion-costesfijos/ges
         JuzgadosModule,
         GestionAreasModule,
         GestionCostesfijosModule,
-        GestionModulosModule
+        GestionModulosModule,
     ],
 
     providers: []

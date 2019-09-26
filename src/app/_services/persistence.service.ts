@@ -16,55 +16,55 @@ export class PersistenceService {
     constructor() { }
 
     setFiltros(data: any) {
-        localStorage.setItem(this.filtrosName, JSON.stringify(data));
+        sessionStorage.setItem(this.filtrosName, JSON.stringify(data));
     }
 
     getFiltros() {
-        let data = localStorage.getItem(this.filtrosName);
+        let data = sessionStorage.getItem(this.filtrosName);
         return JSON.parse(data);
     }
 
     clearFiltros() {
-        localStorage.removeItem(this.filtrosName);
+        sessionStorage.removeItem(this.filtrosName);
     }
 
     setDatos(data: any) {
-        localStorage.setItem(this.datosName, JSON.stringify(data));
+        sessionStorage.setItem(this.datosName, JSON.stringify(data));
     }
 
     getDatos() {
-        let data = localStorage.getItem(this.datosName);
+        let data = sessionStorage.getItem(this.datosName);
         return JSON.parse(data);
     }
 
     clearDatos() {
-        localStorage.removeItem(this.datosName);
+        sessionStorage.removeItem(this.datosName);
     }
 
     setHistorico(data: any) {
-        localStorage.setItem(this.historicoName, JSON.stringify(data));
+        sessionStorage.setItem(this.historicoName, JSON.stringify(data));
     }
 
     getHistorico() {
-        let data = localStorage.getItem(this.historicoName);
+        let data = sessionStorage.getItem(this.historicoName);
         return JSON.parse(data);
     }
 
     clearHistorico() {
-        localStorage.removeItem(this.historicoName);
+        sessionStorage.removeItem(this.historicoName);
     }
 
     setPermisos(data: any) {
-        localStorage.setItem(this.permisosName, JSON.stringify(data));
+        sessionStorage.setItem(this.permisosName, JSON.stringify(data));
     }
 
     getPermisos() {
-        let data = localStorage.getItem(this.permisosName);
+        let data = sessionStorage.getItem(this.permisosName);
         return JSON.parse(data);
     }
 
     clearPermisos() {
-        localStorage.removeItem(this.permisosName);
+        sessionStorage.removeItem(this.permisosName);
     }
 
     clearPersistence() {

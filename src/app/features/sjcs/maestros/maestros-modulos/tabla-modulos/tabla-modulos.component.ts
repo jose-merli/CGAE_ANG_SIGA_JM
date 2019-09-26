@@ -11,9 +11,9 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 
 
 @Component({
-  selector: 'app-gestion-modulosybasesdecompensacion',
-  templateUrl: './gestion-modulosybasesdecompensacion.component.html',
-  styleUrls: ['./gestion-modulosybasesdecompensacion.component.scss']
+  selector: 'app-tabla-modulos',
+  templateUrl: './tabla-modulos.component.html',
+  styleUrls: ['./tabla-modulos.component.scss']
 })
 export class TablaModulosComponent implements OnInit {
 
@@ -68,7 +68,7 @@ export class TablaModulosComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       this.persistenceService.setHistorico(this.historico);
       this.persistenceService.setDatos(this.selectedDatos[0]);
-      this.router.navigate(["/fichaGrupoAreas"], { queryParams: { idArea: this.selectedDatos[0].idArea } });
+      this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento } });
     } else {
       if (evento.data.fechabaja == undefined && this.historico == true) {
         this.selectedDatos.pop();
@@ -89,7 +89,7 @@ export class TablaModulosComponent implements OnInit {
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -104,13 +104,21 @@ export class TablaModulosComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
-      // this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.permisos) {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+        if (this.historico) {
+          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        } else {
+          this.selectedDatos = this.datos;
+        }
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+
     }
   }
 
@@ -164,6 +172,7 @@ export class TablaModulosComponent implements OnInit {
 
   isSelectMultiple() {
     if (this.permisos) {
+      this.selectAll = false;
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
         this.selectedDatos = [];

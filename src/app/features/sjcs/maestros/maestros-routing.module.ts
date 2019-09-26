@@ -7,7 +7,8 @@ import { BusquedaJuzgadosComponent } from './juzgados/busqueda-juzgados.componen
 import { GestionJuzgadosComponent } from './juzgados/gestion-juzgados/gestion-juzgados.component';
 import { BusquedaAreasComponent } from './areas/busqueda-areas.component';
 import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.component';
-import { MaestrosModulosComponent } from './maestros-modulos/maestros-modulos.component';
+import { MaestrosModulosComponent } from './maestros-modulos/busqueda-modulosybasesdecompensacion.component';
+import { GestionModulosYBasesComponent } from './maestros-modulos/edicion-modulos/gestion-modulosybasesdecompensacion.component';
 
 import { GestionCostesfijosComponent } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.component';
 
@@ -50,6 +51,11 @@ const routesMaestros: Routes = [
   {
     path: "maestrosModulos",
     component: MaestrosModulosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionModulos",
+    component: GestionModulosYBasesComponent,
     canActivate: [AuthGuard]
   },
 

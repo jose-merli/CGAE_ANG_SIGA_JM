@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
 // import { TablaBusquedaModulosComponent } from '../tabla-busqueda-modulos/tabla-busqueda-modulos.component';
-import { MaestrosModulosComponent } from '../maestros-modulos.component';
+import { MaestrosModulosComponent } from '../busqueda-modulosybasesdecompensacion.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
@@ -9,11 +9,11 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-busqueda-modulosybasesdecompensacion',
-  templateUrl: './busqueda-modulosybasesdecompensacion.component.html',
-  styleUrls: ['./busqueda-modulosybasesdecompensacion.component.scss']
+  selector: 'app-filtros-modulos',
+  templateUrl: './filtros-modulos.component.html',
+  styleUrls: ['./filtros-modulos.component.scss']
 })
-export class BusquedaModulosYBasesDeCompensacion implements OnInit {
+export class FiltrosModulosComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
@@ -23,7 +23,7 @@ export class BusquedaModulosYBasesDeCompensacion implements OnInit {
   msgs: any[] = [];
   filtros: ModulosItem = new ModulosItem();
   jurisdicciones: any[] = [];
-  permisos: boolean = false;
+  @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -34,24 +34,21 @@ export class BusquedaModulosYBasesDeCompensacion implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
+      if (this.filtros.nombre != undefined || this.filtros.codigo != undefined) {
+        this.isBuscar();
+      }
     }
   }
 
   newModulo() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/fichaGrupomodulos"]);
+    this.router.navigate(["/gestionModulos"]);
   }
 
   onHideDatosGenerales() {

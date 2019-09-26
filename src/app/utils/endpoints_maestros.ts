@@ -43,5 +43,14 @@ export let endpoints_maestros: any = {
     gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos",
 
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
-    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos"
+    modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
+    modulosybasesdecompensacion_searchAcreditaciones: "maestros/modulosybasesdecompensacion/searchAcreditaciones",
+    modulosybasesdecompensacion_comboAcreditacionesDisponibles: "maestros/modulosybasesdecompensacion/comboAcreditacionesDisponibles",
+    modulosybasesdecompensacion_comboAcreditaciones: "maestros/modulosybasesdecompensacion/comboAcreditaciones",
+    modulosybasesdecompensacion_updatemoduloybasedecompensacion: "maestros/modulosybasesdecompensacion/updatemoduloybasedecompensacion",
+    modulosybasesdecompensacion_createmoduloybasedecompensacion: "maestros/modulosybasesdecompensacion/createmoduloybasedecompensacion",
+    modulosybasesdecompensacion_deleteAcreditacion: "maestros/modulosybasesdecompensacion/deleteAcreditacion",
+    modulosybasesdecompensacion_updateAcreditacion: "maestros/modulosybasesdecompensacion/updateAcreditacion",
+    modulosybasesdecompensacion_createAcreditacion: "maestros/modulosybasesdecompensacion/createAcreditacion"
+
 }
