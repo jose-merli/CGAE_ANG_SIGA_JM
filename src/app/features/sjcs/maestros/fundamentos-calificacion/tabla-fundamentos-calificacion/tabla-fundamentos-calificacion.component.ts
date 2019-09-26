@@ -26,6 +26,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
+  permisoEscritura: boolean = false;
 
 
   message;
@@ -39,6 +40,9 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    if (this.persistenceService.getPermisos() == true) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
     this.getCols();
     this.historico = this.persistenceService.getHistorico();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -54,9 +58,9 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "codigo", header: "Codigo Externo" },
-      { field: "descripcionFundamento", header: "Descripcion" },
-      { field: "descripcionDictamen", header: "Dictamen" }
+      { field: "codigo", header: "general.codeext" },
+      { field: "descripcionFundamento", header: "administracion.parametrosGenerales.literal.descripcion" },
+      { field: "descripcionDictamen", header: "justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" }
     ];
 
     this.rowsPerPage = [
@@ -81,14 +85,16 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 
 
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
   }
 
@@ -105,32 +111,36 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 
 
   onChangeSelectAll() {
-    if (!this.historico) {
-      if (this.selectAll) {
-        this.selectMultiple = true;
-        this.selectedDatos = this.datos;
-        this.numSelected = this.datos.length;
+    if (this.permisoEscritura) {
+      if (!this.historico) {
+        if (this.selectAll) {
+          this.selectMultiple = true;
+          this.selectedDatos = this.datos;
+          this.numSelected = this.datos.length;
+        } else {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectMultiple = false;
+        }
       } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectMultiple = false;
-      }
-    } else {
-      if (this.selectAll) {
-        this.selectMultiple = true;
-        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
-        this.numSelected = this.selectedDatos.length;
-      } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectMultiple = false;
+        if (this.selectAll) {
+          this.selectMultiple = true;
+          this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+          this.numSelected = this.selectedDatos.length;
+        } else {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectMultiple = false;
+        }
       }
     }
   }
-
   openTab(evento) {
 
 
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.persistenceService.setDatos(evento.data);

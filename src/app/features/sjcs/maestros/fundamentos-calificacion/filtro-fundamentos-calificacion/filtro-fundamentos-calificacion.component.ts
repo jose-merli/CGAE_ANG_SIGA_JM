@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { FundamentosCalificacionItem } from '../../../../../models/sjcs/FundamentosCalificacionItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtro-fundamentos-calificacion',
@@ -17,52 +18,56 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
   filtros: FundamentosCalificacionItem = new FundamentosCalificacionItem();
   historico: boolean = false
   comboDictamen = [];
-  comboAux;
+  filtroAux: FundamentosCalificacionItem = new FundamentosCalificacionItem();
 
   @Output() isOpen = new EventEmitter<boolean>();
   @Input() buscar: boolean
+  @Input() permisoEscritura
 
   constructor(private persistenceService: PersistenceService, private translateService: TranslateService,
-    private sigaServices: SigaServices, private router: Router) { }
+    private sigaServices: SigaServices, private router: Router, private commonServices: CommonsService) { }
 
   ngOnInit() {
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
+
+      if (this.persistenceService.getFiltrosAux() != undefined) {
+        this.filtroAux = this.persistenceService.getFiltrosAux();
+      }
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
       this.isOpen.emit(this.historico)
-
     } else {
-      this.filtros = new FundamentosCalificacionItem();
+      this.filtros = new FundamentosCalificacionItem()
+      this.filtroAux = new FundamentosCalificacionItem()
     }
+    this.getComboDictamen()
+
+
+  }
+
+  getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-
         this.comboDictamen = n.combooItems;
-
+        this.commonServices.arregloTildesCombo(this.comboDictamen);
       },
       err => {
         console.log(err);
       }
     );
-
   }
-
 
   newFundamento() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionFundamentos"]);
   }
 
-  onChangeDictamen() {
-
-  }
-
   search() {
 
-    this.persistenceService.setFiltros(this.filtros);
+    this.filtroAux = this.persistenceService.getFiltrosAux()
     this.isOpen.emit(false)
 
 
@@ -92,8 +97,8 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
 
   guardaBusca() {
     if (this.checkFilters()) {
-
-      this.comboAux = this.filtros.descripcionDictamen
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
       this.search()
     }
   }

@@ -6,6 +6,7 @@ import { Subject } from '../../../node_modules/rxjs';
 export class PersistenceService {
 
     private filtrosName: string = "filtros";
+    private filtrosAuxName: string = "filtroAux";
     private datosName: string = "datos";
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
@@ -21,6 +22,15 @@ export class PersistenceService {
 
     getFiltros() {
         let data = localStorage.getItem(this.filtrosName);
+        return JSON.parse(data);
+    }
+
+    setFiltrosAux(data: any) {
+        localStorage.setItem(this.filtrosAuxName, JSON.stringify(data));
+    }
+
+    getFiltrosAux() {
+        let data = localStorage.getItem(this.filtrosAuxName);
         return JSON.parse(data);
     }
 

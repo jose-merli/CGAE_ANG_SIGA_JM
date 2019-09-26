@@ -41,27 +41,29 @@
               <label>
                 {{"general.codeext"|translate}}
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.codigo" [disabled]="historico" pInputText>
+              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.codigo" [disabled]="historico || !permisoEscritura"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <label>
                 {{"general.description" | translate}} (*)
               </label>
-              <input type="text" class="form-control" maxLength="250" [(ngModel)]="body.descripcionFundamento" [disabled]="historico" pInputText>
+              <input type="text" class="form-control" maxLength="250" [(ngModel)]="body.descripcionFundamento" [disabled]="historico || !permisoEscritura"
+                pInputText>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <label>
                 {{"justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idTipoDictamenEjg' placeholder="Seleccionar" [disabled]="historico" [options]="comboDictamen"
-                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]='body.idTipoDictamenEjg' placeholder="Seleccionar" [disabled]="historico || !permisoEscritura"
+                [options]="comboDictamen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label class="d-block pb-2">{{"justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla" | translate}} 0</label>
 
-              <textarea name="textoEnPlantilla" [disabled]="historico" class="form-control" pInputTextarea [(ngModel)]="body.textoEnPlantilla"
+              <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control" pInputTextarea [(ngModel)]="body.textoEnPlantilla"
                 autoResize="autoResize"></textarea>
             </div>
           </div>
@@ -71,8 +73,10 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave() || !permisoEscritura" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

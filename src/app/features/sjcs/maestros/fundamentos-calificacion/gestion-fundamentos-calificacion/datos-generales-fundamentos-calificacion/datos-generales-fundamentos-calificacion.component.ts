@@ -17,6 +17,9 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+
+  permisoEscritura: boolean = false;
+
   openFicha: boolean = true;
   msgs = [];
   historico: boolean = false;
@@ -34,7 +37,9 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
   ngOnInit() {
 
     this.validateHistorical();
-
+    if (this.persistenceService.getPermisos() == true) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
     if (this.modoEdicion) {
       this.body = this.datos;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -114,7 +119,6 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          console.log(JSON.parse(err.error).error.description)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
