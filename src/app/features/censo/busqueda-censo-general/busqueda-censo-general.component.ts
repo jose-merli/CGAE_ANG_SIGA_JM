@@ -179,24 +179,6 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         } else {
           this.showFail(this.translateService.instant("censo.busquedaCensoGeneral.mensaje.introducir.colegio"));
         }
-      } else if (
-        this.colegios_seleccionados != undefined &&
-        this.colegios_seleccionados.length > 0
-      ) {
-        if (
-          (this.body.numeroColegiado != undefined &&
-            this.body.numeroColegiado != "") ||
-          (this.body.nombre != null &&
-            this.body.nombre != undefined) ||
-          (this.body.primerApellido != null &&
-            this.body.primerApellido) ||
-          (this.body.segundoApellido != null &&
-            this.body.segundoApellido != undefined)
-        ) {
-          this.search();
-        } else {
-          this.showFail("Debe introducir un campo más");
-        }
       } else {
         this.search();
       }
