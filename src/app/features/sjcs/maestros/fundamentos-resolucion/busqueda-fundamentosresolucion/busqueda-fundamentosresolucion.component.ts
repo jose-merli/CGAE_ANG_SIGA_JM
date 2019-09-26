@@ -6,6 +6,7 @@ import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { TablaFundamentosresolucionComponent } from './tabla-fundamentosresolucion/tabla-fundamentosresolucion.component';
 
 @Component({
   selector: 'app-busqueda-fundamentosresolucion',
@@ -22,6 +23,7 @@ export class BusquedaFundamentosresolucionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @ViewChild(FiltrosFundamentosresolucionComponent) filtros;
+  @ViewChild(TablaFundamentosresolucionComponent) tabla;
 
   constructor(private sigaServices: SigaServices, private commonsService: CommonsService, private persistenceService: PersistenceService,
     private translateService: TranslateService, private router: Router) { }
@@ -50,18 +52,23 @@ export class BusquedaFundamentosresolucionComponent implements OnInit {
     this.search(event);
   }
 
+  searchHistorico(event) {
+    this.search(event)
+  }
 
   search(event) {
     this.filtros.filtros.historico = event;
+    this.persistenceService.setHistorico(event)
     this.progressSpinner = true;
 
-    this.sigaServices.post("gestionFundamentosResolucion_searchFundamentosResolucion", this.filtros.filtros).subscribe(
+    this.sigaServices.post("gestionFundamentosResolucion_searchFundamentosResolucion", this.filtros.filtroAux).subscribe(
       n => {
-
         this.datos = JSON.parse(n.body).fundamentoResolucionItems;
         this.buscar = true;
         this.progressSpinner = false;
-
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
       },
       err => {
         this.progressSpinner = false;

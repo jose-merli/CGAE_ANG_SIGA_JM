@@ -9,7 +9,7 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-fundamentos-calificacion (isOpen)="isOpenReceive($event)"></app-filtro-fundamentos-calificacion>
+  <app-filtro-fundamentos-calificacion [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtro-fundamentos-calificacion>
   <app-tabla-fundamentos-calificacion *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="searchHistorico($event)"></app-tabla-fundamentos-calificacion>
 
 </div>

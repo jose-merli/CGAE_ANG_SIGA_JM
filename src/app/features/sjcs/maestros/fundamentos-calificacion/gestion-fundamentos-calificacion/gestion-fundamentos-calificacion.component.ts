@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FundamentosCalificacionItem } from '../../../../../models/sjcs/FundamentosCalificacionItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
@@ -14,12 +14,15 @@ export class GestionFundamentosCalificacionComponent implements OnInit {
   datos: FundamentosCalificacionItem = new FundamentosCalificacionItem();
   modoEdicion: boolean = true;
 
+  permisoEscritura: boolean = false;
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
   ngOnInit() {
 
     this.getFichasPosibles();
-
+    if (this.persistenceService.getPermisos() == true) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
     if (this.persistenceService.getDatos() != undefined) {
       this.datos = this.persistenceService.getDatos();
       if (this.datos.fechabaja != undefined && this.datos.fechabaja != null) {

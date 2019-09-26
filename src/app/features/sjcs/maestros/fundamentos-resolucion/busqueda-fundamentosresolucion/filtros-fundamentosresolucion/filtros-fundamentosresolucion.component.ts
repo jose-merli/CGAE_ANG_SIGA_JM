@@ -17,6 +17,7 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   msgs = [];
 
   filtros: FundamentoResolucionItem = new FundamentoResolucionItem();
+  filtroAux: FundamentoResolucionItem = new FundamentoResolucionItem();
   historico: boolean = false;
 
   @Output() isOpen = new EventEmitter<boolean>();
@@ -27,7 +28,7 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   ngOnInit() {
 
     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+      this.filtroAux = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
@@ -44,10 +45,8 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   }
 
   search() {
-    if (this.checkFilters()) {
-      this.persistenceService.setFiltros(this.filtros);
-      this.isOpen.emit(this.historico);
-    }
+    this.persistenceService.setFiltros(this.filtros);
+    this.isOpen.emit(false)
   }
 
   newFundamentoResolucion() {
@@ -57,7 +56,6 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new FundamentoResolucionItem();
-    this.persistenceService.clearFiltros();
   }
 
   checkFilters() {
@@ -89,6 +87,13 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   }
 
 
+  guardaBusca() {
+    if (this.checkFilters()) {
+      this.filtroAux.codigoExt = this.filtros.codigoExt
+      this.filtroAux.descripcionFundamento = this.filtros.descripcionFundamento
+      this.search()
+    }
+  }
   clear() {
     this.msgs = [];
   }

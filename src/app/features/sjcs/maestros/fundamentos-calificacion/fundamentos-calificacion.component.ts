@@ -7,6 +7,7 @@ import { Router } from '../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TablaFundamentosCalificacionComponent } from './tabla-fundamentos-calificacion/tabla-fundamentos-calificacion.component';
+import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 
 @Component({
   selector: 'app-fundamentos-calificacion',
@@ -15,8 +16,8 @@ import { TablaFundamentosCalificacionComponent } from './tabla-fundamentos-calif
 })
 export class FundamentosCalificacionComponent implements OnInit {
 
-  @ViewChild(FiltroFundamentosCalificacionComponent) filtros
-  @ViewChild(TablaFundamentosCalificacionComponent) tabla
+  @ViewChild(FiltroFundamentosCalificacionComponent) filtros;
+  @ViewChild(TablaFundamentosCalificacionComponent) tabla;
 
   msgs = [];
   datos;
@@ -31,22 +32,21 @@ export class FundamentosCalificacionComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.commonsService.checkAcceso(procesos_maestros.juzgados)
-    //   .then(respuesta => {
-    //   this.permisoEscritura = respuesta;
+    this.commonsService.checkAcceso(procesos_maestros.fundamentoCalificacion)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscritura);
 
-    //   this.persistenceService.setPermisos(this.permisoEscritura);
-
-    //   if (this.permisoEscritura == undefined) {
-    //   sessionStorage.setItem("codError", "403");
-    //   sessionStorage.setItem(
-    //   "descError",
-    //   this.translateService.instant("generico.error.permiso.denegado")
-    //   );
-    //   this.router.navigate(["/errorAcceso"]);
-    //   }
-    //   }
-    //   ).catch(error => console.error(error));
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error => console.error(error));
 
   }
 
@@ -55,26 +55,23 @@ export class FundamentosCalificacionComponent implements OnInit {
   }
 
   searchHistorico(event) {
-
-    console.log(this.filtros.comboAux)
-    if (this.filtros.comboAux != null && this.filtros.comboAux != undefined) {
-      this.filtros.filtros.descripcionDictamen = this.filtros.comboAux
-    }
     this.search(event)
   }
 
   search(event) {
-    this.filtros.filtros.historico = event;
-
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    console.log(this.filtros.filtros)
-    this.sigaServices.post("busquedaFundamentosCalificacion_searchFundamentos", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaFundamentosCalificacion_searchFundamentos", this.filtros.filtroAux).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).fundamentosCalificacionesItems;
         this.buscar = true;
         this.progressSpinner = false;
-        this.tabla.historico = event
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -82,7 +79,6 @@ export class FundamentosCalificacionComponent implements OnInit {
       }
     );
   }
-
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({
