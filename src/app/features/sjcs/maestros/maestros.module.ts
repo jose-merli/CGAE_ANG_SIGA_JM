@@ -29,8 +29,7 @@ import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-part
                 GestionModulosModule,
                 PrisionesModule,
                 FundamentosCalificacionModule,
-                GestionPartidasComponent,
-                TablaPartidasComponent
+                GestionPartidasComponent
         ],
 
         providers: []
