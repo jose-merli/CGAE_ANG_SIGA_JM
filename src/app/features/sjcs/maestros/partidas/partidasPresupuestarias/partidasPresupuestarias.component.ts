@@ -21,7 +21,6 @@ export class PartidasPresupuestarias implements OnInit {
   msgs: any[] = [];
   filtros: PartidasItems = new PartidasItems();
   jurisdicciones: any[] = [];
-  permisos: boolean = false;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -32,11 +31,6 @@ export class PartidasPresupuestarias implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();

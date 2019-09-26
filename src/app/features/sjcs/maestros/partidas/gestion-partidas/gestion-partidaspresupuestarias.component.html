@@ -111,17 +111,17 @@
 
             <div *ngIf="dato.editable && col.field == 'importepartida'">
               <input class="form-control paddingInput" [(ngModel)]="dato.importepartida" name="importepartida" (input)="changeImporte(dato)"
-                type="text" [disabled]="!permisos" (keypress)="numberOnly($event)" maxLength="13" on-focusout="changeImporte(dato)"
+                type="text" [(disabled)]="!permisos" (keypress)="numberOnly($event)" maxLength="13" on-focusout="changeImporte(dato)"
                 (onBlur)="changeImporte(dato)" />
             </div>
             <div *ngIf="dato.editable && col.field == 'nombrepartida'">
               <input class="form-control paddingInput" [(ngModel)]="dato.nombrepartida" name="nombrepartida" type="text" maxLength="58"
-                on-focusout="changeNombrePartida(dato)" [disabled]="!permisos" (onBlur)="changeNombrePartida(dato)" (input)="changeNombrePartida(dato)"
+                on-focusout="changeNombrePartida(dato)" [(disabled)]="!permisos" (onBlur)="changeNombrePartida(dato)" (input)="changeNombrePartida(dato)"
               />
             </div>
             <div *ngIf="dato.editable && col.field == 'descripcion'">
               <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion" type="text" maxLength="98" on-focusout="changeDescripcion(dato)"
-                (onBlur)="changeDescripcion(dato)" [disabled]="!permisos" (input)="changeDescripcion(dato)" />
+                (onBlur)="changeDescripcion(dato)" [(disabled)]="!permisos" (input)="changeDescripcion(dato)" />
             </div>
           </td>
 
