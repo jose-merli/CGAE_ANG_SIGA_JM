@@ -3,14 +3,12 @@
     <i class="fa fa-square"></i>
     <p>SJSC
       <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.maestros' | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>Gestión Juzgados
+      <i class="pl-1 fa fa-angle-right"></i>{{ 'justiciaGratuita.maestros.gestionJuzgados' | translate }}
     </p>
   </div>
-  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <!-- <app-datos-generales-juzgado *ngSwitchCase="'generales'" [datos]="datos" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-juzgado>
-    <app-procedimientos-juzgado *ngSwitchCase="'procedimientos'" [datos]="datos" [modoEdicion]="modoEdicion"></app-procedimientos-juzgado> -->
-    <app-datos-generales-juzgado *ngSwitchCase="'generales'" [datos]="datos" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-juzgado>
-    <app-procedimientos-juzgado *ngSwitchCase="'procedimientos'" [datos]="datos" [modoEdicion]="modoEdicion"></app-procedimientos-juzgado>
+  <div>
+    <app-datos-generales-juzgado [datos]="datos" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-juzgado>
+    <app-procedimientos-juzgado [datos]="datos" [modoEdicion]="modoEdicion"></app-procedimientos-juzgado>
   </div>
 </div>
 <div class="mt-3 text-right main-button ">

@@ -683,6 +683,16 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "funcamentosCalificacion",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fundamentosResolucion",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: "partidas",
     // component: PartidasPresupuestarias,
     loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
@@ -716,7 +726,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoPrisiones",
-    component: MantenimientoPrisionesComponent,
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
   {

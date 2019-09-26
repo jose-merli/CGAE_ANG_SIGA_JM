@@ -158,4 +158,14 @@ export class CommonsService {
 
   }
 
+  openOutlook(correo) {
+
+    let EMAIL_REGEX = /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
+    if (correo != undefined && correo != "" && EMAIL_REGEX.test(correo)) {
+      let href = "mailto:" + correo;
+      window.open(href, "_blank");
+    }
+
+  }
+
 }

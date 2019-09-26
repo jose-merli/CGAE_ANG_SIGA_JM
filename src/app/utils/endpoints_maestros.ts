@@ -42,11 +42,26 @@ export let endpoints_maestros: any = {
     gestionCostesFijos_activateCostesFijos: "maestros/gestionCostesFijos/activateCostesFijos",
     gestionCostesFijos_updateCostesFijos: "maestros/gestionCostesFijos/updateCostesFijos",
 
+    gestionFundamentosResolucion_searchFundamentosResolucion: "maestros/gestionFundamentosResolucion/searchFundamentosResolucion",
+    gestionFundamentosResolucion_deleteFundamentosResolucion: "maestros/gestionFundamentosResolucion/deleteFundamentosResolucion",
+    gestionFundamentosResolucion_activateFundamentosResolucion: "maestros/gestionFundamentosResolucion/activateFundamentosResolucion",
+    gestionFundamentosResolucion_getResoluciones: "maestros/gestionFundamentosResolucion/getResoluciones",
+    gestionFundamentosResolucion_createFundamentoResolucion: "maestros/gestionFundamentosResolucion/createFundamentoResolucion",
+    gestionFundamentosResolucion_updateFundamentoResolucion: "maestros/gestionFundamentosResolucion/updateFundamentoResolucion",
+
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
     modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
 
     gestionPartidasPres_searchPartidasPres: "maestros/gestionPartidasPres/searchPartidasPres",
     gestionPartidasPres_eliminatePartidasPres: "maestros/gestionPartidasPres/eliminatePartidasPres",
     gestionPartidasPres_updatePartidasPres: "maestros/gestionPartidasPres/updatePartidasPres",
-    gestionPartidasPres_createPartidasPres: "maestros/gestionPartidasPres/createPartidasPres"
+    gestionPartidasPres_createPartidasPres: "maestros/gestionPartidasPres/createPartidasPres",
+
+    busquedaPrisiones_searchPrisiones: "maestros/busquedaPrisiones/searchPrisiones",
+    busquedaPrisiones_provinces: "maestros/busquedaPrisiones/provinces",
+    busquedaPrisiones_population: "maestros/busquedaPrisiones/population",
+    busquedaPrisiones_deletePrisiones: "maestros/busquedaPrisiones/deletePrisiones",
+    busquedaPrisiones_activatePrisiones: "maestros/busquedaPrisiones/activatePrisiones",
+    gestionPrisiones_createPrision: "maestros/gestionPrisiones/createPrision",
+    gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
 }

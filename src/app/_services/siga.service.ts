@@ -699,6 +699,16 @@ export class SigaServices {
     plantillasDoc_plantillas_borrar: "plantillasDoc/borrar",
     plantillasDoc_descargarPlantilla: "plantillasDoc/descargarPlantilla",
 
+
+
+    //Fundamentos calificacion
+    busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
+    busquedaFundamentosCalificacion_searchFundamentos: "maestros/busquedaFundamentosCalificacion/searchFundamentos",
+    fundamentosCalificacion_deleteFundamentoCalificacion: "maestros/busquedaFundamentosCalificacion/deleteFundamentos",
+    busquedaFundamentosCalificacion_activateFundamentos: "maestros/busquedaFundamentosCalificacion/activateFundamentos",
+    busquedaFundamentosCalificacion_createFundamentos: "maestros/busquedaFundamentosCalificacion/createFundamento",
+    busquedaFundamentosCalificacion_updateFundamento: "maestros/busquedaFundamentosCalificacion/updateFundamentoCalificacion",
+
     //Diálogo comunicación
     dialogo_claseComunicaciones: "dialogoComunicacion/clasesComunicacion",
     dialogo_claseComunicacion: "dialogoComunicacion/claseComunicacion",

@@ -1,7 +1,7 @@
-import { Component, OnInit, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, Output, EventEmitter, Input } from '@angular/core';
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { TranslateService } from '../../../../../commons/translate';
-import { Router } from '../../../../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { JuzgadoItem } from '../../../../../models/sjcs/JuzgadoItem';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -23,6 +23,8 @@ export class FiltroJuzgadosComponent implements OnInit {
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones: any;
 
+  @Input() permisoEscritura;
+
   comboProvincias = [];
   comboPoblacion = [];
 
@@ -34,6 +36,10 @@ export class FiltroJuzgadosComponent implements OnInit {
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
 
     this.getComboProvincias();
 
@@ -82,7 +88,7 @@ export class FiltroJuzgadosComponent implements OnInit {
         this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
       }
     } else {
       this.comboPoblacion = [];
@@ -119,7 +125,7 @@ export class FiltroJuzgadosComponent implements OnInit {
 
   }
 
-  newJudge() {
+  newCourt() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionJuzgados"]);
   }

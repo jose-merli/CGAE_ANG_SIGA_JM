@@ -143,7 +143,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
         this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
       }
     } else {
       this.comboPoblacion = [];
@@ -212,7 +212,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -254,7 +254,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   disabledSave() {
     if (!this.historico && (this.body.nombre != "" && this.body.nombre != undefined && this.body.idProvincia != undefined &&
       this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && this.emailValido && this.tlf1Valido
-      && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura) {
+      && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;
