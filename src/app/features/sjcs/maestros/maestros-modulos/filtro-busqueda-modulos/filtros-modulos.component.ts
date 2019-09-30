@@ -1,17 +1,19 @@
 import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
+// import { TablaBusquedaModulosComponent } from '../tabla-busqueda-modulos/tabla-busqueda-modulos.component';
+import { MaestrosModulosComponent } from '../busqueda-modulosybasesdecompensacion.component';
 import { TranslateService } from '../../../../../commons/translate';
-import { PartidasItems } from '../../../../../models/sjcs/PartidasItems';
+import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-partidasPresupuestarias',
-  templateUrl: './partidasPresupuestarias.component.html',
-  styleUrls: ['./partidasPresupuestarias.component.scss']
+  selector: 'app-filtros-modulos',
+  templateUrl: './filtros-modulos.component.html',
+  styleUrls: ['./filtros-modulos.component.scss']
 })
-export class PartidasPresupuestarias implements OnInit {
+export class FiltrosModulosComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
@@ -19,8 +21,9 @@ export class PartidasPresupuestarias implements OnInit {
   // zona:string;
   // partidoJudicial:string;
   msgs: any[] = [];
-  filtros: PartidasItems = new PartidasItems();
+  filtros: ModulosItem = new ModulosItem();
   jurisdicciones: any[] = [];
+  @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -37,15 +40,15 @@ export class PartidasPresupuestarias implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
+      if (this.filtros.nombre != undefined || this.filtros.codigo != undefined) {
+        this.isBuscar();
+      }
     }
-    this.filtros.descripciontemp = undefined;
-    this.filtros.nombrepartidatemp = undefined;
   }
 
   newModulo() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/fichaGrupomodulos"]);
+    this.router.navigate(["/gestionModulos"]);
   }
 
   onHideDatosGenerales() {
@@ -54,30 +57,19 @@ export class PartidasPresupuestarias implements OnInit {
 
   isBuscar() {
     this.persistenceService.setFiltros(this.filtros);
-    if ((this.filtros.nombrepartida == undefined || this.filtros.nombrepartida == "" ||
-      this.filtros.nombrepartida.trim().length < 3) && (this.filtros.descripcion == undefined || this.filtros.descripcion == ""
-        || this.filtros.descripcion.trim().length < 3)) {
+    if ((this.filtros.nombre == undefined || this.filtros.nombre == "" ||
+      this.filtros.nombre.trim().length < 3) && (this.filtros.codigo == undefined || this.filtros.codigo == ""
+        || this.filtros.codigo.trim().length < 3)) {
       this.showSearchIncorrect();
     } else {
       this.buscar = true;
       this.filtros.historico = false;
-      this.filtros.nombrepartidatemp = this.filtros.nombrepartida;
-      this.filtros.descripciontemp = this.filtros.descripcion;
-      if (this.filtros.nombrepartidatemp != this.filtros.nombrepartida) {
-        this.filtros.nombrepartidatemp = this.filtros.nombrepartida;
-      }
-      if (this.filtros.descripciontemp != this.filtros.descripcion) {
-        this.filtros.descripciontemp = this.filtros.descripcion;
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+        this.filtros.nombre = this.filtros.nombre.trim();
       }
 
-      if (this.filtros.nombrepartidatemp != undefined && this.filtros.nombrepartidatemp != null) {
-        this.filtros.nombrepartidatemp = this.filtros.nombrepartidatemp.trim();
-        // this.filtros.nombrepartida = this.filtros.nombrepartida.trim();
-      }
-
-      if (this.filtros.descripciontemp != undefined && this.filtros.descripciontemp != null) {
-        this.filtros.descripciontemp = this.filtros.descripciontemp.trim();
-        // this.filtros.descripcion = this.filtros.descripcion.trim();
+      if (this.filtros.codigo != undefined && this.filtros.codigo != null) {
+        this.filtros.codigo = this.filtros.codigo.trim();
       }
 
       this.busqueda.emit(false);
@@ -96,8 +88,7 @@ export class PartidasPresupuestarias implements OnInit {
   }
 
   clearFilters() {
-    this.filtros.nombrepartida = "";
-    this.filtros.descripcion = "";
+    this.filtros = new ModulosItem();
   }
 
   //búsqueda con enter

@@ -28,7 +28,6 @@ export class TablaPartidasComponent implements OnInit {
 
   updatePartidasPres = [];
 
-  permisos: boolean = false;
   body;
 
   selectedItem: number = 10;
@@ -48,6 +47,8 @@ export class TablaPartidasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
+
+  @Input() permisos;
   //Combo partidos judiciales
   @Input() comboPJ;
 
@@ -67,11 +68,6 @@ export class TablaPartidasComponent implements OnInit {
     this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

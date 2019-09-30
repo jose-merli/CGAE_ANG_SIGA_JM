@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
+            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Acreditaciones'|translate}}</label>
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <div class="img-colegiado">
           <i class="fas fa-align-left icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
+        <label class="title-ficha">{{'menu.justiciaGratuita.maestros.Acreditaciones'|translate}}</label>
         <i class="fa fa-angle-down ml-auto"></i>
       </div>
       <div *ngIf="!modoEdicion && !showTarjeta" class="form-row">
@@ -30,7 +30,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
+            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Acreditaciones'|translate}}</label>
           </div>
         </div>
       </div>
@@ -38,7 +38,7 @@
         <div class="img-colegiado">
           <i class="fas fa-align-left icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
+        <label class="title-ficha">{{'menu.justiciaGratuita.maestros.Acreditaciones'|translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -70,33 +70,58 @@
 
             <td class="text-center" *ngFor="let col of columns">
 
-              <div *ngIf="col.field == 'jurisdicciones'">
-                <!-- <p-multiSelect #multiSelectPJ *ngIf="nuevo || (!nuevo && !seleccion)" defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal"
-                  [options]="comboJurisdicciones" optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll"
-                  [panelStyle]="{ width: '100%' }" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato)"></p-multiSelect> -->
+              <div *ngIf="col.field == 'idAcreditacion'">
+                <p-dropdown *ngIf="!dato.acreditacionNueva" disabled class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [options]="comboAcreditaciones" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                <p-dropdown *ngIf="dato.acreditacionNueva" class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [options]="comboAcreditacionesNew" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
 
-                <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal" [options]="comboJurisdicciones"
-                  optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
-                  [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato)"></p-multiSelect>
               </div>
 
-              <div *ngIf="col.field == 'nombreMateria'">
-                <span *ngIf="disableAll || ( !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)) || selectMultiple)">
-                  {{ dato[col.field] }} </span>
+              <div *ngIf="col.field == 'porcentaje'">
+                <span *ngIf="disableAll || ( !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple)">
+                  {{ dato[col.field] }} % </span>
 
-                <input *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)))"
-                  type="text" class="form-control paddingInput" [(ngModel)]="dato.nombreMateria" name="nombreMateria" type="text"
-                  on-focusout="validateArea($event)" (input)="validateArea($event)" maxLength="60" />
+                <input *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)))"
+                  class="form-control paddingInput" [(ngModel)]="dato.porcentaje" max="100" name="porcentaje" type="number"
+                  on-focusout="validateAcreditacion($event)" (input)="validateAcreditacion($event)" maxLength="3" />
               </div>
 
-              <div *ngIf="col.field == 'contenido'">
-                <span *ngIf="disableAll || !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)) || selectMultiple">
+              <div *ngIf="col.field == 'nig_numprocedimiento'">
+                <span *ngIf="disableAll || (dato.nigProcedimiento && (!((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple))">
+                  ✔
+                </span>
+                <span *ngIf="disableAll || (!dato.nigProcedimiento && (!((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple))">
+                  ❌
+                </span>
+                <p-checkbox *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
+                  [disabled]="disableAll" (onChange)="validateAcreditacion($event)" [(ngModel)]="dato.nigProcedimiento" binary="true"
+                  name="nig_numprocedimiento"></p-checkbox>
+
+                <!-- <inputa *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
+                  type="text" class="form-control paddingInput" [(ngModel)]="dato.nigProcedimiento" name="nig_numprocedimiento"
+                  type="text" on-focusout="validateAcreditacion($event)" (input)="validateAcreditacion($event)" maxLength="3900"
+                /> -->
+              </div>
+
+              <div *ngIf="col.field == 'codigoext'">
+                <span *ngIf="disableAll || !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple">
                   {{ dato[col.field] }}
                 </span>
 
-                <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text"
-                  class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="validateArea($event)"
-                  (input)="validateArea($event)" maxLength="3900" />
+                <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
+                  type="text" class="form-control paddingInput" [(ngModel)]="dato.codigoext" name="codigoext" type="text" on-focusout="validateAcreditacion($event)"
+                  (input)="validateAcreditacion($event)" maxLength="3900" />
+              </div>
+
+              <div *ngIf="col.field == 'codSubTarifa'">
+                <span *ngIf="disableAll || !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple">
+                  {{ dato[col.field] }}
+                </span>
+
+                <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
+                  type="text" class="form-control paddingInput" [(ngModel)]="dato.codSubTarifa" name="codSubTarifa" type="text"
+                  on-focusout="validateAcreditacion($event)" (input)="validateAcreditacion($event)" maxLength="3900" />
               </div>
             </td>
 
@@ -135,12 +160,15 @@
       <div class="text-right main-button">
         <button [disabled]="disableAll || ((!selectMultiple && !selectAll) || nuevo) || selectedDatos == undefined || !selectedDatos.length > 0"
           (click)="delete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button [disabled]="disableAll || (updateAreas.length == 0 && !nuevo)" (click)="rest()" pButton type="button" icon="fa fa-undo"
+
+        <button [disabled]="disableAll" (click)="rest(); selectAll=false; selectMultiple = false" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
         <button pButton [disabled]="disableAll || disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button pButton [disabled]="disableAll || selectMultiple || selectAll || nuevo" (click)="newMateria()" type="button" icon="fa fa-plus"
-          iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+
+        <button pButton [disabled]="disableAll || selectMultiple || selectAll || nuevo" (click)="newAcreditacion()" type="button"
+          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
     </div>

@@ -1,19 +1,19 @@
 import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
-// import { TablaBusquedaModulosComponent } from '../tabla-busqueda-modulos/tabla-busqueda-modulos.component';
-import { MaestrosModulosComponent } from '../maestros-modulos.component';
+// import { TablaBusquedadocumentacionejgComponent } from '../tabla-busqueda-documentacionejg/tabla-busqueda-documentacionejg.component';
+import { DocumentacionEJGComponent } from '../documentacion-ejg.component';
 import { TranslateService } from '../../../../../commons/translate';
-import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
+import { DocumentacionEjgItem } from '../../../../../models/sjcs/DocumentacionEjgItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-busqueda-modulosybasesdecompensacion',
-  templateUrl: './busqueda-modulosybasesdecompensacion.component.html',
-  styleUrls: ['./busqueda-modulosybasesdecompensacion.component.scss']
+  selector: 'app-filtros-documentacionejg',
+  templateUrl: './filtros-documentacionejg.component.html',
+  styleUrls: ['./filtros-documentacionejg.component.scss']
 })
-export class BusquedaModulosYBasesDeCompensacion implements OnInit {
+export class FiltrosdocumentacionejgComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
@@ -21,9 +21,9 @@ export class BusquedaModulosYBasesDeCompensacion implements OnInit {
   // zona:string;
   // partidoJudicial:string;
   msgs: any[] = [];
-  filtros: ModulosItem = new ModulosItem();
+  filtros: DocumentacionEjgItem = new DocumentacionEjgItem();
   jurisdicciones: any[] = [];
-  permisos: boolean = false;
+  @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -34,24 +34,21 @@ export class BusquedaModulosYBasesDeCompensacion implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
+      if (this.filtros.abreviaturaDoc != undefined || this.filtros.descripcionDoc != undefined || this.filtros.abreviaturaTipoDoc != undefined || this.filtros.descripcionTipoDoc != undefined) {
+        this.isBuscar();
+      }
     }
   }
 
-  newModulo() {
+  newDoc() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/fichaGrupomodulos"]);
+    this.router.navigate(["/gestiondocumentacionejg"]);
   }
 
   onHideDatosGenerales() {
@@ -60,21 +57,27 @@ export class BusquedaModulosYBasesDeCompensacion implements OnInit {
 
   isBuscar() {
     this.persistenceService.setFiltros(this.filtros);
-    if ((this.filtros.nombre == undefined || this.filtros.nombre == "" ||
-      this.filtros.nombre.trim().length < 3) && (this.filtros.codigo == undefined || this.filtros.codigo == ""
-        || this.filtros.codigo.trim().length < 3)) {
+    if ((this.filtros.abreviaturaDoc == undefined || this.filtros.abreviaturaDoc == "" || this.filtros.abreviaturaDoc.trim().length < 3)
+      && (this.filtros.abreviaturaTipoDoc == undefined || this.filtros.abreviaturaTipoDoc == "" || this.filtros.abreviaturaTipoDoc.trim().length < 3)
+      && (this.filtros.descripcionDoc == undefined || this.filtros.descripcionDoc == "" || this.filtros.descripcionDoc.trim().length < 3)
+      && (this.filtros.descripcionTipoDoc == undefined || this.filtros.descripcionTipoDoc == "" || this.filtros.descripcionTipoDoc.trim().length < 3)
+    ) {
       this.showSearchIncorrect();
     } else {
       this.buscar = true;
       this.filtros.historico = false;
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-        this.filtros.nombre = this.filtros.nombre.trim();
+      if (this.filtros.abreviaturaDoc != undefined && this.filtros.abreviaturaDoc != null) {
+        this.filtros.abreviaturaDoc = this.filtros.abreviaturaDoc.trim();
       }
-
-      if (this.filtros.codigo != undefined && this.filtros.codigo != null) {
-        this.filtros.codigo = this.filtros.codigo.trim();
+      if (this.filtros.abreviaturaTipoDoc != undefined && this.filtros.abreviaturaTipoDoc != null) {
+        this.filtros.abreviaturaTipoDoc = this.filtros.abreviaturaTipoDoc.trim();
       }
-
+      if (this.filtros.descripcionDoc != undefined && this.filtros.descripcionDoc != null) {
+        this.filtros.descripcionDoc = this.filtros.descripcionDoc.trim();
+      }
+      if (this.filtros.descripcionTipoDoc != undefined && this.filtros.descripcionTipoDoc != null) {
+        this.filtros.descripcionTipoDoc = this.filtros.descripcionTipoDoc.trim();
+      }
       this.busqueda.emit(false);
     }
   }
@@ -91,7 +94,7 @@ export class BusquedaModulosYBasesDeCompensacion implements OnInit {
   }
 
   clearFilters() {
-    this.filtros = new ModulosItem();
+    this.filtros = new DocumentacionEjgItem();
   }
 
   //búsqueda con enter

@@ -17,12 +17,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { TableModule } from 'primeng/table';
-import { FiltrosModulosComponent } from './filtro-busqueda-modulos/filtros-modulos.component';
-import { TablaModulosComponent } from './tabla-modulos/tabla-modulos.component';
-import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
-import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
-import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
-import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
+import { FiltrosdocumentacionejgComponent } from './filtro-busqueda-ejg/filtros-documentacionejg.component';
+import { DocumentacionEJGComponent } from './documentacion-ejg.component';
+// import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
+// import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
+// import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
+// import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
@@ -51,12 +51,13 @@ import { PartidasComponent } from '../partidas/partidas.component';
 
   ],
   declarations: [
-    FiltrosModulosComponent,
-    MaestrosModulosComponent,
-    TablaModulosComponent,
-    GestionModulosYBasesComponent,
-    EdicionModulosComponent,
-    TablaAcreditacionesComponent
+    FiltrosdocumentacionejgComponent,
+    DocumentacionEJGComponent
+    // MaestrosModulosComponent,
+    // TablaModulosComponent,
+    // GestionModulosYBasesComponent, 
+    // EdicionModulosComponent,
+    // TablaAcreditacionesComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

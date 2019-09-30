@@ -7,9 +7,10 @@ import { BusquedaJuzgadosComponent } from './juzgados/busqueda-juzgados.componen
 import { GestionJuzgadosComponent } from './juzgados/gestion-juzgados/gestion-juzgados.component';
 import { BusquedaAreasComponent } from './areas/busqueda-areas.component';
 import { GestionAreasComponent } from './areas/edicion-areas/gestion-areas.component';
+import { MaestrosModulosComponent } from './maestros-modulos/busqueda-modulosybasesdecompensacion.component';
+import { GestionModulosYBasesComponent } from './maestros-modulos/edicion-modulos/gestion-modulosybasesdecompensacion.component';
 import { FundamentosCalificacionComponent } from './fundamentos-calificacion/fundamentos-calificacion.component';
 import { GestionFundamentosCalificacionComponent } from './fundamentos-calificacion/gestion-fundamentos-calificacion/gestion-fundamentos-calificacion.component';
-import { MaestrosModulosComponent } from './maestros-modulos/maestros-modulos.component';
 import { GestionCostesfijosComponent } from './costes-fijos/gestion-costesfijos/gestion-costesfijos.component';
 import { PartidasComponent } from './partidas/partidas.component';
 import { BusquedaFundamentosresolucionComponent } from './fundamentos-resolucion/busqueda-fundamentosresolucion/busqueda-fundamentosresolucion.component';
@@ -81,6 +82,10 @@ const routesMaestros: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "gestionModulos",
+    component: GestionModulosYBasesComponent,
+    canActivate: [AuthGuard]
+  }, {
     path: "partidas",
     component: PartidasComponent,
     canActivate: [AuthGuard]
