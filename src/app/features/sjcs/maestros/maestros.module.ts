@@ -14,6 +14,8 @@ import { PrisionesModule } from './prisiones/prisiones.module';
 import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
 import { GestionPartidasComponent } from './partidas/partidas.module';
 import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
+import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
+import { ComisariasModule } from './comisarias/comisarias.module';
 
 @NgModule({
         declarations: [],
@@ -29,7 +31,8 @@ import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-part
                 GestionModulosModule,
                 PrisionesModule,
                 FundamentosCalificacionModule,
-                GestionPartidasComponent
+                GestionPartidasComponent,
+                ComisariasModule
         ],
 
         providers: []

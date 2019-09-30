@@ -33,6 +33,10 @@ const routesSjcs: Routes = [
   {
     path: "mantenimientoPrisiones",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "comisarias",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   }
 ];
 

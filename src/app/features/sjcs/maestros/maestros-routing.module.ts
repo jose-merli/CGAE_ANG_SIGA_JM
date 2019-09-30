@@ -16,6 +16,8 @@ import { BusquedaFundamentosresolucionComponent } from './fundamentos-resolucion
 import { GestionFundamentosresolucionComponent } from './fundamentos-resolucion/busqueda-fundamentosresolucion/gestion-fundamentosresolucion/gestion-fundamentosresolucion.component';
 import { BusquedaPrisionesComponent } from './prisiones/busqueda-prisiones/busqueda-prisiones.component';
 import { GestionPrisionesComponent } from './prisiones/gestion-prisiones/gestion-prisiones.component';
+import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
+import { GestionComisariasComponent } from './comisarias/comisarias/gestion-comisarias/gestion-comisarias.component';
 
 const routesMaestros: Routes = [
   {
@@ -86,6 +88,11 @@ const routesMaestros: Routes = [
   {
     path: "mantenimientoPrisiones",
     component: BusquedaPrisionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionComisarias",
+    component: GestionComisariasComponent,
     canActivate: [AuthGuard]
   },
   {
