@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { AuthenticationService } from "../../_services/authentication.service";
 import { SigaServices } from "../../_services/siga.service";
@@ -7,16 +7,10 @@ import { LoginCombo } from "./login-develop.combo";
 import { ListboxModule } from "primeng/listbox";
 import { ButtonModule } from "primeng/button";
 
-export enum KEY_CODE {
-  ENTER = 13
-}
 @Component({
   selector: "app-login-develop",
   templateUrl: "./login-develop.component.html",
-  styleUrls: ["./login-develop.component.scss"],
-  host: {
-    "(document:keypress)": "onKeyPress($event)"
-  },
+  styleUrls: ["./login-develop.component.scss"]
 })
 export class LoginDevelopComponent implements OnInit {
   form: FormGroup;
@@ -49,26 +43,23 @@ export class LoginDevelopComponent implements OnInit {
     sessionStorage.removeItem("authenticated");
     this.ocultar = true;
     this.progressSpinner = true;
-    // this.sigaServices.getBackend("validaInstitucion").subscribe(
-    //   response => {
-    //     this.progressSpinner = false;
-    //     this.ocultar = true;
-    //   },
-    //   error => {
-    //     console.log("ERROR", error);
-    //     if (error.status == 403) {
-    //       let codError = error.status;
+    this.sigaServices.getBackend("validaInstitucion").subscribe(
+      response => {
+        this.progressSpinner = false;
+        this.ocultar = true;
+      },
+      error => {
+        console.log("ERROR", error);
+        if (error.status == 403) {
+          let codError = error.status;
 
-    //       sessionStorage.setItem("codError", codError);
-    //       sessionStorage.setItem("descError", "Imposible validar el certificado");
-    //       this.router.navigate(["/errorAcceso"]);
-    //       this.progressSpinner = false;
-    //     }
-    //   }
-    // );
-    this.progressSpinner = false;
-    this.ocultar = true;
-
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Imposible validar el certificado");
+          this.router.navigate(["/errorAcceso"]);
+          this.progressSpinner = false;
+        }
+      }
+    );
     this.sigaServices.getBackend("instituciones").subscribe(n => {
       this.instituciones = n.combooItems;
 
@@ -141,12 +132,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     );
   }
-  @HostListener("document:keypress", ["$event"])
-  onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER) {
-      this.submit();
-    }
-  }
+
   onChange(newValue) {
     this.tmpLoginPerfil = ["ADG"];
     var ir = null;
@@ -181,4 +167,3 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 }
-
