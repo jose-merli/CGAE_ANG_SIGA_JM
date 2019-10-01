@@ -8,5 +8,6 @@ export const procesos_maestros: any = {
     fundamentoResolucion: "917",
     modulo: "91D",
     prisiones: "91G",
-    fundamentoCalificacion: "921"
+    fundamentoCalificacion: "921",
+    partidaJudicial: "91C"
 }
