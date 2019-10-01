@@ -16,7 +16,7 @@ export class EdicionAreasComponent implements OnInit {
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   msgs;
-
+  showTarjeta: boolean = true;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   //Resultados de la busqueda
@@ -138,4 +138,9 @@ export class EdicionAreasComponent implements OnInit {
       return true;
     }
   }
+
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
+  }
+
 }

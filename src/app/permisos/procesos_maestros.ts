@@ -9,5 +9,6 @@ export const procesos_maestros: any = {
     modulo: "91D",
     prisiones: "91G",
     fundamentoCalificacion: "921",
-    partidaJudicial: "91C"
+    partidaJudicial: "91C",
+    comisarias: "91H"
 }

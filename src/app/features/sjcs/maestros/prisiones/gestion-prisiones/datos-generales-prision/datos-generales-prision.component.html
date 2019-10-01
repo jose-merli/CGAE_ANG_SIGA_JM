@@ -53,13 +53,22 @@
                 pInputText>
             </div>
 
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"censo.ws.literal.codigopostal" | translate}} (*)
+              </label>
+              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+                [disabled]="historico || !permisoEscritura" pInputText>
+            </div>
+
             <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{"censo.datosDireccion.literal.provincia" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [disabled]="!permisoEscritura || historico" [showClear]="true">
+                disabled="true" [showClear]="true">
               </p-dropdown>
             </div>
 
@@ -74,14 +83,6 @@
                 [showClear]="true">
               </p-dropdown>
 
-            </div>
-
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.ws.literal.codigopostal" | translate}}
-              </label>
-              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" [disabled]="historico || !permisoEscritura"
-                pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -122,23 +123,30 @@
               </label>
               <div *ngIf="edicionEmail" class="row">
                 <div class="col-10 mr-4 pr-0">
-                  <input type="text" pInputText [(ngModel)]="body.email" (input)="changeEmail()" style="width: 100%" />
+                  <input type="text" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
+                    style="width: 100%" />
                 </div>
                 <div>
                   <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn button-edit" [disabled]="!emailValido"></button>
                 </div>
               </div>
-              <div *ngIf="!emailValido">
+              <div *ngIf="avisoMail">
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
               </div>
               <div *ngIf="!edicionEmail" class="row">
-                <div class="col-10 mr-4 pr-0">
+                <div class="col-6 mr-4 pr-0">
                   <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
                 </div>
                 <div>
                   <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>
                 </div>
               </div>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6" id="divMovil">
+              <label id="labelMovil">{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate}}</label>
+              <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
+
             </div>
           </div>
         </div>

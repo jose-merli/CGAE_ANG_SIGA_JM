@@ -17,5 +17,6 @@ export class PrisionItem {
   email: string;
   nombrePoblacion: string;
   nombreProvincia: string;
+  visibleMovil;
   constructor() { }
 }

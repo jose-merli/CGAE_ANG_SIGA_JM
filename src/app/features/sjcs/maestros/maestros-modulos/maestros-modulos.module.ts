@@ -17,10 +17,14 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { TableModule } from 'primeng/table';
-import { BusquedaModulosYBasesDeCompensacion } from './filtro-busqueda-modulos/busqueda-modulosybasesdecompensacion.component';
-import { TablaModulosComponent } from './gestion-modulos/gestion-modulosybasesdecompensacion.component';
+import { FiltrosModulosComponent } from './filtro-busqueda-modulos/filtros-modulos.component';
+import { TablaModulosComponent } from './tabla-modulos/tabla-modulos.component';
+import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
+import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
+import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
+import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
+import { FechaModule } from '../../../../commons/fecha/fecha.module';
 
-import { MaestrosModulosComponent } from './maestros-modulos.component';
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from '../partidas/partidas.component';
@@ -41,15 +45,18 @@ import { PartidasComponent } from '../partidas/partidas.component';
     PipeTranslationModule,
     MenubarModule,
     TableModule,
-    MultiSelectModule
-
+    MultiSelectModule,
+    FechaModule
     // FichaGrupoZonaModule
 
   ],
   declarations: [
-    BusquedaModulosYBasesDeCompensacion,
+    FiltrosModulosComponent,
     MaestrosModulosComponent,
     TablaModulosComponent,
+    GestionModulosYBasesComponent,
+    EdicionModulosComponent,
+    TablaAcreditacionesComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

@@ -6,6 +6,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
+import { TablaPrisionesComponent } from './tabla-prisiones/tabla-prisiones.component';
 
 @Component({
   selector: 'app-busqueda-prisiones',
@@ -22,6 +23,7 @@ export class BusquedaPrisionesComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @ViewChild(FiltroPrisionesComponent) filtros;
+  @ViewChild(TablaPrisionesComponent) tabla;
 
   //comboPartidosJudiciales
   comboPJ;
@@ -61,22 +63,24 @@ export class BusquedaPrisionesComponent implements OnInit {
 
 
   search(event) {
-    this.filtros.filtros.historico = event;
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-
-    this.sigaServices.post("busquedaPrisiones_searchPrisiones", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaPrisiones_searchPrisiones", this.filtros.filtroAux).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).prisionItems;
         this.buscar = true;
         this.progressSpinner = false;
-
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
-      }
-    );
+      });
   }
 
   showMessage(event) {

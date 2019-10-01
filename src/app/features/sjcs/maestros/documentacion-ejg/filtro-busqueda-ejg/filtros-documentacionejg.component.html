@@ -1,0 +1,52 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros' | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.procedimientos' | translate}}
+  </p>
+</div>
+<div class="card">
+  <div class="card-body">
+    <p class="title-module"> {{'general.message.datos.generales' | translate}}
+      <!-- <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i> -->
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div class="module vista-simple">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>abreviaturaDoc
+          <input type="text" name="abreviaturaDoc" value="" class="box" class="form-control" [(ngModel)]='filtros.abreviaturaDoc' pInputText
+            maxLength="200" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'general.boton.code' | translate}}</label>abreviaturaTipoDoc
+          <input type="text" name="abreviaturaTipoDoc" value="" class="box" class="form-control" [(ngModel)]='filtros.abreviaturaTipoDoc'
+            pInputText maxLength="200" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>descripcionDoc
+          <input type="text" name="descripcionDoc" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionDoc' pInputText
+            maxLength="200" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'general.boton.code' | translate}}</label>descripcionTipoDoc
+          <input type="text" name="descripcionTipoDoc" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcionTipoDoc'
+            pInputText maxLength="200" pInputText>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button (click)="newDoc()" [disabled]="!permisos" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
+    </div>
+  </div>
+</div>

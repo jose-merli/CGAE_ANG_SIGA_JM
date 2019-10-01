@@ -21,24 +21,31 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   msgs = [];
   historico: boolean = false;
 
+  provinciaSelecionada: string;
+
+
   body: PrisionItem;
   bodyInicial: PrisionItem;
   idPrision;
+  isDisabledProvincia: boolean = true;
 
   comboProvincias;
   comboPoblacion;
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones;
+  codigoPostalValido: boolean = true;
 
   permisoEscritura: boolean = true;
+  movilCheck: boolean = false
 
   visibleMovilValue: boolean = false;
   esDecanoValue: boolean = false;
   isCodigoEjisValue: boolean = false;
 
   progressSpinner: boolean = false;
+  avisoMail: boolean = false
 
-  emailValido: boolean = true;
+  emailValido: boolean = false;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
   faxValido: boolean = true;
@@ -64,7 +71,8 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     if (this.modoEdicion) {
       this.body = this.datos;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
+      if (this.datos.visibleMovil == "1")
+        this.movilCheck = true
       if (this.body.email != undefined && this.body.email != "") {
         this.edicionEmail = false;
       } else {
@@ -89,12 +97,19 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
 
-      if (this.persistenceService.getDatos().fechabaja != null) {
+      if (this.persistenceService.getDatos().fechaBaja != null) {
         this.historico = true;
       } else {
         this.historico = false;
       }
     }
+  }
+
+  cambiaMovil() {
+    if (this.movilCheck)
+      this.body.visibleMovil = 1
+    else
+      this.body.visibleMovil = 0
   }
 
   getComboProvincias() {
@@ -172,6 +187,38 @@ export class DatosGeneralesPrisionComponent implements OnInit {
       );
   }
 
+  onChangeCodigoPostal() {
+    if (
+      this.isValidCodigoPostal() &&
+      this.body.codigoPostal.length == 5
+    ) {
+      let value = this.body.codigoPostal.substring(0, 2);
+      this.provinciaSelecionada = value;
+      this.isDisabledPoblacion = false;
+      if (value != this.body.idProvincia) {
+        this.body.idProvincia = this.provinciaSelecionada;
+        this.body.idPoblacion = "";
+        this.body.nombrePoblacion = "";
+        this.comboPoblacion = [];
+        this.isDisabledProvincia = true;
+      }
+      this.codigoPostalValido = true;
+    } else {
+      this.codigoPostalValido = false;
+      this.body.idProvincia = "";
+
+    }
+  }
+
+
+  isValidCodigoPostal(): boolean {
+    return (
+      this.body.codigoPostal &&
+      typeof this.body.codigoPostal === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+    );
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -188,7 +235,8 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   callSaveService(url) {
-
+    if (this.body.visibleMovil == null)
+      this.body.visibleMovil = 0
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -227,6 +275,12 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.emailValido = false
+    this.edicionEmail = true
+    this.tlf1Valido = true
+    this.tlf2Valido = true
+    this.faxValido = true
+
   }
 
   editEmail() {
@@ -253,18 +307,28 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     });
   }
 
+  changeEmail() {
+    if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
+      this.emailValido = true
+      this.avisoMail = false
+    }
+    else {
+      this.emailValido = false
+      this.avisoMail = false
+
+      if (this.body.email != null && this.body.email != "")
+        this.avisoMail = true
+    }
+  }
+
   disabledSave() {
     if (!this.historico && (this.body.nombre != "" && this.body.nombre != undefined && this.body.idProvincia != undefined &&
-      this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && this.emailValido && this.tlf1Valido
+      this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && !this.avisoMail && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;
     }
-  }
-
-  changeEmail() {
-    this.emailValido = this.commonsServices.validateEmail(this.body.email);
   }
 
   changeTelefono1() {

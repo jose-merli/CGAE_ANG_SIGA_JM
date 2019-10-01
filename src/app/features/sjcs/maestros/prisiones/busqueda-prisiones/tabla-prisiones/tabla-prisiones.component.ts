@@ -63,16 +63,15 @@ export class TablaPrisionesComponent implements OnInit {
 
   searchHistorical() {
 
-    this.selectAll = false;
-    this.selectedDatos = [];
-    this.selectMultiple = false;
-
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
+    this.selectAll = false
+    if (this.selectMultiple) {
+      this.selectMultiple = false;
+    }
 
   }
-
 
   openTab(evento) {
 

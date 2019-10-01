@@ -2,8 +2,8 @@
 
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha">
-      <div *ngIf="!modoEdicion" class="form-row">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="!modoEdicion && showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fas fa-align-left icon-ficha"></i>
@@ -15,7 +15,26 @@
           </div>
         </div>
       </div>
-      <div *ngIf="modoEdicion" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="modoEdicion && showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-align-left icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
+        <i class="fa fa-angle-down ml-auto"></i>
+      </div>
+      <div *ngIf="!modoEdicion && !showTarjeta" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-align-left icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="modoEdicion && !showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fas fa-align-left icon-ficha"></i>
         </div>
@@ -24,7 +43,7 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="modoEdicion" class="px-0 card-body card-body-ficha">
+    <div [hidden]="!showTarjeta" *ngIf="modoEdicion" class="px-0 card-body card-body-ficha">
 
       <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="editAreas($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
@@ -77,7 +96,7 @@
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text"
                   class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="validateArea($event)"
-                  (input)="validateArea($event)" maxLength="60" />
+                  (input)="validateArea($event)" maxLength="3900" />
               </div>
             </td>
 
@@ -112,7 +131,7 @@
         </ng-template>
       </p-table>
     </div>
-    <div *ngIf="modoEdicion" class="card-footer">
+    <div [hidden]="!showTarjeta" *ngIf="modoEdicion" class="card-footer">
       <div class="text-right main-button">
         <button [disabled]="disableAll || ((!selectMultiple && !selectAll) || nuevo) || selectedDatos == undefined || !selectedDatos.length > 0"
           (click)="delete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>

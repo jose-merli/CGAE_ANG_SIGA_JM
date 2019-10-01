@@ -709,6 +709,14 @@ export class SigaServices {
     busquedaFundamentosCalificacion_createFundamentos: "maestros/busquedaFundamentosCalificacion/createFundamento",
     busquedaFundamentosCalificacion_updateFundamento: "maestros/busquedaFundamentosCalificacion/updateFundamentoCalificacion",
 
+    //Comisarias
+    busquedaComisarias_searchComisarias: "maestros/gestionComisarias/searchComisarias",
+    gestionComisarias_createComisaria: "maestros/gestionComisarias/createComisarias",
+    gestionComisarias_updateComisarias: "maestros/gestionComisarias/updateComisarias",
+    busquedaComisarias_deleteComisarias: "maestros/gestionComisarias/deleteComisarias",
+    busquedaComisarias_activateComisarias: "maestros/gestionComisarias/activateComisarias",
+    busquedaComisarias_provinces: "maestros/gestionComisarias/provinces",
+    busquedaCommisarias_poblacion: "maestros/gestionComisarias/population",
     //Diálogo comunicación
     dialogo_claseComunicaciones: "dialogoComunicacion/clasesComunicacion",
     dialogo_claseComunicacion: "dialogoComunicacion/claseComunicacion",

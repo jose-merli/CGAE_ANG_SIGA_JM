@@ -1,6 +1,7 @@
 export class ModulosItem {
   idInstitucion: string;
   nombre: string;
+  importe: string;
   codigo: string;
   fechabaja: string;
   historico: boolean;
@@ -12,9 +13,10 @@ export class ModulosItem {
   orden: string;
   codigoext: string;
   permitiraniadirletrado: string;
-  fechadesdevigor: string;
-  fechahastavigor: string;
+  fechadesdevigor: Date;
+  fechahastavigor: Date;
   observaciones: string;
-
+  complementoCheck: boolean;
+  permitiraniadirletradoCheck: boolean;
   constructor() { }
 }

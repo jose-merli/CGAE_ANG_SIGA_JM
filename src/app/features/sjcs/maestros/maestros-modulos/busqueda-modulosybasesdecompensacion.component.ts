@@ -1,18 +1,19 @@
 
 import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList } from '@angular/core';
-import { BusquedaModulosYBasesDeCompensacion } from './filtro-busqueda-modulos/busqueda-modulosybasesdecompensacion.component';
-import { TablaModulosComponent } from './gestion-modulos/gestion-modulosybasesdecompensacion.component';
+import { FiltrosModulosComponent } from './filtro-busqueda-modulos/filtros-modulos.component';
+import { TablaModulosComponent } from './tabla-modulos/tabla-modulos.component';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
+// import { FiltrosModulosComponent } from './tabla-busqueda-modulos/tabla-busqueda-modulos.component';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-maestros-modulos',
-  templateUrl: './maestros-modulos.component.html',
-  styleUrls: ['./maestros-modulos.component.scss']
+  selector: 'app-busqueda-modulosybasesdecompensacion',
+  templateUrl: './busqueda-modulosybasesdecompensacion.component.html',
+  styleUrls: ['./busqueda-modulosybasesdecompensacion.component.scss']
 })
 export class MaestrosModulosComponent implements OnInit, AfterViewInit {
 
@@ -27,7 +28,7 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
    ngAfterViewInit() en el que simplemente inicializamos la variable con el valor del atributo del hijo 
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
-  @ViewChild(BusquedaModulosYBasesDeCompensacion) filtros;
+  @ViewChild(FiltrosModulosComponent) filtros;
 
   //comboPartidosJudiciales
   msgs;

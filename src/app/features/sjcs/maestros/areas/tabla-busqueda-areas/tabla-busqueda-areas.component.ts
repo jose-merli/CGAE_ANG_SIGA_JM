@@ -87,7 +87,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -102,14 +102,21 @@ export class TablaBusquedaAreasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+    this.selectMultiple = false;
+
     if (this.selectAll === true) {
-      // this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+      } else {
+        this.selectedDatos = this.datos;
+      }
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+
   }
 
   searchAreas() {
@@ -161,6 +168,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
     if (this.permisos) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {

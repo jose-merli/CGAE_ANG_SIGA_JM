@@ -41,7 +41,7 @@ export class TablaMateriasComponent implements OnInit {
   nuevo: boolean = false;
   datosInicial = [];
   updateAreas = [];
-
+  showTarjeta: boolean = true;
   // selectedBefore;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
@@ -497,16 +497,14 @@ export class TablaMateriasComponent implements OnInit {
 
   onChangeSelectAll() {
     if (!this.disableAll) {
-
+      this.selectMultiple = false;
       if (this.selectAll) {
-        this.selectMultiple = true;
         this.selectedDatos = this.datos;
         this.numSelected = this.datos.length;
         this.selectionMode = "multiple";
       } else {
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.selectMultiple = false;
         this.selectionMode = "single";
       }
     } else {
@@ -516,7 +514,7 @@ export class TablaMateriasComponent implements OnInit {
 
   isSelectMultiple() {
     if (!this.disableAll) {
-
+      this.selectAll = false;
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
@@ -525,7 +523,6 @@ export class TablaMateriasComponent implements OnInit {
         this.selectionMode = "single";
 
       } else {
-        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "multiple";
@@ -552,6 +549,9 @@ export class TablaMateriasComponent implements OnInit {
     dato.overlayVisible = true;
   }
 
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
+  }
 }
 
 
