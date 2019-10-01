@@ -25,6 +25,9 @@ export class PersistenceService {
         return JSON.parse(data);
     }
 
+    clearFiltros() {
+        sessionStorage.removeItem(this.filtrosName);
+    }
     setFiltrosAux(data: any) {
         localStorage.setItem(this.filtrosAuxName, JSON.stringify(data));
     }
@@ -34,8 +37,8 @@ export class PersistenceService {
         return JSON.parse(data);
     }
 
-    clearFiltros() {
-        sessionStorage.removeItem(this.filtrosName);
+    clearFiltrosAux() {
+        sessionStorage.removeItem(this.filtrosAuxName);
     }
 
     setDatos(data: any) {
@@ -82,6 +85,7 @@ export class PersistenceService {
         this.clearHistorico();
         this.clearDatos();
         this.clearPermisos();
+        this.clearFiltrosAux();
     }
 
     notifyObtenerDatos(datos) {

@@ -18,15 +18,20 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  codigoPostalValido: boolean = true;
+
   openFicha: boolean = true;
   msgs = [];
   historico: boolean = false;
+  isDisabledProvincia: boolean = true;
 
   movilCheck: boolean = false
 
   body: ComisariaItem;
   bodyInicial: ComisariaItem;
   idComisaria;
+  provinciaSelecionada: string;
+
 
   comboProvincias;
   comboPoblacion;
@@ -246,10 +251,51 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
 
   }
 
+  onChangeCodigoPostal() {
+    if (
+      this.isValidCodigoPostal() &&
+      this.body.codigoPostal.length == 5
+    ) {
+      let value = this.body.codigoPostal.substring(0, 2);
+      this.provinciaSelecionada = value;
+      this.isDisabledPoblacion = false;
+      if (value != this.body.idProvincia) {
+        this.body.idProvincia = this.provinciaSelecionada;
+        this.body.idPoblacion = "";
+        this.body.nombrePoblacion = "";
+        this.comboPoblacion = [];
+        if (this.historico == true) {
+          this.isDisabledPoblacion = true;
+        } else {
+          this.isDisabledPoblacion = false;
+        }
+      }
+      this.codigoPostalValido = true;
+    } else {
+      this.codigoPostalValido = false;
+      this.isDisabledPoblacion = true;
+      this.provinciaSelecionada = "";
+
+    }
+  }
+
+  isValidCodigoPostal(): boolean {
+    return (
+      this.body.codigoPostal &&
+      typeof this.body.codigoPostal === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+    );
+  }
+
+
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.emailValido = false
     this.edicionEmail = true
+
+    this.tlf1Valido = true
+    this.tlf2Valido = true
+    this.faxValido = true
   }
 
   editEmail() {
@@ -293,6 +339,7 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
     }
     else {
       this.emailValido = false
+      this.avisoMail = false
       if (this.body.email != null && this.body.email != "")
         this.avisoMail = true
     }
