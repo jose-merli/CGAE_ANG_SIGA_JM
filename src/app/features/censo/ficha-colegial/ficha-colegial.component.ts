@@ -1309,7 +1309,7 @@ export class FichaColegialComponent implements OnInit {
       this.cargarImagen(this.idPersona);
       this.stringAComisiones();
       this.fechaNacimiento = this.generalBody.fechaNacimiento;
-      this.fechaAlta = this.generalBody.incorporacion;
+      this.fechaAlta = this.generalBody.fechaAlta;
     }
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {

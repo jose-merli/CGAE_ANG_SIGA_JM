@@ -3,7 +3,9 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  OnDestroy
+  OnDestroy,
+  ViewChildren,
+  AfterViewInit
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
@@ -29,7 +31,6 @@ export class AgendaComponent implements OnInit {
   listLecturaSelect;
   listAcceso;
   listAccesoSelect;
-  currentLang;
   lectura: boolean = true;
   acceso: boolean = true;
 
@@ -46,6 +47,7 @@ export class AgendaComponent implements OnInit {
   selectedCalendarios: any[];
   es: any;
   week: any;
+  allDayText: string;
 
   @ViewChild("calendario") calendarioSchedule;
 
@@ -59,6 +61,8 @@ export class AgendaComponent implements OnInit {
     this.listAccesoSelect = [];
     sessionStorage.setItem("isFormacionCalendar", "false");
 
+    this.getLenguage();
+
     this.options = {
       header: {
         left: "prev,next",
@@ -67,15 +71,40 @@ export class AgendaComponent implements OnInit {
       },
       editable: false,
       views: {
-        month: { buttonText: this.translateService.instant("menu.agenda.mes.literal") },
+        month: {
+          buttonText: this.translateService.instant("menu.agenda.mes.literal")
+        },
         agendaDay: {
           buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.dia")
         },
-        agendaWeek: { buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.semana") }
+        agendaWeek: {
+          buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.semana")
+        }
+      },
+      viewRender: function (view) {
+        console.log("rerer", this.es);
+        if (view.options.locale == 'ca_ES') {
+          this.allDayText = 'Tot<br/>el dia';
+        } else if (view.options.locale == 'gl_ES') {
+          this.allDayText = 'Todo<br/>o día';
+        } else if (view.options.locale == 'eu_ES') {
+          this.allDayText = 'Egun<br/>osoan';
+        } else if (view.options.locale == 'es') {
+          this.allDayText = 'Todo<br/>el día';
+        }
+
+        if (view.name == 'month') {
+          view.options.allDayText = '';
+          view.options.allDayHtml = '';
+        }
+
+        if (view.name == 'agendaWeek' || view.name == 'agendaDay') {
+          view.el[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].innerHTML = this.allDayText;
+        }
+
+        console.log("d", view);
       }
     }
-
-    this.getLenguage();
 
     this.calendarioSchedule.timezone = "local";
     this.events = [];
@@ -87,24 +116,29 @@ export class AgendaComponent implements OnInit {
   }
 
   getLenguage() {
+    //let allDayText = this.calendarioSchedule.el.nativeElement.querySelector('td.fc-axis.ui-widget-content').querySelector('span');
 
     this.sigaServices.get('usuario').subscribe((response) => {
-      this.currentLang = response.usuarioItem[0].idLenguaje;
+      let currentLang = response.usuarioItem[0].idLenguaje;
 
-      if (this.currentLang == 1) {
-        this.es = "es";
-      } else if (this.currentLang == 2) {
-        this.es = "ca_ES";
-      } else if (this.currentLang == 3) {
-        this.es = "eu_ES";
-      } else if (this.currentLang == 4) {
-        this.es = "gl_ES";
-      } else {
-        this.es = "es";
+      switch (currentLang) {
+        case "1":
+          this.es = "es";
+          break;
+        case "2":
+          this.es = "ca_ES";
+          break;
+        case "3":
+          this.es = "eu_ES";
+          break;
+        case "4":
+          this.es = "gl_ES";
+          break;
+        default:
+          this.es = "es";
+          break;
       }
-
     });
-
   }
 
   onClickCheckBox(calendario) {
@@ -140,6 +174,9 @@ export class AgendaComponent implements OnInit {
             }
           });
         }
+
+        let allDayText = this.calendarioSchedule.el.nativeElement.children[0].children[1].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].firstChild.children[0].innerTextHTML = "jol";
+        console.log("fweff", allDayText);
         this.progressSpinner = false;
       },
       err => {

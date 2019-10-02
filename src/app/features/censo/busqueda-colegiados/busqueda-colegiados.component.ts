@@ -245,6 +245,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           JSON.stringify(this.fechaNacimientoHastaSelect)
         );
       }
+
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
 
@@ -670,7 +671,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaNacimientoDesdeSelect = undefined;
     this.fechaNacimientoHastaSelect = undefined;
 
-    if(!this.deshabilitarCombCol){
+    if (!this.deshabilitarCombCol) {
       this.colegiosSeleccionados = [];
     }
   }
