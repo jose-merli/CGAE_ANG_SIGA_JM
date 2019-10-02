@@ -952,7 +952,7 @@ export class FichaColegialComponent implements OnInit {
       key == "regtel"
     ) {
 
-      if (this.bodyRegTel != null && this.bodyRegTel.length > 0 ) {
+      if (this.generalBody.identificadords != null || (this.bodyRegTel != null && this.bodyRegTel.length > 0)) {
         this.activacionEditar = true;
       } else {
         this.activacionEditar = false;
