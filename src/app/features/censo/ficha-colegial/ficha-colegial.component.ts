@@ -4702,12 +4702,12 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+              
+            // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
             } else {
@@ -4791,14 +4791,11 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-
-
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
 
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = true;
@@ -4831,13 +4828,12 @@ export class FichaColegialComponent implements OnInit {
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
-
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
 
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = true;
@@ -4871,6 +4867,12 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            //  this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
+
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = false;
             } else {
@@ -4886,12 +4888,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+           
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -4911,6 +4908,11 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            //  this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = false;
             } else {
@@ -4926,12 +4928,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+           
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -4945,7 +4942,8 @@ export class FichaColegialComponent implements OnInit {
   onClickDescargarRegTel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    //this.selectedDatosRegtel.fechaModificacion = undefined;
+    let fechaModificacionRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel.fechaModificacion));
+    this.selectedDatosRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",
@@ -4956,9 +4954,11 @@ export class FichaColegialComponent implements OnInit {
         data => {
           const blob = new Blob([data], { type: "application/octet-stream" });
           saveAs(blob, this.selectedDatosRegtel.originalFilename);
+          this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
           this.progressSpinner = false;
         },
         err => {
+          this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
           this.progressSpinner = false;
         }
       );

@@ -175,7 +175,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       {
         field: "codigoExterno",
-        header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno",
+        header: "general.codeext",
         width: "15%"
       }
     ];
