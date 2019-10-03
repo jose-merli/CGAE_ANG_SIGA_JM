@@ -299,14 +299,16 @@ para poder filtrar el dato con o sin estos caracteres*/
               }, () => {
                 this.datos.forEach((value2: any, key: number) => {
                   value2.perfiles = [];
-                  let perfilasos = value2.perfil.split(";");
-                  perfilasos.forEach((valuePerfil: String, key: number) => {
-                    this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
-                      if (valuePerfil.trim() == value.value) {
-                        value2.perfiles.push(value);
-                      }
+                  if (value2.perfil != null) {
+                    let perfilasos = value2.perfil.split(";");
+                    perfilasos.forEach((valuePerfil: String, key: number) => {
+                      this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+                        if (valuePerfil.trim() == value.value) {
+                          value2.perfiles.push(value);
+                        }
+                      });
                     });
-                  });
+                  }
                 });
                 this.datosInicial = JSON.parse(JSON.stringify(this.datos));
               }
@@ -372,14 +374,16 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
           this.datos.forEach((value2: any, key: number) => {
             value2.perfiles = [];
-            let perfilasos = value2.perfil.split(";");
-            perfilasos.forEach((valuePerfil: String, key: number) => {
-              this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
-                if (valuePerfil.trim() == value.value) {
-                  value2.perfiles.push(value);
-                }
+            if (value2.perfil != null) {
+              let perfilasos = value2.perfil.split(";");
+              perfilasos.forEach((valuePerfil: String, key: number) => {
+                this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+                  if (valuePerfil.trim() == value.value) {
+                    value2.perfiles.push(value);
+                  }
+                });
               });
-            });
+            }
           });
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
@@ -536,14 +540,16 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
             this.datos.forEach((value2: any, key: number) => {
               value2.perfiles = [];
-              let perfilasos = value2.perfil.split(";");
-              perfilasos.forEach((valuePerfil: String, key: number) => {
-                this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
-                  if (valuePerfil.trim() == value.value) {
-                    value2.perfiles.push(value);
-                  }
+              if (value2.perfil != null) {
+                let perfilasos = value2.perfil.split(";");
+                perfilasos.forEach((valuePerfil: String, key: number) => {
+                  this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+                    if (valuePerfil.trim() == value.value) {
+                      value2.perfiles.push(value);
+                    }
+                  });
                 });
-              });
+              }
             });
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           }
