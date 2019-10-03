@@ -57,7 +57,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   disabledRadio: boolean = false;
   disabled: boolean = false;
   selectMultiple: boolean = false;
-  blockCrear: boolean = true;
+  blockCrear: boolean = false;
   selectedItem: number = 10;
   first: number = 0;
   activo: boolean = false;
@@ -71,7 +71,11 @@ export class Usuarios extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   numSelected: number = 0;
   es: any = esCalendar;
-
+  nuevo: boolean = false;
+  updateUsuarios: any[] = [];
+  seleccion;
+  selectionMode: string = "single";
+  datosInicial: any[];
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -85,10 +89,9 @@ export class Usuarios extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table: DataTable;
   selectedDatos;
+  textSelected: String = "{label}";
 
   ngOnInit() {
-
-
     this.activo = true;
     this.checkAcceso();
     this.sigaServices.get("usuarios_rol").subscribe(
@@ -119,7 +122,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.usuarios_perfil = n.combooItems;
-        let first = { label: "", value: "" };
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
@@ -138,7 +140,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         });
 
-        this.usuarios_perfil.unshift(first);
       },
       err => {
         console.log(err);
@@ -147,24 +148,34 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     this.cols = [
       {
-        field: "nombreApellidos",
-        header: "administracion.parametrosGenerales.literal.nombre.apellidos",
-        width: "25%"
-      },
-      {
         field: "nif",
         header: "administracion.usuarios.literal.NIF",
-        width: "5%"
+        width: "8%"
+      },
+      {
+        field: "nombreApellidos",
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos",
+        width: "20%"
       },
       {
         field: "roles",
         header: "administracion.usuarios.literal.roles",
-        width: "25%"
+        width: "20%"
+      },
+      {
+        field: "perfiles",
+        header: "administracion.grupos.literal.perfiles",
+        width: "20%"
       },
       {
         field: "fechaAlta",
         header: "administracion.usuarios.literal.fechaAlta",
-        width: "5%"
+        width: "8%"
+      },
+      {
+        field: "codigoExterno",
+        header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno",
+        width: "15%"
       }
     ];
 
@@ -204,6 +215,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.activo = "S";
     }
   }
+
+  openMultiSelect(dato) {
+    dato.overlayVisible = true;
+  }
+
   isValidDNI(dni: string): boolean {
     let DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -226,6 +242,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   toHistorico() {
+    this.nuevo = false;
     this.progressSpinner = true;
     this.body.activo = "N";
     this.sigaServices
@@ -236,6 +253,15 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.searchUser = JSON.parse(data["body"]);
           this.datosActivos = this.searchUser.usuarioItem;
           this.table.paginator = true;
+          this.datos.forEach(element => {
+            element.editable = false
+            element.overlayVisible = false;
+            element.idGrupo = [];
+            for (let i in element.perfiles) {
+              element.idGrupo.push(element.perfiles[i]);
+            }
+            element.rol = element.roles;
+          });
         },
         err => {
           console.log(err);
@@ -255,10 +281,33 @@ para poder filtrar el dato con o sin estos caracteres*/
                 this.datos = this.datosActivos;
                 this.table.paginator = true;
                 this.table.reset();
+                this.datos.forEach(element => {
+                  element.editable = false
+                  element.overlayVisible = false;
+                  element.idGrupo = [];
+                  for (let i in element.perfiles) {
+                    element.idGrupo.push(element.perfiles[i]);
+                  }
+                  let findDato = this.usuarios_rol.find(item => item.label === element.roles);
+                  element.rol = findDato.value;
+                });
               },
               err => {
                 console.log(err);
                 this.progressSpinner = false;
+              }, () => {
+                this.datos.forEach((value2: any, key: number) => {
+                  value2.perfiles = [];
+                  let perfilasos = value2.perfil.split(";");
+                  perfilasos.forEach((valuePerfil: String, key: number) => {
+                    this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+                      if (valuePerfil.trim() == value.value) {
+                        value2.perfiles.push(value);
+                      }
+                    });
+                  });
+                });
+                this.datosInicial = JSON.parse(JSON.stringify(this.datos));
               }
             );
         }
@@ -268,6 +317,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   toNotHistory() {
+    this.nuevo = false;
     this.historico = false;
     this.body.activo = "S";
     this.Search();
@@ -304,21 +354,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeForm() {
-    if (this.body.nif != "" || this.body.nif.length < 9) {
-      this.dniCorrecto = null;
-    }
-    if (
-      this.body.nombreApellidos != "" &&
-      this.body.nombreApellidos != undefined &&
-      (this.body.nif != "" && this.body.nif != undefined) &&
-      (this.body.rol != "" && this.body.rol != undefined) &&
-      (this.body.grupo != "" && this.body.grupo != undefined) &&
-      this.body.nif != ""
-    ) {
-      this.blockCrear = false;
-    } else {
-      this.blockCrear = true;
-    }
   }
 
   onChangeRowsPerPages(event) {
@@ -329,65 +364,55 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   pInputText;
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    }
-  }
-
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
+    if (this.selectedDatos != undefined) {
+      this.numSelected = selectedDatos.length;
+    } else {
+      this.selectedDatos = [];
+    }
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-  sendEdit() {
-    console.log(this.body);
-    if (this.body.codigoExterno == undefined) {
-      this.body.codigoExterno = "";
+
+  editUsuarios(evento) {
+    if (this.selectedDatos == undefined) this.selectedDatos = [];
+    if (evento.data.activo == "S" && this.historico) {
+      this.selectedDatos.pop();
     }
-    if (this.body.grupo == undefined) {
-      this.body.grupo = "";
-    }
-    this.sigaServices.post("usuarios_update", this.body).subscribe(
-      data => {
-        this.showSuccess();
-        console.log(data);
-      },
-      err => {
-        this.showFail();
-        console.log(err);
-      },
-      () => {
-        this.cancelar();
-        this.Search();
-        this.table.reset();
+    if (this.nuevo) {
+      this.seleccion = false;
+    } else {
+      if (!this.selectAll && !this.selectMultiple) {
+
+        this.datos.forEach(element => {
+          element.editable = false;
+          element.overlayVisible = false;
+        });
+
+        evento.data.editable = true;
+
+        this.selectedDatos = [];
+        this.selectedDatos.push(evento.data);
+
+        this.seleccion = true;
+
       }
-    );
+
+    }
   }
 
   Search() {
+    this.updateUsuarios = [];
+    this.nuevo = false;
     if (this.checkFilters()) {
 
       this.buscar = true;
       this.progressSpinner = true;
-      // if (this.body.nif == "" || this.body.nif == null) {
-      //   this.dniCorrecto = null;
-      // }
       if (this.body.nombreApellidos == undefined) {
         this.body.nombreApellidos = "";
       }
-      // if (UsuarioRequestDto == undefined) {
-      //   this.body.activo = "S";
-      //   this.activo = true;
-      // }
       if (this.body.grupo == undefined) {
         this.body.grupo = "";
       }
@@ -407,6 +432,18 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.searchUser = JSON.parse(data["body"]);
             this.datos = this.searchUser.usuarioItem;
             this.table.paginator = true;
+
+            this.datos.forEach(element => {
+              element.editable = false
+              element.overlayVisible = false;
+              element.idGrupo = [];
+              for (let i in element.perfiles) {
+                element.idGrupo.push(element.perfiles[i]);
+              }
+              let findDato = this.usuarios_rol.find(item => item.label === element.roles);
+              element.rol = findDato.value;
+            });
+            this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           },
           err => {
             console.log(err);
@@ -418,8 +455,66 @@ para poder filtrar el dato con o sin estos caracteres*/
               this.table.first = first;
               sessionStorage.removeItem("first");
             }
+            this.datos.forEach((value2: any, key: number) => {
+              value2.perfiles = [];
+              let perfilasos = value2.perfil.split(";");
+              perfilasos.forEach((valuePerfil: String, key: number) => {
+                this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+                  if (valuePerfil.trim() == value.value) {
+                    value2.perfiles.push(value);
+                  }
+                });
+              });
+            });
+            this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           }
         );
+    }
+  }
+
+  editPerfiles(dato) {
+
+    if (!this.nuevo) {
+
+      let findUpdate = this.updateUsuarios.find(item => item.idUsuario === dato.idUsuario);
+
+      if (findUpdate == undefined) {
+        let dato2 = dato;
+        dato2.idGrupo = [];
+        for (let i in dato2.perfiles) {
+          dato2.idGrupo.push(dato2.perfiles[i].value);
+        }
+        // let perfilesNuevo = "";
+        // for (let i in dato2.perfiles) {
+        //   perfilesNuevo += ";" + dato2.perfiles[i].value;
+        // }
+        // dato2.perfil = perfilesNuevo.substring(1, perfilesNuevo.length);
+        this.updateUsuarios.push(dato2);
+      } else {
+        let updateFind = this.updateUsuarios.findIndex(item => item.idUsuario === dato.idUsuario);
+        let dato2 = dato;
+        dato2.idGrupo = [];
+        for (let i in dato2.perfiles) {
+          dato2.idGrupo.push(dato2.perfiles[i].value);
+        }
+        let findDato = this.usuarios_rol.find(item => item.label === dato2.roles);
+        this.updateUsuarios[updateFind].rol = findDato.value;
+
+      }
+      // }
+    } else {
+      this.selectedDatos = [];
+    }
+  }
+
+  validateUsuario(e) {
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idUsuario === this.selectedDatos[0].idUsuario);
+
+      let dato = this.datos[datoId];
+
+      this.editarUsuario(dato);
+
     }
   }
 
@@ -448,7 +543,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: this.translateService.instant("general.message.incorrect"),
+      summary: "Incorrecto",
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )
@@ -469,29 +564,48 @@ para poder filtrar el dato con o sin estos caracteres*/
     else return true;
   }
 
-  editarUsuario(selectedItem) {
-    // if (!this.selectMultiple) {
-    if (selectedItem.length == 1) {
-      this.body = new UsuarioRequestDto();
-      this.body = selectedItem[0];
-      this.usuarios_rol.forEach((value: ComboItem, key: number) => {
-        if (value.label == selectedItem[0].roles) {
-          this.body.rol = value.value;
+  newUsuario() {
+    this.nuevo = true;
+    this.seleccion = false;
+    if (this.datosInicial != undefined && this.datosInicial != null) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+
+    let usuario = {
+      idUsuario: "",
+      activo: "",
+      nombreApellidos: "",
+      roles: "",
+      codigoExterno: "",
+      perfiles: "",
+      usuarioNuevo: true
+    };
+
+    if (this.datos.length == 0) {
+      this.datos.push(usuario);
+    } else {
+      this.datos = [usuario, ...this.datos];
+    }
+    this.selectedDatos = this.datos[0];
+
+  }
+
+  editarUsuario(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idUsuario === dato.idUsuario);
+
+    if (findDato != undefined) {
+      if (dato.codigoExterno != findDato.codigoExterno || dato.perfil != findDato.perfil) {
+
+        let findUpdate = this.updateUsuarios.find(item => item.codigoExterno === dato.codigoExterno && item.perfil === dato.perfil);
+        if (findUpdate == undefined) {
+          this.updateUsuarios.push(dato);
         }
-      });
-      this.editar = true;
-      this.disabledRadio = false;
-    } else {
-      this.editar = false;
-      this.dniCorrecto = null;
-      this.body = new UsuarioRequestDto();
-      this.body.activo = selectedItem[0].activo;
+      }
     }
-    if (this.body.activo == "N") {
-      this.activo = true;
-    } else {
-      this.activo = false;
-    }
+
   }
 
   cancelar() {
@@ -513,6 +627,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.post("usuarios_delete", this.usuariosDelete).subscribe(
       data => {
         this.showSuccessDelete(selectedItem.length);
+        this.selectionMode = 'single';
+        this.historico = false;
+        this.selectMultiple = false;
       },
       err => {
         this.showFail();
@@ -521,8 +638,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       () => {
         this.editar = false;
         this.dniCorrecto = null;
-        this.body = new UsuarioRequestDto();
-        this.body.activo = selectedItem[0].activo;
+        this.body.activo = "S";
         this.disabledRadio = false;
         this.Search();
         this.table.reset();
@@ -539,30 +655,22 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   crear() {
-    let a = this.body;
-    if (this.isValidDNI("" + this.body.nif)) {
-      this.sigaServices.post("usuarios_insert", this.body).subscribe(
-        data => {
-          this.searchUser = JSON.parse(data["body"]);
-
-          this.showSuccess();
-        },
-        error => {
-          this.searchUser = JSON.parse(error["error"]);
-          this.showduplicateFail(this.searchUser.error.message.toString());
-          console.log(error);
-          this.showFail();
-        },
-        () => {
-          this.cancelar();
-          this.Search();
-          this.table.reset();
-        }
-      );
-      this.dniCorrecto = null;
-    } else {
-      this.dniCorrecto = false;
-    }
+    this.datos[0].grupo = this.datos[0].perfiles;
+    this.sigaServices.post("usuarios_insert", this.datos[0]).subscribe(
+      data => {
+        this.searchUser = JSON.parse(data["body"]);
+        this.showSuccess();
+      },
+      error => {
+        this.searchUser = JSON.parse(error["error"]);
+        this.showduplicateFail(this.searchUser.error.message.toString());
+      },
+      () => {
+        this.selectMultiple = false;
+        this.Search();
+        this.table.reset();
+      }
+    );
   }
 
   showSuccess() {
@@ -576,7 +684,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   showSuccessDelete(number) {
     let msg = "";
-    if (!this.activo) {
+    if (!this.historico) {
       if (number >= 2) {
         msg =
           number +
@@ -611,29 +719,23 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
+
   showFail() {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Error",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
     });
   }
+
   confirmarBorrar(selectedItem) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
 
-    if (selectedItem.length > 1) {
-      mess =
-        this.translateService.instant("messages.deleteConfirmation.much") +
-        selectedItem.length +
-        " " +
-        this.translateService.instant("messages.deleteConfirmation.register") +
-        "?";
-    }
-    if (this.activo == true) {
+    if (this.historico) {
       icon = "fa fa-check";
       if (selectedItem.length > 1) {
         mess =
@@ -649,6 +751,17 @@ para poder filtrar el dato con o sin estos caracteres*/
         mess = this.translateService.instant(
           "general.message.confirmar.rehabilitacion"
         );
+      }
+    } else {
+      if (selectedItem.length > 1) {
+        mess =
+          this.translateService.instant("messages.deleteConfirmation.much") +
+          selectedItem.length +
+          " " +
+          this.translateService.instant("messages.deleteConfirmation.register") +
+          "?";
+      } else {
+        let mess = this.translateService.instant("messages.deleteConfirmation");
       }
     }
     this.confirmationService.confirm({
@@ -671,47 +784,94 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
-  irEditarUsuario(id) {
-    console.log(id)
-    if (!this.selectMultiple) {
-      var ir = null;
-      if (id && id.length > 0) {
-        ir = id[0];
+
+  isSelectMultiple() {
+    if (!this.historico) {
+      if (this.nuevo) {
+        this.nuevo = false;
+        this.datos = JSON.parse(JSON.stringify(this.datosInicial));
       }
-      sessionStorage.removeItem("usuarioBody");
-      sessionStorage.removeItem("privilegios");
-      sessionStorage.removeItem("first");
-      sessionStorage.setItem("usuarioBody", JSON.stringify(id));
-      sessionStorage.setItem(
-        "privilegios",
-        JSON.stringify(this.activacionEditar)
-      );
-      sessionStorage.setItem("searchUser", JSON.stringify(this.body));
-      sessionStorage.setItem("editedUser", JSON.stringify(this.selectedDatos));
-      sessionStorage.setItem("first", JSON.stringify(this.table.first));
-      this.router.navigate(["/editarUsuario"]);
-    } else {
-      this.editar = false;
-      this.numSelected = this.selectedDatos.length;
-      this.dniCorrecto = null;
-      this.body = new UsuarioRequestDto();
-      this.body.activo = id[0].activo;
-    }
-    if (this.body.activo == "N") {
-      this.activo = true;
-    } else {
-      this.activo = false;
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single"
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "multiple"
+      }
+      this.datos.forEach(element => {
+        element.editable = false;
+      });
     }
   }
 
   onChangeSelectAll() {
+    if (this.nuevo) {
+      this.nuevo = false;
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    }
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
+      this.selectionMode = "multiple"
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
+      this.selectionMode = "single"
+    }
+    this.datos.forEach(element => {
+      element.editable = false;
+    });
+  }
+
+
+
+  sendEdit() {
+    if (this.datos[0].usuarioNuevo) {
+      if (this.datos[0].nif != undefined && this.datos[0].nif.length >= 9) {
+        this.crear();
+      } else {
+        this.msgs = [];
+        this.msgs.push({
+          severity: "error",
+          summary: "Error",
+          detail: this.translateService.instant(
+            "messages.nifcif.comprobacion.incorrecto"
+          )
+        });
+      }
+    } else {
+      console.log(this.body);
+      this.sigaServices.post("usuarios_update", this.updateUsuarios).subscribe(
+        data => {
+          this.showSuccess();
+          console.log(data);
+        },
+        err => {
+          this.showFail();
+          console.log(err);
+        },
+        () => {
+          this.selectMultiple = false;
+          this.Search();
+          this.table.reset();
+        }
+      );
+    }
+  }
+  disableGuardar() {
+    if (this.updateUsuarios.length == 0 || this.nuevo) {
+      if (this.nuevo && this.datos[0].nombreApellidos != "" && this.datos[0].nif != "" && this.datos[0].rol != "" && this.datos[0].rol != undefined && this.datos[0].perfiles != "" && this.datos[0].perfiles != undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
     }
   }
 
