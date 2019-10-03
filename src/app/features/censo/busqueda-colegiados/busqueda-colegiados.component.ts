@@ -246,8 +246,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         );
       }
 
+      // orden es, fallecido, colegiado, de baja, no colegiado
+      this.getSituacion(id);
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
-      console.log(id);
 
       // if (id[0].situacion == 30) {
       //   sessionStorage.setItem("disabledAction", "true");
@@ -258,6 +259,27 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.router.navigate(["/fichaColegial"]);
     } else {
       this.actualizaSeleccionados(this.selectedDatos);
+    }
+  }
+
+  getSituacion(id) {
+    let idSituacionValues = [];
+    this.datos.forEach(element => {
+      idSituacionValues.push(element.situacion);
+    });
+
+    if (idSituacionValues.indexOf("60") != -1) {
+      id[0].situacion = "60";
+    } else {
+      if (idSituacionValues.indexOf("20") != -1) {
+        id[0].situacion = "20";
+      } else {
+        if (idSituacionValues.indexOf("30") == -1 || idSituacionValues.indexOf("40") == -1 || idSituacionValues.indexOf("50") == -1) {
+          if (idSituacionValues.indexOf("10") != -1) {
+            id[0].situacion = "10";
+          }
+        }
+      }
     }
   }
 
