@@ -82,6 +82,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   consultasGuardadas: boolean = true;
   esPorDefecto: boolean = false;
   label1: string;
+  controlSelectionMode: string;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -99,7 +100,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.getInstitucionActual();
 
     //sessionStorage.removeItem('esPorDefecto');
@@ -212,9 +212,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       if (!this.esPorDefecto) {
         this.selectMultipleDocs = !this.selectMultipleDocs;
         if (!this.selectMultipleDocs) {
+          // this.controlSelectionMode = "none";
           this.selectedDocs = [];
         } else {
-          this.selectAll = false;
+          this.selectAllDocs = false;
+          this.controlSelectionMode = "multiple";
           this.selectedDocs = [];
         }
       }
@@ -237,8 +239,10 @@ export class PlantillaDocumentoComponent implements OnInit {
       if (this.selectAllDocs === true) {
         this.selectMultipleDocs = false;
         this.selectedDocs = this.documentos;
+        this.numSelected = this.documentos.length;
       } else {
         this.selectedDocs = [];
+        this.numSelected = 0;
       }
     }
   }
@@ -719,7 +723,6 @@ export class PlantillaDocumentoComponent implements OnInit {
           this.body.plantillas.push(plantilla);
           this.documentos = this.body.plantillas;
           this.documentos = [...this.documentos];
-
           this.progressSpinner = false;
         },
         err => {
@@ -968,6 +971,9 @@ export class PlantillaDocumentoComponent implements OnInit {
               )
             }
           ];
+          this.selectAllDocs = false;
+          this.selectMultipleDocs = false;
+          this.selectedDocs = [];
         }
       });
     }
@@ -995,6 +1001,9 @@ export class PlantillaDocumentoComponent implements OnInit {
           console.log(err);
         },
         () => {
+          this.selectAllDocs = false;
+          this.selectMultipleDocs = false;
+          this.selectedDocs = [];
           this.getDocumentos();
         }
       );
@@ -1188,8 +1197,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
 
-       // El modo de la pantalla viene por los permisos de la aplicación
-       if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
         this.esPorDefecto = true;
       }
 

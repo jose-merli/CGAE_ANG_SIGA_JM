@@ -25,6 +25,7 @@ export class FichaColegialGeneralesItem {
   fechaNacimientoDate: Date;
   fechaIncorporacion: Date;
   incorporacion: Date;
+  fechaAlta: Date;
   fechaNacimiento: Date;
   idioma: String;
   motivo: String;

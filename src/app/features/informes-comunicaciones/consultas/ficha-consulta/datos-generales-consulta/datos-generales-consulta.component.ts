@@ -19,6 +19,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   openFicha: boolean = true;
   editar: boolean;
+  esDuplicar: boolean;
   editMode: boolean = false;
   datos: any[];
   cols: any[];
@@ -384,7 +385,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   habilitarBotones() {
-    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "S" || this.body.generica == "1" || sessionStorage.getItem("permisoModoLectura") == 'true')) {
+    if (this.institucionActual != '2000' && (
+      (this.body.generica == "Si" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "Si") ||
+      (this.body.generica == "S" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "S")) ||
+      this.body.generica == "1" ||
+      (sessionStorage.getItem("permisoModoLectura") == 'true' && sessionStorage.getItem("esDuplicar") === 'false') || sessionStorage.getItem("permisoModoLectura") == 'true') {
       this.editar = false;
     } else {
       this.editar = true;
@@ -392,6 +397,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.editar == false) {
       this.sigaServices.notifyRefreshEditar();
     }
+    // }else{
+    //   this.esDuplicar = true;
+    //   this.sigaServices.notifyRefreshEditar();
+    // }
   }
 
   confirmEdit() {

@@ -905,9 +905,15 @@ export class FichaCursoComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        this.showFail(
-          this.translateService.instant("general.message.error.realiza.accion")
-        );
+
+        if (JSON.parse(err.error).error.description != null) {
+          this.showFail(JSON.parse(err.error).error.description);
+        } else {
+          this.showFail(
+            this.translateService.instant("general.message.error.realiza.accion")
+          );
+        }
+
       },
       () => {
         this.progressSpinner = false;

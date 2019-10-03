@@ -952,7 +952,7 @@ export class FichaColegialComponent implements OnInit {
       key == "regtel"
     ) {
 
-      if (this.generalBody.identificadords != null) {
+      if (this.generalBody.identificadords != null || (this.bodyRegTel != null && this.bodyRegTel.length > 0)) {
         this.activacionEditar = true;
       } else {
         this.activacionEditar = false;
@@ -1309,7 +1309,7 @@ export class FichaColegialComponent implements OnInit {
       this.cargarImagen(this.idPersona);
       this.stringAComisiones();
       this.fechaNacimiento = this.generalBody.fechaNacimiento;
-      this.fechaAlta = this.generalBody.incorporacion;
+      this.fechaAlta = this.generalBody.fechaAlta;
     }
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
@@ -4945,7 +4945,7 @@ export class FichaColegialComponent implements OnInit {
   onClickDescargarRegTel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    //this.selectedDatosRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",

@@ -86,6 +86,7 @@ export class ConsultasComponent implements OnInit {
     this.checkAcceso();
     this.currentRoute = this.router.url;
 
+    sessionStorage.removeItem("esDuplicar");
     sessionStorage.removeItem("consultasSearch");
     sessionStorage.removeItem('idInstitucion');
     sessionStorage.removeItem('esPorDefecto');
@@ -357,24 +358,28 @@ export class ConsultasComponent implements OnInit {
   }
 
   controlBtnEliminar(array) {
-    if (this.institucionActual == 2000) {
-      this.eliminar = true;
+    if (!this.activacionEditar) {
+      this.eliminar = false;
     } else {
-      var keepGoing = true;
+      if (this.institucionActual == 2000) {
+        this.eliminar = true;
+      } else {
+        var keepGoing = true;
 
-      array.forEach(element => {
+        array.forEach(element => {
 
-        if (keepGoing) {
-          if (element.generica == 'No') {
-            this.eliminar = true;
-          } else {
-            keepGoing = false;
+          if (keepGoing) {
+            if (element.generica == 'No') {
+              this.eliminar = true;
+            } else {
+              keepGoing = false;
+            }
           }
-        }
-      });
+        });
 
-      if (!keepGoing) {
-        this.eliminar = false;
+        if (!keepGoing) {
+          this.eliminar = false;
+        }
       }
     }
   }
@@ -444,6 +449,7 @@ export class ConsultasComponent implements OnInit {
 
   duplicar(dato) {
     sessionStorage.setItem("soloLectura", "false");
+    sessionStorage.setItem("permisoModoLectura", "false");
     this.progressSpinner = true;
     this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
@@ -459,6 +465,10 @@ export class ConsultasComponent implements OnInit {
         sessionStorage.setItem(
           "filtrosConsulta",
           JSON.stringify(this.bodySearch)
+        );
+        sessionStorage.setItem(
+          "esDuplicar",
+          "true"
         );
         this.progressSpinner = false;
         this.router.navigate(["/fichaConsulta"]);
