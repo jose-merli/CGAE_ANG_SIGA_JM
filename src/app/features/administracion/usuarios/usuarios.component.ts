@@ -76,6 +76,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   seleccion;
   selectionMode: string = "single";
   datosInicial: any[];
+  filtrosIniciales: any;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -244,9 +245,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   toHistorico() {
     this.nuevo = false;
     this.progressSpinner = true;
-    this.body.activo = "N";
+    this.filtrosIniciales.activo = "N";
     this.sigaServices
-      .postPaginado("usuarios_search", "?numPagina=1", this.body)
+      .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
       .subscribe(
         data => {
           console.log(data);
@@ -267,9 +268,9 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
-          this.body.activo = "S";
+          this.filtrosIniciales.activo = "S";
           this.sigaServices
-            .postPaginado("usuarios_search", "?numPagina=1", this.body)
+            .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
             .subscribe(
               data => {
                 console.log(data);
@@ -319,9 +320,72 @@ para poder filtrar el dato con o sin estos caracteres*/
   toNotHistory() {
     this.nuevo = false;
     this.historico = false;
-    this.body.activo = "S";
-    this.Search();
+    this.filtrosIniciales.activo = "S";
+    this.updateUsuarios = [];
+    this.nuevo = false;
+    this.buscar = true;
+    this.progressSpinner = true;
+    if (this.filtrosIniciales.nombreApellidos == undefined) {
+      this.filtrosIniciales.nombreApellidos = "";
+    }
+    if (this.filtrosIniciales.grupo == undefined) {
+      this.filtrosIniciales.grupo = "";
+    }
+    if (this.filtrosIniciales.nif == undefined) {
+      this.filtrosIniciales.nif = "";
+    }
+    if (this.filtrosIniciales.rol == undefined) {
+      this.filtrosIniciales.rol = "";
+    }
+    this.filtrosIniciales.idInstitucion = "2000";
+    this.sigaServices
+      .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.progressSpinner = false;
+          this.searchUser = JSON.parse(data["body"]);
+          this.datos = this.searchUser.usuarioItem;
+          this.table.paginator = true;
+
+          this.datos.forEach(element => {
+            element.editable = false
+            element.overlayVisible = false;
+            element.idGrupo = [];
+            for (let i in element.perfiles) {
+              element.idGrupo.push(element.perfiles[i]);
+            }
+            let findDato = this.usuarios_rol.find(item => item.label === element.roles);
+            element.rol = findDato.value;
+          });
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          if (sessionStorage.getItem("first") != null) {
+            let first = JSON.parse(sessionStorage.getItem("first")) as number;
+            this.table.first = first;
+            sessionStorage.removeItem("first");
+          }
+          this.datos.forEach((value2: any, key: number) => {
+            value2.perfiles = [];
+            let perfilasos = value2.perfil.split(";");
+            perfilasos.forEach((valuePerfil: String, key: number) => {
+              this.usuarios_perfil.forEach((value: ComboItem, key: number) => {
+                if (valuePerfil.trim() == value.value) {
+                  value2.perfiles.push(value);
+                }
+              });
+            });
+          });
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        }
+      );
   }
+
   checkAcceso() {
     this.controlAcceso = new ControlAccesoDto();
     this.controlAcceso.idProceso = "83";
@@ -354,6 +418,20 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeForm() {
+    //   if (!(
+    //     (this.body.nombreApellidos == null ||
+    //       this.body.nombreApellidos == undefined ||
+    //       this.body.nombreApellidos == "") &&
+    //     (this.body.nif == null ||
+    //       this.body.nif == undefined ||
+    //       this.body.nif == "") &&
+    //     (this.body.rol == null ||
+    //       this.body.rol == undefined) &&
+    //     (this.body.grupo == null ||
+    //       this.body.grupo == undefined)
+    //   )) {
+    //     this.filtrosIniciales = JSON.parse(JSON.stringify(this.body));
+    //   }
   }
 
   onChangeRowsPerPages(event) {
@@ -407,6 +485,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.updateUsuarios = [];
     this.nuevo = false;
     if (this.checkFilters()) {
+      this.filtrosIniciales = JSON.parse(JSON.stringify(this.body));
 
       this.buscar = true;
       this.progressSpinner = true;
@@ -616,6 +695,22 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.disabledRadio = false;
   }
 
+  deseleccionar() {
+    if (this.nuevo) {
+      this.nuevo = false;
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    }
+    if (!this.historico) {
+      this.selectMultiple = false;
+      this.selectionMode = 'single';
+      this.selectedDatos = [];
+      this.selectAll = false;
+    } else {
+      this.selectedDatos = [];
+      this.selectAll = false;
+    }
+  }
+
   borrar(selectedItem) {
     this.usuariosDelete = new UsuarioDeleteRequestDto();
     selectedItem.forEach((value: UsuarioItem, key: number) => {
@@ -786,6 +881,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   isSelectMultiple() {
+    this.selectAll = false;
     if (!this.historico && this.activacionEditar) {
       if (this.nuevo) {
         this.nuevo = false;
@@ -808,24 +904,57 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  // onChangeSelectAll() {
+  // if (this.nuevo) {
+  //   this.nuevo = false;
+  //   this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+  // }
+  //   if (this.selectAll === true) {
+  //     this.selectMultiple = false;
+  //     this.selectedDatos = this.datos;
+  //     this.numSelected = this.datos.length;
+  //     this.selectionMode = "multiple"
+  //   } else {
+  //     this.selectedDatos = [];
+  //     this.numSelected = 0;
+  //     this.selectionMode = "single"
+  //   }
+  //   this.datos.forEach(element => {
+  //     element.editable = false;
+  //   });
+  // }
+
   onChangeSelectAll() {
     if (this.nuevo) {
       this.nuevo = false;
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     }
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-      this.selectionMode = "multiple"
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "single"
+    if (this.activacionEditar) {
+      if (!this.historico) {
+        if (this.selectAll) {
+          this.selectMultiple = true;
+          this.selectedDatos = this.datos;
+          this.numSelected = this.datos.length;
+          this.selectedDatos = this.datos;
+          this.selectionMode = "multiple"
+        } else {
+          this.selectionMode = "single";
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectMultiple = false;
+        }
+      } else {
+        if (this.selectAll) {
+          this.selectionMode = "multiple"
+          this.selectedDatos = this.datos.filter(dato => dato.activo == 'N')
+          this.numSelected = this.selectedDatos.length;
+        } else {
+          this.selectionMode = "single";
+          this.selectedDatos = [];
+          this.numSelected = 0;
+        }
+      }
     }
-    this.datos.forEach(element => {
-      element.editable = false;
-    });
   }
 
 
