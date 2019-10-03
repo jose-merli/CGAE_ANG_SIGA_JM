@@ -786,7 +786,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   isSelectMultiple() {
-    if (!this.historico) {
+    if (!this.historico && this.activacionEditar) {
       if (this.nuevo) {
         this.nuevo = false;
         this.datos = JSON.parse(JSON.stringify(this.datosInicial));
