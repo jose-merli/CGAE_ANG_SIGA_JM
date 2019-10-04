@@ -18,6 +18,7 @@ export class FiltroJuzgadosComponent implements OnInit {
   msgs = [];
 
   filtros: JuzgadoItem = new JuzgadoItem();
+  filtroAux: JuzgadoItem = new JuzgadoItem();
   historico: boolean = false;
 
   isDisabledPoblacion: boolean = true;
@@ -120,7 +121,9 @@ export class FiltroJuzgadosComponent implements OnInit {
 
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
-      this.isOpen.emit(this.historico)
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.isOpen.emit(false)
     }
 
   }

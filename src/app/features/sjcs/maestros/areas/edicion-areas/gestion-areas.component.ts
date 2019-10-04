@@ -50,7 +50,7 @@ export class GestionAreasComponent implements OnInit {
     // this.progressSpinner = true;
     let filtros: AreasItem = new AreasItem;
     filtros.idArea = this.idArea;
-    filtros.historico = false;
+    filtros.historico = this.persistenceService.getHistorico();
     if (this.persistenceService.getHistorico() != undefined) {
       filtros.historico = this.persistenceService.getHistorico();
     }

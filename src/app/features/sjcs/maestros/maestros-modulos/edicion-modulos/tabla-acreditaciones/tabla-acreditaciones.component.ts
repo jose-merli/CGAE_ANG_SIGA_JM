@@ -91,7 +91,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (datos.fechabaja != undefined) {
+    if (datos.fechabaja != null) {
       this.disableAll = true;
     }
     if (this.persistenceService.getPermisos() != true) {

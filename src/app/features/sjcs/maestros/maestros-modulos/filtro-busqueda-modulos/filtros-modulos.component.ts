@@ -22,6 +22,7 @@ export class FiltrosModulosComponent implements OnInit {
   // partidoJudicial:string;
   msgs: any[] = [];
   filtros: ModulosItem = new ModulosItem();
+  filtroAux: ModulosItem = new ModulosItem();
   jurisdicciones: any[] = [];
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
@@ -62,16 +63,8 @@ export class FiltrosModulosComponent implements OnInit {
         || this.filtros.codigo.trim().length < 3)) {
       this.showSearchIncorrect();
     } else {
-      this.buscar = true;
-      this.filtros.historico = false;
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-        this.filtros.nombre = this.filtros.nombre.trim();
-      }
-
-      if (this.filtros.codigo != undefined && this.filtros.codigo != null) {
-        this.filtros.codigo = this.filtros.codigo.trim();
-      }
-
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
       this.busqueda.emit(false);
     }
   }

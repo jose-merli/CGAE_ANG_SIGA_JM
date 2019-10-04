@@ -72,6 +72,7 @@ export class FundamentosCalificacionComponent implements OnInit {
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
         }
+        this.resetSelect();
       },
       err => {
         this.progressSpinner = false;
@@ -79,6 +80,16 @@ export class FundamentosCalificacionComponent implements OnInit {
       }
     );
   }
+
+  resetSelect() {
+    if (this.tabla != undefined) {
+      this.tabla.selectedDatos = [];
+      this.tabla.numSelected = 0;
+      this.tabla.selectMultiple = false;
+      this.tabla.selectAll = false;
+    }
+  }
+
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({
