@@ -114,12 +114,12 @@
               </div>
 
               <div *ngIf="col.field == 'perfiles'">
-                <p-multiSelect [disabled]="setItalic(dato)" *ngIf="!dato.usuarioNuevo" #multiSelectPJ defaultLabel="Elegir" filterBy="label"
-                  [(ngModel)]="dato.perfiles" [options]="usuarios_perfil" optionLabel="label" [selectedItemsLabel]="textSelected"
-                  styleClass="widthAll" [panelStyle]="{ width: '100%' }" [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)"
-                  (onChange)="editPerfiles(dato)"></p-multiSelect>
+                <p-multiSelect [disabled]="!activacionEditar || setItalic(dato) || selectMultiple" *ngIf="!dato.usuarioNuevo" #multiSelectPJ
+                  defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.perfiles" [options]="usuarios_perfil" optionLabel="label"
+                  [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }" [overlayVisible]="dato.overlayVisible"
+                  (onFocus)="openMultiSelect(dato)" (onChange)="editPerfiles(dato)"></p-multiSelect>
 
-                <p-dropdown *ngIf="dato.usuarioNuevo" class="select-form" [(ngModel)]='dato.perfiles' placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                <p-dropdown [disabled]="!activacionEditar" *ngIf="dato.usuarioNuevo" class="select-form" [(ngModel)]='dato.perfiles' placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
               </div>
 
@@ -133,8 +133,8 @@
                   </div>
                 </div>
                 <div *ngIf="(nuevo && dato.usuarioNuevo)">
-                  <input type="text" class="form-control paddingInput" [(ngModel)]="dato.nif" on-focusout="validateUsuario($event)" (input)="validateUsuario($event)"
-                    name="nif" type="text" maxLength="19" />
+                  <input [disabled]="!activacionEditar" type="text" class="form-control paddingInput" [(ngModel)]="dato.nif" on-focusout="validateUsuario($event)"
+                    (input)="validateUsuario($event)" name="nif" type="text" maxLength="19" />
                 </div>
               </div>
               <div *ngIf="col.field == 'nombreApellidos'">
@@ -146,13 +146,13 @@
                     <span>{{dato[col.field]}}</span>
                   </div>
                 </div>
-                <input *ngIf="(nuevo && dato.usuarioNuevo)" type="text" class="form-control paddingInput" [(ngModel)]="dato.nombreApellidos"
-                  on-focusout="validateUsuario($event)" (input)="validateUsuario($event)" name="nombreApellidos" type="text"
-                  maxLength="60" />
+                <input [disabled]="!activacionEditar" *ngIf="(nuevo && dato.usuarioNuevo)" type="text" class="form-control paddingInput"
+                  [(ngModel)]="dato.nombreApellidos" on-focusout="validateUsuario($event)" (input)="validateUsuario($event)"
+                  name="nombreApellidos" type="text" maxLength="60" />
               </div>
 
               <div *ngIf="col.field == 'roles' && dato.usuarioNuevo">
-                <p-dropdown class="select-form" [(ngModel)]='dato.rol' [(disabled)]="editar" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                <p-dropdown [disabled]="!activacionEditar" class="select-form" [(ngModel)]='dato.rol' [(disabled)]="editar" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   [options]="usuarios_rol" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
 
               </div>
@@ -167,7 +167,7 @@
                   </div>
                 </span>
 
-                <input [disabled]="setItalic(dato) && !dato.usuarioNuevo" *ngIf="((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.usuarioNuevo))"
+                <input [disabled]="!activacionEditar || (setItalic(dato) && !dato.usuarioNuevo)" *ngIf="((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.usuarioNuevo))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.codigoExterno" on-focusout="validateUsuario($event)"
                   (input)="validateUsuario($event)" name="codigoExterno" type="text" maxLength="9" />
               </div>
@@ -194,7 +194,7 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox [disabled]="historico" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
+              <p-checkbox [disabled]="!activacionEditar" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
                 name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
@@ -205,24 +205,24 @@
       <div class="card-footer">
         <div class="text-right main-button">
 
-          <button [disabled]="!(selectedDatos && selectedDatos != '' || nuevo)" (click)="isSelectMultiple(); selectedDatos=false" pButton
+          <button [disabled]="!activacionEditar || !(selectedDatos && selectedDatos != '' || nuevo)" (click)="deseleccionar()" pButton
             type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.deseleccionar' | translate}}"></button>
 
           <button (click)="sendEdit();" pButton type="button" icon="	fa fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-            [disabled]="disableGuardar()"></button>
+            [disabled]="!activacionEditar || disableGuardar()"></button>
 
-          <button *ngIf="!historico" (click)="toHistorico(); selectMultiple=true; selectionMode='multiple'" pButton type="button" icon="fa fa-history"
-            iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+          <button *ngIf="!historico" (click)="toHistorico(); selectMultiple=true; selectionMode='multiple'; selectAll = false" pButton
+            type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
           <button *ngIf="historico" (click)="toNotHistory();  isSelectMultiple();" pButton type="button" icon="fa fa-undo" iconPos="left"
             label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-          <button *ngIf="!historico" [disabled]="!(selectedDatos && selectedDatos != '' && !nuevo)" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
+          <button *ngIf="!historico" [disabled]="!activacionEditar || !(selectedDatos && selectedDatos != '' && !nuevo)" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
             pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-          <button *ngIf="historico" [disabled]="!(selectedDatos && selectedDatos != '' && !nuevo)" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
+          <button *ngIf="historico" [disabled]="!activacionEditar || !(selectedDatos && selectedDatos != '' && !nuevo)" (click)="confirmarBorrar(selectedDatos); selectedDatos=false"
             pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.message.rehabilitar' | translate}}"></button>
 
-          <button *ngIf="activacionEditar" (click)="newUsuario(); historico = false; selectedDatos = []" pButton type="button" icon="	fa fa-plus "
-            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="blockCrear"></button>
+          <button (click)="newUsuario(); historico = false; selectedDatos = []" pButton type="button" icon="	fa fa-plus " iconPos="left"
+            label="{{ 'general.boton.new' | translate}}" [disabled]="!activacionEditar || blockCrear"></button>
 
         </div>
       </div>
