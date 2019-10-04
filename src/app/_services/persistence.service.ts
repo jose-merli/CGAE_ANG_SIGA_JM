@@ -29,11 +29,11 @@ export class PersistenceService {
         sessionStorage.removeItem(this.filtrosName);
     }
     setFiltrosAux(data: any) {
-        localStorage.setItem(this.filtrosAuxName, JSON.stringify(data));
+        sessionStorage.setItem(this.filtrosAuxName, JSON.stringify(data));
     }
 
     getFiltrosAux() {
-        let data = localStorage.getItem(this.filtrosAuxName);
+        let data = sessionStorage.getItem(this.filtrosAuxName);
         return JSON.parse(data);
     }
 

@@ -22,6 +22,7 @@ export class FiltroGestionZonasComponent implements OnInit {
   // partidoJudicial:string;
 
   filtros: ZonasItem = new ZonasItem();
+  filtroAux: ZonasItem = new ZonasItem();
   historico: boolean = false;
   @Input() permisoEscritura;
 
@@ -54,7 +55,9 @@ export class FiltroGestionZonasComponent implements OnInit {
 
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
-      this.isOpen.emit(this.historico)
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.isOpen.emit(false)
     }
 
   }

@@ -54,6 +54,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
+    this.historico = this.persistenceService.getHistorico()
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     if (this.persistenceService.getPermisos()) {
       this.permisos = true;
@@ -64,7 +65,6 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   seleccionaFila(evento) {
     if (!this.selectAll && !this.selectMultiple) {
-      this.persistenceService.setHistorico(this.historico);
       this.persistenceService.setDatos(this.selectedDatos[0]);
       this.router.navigate(["/fichaGrupoAreas"], { queryParams: { idArea: this.selectedDatos[0].idArea } });
     } else {
@@ -121,6 +121,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   searchAreas() {
     this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico)
     this.searchAreasSend.emit(this.historico);
 
   }

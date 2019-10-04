@@ -1,19 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FiltroPrisionesComponent } from './filtro-prisiones/filtro-prisiones.component';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
-import { TablaPrisionesComponent } from './tabla-prisiones/tabla-prisiones.component';
+import { FiltrosProcuradoresComponent } from './filtros-procuradores/filtros-procuradores.component';
+import { TablaProcuradoresComponent } from './tabla-procuradores/tabla-procuradores.component';
 
 @Component({
-  selector: 'app-busqueda-prisiones',
-  templateUrl: './busqueda-prisiones.component.html',
-  styleUrls: ['./busqueda-prisiones.component.scss']
+  selector: 'app-busqueda-procuradores',
+  templateUrl: './busqueda-procuradores.component.html',
+  styleUrls: ['./busqueda-procuradores.component.scss']
 })
-export class BusquedaPrisionesComponent implements OnInit {
+export class BusquedaProcuradoresComponent implements OnInit {
 
   buscar: boolean = false;
   historico: boolean = false;
@@ -22,8 +22,8 @@ export class BusquedaPrisionesComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
-  @ViewChild(FiltroPrisionesComponent) filtros;
-  @ViewChild(TablaPrisionesComponent) tabla;
+  @ViewChild(FiltrosProcuradoresComponent) filtros;
+  @ViewChild(TablaProcuradoresComponent) tabla;
 
   //comboPartidosJudiciales
   comboPJ;
@@ -37,7 +37,7 @@ export class BusquedaPrisionesComponent implements OnInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_maestros.prisiones)
+    this.commonsService.checkAcceso(procesos_maestros.comisarias)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -61,16 +61,15 @@ export class BusquedaPrisionesComponent implements OnInit {
     this.search(event);
   }
 
-
   search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("busquedaPrisiones_searchPrisiones", this.filtros.filtroAux).subscribe(
+    this.sigaServices.post("busquedaProcuradores_searchProcuradores", this.filtros.filtroAux).subscribe(
       n => {
 
-        this.datos = JSON.parse(n.body).prisionItems;
+        this.datos = JSON.parse(n.body).procuradorItems;
         this.buscar = true;
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {

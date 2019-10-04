@@ -17,6 +17,7 @@ import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-part
 import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partidas-judiciales.module';
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { ComisariasModule } from './comisarias/comisarias.module';
+import { ProcuradoresModule } from './procuradores/procuradores.module';
 
 @NgModule({
         declarations: [],
@@ -33,8 +34,9 @@ import { ComisariasModule } from './comisarias/comisarias.module';
                 PrisionesModule,
                 FundamentosCalificacionModule,
                 GestionPartidasComponent,
+                ComisariasModule,
+                ProcuradoresModule,
                 GestionPartidasJudicialesComponent,
-                ComisariasModule
         ],
 
         providers: []
