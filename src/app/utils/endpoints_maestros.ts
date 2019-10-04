@@ -72,4 +72,10 @@ export let endpoints_maestros: any = {
     busquedaPrisiones_activatePrisiones: "maestros/busquedaPrisiones/activatePrisiones",
     gestionPrisiones_createPrision: "maestros/gestionPrisiones/createPrision",
     gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
+
+
+    gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",
+    deletePartidosJudi_deletePartidosJudi: "maestros/deletePartidosJudi/deletePartidosJudi",
+    gestionPartidosJudi_ComboPartidosJudi: "maestros/gestionPartidosJudi/ComboPartidosJudi",
+    gestionPartidosJudi_createPartidosJudi: "maestros/gestionPartidosJudi/createPartidosJudi"
 }

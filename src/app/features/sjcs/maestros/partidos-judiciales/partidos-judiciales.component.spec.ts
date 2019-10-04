@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PartidosJudicialesComponent } from './partidos-judiciales.component';
+import { PartidosJudicialesComponent } from './partidas-judiciales.component';
 
 describe('PartidosJudicialesComponent', () => {
   let component: PartidosJudicialesComponent;

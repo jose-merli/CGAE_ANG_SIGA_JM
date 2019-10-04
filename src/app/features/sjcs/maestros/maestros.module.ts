@@ -14,6 +14,7 @@ import { PrisionesModule } from './prisiones/prisiones.module';
 import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
 import { GestionPartidasComponent } from './partidas/partidas.module';
 import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
+import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partidas-judiciales.module';
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { ComisariasModule } from './comisarias/comisarias.module';
 import { ProcuradoresModule } from './procuradores/procuradores.module';
@@ -34,7 +35,8 @@ import { ProcuradoresModule } from './procuradores/procuradores.module';
                 FundamentosCalificacionModule,
                 GestionPartidasComponent,
                 ComisariasModule,
-                ProcuradoresModule
+                ProcuradoresModule,
+                GestionPartidasJudicialesComponent,
         ],
 
         providers: []
