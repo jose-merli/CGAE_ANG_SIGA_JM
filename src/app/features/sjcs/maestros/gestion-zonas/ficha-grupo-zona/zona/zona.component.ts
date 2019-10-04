@@ -462,7 +462,7 @@ export class ZonaComponent implements OnInit {
         this.selectionMode = "single";
       }
     }
-   
+
   }
 
   isSelectMultiple() {
@@ -497,7 +497,9 @@ export class ZonaComponent implements OnInit {
   }
 
   openMultiSelect(dato) {
-    console.log(this.multiSelect);
+    // console.log(this.multiSelect);
+    dato.onPanelShow;
+    dato.show();
     dato.overlayVisible = true;
   }
 
