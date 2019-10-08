@@ -620,10 +620,4 @@ export class GestionCostesfijosComponent implements OnInit {
     this.msgs = [];
   }
 
-  openMultiSelect(dato) {
-    console.log(this.multiSelect);
-    dato.overlayVisible = true;
-  }
-
-
 }

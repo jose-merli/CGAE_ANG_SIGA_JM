@@ -22,6 +22,7 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   // partidoJudicial:string;
   msgs: any[] = [];
   filtros: AreasItem = new AreasItem();
+  filtroAux: AreasItem = new AreasItem();
   jurisdicciones: any[] = [];
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -35,13 +36,21 @@ export class FiltroBusquedaAreasComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.filtros.historico = this.persistenceService.getHistorico();
-      // this.isBuscar();
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisos = this.persistenceService.getPermisos();
     }
+
+
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
+      if (this.persistenceService.getHistorico() != undefined) {
+        this.busqueda.emit(this.persistenceService.getHistorico());
+      }
+      else {
+        this.isBuscar();
+      }
+    } else {
+      this.filtros = new AreasItem();
     }
     this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
       n => {
@@ -83,19 +92,23 @@ export class FiltroBusquedaAreasComponent implements OnInit {
     if ((this.filtros.nombreArea == undefined || this.filtros.nombreArea == "" || this.filtros.nombreArea.trim().length < 3) && (this.filtros.nombreMateria == undefined || this.filtros.nombreMateria == "" || this.filtros.nombreMateria.trim().length < 3) && (this.filtros.jurisdiccion == undefined || this.filtros.jurisdiccion == "")) {
       this.showSearchIncorrect();
     } else {
-      this.buscar = true;
-      this.filtros.historico = false;
-      if (this.filtros.nombreArea != undefined && this.filtros.nombreArea != null) {
-        this.filtros.nombreArea = this.filtros.nombreArea.trim();
-      }
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      // this.buscar = true;
+      // this.filtros.historico = false;
+      // if (this.filtros.nombreArea != undefined && this.filtros.nombreArea != null) {
+      //   this.filtros.nombreArea = this.filtros.nombreArea.trim();
+      // }
 
-      if (this.filtros.nombreMateria != undefined && this.filtros.nombreMateria != null) {
-        this.filtros.nombreMateria = this.filtros.nombreMateria.trim();
-      }
+      // if (this.filtros.nombreMateria != undefined && this.filtros.nombreMateria != null) {
+      //   this.filtros.nombreMateria = this.filtros.nombreMateria.trim();
+      // }
 
       this.busqueda.emit(false);
     }
   }
+
 
   showSearchIncorrect() {
     this.msgs = [];

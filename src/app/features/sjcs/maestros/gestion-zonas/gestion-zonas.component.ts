@@ -6,13 +6,14 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
+import { TablaGestionZonasComponent } from './tabla-gestion-zonas/tabla-gestion-zonas.component';
 
 @Component({
   selector: 'app-gestion-zonas',
   templateUrl: './gestion-zonas.component.html',
   styleUrls: ['./gestion-zonas.component.scss']
 })
-export class GestionZonasComponent implements OnInit, AfterViewInit {
+export class GestionZonasComponent implements OnInit {
 
 
   buscar: boolean = false;
@@ -28,6 +29,7 @@ export class GestionZonasComponent implements OnInit, AfterViewInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltroGestionZonasComponent) filtros;
+  @ViewChild(TablaGestionZonasComponent) tabla;
 
   //comboPartidosJudiciales
   comboPJ;
@@ -60,38 +62,48 @@ export class GestionZonasComponent implements OnInit, AfterViewInit {
       ).catch(error => console.error(error));
   }
 
-  ngAfterViewInit() {
-    // this.buscar = this.filtros.buscar
-  }
 
   isOpenReceive(event) {
     this.filtros.filtros.historico = event;
-    this.searchZonas();
+    this.searchZonas(event);
   }
 
 
-  searchZonas() {
+  searchZonas(event) {
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-
-    this.sigaServices.post("gestionZonas_searchZones", this.filtros.filtros).subscribe(
+    this.sigaServices.post("gestionZonas_searchZones", this.filtros.filtroAux).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).zonasItems;
         this.buscar = true;
         this.progressSpinner = false;
-
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
+        this.resetSelect();
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
-      }
-    );
+      });
+  }
+
+  resetSelect() {
+    if (this.tabla != undefined) {
+      this.tabla.selectedDatos = [];
+      this.tabla.numSelected = 0;
+      this.tabla.selectMultiple = false;
+      this.tabla.selectAll = false;
+    }
   }
 
   searchZonasSend(event) {
     this.filtros.filtros.historico = event;
 
-    this.searchZonas();
+    this.searchZonas(event);
   }
 
   showMessage(event) {

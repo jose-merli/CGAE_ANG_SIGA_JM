@@ -29,6 +29,7 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltrosModulosComponent) filtros;
+  @ViewChild(TablaModulosComponent) tabla;
 
   //comboPartidosJudiciales
   msgs;
@@ -73,21 +74,34 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
 
 
   searchModulos(event) {
-    this.filtros.filtros.historico = event;
-
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-
-    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtros).subscribe(
+    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).modulosItem;
         this.buscar = true;
         this.progressSpinner = false;
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
+        this.resetSelect();
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
-      }
-    );
+      });
+  }
+
+
+  resetSelect() {
+    if (this.tabla != undefined) {
+      this.tabla.selectedDatos = [];
+      this.tabla.numSelected = 0;
+      this.tabla.selectMultiple = false;
+      this.tabla.selectAll = false;
+    }
   }
 
   showMessage(event) {

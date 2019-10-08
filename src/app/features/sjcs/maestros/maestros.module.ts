@@ -18,6 +18,8 @@ import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partid
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { ComisariasModule } from './comisarias/comisarias.module';
 import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.module';
+import { ProcuradoresModule } from './procuradores/procuradores.module';
+import { SpinnerModule } from 'primeng/spinner';
 
 @NgModule({
         declarations: [],
@@ -34,9 +36,12 @@ import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.
                 PrisionesModule,
                 FundamentosCalificacionModule,
                 GestionPartidasComponent,
+                ComisariasModule,
+                ProcuradoresModule,
                 GestionPartidasJudicialesComponent,
                 ComisariasModule,
-                GestionTiposAsistenciaModule
+                GestionTiposAsistenciaModule,
+                SpinnerModule
         ],
 
         providers: []
