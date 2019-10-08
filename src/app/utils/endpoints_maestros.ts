@@ -77,5 +77,13 @@ export let endpoints_maestros: any = {
     gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",
     deletePartidosJudi_deletePartidosJudi: "maestros/deletePartidosJudi/deletePartidosJudi",
     gestionPartidosJudi_ComboPartidosJudi: "maestros/gestionPartidosJudi/ComboPartidosJudi",
-    gestionPartidosJudi_createPartidosJudi: "maestros/gestionPartidosJudi/createPartidosJudi"
+    gestionPartidosJudi_createPartidosJudi: "maestros/gestionPartidosJudi/createPartidosJudi",
+
+
+    gestionTiposAsistencia_busquedaTiposAsistencia: "maestros/gestionTiposAsistencia/busquedaTiposAsistencia",
+    gestionTiposAsistencia_ComboTiposAsistencia: "maestros/gestionTiposAsistencia/ComboTiposAsistencia",
+    gestionTiposAsistencia_deleteTipoAsitencia: "maestros/gestionTiposAsistencia/deleteTipoAsitencia",
+    gestionTiposAsistencia_updateTiposAsistencias: "maestros/gestionTiposAsistencia/updateTiposAsistencias",
+    gestionTiposAsistencia_activateTipoAsitencia: "maestros/gestionTiposAsistencia/activateTipoAsitencia",
+    gestionTiposAsistencia_createTipoAsistencia: "maestros/gestionTiposAsistencia/createTipoAsistencia"
 }
