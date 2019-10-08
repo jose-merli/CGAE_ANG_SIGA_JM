@@ -42,11 +42,11 @@ export class TablaAcreditacionesComponent implements OnInit {
   updateAcreditaciones = [];
   comboAcreditaciones: any[] = [];
   comboAcreditacionesNew: any[] = [];
-
   // selectedBefore;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
   showTarjeta: boolean = true;
+  maximaLong: any = 3;
   //Resultados de la busqueda
   @Input() idProcedimiento;
   //Resultados de la busqueda
@@ -120,10 +120,10 @@ export class TablaAcreditacionesComponent implements OnInit {
             } else {
               element.nigProcedimiento = false;
             }
+            element.porcentaje = element.porcentaje.replace(".", ",");
             element.editable = false;
             element.overlayVisible = false;
             element.idprocedimiento = this.idProcedimiento;
-
           });
 
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -185,6 +185,14 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.body.acreditacionItem != undefined) {
+      this.body.acreditacionItem.forEach(element => {
+        element.porcentaje = "" + element.porcentaje;
+        element.porcentaje = + element.porcentaje.replace(",", ".");
+      });
+    } else {
+      this.body.porcentaje = + this.body.porcentaje.replace(",", ".");
+    }
 
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -197,6 +205,7 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.getComboAcreditaciones();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
       },
       err => {
         this.progressSpinner = false;
@@ -246,18 +255,88 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   }
 
+  changeImporte() {
+
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      if (charCode == 188) {
+      }
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
   validateAcreditacion(e) {
+    if (this.selectedDatos == null) {
+      this.selectedDatos = [];
+      this.selectedDatos.push(this.datos.find(item => item.editable == true));
+    }
     if (!this.nuevo) {
       let datoId = this.datos.findIndex(item => item.idAcreditacion === this.selectedDatos[0].idAcreditacion);
-
       let dato = this.datos[datoId];
-      if (dato.porcentaje > 100) {
-        dato.porcentaje = 100;
+      dato.porcentaje = "" + dato.porcentaje;
+      if (dato.porcentaje.split(",").length - 1 > 1) {
+        let partePrimera = dato.porcentaje.split(",");
+        dato.porcentaje = partePrimera[0];
       }
+      if (dato.porcentaje.includes(",")) {
+        this.maximaLong = 4;
+        let partes = dato.porcentaje.split(",");
+        this.maximaLong = partes[0].length + 3;
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          dato.porcentaje = partes[0] + "," + segundaParte;
+        }
+        // if(partes[1].length >=1){
+        //   this.maximaLong = partes[0].length + 3;
+        // }
+        if (numero >= 100) {
+          dato.porcentaje = 100;
+        } else if (numero < 0) {
+          dato.porcentaje = 0;
+        }
+      } else {
+        this.maximaLong = 3;
+        if (dato.porcentaje.length > 3) {
+          dato.porcentaje = 100;
+        } else {
+          let numero = + dato.porcentaje;
+          if (numero >= 100) {
+            dato.porcentaje = 100;
+          }
+          else if (numero < 0) {
+            dato.porcentaje = 0;
+          }
+        }
+      }
+
       this.editarAcreditacion(dato);
 
     } else {
-      if (this.datos[0].porcentaje > 100) this.datos[0].porcentaje = 100;
+      this.datos[0].porcentaje = "" + this.datos[0].porcentaje;
+      if (this.datos[0].porcentaje.includes(",")) {
+        let partes = this.datos[0].porcentaje.split(",");
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].porcentaje = partes[0] + "," + segundaParte;
+          // this.importe.nativeElement.value = this.modulosItem.importe;
+        }
+        this.maximaLong = 4;
+        this.maximaLong = partes[0].length + 3;
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].porcentaje = partes[0] + "," + segundaParte;
+        }
+      }
+      if (+this.datos[0].porcentaje > 100) this.datos[0].porcentaje = 100;
     }
   }
 
@@ -271,7 +350,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].idAcreditacion != undefined && this.datos[0].porcentaje != "") {
+      if (this.datos[0].idAcreditacion != undefined && this.datos[0].idAcreditacion != "" && this.datos[0].porcentaje != "") {
         return false;
       } else {
         return true;

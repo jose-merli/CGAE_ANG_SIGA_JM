@@ -547,8 +547,8 @@ export class TablaMateriasComponent implements OnInit {
   openMultiSelect(dato) {
     // console.log(this.multiSelect);
     dato.onPanelShow;
-    dato.show();
-    dato.overlayVisible = true;
+    // this.multiSelect.show();
+    // dato.overlayVisible = true;
   }
 
   onHideTarjeta() {

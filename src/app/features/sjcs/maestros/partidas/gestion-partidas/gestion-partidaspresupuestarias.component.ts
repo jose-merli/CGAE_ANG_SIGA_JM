@@ -129,28 +129,6 @@ export class TablaPartidasComponent implements OnInit {
     }
   }
 
-
-
-
-  // changeImporte() {
-
-  //   let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === this.selectedBefore.idpartidapresupuestaria);
-  //   this.selectedBefore = this.datos.find(item => item.idpartidapresupuestaria === this.selectedBefore.idpartidapresupuestaria);
-  //   if (this.selectedBefore != undefined)
-  //     if (this.selectedBefore.importepartida > 99999999.99) {
-  //       this.selectedBefore.importepartida = 99999999
-  //     }
-  //   if (findDato != undefined) {
-  //     if (this.selectedBefore.importepartida != findDato.importepartida) {
-  //       let findUpdate = this.updatePartidasPres.find(item => item.importepartida === this.selectedBefore.importepartida);
-
-  //       if (findUpdate == undefined) {
-  //         this.updatePartidasPres.push(this.selectedBefore);
-  //       }
-  //     }
-  //   }
-
-  // }
   changeImporte(dato) {
     let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
