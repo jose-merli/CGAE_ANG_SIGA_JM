@@ -4669,6 +4669,7 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
             //     JSON.stringify(new Date(element.fechaModificacion))
@@ -4779,13 +4780,14 @@ export class FichaColegialComponent implements OnInit {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
     this.selectedDatosRegtel.id = this.selectedDatosRegtel.parent;
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    let selectedRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
           "fichaColegialRegTel_searchListDir",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
@@ -4823,7 +4825,7 @@ export class FichaColegialComponent implements OnInit {
         .postPaginado(
           "fichaColegialRegTel_searchListDirNoCol",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
@@ -4855,13 +4857,14 @@ export class FichaColegialComponent implements OnInit {
       this.atrasRegTel = this.selectedDatosRegtel.parent;
     }
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    let selectedRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
           "fichaColegialRegTel_searchListDir",
           "?numPagina=1",
-          this.selectedDatosRegtel
+         selectedRegtel
         )
         .subscribe(
           data => {
@@ -4902,7 +4905,7 @@ export class FichaColegialComponent implements OnInit {
         .postPaginado(
           "fichaColegialRegTel_searchListDirNoCol",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
@@ -4942,23 +4945,23 @@ export class FichaColegialComponent implements OnInit {
   onClickDescargarRegTel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    let fechaModificacionRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel.fechaModificacion));
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    let selectedRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",
 
-        this.selectedDatosRegtel
+        selectedRegtel
       )
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "application/octet-stream" });
           saveAs(blob, this.selectedDatosRegtel.originalFilename);
-          this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
+          //this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
           this.progressSpinner = false;
         },
         err => {
-          this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
+          //this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
           this.progressSpinner = false;
         }
       );
