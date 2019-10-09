@@ -4,7 +4,7 @@
   <i class="fa fa-square"></i>
   <p>{{'menu.justiciaGratuita' | translate}}
     <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros' | translate}}
-    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.MaestroPJ' | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.partidosJudiciales' | translate}}
   </p>
 </div>
 <div class="card">
@@ -18,7 +18,7 @@
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'menu.justiciaGratuita.maestros.MaestroPJ' | translate}}</label>
+          <label>{{ 'menu.justiciaGratuita.maestros.partidosJudiciales' | translate}}</label>
           <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="200"
             pInputText>
         </div>

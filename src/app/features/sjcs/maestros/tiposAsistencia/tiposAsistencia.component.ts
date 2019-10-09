@@ -25,7 +25,7 @@ export class TiposAsistenciaComponent implements OnInit {
   selectMultiple: boolean = false;
   cols;
   rowsPerPage;
-
+  esComa: boolean = false;
 
   updateTiposAsistencia = [];
   editMode: boolean = false;
@@ -37,7 +37,7 @@ export class TiposAsistenciaComponent implements OnInit {
   comboTiposGuardia;
   comboAsistencias;
   comboActuacion;
-
+  maximaLong: any = 3;
   progressSpinner: boolean = false;
   msgs;
   body;
@@ -51,6 +51,7 @@ export class TiposAsistenciaComponent implements OnInit {
   pordefectotabla: boolean = false;
   permisoEscritura: boolean = false;
 
+  @ViewChild("importe") importe;
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
@@ -60,7 +61,7 @@ export class TiposAsistenciaComponent implements OnInit {
   ngOnInit() {
     this.getComboTiposAsistencia();
     this.getCols();
-    this.commonsService.checkAcceso(procesos_maestros.costesFijos)
+    this.commonsService.checkAcceso(procesos_maestros.tiposAsistencias)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
@@ -86,21 +87,155 @@ export class TiposAsistenciaComponent implements OnInit {
     this.nuevo = false;
   }
 
-  getComboAsistencia() {
-    this.progressSpinner = true;
+  validateAcreditacionMaximo(e) {
+    if (this.selectedDatos == null) {
+      this.selectedDatos = [];
+      this.selectedDatos.push(this.datos.find(item => item.editable == true));
+    }
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.selectedDatos[0].idtipoasistenciacolegio);
+      let dato = this.datos[datoId];
+      dato.importemaximo = "" + dato.importemaximo;
 
-    this.sigaServices.get("gestionCostesFijos_getComboAsistencia").subscribe(
-      n => {
-        this.comboAsistencias = n.combooItems;
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
 
+      if (dato.importemaximo.split(",").length - 1 > 1) {
+        let partePrimera = dato.importemaximo.split(",");
+        dato.importemaximo = partePrimera[0];
       }
-    );
+      if (dato.importemaximo.includes(",")) {
+        this.maximaLong = 8;
+        let partes = dato.importemaximo.split(",");
+        this.maximaLong = partes[0].length + 3;
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          dato.importemaximo = partes[0] + "," + segundaParte;
+        }
+        if (numero >= 100) {
+          // dato.importemaximo = 100;
+        } else if (numero < 0) {
+          dato.importemaximo = 0;
+        }
+      } else {
+        this.maximaLong = 8;
+        if (dato.importemaximo.length > 3) {
+          // dato.importemaximo = 100;
+        } else {
+          let numero = + dato.importemaximo;
+          if (numero >= 100) {
+            // dato.importemaximo = 100;
+          }
+          else if (numero < 0) {
+            dato.importemaximo = 0;
+          }
+        }
+      }
+
+      this.editarTipoAsistencia(dato);
+
+    } else {
+      this.datos[0].importemaximo = "" + this.datos[0].importemaximo;
+      if (this.datos[0].importemaximo.includes(",")) {
+        let partes = this.datos[0].importemaximo.split(",");
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].importemaximo = partes[0] + "," + segundaParte;
+          // this.importe.nativeElement.value = this.modulosItem.importe;
+        }
+        this.maximaLong = 8;
+        this.maximaLong = partes[0].length + 3;
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].importemaximo = partes[0] + "," + segundaParte;
+        }
+      }
+      if (+this.datos[0].importemaximo > 999999999) this.datos[0].importemaximo = 99999999;
+    }
   }
+
+
+  validateAcreditacion(e) {
+    if (this.selectedDatos == null) {
+      this.selectedDatos = [];
+      this.selectedDatos.push(this.datos.find(item => item.editable == true));
+    }
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.selectedDatos[0].idtipoasistenciacolegio);
+      let dato = this.datos[datoId];
+      dato.importe = "" + dato.importe;
+
+
+      if (dato.importe.split(",").length - 1 > 1) {
+        let partePrimera = dato.importe.split(",");
+        dato.importe = partePrimera[0];
+      }
+      if (dato.importe.includes(",")) {
+        this.maximaLong = 8;
+        let partes = dato.importe.split(",");
+        this.maximaLong = partes[0].length + 3;
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          dato.importe = partes[0] + "," + segundaParte;
+        }
+        if (numero >= 100) {
+          // dato.importe = 100;
+        } else if (numero < 0) {
+          dato.importe = 0;
+        }
+      } else {
+        this.maximaLong = 8;
+        if (dato.importe.length > 3) {
+          // dato.importe = 100;
+        } else {
+          let numero = + dato.importe;
+          if (numero >= 100) {
+            // dato.importe = 100;
+          }
+          else if (numero < 0) {
+            dato.importe = 0;
+          }
+        }
+      }
+
+      this.editarTipoAsistencia(dato);
+
+    } else {
+      this.datos[0].importe = "" + this.datos[0].importe;
+      if (this.datos[0].importe.includes(",")) {
+        let partes = this.datos[0].importe.split(",");
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].importe = partes[0] + "," + segundaParte;
+          // this.importe.nativeElement.value = this.modulosItem.importe;
+        }
+        this.maximaLong = 8;
+        this.maximaLong = partes[0].length + 3;
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].importe = partes[0] + "," + segundaParte;
+        }
+      }
+      if (+this.datos[0].importe > 999999999) this.datos[0].importe = 99999999;
+    }
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      if (charCode == 188) {
+      }
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
+
   getComboTiposAsistencia() {
     this.progressSpinner = true;
 
@@ -241,13 +376,13 @@ export class TiposAsistenciaComponent implements OnInit {
           this.body.tiposAsistenciasItem = this.updateTiposAsistencia;
           this.callSaveService(url);
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionCostesFijos.constesFijosModificadosYaRegistrados"));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
           this.progressSpinner = false;
         }
 
       }
       else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Por defecto");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUnoPorDefecto"));
         this.progressSpinner = false;
       }
 
@@ -274,6 +409,17 @@ export class TiposAsistenciaComponent implements OnInit {
 
 
   callSaveService(url) {
+    if (this.body.tiposAsistenciasItem != undefined) {
+      this.body.tiposAsistenciasItem.forEach(element => {
+        element.importe = "" + element.importe;
+        element.importemaximo = "" + element.importemaximo;
+        element.importe = + element.importe.replace(",", ".");
+        element.importemaximo = + element.importemaximo.replace(",", ".");
+      });
+    } else {
+      this.body.importe = + this.body.importe.replace(",", ".");
+      this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
+    }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -294,6 +440,8 @@ export class TiposAsistenciaComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         this.progressSpinner = false;
+        this.editMode = true;
+        this.nuevo = false;
       },
       () => {
         this.selectedDatos = [];
@@ -396,7 +544,14 @@ export class TiposAsistenciaComponent implements OnInit {
       // FORZAMOS POR DEFECTO QUE HAYA UNO POR DEFECTO
       this.pordefectotabla = true;
     } else {
-      this.updateTiposAsistencia.push(dato);
+      let dato2 = dato;
+      let tiposAsistenciaString = "";
+      for (let i in dato2.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      }
+      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato2.seleccionados = "";
+      this.updateTiposAsistencia.push(dato2);
     }
   }
   editarTipoAsistencia(dato) {
@@ -667,40 +822,6 @@ export class TiposAsistenciaComponent implements OnInit {
     else return true;
   }
 
-  // onChangeSelectAll() {
-
-  //   this.editElementDisabled();
-  //   this.editMode = false;
-
-  //   if (this.selectAll) {
-  //     this.selectMultiple = true;
-
-  //     if (this.historico) {
-  //       this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-  //       this.selectMultiple = true;
-  //       this.selectionMode = "single";
-  //     } else {
-  //       this.selectedDatos = this.datos;
-  //       this.selectMultiple = false;
-  //       this.selectionMode = "single";
-
-  //     }
-
-  //     // if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-  //     //   this.selectMultiple = true;
-  //     //   this.numSelected = this.selectedDatos.length;
-  //     // }
-  //     this.selectionMode = "multiple";
-  //     this.numSelected = this.datos.length;
-  //   } else {
-  //     this.selectedDatos = [];
-  //     this.numSelected = 0;
-  //     if (this.historico)
-  //       this.selectMultiple = true;
-  //     this.selectionMode = "multiple";
-  //   }
-  // }
-
   onChangeSelectAll() {
     if (this.selectAll === true) {
       if (this.nuevo) this.datos.shift();
@@ -751,32 +872,6 @@ export class TiposAsistenciaComponent implements OnInit {
     }
     // this.volver();
   }
-
-  // isSelectMultiple() {
-
-  //   if (this.permisoEscritura) {
-
-  //     this.editElementDisabled();
-  //     this.editMode = false;
-
-  //     this.selectMultiple = !this.selectMultiple;
-
-  //     if (!this.selectMultiple) {
-  //       this.selectedDatos = [];
-  //       this.numSelected = 0;
-  //       this.selectionMode = "single";
-
-  //     } else {
-  //       this.selectAll = false;
-  //       this.selectedDatos = [];
-  //       this.numSelected = 0;
-  //       this.selectionMode = "multiple";
-
-  //     }
-  //   }
-
-  // }
-
 
   actualizaSeleccionados(selectedDatos) {
     if (this.selectedDatos == undefined) {
