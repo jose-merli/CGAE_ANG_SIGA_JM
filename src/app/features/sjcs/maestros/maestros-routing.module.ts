@@ -21,6 +21,7 @@ import { ComisariasComponent } from './comisarias/comisarias/comisarias.componen
 import { GestionComisariasComponent } from './comisarias/comisarias/gestion-comisarias/gestion-comisarias.component';
 import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procuradores/busqueda-procuradores.component';
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
+import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
 
 const routesMaestros: Routes = [
   {
@@ -115,6 +116,11 @@ const routesMaestros: Routes = [
   {
     path: "mantenimientoprocuradores",
     component: BusquedaProcuradoresComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "procedimientos",
+    component: BusquedaProcedimientosComponent,
     canActivate: [AuthGuard]
   }
 
