@@ -52,7 +52,7 @@ export class TablaMateriasComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
 
   @ViewChild("table") table;
-  @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
+  @ViewChild("multiSelect") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
@@ -545,8 +545,10 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   openMultiSelect(dato) {
-    console.log(this.multiSelect);
-    dato.overlayVisible = true;
+    // console.log(this.multiSelect);
+    dato.onPanelShow;
+    // this.multiSelect.show();
+    // dato.overlayVisible = true;
   }
 
   onHideTarjeta() {

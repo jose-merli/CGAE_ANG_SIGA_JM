@@ -59,7 +59,7 @@
                 <p-multiSelect #multiSelectPJ *ngIf="!(selectMultiple || selectAll) && ((nuevo && dato.zonaNueva == undefined) || (!nuevo && !seleccion) || historico)"
                   [disabled]="nuevo || historico" defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.partidosJudiciales"
                   [options]="comboPJ" optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
-                  (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato)"></p-multiSelect>
+                  (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato); openMultiSelect(dato)"></p-multiSelect>
 
                 <p-multiSelect *ngIf="!(selectMultiple || selectAll) && (!historico && ((seleccion && !nuevo)  || (nuevo && dato.zonaNueva)))"
                   #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.partidosJudiciales" [options]="comboPJ"

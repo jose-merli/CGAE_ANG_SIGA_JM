@@ -17,20 +17,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { TableModule } from 'primeng/table';
-import { FiltrosModulosComponent } from './filtro-busqueda-modulos/filtros-modulos.component';
-import { TablaModulosComponent } from './tabla-modulos/tabla-modulos.component';
-import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
-import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
-import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edicion-modulos.component';
-import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
-import { FechaModule } from '../../../../commons/fecha/fecha.module';
-import { SpinnerModule } from 'primeng/spinner';
 
-// import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
-import { PartidasComponent } from '../partidas/partidas.component';
-
-// import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
+import { TiposAsistenciaComponent } from './tiposAsistencia.component';
 
 @NgModule({
   imports: [
@@ -46,19 +35,13 @@ import { PartidasComponent } from '../partidas/partidas.component';
     PipeTranslationModule,
     MenubarModule,
     TableModule,
-    MultiSelectModule,
-    FechaModule,
-    SpinnerModule,
+    MultiSelectModule
+
     // FichaGrupoZonaModule
 
   ],
   declarations: [
-    FiltrosModulosComponent,
-    MaestrosModulosComponent,
-    TablaModulosComponent,
-    GestionModulosYBasesComponent,
-    EdicionModulosComponent,
-    TablaAcreditacionesComponent
+    TiposAsistenciaComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -88,4 +71,4 @@ import { PartidasComponent } from '../partidas/partidas.component';
     { provide: LOCALE_ID, useValue: 'es-ES' }
   ]
 })
-export class GestionModulosModule { }
+export class GestionTiposAsistenciaModule { }

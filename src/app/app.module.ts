@@ -194,7 +194,6 @@ import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/manteni
 import { DocumentacionEJGComponent } from './features/sjcs/maestros/documentacion-ejg/documentacion-ejg.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
-import { TiposAsistenciaComponent } from './features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component';
 import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { BajasTemporalesComponent } from './features/sjcs/oficio/bajas-temporales/bajas-temporales.component';
@@ -463,7 +462,6 @@ import { FechaModule } from './commons/fecha/fecha.module';
 		DocumentacionEJGComponent,
 		MaestroPJComponent,
 		DestinatariosRetencionesComponent,
-		TiposAsistenciaComponent,
 		TurnosComponent,
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
