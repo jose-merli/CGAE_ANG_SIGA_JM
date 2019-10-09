@@ -19,6 +19,7 @@ import { BusquedaPrisionesComponent } from './prisiones/busqueda-prisiones/busqu
 import { GestionPrisionesComponent } from './prisiones/gestion-prisiones/gestion-prisiones.component';
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { GestionComisariasComponent } from './comisarias/comisarias/gestion-comisarias/gestion-comisarias.component';
+import { TiposAsistenciaComponent } from './tiposAsistencia/tiposAsistencia.component';
 import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procuradores/busqueda-procuradores.component';
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
 import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
@@ -42,6 +43,11 @@ const routesMaestros: Routes = [
   {
     path: "gestionJuzgados",
     component: GestionJuzgadosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "tiposAsistencia",
+    component: TiposAsistenciaComponent,
     canActivate: [AuthGuard]
   },
   {
