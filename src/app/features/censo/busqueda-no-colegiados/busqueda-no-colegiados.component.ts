@@ -137,6 +137,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     sessionStorage.removeItem("nuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiadoGen");
     sessionStorage.removeItem('consultasSearch');
+    sessionStorage.removeItem("abrirSociedad");
+    sessionStorage.removeItem("abrirSolicitudIncorporacion");
 
     this.getLetrado();
 

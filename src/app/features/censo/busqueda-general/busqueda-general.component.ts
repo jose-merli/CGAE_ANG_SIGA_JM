@@ -179,6 +179,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.isSociedad = true;
     }
 
+    if (sessionStorage.getItem("abrirSolicitudIncorporacion") != null || sessionStorage.getItem("abrirSolicitudIncorporacion") != undefined) {
+      this.persona = "f";
+
+      this.isFormador = true;
+    }
+
     this.colsFisicas = [
       { field: "nif", header: "NIF/CIF" },
       { field: "nombre", header: "Nombre" },
@@ -399,7 +405,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
       if (sessionStorage.getItem("AddDestinatarioIndv") == undefined &&
         sessionStorage.getItem("abrirRemitente") == undefined && sessionStorage.getItem("nuevoNoColegiadoGen") == undefined) {
-        this.colegios_seleccionados = [];
+        //this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
 
       } else {
@@ -417,7 +423,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
       if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined
         && sessionStorage.getItem("nuevoNoColegiadoGen") == undefined && sessionStorage.getItem("crearnuevo") == undefined) {
-        this.colegios_seleccionados = [];
+        //this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
 
       } else {
@@ -624,8 +630,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 // encuentra datos, muestra mensaje informativo si tiene nif + {nombre || primer apellido || segundo apellido informado}
 
                 if (this.searchFisica.onlyNif) {
-                  this.showWarning(
-                    "No se puede crear el registro porque ya existe en este colegio. Pruebe a buscar en Colegiados/No colegiados/Sociedades, también en el histórico."
+                  this.showInfo(
+                    "busquedaGeneral.literal.colegiado.otroColegio"
                   );
                 }
 
@@ -704,8 +710,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
               } else {
 
                 if (this.searchJuridica.onlyNif) {
-                  this.showWarning(
-                    "No se puede crear el registro porque ya existe en este colegio. Pruebe a buscar en Colegiados/No colegiados/Sociedades, también en el histórico."
+                  this.showInfo(
+                    "busquedaGeneral.literal.colegiado.otroColegio"
                   );
                 }
 
@@ -758,6 +764,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         sessionStorage.setItem("notario", JSON.stringify(id));
         //this.location.back();
+
         this.router.navigate(["fichaPersonaJuridica"]);
       }
     } else if (
@@ -866,6 +873,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       cuerpo.push(id[0]);
       sessionStorage.setItem("usuarioBody", JSON.stringify(cuerpo));
       sessionStorage.removeItem("abrirSociedad");
+      //sessionStorage.setItem("nuevoRegistro", "true");
       this.router.navigate(["fichaPersonaJuridica"]);
     } else if (this.isFormador) {
       // ir a ficha de formador
