@@ -112,9 +112,16 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
     else return true;
   }
 
+  disableGuardar() {
+    if ((JSON.stringify(this.selectedDatos) != JSON.stringify(this.initSelectedDatos)) && this.initSelectedDatos != undefined) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   save() {
-
+    this.progressSpinner = true;
     let procedimientoDTO = new ProcedimientoObject();
     procedimientoDTO.procedimientosItems = this.selectedDatos;
     procedimientoDTO.idJuzgado = this.datos.idJuzgado
@@ -222,7 +229,9 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
 
   actualizaSeleccionados() {
-
+    if (this.initSelectedDatos == undefined) {
+      this.initSelectedDatos = [];
+    }
     if (this.permisoEscritura) {
       if (this.selectedDatos == undefined || this.selectedDatos.length == 0) {
         this.numSelected = 0;

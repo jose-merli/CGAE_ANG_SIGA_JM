@@ -15,7 +15,7 @@
           </div>
           <div class="d-flex justify-content-between">
             <br>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i *ngIf="modoEdicion" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
       </div>
@@ -24,14 +24,14 @@
           <i class="fas fa-cog icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ 'justiciaGratuita.maestros.gestionProcedimientos' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i *ngIf="modoEdicion" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <p-table [value]="procedimientos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" 
-         paginatorPosition="both" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()">
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}"
+        paginatorPosition="both" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of cols" [style.width]="col.width">
@@ -50,12 +50,20 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="setItalic(dato)">
+              <div *ngIf="setItalic(dato) && col.field != 'importe'">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato)">
+              <div *ngIf="!setItalic(dato) && col.field != 'importe'">
                 <span>{{dato[col.field]}}</span>
               </div>
+
+              <div *ngIf="setItalic(dato) && col.field == 'importe'">
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | number:'1.2-2'}} € </span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field == 'importe'">
+                <span>{{dato[col.field] | number:'1.2-2'}} € </span>
+              </div>
+
             </td>
 
           </tr>
@@ -100,8 +108,8 @@
       <div class="text-right main-button ">
         <button [disabled]="historico || !permisoEscritura" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="historico || !permisoEscritura" (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="historico || !permisoEscritura || disableGuardar()" (click)="save()" pButton type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
