@@ -37,7 +37,7 @@ export class TiposAsistenciaComponent implements OnInit {
   comboTiposGuardia;
   comboAsistencias;
   comboActuacion;
-  maximaLong: any = 3;
+  maximaLong: any = 11;
   progressSpinner: boolean = false;
   msgs;
   body;
@@ -52,6 +52,9 @@ export class TiposAsistenciaComponent implements OnInit {
   permisoEscritura: boolean = false;
 
   @ViewChild("importe") importe;
+
+  @ViewChild("importeMax") importeMax;
+
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
@@ -88,7 +91,7 @@ export class TiposAsistenciaComponent implements OnInit {
   }
 
   validateAcreditacionMaximo(e) {
-    if (this.selectedDatos == null) {
+    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
       this.selectedDatos = [];
       this.selectedDatos.push(this.datos.find(item => item.editable == true));
     }
@@ -103,9 +106,8 @@ export class TiposAsistenciaComponent implements OnInit {
         dato.importemaximo = partePrimera[0];
       }
       if (dato.importemaximo.includes(",")) {
-        this.maximaLong = 8;
+        this.maximaLong = 11;
         let partes = dato.importemaximo.split(",");
-        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
@@ -117,46 +119,45 @@ export class TiposAsistenciaComponent implements OnInit {
           dato.importemaximo = 0;
         }
       } else {
-        this.maximaLong = 8;
-        if (dato.importemaximo.length > 3) {
-          // dato.importemaximo = 100;
-        } else {
-          let numero = + dato.importemaximo;
-          if (numero >= 100) {
-            // dato.importemaximo = 100;
-          }
-          else if (numero < 0) {
-            dato.importemaximo = 0;
-          }
+        this.maximaLong = 9;
+        dato.importemaximo = dato.importemaximo.substring(0, 8);
+        let numero = + dato.importemaximo;
+        if (numero < 0) {
+          dato.importemaximo = 0;
         }
       }
+      this.importeMax.nativeElement.value = dato.importemaximo;
 
       this.editarTipoAsistencia(dato);
 
     } else {
       this.datos[0].importemaximo = "" + this.datos[0].importemaximo;
       if (this.datos[0].importemaximo.includes(",")) {
+        this.maximaLong = 11;
         let partes = this.datos[0].importemaximo.split(",");
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importemaximo = partes[0] + "," + segundaParte;
           // this.importe.nativeElement.value = this.modulosItem.importe;
         }
-        this.maximaLong = 8;
-        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importemaximo = partes[0] + "," + segundaParte;
         }
+      } else {
+        this.maximaLong = 9;
+        this.datos[0].importemaximo = this.datos[0].importemaximo.substring(0, 8);
       }
       if (+this.datos[0].importemaximo > 999999999) this.datos[0].importemaximo = 99999999;
+      this.importeMax.nativeElement.value = this.datos[0].importemaximo;
+
     }
   }
 
 
   validateAcreditacion(e) {
-    if (this.selectedDatos == null) {
+    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
       this.selectedDatos = [];
       this.selectedDatos.push(this.datos.find(item => item.editable == true));
     }
@@ -171,54 +172,53 @@ export class TiposAsistenciaComponent implements OnInit {
         dato.importe = partePrimera[0];
       }
       if (dato.importe.includes(",")) {
-        this.maximaLong = 8;
+        this.maximaLong = 11;
         let partes = dato.importe.split(",");
-        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           dato.importe = partes[0] + "," + segundaParte;
         }
-        if (numero >= 100) {
-          // dato.importe = 100;
-        } else if (numero < 0) {
+        if (numero < 0) {
           dato.importe = 0;
         }
       } else {
-        this.maximaLong = 8;
-        if (dato.importe.length > 3) {
-          // dato.importe = 100;
-        } else {
-          let numero = + dato.importe;
-          if (numero >= 100) {
-            // dato.importe = 100;
-          }
-          else if (numero < 0) {
-            dato.importe = 0;
-          }
+        this.maximaLong = 9;
+        dato.importe = dato.importe.substring(0, 8);
+
+        let numero = + dato.importe;
+        if (numero < 0) {
+          dato.importe = 0;
+
         }
       }
+      this.importe.nativeElement.value = dato.importe;
 
       this.editarTipoAsistencia(dato);
 
     } else {
       this.datos[0].importe = "" + this.datos[0].importe;
       if (this.datos[0].importe.includes(",")) {
+        this.maximaLong = 11;
         let partes = this.datos[0].importe.split(",");
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importe = partes[0] + "," + segundaParte;
           // this.importe.nativeElement.value = this.modulosItem.importe;
         }
-        this.maximaLong = 8;
-        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importe = partes[0] + "," + segundaParte;
         }
+      } else {
+        this.maximaLong = 9;
+        this.datos[0].importe = this.datos[0].importe.substring(0, 8);
+
       }
       if (+this.datos[0].importe > 999999999) this.datos[0].importe = 99999999;
+      this.importe.nativeElement.value = this.datos[0].importe;
+
     }
   }
 
@@ -415,10 +415,23 @@ export class TiposAsistenciaComponent implements OnInit {
         element.importemaximo = "" + element.importemaximo;
         element.importe = + element.importe.replace(",", ".");
         element.importemaximo = + element.importemaximo.replace(",", ".");
+
+        if (element.importe == ".") {
+          element.importe = 0;
+        }
+        if (element.importemaximo == ".") {
+          element.importemaximo = 0;
+        }
       });
     } else {
       this.body.importe = + this.body.importe.replace(",", ".");
       this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
+      if (this.body.importe == ".") {
+        this.body.importe = 0;
+      }
+      if (this.body.importemaximo == ".") {
+        this.body.importemaximo = 0;
+      }
     }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
