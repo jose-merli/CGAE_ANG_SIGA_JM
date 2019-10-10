@@ -46,7 +46,9 @@ export class TablaAcreditacionesComponent implements OnInit {
   overlayVisible: boolean = false;
   selectionMode: string = "single";
   showTarjeta: boolean = true;
-  maximaLong: any = 3;
+  maximaLong: any = 5;
+  @ViewChild("porcentaje") porcentajeAct;
+
   //Resultados de la busqueda
   @Input() idProcedimiento;
   //Resultados de la busqueda
@@ -71,9 +73,12 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (datos.fechabaja != undefined) {
-      this.disableAll = true;
+    if (this.datos != undefined) {
+      if (datos.fechabaja != undefined) {
+        this.disableAll = true;
+      }
     }
+
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
@@ -91,8 +96,10 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (datos.fechabaja != null) {
-      this.disableAll = true;
+    if (this.datos != undefined) {
+      if (datos.fechabaja != undefined) {
+        this.disableAll = true;
+      }
     }
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
@@ -255,10 +262,6 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   }
 
-  changeImporte() {
-
-  }
-
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
@@ -286,24 +289,18 @@ export class TablaAcreditacionesComponent implements OnInit {
         dato.porcentaje = partePrimera[0];
       }
       if (dato.porcentaje.includes(",")) {
-        this.maximaLong = 4;
         let partes = dato.porcentaje.split(",");
-        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           dato.porcentaje = partes[0] + "," + segundaParte;
         }
-        // if(partes[1].length >=1){
-        //   this.maximaLong = partes[0].length + 3;
-        // }
         if (numero >= 100) {
           dato.porcentaje = 100;
         } else if (numero < 0) {
           dato.porcentaje = 0;
         }
       } else {
-        this.maximaLong = 3;
         if (dato.porcentaje.length > 3) {
           dato.porcentaje = 100;
         } else {
@@ -316,6 +313,7 @@ export class TablaAcreditacionesComponent implements OnInit {
           }
         }
       }
+      this.porcentajeAct.nativeElement.value = dato.porcentaje;
 
       this.editarAcreditacion(dato);
 
@@ -328,8 +326,6 @@ export class TablaAcreditacionesComponent implements OnInit {
           this.datos[0].porcentaje = partes[0] + "," + segundaParte;
           // this.importe.nativeElement.value = this.modulosItem.importe;
         }
-        this.maximaLong = 4;
-        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
@@ -337,6 +333,8 @@ export class TablaAcreditacionesComponent implements OnInit {
         }
       }
       if (+this.datos[0].porcentaje > 100) this.datos[0].porcentaje = 100;
+      this.porcentajeAct.nativeElement.value = this.datos[0].porcentaje;
+
     }
   }
 

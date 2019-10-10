@@ -226,6 +226,9 @@ export class GestionCostesfijosComponent implements OnInit {
     if (this.body.costeFijoItems != undefined) {
       this.body.costeFijoItems.forEach(element => {
         element.importe = element.importe.replace(",", ".");
+        if (element.importe == ".") {
+          element.importe = 0;
+        }
       });
     } else {
       this.body.importe = + this.body.importe.replace(",", ".");
@@ -623,7 +626,7 @@ export class GestionCostesfijosComponent implements OnInit {
 
 
   validateAcreditacion() {
-    if (this.selectedDatos == null) {
+    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
       this.selectedDatos = [];
       this.selectedDatos.push(this.datos.find(item => item.editable == true));
     }

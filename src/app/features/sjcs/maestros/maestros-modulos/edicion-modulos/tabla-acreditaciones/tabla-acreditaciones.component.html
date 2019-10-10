@@ -79,7 +79,7 @@
               <div *ngIf="col.field == 'porcentaje'">
                 <span *ngIf="disableAll || ( !((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)) || selectMultiple)">
                   {{ dato[col.field] }} % </span>
-                <input *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)))"
+                <input #porcentaje *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva)))"
                   class="form-control paddingInput" [(ngModel)]="dato.porcentaje" max="100" name="porcentaje" type="text" on-focusout="validateAcreditacion($event)"
                   (input)="validateAcreditacion($event)" (keypress)="numberOnly($event)" [maxLength]="maximaLong" />
               </div>
