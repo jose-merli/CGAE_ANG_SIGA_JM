@@ -91,13 +91,13 @@
                             <div *ngIf="dato.editable && col.field == 'importemaximo'">
                                 <input #importeMax class="form-control paddingInput" [(ngModel)]="dato.importemaximo" name="importemaximo" type="text" on-focusout="validateAcreditacionMaximo($event)"
                                     (keypress)="numberOnly($event)" (onBlur)="validateAcreditacionMaximo($event)" (input)="validateAcreditacionMaximo($event)"
-                                    [maxLength]="maximaLong" />
+                                    [maxLength]="maximaLong" pInputText/>
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importe'">
                                 <input #importe class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion($event)"
                                     (onBlur)="validateAcreditacion($event)" (keypress)="numberOnly($event)" (input)="validateAcreditacion($event)"
-                                    [maxLength]="maximaLong" />
+                                    [maxLength]="maximaLong" pInputText/>
                             </div>
                             <div *ngIf="col.field == 'visiblemovil'">
                                 <span *ngIf="disableAll || (dato.visibleMovilBoolean && (!((dato.editable))))">

@@ -46,7 +46,7 @@ export class GestionCostesfijosComponent implements OnInit {
   idTipoAsistencia;
   selectedBefore;
   selectionMode: string = "single";
-
+  id: any;
   permisoEscritura: boolean = false;
   maximaLong: any = 15;
 
@@ -226,6 +226,7 @@ export class GestionCostesfijosComponent implements OnInit {
     if (this.body.costeFijoItems != undefined) {
       this.body.costeFijoItems.forEach(element => {
         element.importe = element.importe.replace(",", ".");
+        element.importeReal = +element.importe;
         if (element.importe == ".") {
           element.importe = 0;
         }
@@ -266,6 +267,9 @@ export class GestionCostesfijosComponent implements OnInit {
   }
 
   newCosteFijo() {
+    this.table.sortOrder = 0;
+     this.table.sortField = '';
+     this.table.reset();
     this.nuevo = true;
     this.editMode = false;
 
@@ -407,7 +411,7 @@ export class GestionCostesfijosComponent implements OnInit {
   }
 
   edit(evento) {
-
+    this.getId();
     if (!this.nuevo && this.permisoEscritura) {
 
       if (!this.selectAll && !this.selectMultiple) {
@@ -621,9 +625,13 @@ export class GestionCostesfijosComponent implements OnInit {
 
       }
     }
-
   }
 
+  getId() {
+    let seleccionados = [];
+    seleccionados.push(this.selectedDatos);
+    this.id = this.datos.findIndex(item => item.idTipoActuacion === seleccionados[0].idTipoActuacion);
+  }
 
   validateAcreditacion() {
     if (this.selectedDatos == null || this.selectedDatos.length == 0) {

@@ -82,10 +82,10 @@
               </div>
 
               <div *ngIf="dato.editable && col.field == 'importeReal'">
-                <!-- <input class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" maxLength="60" on-focusout="changeImporte($event)"
-                  (onBlur)="changeImporte($event)" (input)="changeImporte($event)" /> -->
-                <input #importe class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion()"
-                  (input)="validateAcreditacion()" (keypress)="numberOnly($event)" [maxLength]="maximaLong" />
+                <!-- <input #importe class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion()"
+                  (input)="validateAcreditacion()" (keypress)="numberOnly($event)" [maxLength]="maximaLong" /> -->
+
+                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="15" [nuevo]="nuevo" [id]="id" [disabled]="historico" (valueChangeInput)="changeImporte()"></app-precio>
 
               </div>
             </td>

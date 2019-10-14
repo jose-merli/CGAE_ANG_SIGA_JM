@@ -340,6 +340,7 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
+import { PrecioModule } from './commons/precio/precio.module';
 
 
 
@@ -681,6 +682,7 @@ import { FechaModule } from './commons/fecha/fecha.module';
 		DialogModule,
 		PipeTranslationModule,
 		FechaModule,
+		PrecioModule,
 
 		KeyFilterModule,
 		StepsModule,

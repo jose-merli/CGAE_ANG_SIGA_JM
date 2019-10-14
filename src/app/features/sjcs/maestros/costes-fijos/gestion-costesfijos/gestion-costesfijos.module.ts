@@ -19,6 +19,7 @@ import { environment } from '../../../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../../node_modules/ngx-cookie-service';
+import { PrecioModule } from '../../../../../commons/precio/precio.module';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { CookieService } from '../../../../../../../node_modules/ngx-cookie-serv
     GrowlModule,
     PipeTranslationModule,
     MenubarModule,
-    MultiSelectModule
+    MultiSelectModule,
+    PrecioModule
   ],
   declarations: [GestionCostesfijosComponent],
   providers: [
