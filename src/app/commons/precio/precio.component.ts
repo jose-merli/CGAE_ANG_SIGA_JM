@@ -24,6 +24,7 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 	@Input() selectedDatos: any[];
 	@Input() dato: any;
 	@Input() maxLength: any;
+	@Input() porcentaje: any;
 	@Input() nuevo: boolean;
 	@Input() id: String;
 
@@ -32,7 +33,8 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 	precioSelectedFromCalendar: boolean = false;
 	currentLang;
 	yearRange: string;
-
+	maxLengthComa: any;
+	maxLengthOriginal: any;
 	first: boolean = true;
 
 	@ViewChild('importe') importe;
@@ -40,7 +42,13 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 	constructor(private service: SigaServices) { }
 
 	ngOnInit() {
-
+		this.maxLengthOriginal = this.maxLength;
+		if (this.porcentaje) {
+			this.maxLengthComa = this.maxLength + 2;
+		} else {
+			this.maxLength++;
+			this.maxLengthComa = this.maxLength + 3;
+		}
 	}
 
 	ngAfterViewInit(): void {
@@ -49,8 +57,6 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 	numberOnly(event): boolean {
 		const charCode = (event.which) ? event.which : event.keyCode;
 		if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
-			if (charCode == 188) {
-			}
 			return true;
 		}
 		else {
@@ -67,20 +73,23 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 				this.dato.importe = partePrimera[0];
 			}
 			if (this.dato.importe.includes(",")) {
+				this.maxLength = this.maxLengthComa;
 				let partes = this.dato.importe.split(",");
 				let numero = + partes[0];
 				if (partes[1].length > 0) {
 					if (partes[0] == "") {
 						partes[0] = 0;
 					}
+					let primeraParte = partes[0].substring(0, this.maxLengthOriginal);
 					let segundaParte = partes[1].substring(0, 2);
-					this.dato.importe = partes[0] + "," + segundaParte;
+					this.dato.importe = primeraParte + "," + segundaParte;
 				}
 				if (numero < 0) {
 					this.dato.importe = 0;
 				}
 			} else {
-				this.dato.importe = this.dato.importe.substring(0, this.maxLength);
+				// this.maxLength = this.maxLengthOriginal;
+				this.dato.importe = this.dato.importe.substring(0, this.maxLengthOriginal);
 
 				let numero = + this.dato.importe;
 				if (numero < 0) {
@@ -94,7 +103,9 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 		} else {
 			this.dato.importe = "" + this.importe.nativeElement.value;
 			if (this.dato.importe.includes(",")) {
+				this.maxLength = this.maxLengthComa;
 				let partes = this.dato.importe.split(",");
+				partes[0].substring(0, this.maxLengthOriginal - 1);
 				if (partes[1].length > 0) {
 					if (partes[0] == "") {
 						partes[0] = 0;
@@ -108,16 +119,19 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 					if (partes[0] == "") {
 						partes[0] = 0;
 					}
+					let primeraParte = partes[0].substring(0, this.maxLengthOriginal);
 					let segundaParte = partes[1].substring(0, 2);
-					this.dato.importe = partes[0] + "," + segundaParte;
+					this.dato.importe = primeraParte + "," + segundaParte;
 				}
 			} else {
-				this.dato.importe = this.dato.importe.substring(0, this.maxLength);
+				this.dato.importe = this.dato.importe.substring(0, this.maxLengthOriginal);
 
 			}
-			this.dato.importe = this.dato.importe.substring(0, this.maxLength);
+			// this.dato.importe = this.dato.importe.substring(0, this.maxLengthOriginal);
 			this.importe.nativeElement.value = this.dato.importe;
-
+		}
+		if (this.dato.importe > 100 && this.porcentaje) {
+			this.dato.importe = 100;
 		}
 	}
 
