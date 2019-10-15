@@ -27,6 +27,7 @@ export class TiposAsistenciaComponent implements OnInit {
   rowsPerPage;
   esComa: boolean = false;
   filterStatusPrivatUser: boolean = false;
+  id;
   updateTiposAsistencia = [];
   editMode: boolean = false;
   seleccion: boolean = false;
@@ -100,6 +101,11 @@ export class TiposAsistenciaComponent implements OnInit {
     this.pordefectoanterior = undefined;
   }
 
+  getId() {
+    let seleccionados = [];
+    seleccionados.push(this.selectedDatos);
+    this.id = this.datos.findIndex(item => item.idTipoAsistencia === seleccionados[0].idTipoAsistencia);
+  }
   validateAcreditacionMaximo(e) {
     if (this.selectedDatos == null || this.selectedDatos.length == 0) {
       this.selectedDatos = [];
@@ -172,7 +178,6 @@ export class TiposAsistenciaComponent implements OnInit {
 
     }
   }
-
 
   validateAcreditacion(e) {
     if (this.selectedDatos == null || this.selectedDatos.length == 0) {
@@ -253,8 +258,6 @@ export class TiposAsistenciaComponent implements OnInit {
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
-      if (charCode == 188) {
-      }
       return true;
     }
     else {
@@ -395,6 +398,19 @@ export class TiposAsistenciaComponent implements OnInit {
       this.datos[0].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       let tipoAsistencia = this.datos[0];
       this.body = tipoAsistencia;
+      this.body.tiposAsistenciasItem.forEach(element => {
+        element.importe = element.importe.replace(",", ".");
+        element.importeReal = +element.importe;
+        element.importemaximo = element.importemaximo.replace(",", ".");
+        element.importemaximoReal = +element.importemaximo;
+        if (element.importe == ".") {
+          element.importe = 0;
+        }
+        if (element.importemaximo == ".") {
+          element.importemaximo = 0;
+        }
+      });
+
       this.callSaveService(url);
 
     } else {
@@ -404,6 +420,18 @@ export class TiposAsistenciaComponent implements OnInit {
         if (this.validateUpdate()) {
           this.body = new TiposAsistenciaObject();
           this.body.tiposAsistenciasItem = this.updateTiposAsistencia;
+          this.body.tiposAsistenciasItem.forEach(element => {
+            element.importe = element.importe.replace(",", ".");
+            element.importeReal = +element.importe;
+            element.importemaximo = element.importemaximo.replace(",", ".");
+            element.importemaximoReal = +element.importemaximo;
+            if (element.importe == ".") {
+              element.importe = 0;
+            }
+            if (element.importemaximo == ".") {
+              element.importemaximo = 0;
+            }
+          });
           this.callSaveService(url);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
@@ -439,30 +467,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
 
   callSaveService(url) {
-    if (this.body.tiposAsistenciasItem != undefined) {
-      this.body.tiposAsistenciasItem.forEach(element => {
-        element.importe = "" + element.importe;
-        element.importemaximo = "" + element.importemaximo;
-        element.importe = + element.importe.replace(",", ".");
-        element.importemaximo = + element.importemaximo.replace(",", ".");
 
-        if (element.importe == ".") {
-          element.importe = 0;
-        }
-        if (element.importemaximo == ".") {
-          element.importemaximo = 0;
-        }
-      });
-    } else {
-      this.body.importe = + this.body.importe.replace(",", ".");
-      this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
-      if (this.body.importe == ".") {
-        this.body.importe = 0;
-      }
-      if (this.body.importemaximo == ".") {
-        this.body.importemaximo = 0;
-      }
-    }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -471,7 +476,15 @@ export class TiposAsistenciaComponent implements OnInit {
         }
 
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        this.datos.forEach(element => {
+
+          element.importeReal = + element.importe;
+          element.importe = element.importe.replace(".", ",");
+          element.importemaximoReal = + element.importemaximo;
+          element.importemaximo = element.importemaximo.replace(".", ",");
+        });
         this.searchTiposAsistencias();
+
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -709,6 +722,75 @@ export class TiposAsistenciaComponent implements OnInit {
     }
   }
 
+  editarImporte(dato) {
+    dato.importe = dato.valorNum;
+
+    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+
+    if (findDato != undefined) {
+      let dato2 = dato;
+      let tiposAsistenciaString = "";
+      for (let i in dato2.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      }
+      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato2.seleccionados = "";
+      this.updateTiposAsistencia.push(dato2);
+
+      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
+        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
+        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
+
+        if (dato.visibleMovilBoolean == false) {
+          dato.visiblemovil = "0";
+        }
+        else {
+          dato.visiblemovil = "1";
+        }
+
+        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
+
+        if (findUpdate == undefined) {
+          this.updateTiposAsistencia.push(dato);
+        }
+      }
+    }
+  }
+
+  editarImporteMaximo(dato) {
+    dato.importemaximo = dato.valorNum;
+    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+
+    if (findDato != undefined) {
+      let dato2 = dato;
+      let tiposAsistenciaString = "";
+      for (let i in dato2.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      }
+      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato2.seleccionados = "";
+      this.updateTiposAsistencia.push(dato2);
+
+      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
+        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
+        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
+
+        if (dato.visibleMovilBoolean == false) {
+          dato.visiblemovil = "0";
+        }
+        else {
+          dato.visiblemovil = "1";
+        }
+
+        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
+
+        if (findUpdate == undefined) {
+          this.updateTiposAsistencia.push(dato);
+        }
+      }
+    }
+  }
+
   editTiposAsistencia(dato) {
 
     if (!this.nuevo) {
@@ -895,6 +977,9 @@ export class TiposAsistenciaComponent implements OnInit {
     this.updateTiposAsistencia = [];
     this.nuevo = false;
     this.editMode = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -910,8 +995,8 @@ export class TiposAsistenciaComponent implements OnInit {
 
     this.cols = [
       { field: "tipoasistencia", header: "censo.usuario.nombre" },
-      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximo", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
+      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
       { field: "tiposguardia", header: "maestros.tiposasistencia.tipoGuardia" },
       { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil" },
       { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto" }

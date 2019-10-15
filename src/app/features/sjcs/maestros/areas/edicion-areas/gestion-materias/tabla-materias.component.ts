@@ -236,7 +236,9 @@ export class TablaMateriasComponent implements OnInit {
   newMateria() {
     this.nuevo = true;
     this.seleccion = false;
-
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
@@ -450,6 +452,9 @@ export class TablaMateriasComponent implements OnInit {
     this.selectedDatos = [];
     this.updateAreas = [];
     this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {

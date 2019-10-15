@@ -108,6 +108,14 @@ export let endpoints_maestros: any = {
     gestionPretensiones_createPretension: "maestros/gestionPretensiones/createPretension",
     gestionPretensiones_updatePretension: "maestros/gestionPretensiones/updatePretension",
 
+    //RetencionesIRPF
+    busquedaRetencionesIRPF_sociedades: "maestros/gestionRetencionesIRPF/sociedades",
+    busquedaRetencionesIRPF_busquedaRetencionesIRPF: "maestros/gestionRetencionesIRPF/busquedaRetencionesIRPF",
+    busquedaRetencionesIRPF_deleteRetencionesIRPF: "maestros/gestionRetencionesIRPF/deleteRetencionesIRPF",
+    busquedaRetencionesIRPF_activateRetencionesIRPF: "maestros/gestionRetencionesIRPF/activateRetencionesIRPF",
+    busquedaRetencionesIRPF_createRetencionesIRPF: "maestros/gestionRetencionesIRPF/createRetencionIRPF",
+    busquedaRetencionesIRPF_updateRetencionesIRPF: "maestros/gestionRetencionesIRPF/updateRetencionesIRPF",
+
 
 
     gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",

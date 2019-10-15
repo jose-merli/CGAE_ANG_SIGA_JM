@@ -12,8 +12,9 @@ export const procesos_maestros: any = {
     fundamentoCalificacion: "921",
     procuradores: "91F",
     partidaJudicial: "91C",
+    procedimientos: "91P",
     tiposAsistencias: "99J",
+    retenciones: "92S",
     tiposActuaciones: "99F",
     destinatariosRetenciones: "996",
-    procedimientos: "91P"
 }

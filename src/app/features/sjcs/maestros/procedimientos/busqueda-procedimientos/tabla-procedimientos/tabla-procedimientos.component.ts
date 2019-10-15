@@ -247,6 +247,9 @@ export class TablaProcedimientosComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   newPretension() {

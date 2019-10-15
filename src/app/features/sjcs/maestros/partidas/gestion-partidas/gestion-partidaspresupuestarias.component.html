@@ -90,29 +90,28 @@
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importepartida'">
-              {{dato[col.field] | number:'1.2-2'}} €
+            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importepartidaReal'">
+              {{dato.importepartida}} €
             </span>
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartida'">
+            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartidaReal'">
               {{ dato[col.field] }}
             </span>
 
-            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importepartida'">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | number:'1.2-2'}} €</span>
+            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importepartidaReal'">
+              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importepartida}} €</span>
             </div>
 
-            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importepartida'">
+            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importepartidaReal'">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartida'">
+            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartidaReal'">
             </span>
 
-            <div *ngIf="dato.editable && col.field == 'importepartida'">
-              <input class="form-control paddingInput" [(ngModel)]="dato.importepartida" name="importepartida" (input)="changeImporte(dato)"
-                type="text" [(disabled)]="!permisos" (keypress)="numberOnly($event)" maxLength="13" on-focusout="changeImporte(dato)"
-                (onBlur)="changeImporte(dato)" />
+            <div *ngIf="dato.editable && col.field == 'importepartidaReal'">
+              <app-precio [(value)]="dato.importepartida" [dato]="dato" [maxLength]="15" [nuevo]="nuevo" [id]="id" [disabled]="historico"
+                (valueChangeInput)="changeImporte(dato)"></app-precio>
             </div>
             <div *ngIf="dato.editable && col.field == 'nombrepartida'">
               <input class="form-control paddingInput" [(ngModel)]="dato.nombrepartida" name="nombrepartida" type="text" maxLength="58"

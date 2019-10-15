@@ -53,6 +53,10 @@ const routesSjcs: Routes = [
   {
     path: "procedimientos",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "documentacionEJG",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   }
 ];
 

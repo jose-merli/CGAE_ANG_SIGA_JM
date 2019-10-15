@@ -450,6 +450,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.selectedDatos = [];
     this.updateAcreditaciones = [];
     this.nuevo = false;
+
   }
 
   showMessage(severity, summary, msg) {

@@ -1,27 +1,25 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
-import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
-import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
-import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
-import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { Router } from '../../../../../../../node_modules/@angular/router';
-
+import { RetencionIrpfItem } from '../../../../../models/sjcs/RetencionIrpfItem';
+import { RetencionIrpfObject } from '../../../../../models/sjcs/RetencionIrpfObject';
+import { SortEvent } from '../../../../../../../node_modules/primeng/api';
+import { truncateSync } from 'fs';
 
 @Component({
-  selector: 'app-gestion-partidaspresupuestarias',
-  templateUrl: './gestion-partidaspresupuestarias.component.html',
-  styleUrls: ['./gestion-partidaspresupuestarias.component.scss']
+  selector: 'app-tabla-retenciones-irpf',
+  templateUrl: './tabla-retenciones-irpf.component.html',
+  styleUrls: ['./tabla-retenciones-irpf.component.scss']
 })
-export class TablaPartidasComponent implements OnInit {
+export class TablaRetencionesIrpfComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
-  colsPartidoJudicial;
+
   msgs;
   id;
+  comboSociedades;
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
@@ -44,21 +42,19 @@ export class TablaPartidasComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
-
+  maximaLong
   //Resultados de la busqueda
   @Input() datos;
 
   @Input() permisos;
-  //Combo partidos judiciales
-  @Input() comboPJ;
 
-  @Output() searchPartidas = new EventEmitter<boolean>();
+  @Output() search = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
+  @ViewChild("retencion") retencion;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService
   ) { }
@@ -66,8 +62,11 @@ export class TablaPartidasComponent implements OnInit {
   ngOnInit() {
     this.selectedDatos = [];
     this.getCols();
+
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.getComboSociedades();
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -78,27 +77,7 @@ export class TablaPartidasComponent implements OnInit {
     this.selectedDatos = [];
     this.updatePartidasPres = [];
     this.nuevo = false;
-    if (this.datos.partidasItem != undefined)
-      this.datos.partidasItem.forEach(element => {
-        element.importepartida = element.importepartida.replace(",", ".");
-        element.importepartidaReal = +element.importepartida;
-        if (element.importepartida == ".") {
-          element.importepartida = 0;
-        }
-      });
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-  }
-
-  numberOnly(event): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-
-    if (charCode >= 44 && charCode <= 57) {
-      return true;
-    }
-    else {
-      return false;
-    }
-
   }
 
   edit(evento) {
@@ -120,7 +99,7 @@ export class TablaPartidasComponent implements OnInit {
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
 
-        let findDato = this.datosInicial.find(item => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.importepartida === this.selectedDatos[0].importepartida);
+        let findDato = this.datosInicial.find(item => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.retencion === this.selectedDatos[0].retencion);
 
         this.selectedBefore = findDato;
       } else {
@@ -137,55 +116,91 @@ export class TablaPartidasComponent implements OnInit {
     }
   }
 
-  getId() {
-    let seleccionados = [];
-    seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
+
+  getComboSociedades() {
+    this.sigaServices
+      .get("busquedaRetencionesIRPF_sociedades")
+      .subscribe(
+        n => {
+          this.comboSociedades = n.combooItems;
+
+        },
+        error => { },
+        () => { }
+      );
+
+
   }
 
-
-  changeImporte(dato) {
-    dato.importepartida = dato.valorNum;
-    let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
-
-    if (findDato != undefined) {
-
-      if (dato.importepartida != findDato.importepartida) {
-
-        let findUpdate = this.updatePartidasPres.find(item => item.importepartida === dato.importepartida);
-
-        if (findUpdate == undefined) {
-          this.updatePartidasPres.push(dato);
-        }
-      }
-    }
-  }
-
-
-  changeNombrePartida(dato) {
-
-    let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
-
-    if (findDato != undefined) {
-      if (dato.nombrepartida != findDato.nombrepartida) {
-
-        let findUpdate = this.updatePartidasPres.find(item => item.nombrepartida === dato.nombrepartida);
-
-        if (findUpdate == undefined) {
-          this.updatePartidasPres.push(dato);
-        }
-      }
-    }
-
-  }
   changeDescripcion(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
+    let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
 
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
 
         let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+
+        if (findUpdate == undefined) {
+          this.updatePartidasPres.push(dato);
+        }
+      }
+    }
+
+  }
+  changeClaveModelo(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
+
+    if (findDato != undefined) {
+      if (dato.claveModelo != findDato.claveModelo) {
+
+        let findUpdate = this.updatePartidasPres.find(item => item.claveModelo === dato.claveModelo);
+
+        if (findUpdate == undefined) {
+          this.updatePartidasPres.push(dato);
+        }
+      }
+    }
+
+  }
+  changeRetencion(dato) {
+    dato.retencion = dato.valorNum;
+    let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
+
+    if (findDato != undefined) {
+      if (dato.retencion != findDato.retencion) {
+
+        let findUpdate = this.updatePartidasPres.find(item => item.retencion === dato.retencion);
+
+        if (findUpdate == undefined) {
+          this.updatePartidasPres.push(dato);
+        }
+      }
+    }
+
+  }
+
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
+  changeSociedad(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
+
+    if (findDato != undefined) {
+      if (dato.descripcionSociedad != findDato.descripcionSociedad) {
+
+        let findUpdate = this.updatePartidasPres.find(item => item.descripcionSociedad === dato.descripcionSociedad);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -204,14 +219,19 @@ export class TablaPartidasComponent implements OnInit {
         }
 
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.search.emit(false);
+        this.getComboSociedades();
+        this.datos.forEach(element => {
+          element.retencionReal = + element.retencion;
+          element.retencion = element.retencion.replace(".", ",");
+        });
 
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
 
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
+        if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -227,39 +247,55 @@ export class TablaPartidasComponent implements OnInit {
 
   }
 
+  quitaComa(dato) {
+    dato.map(element => {
+      if (element.retencion != null && element.retencion != undefined && element.retencion != "")
+        element.retencion = element.retencion.replace(",", ".")
+    });
+  }
 
   save() {
     this.progressSpinner = true;
     let url = "";
 
     if (this.nuevo) {
-      url = "gestionPartidasPres_createPartidasPres";
-      let partidaPresupuestaria = this.datos[0];
-      this.body = partidaPresupuestaria;
-      this.body.importepartida = this.body.valorNum;
-      this.body.importepartida = this.body.importepartida.replace(",", ".");
-      this.body.importepartidaReal = +this.body.importepartida;
-      if (this.body.importepartida == ".") {
-        this.body.importepartida = 0;
-      }
-      this.callSaveService(url);
+      url = "busquedaRetencionesIRPF_createRetencionesIRPF";
+      let retencion;
+      retencion = this.datos[0];
+      retencion.retencion = retencion.valorNum;
 
+      // retencion.descripcion = this.comboSociedades[retencion.idRetencion].label
+      if (retencion.retencion != null && retencion.retencion != undefined && retencion.retencion != "") {
+        this.body = retencion;
+        this.body.retencion = this.body.retencion.replace(",", ".");
+        if (this.body.retencion == ".") {
+          this.body.retencion = 0;
+        }
+
+        this.callSaveService(url);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.retencionNula"));
+        this.progressSpinner = false;
+
+      }
     } else {
-      url = "gestionPartidasPres_updatePartidasPres";
+      url = "busquedaRetencionesIRPF_updateRetencionesIRPF";
       this.editMode = false;
       if (this.validateUpdate()) {
-        this.body = new PartidasObject();
-        this.body.partidasItem = this.updatePartidasPres;
-        this.body.partidasItem.forEach(element => {
-          element.importepartida = element.importepartida.replace(",", ".");
-          element.importepartidaReal = +element.importepartida;
-          if (element.importepartida == ".") {
-            element.importepartida = 0;
+        this.body = new RetencionIrpfItem();
+        this.quitaComa(this.updatePartidasPres)
+        this.body.retencionItems = this.updatePartidasPres;
+        this.body.retencionItems.forEach(element => {
+          element.retencion = element.retencion.replace(",", ".");
+          element.retencionReal = +element.retencion;
+          if (element.retencion == ".") {
+            element.retencion = 0;
           }
         });
         this.callSaveService(url);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de las partidas presupuestrias ya se encuentran registrados");
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.procedimientos.existeProcedimiento"));
         this.progressSpinner = false;
       }
     }
@@ -276,45 +312,45 @@ export class TablaPartidasComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
-  // rest() {
-  //   if (this.editMode) {
-  //     if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-  //   } else {
-  //     this.partidasItem = new PartidasItem();
-  //   }
-  // }
-
-  newPartidaPresupuestaria() {
+  newRetencion() {
     this.nuevo = true;
     this.editMode = false;
     this.selectionMode = "single";
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
+    this.getComboSociedades();
+
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
       this.datos = [];
     }
 
-    let partidaPresupuestaria = {
-      nombrepartida: undefined,
+    let retencion = {
       descripcion: undefined,
-      importepartida: undefined,
-      importepartidaReal: undefined,
-      idpartidapresupuestaria: undefined,
+      retencion: "",
+      retencionReal: undefined,
+      claveModelo: undefined,
+      tipoSociedad: undefined,
       editable: true
     };
     if (this.datos.length == 0) {
-      this.datos.push(partidaPresupuestaria);
+      this.datos.push(retencion);
     } else {
-      this.datos = [partidaPresupuestaria, ...this.datos];
+      this.datos = [retencion, ...this.datos];
     }
 
   }
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined && this.datos[0].valorNum != undefined) {
+      if (this.datos[0].descripcion != undefined) {
         return false;
       } else {
         return true;
@@ -336,7 +372,7 @@ export class TablaPartidasComponent implements OnInit {
 
     this.updatePartidasPres.forEach(dato => {
 
-      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
+      let findDatos = this.datos.filter(item => item.descripcion === dato.descripcion);
 
       if (findDatos != undefined && findDatos.length > 1) {
         check = false;
@@ -349,12 +385,15 @@ export class TablaPartidasComponent implements OnInit {
 
 
   delete() {
-    let PartidasPresDelete = new PartidasObject();
-    PartidasPresDelete.partidasItem = this.selectedDatos
-    this.sigaServices.post("gestionPartidasPres_eliminatePartidasPres", PartidasPresDelete).subscribe(
+    let del = new RetencionIrpfObject();
+    del.retencionItems = this.selectedDatos
+    let url;
+    if (this.historico) url = "busquedaRetencionesIRPF_activateRetencionesIRPF";
+    else url = "busquedaRetencionesIRPF_deleteRetencionesIRPF";
+    this.sigaServices.post(url, del).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchPartidas.emit(false);
+        this.search.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -405,7 +444,7 @@ export class TablaPartidasComponent implements OnInit {
     }
   }
 
-  searchPartida() {
+  isHistorico() {
     this.historico = !this.historico;
     if (this.historico) {
 
@@ -423,7 +462,7 @@ export class TablaPartidasComponent implements OnInit {
       this.selectMultiple = false;
       this.selectionMode = "single";
     }
-    this.searchPartidas.emit(this.historico);
+    this.search.emit(this.historico);
     this.selectAll = false;
   }
 
@@ -433,12 +472,19 @@ export class TablaPartidasComponent implements OnInit {
     else return true;
   }
 
+  getId() {
+    let seleccionados = [];
+    seleccionados.push(this.selectedDatos);
+    this.id = this.datos.findIndex(item => item.idRetencion === seleccionados[0].idRetencion);
+  }
+
   getCols() {
 
     this.cols = [
-      { field: "nombrepartida", header: "censo.usuario.nombre" },
       { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "importepartidaReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec" },
+      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo" },
+      { field: "tipoSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad" }
 
     ];
 
@@ -523,3 +569,4 @@ export class TablaPartidasComponent implements OnInit {
 
 
 }
+

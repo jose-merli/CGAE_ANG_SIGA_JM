@@ -27,6 +27,7 @@ import { EdicionAreasComponent } from './edicion-areas/gestion-areas/edicion-are
 import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { GestionAreasComponent } from './edicion-areas/gestion-areas.component';
 import { MultiSelectModule } from "primeng/multiselect";
+import { PrecioModule } from '../../../../commons/precio/precio.module';
 
 // import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
@@ -44,7 +45,8 @@ import { MultiSelectModule } from "primeng/multiselect";
     PipeTranslationModule,
     MenubarModule,
     TableModule,
-    MultiSelectModule
+    MultiSelectModule,
+    PrecioModule,
 
     // FichaGrupoZonaModule
 

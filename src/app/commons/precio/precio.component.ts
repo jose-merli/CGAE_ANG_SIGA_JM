@@ -67,71 +67,75 @@ export class PrecioComponent implements OnInit, AfterViewInit {
 
 	validateImporte() {
 		if (!this.nuevo) {
-			this.dato.importe = "" + this.importe.nativeElement.value;
-			if (this.dato.importe.split(",").length - 1 > 1) {
-				let partePrimera = this.dato.importe.split(",");
-				this.dato.importe = partePrimera[0];
+			this.dato.numero = "" + this.importe.nativeElement.value;
+			if (this.dato.numero.split(",").length - 1 > 1) {
+				let partePrimera = this.dato.numero.split(",");
+				this.dato.numero = partePrimera[0];
 			}
-			if (this.dato.importe.includes(",")) {
+			if (this.dato.numero.includes(",")) {
 				this.maxLength = this.maxLengthComa;
-				let partes = this.dato.importe.split(",");
+				let partes = this.dato.numero.split(",");
 				let numero = + partes[0];
 				if (partes[1].length > 0) {
 					if (partes[0] == "") {
-						partes[0] = 0;
+						partes[0] = "0";
 					}
 					let primeraParte = partes[0].substring(0, this.maxLengthOriginal);
 					let segundaParte = partes[1].substring(0, 2);
-					this.dato.importe = primeraParte + "," + segundaParte;
+					this.dato.numero = primeraParte + "," + segundaParte;
 				}
 				if (numero < 0) {
-					this.dato.importe = 0;
+					this.dato.numero = "0";
 				}
 			} else {
-				// this.maxLength = this.maxLengthOriginal;
-				this.dato.importe = this.dato.importe.substring(0, this.maxLengthOriginal);
+				this.maxLength = this.maxLengthOriginal;
+				this.dato.numero = this.dato.numero.substring(0, this.maxLengthOriginal);
 
-				let numero = + this.dato.importe;
+				let numero = + this.dato.numero;
 				if (numero < 0) {
-					this.dato.importe = 0;
+					this.dato.numero = "0";
 				}
 			}
-			this.importe.nativeElement.value = this.dato.importe;
-
+			this.importe.nativeElement.value = this.dato.numero;
+			this.dato.valorNum = this.dato.numero;
 			this.valueChangeInput.emit(this.dato);
 
 		} else {
-			this.dato.importe = "" + this.importe.nativeElement.value;
-			if (this.dato.importe.includes(",")) {
+			this.dato.numero = "" + this.importe.nativeElement.value;
+			if (this.dato.numero.includes(",")) {
 				this.maxLength = this.maxLengthComa;
-				let partes = this.dato.importe.split(",");
+				let partes = this.dato.numero.split(",");
 				partes[0].substring(0, this.maxLengthOriginal - 1);
 				if (partes[1].length > 0) {
 					if (partes[0] == "") {
-						partes[0] = 0;
+						partes[0] = "0";
 					}
 					let segundaParte = partes[1].substring(0, 2);
-					this.dato.importe = partes[0] + "," + segundaParte;
+					this.dato.numero = partes[0] + "," + segundaParte;
 					// this.importe.nativeElement.value = this.modulosItem.importe;
 				}
 				let numero = + partes[0];
 				if (partes[1].length > 0) {
 					if (partes[0] == "") {
-						partes[0] = 0;
+						partes[0] = "0";
 					}
 					let primeraParte = partes[0].substring(0, this.maxLengthOriginal);
 					let segundaParte = partes[1].substring(0, 2);
-					this.dato.importe = primeraParte + "," + segundaParte;
+					this.dato.numero = primeraParte + "," + segundaParte;
 				}
 			} else {
-				this.dato.importe = this.dato.importe.substring(0, this.maxLengthOriginal);
+				this.maxLength = this.maxLengthOriginal;
+				this.dato.numero = this.dato.numero.substring(0, this.maxLengthOriginal);
 
 			}
-			// this.dato.importe = this.dato.importe.substring(0, this.maxLengthOriginal);
-			this.importe.nativeElement.value = this.dato.importe;
+			// this.dato.numero = this.dato.numero.substring(0, this.maxLengthOriginal);
+			this.importe.nativeElement.value = this.dato.numero;
+			this.dato.valorNum = this.dato.numero;
 		}
-		if (this.dato.importe > 100 && this.porcentaje) {
-			this.dato.importe = 100;
+		if (this.dato.numero > 100 && this.porcentaje) {
+			this.dato.numero = 100;
+			this.importe.nativeElement.value = this.dato.numero;
+
 		}
 	}
 

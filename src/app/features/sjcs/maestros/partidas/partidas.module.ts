@@ -22,6 +22,7 @@ import { PartidasPresupuestarias } from './partidasPresupuestarias/partidasPresu
 import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from './partidas.component';
 import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
+import { PrecioModule } from '../../../../commons/precio/precio.module';
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresu
         PipeTranslationModule,
         MenubarModule,
         TableModule,
-        MultiSelectModule
+        MultiSelectModule,
+        PrecioModule,
 
         // FichaGrupoZonaModule
 
