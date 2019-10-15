@@ -57,7 +57,7 @@ export class BusquedaFundamentosresolucionComponent implements OnInit {
   }
 
   search(event) {
-    this.filtros.filtros.historico = event;
+    this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event)
     this.progressSpinner = true;
 
