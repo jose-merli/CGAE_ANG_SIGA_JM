@@ -26,7 +26,7 @@ export class TiposAsistenciaComponent implements OnInit {
   cols;
   rowsPerPage;
   esComa: boolean = false;
-
+  filterStatusPrivatUser: boolean = false;
   updateTiposAsistencia = [];
   editMode: boolean = false;
   seleccion: boolean = false;
@@ -48,7 +48,7 @@ export class TiposAsistenciaComponent implements OnInit {
   messagesConfirmation: boolean = false;
 
 
-
+  pordefectoanterior;
   idTipoAsistencia;
   selectedBefore;
   selectionMode: string = "single";
@@ -56,7 +56,7 @@ export class TiposAsistenciaComponent implements OnInit {
   permisoEscritura: boolean = false;
 
   @ViewChild("importe") importe;
-
+  @ViewChild("check") check;
   @ViewChild("importeMax") importeMax;
 
   @ViewChild("table") table;
@@ -97,6 +97,7 @@ export class TiposAsistenciaComponent implements OnInit {
     this.selectedDatos = [];
     this.updateTiposAsistencia = [];
     this.nuevo = false;
+    this.pordefectoanterior = undefined;
   }
 
   validateAcreditacionMaximo(e) {
@@ -563,12 +564,15 @@ export class TiposAsistenciaComponent implements OnInit {
           dato.pordefecto = "1";
           dato.porDefectoBoolean = true;
           this.messagesConfirmation = true;
-          this.confirmEdit();
+          this.confirmEdit(dato);
         }
       }
       else {
         if (element.porDefectoBoolean = true) {
-          this.confirmEdit();
+          if (element.pordefecto == "1") {
+            this.pordefectoanterior = element.idtipoasistenciacolegio;
+          }
+          // this.confirmEdit(dato);
           element.porDefectoBoolean = false;
           element.pordefecto = "0";
           element.overlayVisible = false;
@@ -589,7 +593,7 @@ export class TiposAsistenciaComponent implements OnInit {
       // FORZAMOS POR DEFECTO QUE HAYA UNO POR DEFECTO
       this.pordefectotabla = true;
       this.messagesConfirmation = false;
-      this.confirmEdit();
+      this.confirmEdit(dato);
     } else {
       let dato2 = dato;
       let tiposAsistenciaString = "";
@@ -602,7 +606,7 @@ export class TiposAsistenciaComponent implements OnInit {
     }
   }
 
-  confirmEdit() {
+  confirmEdit(dato) {
     if (this.messagesConfirmation) {
       let mess = this.translateService.instant(
         "general.message.confirmacionpordefecto"
@@ -615,7 +619,17 @@ export class TiposAsistenciaComponent implements OnInit {
           this.pordefectotabla = false
         },
         reject: () => {
-          this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+          dato.porDefectoBoolean = false
+          dato.pordefecto = "0";
+          this.pordefectotabla = true;
+          if (this.pordefectoanterior != undefined) {
+            let findDato = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.pordefectoanterior);
+
+            if (findDato != undefined) {
+              this.datos[findDato].pordefecto = "1";
+              this.datos[findDato].porDefectoBoolean = "true";
+            }
+          }
           this.msgs = [
             {
               severity: "info",
@@ -637,8 +651,13 @@ export class TiposAsistenciaComponent implements OnInit {
         icon: icon,
         accept: () => {
           this.pordefectotabla = false
+          dato.pordefecto = "1";
+          dato.porDefectoBoolean = true;
         },
         reject: () => {
+          dato.porDefectoBoolean = false
+          dato.pordefecto = "0";
+          this.pordefectotabla = true;
 
           this.msgs = [
             {
@@ -792,31 +811,43 @@ export class TiposAsistenciaComponent implements OnInit {
 
     this.body = new TiposAsistenciaObject();
     this.body.tiposAsistenciasItem = this.selectedDatos;
-
-    this.sigaServices.post("gestionTiposAsistencia_deleteTipoAsitencia", this.body).subscribe(
-      data => {
-
-        this.nuevo = false;
-        this.selectedDatos = [];
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.searchTiposAsistencias();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
+    let pordefectoactivado;
+    this.body.tiposAsistenciasItem.forEach(element => {
+      if (element.pordefecto == "1") {
+        pordefectoactivado = true;
       }
-    );
+    });
+    if (!pordefectoactivado) {
+      this.sigaServices.post("gestionTiposAsistencia_deleteTipoAsitencia", this.body).subscribe(
+        data => {
+
+          this.nuevo = false;
+          this.selectedDatos = [];
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.searchTiposAsistencias();
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.nosepuedeeliminarpordefecto"));
+      this.progressSpinner = false;
+    }
+
+
   }
 
   activate() {

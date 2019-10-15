@@ -116,8 +116,9 @@
                                 <span *ngIf="disableAll|| (!dato.porDefectoBoolean && (!((dato.editable))))">
                                     ❌
                                 </span>
-                                <p-checkbox *ngIf="!disableAll && ((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)" [disabled]="disableAll"
-                                    (onChange)="editarPorDefecto(dato)" [(ngModel)]="dato.porDefectoBoolean" binary="true" name="pordefecto"></p-checkbox>
+                                <p-checkbox #check *ngIf="!disableAll && ((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)"
+                                    [disabled]="disableAll" (onChange)="editarPorDefecto(dato)" [(ngModel)]="dato.porDefectoBoolean"
+                                    binary="true" name="pordefecto"></p-checkbox>
                             </div>
                         </td>
 
