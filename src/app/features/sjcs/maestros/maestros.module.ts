@@ -22,6 +22,7 @@ import { ProcuradoresModule } from './procuradores/procuradores.module';
 import { SpinnerModule } from 'primeng/spinner';
 import { GestionTiposActuacionModule } from './tiposActuacion/tiposActuacion.module';
 import { GestionDestinatariosComponent } from './destinatarios-retenciones/destinatarios.module';
+import { ProcedimientosModule } from './procedimientos/procedimientos.module';
 
 @NgModule({
         declarations: [],
@@ -41,12 +42,13 @@ import { GestionDestinatariosComponent } from './destinatarios-retenciones/desti
                 ComisariasModule,
                 ProcuradoresModule,
                 GestionPartidasJudicialesComponent,
+                ProcedimientosModule,
                 ComisariasModule,
                 GestionTiposAsistenciaModule,
                 SpinnerModule,
                 GestionTiposActuacionModule,
-                GestionDestinatariosComponent
-
+                GestionDestinatariosComponent,
+                GestionTiposAsistenciaModule
         ],
 
         providers: []

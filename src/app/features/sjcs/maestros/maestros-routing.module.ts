@@ -24,6 +24,7 @@ import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procurado
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
 import { TiposActuacionComponent } from './tiposActuacion/tiposActuacion.component';
 import { DestinatariosRetencionesComponent } from './destinatarios-retenciones/destinatarios-retenciones.component';
+import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
 
 const routesMaestros: Routes = [
   {
@@ -135,6 +136,12 @@ const routesMaestros: Routes = [
     component: DestinatariosRetencionesComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: "procedimientos",
+    component: BusquedaProcedimientosComponent,
+    canActivate: [AuthGuard]
+  }
+
 
 ];
 

@@ -2,8 +2,8 @@
 <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
-        <i class="pl-1 fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate}}
-        <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.sjcs.tiposAsistencia' | translate}}
+        <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate}}
+        <i class="fa fa-angle-right"></i>{{ 'menu.sjcs.tiposAsistencia' | translate}}
     </p>
 </div>
 
@@ -47,11 +47,11 @@
                         <td class="text-center" *ngFor="let col of columns">
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importe'">
-                                {{dato[col.field] | number:'1.2-2'}} €
+                                {{dato[col.field]}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importemaximo' && col.field !='importe'">
-                                {{dato[col.field] | number:'1.2-2'}} €
+                                {{dato[col.field]}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importe' && col.field !='visiblemovil' 
@@ -87,15 +87,15 @@
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importemaximo'">
-                                <input class="form-control paddingInput" [(ngModel)]="dato.importemaximo" name="importemaximo" type="text" on-focusout="validateAcreditacionMaximo($event)"
+                                <input #importeMax class="form-control paddingInput" [(ngModel)]="dato.importemaximo" name="importemaximo" type="text" on-focusout="validateAcreditacionMaximo($event)"
                                     (keypress)="numberOnly($event)" (onBlur)="validateAcreditacionMaximo($event)" (input)="validateAcreditacionMaximo($event)"
-                                    [maxLength]="maximaLong" />
+                                    [maxLength]="maximaLong" pInputText/>
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importe'">
-                                <input class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion($event)"
+                                <input #importe class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion($event)"
                                     (onBlur)="validateAcreditacion($event)" (keypress)="numberOnly($event)" (input)="validateAcreditacion($event)"
-                                    [maxLength]="maximaLong" />
+                                    [maxLength]="maximaLong" pInputText/>
                             </div>
                             <div *ngIf="col.field == 'visiblemovil'">
                                 <span *ngIf="disableAll || (dato.visibleMovilBoolean && (!((dato.editable))))">

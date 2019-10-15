@@ -90,7 +90,6 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   }
 
   getInfo() {
-
     if (this.body != undefined && this.body.fechaCodigoEjis != undefined) {
       this.body.fechaCodigoEjis = new Date(this.body.fechaCodigoEjis);
     }
@@ -106,7 +105,18 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     if (this.body != undefined && this.body.isCodigoEjis != undefined) {
       this.body.isCodigoEjis == "1" ? this.isCodigoEjisValue = true : this.isCodigoEjisValue = false;
     }
+  }
 
+  setInfo() {
+    if (this.body != undefined && this.body.visibleMovil != undefined) {
+      this.visibleMovilValue == true ? this.body.visibleMovil = "1" : this.body.visibleMovil = "0";
+    }
+    if (this.body != undefined && this.body.esDecano != undefined) {
+      this.esDecanoValue == true ? this.body.esDecano = "1" : this.body.esDecano = "0";
+    }
+    if (this.body != undefined && this.body.isCodigoEjis != undefined) {
+      this.isCodigoEjisValue == true ? this.body.isCodigoEjis = "1" : this.body.isCodigoEjis = "0";
+    }
   }
 
   getComboProvincias() {
@@ -227,7 +237,11 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-
+    this.emailValido = true;
+    this.tlf1Valido = true;
+    this.tlf2Valido = true;
+    this.faxValido = true;
+    this.mvlValido = true;
     if (this.modoEdicion) {
       this.getInfo();
     }
@@ -262,23 +276,45 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   }
 
   changeEmail() {
+    this.body.email = this.body.email.trim();
     this.emailValido = this.commonsServices.validateEmail(this.body.email);
   }
 
   changeTelefono1() {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+    if (this.body.telefono1.length > 8) {
+      this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+    }
   }
 
   changeTelefono2() {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+    if (this.body.telefono2.length > 8) {
+      this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+    }
   }
   changeFax() {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
+    if (this.body.fax.length > 8) {
+      this.faxValido = this.commonsServices.validateFax(this.body.fax);
+    }
   }
 
   changeMovil() {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
+    if (this.body.movil.length > 8) {
+      this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
+    }
   }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    // this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
+
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
 
   clear() {
     this.msgs = [];

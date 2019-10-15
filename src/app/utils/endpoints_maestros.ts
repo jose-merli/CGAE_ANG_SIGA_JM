@@ -74,6 +74,42 @@ export let endpoints_maestros: any = {
     gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
 
 
+    //Fundamentos calificacion
+    busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
+    busquedaFundamentosCalificacion_searchFundamentos: "maestros/busquedaFundamentosCalificacion/searchFundamentos",
+    fundamentosCalificacion_deleteFundamentoCalificacion: "maestros/busquedaFundamentosCalificacion/deleteFundamentos",
+    busquedaFundamentosCalificacion_activateFundamentos: "maestros/busquedaFundamentosCalificacion/activateFundamentos",
+    busquedaFundamentosCalificacion_createFundamentos: "maestros/busquedaFundamentosCalificacion/createFundamento",
+    busquedaFundamentosCalificacion_updateFundamento: "maestros/busquedaFundamentosCalificacion/updateFundamentoCalificacion",
+
+    //Comisarias
+    busquedaComisarias_searchComisarias: "maestros/gestionComisarias/searchComisarias",
+    gestionComisarias_createComisaria: "maestros/gestionComisarias/createComisarias",
+    gestionComisarias_updateComisarias: "maestros/gestionComisarias/updateComisarias",
+    busquedaComisarias_deleteComisarias: "maestros/gestionComisarias/deleteComisarias",
+    busquedaComisarias_activateComisarias: "maestros/gestionComisarias/activateComisarias",
+    busquedaComisarias_provinces: "maestros/gestionComisarias/provinces",
+    busquedaCommisarias_poblacion: "maestros/gestionComisarias/population",
+
+    //Procuradores
+    busquedaProcuradores_searchProcuradores: "maestros/gestionProcuradores/busquedaProcuradores",
+    busquedaProcuradores_deleteProcuradores: "maestros/gestionProcuradores/deleteProcuradores",
+    busquedaProcuradores_activateProcuradores: "maestros/gestionProcuradores/activateProcuradores",
+    gestionProcuradores_createProcurador: "maestros/gestionProcuradores/createProcurador",
+    gestionProcuradores_updateProcurador: "maestros/gestionProcuradores/updateProcurador",
+    busquedaProcuradores_colegios: "maestros/gestionProcuradores/colegios",
+
+    //Procedimientos
+    busquedaProcedimientos_jurisdiccion: "maestros/busquedaPretensiones/jurisdiccion",
+    busquedaProcedimientos_procedimientos: "maestros/busquedaPretensiones/procesos",
+    busquedaProcedimientos_searchProcedimientos: "maestros/gestionPretensiones/busquedaPretensiones",
+    gestionProcedimientos_deleteProcedimientos: "maestros/gestionPretensiones/deletePretensiones",
+    gestionProcedimientos_activateProcedimientos: "maestros/gestionPretensiones/activatePretensiones",
+    gestionPretensiones_createPretension: "maestros/gestionPretensiones/createPretension",
+    gestionPretensiones_updatePretension: "maestros/gestionPretensiones/updatePretension",
+
+
+
     gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",
     deletePartidosJudi_deletePartidosJudi: "maestros/deletePartidosJudi/deletePartidosJudi",
     gestionPartidosJudi_ComboPartidosJudi: "maestros/gestionPartidosJudi/ComboPartidosJudi",

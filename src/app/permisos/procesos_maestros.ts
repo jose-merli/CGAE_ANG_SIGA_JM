@@ -14,5 +14,6 @@ export const procesos_maestros: any = {
     partidaJudicial: "91C",
     tiposAsistencias: "99J",
     tiposActuaciones: "99F",
-    destinatariosRetenciones: "996"
+    destinatariosRetenciones: "996",
+    procedimientos: "91P"
 }

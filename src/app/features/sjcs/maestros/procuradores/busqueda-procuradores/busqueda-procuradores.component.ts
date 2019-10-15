@@ -4,9 +4,9 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
-import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { FiltrosProcuradoresComponent } from './filtros-procuradores/filtros-procuradores.component';
 import { TablaProcuradoresComponent } from './tabla-procuradores/tabla-procuradores.component';
+import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 
 @Component({
   selector: 'app-busqueda-procuradores',
@@ -37,7 +37,7 @@ export class BusquedaProcuradoresComponent implements OnInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_maestros.comisarias)
+    this.commonsService.checkAcceso(procesos_maestros.procuradores)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;

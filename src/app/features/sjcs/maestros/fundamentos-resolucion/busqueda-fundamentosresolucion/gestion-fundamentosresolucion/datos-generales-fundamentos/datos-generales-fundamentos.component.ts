@@ -17,7 +17,7 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
   resoluciones;
   bodyInicial;
   progressSpinner: boolean = false;
-
+  showTarjeta: boolean = true;
 
   idFundamento;
   msgs;
@@ -131,7 +131,7 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.historico && (this.body.descripcionFundamento && this.body.idTipoResolucion) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+    if (!this.historico && (this.body.descripcionFundamento && this.body.idTipoResolucion) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial) && this.body.codigoExt.trim() != "" && this.body.codigoExt != undefined)) {
       return false;
     } else {
       return true;
@@ -150,5 +150,8 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
     }
   }
 
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
+  }
 
 }

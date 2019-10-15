@@ -50,6 +50,10 @@ const routesSjcs: Routes = [
     path: "destinatariosRetenciones",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   },
+  {
+    path: "procedimientos",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  }
 ];
 
 @NgModule({
