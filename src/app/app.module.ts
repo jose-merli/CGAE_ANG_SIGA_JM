@@ -461,7 +461,6 @@ import { FechaModule } from './commons/fecha/fecha.module';
 		MantenimientoJuzgadosComponent,
 		DocumentacionEJGComponent,
 		MaestroPJComponent,
-		DestinatariosRetencionesComponent,
 		TurnosComponent,
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,

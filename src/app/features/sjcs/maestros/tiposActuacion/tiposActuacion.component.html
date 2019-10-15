@@ -1,11 +1,13 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
         <i class="pl-1 fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate}}
-        <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.sjcs.tiposAsistencia' | translate}}
+        <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.maestros.tiposActuacion' | translate}}
     </p>
 </div>
+
 
 <div class="ficha-container">
     <div class="card">
@@ -14,7 +16,7 @@
                 <div class="img-colegiado">
                     <i class="fas fa-align-left icon-ficha"></i>
                 </div>
-                <label class="title-ficha">{{ 'menu.sjcs.tiposAsistencia' | translate }}</label>
+                <label class="title-ficha">{{ 'menu.justiciaGratuita.maestros.tiposActuacion' | translate }}</label>
                 <i class="fa fa-angle-up ml-auto"></i>
             </div>
         </div>
@@ -67,23 +69,23 @@
                                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | number:'1.2-2'}} €</span>
                             </div>
 
-                            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importe' && col.field != 'importemaximo' && col.field !='visiblemovil' && col.field != 'pordefecto'">
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importe' && col.field != 'importemaximo'">
                                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                             </div>
 
                             <span *ngIf="dato.editable && !setItalic(dato) && col.field != 'importe'">
                             </span>
 
-                            <div *ngIf="dato.editable && col.field == 'tiposguardia'">
-                                <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.seleccionadosReal" [options]="comboTiposGuardia"
+                            <div *ngIf="dato.editable && col.field == 'descripciontipoasistencia'">
+                                <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.seleccionadosReal" [options]="comboTiposActuacion"
                                     optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
                                     [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="openMultiSelect(dato);editarTipoAsistencia(dato) "></p-multiSelect>
                             </div>
 
-                            <div *ngIf="dato.editable && col.field == 'tipoasistencia'">
-                                <input class="form-control paddingInput" [(ngModel)]="dato.tipoasistencia" name="tipoasistencia" type="text" maxLength="200"
-                                    on-focusout="editarTipoAsistencia(dato)" (onBlur)="editarTipoAsistencia(dato)" (input)="editarTipoAsistencia(dato)"
-                                />
+                            <div *ngIf="dato.editable && col.field == 'descripciontipoactuacion'">
+                                <input class="form-control paddingInput" [(ngModel)]="dato.descripciontipoactuacion" name="descripciontipoactuacion" type="text"
+                                    maxLength="200" on-focusout="editarTipoAsistencia(dato)" (onBlur)="editarTipoAsistencia(dato)"
+                                    (input)="editarTipoAsistencia(dato)" />
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importemaximo'">
@@ -96,28 +98,6 @@
                                 <input class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion($event)"
                                     (onBlur)="validateAcreditacion($event)" (keypress)="numberOnly($event)" (input)="validateAcreditacion($event)"
                                     [maxLength]="maximaLong" />
-                            </div>
-                            <div *ngIf="col.field == 'visiblemovil'">
-                                <span *ngIf="disableAll || (dato.visibleMovilBoolean && (!((dato.editable))))">
-                                    ✔
-                                </span>
-                                <span *ngIf="disableAll|| (!dato.visibleMovilBoolean && (!((dato.editable))))">
-                                    ❌
-                                </span>
-                                <p-checkbox *ngIf="!disableAll &&((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)" [disabled]="disableAll"
-                                    (onChange)="editarTipoAsistencia(dato)" [(ngModel)]="dato.visibleMovilBoolean" binary="true"
-                                    name="visiblemovil"></p-checkbox>
-                            </div>
-
-                            <div *ngIf="col.field == 'pordefecto'">
-                                <span *ngIf="disableAll || (dato.porDefectoBoolean && (!((dato.editable))))">
-                                    ✔
-                                </span>
-                                <span *ngIf="disableAll|| (!dato.porDefectoBoolean && (!((dato.editable))))">
-                                    ❌
-                                </span>
-                                <p-checkbox *ngIf="!disableAll && ((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)" [disabled]="disableAll"
-                                    (onChange)="editarPorDefecto(dato)" [(ngModel)]="dato.porDefectoBoolean" binary="true" name="pordefecto"></p-checkbox>
                             </div>
                         </td>
 
@@ -178,13 +158,6 @@
             </div>
         </div>
     </div>
-    <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
-        <p-footer>
-            <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-            <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-        </p-footer>
-    </p-confirmDialog>
-
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
