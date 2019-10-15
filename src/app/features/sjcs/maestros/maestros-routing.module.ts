@@ -22,6 +22,8 @@ import { GestionComisariasComponent } from './comisarias/comisarias/gestion-comi
 import { TiposAsistenciaComponent } from './tiposAsistencia/tiposAsistencia.component';
 import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procuradores/busqueda-procuradores.component';
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
+import { TiposActuacionComponent } from './tiposActuacion/tiposActuacion.component';
+import { DestinatariosRetencionesComponent } from './destinatarios-retenciones/destinatarios-retenciones.component';
 import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
 import { RetencionesIRPFComponent } from './retenciones-IRPF/retenciones-IRPF.component';
 
@@ -123,6 +125,16 @@ const routesMaestros: Routes = [
   {
     path: "mantenimientoprocuradores",
     component: BusquedaProcuradoresComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "tiposActuacion",
+    component: TiposActuacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "destinatariosRetenciones",
+    component: DestinatariosRetencionesComponent,
     canActivate: [AuthGuard]
   },
   {

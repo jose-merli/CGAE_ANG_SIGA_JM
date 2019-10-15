@@ -196,6 +196,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {

@@ -19,6 +19,8 @@ import { ComisariasComponent } from './comisarias/comisarias/comisarias.componen
 import { ComisariasModule } from './comisarias/comisarias.module';
 import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.module';
 import { ProcuradoresModule } from './procuradores/procuradores.module';
+import { GestionTiposActuacionModule } from './tiposActuacion/tiposActuacion.module';
+import { GestionDestinatariosComponent } from './destinatarios-retenciones/destinatarios.module';
 import { ProcedimientosModule } from './procedimientos/procedimientos.module';
 import { SpinnerModule } from '../../../../../node_modules/primeng/primeng';
 import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.module';
@@ -44,6 +46,10 @@ import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.modul
                 ComisariasModule,
                 GestionTiposAsistenciaModule,
                 RetencionesIrpfModule,
+                SpinnerModule,
+                GestionTiposActuacionModule,
+                GestionDestinatariosComponent,
+                GestionTiposAsistenciaModule
         ],
 
         providers: []

@@ -6,16 +6,15 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
 import { MultiSelect } from '../../../../../../node_modules/primeng/primeng';
-import { ConfirmationService } from "primeng/api";
-import { TiposAsistenciaObject } from '../../../../models/sjcs/TiposAsistenciaObject';
+import { TiposActuacionObject } from '../../../../models/sjcs/TiposActuacionObject';
 
 
 @Component({
-  selector: 'app-gestion-tiposasistencia',
-  templateUrl: './tiposAsistencia.component.html',
-  styleUrls: ['./tiposAsistencia.component.scss']
+  selector: 'app-gestion-tiposactuacion',
+  templateUrl: './tiposActuacion.component.html',
+  styleUrls: ['./tiposActuacion.component.scss']
 })
-export class TiposAsistenciaComponent implements OnInit {
+export class TiposActuacionComponent implements OnInit {
   textSelected: String = "{label}";
 
   selectedItem: number = 10;
@@ -26,7 +25,7 @@ export class TiposAsistenciaComponent implements OnInit {
   cols;
   rowsPerPage;
   esComa: boolean = false;
-  id;
+
   updateTiposAsistencia = [];
   editMode: boolean = false;
   seleccion: boolean = false;
@@ -34,20 +33,16 @@ export class TiposAsistenciaComponent implements OnInit {
   disableAll: boolean = false;
   historico: boolean = false;
 
-  comboTiposGuardia;
+  comboTiposActuacion;
   comboAsistencias;
   comboActuacion;
-  maximaLong: any = 11;
+  maximaLong: any = 3;
   progressSpinner: boolean = false;
   msgs;
   body;
   nuevo: boolean = false;
   datosInicial = [];
   updateCosteFijo = [];
-
-  messagesConfirmation: boolean = false;
-
-
 
   idTipoAsistencia;
   selectedBefore;
@@ -56,24 +51,16 @@ export class TiposAsistenciaComponent implements OnInit {
   permisoEscritura: boolean = false;
 
   @ViewChild("importe") importe;
-
-  @ViewChild("importeMax") importeMax;
-
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
-    private sigaServices: SigaServices, private translateService: TranslateService,
-    private commonsService: CommonsService,
-    private router: Router,
-    private confirmationService: ConfirmationService
-  ) { }
+    private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router) { }
 
   ngOnInit() {
-
     this.getComboTiposAsistencia();
     this.getCols();
-    this.commonsService.checkAcceso(procesos_maestros.tiposAsistencias)
+    this.commonsService.checkAcceso(procesos_maestros.tiposActuaciones)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
@@ -93,24 +80,19 @@ export class TiposAsistenciaComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.searchTiposAsistencias();
+    this.searchTiposActuaciones();
     this.selectedDatos = [];
     this.updateTiposAsistencia = [];
     this.nuevo = false;
   }
 
-  getId() {
-    let seleccionados = [];
-    seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex(item => item.idTipoAsistencia === seleccionados[0].idTipoAsistencia);
-  }
   validateAcreditacionMaximo(e) {
-    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
+    if (this.selectedDatos == null) {
       this.selectedDatos = [];
       this.selectedDatos.push(this.datos.find(item => item.editable == true));
     }
     if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.selectedDatos[0].idtipoasistenciacolegio);
+      let datoId = this.datos.findIndex(item => item.idtipoactuacion === this.selectedDatos[0].idtipoactuacion);
       let dato = this.datos[datoId];
       dato.importemaximo = "" + dato.importemaximo;
 
@@ -121,8 +103,9 @@ export class TiposAsistenciaComponent implements OnInit {
       }
       if (this.datos[0].importe == ",") this.datos[0].importe = "0";
       if (dato.importemaximo.includes(",")) {
-        this.maximaLong = 11;
+        this.maximaLong = 8;
         let partes = dato.importemaximo.split(",");
+        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
@@ -134,14 +117,19 @@ export class TiposAsistenciaComponent implements OnInit {
           dato.importemaximo = 0;
         }
       } else {
-        this.maximaLong = 9;
-        dato.importemaximo = dato.importemaximo.substring(0, 8);
-        let numero = + dato.importemaximo;
-        if (numero < 0) {
-          dato.importemaximo = 0;
+        this.maximaLong = 8;
+        if (dato.importemaximo.length > 3) {
+          // dato.importemaximo = 100;
+        } else {
+          let numero = + dato.importemaximo;
+          if (numero >= 100) {
+            // dato.importemaximo = 100;
+          }
+          else if (numero < 0) {
+            dato.importemaximo = 0;
+          }
         }
       }
-      this.importeMax.nativeElement.value = dato.importemaximo;
 
       this.editarTipoAsistencia(dato);
 
@@ -155,35 +143,32 @@ export class TiposAsistenciaComponent implements OnInit {
       }
       if (this.datos[0].importe == ",") this.datos[0].importe = "0";
       if (this.datos[0].importemaximo.includes(",")) {
-        this.maximaLong = 11;
         let partes = this.datos[0].importemaximo.split(",");
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importemaximo = partes[0] + "," + segundaParte;
           // this.importe.nativeElement.value = this.modulosItem.importe;
         }
+        this.maximaLong = 8;
+        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importemaximo = partes[0] + "," + segundaParte;
         }
-      } else {
-        this.maximaLong = 9;
-        this.datos[0].importemaximo = this.datos[0].importemaximo.substring(0, 8);
       }
       if (+this.datos[0].importemaximo > 999999999) this.datos[0].importemaximo = 99999999;
-      this.importeMax.nativeElement.value = this.datos[0].importemaximo;
-
     }
   }
 
+
   validateAcreditacion(e) {
-    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
+    if (this.selectedDatos == null) {
       this.selectedDatos = [];
       this.selectedDatos.push(this.datos.find(item => item.editable == true));
     }
     if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.selectedDatos[0].idtipoasistenciacolegio);
+      let datoId = this.datos.findIndex(item => item.idtipoactuacion === this.selectedDatos[0].idtipoactuacion);
       let dato = this.datos[datoId];
       dato.importe = "" + dato.importe;
 
@@ -194,27 +179,33 @@ export class TiposAsistenciaComponent implements OnInit {
       }
       if (this.datos[0].importe == ",") this.datos[0].importe = "0";
       if (dato.importe.includes(",")) {
-        this.maximaLong = 11;
+        this.maximaLong = 8;
         let partes = dato.importe.split(",");
+        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           dato.importe = partes[0] + "," + segundaParte;
         }
-        if (numero < 0) {
+        if (numero >= 100) {
+          // dato.importe = 100;
+        } else if (numero < 0) {
           dato.importe = 0;
         }
       } else {
-        this.maximaLong = 9;
-        dato.importe = dato.importe.substring(0, 8);
-
-        let numero = + dato.importe;
-        if (numero < 0) {
-          dato.importe = 0;
-
+        this.maximaLong = 8;
+        if (dato.importe.length > 3) {
+          // dato.importe = 100;
+        } else {
+          let numero = + dato.importe;
+          if (numero >= 100) {
+            // dato.importe = 100;
+          }
+          else if (numero < 0) {
+            dato.importe = 0;
+          }
         }
       }
-      this.importe.nativeElement.value = dato.importe;
 
       this.editarTipoAsistencia(dato);
 
@@ -230,32 +221,29 @@ export class TiposAsistenciaComponent implements OnInit {
       if (this.datos[0].importe == ",") this.datos[0].importe = "0";
 
       if (this.datos[0].importe.includes(",")) {
-        this.maximaLong = 11;
         let partes = this.datos[0].importe.split(",");
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importe = partes[0] + "," + segundaParte;
           // this.importe.nativeElement.value = this.modulosItem.importe;
         }
+        this.maximaLong = 8;
+        this.maximaLong = partes[0].length + 3;
         let numero = + partes[0];
         if (partes[1].length > 2) {
           let segundaParte = partes[1].substring(0, 2);
           this.datos[0].importe = partes[0] + "," + segundaParte;
         }
-      } else {
-        this.maximaLong = 9;
-        this.datos[0].importe = this.datos[0].importe.substring(0, 8);
-
       }
       if (+this.datos[0].importe > 999999999) this.datos[0].importe = 99999999;
-      this.importe.nativeElement.value = this.datos[0].importe;
-
     }
   }
 
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      if (charCode == 188) {
+      }
       return true;
     }
     else {
@@ -268,13 +256,13 @@ export class TiposAsistenciaComponent implements OnInit {
   getComboTiposAsistencia() {
     this.progressSpinner = true;
 
-    this.sigaServices.get("gestionTiposAsistencia_ComboTiposAsistencia").subscribe(
+    this.sigaServices.get("gestionTiposAsistencia_ComboTiposActuacion").subscribe(
       n => {
 
-        this.comboTiposGuardia = n.combooItems;
+        this.comboTiposActuacion = n.combooItems;
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
    para poder filtrar el dato con o sin estos caracteres*/
-        this.comboTiposGuardia.map(e => {
+        this.comboTiposActuacion.map(e => {
           let accents =
             "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
           let accentsOut =
@@ -298,44 +286,32 @@ export class TiposAsistenciaComponent implements OnInit {
       }
       , () => {
         this.progressSpinner = false;
-        this.searchTiposAsistencias();
+        this.searchTiposActuaciones();
       }
 
     );
 
   }
-  searchTiposAsistencias() {
+  searchTiposActuaciones() {
     this.sigaServices
-      .getParam("gestionTiposAsistencia_busquedaTiposAsistencia", "?historico=" + this.historico)
+      .getParam("gestionTiposActuacion_busquedaTiposActuacion", "?historico=" + this.historico)
       .subscribe(
         res => {
-          this.datos = res.tiposAsistenciasItem;
+          this.datos = res.tiposActuacionItem;
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           this.datos.forEach(element => {
             let seleccionados = [];
             element.editable = false
             element.overlayVisible = false;
-            element.importe = element.importe.replace(".", ",");
-            element.importemaximo = element.importemaximo.replace(".", ",");
-            if (element.visiblemovil == 1) {
-              element.visibleMovilBoolean = true;
-            } else {
-              element.visibleMovilBoolean = false;
-            }
-            if (element.pordefecto == 1) {
-              element.porDefectoBoolean = true;
-            } else {
-              element.porDefectoBoolean = false;
-            }
             let prueba = [];
-            let misseleccionados = element.idtiposguardia.split(',');
+            let misseleccionados = element.idtipoasistencia.split(',');
             misseleccionados = misseleccionados.map(function (el) {
               return el.trim();
             });
             if (misseleccionados != null && misseleccionados != undefined) {
               misseleccionados.forEach(element => {
                 if (seleccionados != undefined) {
-                  seleccionados.push(this.comboTiposGuardia.find(x => x.value == element));
+                  seleccionados.push(this.comboTiposActuacion.find(x => x.value == element));
                   prueba = seleccionados.filter(function (el) {
                     return el != undefined;
                   });
@@ -378,7 +354,7 @@ export class TiposAsistenciaComponent implements OnInit {
       this.selectMultiple = false;
       this.selectionMode = "single";
     }
-    this.searchTiposAsistencias();
+    this.searchTiposActuaciones();
     this.selectAll = false;
   }
 
@@ -393,55 +369,22 @@ export class TiposAsistenciaComponent implements OnInit {
       for (let i in dato2.seleccionadosReal) {
         tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
       }
-      this.datos[0].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      this.datos[0].idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       let tipoAsistencia = this.datos[0];
       this.body = tipoAsistencia;
-      this.body.tiposAsistenciasItem.forEach(element => {
-        element.importe = element.importe.replace(",", ".");
-        element.importeReal = +element.importe;
-        element.importemaximo = element.importemaximo.replace(",", ".");
-        element.importemaximoReal = +element.importemaximo;
-        if (element.importe == ".") {
-          element.importe = 0;
-        }
-        if (element.importemaximo == ".") {
-          element.importemaximo = 0;
-        }
-      });
-
       this.callSaveService(url);
 
     } else {
-      if (!this.pordefectotabla) {
-        url = "gestionTiposAsistencia_updateTiposAsistencias";
-        this.editMode = false;
-        if (this.validateUpdate()) {
-          this.body = new TiposAsistenciaObject();
-          this.body.tiposAsistenciasItem = this.updateTiposAsistencia;
-          this.body.tiposAsistenciasItem.forEach(element => {
-            element.importe = element.importe.replace(",", ".");
-            element.importeReal = +element.importe;
-            element.importemaximo = element.importemaximo.replace(",", ".");
-            element.importemaximoReal = +element.importemaximo;
-            if (element.importe == ".") {
-              element.importe = 0;
-            }
-            if (element.importemaximo == ".") {
-              element.importemaximo = 0;
-            }
-          });
-          this.callSaveService(url);
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
-          this.progressSpinner = false;
-        }
-
-      }
-      else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUnoPorDefecto"));
+      url = "gestionTiposActuacion_updateTiposActuacion";
+      this.editMode = false;
+      if (this.validateUpdate()) {
+        this.body = new TiposActuacionObject();
+        this.body.tiposActuacionItem = this.updateTiposAsistencia;
+        this.callSaveService(url);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
         this.progressSpinner = false;
       }
-
     }
 
   }
@@ -452,7 +395,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
     this.updateTiposAsistencia.forEach(dato => {
 
-      let findDatos = this.datos.filter(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.importemaximo === dato.importemaximo && item.visiblemovil === dato.visiblemovil && item.pordefecto === dato.pordefecto);
+      let findDatos = this.datos.filter(item => item.descripciontipoactuacion === dato.descripciontipoactuacion && item.importe === dato.importe && item.importemaximo === dato.importemaximo);
 
       if (findDatos != undefined && findDatos.length > 1) {
         check = false;
@@ -465,7 +408,17 @@ export class TiposAsistenciaComponent implements OnInit {
 
 
   callSaveService(url) {
-
+    if (this.body.tiposActuacionItem != undefined) {
+      this.body.tiposActuacionItem.forEach(element => {
+        element.importe = "" + element.importe;
+        element.importemaximo = "" + element.importemaximo;
+        element.importe = + element.importe.replace(",", ".");
+        element.importemaximo = + element.importemaximo.replace(",", ".");
+      });
+    } else {
+      this.body.importe = + this.body.importe.replace(",", ".");
+      this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
+    }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -474,15 +427,7 @@ export class TiposAsistenciaComponent implements OnInit {
         }
 
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.datos.forEach(element => {
-
-          element.importeReal = + element.importe;
-          element.importe = element.importe.replace(".", ",");
-          element.importemaximoReal = + element.importemaximo;
-          element.importemaximo = element.importemaximo.replace(".", ",");
-        });
-        this.searchTiposAsistencias();
-
+        this.searchTiposActuaciones();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -521,12 +466,12 @@ export class TiposAsistenciaComponent implements OnInit {
     let tipoAsistencia = {
       idtipoasistenciacolegio: undefined,
       tipoasistencia: undefined,
-      importe: "0",
-      importemaximo: "0",
+      importe: undefined,
+      importemaximo: undefined,
       visiblemovil: "0",
       pordefecto: "0",
       seleccionadosReal: undefined,
-      idtiposguardia: undefined,
+      idtipoasistencia: undefined,
       editable: true,
       acreditacionNueva: true
     };
@@ -537,27 +482,6 @@ export class TiposAsistenciaComponent implements OnInit {
       this.datos = [tipoAsistencia, ...this.datos];
     }
 
-  }
-
-  onChangeTipoAsistencia(dato) {
-    this.progressSpinner = true;
-
-    this.sigaServices
-      .getParam(
-        "gestionCostesFijos_getComboActuacion",
-        "?idTipoAsistencia=" + dato.idTipoAsistencia
-      ).subscribe(
-        n => {
-
-          dato.opcionTipoActuacion = n.combooItems;
-          this.progressSpinner = false;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-
-        }
-      );
   }
 
   editarPorDefecto(dato) {
@@ -574,13 +498,10 @@ export class TiposAsistenciaComponent implements OnInit {
           this.pordefectotabla = false;
           dato.pordefecto = "1";
           dato.porDefectoBoolean = true;
-          this.messagesConfirmation = true;
-          this.confirmEdit();
         }
       }
       else {
         if (element.porDefectoBoolean = true) {
-          this.confirmEdit();
           element.porDefectoBoolean = false;
           element.pordefecto = "0";
           element.overlayVisible = false;
@@ -589,7 +510,7 @@ export class TiposAsistenciaComponent implements OnInit {
           for (let i in dato2.seleccionadosReal) {
             tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
           }
-          dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+          dato2.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
           dato2.seleccionados = "";
 
         }
@@ -600,77 +521,20 @@ export class TiposAsistenciaComponent implements OnInit {
       // dato.porDefectoBoolean = true;
       // FORZAMOS POR DEFECTO QUE HAYA UNO POR DEFECTO
       this.pordefectotabla = true;
-      this.messagesConfirmation = false;
-      this.confirmEdit();
     } else {
       let dato2 = dato;
       let tiposAsistenciaString = "";
       for (let i in dato2.seleccionadosReal) {
         tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
       }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato2.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       dato2.seleccionados = "";
       this.updateTiposAsistencia.push(dato2);
     }
   }
-
-  confirmEdit() {
-    if (this.messagesConfirmation) {
-      let mess = this.translateService.instant(
-        "general.message.confirmacionpordefecto"
-      );
-      let icon = "fa fa-edit";
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          this.pordefectotabla = false
-        },
-        reject: () => {
-          this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancel",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-    } else {
-      let mess = this.translateService.instant(
-        "general.message.confirmacionespordefecto"
-      );
-      let icon = "fa fa-edit";
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          this.pordefectotabla = false
-        },
-        reject: () => {
-
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancel",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-    }
-  }
-
-
-
   editarTipoAsistencia(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+    let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
     if (findDato != undefined) {
       let dato2 = dato;
@@ -678,91 +542,14 @@ export class TiposAsistenciaComponent implements OnInit {
       for (let i in dato2.seleccionadosReal) {
         tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
       }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato2.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       dato2.seleccionados = "";
       this.updateTiposAsistencia.push(dato2);
 
-      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
-        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
+      if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion || dato.importe != findDato.importe ||
+        dato.importemaximo != findDato.importemaximo) {
 
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-
-        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
-
-        if (findUpdate == undefined) {
-          this.updateTiposAsistencia.push(dato);
-        }
-      }
-    }
-  }
-
-  editarImporte(dato) {
-    dato.importe = dato.valorNum;
-
-    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
-
-    if (findDato != undefined) {
-      let dato2 = dato;
-      let tiposAsistenciaString = "";
-      for (let i in dato2.seleccionadosReal) {
-        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
-      }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-      dato2.seleccionados = "";
-      this.updateTiposAsistencia.push(dato2);
-
-      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
-        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
-
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-
-        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
-
-        if (findUpdate == undefined) {
-          this.updateTiposAsistencia.push(dato);
-        }
-      }
-    }
-  }
-
-  editarImporteMaximo(dato) {
-    dato.importemaximo = dato.valorNum;
-    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
-
-    if (findDato != undefined) {
-      let dato2 = dato;
-      let tiposAsistenciaString = "";
-      for (let i in dato2.seleccionadosReal) {
-        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
-      }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-      dato2.seleccionados = "";
-      this.updateTiposAsistencia.push(dato2);
-
-      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
-        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
-
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-
-        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.descripciontipoactuacion === dato.descripciontipoactuacion && item.importe === dato.importe && item.importemaximo === dato.importemaximo);
 
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
@@ -793,7 +580,7 @@ export class TiposAsistenciaComponent implements OnInit {
           tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value.trim();
         }
 
-        dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+        dato2.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
         dato2.seleccionados = "";
         this.updateTiposAsistencia.push(dato2);
       } else {
@@ -803,7 +590,7 @@ export class TiposAsistenciaComponent implements OnInit {
           tiposAsistenciaString += "," + dato.seleccionadosReal[i].value.trim();
         }
         this.updateTiposAsistencia[updateFind].seleccionadosReal = dato.seleccionadosReal;
-        this.updateTiposAsistencia[updateFind].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+        this.updateTiposAsistencia[updateFind].idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
         this.updateTiposAsistencia[updateFind].seleccionados = "";
       }
       // }
@@ -848,8 +635,8 @@ export class TiposAsistenciaComponent implements OnInit {
 
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
-        let findDato = this.datosInicial.find(item => item.tipoasistencia === this.selectedDatos[0].tipoasistencia && item.importe === this.selectedDatos[0].importe
-          && item.importemaximo === this.selectedDatos[0].importemaximo && item.visibleMovilBoolean === this.selectedDatos[0].visibleMovilBoolean && item.porDefectoBoolean === this.selectedDatos[0].porDefectoBoolean);
+        let findDato = this.datosInicial.find(item => item.descripciontipoactuacion === this.selectedDatos[0].descripciontipoactuacion && item.importe === this.selectedDatos[0].importe
+          && item.importemaximo === this.selectedDatos[0].importemaximo);
 
         this.selectedBefore = findDato;
 
@@ -871,8 +658,8 @@ export class TiposAsistenciaComponent implements OnInit {
   delete() {
     this.progressSpinner = true;
 
-    this.body = new TiposAsistenciaObject();
-    this.body.tiposAsistenciasItem = this.selectedDatos;
+    this.body = new TiposActuacionObject();
+    this.body.tiposActuacionItem = this.selectedDatos;
 
     this.sigaServices.post("gestionTiposAsistencia_deleteTipoAsitencia", this.body).subscribe(
       data => {
@@ -881,7 +668,7 @@ export class TiposAsistenciaComponent implements OnInit {
         this.selectedDatos = [];
         this.selectMultiple = false;
         this.selectAll = false;
-        this.searchTiposAsistencias();
+        this.searchTiposActuaciones();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -902,15 +689,15 @@ export class TiposAsistenciaComponent implements OnInit {
 
   activate() {
     this.progressSpinner = true;
-    this.body = new TiposAsistenciaObject();
-    this.body.tiposAsistenciasItem = this.selectedDatos;
+    this.body = new TiposActuacionObject();
+    this.body.tiposActuacionItem = this.selectedDatos;
     this.historico = false;
 
     this.sigaServices.post("gestionTiposAsistencia_activateTipoAsitencia", this.body).subscribe(
       data => {
 
         this.selectedDatos = [];
-        this.searchTiposAsistencias();
+        this.searchTiposActuaciones();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -945,9 +732,6 @@ export class TiposAsistenciaComponent implements OnInit {
     this.updateTiposAsistencia = [];
     this.nuevo = false;
     this.editMode = false;
-    this.table.sortOrder = 0;
-    this.table.sortField = '';
-    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -962,12 +746,10 @@ export class TiposAsistenciaComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "tipoasistencia", header: "censo.usuario.nombre" },
-      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
-      { field: "tiposguardia", header: "maestros.tiposasistencia.tipoGuardia" },
-      { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil" },
-      { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto" }
+      { field: "descripciontipoactuacion", header: "censo.usuario.nombre" },
+      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
+      { field: "importemaximo", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
+      { field: "descripciontipoasistencia", header: "maestros.tiposasistencia.tipoGuardia" },
     ];
 
     this.rowsPerPage = [

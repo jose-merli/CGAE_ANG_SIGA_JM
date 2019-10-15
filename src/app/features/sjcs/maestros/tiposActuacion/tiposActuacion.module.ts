@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -19,8 +19,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TableModule } from 'primeng/table';
 
 import { MultiSelectModule } from "primeng/multiselect";
-import { TiposAsistenciaComponent } from './tiposAsistencia.component';
-import { PrecioModule } from '../../../../commons/precio/precio.module';
+import { TiposActuacionComponent } from './tiposActuacion.component';
 
 @NgModule({
   imports: [
@@ -36,15 +35,13 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     PipeTranslationModule,
     MenubarModule,
     TableModule,
-    MultiSelectModule,
-    PrecioModule,
-    ConfirmDialogModule,
+    MultiSelectModule
 
     // FichaGrupoZonaModule
 
   ],
   declarations: [
-    TiposAsistenciaComponent
+    TiposActuacionComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -74,4 +71,4 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     { provide: LOCALE_ID, useValue: 'es-ES' }
   ]
 })
-export class GestionTiposAsistenciaModule { }
+export class GestionTiposActuacionModule { }

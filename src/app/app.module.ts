@@ -461,7 +461,6 @@ import { PrecioModule } from './commons/precio/precio.module';
 		MantenimientoJuzgadosComponent,
 		DocumentacionEJGComponent,
 		MaestroPJComponent,
-		DestinatariosRetencionesComponent,
 		TurnosComponent,
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
