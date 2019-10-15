@@ -23,6 +23,7 @@ import { TiposAsistenciaComponent } from './tiposAsistencia/tiposAsistencia.comp
 import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procuradores/busqueda-procuradores.component';
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
 import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
+import { RetencionesIRPFComponent } from './retenciones-IRPF/retenciones-IRPF.component';
 
 const routesMaestros: Routes = [
   {
@@ -127,6 +128,11 @@ const routesMaestros: Routes = [
   {
     path: "procedimientos",
     component: BusquedaProcedimientosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "documentacionEJG",
+    component: RetencionesIRPFComponent,
     canActivate: [AuthGuard]
   }
 

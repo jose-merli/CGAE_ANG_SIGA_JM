@@ -48,12 +48,12 @@
 
                         <td class="text-center" *ngFor="let col of columns">
 
-                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importe'">
-                                {{dato[col.field]}} €
+                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importeReal'">
+                                {{dato.importe}} €
                             </span>
 
-                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importemaximo' && col.field !='importe'">
-                                {{dato[col.field]}} €
+                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importemaximoReal' && col.field !='importeReal'">
+                                {{dato.importemaximo}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importe' && col.field !='visiblemovil' 
@@ -61,12 +61,12 @@
                                 {{ dato[col.field] }}
                             </span>
 
-                            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importe'">
-                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | number:'1.2-2'}} €</span>
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importeReal'">
+                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importe}} €</span>
                             </div>
 
-                            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importemaximo'">
-                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | number:'1.2-2'}} €</span>
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importemaximoReal'">
+                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importemaximo}} €</span>
                             </div>
 
                             <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importe' && col.field != 'importemaximo' && col.field !='visiblemovil' && col.field != 'pordefecto'">
@@ -88,17 +88,18 @@
                                 />
                             </div>
 
-                            <div *ngIf="dato.editable && col.field == 'importemaximo'">
-                                <input #importeMax class="form-control paddingInput" [(ngModel)]="dato.importemaximo" name="importemaximo" type="text" on-focusout="validateAcreditacionMaximo($event)"
-                                    (keypress)="numberOnly($event)" (onBlur)="validateAcreditacionMaximo($event)" (input)="validateAcreditacionMaximo($event)"
-                                    [maxLength]="maximaLong" pInputText/>
+
+                            <div *ngIf="dato.editable && col.field == 'importemaximoReal'">
+                                <app-precio [(value)]="dato.importemaximo" [dato]="dato" [maxLength]="maximaLong" [nuevo]="nuevo" [id]="id" [disabled]="historico"
+                                    (valueChangeInput)="editarImporteMaximo(dato)"></app-precio>
+
                             </div>
 
-                            <div *ngIf="dato.editable && col.field == 'importe'">
-                                <input #importe class="form-control paddingInput" [(ngModel)]="dato.importe" name="importe" type="text" on-focusout="validateAcreditacion($event)"
-                                    (onBlur)="validateAcreditacion($event)" (keypress)="numberOnly($event)" (input)="validateAcreditacion($event)"
-                                    [maxLength]="maximaLong" pInputText/>
+                            <div *ngIf="dato.editable && col.field == 'importeReal'">
+                                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="maximaLong" [nuevo]="nuevo" [id]="id" [disabled]="historico"
+                                    (valueChangeInput)="editarImporte(dato)"></app-precio>
                             </div>
+
                             <div *ngIf="col.field == 'visiblemovil'">
                                 <span *ngIf="disableAll || (dato.visibleMovilBoolean && (!((dato.editable))))">
                                     ✔

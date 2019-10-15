@@ -454,7 +454,6 @@ import { PrecioModule } from './commons/precio/precio.module';
 		ZonasYSubzonasComponent,
 		AreasYMateriasComponent,
 		PartidosJudicialesComponent,
-		RetencionesIRPFComponent,
 		CalendarioLaboralComponent,
 		MantenimientoProcuradoresComponent,
 		MantenimientoPrisionesComponent,

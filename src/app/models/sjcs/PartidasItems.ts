@@ -4,6 +4,7 @@ export class PartidasItems {
   descripcion: string;
   idpartidapresupuestaria: string;
   importepartida: string;
+  importepartidaReal;
   historico: boolean;
   fechabaja: Date;
   nombrepartidatemp: string;

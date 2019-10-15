@@ -96,6 +96,11 @@ export class PartidasComponent implements OnInit, AfterViewInit {
         this.datos = JSON.parse(n.body).partidasItem;
         this.buscar = true;
         this.progressSpinner = false;
+
+        this.datos.forEach(element => {
+          element.importepartidaReal = + element.importepartida;
+          element.importepartida = element.importepartida.replace(".", ",");
+        });
       },
       err => {
         this.progressSpinner = false;

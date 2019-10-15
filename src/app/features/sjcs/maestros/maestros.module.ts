@@ -20,7 +20,8 @@ import { ComisariasModule } from './comisarias/comisarias.module';
 import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.module';
 import { ProcuradoresModule } from './procuradores/procuradores.module';
 import { ProcedimientosModule } from './procedimientos/procedimientos.module';
-
+import { SpinnerModule } from '../../../../../node_modules/primeng/primeng';
+import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.module';
 @NgModule({
         declarations: [],
         imports: [
@@ -41,7 +42,8 @@ import { ProcedimientosModule } from './procedimientos/procedimientos.module';
                 GestionPartidasJudicialesComponent,
                 ProcedimientosModule,
                 ComisariasModule,
-                GestionTiposAsistenciaModule
+                GestionTiposAsistenciaModule,
+                RetencionesIrpfModule,
         ],
 
         providers: []
