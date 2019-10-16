@@ -276,6 +276,9 @@ export class TablaPartidasComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   // rest() {
@@ -290,6 +293,9 @@ export class TablaPartidasComponent implements OnInit {
     this.nuevo = true;
     this.editMode = false;
     this.selectionMode = "single";
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
@@ -300,7 +306,7 @@ export class TablaPartidasComponent implements OnInit {
       nombrepartida: undefined,
       descripcion: undefined,
       importepartida: undefined,
-      importepartidaReal: undefined,
+      importepartidaReal: 0,
       idpartidapresupuestaria: undefined,
       editable: true
     };
@@ -309,7 +315,9 @@ export class TablaPartidasComponent implements OnInit {
     } else {
       this.datos = [partidaPresupuestaria, ...this.datos];
     }
-
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   disabledSave() {

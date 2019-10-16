@@ -257,6 +257,28 @@ export class ZonaComponent implements OnInit {
     }
   }
 
+
+  validateZona(e) {
+
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idsubzona === this.selectedBefore.idsubzona);
+
+      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e));
+
+      if (findDato.length > 1) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.existeZonaMismaDescripcion"));
+        this.progressSpinner = false;
+        this.datos[datoId].descripcionsubzona = this.selectedBefore.descripcionsubzona;
+
+      } else {
+        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e));
+        this.editarDescripcionZona(dato);
+      }
+
+      this.seleccion = false;
+    }
+  }
+
   validateNewZone(url) {
     let zona = this.datos[0];
 
@@ -488,8 +510,10 @@ export class ZonaComponent implements OnInit {
 
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
+    if (selectedDatos != null) {
+      this.numSelected = selectedDatos.length;
+      this.seleccion = false;
+    }
   }
 
   clear() {
