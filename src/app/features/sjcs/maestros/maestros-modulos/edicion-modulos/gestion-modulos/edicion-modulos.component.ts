@@ -184,17 +184,12 @@ export class EdicionModulosComponent implements OnInit {
 
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
-    // this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
-    this.esComa = this.modulosItem.importe.includes(",");
-
-    if (charCode >= 48 && charCode <= 57 || (charCode == 44 && !this.esComa)) {
-      if (charCode == 188) {
-        this.esComa = true;
-      }
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
       return true;
     }
     else {
       return false;
+
     }
   }
 
