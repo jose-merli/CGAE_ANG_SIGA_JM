@@ -276,6 +276,9 @@ export class TablaPartidasComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   // rest() {
@@ -300,7 +303,7 @@ export class TablaPartidasComponent implements OnInit {
       nombrepartida: undefined,
       descripcion: undefined,
       importepartida: undefined,
-      importepartidaReal: undefined,
+      importepartidaReal: 0,
       idpartidapresupuestaria: undefined,
       editable: true
     };
@@ -309,7 +312,9 @@ export class TablaPartidasComponent implements OnInit {
     } else {
       this.datos = [partidaPresupuestaria, ...this.datos];
     }
-
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   disabledSave() {
