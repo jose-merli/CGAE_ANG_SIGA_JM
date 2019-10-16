@@ -511,6 +511,9 @@ export class TiposAsistenciaComponent implements OnInit {
     this.editMode = false;
     this.seleccion = false;
     this.selectionMode = "single";
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));

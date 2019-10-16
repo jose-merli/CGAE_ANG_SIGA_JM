@@ -256,6 +256,9 @@ export class TablaProcedimientosComponent implements OnInit {
     this.nuevo = true;
     this.editMode = false;
     this.selectionMode = "single";
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
     this.getComboJurisdiccion();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {

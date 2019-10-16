@@ -290,6 +290,9 @@ export class TablaPartidasComponent implements OnInit {
     this.nuevo = true;
     this.editMode = false;
     this.selectionMode = "single";
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
