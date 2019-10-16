@@ -110,9 +110,10 @@ export class TablaGestionZonasComponent implements OnInit {
     zonasActivate.zonasItems = this.selectedDatos
     this.sigaServices.post("fichaZonas_activateGroupZones", zonasActivate).subscribe(
       data => {
-
+        this.historico = false;
+        this.persistenceService.setHistorico(this.historico);
         this.selectedDatos = [];
-        this.searchZonasSend.emit(true);
+        this.searchZonasSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -202,6 +203,7 @@ export class TablaGestionZonasComponent implements OnInit {
 
   isSelectMultiple() {
     if (this.permisoEscritura) {
+      this.selectAll = false;
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
         this.selectedDatos = [];
