@@ -134,7 +134,9 @@ export let endpoints_maestros: any = {
     gestionTiposActuacion_busquedaTiposActuacion: "maestros/gestionTiposActuacion/busquedaTiposActuacion",
     gestionTiposAsistencia_ComboTiposActuacion: "maestros/gestionTiposAsistencia/ComboTiposActuacion",
     gestionTiposActuacion_updateTiposActuacion: "maestros/gestionTiposActuacion/updateTiposActuacion",
-
+    gestionTiposActuacion_deleteTipoActuacion: "maestros/gestionTiposActuacion/deleteTipoActuacion",
+    gestionTiposActuacion_activateTipoActuacion: "maestros/gestionTiposActuacion/activateTipoActuacion",
+    gestionTiposActuacion_createTipoActuacion: "maestros/gestionTiposActuacion/createTipoActuacion",
 
     gestionDestinatariosRetenc_searchDestinatariosRetenc: "maestros/gestionDestinatariosRetenc/searchDestinatariosRetenc",
     gestionDestinatariosRetenc_updateDestinatariosRetenc: "maestros/gestionDestinatariosRetenc/updateDestinatariosRetenc",
