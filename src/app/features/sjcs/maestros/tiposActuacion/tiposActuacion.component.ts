@@ -381,10 +381,19 @@ export class TiposActuacionComponent implements OnInit {
         this.body = new TiposActuacionObject();
         this.body.tiposActuacionItem = this.updateTiposActuacion;
         this.callSaveService(url);
+
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
-        this.progressSpinner = false;
-        this.updateTiposActuacion = [];
+        err => {
+          let message = JSON.parse(err.error).error.message;
+          if (JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description)
+              + message);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+          this.updateTiposActuacion = [];
+        }
       }
     }
 
@@ -433,9 +442,9 @@ export class TiposActuacionComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-
+        let message = JSON.parse(err.error).error.message;
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description) + " " + message);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
