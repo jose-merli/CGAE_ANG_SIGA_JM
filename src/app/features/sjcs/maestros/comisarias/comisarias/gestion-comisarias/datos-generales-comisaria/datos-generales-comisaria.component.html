@@ -57,7 +57,7 @@
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
-              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+              <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
                 [disabled]="historico || !permisoEscritura" pInputText>
             </div>
 

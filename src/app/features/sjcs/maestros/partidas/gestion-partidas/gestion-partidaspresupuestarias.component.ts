@@ -322,7 +322,7 @@ export class TablaPartidasComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined && this.datos[0].valorNum != undefined) {
+      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined && this.datos[0].valorNum != undefined) {
         return false;
       } else {
         return true;
