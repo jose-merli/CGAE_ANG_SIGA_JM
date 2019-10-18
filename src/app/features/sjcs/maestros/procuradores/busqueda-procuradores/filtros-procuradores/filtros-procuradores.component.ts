@@ -78,6 +78,15 @@ export class FiltrosProcuradoresComponent implements OnInit {
   }
 
   checkFilters() {
+    if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+      this.filtros.nombre = this.filtros.nombre.trim();
+    }
+    if (this.filtros.apellido1 != undefined && this.filtros.apellido1 != null) {
+      this.filtros.apellido1 = this.filtros.apellido1.trim();
+    }
+    if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
+      this.filtros.codigoExt = this.filtros.codigoExt.trim();
+    }
     if (
       (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
       (this.filtros.apellido1 == null || this.filtros.apellido1 == "" || this.filtros.apellido1.length < 3) &&
@@ -85,15 +94,6 @@ export class FiltrosProcuradoresComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-        this.filtros.nombre = this.filtros.nombre.trim();
-      }
-
-      if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
-        this.filtros.codigoExt = this.filtros.codigoExt.trim();
-      }
-
       return true;
     }
   }

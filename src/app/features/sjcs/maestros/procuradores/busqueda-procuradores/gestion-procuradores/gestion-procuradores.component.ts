@@ -103,6 +103,9 @@ export class GestionProcuradoresComponent implements OnInit {
           this.modoEdicionSend(send);
         }
 
+        this.direcciones.bodyInicial = JSON.parse(JSON.stringify(this.direcciones.body));
+        this.generales.bodyInicial = JSON.parse(JSON.stringify(this.generales.body));
+
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -125,8 +128,20 @@ export class GestionProcuradoresComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.generales.body.nombre != undefined)
+      this.generales.body.nombre = this.generales.body.nombre.trim();
+    if (this.generales.body.apellido1 != undefined)
+      this.generales.body.apellido1 = this.generales.body.apellido1.trim();
+    if (this.generales.body.nColegiado != undefined)
+      this.generales.body.nColegiado = this.generales.body.nColegiado.trim();
+    if (this.generales.body.codigoExt != undefined)
+      this.generales.body.codigoExt = this.generales.body.codigoExt.trim();
+    if (this.generales.body.apellido2 != undefined)
+      this.generales.body.apellido2 = this.generales.body.apellido2.trim();
+
     if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.nombre != "" && this.generales.body.apellido1 != undefined &&
-      this.generales.body.apellido1 != null && this.generales.body.apellido1 != "") && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) && this.permisoEscritura && ((JSON.stringify(this.direcciones.body) != JSON.stringify(this.direcciones.bodyInicial))
+      this.generales.body.apellido1 != null && this.generales.body.apellido1 != "") && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
+      this.permisoEscritura && ((JSON.stringify(this.direcciones.body) != JSON.stringify(this.direcciones.bodyInicial))
         || (JSON.stringify(this.generales.body) != JSON.stringify(this.generales.bodyInicial)))) {
       return false;
     } else {

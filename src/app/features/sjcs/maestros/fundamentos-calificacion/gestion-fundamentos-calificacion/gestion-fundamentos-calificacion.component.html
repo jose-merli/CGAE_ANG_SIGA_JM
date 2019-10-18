@@ -7,8 +7,6 @@
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <!-- <app-datos-generales-juzgado *ngSwitchCase="'generales'" [datos]="datos" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-juzgado>
-    <app-procedimientos-juzgado *ngSwitchCase="'procedimientos'" [datos]="datos" [modoEdicion]="modoEdicion"></app-procedimientos-juzgado> -->
     <app-datos-generales-fundamentos-calificacion *ngSwitchCase="'generales'" [datos]="datos" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-fundamentos-calificacion>
   </div>
 </div>
