@@ -81,7 +81,12 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
     this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).modulosItem;
-        this.buscar = true;
+        this.buscar = true
+        if (this.datos != undefined)
+          this.datos.forEach(element => {
+            if (element.precio[0] == '.' || element.precio[0] == ',')
+              element.precio = "0".concat(element.precio)
+          });
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;

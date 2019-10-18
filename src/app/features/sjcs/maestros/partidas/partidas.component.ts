@@ -100,6 +100,8 @@ export class PartidasComponent implements OnInit, AfterViewInit {
         this.datos.forEach(element => {
           element.importepartidaReal = + element.importepartida;
           element.importepartida = element.importepartida.replace(".", ",");
+          if (element.importepartida[0] == ',')
+            element.importepartida = "0".concat(element.importepartida)
         });
       },
       err => {
