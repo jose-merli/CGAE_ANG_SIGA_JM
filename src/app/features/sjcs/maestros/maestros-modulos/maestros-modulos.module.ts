@@ -29,6 +29,7 @@ import { SpinnerModule } from 'primeng/spinner';
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from '../partidas/partidas.component';
+import { PrecioModule } from '../../../../commons/precio/precio.module';
 
 // import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
@@ -49,6 +50,7 @@ import { PartidasComponent } from '../partidas/partidas.component';
     MultiSelectModule,
     FechaModule,
     SpinnerModule,
+    PrecioModule,
     // FichaGrupoZonaModule
 
   ],

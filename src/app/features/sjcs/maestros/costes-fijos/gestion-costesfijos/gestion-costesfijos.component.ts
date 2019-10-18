@@ -148,6 +148,8 @@ export class GestionCostesfijosComponent implements OnInit {
           this.datos.forEach(element => {
             element.importeReal = + element.importe;
             element.importe = element.importe.replace(".", ",");
+            if (element.importe[0] == ',')
+              element.importe = '0'.concat(element.importe)
           });
 
           this.editElementDisabled();
@@ -268,8 +270,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   newCosteFijo() {
     this.table.sortOrder = 0;
-     this.table.sortField = '';
-     this.table.reset();
+    this.table.sortField = '';
+    this.table.reset();
     this.nuevo = true;
     this.editMode = false;
 
@@ -374,8 +376,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   }
 
-  changeImporte() {
-
+  changeImporte(dato) {
+    dato.importe = dato.valorNum
     let findDato = this.datosInicial.find(item => item.descripcion === this.selectedBefore.descripcion && item.tipoAsistencia === this.selectedBefore.tipoAsistencia && item.tipoActuacion === this.selectedBefore.tipoActuacion);
     this.selectedBefore = this.datos.find(item => item.descripcion === this.selectedBefore.descripcion && item.tipoAsistencia === this.selectedBefore.tipoAsistencia && item.tipoActuacion === this.selectedBefore.tipoActuacion);
 
@@ -665,7 +667,6 @@ export class GestionCostesfijosComponent implements OnInit {
         // this.maximaLong = 15;
       }
       this.importe.nativeElement.value = dato.importe;
-      this.changeImporte();
 
     } else {
       this.datos[0].importe = "" + this.datos[0].importe;
