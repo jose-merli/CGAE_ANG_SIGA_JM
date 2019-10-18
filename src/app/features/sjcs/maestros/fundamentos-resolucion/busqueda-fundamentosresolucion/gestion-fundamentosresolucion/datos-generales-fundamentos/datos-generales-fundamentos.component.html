@@ -58,7 +58,7 @@
               <label>
                 {{ 'justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla' | translate }} 1
               </label>
-              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea style="" [(ngModel)]="body.textoPlantilla2"
+              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea [(ngModel)]="body.textoPlantilla2"
                 autoResize="autoResize" [disabled]="historico || !permisoEscritura" maxLength="4000"></textarea>
             </div>
 

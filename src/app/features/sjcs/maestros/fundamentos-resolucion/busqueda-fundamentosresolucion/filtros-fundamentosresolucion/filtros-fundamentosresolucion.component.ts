@@ -102,7 +102,11 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.search();
+      if (this.checkFilters()) {
+        this.filtroAux.codigoExt = this.filtros.codigoExt
+        this.filtroAux.descripcionFundamento = this.filtros.descripcionFundamento
+        this.search()
+      }
     }
   }
 

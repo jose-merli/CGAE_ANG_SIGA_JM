@@ -132,6 +132,7 @@ export class EdicionAreasComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.areasItem.nombreArea != undefined) this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
     if (this.areasItem.nombreArea != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {

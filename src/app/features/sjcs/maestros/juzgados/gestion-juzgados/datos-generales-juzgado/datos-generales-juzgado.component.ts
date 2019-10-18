@@ -266,6 +266,14 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.body.nombre != undefined || this.body.domicilio != undefined || this.body.codigoExt != undefined
+      || this.body.codigoProcurador != undefined || this.body.isCodigoEjis != undefined)
+      this.body.nombre = this.body.nombre.trim();
+    this.body.domicilio = this.body.domicilio.trim();
+    this.body.codigoExt = this.body.codigoExt.trim();
+    this.body.codigoProcurador = this.body.codigoProcurador.trim();
+    this.body.isCodigoEjis = this.body.isCodigoEjis.trim();
+
     if (!this.historico && (this.body.nombre != "" && this.body.nombre != undefined && this.body.idProvincia != undefined &&
       this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && this.emailValido && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
