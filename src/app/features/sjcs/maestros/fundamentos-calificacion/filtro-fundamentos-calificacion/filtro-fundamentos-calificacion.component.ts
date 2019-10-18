@@ -75,7 +75,7 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
 
   checkFilters() {
     if (
-      ((this.filtros.descripcionFundamento != null && this.filtros.descripcionFundamento.length > 2)
+      ((this.filtros.descripcionFundamento != null && this.filtros.descripcionFundamento.trim().length > 2)
         || this.filtros.descripcionDictamen != undefined)) {
 
       // quita espacios vacios antes de buscar
