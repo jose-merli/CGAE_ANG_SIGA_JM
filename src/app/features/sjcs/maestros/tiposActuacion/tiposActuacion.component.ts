@@ -86,164 +86,9 @@ export class TiposActuacionComponent implements OnInit {
     this.nuevo = false;
   }
 
-  validateAcreditacionMaximo(e) {
-    if (this.selectedDatos == null) {
-      this.selectedDatos = [];
-      this.selectedDatos.push(this.datos.find(item => item.editable == true));
-    }
-    if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idtipoactuacion === this.selectedDatos[0].idtipoactuacion);
-      let dato = this.datos[datoId];
-      dato.importemaximo = "" + dato.importemaximo;
-
-
-      if (dato.importemaximo.split(",").length - 1 > 1) {
-        let partePrimera = dato.importemaximo.split(",");
-        dato.importemaximo = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-      if (dato.importemaximo.includes(",")) {
-        this.maximaLong = 8;
-        let partes = dato.importemaximo.split(",");
-        this.maximaLong = partes[0].length + 3;
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          dato.importemaximo = partes[0] + "," + segundaParte;
-        }
-        if (numero >= 100) {
-          // dato.importemaximo = 100;
-        } else if (numero < 0) {
-          dato.importemaximo = 0;
-        }
-      } else {
-        this.maximaLong = 8;
-        if (dato.importemaximo.length > 3) {
-          // dato.importemaximo = 100;
-        } else {
-          let numero = + dato.importemaximo;
-          if (numero >= 100) {
-            // dato.importemaximo = 100;
-          }
-          else if (numero < 0) {
-            dato.importemaximo = 0;
-          }
-        }
-      }
-
-      this.editarTipoAsistencia(dato);
-
-    } else {
-      if (this.datos[0].importemaximo == undefined || this.datos[0].importemaximo == "") {
-        this.datos[0].importemaximo = "0";
-      }
-      if (this.datos[0].importemaximo.split(",").length - 1 > 1) {
-        let partePrimera = this.datos[0].importemaximo.split(",");
-        this.datos[0].importemaximo = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-      if (this.datos[0].importemaximo.includes(",")) {
-        let partes = this.datos[0].importemaximo.split(",");
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importemaximo = partes[0] + "," + segundaParte;
-          // this.importe.nativeElement.value = this.modulosItem.importe;
-        }
-        this.maximaLong = 8;
-        this.maximaLong = partes[0].length + 3;
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importemaximo = partes[0] + "," + segundaParte;
-        }
-      }
-      if (+this.datos[0].importemaximo > 999999999) this.datos[0].importemaximo = 99999999;
-    }
-  }
-
-
-  validateAcreditacion(e) {
-    if (this.selectedDatos == null) {
-      this.selectedDatos = [];
-      this.selectedDatos.push(this.datos.find(item => item.editable == true));
-    }
-    if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idtipoactuacion === this.selectedDatos[0].idtipoactuacion);
-      let dato = this.datos[datoId];
-      dato.importe = "" + dato.importe;
-
-
-      if (dato.importe.split(",").length - 1 > 1) {
-        let partePrimera = dato.importe.split(",");
-        dato.importe = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-      if (dato.importe.includes(",")) {
-        this.maximaLong = 8;
-        let partes = dato.importe.split(",");
-        this.maximaLong = partes[0].length + 3;
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          dato.importe = partes[0] + "," + segundaParte;
-        }
-        if (numero >= 100) {
-          // dato.importe = 100;
-        } else if (numero < 0) {
-          dato.importe = 0;
-        }
-      } else {
-        this.maximaLong = 8;
-        if (dato.importe.length > 3) {
-          // dato.importe = 100;
-        } else {
-          let numero = + dato.importe;
-          if (numero >= 100) {
-            // dato.importe = 100;
-          }
-          else if (numero < 0) {
-            dato.importe = 0;
-          }
-        }
-      }
-
-      this.editarTipoAsistencia(dato);
-
-    } else {
-      if (this.datos[0].importe == undefined || this.datos[0].importe == "") {
-        this.datos[0].importe = "0";
-      }
-      if (this.datos[0].importe.split(",").length - 1 > 1) {
-
-        let partePrimera = this.datos[0].importe.split(",");
-        this.datos[0].importe = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-
-      if (this.datos[0].importe.includes(",")) {
-        let partes = this.datos[0].importe.split(",");
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importe = partes[0] + "," + segundaParte;
-          // this.importe.nativeElement.value = this.modulosItem.importe;
-        }
-        this.maximaLong = 8;
-        this.maximaLong = partes[0].length + 3;
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importe = partes[0] + "," + segundaParte;
-        }
-      }
-      if (+this.datos[0].importe > 999999999) this.datos[0].importe = 99999999;
-    }
-  }
-
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
-      if (charCode == 188) {
-      }
       return true;
     }
     else {
@@ -303,6 +148,9 @@ export class TiposActuacionComponent implements OnInit {
             let seleccionados = [];
             element.editable = false
             element.overlayVisible = false;
+
+            this.beautifyData(element)
+
             let prueba = [];
             let misseleccionados = element.idtipoasistencia.split(',');
             misseleccionados = misseleccionados.map(function (el) {
@@ -336,6 +184,25 @@ export class TiposActuacionComponent implements OnInit {
 
   }
 
+  beautifyData(element) {
+    if (element.importe != null) {
+      element.importe = element.importe.replace(".", ",");
+      if (element.importe[0] == "," && element.importe.length > 1)
+        element.importe = "0".concat(element.importe);
+      else if (element.importe[0] == "," && element.importe.length == 1)
+        element.importe = "0"
+    } else
+      element.importe = "0"
+
+    if (element.importemaximo != null) {
+      element.importemaximo = element.importemaximo.replace(".", ",");
+      if (element.importemaximo[0] == "," && element.importemaximo.length > 1)
+        element.importemaximo = "0".concat(element.importemaximo);
+      else if (element.importemaximo[0] == "," && element.importemaximo.length == 1)
+        element.importemaximo = "0"
+    } else
+      element.importemaximo = "0"
+  }
   searchHistorical() {
     this.historico = !this.historico;
     if (this.historico) {
@@ -380,6 +247,7 @@ export class TiposActuacionComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new TiposActuacionObject();
         this.body.tiposActuacionItem = this.updateTiposActuacion;
+
         this.callSaveService(url);
 
       } else {
@@ -420,8 +288,6 @@ export class TiposActuacionComponent implements OnInit {
   callSaveService(url) {
     if (this.body.tiposActuacionItem != undefined) {
       this.body.tiposActuacionItem.forEach(element => {
-        element.importe = "" + element.importe;
-        element.importemaximo = "" + element.importemaximo;
         element.importe = + element.importe.replace(",", ".");
         element.importemaximo = + element.importemaximo.replace(",", ".");
       });
@@ -478,11 +344,15 @@ export class TiposActuacionComponent implements OnInit {
       descripciontipoactuacion: undefined,
       importe: "0",
       importemaximo: "0",
+      importeReal: undefined,
+      importemaximoReal: undefined,
       seleccionadosReal: undefined,
       idtipoasistencia: undefined,
       editable: true
     };
-
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
     if (this.datos.length == 0) {
       this.datos.push(tipoActuacion);
     } else {
@@ -490,7 +360,40 @@ export class TiposActuacionComponent implements OnInit {
     }
 
   }
+  changeImporte(dato) {
+    dato.importe = dato.valorNum;
+    let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
+    if (findDato != undefined) {
+      if (dato.importe != findDato.importe) {
+
+        let findUpdate = this.updateTiposActuacion.find(item => item.importe === dato.importe);
+        this.permitirGuardar = true
+
+        if (findUpdate == undefined) {
+          this.updateTiposActuacion.push(dato);
+        }
+      }
+    }
+
+  }
+  changeImporteMaximo(dato) {
+    dato.importemaximo = dato.valorNum;
+    let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
+
+    if (findDato != undefined) {
+      if (dato.importemaximo != findDato.importemaximo) {
+
+        let findUpdate = this.updateTiposActuacion.find(item => item.importemaximo === dato.importemaximo);
+        this.permitirGuardar = true
+        if (findUpdate == undefined) {
+          this.updateTiposActuacion.push(dato);
+        }
+      }
+    }
+
+
+  }
   editarTipoAsistencia(dato) {
 
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
@@ -673,8 +576,8 @@ export class TiposActuacionComponent implements OnInit {
 
     this.cols = [
       { field: "descripciontipoactuacion", header: "censo.usuario.nombre" },
-      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximo", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
+      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
       { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia" },
     ];
 

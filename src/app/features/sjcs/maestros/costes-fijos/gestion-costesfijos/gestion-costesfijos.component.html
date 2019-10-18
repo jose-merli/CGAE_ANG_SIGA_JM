@@ -86,7 +86,7 @@
                   (input)="validateAcreditacion()" (keypress)="numberOnly($event)" [maxLength]="maximaLong" /> -->
 
                 <app-precio [(value)]="dato.importe" [porcentaje]="false" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                  (valueChangeInput)="changeImporte()"></app-precio>
+                  (valueChangeInput)="changeImporte(dato)"></app-precio>
 
               </div>
             </td>

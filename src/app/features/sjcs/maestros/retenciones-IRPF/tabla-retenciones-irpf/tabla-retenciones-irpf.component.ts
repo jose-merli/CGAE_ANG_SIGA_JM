@@ -247,13 +247,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   }
 
-  quitaComa(dato) {
-    dato.map(element => {
-      if (element.retencion != null && element.retencion != undefined && element.retencion != "")
-        element.retencion = element.retencion.replace(",", ".")
-    });
-  }
-
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -283,7 +276,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       this.editMode = false;
       if (this.validateUpdate()) {
         this.body = new RetencionIrpfItem();
-        this.quitaComa(this.updatePartidasPres)
         this.body.retencionItems = this.updatePartidasPres;
         this.body.retencionItems.forEach(element => {
           element.retencion = element.retencion.replace(",", ".");
@@ -292,6 +284,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
             element.retencion = 0;
           }
         });
+
         this.callSaveService(url);
       } else {
 
