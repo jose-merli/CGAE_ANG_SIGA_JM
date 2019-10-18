@@ -259,8 +259,15 @@ export class TablaPartidasComponent implements OnInit {
         });
         this.callSaveService(url);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de las partidas presupuestrias ya se encuentran registrados");
-        this.progressSpinner = false;
+        err => {
+
+          if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+          this.progressSpinner = false;
+        }
       }
     }
 
@@ -305,7 +312,7 @@ export class TablaPartidasComponent implements OnInit {
     let partidaPresupuestaria = {
       nombrepartida: undefined,
       descripcion: undefined,
-      importepartida: undefined,
+      importepartida: "0",
       importepartidaReal: 0,
       idpartidapresupuestaria: undefined,
       editable: true
@@ -322,7 +329,8 @@ export class TablaPartidasComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined && this.datos[0].valorNum != undefined) {
+      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
+        && this.datos[0].valorNum != undefined) {
         return false;
       } else {
         return true;

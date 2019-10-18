@@ -151,6 +151,9 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.body.descripcionFundamento != undefined || this.body.codigo != undefined)
+      this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
+    this.body.codigo = this.body.codigo.trim();
     if (!this.historico && (this.body.idTipoDictamenEjg != undefined &&
       this.body.idTipoDictamenEjg != "" && this.body.descripcionFundamento != null && this.body.descripcionFundamento != ""
     )) {
