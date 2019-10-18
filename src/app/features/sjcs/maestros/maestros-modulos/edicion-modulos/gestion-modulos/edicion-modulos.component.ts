@@ -254,6 +254,12 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.modulosItem.nombre != undefined || this.modulosItem.importe != undefined || this.modulosItem.codigo != undefined
+      || this.modulosItem.codigoext != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
+    this.modulosItem.importe = this.modulosItem.importe.trim();
+    this.modulosItem.codigo = this.modulosItem.codigo.trim();
+    this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
+
     if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.nombre != "" &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
       this.modulosItem.idjurisdiccion != undefined) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {

@@ -314,7 +314,7 @@ export class TablaMateriasComponent implements OnInit {
       }
 
     } else {
-      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
+      if ((this.updateAreas != undefined && this.updateAreas.length > 0) || this.selectedDatos.length > 0) {
         return false;
       } else {
         return true;

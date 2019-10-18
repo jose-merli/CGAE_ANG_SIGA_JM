@@ -85,6 +85,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 
 
   isSelectMultiple() {
+    this.selectAll = false;
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
