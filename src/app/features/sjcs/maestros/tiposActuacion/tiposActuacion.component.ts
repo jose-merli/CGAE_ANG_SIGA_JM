@@ -320,6 +320,7 @@ export class TiposActuacionComponent implements OnInit {
         this.progressSpinner = false;
         this.editMode = true;
         this.nuevo = false;
+        this.updateTiposActuacion = [];
       },
       () => {
         this.selectedDatos = [];
@@ -368,6 +369,13 @@ export class TiposActuacionComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
     if (findDato != undefined) {
+      let tiposAsistenciaString = "";
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
+      }
+      dato.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
       if (dato.importe != findDato.importe) {
 
         let findUpdate = this.updateTiposActuacion.find(item => item.importe === dato.importe);
@@ -385,6 +393,13 @@ export class TiposActuacionComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
     if (findDato != undefined) {
+      let tiposAsistenciaString = "";
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
+      }
+      dato.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
       if (dato.importemaximo != findDato.importemaximo) {
 
         let findUpdate = this.updateTiposActuacion.find(item => item.importemaximo === dato.importemaximo);
@@ -401,36 +416,54 @@ export class TiposActuacionComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
+    // if (findDato != undefined) {
+    //   // let dato2 = dato;
+    //   let tiposAsistenciaString = "";
+    //   for (let i in dato.seleccionadosReal) {
+    //     tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
+    //   }
+    //   dato.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+    //   dato.seleccionados = "";
+    //   // this.updateTiposActuacion.push(dato);
+
+    //   if ((dato.descripciontipoactuacion == null || dato.descripciontipoactuacion == "")
+    //     || (dato.importe == null || dato.importe == "")
+    //     || (dato.importemaximo == null || dato.importemaximo == "")
+    //     || (dato.seleccionadosReal.length == 0 || dato.seleccionadosReal == "")) {
+    //     this.permitirGuardar = false;
+    //   } else {
+    //     this.permitirGuardar = true;
+    //   }
+    //   this.updateTiposActuacion.push(dato);
+    //   if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion || dato.importe != findDato.importe ||
+    //     dato.importemaximo != findDato.importemaximo) {
+
+    //     let findUpdate = this.updateTiposActuacion.find(item => item.descripciontipoactuacion === dato.descripciontipoactuacion && item.importe === dato.importe && item.importemaximo === dato.importemaximo);
+
+    //     if (findUpdate == undefined) {
+    //       // this.updateTiposActuacion.push(dato);
+    //     }
+    //   }
+    // }
     if (findDato != undefined) {
-      let dato2 = dato;
       let tiposAsistenciaString = "";
-      for (let i in dato2.seleccionadosReal) {
-        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
       }
-      dato2.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-      dato2.seleccionados = "";
-      this.updateTiposActuacion.push(dato2);
+      dato.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
+      if (dato.seleccionadosReal != findDato.seleccionadosReal) {
 
-      if ((dato.descripciontipoactuacion == null || dato.descripciontipoactuacion == "")
-        || (dato.importe == null || dato.importe == "")
-        || (dato.importemaximo == null || dato.importemaximo == "")
-        || (dato.seleccionadosReal == null || dato.seleccionadosReal == "")) {
-        this.permitirGuardar = false;
-      } else {
-        this.permitirGuardar = true;
-      }
-
-      if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo) {
-
-        let findUpdate = this.updateTiposActuacion.find(item => item.descripciontipoactuacion === dato.descripciontipoactuacion && item.importe === dato.importe && item.importemaximo === dato.importemaximo);
-
+        let findUpdate = this.updateTiposActuacion.find(item => item.seleccionadosReal === dato.seleccionadosReal);
+        this.permitirGuardar = true
         if (findUpdate == undefined) {
           this.updateTiposActuacion.push(dato);
         }
       }
     }
   }
+
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].importe != undefined && this.datos[0].importemaximo != undefined
