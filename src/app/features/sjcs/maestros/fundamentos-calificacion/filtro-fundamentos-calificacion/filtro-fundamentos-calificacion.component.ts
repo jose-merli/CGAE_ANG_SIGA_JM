@@ -74,14 +74,15 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
   }
 
   checkFilters() {
+    if (this.filtros.descripcionFundamento != undefined && this.filtros.descripcionFundamento != null) {
+      this.filtros.descripcionFundamento = this.filtros.descripcionFundamento.trim();
+    }
     if (
       ((this.filtros.descripcionFundamento != null && this.filtros.descripcionFundamento.trim().length > 2)
         || this.filtros.descripcionDictamen != undefined)) {
 
       // quita espacios vacios antes de buscar
-      if (this.filtros.descripcionFundamento != undefined && this.filtros.descripcionFundamento != null) {
-        this.filtros.descripcionFundamento = this.filtros.descripcionFundamento.trim();
-      }
+
       return true;
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));

@@ -49,7 +49,7 @@
             </span>
 
             <div *ngIf="dato.editable && col.field == 'importepartidaReal'">
-              <app-precio [(value)]="dato.importepartida" [dato]="dato" [maxLength]="15" [nuevo]="nuevo" [id]="id" [disabled]="historico"
+              <app-precio [(value)]="dato.importepartida" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico"
                 (valueChangeInput)="changeImporte(dato)"></app-precio>
             </div>
             <div *ngIf="dato.editable && col.field == 'nombrepartida'">

@@ -141,6 +141,8 @@ export class GrupoZonaComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.body.descripcionzona != undefined)
+      this.body.descripcionzona = this.body.descripcionzona.trim();
     if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona != null && this.body.descripcionzona.trim() != "")) {
       return false;
     } else {

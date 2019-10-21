@@ -298,6 +298,8 @@ export class TablaProcedimientosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
+      if (this.datos[0].descripcion != undefined || this.datos[0].descripcion != "")
+        this.datos[0].descripcion = this.datos[0].descripcion.trim();
       if (this.datos[0].descripcion != undefined) {
         if (this.datos[0].descripcion.trim() != "") {
           return false;
