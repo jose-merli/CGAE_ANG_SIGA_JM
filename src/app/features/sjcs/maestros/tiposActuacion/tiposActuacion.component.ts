@@ -564,6 +564,9 @@ export class TiposActuacionComponent implements OnInit {
     this.updateTiposActuacion = [];
     this.nuevo = false;
     this.editMode = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {

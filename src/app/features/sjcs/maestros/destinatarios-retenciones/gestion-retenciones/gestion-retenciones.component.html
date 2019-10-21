@@ -27,24 +27,14 @@
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importepartida'">
-              {{dato[col.field] | number:'1.2-2'}} €
-            </span>
-
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartida'">
+            <span *ngIf="!dato.editable && !setItalic(dato)">
               {{ dato[col.field] }}
             </span>
 
-            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importepartida'">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field] | number:'1.2-2'}} €</span>
-            </div>
 
-            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importepartida'">
+            <div *ngIf="!dato.editable && setItalic(dato) ">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
-
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartida'">
-            </span>
 
             <div *ngIf="dato.editable && col.field == 'cuentacontable'">
               <input class="form-control paddingInput" [(ngModel)]="dato.cuentacontable" name="cuentacontable" (input)="changeCuentaContable(dato)"
@@ -74,9 +64,9 @@
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
           <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos != undefined || selectedDatos.length >= 0">Seleccionados: {{selectedDatos.length}}
           </label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos == undefined || selectedDatos == []">Seleccionados: 0
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">

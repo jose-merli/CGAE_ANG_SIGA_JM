@@ -127,20 +127,34 @@ export class TablaProcedimientosComponent implements OnInit {
   }
 
   changeDescripcion(dato) {
-
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
 
     if (findDato != undefined) {
-      if (dato.descripcion != findDato.descripcion) {
+      if (dato.descripcion.trim() != "") {
+        if (dato.descripcion != findDato.descripcion) {
 
+          let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+
+          if (findUpdate == undefined) {
+            this.updatePartidasPres.push(dato);
+          }
+        }
+      } else {
         let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
-
-        if (findUpdate == undefined) {
-          this.updatePartidasPres.push(dato);
+        if (findUpdate != undefined) {
+          let cambios = [];
+          this.updatePartidasPres.forEach(data => {
+            if (data.idPretension != findUpdate.idPretension) {
+              cambios.push(data);
+            }
+          });
+          if (cambios != undefined) {
+            this.updatePartidasPres = [];
+            this.updatePartidasPres = cambios;
+          }
         }
       }
     }
-
   }
   changeCodigoExt(dato) {
 
@@ -285,7 +299,11 @@ export class TablaProcedimientosComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].descripcion != undefined) {
-        return false;
+        if (this.datos[0].descripcion.trim() != "") {
+          return false;
+        } else {
+          return true;
+        }
       } else {
         return true;
       }

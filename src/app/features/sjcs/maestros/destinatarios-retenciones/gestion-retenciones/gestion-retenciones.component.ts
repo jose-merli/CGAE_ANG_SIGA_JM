@@ -267,6 +267,9 @@ export class TablaDestinatariosComponent implements OnInit {
     this.updateDestinatariosRet = [];
     this.nuevo = false;
     this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   // rest() {
@@ -278,6 +281,9 @@ export class TablaDestinatariosComponent implements OnInit {
   // }
 
   newDestinatariosRetenc() {
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
     this.nuevo = true;
     this.editMode = false;
     this.selectionMode = "single";

@@ -523,6 +523,9 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.selectedDatos = [];
     this.updateAcreditaciones = [];
     this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
 
   }
 

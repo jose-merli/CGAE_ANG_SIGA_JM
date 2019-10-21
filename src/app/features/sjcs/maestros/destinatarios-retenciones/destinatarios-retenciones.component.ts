@@ -101,6 +101,11 @@ export class DestinatariosRetencionesComponent implements OnInit {
     this.sigaServices.post("gestionDestinatariosRetenc_searchDestinatariosRetenc", this.filtros.filtros).subscribe(
       n => {
         this.datos = JSON.parse(n.body).destinatariosItem;
+        this.datos.forEach(element => {
+          element.editable = false;
+          element.overlayVisible = false;
+          element.orden = +element.orden;
+        });
         this.buscar = true;
         this.progressSpinner = false;
       },
