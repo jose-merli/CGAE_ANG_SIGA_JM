@@ -63,7 +63,6 @@ export class DatosGeneralesPrisionComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
-
     this.getComboProvincias();
 
     this.validateHistorical();
@@ -178,6 +177,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
           this.progressSpinner = false;
+          this.commonsServices.arregloTildesCombo(this.comboPoblacion);
 
         },
         error => {
@@ -233,10 +233,33 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     }
 
   }
+  trimeando() {
+    this.body.nombre = this.body.nombre.trim()
+    if (this.body.domicilio != null && this.body.domicilio != undefined)
+      this.body.domicilio = this.body.domicilio.trim()
+
+    if (this.body.telefono1 != null && this.body.telefono1 != undefined)
+      this.body.telefono1 = this.body.telefono1.trim()
+
+    if (this.body.telefono2 != null && this.body.telefono2 != undefined)
+      this.body.telefono2 = this.body.telefono2.trim()
+
+    if (this.body.fax != null && this.body.fax != undefined)
+      this.body.fax = this.body.fax.trim()
+
+    if (this.body.email != null && this.body.email != undefined)
+      this.body.email = this.body.email.trim()
+
+    if (this.body.codigoExt != null && this.body.codigoExt != undefined)
+      this.body.codigoExt = this.body.codigoExt.trim()
+
+  }
 
   callSaveService(url) {
-    if (this.body.visibleMovil == null)
+    if (this.body.visibleMovil == null) {
       this.body.visibleMovil = 0
+    }
+    this.trimeando()
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -322,8 +345,9 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.historico && (this.body.nombre != "" && this.body.nombre != undefined && this.body.idProvincia != undefined &&
-      this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && !this.avisoMail && this.tlf1Valido
+    if (!this.historico && (this.body.nombre != undefined && this.body.nombre != null && this.body.nombre.trim() != "" &&
+      this.body.idProvincia != undefined && this.body.idProvincia != "" && this.body.idPoblacion != undefined && this.body.idPoblacion != null && this.body.idPoblacion != ""
+      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5 && !this.avisoMail && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {

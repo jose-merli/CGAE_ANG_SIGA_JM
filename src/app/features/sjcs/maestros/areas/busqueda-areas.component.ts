@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   templateUrl: './busqueda-areas.component.html',
   styleUrls: ['./busqueda-areas.component.scss']
 })
-export class BusquedaAreasComponent implements OnInit, AfterViewInit {
+export class BusquedaAreasComponent implements OnInit {
 
   buscar: boolean = false;
   messageShow: string;
@@ -27,6 +27,7 @@ export class BusquedaAreasComponent implements OnInit, AfterViewInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltroBusquedaAreasComponent) filtros;
+  @ViewChild(TablaBusquedaAreasComponent) tabla;
 
   //comboPartidosJudiciales
   comboPJ;
@@ -46,13 +47,13 @@ export class BusquedaAreasComponent implements OnInit, AfterViewInit {
     this.buscar = this.filtros.buscar
 
     this.commonsService.checkAcceso(procesos_maestros.areasMaterias)
-      .then(respuesta  =>  {
-        this.permisoEscritura  =  respuesta;
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscritura);
 
-        if  (this.permisoEscritura  ==  undefined) {
-          sessionStorage.setItem("codError",  "403");
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
             "descError",
             this.translateService.instant("generico.error.permiso.denegado")
@@ -60,37 +61,39 @@ export class BusquedaAreasComponent implements OnInit, AfterViewInit {
           this.router.navigate(["/errorAcceso"]);
         }
       }
-      ).catch(error  =>  console.error(error));
+      ).catch(error => console.error(error));
   }
-
-  ngAfterViewInit() {
-  }
-
-  // busquedaReceive(event) {
-  //   this.searchAreas();
-  // }
 
 
   searchAreas(event) {
-    this.filtros.filtros.historico = event;
-
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-
-    this.sigaServices.post("fichaAreas_searchAreas", this.filtros.filtros).subscribe(
+    this.sigaServices.post("fichaAreas_searchAreas", this.filtros.filtroAux).subscribe(
       n => {
-
         this.datos = JSON.parse(n.body).areasItems;
         this.buscar = true;
         this.progressSpinner = false;
-
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
+        this.resetSelect();
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
-      }
-    );
+      });
   }
 
+  resetSelect() {
+    if (this.tabla != undefined) {
+      this.tabla.selectedDatos = [];
+      this.tabla.numSelected = 0;
+      this.tabla.selectMultiple = false;
+      this.tabla.selectAll = false;
+    }
+  }
   // searchZonasSend(event) {
   //   this.filtros.filtros.historico = event;
   //   this.searchZonas();

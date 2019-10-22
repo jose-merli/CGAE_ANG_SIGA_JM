@@ -22,6 +22,7 @@ export class FiltroGestionZonasComponent implements OnInit {
   // partidoJudicial:string;
 
   filtros: ZonasItem = new ZonasItem();
+  filtroAux: ZonasItem = new ZonasItem();
   historico: boolean = false;
   @Input() permisoEscritura;
 
@@ -54,7 +55,9 @@ export class FiltroGestionZonasComponent implements OnInit {
 
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
-      this.isOpen.emit(this.historico)
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.isOpen.emit(false)
     }
 
   }
@@ -66,9 +69,9 @@ export class FiltroGestionZonasComponent implements OnInit {
 
   checkFilters() {
     if (
-      (this.filtros.descripcionzona == null || this.filtros.descripcionzona == "" || this.filtros.descripcionzona.length < 3) &&
-      (this.filtros.descripcionsubzona == null || this.filtros.descripcionsubzona == "" || this.filtros.descripcionsubzona.length < 3) &&
-      (this.filtros.descripcionpartido == null || this.filtros.descripcionpartido == "" || this.filtros.descripcionpartido.length < 3)) {
+      (this.filtros.descripcionzona == null || this.filtros.descripcionzona.trim() == "" || this.filtros.descripcionzona.trim().length < 3) &&
+      (this.filtros.descripcionsubzona == null || this.filtros.descripcionsubzona.trim() == "" || this.filtros.descripcionsubzona.trim().length < 3) &&
+      (this.filtros.descripcionpartido == null || this.filtros.descripcionpartido.trim() == "" || this.filtros.descripcionpartido.trim().length < 3)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {

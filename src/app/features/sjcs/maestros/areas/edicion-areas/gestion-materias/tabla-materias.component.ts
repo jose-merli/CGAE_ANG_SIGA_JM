@@ -52,7 +52,7 @@ export class TablaMateriasComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
 
   @ViewChild("table") table;
-  @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
+  @ViewChild("multiSelect") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
@@ -236,7 +236,9 @@ export class TablaMateriasComponent implements OnInit {
   newMateria() {
     this.nuevo = true;
     this.seleccion = false;
-
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
@@ -312,7 +314,7 @@ export class TablaMateriasComponent implements OnInit {
       }
 
     } else {
-      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
+      if ((this.updateAreas != undefined && this.updateAreas.length > 0) || this.selectedDatos.length > 0) {
         return false;
       } else {
         return true;
@@ -450,6 +452,9 @@ export class TablaMateriasComponent implements OnInit {
     this.selectedDatos = [];
     this.updateAreas = [];
     this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -545,8 +550,10 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   openMultiSelect(dato) {
-    console.log(this.multiSelect);
-    dato.overlayVisible = true;
+    // console.log(this.multiSelect);
+    dato.onPanelShow;
+    // this.multiSelect.show();
+    // dato.overlayVisible = true;
   }
 
   onHideTarjeta() {

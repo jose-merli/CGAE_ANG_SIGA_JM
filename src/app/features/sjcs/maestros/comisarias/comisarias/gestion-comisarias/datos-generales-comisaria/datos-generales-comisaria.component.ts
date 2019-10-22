@@ -74,6 +74,9 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
     if (this.modoEdicion) {
       this.body = this.datos;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      if (this.body.codigoPostal == null) {
+        this.body.codigoPostal = "";
+      }
       if (this.bodyInicial.email != null && this.bodyInicial.email != undefined)
         this.emailValido = true
       if (this.datos.visibleMovil == "1")
@@ -323,7 +326,7 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
   }
 
   disabledSave() {
-    if (!this.historico && (this.body.nombre != "" && this.body.nombre != undefined && this.body.idProvincia != undefined &&
+    if (!this.historico && (this.body.nombre.trim() != "" && this.body.nombre != undefined && this.body.codigoPostal != "" && this.body.codigoPostal != undefined && this.body.codigoPostal.length == 5 && this.body.idProvincia != undefined &&
       this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && !this.avisoMail && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
@@ -346,14 +349,17 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
   }
 
   changeTelefono1() {
+    this.body.telefono1 = this.body.telefono1.trim();
     this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
   }
 
   changeTelefono2() {
+    this.body.telefono2 = this.body.telefono2.trim();
     this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
   }
 
   changeFax() {
+    this.body.fax1 = this.body.fax1.trim();
     this.faxValido = this.commonsServices.validateFax(this.body.fax1);
   }
 

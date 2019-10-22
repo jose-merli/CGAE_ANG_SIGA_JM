@@ -57,7 +57,7 @@
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
-              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+              <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
                 [disabled]="historico || !permisoEscritura" pInputText>
             </div>
 
@@ -143,6 +143,7 @@
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6" id="divMovil">
+
               <label id="labelMovil">{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate}}</label>
               <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
 

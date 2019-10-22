@@ -71,13 +71,13 @@
             <td class="text-center" *ngFor="let col of columns">
 
               <div *ngIf="col.field == 'jurisdicciones'">
-                <!-- <p-multiSelect #multiSelectPJ *ngIf="nuevo || (!nuevo && !seleccion)" defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal"
+                <!-- <p-multiSelect #multiSelect *ngIf="nuevo || (!nuevo && !seleccion)" defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal"
                   [options]="comboJurisdicciones" optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll"
                   [panelStyle]="{ width: '100%' }" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato)"></p-multiSelect> -->
 
-                <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal" [options]="comboJurisdicciones"
+                <p-multiSelect #multiSelect defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal" [options]="comboJurisdicciones"
                   optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
-                  [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato)"></p-multiSelect>
+                  [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato); openMultiSelect(dato)"></p-multiSelect>
               </div>
 
               <div *ngIf="col.field == 'nombreMateria'">

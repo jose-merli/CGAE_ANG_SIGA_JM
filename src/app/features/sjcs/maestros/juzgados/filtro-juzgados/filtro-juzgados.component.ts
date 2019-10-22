@@ -18,6 +18,7 @@ export class FiltroJuzgadosComponent implements OnInit {
   msgs = [];
 
   filtros: JuzgadoItem = new JuzgadoItem();
+  filtroAux: JuzgadoItem = new JuzgadoItem();
   historico: boolean = false;
 
   isDisabledPoblacion: boolean = true;
@@ -120,7 +121,9 @@ export class FiltroJuzgadosComponent implements OnInit {
 
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
-      this.isOpen.emit(this.historico)
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.isOpen.emit(false)
     }
 
   }
@@ -132,8 +135,8 @@ export class FiltroJuzgadosComponent implements OnInit {
 
   checkFilters() {
     if (
-      (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
-      (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.length < 3) &&
+      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.length < 3) &&
+      (this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.length < 3) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));

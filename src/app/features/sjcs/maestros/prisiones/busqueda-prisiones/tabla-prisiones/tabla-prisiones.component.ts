@@ -154,7 +154,7 @@ export class TablaPrisionesComponent implements OnInit {
 
     this.cols = [
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "codigoExt", header: "administracion.parametrosGenerales.literal.codigo" },
+      { field: "codigoExt", header: "general.codeext" },
       { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
       { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
       { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
@@ -215,6 +215,8 @@ export class TablaPrisionesComponent implements OnInit {
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.selectAll = false;
+
       } else {
         this.selectAll = false;
         this.selectedDatos = [];

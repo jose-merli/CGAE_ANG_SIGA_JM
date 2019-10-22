@@ -75,6 +75,48 @@ export let endpoints_maestros: any = {
     gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
 
 
+    //Fundamentos calificacion
+    busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
+    busquedaFundamentosCalificacion_searchFundamentos: "maestros/busquedaFundamentosCalificacion/searchFundamentos",
+    fundamentosCalificacion_deleteFundamentoCalificacion: "maestros/busquedaFundamentosCalificacion/deleteFundamentos",
+    busquedaFundamentosCalificacion_activateFundamentos: "maestros/busquedaFundamentosCalificacion/activateFundamentos",
+    busquedaFundamentosCalificacion_createFundamentos: "maestros/busquedaFundamentosCalificacion/createFundamento",
+    busquedaFundamentosCalificacion_updateFundamento: "maestros/busquedaFundamentosCalificacion/updateFundamentoCalificacion",
+
+    //Comisarias
+    busquedaComisarias_searchComisarias: "maestros/gestionComisarias/searchComisarias",
+    gestionComisarias_createComisaria: "maestros/gestionComisarias/createComisarias",
+    gestionComisarias_updateComisarias: "maestros/gestionComisarias/updateComisarias",
+    busquedaComisarias_deleteComisarias: "maestros/gestionComisarias/deleteComisarias",
+    busquedaComisarias_activateComisarias: "maestros/gestionComisarias/activateComisarias",
+    busquedaComisarias_provinces: "maestros/gestionComisarias/provinces",
+    busquedaCommisarias_poblacion: "maestros/gestionComisarias/population",
+
+    //Procuradores
+    busquedaProcuradores_searchProcuradores: "maestros/gestionProcuradores/busquedaProcuradores",
+    busquedaProcuradores_deleteProcuradores: "maestros/gestionProcuradores/deleteProcuradores",
+    busquedaProcuradores_activateProcuradores: "maestros/gestionProcuradores/activateProcuradores",
+    gestionProcuradores_createProcurador: "maestros/gestionProcuradores/createProcurador",
+    gestionProcuradores_updateProcurador: "maestros/gestionProcuradores/updateProcurador",
+    busquedaProcuradores_colegios: "maestros/gestionProcuradores/colegios",
+
+    //Procedimientos
+    busquedaProcedimientos_jurisdiccion: "maestros/busquedaPretensiones/jurisdiccion",
+    busquedaProcedimientos_procedimientos: "maestros/busquedaPretensiones/procesos",
+    busquedaProcedimientos_searchProcedimientos: "maestros/gestionPretensiones/busquedaPretensiones",
+    gestionProcedimientos_deleteProcedimientos: "maestros/gestionPretensiones/deletePretensiones",
+    gestionProcedimientos_activateProcedimientos: "maestros/gestionPretensiones/activatePretensiones",
+    gestionPretensiones_createPretension: "maestros/gestionPretensiones/createPretension",
+    gestionPretensiones_updatePretension: "maestros/gestionPretensiones/updatePretension",
+
+    //RetencionesIRPF
+    busquedaRetencionesIRPF_sociedades: "maestros/gestionRetencionesIRPF/sociedades",
+    busquedaRetencionesIRPF_busquedaRetencionesIRPF: "maestros/gestionRetencionesIRPF/busquedaRetencionesIRPF",
+    busquedaRetencionesIRPF_deleteRetencionesIRPF: "maestros/gestionRetencionesIRPF/deleteRetencionesIRPF",
+    busquedaRetencionesIRPF_activateRetencionesIRPF: "maestros/gestionRetencionesIRPF/activateRetencionesIRPF",
+    busquedaRetencionesIRPF_createRetencionesIRPF: "maestros/gestionRetencionesIRPF/createRetencionIRPF",
+    busquedaRetencionesIRPF_updateRetencionesIRPF: "maestros/gestionRetencionesIRPF/updateRetencionesIRPF",
+
     gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",
     deletePartidosJudi_deletePartidosJudi: "maestros/deletePartidosJudi/deletePartidosJudi",
     gestionPartidosJudi_ComboPartidosJudi: "maestros/gestionPartidosJudi/ComboPartidosJudi",
@@ -82,6 +124,24 @@ export let endpoints_maestros: any = {
 
     calendarioLaboralAgenda_searchFestivos: "calendarioLaboralAgenda/searchFestivos",
     calendarioLaboralAgenda_deleteFestivos: "calendarioLaboralAgenda/deleteFestivos",
-    calendarioLaboralAgenda_activateFestivos: "calendarioLaboralAgenda/activateFestivos"
+    calendarioLaboralAgenda_activateFestivos: "calendarioLaboralAgenda/activateFestivos",
 
+    gestionTiposAsistencia_busquedaTiposAsistencia: "maestros/gestionTiposAsistencia/busquedaTiposAsistencia",
+    gestionTiposAsistencia_ComboTiposAsistencia: "maestros/gestionTiposAsistencia/ComboTiposAsistencia",
+    gestionTiposAsistencia_deleteTipoAsitencia: "maestros/gestionTiposAsistencia/deleteTipoAsitencia",
+    gestionTiposAsistencia_updateTiposAsistencias: "maestros/gestionTiposAsistencia/updateTiposAsistencias",
+    gestionTiposAsistencia_activateTipoAsitencia: "maestros/gestionTiposAsistencia/activateTipoAsitencia",
+    gestionTiposAsistencia_createTipoAsistencia: "maestros/gestionTiposAsistencia/createTipoAsistencia",
+
+    gestionTiposActuacion_busquedaTiposActuacion: "maestros/gestionTiposActuacion/busquedaTiposActuacion",
+    gestionTiposAsistencia_ComboTiposActuacion: "maestros/gestionTiposAsistencia/ComboTiposActuacion",
+    gestionTiposActuacion_updateTiposActuacion: "maestros/gestionTiposActuacion/updateTiposActuacion",
+    gestionTiposActuacion_deleteTipoActuacion: "maestros/gestionTiposActuacion/deleteTipoActuacion",
+    gestionTiposActuacion_activateTipoActuacion: "maestros/gestionTiposActuacion/activateTipoActuacion",
+    gestionTiposActuacion_createTipoActuacion: "maestros/gestionTiposActuacion/createTipoActuacion",
+
+    gestionDestinatariosRetenc_searchDestinatariosRetenc: "maestros/gestionDestinatariosRetenc/searchDestinatariosRetenc",
+    gestionDestinatariosRetenc_updateDestinatariosRetenc: "maestros/gestionDestinatariosRetenc/updateDestinatariosRetenc",
+    gestionDestinatariosRetenc_eliminateDestinatariosRetenc: "maestros/gestionDestinatariosRetenc/eliminateDestinatariosRetenc",
+    gestionDestinatariosRetenc_createDestinatarioRetenc: "maestros/gestionDestinatariosRetenc/createDestinatarioRetenc"
 }

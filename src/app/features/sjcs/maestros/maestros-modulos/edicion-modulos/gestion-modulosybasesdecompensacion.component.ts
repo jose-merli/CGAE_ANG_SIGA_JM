@@ -37,8 +37,6 @@ export class GestionModulosYBasesComponent implements OnInit {
       });
     if (this.idProcedimiento != undefined) {
       this.searchModulos();
-    } else {
-      this.modulosItem = new ModulosItem();
     }
 
 

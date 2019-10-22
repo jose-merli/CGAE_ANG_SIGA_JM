@@ -1,5 +1,5 @@
-import { NgModule, LOCALE_ID, EventEmitter } from '@angular/core';
-import { CommonModule, DatePipe, APP_BASE_HREF } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { routingMaestros } from './maestros-routing.module';
 import { GestionZonasModule } from './gestion-zonas/gestion-zonas.module';
@@ -13,11 +13,16 @@ import { FundamentosResolucionModule } from './fundamentos-resolucion/fundamento
 import { PrisionesModule } from './prisiones/prisiones.module';
 import { FundamentosCalificacionModule } from './fundamentos-calificacion/fundamentos-calificacion.module';
 import { GestionPartidasComponent } from './partidas/partidas.module';
-import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partidas-judiciales.module';
-import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { ComisariasModule } from './comisarias/comisarias.module';
 import { CalendarioLaboralAgendaModule } from './calendario-laboral-agenda/calendario-laboral-agenda.module';
+import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.module';
+import { ProcuradoresModule } from './procuradores/procuradores.module';
+import { GestionTiposActuacionModule } from './tiposActuacion/tiposActuacion.module';
+import { GestionDestinatariosComponent } from './destinatarios-retenciones/destinatarios.module';
+import { ProcedimientosModule } from './procedimientos/procedimientos.module';
+import { SpinnerModule } from '../../../../../node_modules/primeng/primeng';
+import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.module';
 
 @NgModule({
         declarations: [],
@@ -34,9 +39,17 @@ import { CalendarioLaboralAgendaModule } from './calendario-laboral-agenda/calen
                 PrisionesModule,
                 FundamentosCalificacionModule,
                 GestionPartidasComponent,
+                ProcuradoresModule,
                 GestionPartidasJudicialesComponent,
                 ComisariasModule,
-                CalendarioLaboralAgendaModule
+                CalendarioLaboralAgendaModule,
+                ProcedimientosModule,
+                GestionTiposAsistenciaModule,
+                RetencionesIrpfModule,
+                SpinnerModule,
+                GestionTiposActuacionModule,
+                GestionDestinatariosComponent,
+                GestionTiposAsistenciaModule
         ],
 
         providers: []

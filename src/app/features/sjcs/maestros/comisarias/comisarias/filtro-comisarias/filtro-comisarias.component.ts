@@ -107,6 +107,20 @@ export class FiltroComisariasComponent implements OnInit {
         n => {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
+          this.comboPoblacion.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
         },
         error => { },
         () => { }
@@ -135,8 +149,8 @@ export class FiltroComisariasComponent implements OnInit {
 
   checkFilters() {
     if (
-      (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
-      (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.length < 3) &&
+      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
+      (this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.trim().length < 3) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));

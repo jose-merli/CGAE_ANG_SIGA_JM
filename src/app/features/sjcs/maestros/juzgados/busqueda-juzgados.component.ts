@@ -6,6 +6,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { TranslateService } from '../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
+import { TablaJuzgadosComponent } from './tabla-juzgados/tabla-juzgados.component';
 
 @Component({
   selector: 'app-busqueda-juzgados',
@@ -24,6 +25,7 @@ export class BusquedaJuzgadosComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @ViewChild(FiltroJuzgadosComponent) filtros;
+  @ViewChild(TablaJuzgadosComponent) tabla;
 
   //comboPartidosJudiciales
   comboPJ;
@@ -64,22 +66,35 @@ export class BusquedaJuzgadosComponent implements OnInit {
 
 
   search(event) {
-    this.filtros.filtros.historico = event;
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-
-    this.sigaServices.post("busquedaJuzgados_searchCourt", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaJuzgados_searchCourt", this.filtros.filtroAux).subscribe(
       n => {
 
         this.datos = JSON.parse(n.body).juzgadoItems;
         this.buscar = true;
         this.progressSpinner = false;
-
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
+        this.resetSelect();
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
-      }
-    );
+      });
+  }
+
+
+  resetSelect() {
+    if (this.tabla != undefined) {
+      this.tabla.selectedDatos = [];
+      this.tabla.numSelected = 0;
+      this.tabla.selectMultiple = false;
+      this.tabla.selectAll = false;
+    }
   }
 
   showMessage(event) {
