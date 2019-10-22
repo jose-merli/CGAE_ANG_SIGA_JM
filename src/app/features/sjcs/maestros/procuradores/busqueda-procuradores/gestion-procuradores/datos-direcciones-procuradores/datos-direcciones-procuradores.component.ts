@@ -127,7 +127,6 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
   }
 
   onChangeProvincia() {
-
     this.body.idPoblacion = "";
     this.comboPoblacion = [];
 
@@ -136,7 +135,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
     } else {
       this.isDisabledPoblacion = true;
     }
-
+    this.disabledSave();
   }
 
   onChangePoblacion() {
@@ -144,6 +143,8 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
       let poblacionSelected = this.comboPoblacion.filter(pob => pob.value == this.body.idPoblacion);
       this.body.nombrePoblacion = poblacionSelected[0].label;
     }
+    this.disabledSave();
+
   }
 
   buscarPoblacion(e) {
@@ -209,6 +210,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
       this.provinciaSelecionada = "";
 
     }
+    this.disabledSave();
   }
 
   isValidCodigoPostal(): boolean {
@@ -268,8 +270,10 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.body.codigoPostal != undefined) this.body.codigoPostal = this.body.codigoPostal.trim();
     if (!this.avisoMail && this.tlf1Valido
-      && this.tlf2Valido && this.faxValido) {
+      && this.tlf2Valido && this.faxValido && this.body.codigoPostal != undefined && this.body.codigoPostal != ""
+      && this.body.codigoPostal.length == 5 && this.body.idPoblacion != undefined && this.body.idPoblacion != "") {
       this.validDir = true
     } else {
       this.validDir = false

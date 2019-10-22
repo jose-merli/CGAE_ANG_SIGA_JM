@@ -59,8 +59,8 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   }
 
   checkFilters() {
-    if ((this.filtros.codigoExt == null || this.filtros.codigoExt == "") &&
-      (this.filtros.descripcionFundamento == null || this.filtros.descripcionFundamento == "" || this.filtros.descripcionFundamento.length < 3)) {
+    if ((this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.trim().length < 3) &&
+      (this.filtros.descripcionFundamento == null || this.filtros.descripcionFundamento.trim() == "" || this.filtros.descripcionFundamento.trim().length < 3)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {
@@ -102,7 +102,11 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.search();
+      if (this.checkFilters()) {
+        this.filtroAux.codigoExt = this.filtros.codigoExt
+        this.filtroAux.descripcionFundamento = this.filtros.descripcionFundamento
+        this.search()
+      }
     }
   }
 

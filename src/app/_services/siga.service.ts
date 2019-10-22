@@ -700,32 +700,6 @@ export class SigaServices {
     plantillasDoc_descargarPlantilla: "plantillasDoc/descargarPlantilla",
 
 
-
-    //Fundamentos calificacion
-    busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
-    busquedaFundamentosCalificacion_searchFundamentos: "maestros/busquedaFundamentosCalificacion/searchFundamentos",
-    fundamentosCalificacion_deleteFundamentoCalificacion: "maestros/busquedaFundamentosCalificacion/deleteFundamentos",
-    busquedaFundamentosCalificacion_activateFundamentos: "maestros/busquedaFundamentosCalificacion/activateFundamentos",
-    busquedaFundamentosCalificacion_createFundamentos: "maestros/busquedaFundamentosCalificacion/createFundamento",
-    busquedaFundamentosCalificacion_updateFundamento: "maestros/busquedaFundamentosCalificacion/updateFundamentoCalificacion",
-
-    //Comisarias
-    busquedaComisarias_searchComisarias: "maestros/gestionComisarias/searchComisarias",
-    gestionComisarias_createComisaria: "maestros/gestionComisarias/createComisarias",
-    gestionComisarias_updateComisarias: "maestros/gestionComisarias/updateComisarias",
-    busquedaComisarias_deleteComisarias: "maestros/gestionComisarias/deleteComisarias",
-    busquedaComisarias_activateComisarias: "maestros/gestionComisarias/activateComisarias",
-    busquedaComisarias_provinces: "maestros/gestionComisarias/provinces",
-    busquedaCommisarias_poblacion: "maestros/gestionComisarias/population",
-
-    //Procuradores
-    busquedaProcuradores_searchProcuradores: "maestros/gestionProcuradores/busquedaProcuradores",
-    busquedaProcuradores_deleteProcuradores: "maestros/gestionProcuradores/deleteProcuradores",
-    busquedaProcuradores_activateProcuradores: "maestros/gestionProcuradores/activateProcuradores",
-    gestionProcuradores_createProcurador: "maestros/gestionProcuradores/createProcurador",
-    gestionProcuradores_updateProcurador: "maestros/gestionProcuradores/updateProcurador",
-    busquedaProcuradores_colegios: "maestros/gestionProcuradores/colegios",
-
     //Diálogo comunicación
     dialogo_claseComunicaciones: "dialogoComunicacion/clasesComunicacion",
     dialogo_claseComunicacion: "dialogoComunicacion/claseComunicacion",

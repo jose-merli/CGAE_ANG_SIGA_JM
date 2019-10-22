@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { SpinnerModule } from 'primeng/spinner';
 
 @Component({
   selector: 'app-edicion-modulos',
@@ -18,8 +19,10 @@ export class EdicionModulosComponent implements OnInit {
   msgs;
   jurisdicciones;
   showTarjeta: boolean = true;
+  esComa: boolean = false;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  @ViewChild("importe") importe;
   //Resultados de la busqueda
   @Input() modulosItem: ModulosItem;
 
@@ -29,6 +32,7 @@ export class EdicionModulosComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.modulosItem != undefined) {
+      this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
       if (this.modulosItem.fechadesdevigor != undefined) {
         this.modulosItem.fechadesdevigor = this.transformaFecha(new Date(this.modulosItem.fechadesdevigor));
       } else {
@@ -58,6 +62,7 @@ export class EdicionModulosComponent implements OnInit {
     if (this.modulosItem != undefined) {
       this.body = this.modulosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
+
     } else {
       this.modulosItem = new ModulosItem();
     }
@@ -143,6 +148,7 @@ export class EdicionModulosComponent implements OnInit {
   rest() {
     if (this.modoEdicion) {
       if (this.bodyInicial != undefined) this.modulosItem = JSON.parse(JSON.stringify(this.bodyInicial));
+      this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
       this.modulosItem.fechadesdevigor = this.transformaFecha(this.modulosItem.fechadesdevigor);
       this.modulosItem.fechahastavigor = this.transformaFecha(this.modulosItem.fechahastavigor);
       this.arreglaChecks();
@@ -164,10 +170,34 @@ export class EdicionModulosComponent implements OnInit {
     }
   }
 
+  changeImporte() {
+    this.esComa = this.modulosItem.importe.includes(",");
+    if (this.esComa) {
+      let partes = this.modulosItem.importe.split(",");
+      if (partes[1].length > 2) {
+        let segundaParte = partes[1].substring(0, 2);
+        this.modulosItem.importe = partes[0] + "," + segundaParte;
+        this.importe.nativeElement.value = this.modulosItem.importe;
+      }
+    }
+  }
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+
   callSaveService(url) {
+    this.modulosItem.importe = this.modulosItem.importe.replace(",", ".");
     this.sigaServices.post(url, this.modulosItem).subscribe(
       data => {
-
+        this.esComa = false;
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           let modulos = JSON.parse(data.body);
@@ -179,18 +209,6 @@ export class EdicionModulosComponent implements OnInit {
           }
           this.modoEdicionSend.emit(send);
         }
-
-        // data => {
-
-        //   if (!this.modoEdicion) {
-        //     this.modoEdicion = true;
-        //     let areas = JSON.parse(data.body);
-        //     // this.areasItem = JSON.parse(data.body);
-        //     this.areasItem.idArea = areas.id;
-        //     let send = {
-        //       modoEdicion: this.modoEdicion,
-        //       idArea: this.areasItem.idArea
-        //     }
 
         this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
         this.persistenceService.setDatos(this.modulosItem);
@@ -208,6 +226,7 @@ export class EdicionModulosComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+        this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
       }
     );
 
@@ -235,6 +254,12 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   disabledSave() {
+    if (this.modulosItem.nombre != undefined || this.modulosItem.importe != undefined || this.modulosItem.codigo != undefined
+      || this.modulosItem.codigoext != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
+    this.modulosItem.importe = this.modulosItem.importe.trim();
+    this.modulosItem.codigo = this.modulosItem.codigo.trim();
+    this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
+
     if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.nombre != "" &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
       this.modulosItem.idjurisdiccion != undefined) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {

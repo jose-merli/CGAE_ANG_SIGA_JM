@@ -60,7 +60,8 @@ export class GrupoZonaComponent implements OnInit {
   }
 
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (this.bodyInicial != undefined)
+      this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
   validateHistorical() {
@@ -140,7 +141,9 @@ export class GrupoZonaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.historico && (this.body.descripcionzona != "" && this.body.descripcionzona != undefined && this.body.descripcionzona != null)) {
+    if (this.body.descripcionzona != undefined)
+      this.body.descripcionzona = this.body.descripcionzona.trim();
+    if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona != null && this.body.descripcionzona.trim() != "")) {
       return false;
     } else {
       return true;

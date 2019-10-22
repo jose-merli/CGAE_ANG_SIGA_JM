@@ -21,7 +21,7 @@ export class TablaPartidasComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  id;
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
@@ -78,6 +78,14 @@ export class TablaPartidasComponent implements OnInit {
     this.selectedDatos = [];
     this.updatePartidasPres = [];
     this.nuevo = false;
+    if (this.datos.partidasItem != undefined)
+      this.datos.partidasItem.forEach(element => {
+        element.importepartida = element.importepartida.replace(",", ".");
+        element.importepartidaReal = +element.importepartida;
+        if (element.importepartida == ".") {
+          element.importepartida = 0;
+        }
+      });
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
   }
 
@@ -129,37 +137,21 @@ export class TablaPartidasComponent implements OnInit {
     }
   }
 
+  getId() {
+    let seleccionados = [];
+    seleccionados.push(this.selectedDatos);
+    this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
+  }
 
 
-
-  // changeImporte() {
-
-  //   let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === this.selectedBefore.idpartidapresupuestaria);
-  //   this.selectedBefore = this.datos.find(item => item.idpartidapresupuestaria === this.selectedBefore.idpartidapresupuestaria);
-  //   if (this.selectedBefore != undefined)
-  //     if (this.selectedBefore.importepartida > 99999999.99) {
-  //       this.selectedBefore.importepartida = 99999999
-  //     }
-  //   if (findDato != undefined) {
-  //     if (this.selectedBefore.importepartida != findDato.importepartida) {
-  //       let findUpdate = this.updatePartidasPres.find(item => item.importepartida === this.selectedBefore.importepartida);
-
-  //       if (findUpdate == undefined) {
-  //         this.updatePartidasPres.push(this.selectedBefore);
-  //       }
-  //     }
-  //   }
-
-  // }
   changeImporte(dato) {
+    dato.importepartida = dato.valorNum;
     let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
     if (findDato != undefined) {
 
       if (dato.importepartida != findDato.importepartida) {
-        if (dato.importepartida > 99999999.99) {
-          dato.importepartida = 99999999;
-        }
+
         let findUpdate = this.updatePartidasPres.find(item => item.importepartida === dato.importepartida);
 
         if (findUpdate == undefined) {
@@ -214,6 +206,7 @@ export class TablaPartidasComponent implements OnInit {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         this.searchPartidas.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
         this.progressSpinner = false;
       },
       err => {
@@ -242,10 +235,13 @@ export class TablaPartidasComponent implements OnInit {
     if (this.nuevo) {
       url = "gestionPartidasPres_createPartidasPres";
       let partidaPresupuestaria = this.datos[0];
-      if (partidaPresupuestaria.importepartida > 99999999.99) {
-        partidaPresupuestaria.importepartida = 99999999;
-      }
       this.body = partidaPresupuestaria;
+      this.body.importepartida = this.body.valorNum;
+      this.body.importepartida = this.body.importepartida.replace(",", ".");
+      this.body.importepartidaReal = +this.body.importepartida;
+      if (this.body.importepartida == ".") {
+        this.body.importepartida = 0;
+      }
       this.callSaveService(url);
 
     } else {
@@ -254,10 +250,24 @@ export class TablaPartidasComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new PartidasObject();
         this.body.partidasItem = this.updatePartidasPres;
+        this.body.partidasItem.forEach(element => {
+          element.importepartida = element.importepartida.replace(",", ".");
+          element.importepartidaReal = +element.importepartida;
+          if (element.importepartida == ".") {
+            element.importepartida = 0;
+          }
+        });
         this.callSaveService(url);
       } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de las partidas presupuestrias ya se encuentran registrados");
-        this.progressSpinner = false;
+        err => {
+
+          if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+          this.progressSpinner = false;
+        }
       }
     }
 
@@ -273,6 +283,9 @@ export class TablaPartidasComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   // rest() {
@@ -287,6 +300,9 @@ export class TablaPartidasComponent implements OnInit {
     this.nuevo = true;
     this.editMode = false;
     this.selectionMode = "single";
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
@@ -296,7 +312,8 @@ export class TablaPartidasComponent implements OnInit {
     let partidaPresupuestaria = {
       nombrepartida: undefined,
       descripcion: undefined,
-      importepartida: undefined,
+      importepartida: "0",
+      importepartidaReal: 0,
       idpartidapresupuestaria: undefined,
       editable: true
     };
@@ -305,12 +322,15 @@ export class TablaPartidasComponent implements OnInit {
     } else {
       this.datos = [partidaPresupuestaria, ...this.datos];
     }
-
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined && this.datos[0].importepartida != undefined) {
+      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
+        && this.datos[0].valorNum != undefined) {
         return false;
       } else {
         return true;
@@ -434,7 +454,7 @@ export class TablaPartidasComponent implements OnInit {
     this.cols = [
       { field: "nombrepartida", header: "censo.usuario.nombre" },
       { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "importepartida", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "importepartidaReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
 
     ];
 

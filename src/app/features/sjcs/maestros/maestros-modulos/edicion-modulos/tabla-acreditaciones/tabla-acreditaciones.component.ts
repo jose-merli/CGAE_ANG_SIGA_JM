@@ -19,7 +19,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
 
   textSelected: String = "{label}";
-
+  id;
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -42,11 +42,13 @@ export class TablaAcreditacionesComponent implements OnInit {
   updateAcreditaciones = [];
   comboAcreditaciones: any[] = [];
   comboAcreditacionesNew: any[] = [];
-
   // selectedBefore;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
   showTarjeta: boolean = true;
+  maximaLong: any = 5;
+  @ViewChild("porcentaje") porcentajeAct;
+
   //Resultados de la busqueda
   @Input() idProcedimiento;
   //Resultados de la busqueda
@@ -71,9 +73,12 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (datos.fechabaja != undefined) {
-      this.disableAll = true;
+    if (this.datos != undefined) {
+      if (datos.fechabaja != undefined) {
+        this.disableAll = true;
+      }
     }
+
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
@@ -91,8 +96,10 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (datos.fechabaja != null) {
-      this.disableAll = true;
+    if (this.datos != undefined) {
+      if (datos.fechabaja != undefined) {
+        this.disableAll = true;
+      }
     }
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
@@ -101,6 +108,11 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
+  }
+  getId() {
+    let seleccionados = [];
+    seleccionados.push(this.selectedDatos);
+    this.id = this.datos.findIndex(item => item.idAcreditacion === seleccionados[0].idAcreditacion);
   }
 
   getAcreditaciones() {
@@ -120,10 +132,12 @@ export class TablaAcreditacionesComponent implements OnInit {
             } else {
               element.nigProcedimiento = false;
             }
+            element.porcentaje = element.porcentaje.replace(".", ",");
+            if (element.porcentaje[0] == ',')
+              element.porcentaje = "0".concat(element.porcentaje)
             element.editable = false;
             element.overlayVisible = false;
             element.idprocedimiento = this.idProcedimiento;
-
           });
 
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -185,6 +199,15 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.body.acreditacionItem != undefined) {
+      this.body.acreditacionItem.forEach(element => {
+        element.porcentajeReal = + element.porcentaje;
+        element.porcentaje = element.porcentaje.replace(",", ".");
+
+      });
+    } else {
+      this.body.porcentaje = + this.body.porcentaje.replace(",", ".");
+    }
 
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -197,6 +220,7 @@ export class TablaAcreditacionesComponent implements OnInit {
         this.getComboAcreditaciones();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
       },
       err => {
         this.progressSpinner = false;
@@ -244,22 +268,84 @@ export class TablaAcreditacionesComponent implements OnInit {
       this.datos = [acreditacion, ...this.datos];
     }
 
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
   }
 
-  validateAcreditacion(e) {
-    if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idAcreditacion === this.selectedDatos[0].idAcreditacion);
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      return true;
+    }
+    else {
+      return false;
 
-      let dato = this.datos[datoId];
-      if (dato.porcentaje > 100) {
-        dato.porcentaje = 100;
-      }
-      this.editarAcreditacion(dato);
-
-    } else {
-      if (this.datos[0].porcentaje > 100) this.datos[0].porcentaje = 100;
     }
   }
+
+  // validateAcreditacion(e) {
+  //   if (this.selectedDatos == null) {
+  //     this.selectedDatos = [];
+  //     this.selectedDatos.push(this.datos.find(item => item.editable == true));
+  //   }
+  //   if (!this.nuevo) {
+  //     let datoId = this.datos.findIndex(item => item.idAcreditacion === this.selectedDatos[0].idAcreditacion);
+  //     let dato = this.datos[datoId];
+  //     dato.porcentaje = "" + dato.porcentaje;
+  //     if (dato.porcentaje.split(",").length - 1 > 1) {
+  //       let partePrimera = dato.porcentaje.split(",");
+  //       dato.porcentaje = partePrimera[0];
+  //     }
+  //     if (dato.porcentaje.includes(",")) {
+  //       let partes = dato.porcentaje.split(",");
+  //       let numero = + partes[0];
+  //       if (partes[1].length > 2) {
+  //         let segundaParte = partes[1].substring(0, 2);
+  //         dato.porcentaje = partes[0] + "," + segundaParte;
+  //       }
+  //       if (numero >= 100) {
+  //         dato.porcentaje = 100;
+  //       } else if (numero < 0) {
+  //         dato.porcentaje = 0;
+  //       }
+  //     } else {
+  //       if (dato.porcentaje.length > 3) {
+  //         dato.porcentaje = 100;
+  //       } else {
+  //         let numero = + dato.porcentaje;
+  //         if (numero >= 100) {
+  //           dato.porcentaje = 100;
+  //         }
+  //         else if (numero < 0) {
+  //           dato.porcentaje = 0;
+  //         }
+  //       }
+  //     }
+  //     this.porcentajeAct.nativeElement.value = dato.porcentaje;
+
+  //     this.editarAcreditacion(dato);
+
+  //   } else {
+  //     this.datos[0].porcentaje = "" + this.datos[0].porcentaje;
+  //     if (this.datos[0].porcentaje.includes(",")) {
+  //       let partes = this.datos[0].porcentaje.split(",");
+  //       if (partes[1].length > 2) {
+  //         let segundaParte = partes[1].substring(0, 2);
+  //         this.datos[0].porcentaje = partes[0] + "," + segundaParte;
+  //         // this.importe.nativeElement.value = this.modulosItem.importe;
+  //       }
+  //       let numero = + partes[0];
+  //       if (partes[1].length > 2) {
+  //         let segundaParte = partes[1].substring(0, 2);
+  //         this.datos[0].porcentaje = partes[0] + "," + segundaParte;
+  //       }
+  //     }
+  //     if (+this.datos[0].porcentaje > 100) this.datos[0].porcentaje = 100;
+  //     this.porcentajeAct.nativeElement.value = this.datos[0].porcentaje;
+
+  //   }
+  // }
 
   validatenewAcreditacion(url) {
     let acreditacion = this.datos[0];
@@ -271,7 +357,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].idAcreditacion != undefined && this.datos[0].porcentaje != "") {
+      if (this.datos[0].idAcreditacion != undefined && this.datos[0].idAcreditacion != "" && this.datos[0].porcentaje != "") {
         return false;
       } else {
         return true;
@@ -311,19 +397,83 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
   }
 
-  editarAcreditacion(dato) {
+
+  changeAcreditacion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
-      if (dato.codigoext != findDato.codigoext || dato.porcentaje != findDato.porcentaje || dato.nigProcedimiento != findDato.nigProcedimiento || dato.codSubTarifa != findDato.codSubTarifa) {
+      if (dato.idAcreditacion != findDato.idAcreditacion) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.codigoext === dato.codigoext && item.porcentaje === dato.porcentaje && item.nigProcedimiento === dato.nigProcedimiento && item.codSubTarifa === dato.codSubTarifa);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
-          let dato2 = dato;
-          dato2.idprocedimiento = this.idProcedimiento;
-          this.updateAcreditaciones.push(dato2);
+          this.updateAcreditaciones.push(dato);
+        }
+      }
+    }
+
+  }
+  changeCodigoExt(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
+
+    if (findDato != undefined) {
+      if (dato.pro != findDato.codigoext) {
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.codigoext === dato.codigoext);
+
+        if (findUpdate == undefined) {
+          this.updateAcreditaciones.push(dato);
+        }
+      }
+    }
+
+  }
+  changeCodSubTarifa(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
+
+    if (findDato != undefined) {
+      if (dato.codSubTarifa != findDato.codSubTarifa) {
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.codSubTarifa === dato.codSubTarifa);
+
+        if (findUpdate == undefined) {
+          this.updateAcreditaciones.push(dato);
+        }
+      }
+    }
+
+  }
+  changePorcentaje(dato) {
+    dato.porcentaje = dato.valorNum;
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
+
+    if (findDato != undefined) {
+      if (dato.porcentaje != findDato.porcentaje) {
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.porcentaje === dato.porcentaje);
+
+        if (findUpdate == undefined) {
+          this.updateAcreditaciones.push(dato);
+        }
+      }
+    }
+
+  }
+  changeNigNumprocedimiento(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
+
+    if (findDato != undefined) {
+      if (dato.nig_numprocedimiento != findDato.nig_numprocedimiento) {
+
+        let findUpdate = this.updateAcreditaciones.find(item => item.nig_numprocedimiento === dato.porcentaje);
+
+        if (findUpdate == undefined) {
+          this.updateAcreditaciones.push(dato);
         }
       }
     }
@@ -373,6 +523,10 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.selectedDatos = [];
     this.updateAcreditaciones = [];
     this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+
   }
 
   showMessage(severity, summary, msg) {
@@ -387,7 +541,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "idAcreditacion", header: "menu.justiciaGratuita.maestros.Acreditacion" },
-      { field: "porcentaje", header: "menu.justiciaGratuita.maestros.porcentaje" },
+      { field: "porcentajeReal", header: "menu.justiciaGratuita.maestros.porcentaje" },
       { field: "nig_numprocedimiento", header: "menu.justiciaGratuita.maestros.numProcedimiento" },
       { field: "codigoext", header: "general.codeext" },
       { field: "codSubTarifa", header: "menu.justiciaGratuita.maestros.codSubtarifa" }

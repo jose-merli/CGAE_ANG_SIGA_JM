@@ -41,7 +41,7 @@
               <label>
                 {{'censo.consultaDirecciones.literal.direccion' | translate}}
               </label>
-              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="20"
+              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="100"
                 pInputText>
             </div>
 

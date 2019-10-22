@@ -163,6 +163,9 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.selectMultiple = false;
     this.nuevo = false;
     this.selectAll = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
   }
 
 

@@ -2,8 +2,15 @@
 
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha">
-      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'general.message.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-down ml-auto"></i>
+      </div>
+      <div *ngIf="!showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fas fa-cog icon-ficha"></i>
         </div>
@@ -12,7 +19,7 @@
       </div>
     </div>
     <!--cuerpo body generales-->
-    <div class="card-body card-body-ficha">
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
       <div class="row">
         <div class="col-lg-12 col-md-12">
           <div class="form-row">
@@ -51,7 +58,7 @@
               <label>
                 {{ 'justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla' | translate }} 1
               </label>
-              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea style="" [(ngModel)]="body.textoPlantilla2"
+              <textarea [rows]="10" [cols]="10" name="textoPlantilla" class="form-control textareaPlantilla" pInputTextarea [(ngModel)]="body.textoPlantilla2"
                 autoResize="autoResize" [disabled]="historico || !permisoEscritura" maxLength="4000"></textarea>
             </div>
 
@@ -75,7 +82,7 @@
         </div>
       </div>
     </div>
-    <div class="card-footer">
+    <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
         <button [disabled]="historico || !permisoEscritura" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>

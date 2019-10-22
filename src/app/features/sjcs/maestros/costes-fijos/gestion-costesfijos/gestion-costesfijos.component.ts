@@ -46,11 +46,13 @@ export class GestionCostesfijosComponent implements OnInit {
   idTipoAsistencia;
   selectedBefore;
   selectionMode: string = "single";
-
+  id: any;
   permisoEscritura: boolean = false;
+  maximaLong: any = 15;
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
+  @ViewChild("importe") importe;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
     private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router) { }
@@ -143,6 +145,12 @@ export class GestionCostesfijosComponent implements OnInit {
       .subscribe(
         res => {
           this.datos = res.costeFijoItems;
+          this.datos.forEach(element => {
+            element.importeReal = + element.importe;
+            element.importe = element.importe.replace(".", ",");
+            if (element.importe[0] == ',')
+              element.importe = '0'.concat(element.importe)
+          });
 
           this.editElementDisabled();
 
@@ -217,7 +225,17 @@ export class GestionCostesfijosComponent implements OnInit {
 
 
   callSaveService(url) {
-
+    if (this.body.costeFijoItems != undefined) {
+      this.body.costeFijoItems.forEach(element => {
+        element.importe = element.importe.replace(",", ".");
+        element.importeReal = +element.importe;
+        if (element.importe == ".") {
+          element.importe = 0;
+        }
+      });
+    } else {
+      this.body.importe = + this.body.importe.replace(",", ".");
+    }
 
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -251,6 +269,9 @@ export class GestionCostesfijosComponent implements OnInit {
   }
 
   newCosteFijo() {
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
     this.nuevo = true;
     this.editMode = false;
 
@@ -266,7 +287,7 @@ export class GestionCostesfijosComponent implements OnInit {
       idCosteFijo: undefined,
       idTipoAusencia: undefined,
       idTipoActuacion: undefined,
-      importe: undefined,
+      importe: 0,
       editable: true
     };
 
@@ -355,8 +376,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   }
 
-  changeImporte() {
-
+  changeImporte(dato) {
+    dato.importe = dato.valorNum
     let findDato = this.datosInicial.find(item => item.descripcion === this.selectedBefore.descripcion && item.tipoAsistencia === this.selectedBefore.tipoAsistencia && item.tipoActuacion === this.selectedBefore.tipoActuacion);
     this.selectedBefore = this.datos.find(item => item.descripcion === this.selectedBefore.descripcion && item.tipoAsistencia === this.selectedBefore.tipoAsistencia && item.tipoActuacion === this.selectedBefore.tipoActuacion);
 
@@ -392,7 +413,7 @@ export class GestionCostesfijosComponent implements OnInit {
   }
 
   edit(evento) {
-
+    this.getId();
     if (!this.nuevo && this.permisoEscritura) {
 
       if (!this.selectAll && !this.selectMultiple) {
@@ -491,10 +512,10 @@ export class GestionCostesfijosComponent implements OnInit {
     } else {
       this.datos = [];
     }
-
     this.selectedDatos = [];
     this.updateCosteFijo = [];
     this.nuevo = false;
+    this.editMode = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -512,7 +533,7 @@ export class GestionCostesfijosComponent implements OnInit {
       { field: "descripcion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoCoste" },
       { field: "tipoAsistencia", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoAsistencia" },
       { field: "tipoActuacion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion" },
-      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
 
     ];
 
@@ -606,9 +627,90 @@ export class GestionCostesfijosComponent implements OnInit {
 
       }
     }
+  }
+
+  getId() {
+    let seleccionados = [];
+    seleccionados.push(this.selectedDatos);
+    this.id = this.datos.findIndex(item => item.idTipoActuacion === seleccionados[0].idTipoActuacion);
+  }
+
+  validateAcreditacion() {
+    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
+      this.selectedDatos = [];
+      this.selectedDatos.push(this.datos.find(item => item.editable == true));
+    }
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idTipoActuacion === this.selectedDatos[0].idTipoActuacion && item.idTipoAsistencia === this.selectedDatos[0].idTipoAsistencia && item.idCosteFijo === this.selectedDatos[0].idCosteFijo);
+      let dato = this.datos[datoId];
+      dato.importe = "" + dato.importe;
+      if (dato.importe.split(",").length - 1 > 1) {
+        let partePrimera = dato.importe.split(",");
+        dato.importe = partePrimera[0];
+      }
+      if (dato.importe.includes(",")) {
+        let partes = dato.importe.split(",");
+        // if (partes[1].length > 2) {
+        //   this.maximaLong = partes[0].length + 3;
+        // } else {
+        //   this.maximaLong = partes[0].length + 4;
+        // }
+        // if (this.maximaLong >= 15) {
+        //   this.maximaLong = 15;
+        // }
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          dato.importe = partes[0] + "," + segundaParte;
+        }
+      } else {
+        // this.maximaLong = 15;
+      }
+      this.importe.nativeElement.value = dato.importe;
+
+    } else {
+      this.datos[0].importe = "" + this.datos[0].importe;
+      if (this.datos[0].importe.includes(",")) {
+        let partes = this.datos[0].importe.split(",");
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].importe = partes[0] + "," + segundaParte;
+          // this.importe.nativeElement.value = this.modulosItem.importe;
+        }
+        // this.maximaLong = 4;
+        // if (partes[1].length > 2) {
+        //   this.maximaLong = partes[0].length + 3;
+        // } else {
+        //   this.maximaLong = partes[0].length + 4;
+        // } if (this.maximaLong >= 15) {
+        //   this.maximaLong = 15;
+        // }
+        let numero = + partes[0];
+        if (partes[1].length > 2) {
+          let segundaParte = partes[1].substring(0, 2);
+          this.datos[0].importe = partes[0] + "," + segundaParte;
+        }
+      }
+      if (+this.datos[0].importe > 100) this.datos[0].importe = 100;
+      this.importe.nativeElement.value = this.datos[0].importe;
+
+    }
 
   }
 
+
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      if (charCode == 188) {
+      }
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
 
   actualizaSeleccionados(selectedDatos) {
     if (selectedDatos != undefined) {

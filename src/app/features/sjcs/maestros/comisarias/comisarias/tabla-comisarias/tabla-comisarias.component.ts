@@ -63,6 +63,7 @@ export class TablaComisariasComponent implements OnInit {
   }
 
   isSelectMultiple() {
+    this.selectAll = false;
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
@@ -173,7 +174,7 @@ export class TablaComisariasComponent implements OnInit {
 
     this.cols = [
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "codigoExt", header: "administracion.parametrosGenerales.literal.codigo" },
+      { field: "codigoExt", header: "general.codeext" },
       { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
       { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
       { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }

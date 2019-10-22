@@ -231,6 +231,7 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 import { SjcsModule } from './features/sjcs/sjcs.module';
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
 import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
+import { BusquedaProcedimientosComponent } from "./features/sjcs/maestros/procedimientos/busqueda-procedimientos/busqueda-procedimientos.component";
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
@@ -738,6 +739,11 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoJuzgados",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "calendarioLaboralAgenda",
     loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
     canActivate: [AuthGuard]
   },
@@ -1293,6 +1299,11 @@ const appRoutes: Routes = [
   {
     path: "dialogoComunicaciones",
     component: DialogoComunicacionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "procedimientos",
+    component: BusquedaProcedimientosComponent,
     canActivate: [AuthGuard]
   },
 
