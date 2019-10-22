@@ -1,4 +1,5 @@
 export let endpoints_maestros: any = {
+
     fichaZonas_getPartidosJudiciales: "maestros/fichaZonas/partidosJudiciales",
     gestionZonas_searchZones: "maestros/gestionZonas/searchZones",
     fichaZonas_createZones: "maestros/fichaZonas/createZones",
@@ -77,5 +78,10 @@ export let endpoints_maestros: any = {
     gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",
     deletePartidosJudi_deletePartidosJudi: "maestros/deletePartidosJudi/deletePartidosJudi",
     gestionPartidosJudi_ComboPartidosJudi: "maestros/gestionPartidosJudi/ComboPartidosJudi",
-    gestionPartidosJudi_createPartidosJudi: "maestros/gestionPartidosJudi/createPartidosJudi"
+    gestionPartidosJudi_createPartidosJudi: "maestros/gestionPartidosJudi/createPartidosJudi",
+
+    calendarioLaboralAgenda_searchFestivos: "calendarioLaboralAgenda/searchFestivos",
+    calendarioLaboralAgenda_deleteFestivos: "calendarioLaboralAgenda/deleteFestivos",
+    calendarioLaboralAgenda_activateFestivos: "calendarioLaboralAgenda/activateFestivos"
+
 }

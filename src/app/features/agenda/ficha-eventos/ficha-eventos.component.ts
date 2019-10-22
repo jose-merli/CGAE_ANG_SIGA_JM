@@ -1,34 +1,23 @@
 import { Location } from "@angular/common";
-import {
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation
-} from "@angular/core";
-import { Router, NavigationEnd } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, SimpleChanges } from "@angular/core";
+import { Router } from '@angular/router';
 import { saveAs } from "file-saver/FileSaver";
-import {
-  AutoComplete,
-  Calendar,
-  ConfirmationService,
-  DataTable
-} from "primeng/primeng";
+import { AutoComplete, Calendar, ConfirmationService, DataTable } from "primeng/primeng";
+import { FechaComponent } from "../../../commons/fecha/fecha.component";
 import { TranslateService } from "../../../commons/translate";
+import { AsistenciaEventoObject } from "../../../models/AsistenciaEventoObject";
 import { CalendarItem } from "../../../models/CalendarItem";
+import { DatosCursosItem } from "../../../models/DatosCursosItem";
+import { DatosPersonaEventoItem } from "../../../models/DatosPersonaEventoItem";
+import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObject";
 import { EventoItem } from "../../../models/EventoItem";
 import { EventoObject } from "../../../models/EventoObject";
 import { NotificacionEventoItem } from '../../../models/NotificacionEventoItem';
 import { NotificacionEventoObject } from "../../../models/NotificacionEventoObject";
 import { esCalendar } from "../../../utils/calendar";
+import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from "../../../_services/siga.service";
-import { AsistenciaEventoObject } from "../../../models/AsistenciaEventoObject";
-import { DatosPersonaEventoItem } from "../../../models/DatosPersonaEventoItem";
-import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObject";
-import { DatosCursosItem } from "../../../models/DatosCursosItem";
-import { FechaComponent } from "../../../commons/fecha/fecha.component";
-import { find } from "../../../../../node_modules/rxjs/operators";
+import { AuthenticationService } from '../../../_services/authentication.service';
 
 @Component({
   selector: "app-ficha-eventos",
@@ -111,6 +100,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   valorEstadoEventoCumplido = "2";
   valorEstadoCursoFinalizado = "4";
 
+  modoTipoEventoFestivo: boolean = false;
+  isInstitucionGeneral: boolean = false;
+  isFiestaLocal: boolean = true;
+  comboTipoFestivo;
+  isFiestaAutonomica: boolean = false;
+  isConsejo: boolean = false;
 
   //Notificaciones
   selectedDatosNotifications = [];
@@ -165,6 +160,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   existeArchivo: boolean = false;
   file: File = undefined;
 
+  calendarioLaboralAgenda: boolean = false;
+
   @ViewChild("pUploadFile")
   pUploadFile;
 
@@ -179,7 +176,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private persistenceService: PersistenceService,
+    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit() {
@@ -272,6 +271,60 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           );
         }
         this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+      } else if (this.newEvent.idTipoCalendario == this.valorTipoLaboral) {
+        this.getComboCalendarLaboralGeneral();
+
+        this.sigaServices.get("institucionActual").subscribe(n => {
+
+          let institucionActual = n.value;
+
+          if (institucionActual != "2000") {
+            this.isInstitucionGeneral = false;
+          } else {
+            this.isInstitucionGeneral = true;
+          }
+
+          this.comboTipoFestivo = [
+            { label: "Fiesta Autonómica", value: "Fiesta Autonómica" },
+            { label: "Fiesta Local", value: "Fiesta Local" },
+            { label: "Fiesta Nacional", value: "Fiesta Nacional" }
+          ];
+
+          // if (!this.modoEdicionEvento) {
+          //   if (!this.isInstitucionGeneral) {
+          //     this.newEvent.title = 'Fiesta Local';
+          //   }
+          // }
+
+          if (this.newEvent.title == 'Fiesta Local') {
+            this.isFiestaLocal = true;
+          } else {
+            this.isFiestaLocal = false;
+          }
+
+          if (this.newEvent.title == 'Fiesta Autonómica') {
+            this.isFiestaAutonomica = true;
+          } else {
+            this.isFiestaAutonomica = false;
+          }
+
+          this.progressSpinner = false;
+
+        }, err => {
+          this.progressSpinner = false;
+        });
+
+        if (!this.modoEdicionEvento) {
+          if (!this.isInstitucionGeneral) {
+            this.newEvent.title = 'Fiesta Local';
+          }
+        }
+
+        if (this.newEvent.title == 'Fiesta Local') {
+          this.isFiestaLocal = true;
+        } else {
+          this.isFiestaLocal = false;
+        }
       } else {
         this.getComboCalendarLaboralGeneral();
       }
@@ -295,9 +348,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.disabledTipoEvento = true;
       // this.modoEdicionEvento = true;
       this.newModeConfiguration();
+      this.checkIsStateEvento();
 
       //Se guarda el evento con los valores iniciales para restablecer los valores
       this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
 
       //3. En caso de venir de la pantalla Formacion
     } else if (sessionStorage.getItem("isFormacionCalendar") == "true") {
@@ -587,7 +642,87 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.checkIsEventoCumplidoOrCancelado();
       this.progressSpinner2 = false;
 
-      //8. Viene directo
+      //8. Viene Calendario Laboral Agenda
+    } else if (sessionStorage.getItem("calendarioLaboralAgenda") != undefined && JSON.parse(sessionStorage.getItem("calendarioLaboralAgenda"))) {
+      this.progressSpinner = true;
+      this.disabledToday = false;
+      this.calendarioLaboralAgenda = true;
+      this.isEventoCumplidoOrCancelado = false;
+
+      if (this.persistenceService.getDatos() != undefined) {
+        this.newEvent = this.persistenceService.getDatos();
+
+
+        if (this.newEvent.fechaBaja != null) {
+          this.historico = true;
+        } else {
+          this.historico = false;
+        }
+
+        if (this.newEvent.start != null) {
+          this.newEvent.start = new Date(this.newEvent.start);
+        }
+
+        if (this.newEvent.end != null) {
+          this.newEvent.end = new Date(this.newEvent.end);
+        }
+
+        this.modoEdicionEvento = true;
+        this.createEvent = true;
+
+
+      } else {
+        this.modoEdicionEvento = false;
+        this.newEvent.idTipoCalendario = this.valorTipoLaboral;
+        this.newEvent.idTipoEvento = this.valorTipoEventoFestivo;
+
+      }
+
+      let institucionActual = this.authenticationService.getInstitucionSession();
+
+      // Colegio
+      if (JSON.parse(institucionActual) > 2001 && JSON.parse(institucionActual) < 2100) {
+        this.isInstitucionGeneral = false;
+        this.isConsejo = false;
+        // General
+      } else if (JSON.parse(institucionActual) == 2000) {
+        this.isInstitucionGeneral = true;
+        this.isConsejo = false;
+        // Consejo
+      } else {
+        this.isInstitucionGeneral = false;
+        this.isConsejo = true;
+      }
+
+
+      this.comboTipoFestivo = [
+        { label: "Fiesta Autonómica", value: "Fiesta Autonómica" },
+        { label: "Fiesta Local", value: "Fiesta Local" },
+        { label: "Fiesta Nacional", value: "Fiesta Nacional" }
+      ];
+
+      if (this.newEvent.title == 'Fiesta Local') {
+        this.isFiestaLocal = true;
+      } else {
+        this.isFiestaLocal = false;
+      }
+
+      if (this.newEvent.title == 'Fiesta Autonómica') {
+        this.isFiestaAutonomica = true;
+      } else {
+        this.isFiestaAutonomica = false;
+      }
+
+      //Se guarda el evento con los valores iniciales para restablecer los valores
+      this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
+      this.modoTipoEventoFestivo = true;
+      this.selectedTipoLaboral = true;
+      this.getComboPartidoJudicial();
+      this.getComboCalendar();
+      this.progressSpinner = false;
+
+      //9. Viene directo
     } else {
       this.isFormacionCalendar = false;
       this.newEvent = new EventoItem();
@@ -595,18 +730,22 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       //Obligamos que el tipo de evento sea Manual
       this.newEvent.idTipoEvento = "1";
       this.modoEdicionEvento = false;
-      this.progressSpinner2 = false;
+      this.progressSpinner = false;
 
       this.getComboCalendar();
     }
 
-    this.getComboEstado();
     this.getComboTipoEvento();
-    this.getComboAsistencia();
+    this.getComboEstado();
+
+    if (!this.selectedTipoLaboral) {
+      this.getComboAsistencia();
+    }
+
     this.getCombosRepeats();
   }
 
-  ngAfterViewInit() {
+  ngOnChanges(changes: SimpleChanges): void {
     window.scrollTo(0, 0);
   }
 
@@ -615,6 +754,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem("modoEdicionEventoByAgenda");
     sessionStorage.removeItem("eventoEdit");
     sessionStorage.removeItem("isNotificaciones");
+    sessionStorage.removeItem("calendarioLaboralAgenda")
   }
 
   checkAcceso() {
@@ -642,9 +782,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       }
 
     } else {
-      this.isEventoCumplidoOrCancelado = false;
+
+      this.checkIsStateEvento();
     }
 
+  }
+
+  checkIsStateEvento() {
+    let fechaActual = new Date();
+    let fechaEvento = this.newEvent.start;
+
+    if (fechaEvento <= fechaActual) {
+      this.newEvent.idEstadoEvento = this.valorEstadoEventoCumplido;
+    } else {
+      this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
+    }
   }
 
   newModeConfiguration() {
@@ -699,6 +851,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   //FUNCIONES FICHA DATOS GENERALES
 
   getComboEstado() {
+    this.progressSpinner2 = true;
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
@@ -707,11 +860,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.newEvent.idEstadoEvento == null ||
           this.newEvent.idEstadoEvento == ""
         ) {
-          this.newEvent.idEstadoEvento = this.comboEstados[0].value;
+
+          if (this.newEvent.idTipoEvento != this.valorTipoEventoFestivo) {
+            this.newEvent.idEstadoEvento = this.comboEstados[0].value;
+          }
         }
+
+        this.progressSpinner2 = false;
+
       },
       err => {
         console.log(err);
+        this.progressSpinner2 = false;
+
       }
     );
   }
@@ -776,11 +937,14 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   //Función obtiene los tipos de calendarios que hay
   getComboCalendar() {
+    this.progressSpinner2 = true;
     this.sigaServices.get("fichaCalendario_getCalendarType").subscribe(
       n => {
         this.comboCalendars = n.combooItems;
+        this.progressSpinner2 = false;
       },
       err => {
+        this.progressSpinner2 = false;
         console.log(err);
       }
     );
@@ -788,6 +952,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   //Funcion que obtiene los tipos de calendarios que se pueden crear si vienes de la pantalla Agenda
   getComboCalendarLaboralGeneral() {
+    this.progressSpinner2 = true;
+
     this.sigaServices.get("fichaCalendario_getCalendarType").subscribe(
       n => {
         let tipoGeneral = n.combooItems.find(
@@ -802,8 +968,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         );
 
         this.comboCalendars.push(tipoLaboral);
+        this.progressSpinner2 = false;
       },
       err => {
+        this.progressSpinner2 = false;
         console.log(err);
       }
     );
@@ -811,11 +979,16 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   //Función obtiene los tipos de eventos que hay
   getComboTipoEvento() {
+    this.progressSpinner2 = true;
+
     this.sigaServices.get("fichaEventos_getTypeEvent").subscribe(
       n => {
         this.comboTipoEvento = n.combooItems;
+        this.progressSpinner2 = false;
+
       },
       err => {
+        this.progressSpinner2 = false;
         console.log(err);
       }
     );
@@ -823,37 +996,119 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   //Obtiene los partidos judiciales donde se puede realizar el evento
   getComboPartidoJudicial() {
+    this.progressSpinner2 = true;
     this.sigaServices.get("fichaEventos_getJudicialDistrict").subscribe(
       n => {
         this.comboPartidoJudicial = n.combooItems;
+        this.progressSpinner2 = false;
       },
       err => {
+        this.progressSpinner2 = false;
         console.log(err);
       }
     );
   }
 
   onChangeSelectCalendar(event) {
+
     if (event == this.valorTipoLaboral) {
       this.selectedTipoLaboral = true;
       this.newEvent.tipoDiasRepeticion = null;
       this.newEvent.idTipoEvento = this.valorTipoEventoFestivo;
+
+      this.getComboCalendarLaboralGeneral();
+
+      this.sigaServices.get("institucionActual").subscribe(n => {
+
+        let institucionActual = n.value;
+
+        if (institucionActual != "2000") {
+          this.isInstitucionGeneral = false;
+        } else {
+          this.isInstitucionGeneral = true;
+        }
+
+        this.comboTipoFestivo = [
+          { label: "Fiesta Autonómica", value: "Fiesta Autonómica" },
+          { label: "Fiesta Local", value: "Fiesta Local" },
+          { label: "Fiesta Nacional", value: "Fiesta Nacional" }
+        ];
+
+
+        // if (!this.modoEdicionEventoByAgenda) {
+        //   if (!this.isInstitucionGeneral) {
+        //     this.newEvent.title = 'Fiesta Local';
+        //   }
+        // }
+
+        if (this.newEvent.title == 'Fiesta Local') {
+          this.isFiestaLocal = true;
+        } else {
+          this.isFiestaLocal = false;
+        }
+
+        this.progressSpinner = false;
+
+      }, err => {
+        this.progressSpinner = false;
+      });
+
+      if (!this.modoEdicionEvento) {
+        if (!this.isInstitucionGeneral) {
+          this.newEvent.title = 'Fiesta Local';
+        }
+      }
+
+      if (this.newEvent.title == 'Fiesta Local') {
+        this.isFiestaLocal = true;
+      } else {
+        this.isFiestaLocal = false;
+      }
+
     } else {
       this.selectedTipoLaboral = false;
       this.newEvent.idTipoEvento = this.valorTipoEventoGeneral;
     }
   }
 
+  onChangeTitulo(event) {
+    if (!this.modoEdicionEvento && this.selectedTipoLaboral) {
+
+      if (this.newEvent.title == "Fiesta Local") {
+        this.isFiestaLocal = true;
+      } else {
+        this.isFiestaLocal = false;
+        this.newEvent.lugar = undefined;
+      }
+    }
+  }
+
   saveEvent() {
     let url = "";
-    this.newEvent.idCurso = this.curso.idCurso;
-    this.progressSpinner = true;
 
-    if (this.newEvent.idEstadoEvento == null) {
-      this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
+    if (this.curso != undefined) {
+      this.newEvent.idCurso = this.curso.idCurso;
     }
 
-    if (
+    this.progressSpinner = true;
+
+    if (!this.selectedTipoLaboral) {
+      if (this.newEvent.idEstadoEvento == null) {
+        this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
+      }
+    }
+
+    if (sessionStorage.getItem("calendarioLaboralAgenda") == "true") {
+
+      if (!this.modoEdicionEvento) {
+        url = "fichaEventos_saveEventCalendar";
+        this.callSaveEvent(url);
+      } else {
+        url = "fichaEventos_updateEventCalendar";
+        this.callSaveEvent(url);
+      }
+
+    } else if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
       this.modoEdicionEvento
@@ -1014,6 +1269,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
               let idEvento = JSON.parse(data.body).id;
               this.newEvent.idEvento = idEvento;
               this.getEventNotifications();
+            }
+
+            if (this.selectedTipoLaboral) {
+              this.newEvent.fechaInicioOld = this.newEvent.start;
             }
 
             //Si estamos en un evento de sesión se carga los formadores
@@ -1186,41 +1445,47 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   validatorDates(event) {
 
-    if (event == null || this.newEvent.end < this.newEvent.start) {
-      this.newEvent.end = new Date(
-        JSON.parse(JSON.stringify(this.newEvent.start))
-      );
-      this.fechaFi.calendar.currentHour = this.fechaIni.calendar.currentHour;
-      this.fechaFi.calendar.currentMinute = this.fechaIni.calendar.currentMinute;
-      this.fechaFi.calendar.inputfieldViewChild.nativeElement.value = this.fechaIni.calendar.inputfieldViewChild.nativeElement.value;
-      this.fechaFi.calendar.inputFieldValue = this.fechaIni.calendar.inputFieldValue;
-      this.fechaFi.calendar.value = this.fechaIni.calendar.value;
+    if (this.newEvent.start != null && this.newEvent.start != undefined) {
+      if (event == null || this.newEvent.end < this.newEvent.start) {
+        this.newEvent.end = new Date(
+          JSON.parse(JSON.stringify(this.newEvent.start))
+        );
+        this.fechaFi.calendar.currentHour = this.fechaIni.calendar.currentHour;
+        this.fechaFi.calendar.currentMinute = this.fechaIni.calendar.currentMinute;
+        this.fechaFi.calendar.inputfieldViewChild.nativeElement.value = this.fechaIni.calendar.inputfieldViewChild.nativeElement.value;
+        this.fechaFi.calendar.inputFieldValue = this.fechaIni.calendar.inputFieldValue;
+        this.fechaFi.calendar.value = this.fechaIni.calendar.value;
+      }
     }
   }
 
   unselectInvalidDates(event) {
 
-    this.invalidDateMin = new Date(
-      JSON.parse(JSON.stringify(this.newEvent.start))
-    );
-    this.invalidDateMax = new Date(
-      JSON.parse(JSON.stringify(this.newEvent.start))
-    );
-    this.invalidDateMin.setHours(this.newEvent.start.getHours());
-    this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
-    this.invalidDateMax.setHours(23);
-    this.invalidDateMax.setMinutes(59);
+    if (this.newEvent.start != undefined && this.newEvent.start != null) {
 
+      this.invalidDateMin = new Date(
+        JSON.parse(JSON.stringify(this.newEvent.start))
+      );
 
-    if (this.newEvent.end.getHours() == this.newEvent.start.getHours()) {
-      if (this.newEvent.end.getMinutes() < this.newEvent.start.getMinutes()) {
-        this.newEvent.end.setMinutes(this.newEvent.start.getMinutes());
-      }
+      this.invalidDateMax = new Date(
+        JSON.parse(JSON.stringify(this.newEvent.start))
+      );
 
-      this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
       this.invalidDateMin.setHours(this.newEvent.start.getHours());
-    } else {
-      this.invalidDateMin.setMinutes(0);
+      this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+      this.invalidDateMax.setHours(23);
+      this.invalidDateMax.setMinutes(59);
+
+      if (this.newEvent.end.getHours() == this.newEvent.start.getHours()) {
+        if (this.newEvent.end.getMinutes() < this.newEvent.start.getMinutes()) {
+          this.newEvent.end.setMinutes(this.newEvent.start.getMinutes());
+        }
+
+        this.invalidDateMin.setMinutes(this.newEvent.start.getMinutes());
+        this.invalidDateMin.setHours(this.newEvent.start.getHours());
+      } else {
+        this.invalidDateMin.setMinutes(0);
+      }
     }
   }
 
@@ -1266,12 +1531,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   fillStartEvent(event) {
 
-    if (event == null) {
+    if (event != null && event != undefined) {
       this.newEvent.start = event;
       this.newEvent.end = event;
     }
 
-    if (this.newEvent.end == undefined || this.newEvent.end == null) {
+    if (this.newEvent.end != undefined && this.newEvent.end != null) {
       this.newEvent.start = event;
       this.newEvent.end = event;
       this.unselectInvalidDates(event);
@@ -1405,7 +1670,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     }
 
     if (validateFormDatos && validateFormRepeticion) {
-      return false;
+
+      if ((this.selectedTipoLaboral && this.newEvent.title == 'Fiesta Local' && this.newEvent.lugar != undefined && this.newEvent.lugar != null &&
+        this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion != "") ||
+        (this.selectedTipoLaboral && this.newEvent.title != 'Fiesta Local' &&
+          this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion != "") ||
+        (!this.selectedTipoLaboral && this.newEvent.lugar != undefined && this.newEvent.lugar != null &&
+          this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion != "")) {
+        return false
+      } else {
+        return true;
+      }
+
     } else {
       return true;
     }
@@ -1940,15 +2216,18 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   isSelectMultipleNotifications() {
-    this.selectMultipleNotifications = !this.selectMultipleNotifications;
-    if (!this.selectMultipleNotifications) {
-      this.selectedDatosNotifications = [];
-      this.numSelectedNotification = 0;
-      this.deleteNotificacion = false;
-    } else {
-      this.selectAllNotifications = false;
-      this.selectedDatosNotifications = [];
-      this.numSelectedNotification = 0;
+
+    if (((this.isFiestaLocal || (!this.isFiestaLocal && this.isInstitucionGeneral)) && this.selectedTipoLaboral) || !this.selectedTipoLaboral) {
+      this.selectMultipleNotifications = !this.selectMultipleNotifications;
+      if (!this.selectMultipleNotifications) {
+        this.selectedDatosNotifications = [];
+        this.numSelectedNotification = 0;
+        this.deleteNotificacion = false;
+      } else {
+        this.selectAllNotifications = false;
+        this.selectedDatosNotifications = [];
+        this.numSelectedNotification = 0;
+      }
     }
   }
 

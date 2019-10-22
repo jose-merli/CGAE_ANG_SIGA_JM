@@ -2,7 +2,11 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'agenda.fichaEventos.cabecera' | translate }}</p>
+    <p *ngIf="calendarioLaboralAgenda">
+      {{ 'menu.justiciaGratuita.maestros' | translate }}
+      <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.maestros.calendarioLaboralAgenda' | translate }}
+      <i class="fa fa-angle-right"></i> {{ 'agenda.fichaEventos.cabecera' | translate }}</p>
+    <p *ngIf="!calendarioLaboralAgenda">{{ 'agenda.fichaEventos.cabecera' | translate }}</p>
   </div>
 
   <!-- FICHA DATOS GENERALES -->
@@ -64,19 +68,27 @@
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }} (*)</label>
               <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"
+                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="tipoAccesoLectura || historico || modoTipoEventoFestivo || modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || isFiestaAutonomica ||  (!isFiestaLocal && !isInstitucionGeneral)"
                 [showClear]="true"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.tipoEvento' | translate}}</label>
               <p-dropdown class="select-form" [options]="comboTipoEvento" name="tipoEvento" [(ngModel)]="newEvent.idTipoEvento" placeholder="-"
-                [disabled]="disabledTipoEvento || isFormacionCalendar || tipoAccesoLectura" [showClear]="true"></p-dropdown>
+                [disabled]="tipoAccesoLectura || historico || disabledTipoEvento || isFormacionCalendar || modoTipoEventoFestivo || isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral)"
+                [showClear]="true"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-6 col-md-6" *ngIf="selectedTipoLaboral">
+              <label>{{ 'agenda.fichaEventos.datosGenerales.tipoFestivo' | translate }}(*)</label>
+              <!-- <input *ngIf="!isInstitucionGeneral" type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title"
+                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || (!isFiestaLocal && !isInstitucionGeneral) || selectedTipoLaboral || isFiestaAutonomica"> -->
+              <p-dropdown class="select-form" [options]="comboTipoFestivo" name="titulo" [(ngModel)]="newEvent.title" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+                [disabled]="tipoAccesoLectura || historico || modoEdicionEvento" (onChange)="onChangeTitulo($event)" [showClear]="true"></p-dropdown>
+            </div>
+            <div class="col-lg-6 col-md-6" *ngIf="!selectedTipoLaboral">
               <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}} (*)</label>
-              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
+              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura  || historico || isEventoCumplidoOrCancelado || isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral) || selectedTipoLaboral">
             </div>
             <div *ngIf="!selectedTipoLaboral" class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
@@ -88,43 +100,46 @@
             <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
               <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [showTime]="true" [disabledToday]="disabledToday"
-                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStart($event)" [utc]="false">
+                [disabled]="tipoAccesoLectura || historico ||  isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStart($event)"
+                [utc]="false">
               </app-fecha>
             </div>
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
               <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEventInput($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
-                [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStartEvent($event)"
-                [disabledToday]="disabledToday" [utc]="false"></app-fecha>
+                [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado"
+                (valueChangeSelected)="fillStartEvent($event)" [disabledToday]="disabledToday" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
               <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEndInput($event)" [showTime]="true" [minDate]="invalidDateMin"
-                [maxDate]="invalidDateMax" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillEnd($event)"
+                [maxDate]="invalidDateMax" [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillEnd($event)"
                 [disabledToday]="true" [disabledDelete]="true" [utc]="false"></app-fecha>
             </div>
           </div>
           <div class="row mb-3">
             <div *ngIf="!selectedTipoLaboral" class="col-lg-12 col-md-12">
-              <label>{{'agenda.fichaEventos.datosGenerales.lugar' | translate}}</label>
+              <label>{{'agenda.fichaEventos.datosGenerales.lugar' | translate}}(*)</label>
               <input type="text" class="form-control" pInputText name="lugar" [(ngModel)]="newEvent.lugar" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
             </div>
             <div *ngIf="selectedTipoLaboral" class="col-lg-12 col-md-12">
-              <label>{{'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate}}</label>
-              <p-dropdown class="select-form" [options]="comboPartidoJudicial" name="estado" [(ngModel)]="newEvent.lugar" placeholder="{{'tablas.literal.seleccionar' | translate }}"
-                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" [showClear]="true"></p-dropdown>
+              <label *ngIf="!isFiestaLocal">{{'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate}}</label>
+              <label *ngIf="isFiestaLocal">{{'agenda.fichaEvento.tarjetaGenerales.partidoJudicial' | translate}} (*)</label>
+              <p-dropdown class="select-form" filter="true" [options]="comboPartidoJudicial" name="estado" [(ngModel)]="newEvent.lugar"
+                placeholder="{{'tablas.literal.seleccionar' | translate }}" [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado || !isFiestaLocal"
+                [showClear]="true"></p-dropdown>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
-              <input type="text" class="form-control" pInputText name="descripcion" [(ngModel)]="newEvent.descripcion" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
+              <input type="text" class="form-control" pInputText name="descripcion" [(ngModel)]="newEvent.descripcion" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || historico">
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>{{'agenda.fichaEventos.datosGenerales.recursos' | translate}}</label>
-              <input type="text" class="form-control" pInputText name="recursos" [(ngModel)]="newEvent.recursos" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
+              <input type="text" class="form-control" pInputText name="recursos" [(ngModel)]="newEvent.recursos" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || historico">
             </div>
           </div>
         </div>
@@ -196,17 +211,17 @@
     <div class="card-footer" *ngIf="esFichaActiva('generales')">
       <div class="text-right main-button">
         <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"
-          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
+          [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado"></button>
         <button pButton (click)="saveEvent()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="validateForm() || tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
-        <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"
-          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || !modoEdicionEvento"></button>
+          [disabled]="validateForm() || tipoAccesoLectura || historico || isEventoCumplidoOrCancelado"></button>
+        <button *ngIf="!calendarioLaboralAgenda" pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{'general.boton.eliminar'  | translate}}" [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado || !modoEdicionEvento"></button>
       </div>
     </div>
   </div>
 
   <!-- NOTIFICACIONES-->
-  <div class="card">
+  <div *ngIf="!selectedTipoLaboral" class="card">
     <!-- Cabecera -->
     <div class="card-header header-ficha" (click)="abreCierraFicha('notify')">
       <div *ngIf="!esFichaActiva('notify')" class="form-row">
@@ -254,7 +269,7 @@
     <div class="card-body card-body-ficha" *ngIf="esFichaActiva('notify')">
       <div class="row">
         <!-- Modo Mostrar -->
-        <div *ngIf="(selectMultipleNotifications || selectAllNotifications) && !pressNewNotificacion">
+        <div *ngIf="isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral) || ((selectMultipleNotifications || selectAllNotifications) && !pressNewNotificacion)">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultipleNotifications}"
             [(selection)]="selectedDatosNotifications" (onRowSelect)="actualizaSeleccionadosNotifications(selectedDatosNotifications)"
             (onRowUnselect)="actualizaSeleccionadosNotifications(selectedDatosNotifications)" pageLinks="4" dataKey="idNotificacion"
@@ -308,7 +323,7 @@
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 <div class="ml-3 selectAll">
                   <p-checkbox (onChange)="onChangeSelectAllNotifications()" [(ngModel)]="selectAllNotifications" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
-                    name="groupname"></p-checkbox>
+                    name="groupname" [disabled]="!this.isFiestaLocal && !this.isInstitucionGeneral"></p-checkbox>
                 </div>
                 <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleNotifications}" (click)="isSelectMultipleNotifications(); selectedDatosNotifications=false">
                   <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
@@ -318,7 +333,7 @@
         </div>
 
         <!-- Modo Edición -->
-        <div *ngIf="!selectMultipleNotifications && !pressNewNotificacion && !selectAllNotifications">
+        <div *ngIf="!isFiestaAutonomica && ((this.isFiestaLocal && !this.isInstitucionGeneral) || this.isInstitucionGeneral) && (!this.selectMultipleNotifications && !this.pressNewNotificacion && !this.selectAllNotifications)">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleNotifications }"
             dataKey="idNotificacion" selectionMode="multiple" [(selection)]="selectedDatosNotifications" [responsive]="true"
             #tableNotifications class="tabla-listado" [paginator]="true" (onRowSelect)="actualizaSeleccionadosNotificationsEdit(selectedDatosNotifications)"
@@ -496,7 +511,7 @@
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesNotifications($event)"></p-dropdown>
                 <label class="pl-1">
-                  {{ "cargaMasivaDatñosCurriculares.numRegistros.literal" | translate }}
+                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
                 </label>
               </div>
             </ng-template>
@@ -510,15 +525,15 @@
           icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}" [disabled]="editNotificacion || pressNewNotificacion"></button>
         <button *ngIf="historico" (click)="getEventNotifications()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
         <button pButton (click)="restNotifications()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"
-          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || (!editNotificacion && !pressNewNotificacion)"></button>
+          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || (!editNotificacion && !pressNewNotificacion) || isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral)"></button>
         <button *ngIf="!editNotificacion" pButton (click)="saveNotification()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || validateNotification() || !pressNewNotificacion"></button>
+          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || validateNotification() || !pressNewNotificacion || isFiestaAutonomica  || (!isFiestaLocal && !isInstitucionGeneral)"></button>
         <button *ngIf="editNotificacion" pButton (click)="saveNotification()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
+          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral)"></button>
         <button (click)="deleteNotification(selectedDatosNotifications)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-          label="{{ 'general.boton.eliminar' | translate}}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || !deleteNotificacion"></button>
+          label="{{ 'general.boton.eliminar' | translate}}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || !deleteNotificacion || isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral)"></button>
         <button pButton (click)="newNotification()" type="button" icon="fa fa-plus" iconPos="left" label="{{
-                'general.boton.new' | translate }}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || editNotificacion || pressNewNotificacion || (selectMultipleNotifications || selectAllNotifications) || historico"></button>
+                'general.boton.new' | translate }}" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || editNotificacion || pressNewNotificacion || (selectMultipleNotifications || selectAllNotifications) || historico || isFiestaAutonomica || (!isFiestaLocal && !isInstitucionGeneral)"></button>
       </div>
     </div>
   </div>

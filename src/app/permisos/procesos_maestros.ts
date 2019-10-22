@@ -10,5 +10,6 @@ export const procesos_maestros: any = {
     prisiones: "91G",
     fundamentoCalificacion: "921",
     partidaJudicial: "91C",
-    comisarias: "91H"
+    comisarias: "91H",
+    calendarioLaboralAgenda: "939"
 }

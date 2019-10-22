@@ -17,6 +17,7 @@ import { TablaPartidasComponent } from './partidas/gestion-partidas/gestion-part
 import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partidas-judiciales.module';
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { ComisariasModule } from './comisarias/comisarias.module';
+import { CalendarioLaboralAgendaModule } from './calendario-laboral-agenda/calendario-laboral-agenda.module';
 
 @NgModule({
         declarations: [],
@@ -34,7 +35,8 @@ import { ComisariasModule } from './comisarias/comisarias.module';
                 FundamentosCalificacionModule,
                 GestionPartidasComponent,
                 GestionPartidasJudicialesComponent,
-                ComisariasModule
+                ComisariasModule,
+                CalendarioLaboralAgendaModule
         ],
 
         providers: []

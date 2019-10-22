@@ -30,8 +30,8 @@
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <p-table [value]="procedimientos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" 
-         paginatorPosition="both" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()">
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}"
+        paginatorPosition="both" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of cols" [style.width]="col.width">

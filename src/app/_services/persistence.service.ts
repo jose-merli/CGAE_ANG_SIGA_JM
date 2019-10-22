@@ -11,9 +11,6 @@ export class PersistenceService {
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
 
-    private obtenerDatos = new Subject<any>();
-    obtenerDatos$ = this.obtenerDatos.asObservable();
-
     constructor() { }
 
     setFiltros(data: any) {
@@ -28,6 +25,7 @@ export class PersistenceService {
     clearFiltros() {
         sessionStorage.removeItem(this.filtrosName);
     }
+
     setFiltrosAux(data: any) {
         localStorage.setItem(this.filtrosAuxName, JSON.stringify(data));
     }
@@ -88,8 +86,5 @@ export class PersistenceService {
         this.clearFiltrosAux();
     }
 
-    notifyObtenerDatos(datos) {
-        this.obtenerDatos.next(datos);
-    }
 }
 

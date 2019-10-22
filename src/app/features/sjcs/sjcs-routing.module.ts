@@ -37,6 +37,10 @@ const routesSjcs: Routes = [
   {
     path: "comisarias",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "calendarioLaboralAgenda",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   }
 ];
 
