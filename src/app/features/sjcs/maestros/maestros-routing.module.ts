@@ -21,6 +21,7 @@ import { ComisariasComponent } from './comisarias/comisarias/comisarias.componen
 import { GestionComisariasComponent } from './comisarias/comisarias/gestion-comisarias/gestion-comisarias.component';
 import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procuradores/busqueda-procuradores.component';
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
+import { GestionDocumentacionejgComponent } from './documentacion-ejg/gestion-documentacionejg/gestion-documentacionejg.component';
 
 const routesMaestros: Routes = [
   {
@@ -116,9 +117,12 @@ const routesMaestros: Routes = [
     path: "mantenimientoprocuradores",
     component: BusquedaProcuradoresComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: "gestiondocumentacionejg",
+    component: GestionDocumentacionejgComponent,
+    canActivate: [AuthGuard]
   }
-
-
 ];
 
 @NgModule({

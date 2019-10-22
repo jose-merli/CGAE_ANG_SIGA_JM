@@ -48,6 +48,7 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
 
   newDoc() {
     this.persistenceService.setFiltros(this.filtros);
+    this.persistenceService.clearDatos();
     this.router.navigate(["/gestiondocumentacionejg"]);
   }
 

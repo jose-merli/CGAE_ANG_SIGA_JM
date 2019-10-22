@@ -18,6 +18,8 @@ import { GestionPartidasJudicialesComponent } from './partidos-judiciales/partid
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { ComisariasModule } from './comisarias/comisarias.module';
 import { ProcuradoresModule } from './procuradores/procuradores.module';
+import { DocumentacionEJGComponent } from './documentacion-ejg/documentacion-ejg.component';
+import { GestionDocumentacionEJGModule } from './documentacion-ejg/documentacion-ejg.module';
 
 @NgModule({
         declarations: [],
@@ -37,6 +39,7 @@ import { ProcuradoresModule } from './procuradores/procuradores.module';
                 ComisariasModule,
                 ProcuradoresModule,
                 GestionPartidasJudicialesComponent,
+                GestionDocumentacionEJGModule
         ],
 
         providers: []

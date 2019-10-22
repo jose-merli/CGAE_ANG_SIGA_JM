@@ -191,7 +191,6 @@ import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/man
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
 import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component';
 import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
-import { DocumentacionEJGComponent } from './features/sjcs/maestros/documentacion-ejg/documentacion-ejg.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { TiposAsistenciaComponent } from './features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component';
@@ -460,7 +459,6 @@ import { FechaModule } from './commons/fecha/fecha.module';
 		MantenimientoPrisionesComponent,
 		MantenimientoComisariasComponent,
 		MantenimientoJuzgadosComponent,
-		DocumentacionEJGComponent,
 		MaestroPJComponent,
 		DestinatariosRetencionesComponent,
 		TiposAsistenciaComponent,

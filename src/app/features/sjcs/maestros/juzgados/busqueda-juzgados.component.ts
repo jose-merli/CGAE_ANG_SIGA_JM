@@ -24,7 +24,6 @@ export class BusquedaJuzgadosComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
-  @ViewChild(FiltroJuzgadosComponent) filtros;
   @ViewChild(TablaJuzgadosComponent) tabla;
 
   //comboPartidosJudiciales
@@ -32,6 +31,7 @@ export class BusquedaJuzgadosComponent implements OnInit {
   msgs;
 
   permisoEscritura;
+  filtros: any;
 
 
 
