@@ -165,11 +165,9 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      // { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
-      { field: "start", header: "Fecha" },
-      { field: "nombre", header: "Nombre" },
-      // { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fiestaLocalPartido", header: "Fiesta Local Partido Judicial" }
+      { field: "start", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "fiestaLocalPartido", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.fiestaLocalPartidoJudicial" }
     ];
 
     this.rowsPerPage = [

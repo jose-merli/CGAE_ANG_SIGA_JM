@@ -21,13 +21,7 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
   filtroAux: EventoItem = new EventoItem();
   historico: boolean = false;
 
-  isDisabledPoblacion: boolean = true;
-  resultadosPoblaciones: any;
-
   @Input() permisoEscritura;
-
-  comboProvincias = [];
-  comboPoblacion = [];
 
   @Output() isOpen = new EventEmitter<boolean>();
 
@@ -37,7 +31,7 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
   ngOnInit() {
 
     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+      this.filtroAux = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
@@ -87,8 +81,6 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new EventoItem();
-    this.persistenceService.clearFiltros();
-    this.isDisabledPoblacion = true;
   }
 
   clear() {

@@ -649,6 +649,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.calendarioLaboralAgenda = true;
       this.isEventoCumplidoOrCancelado = false;
 
+      if (this.persistenceService.getPermisos() != undefined) {
+        this.tipoAccesoLectura = !this.persistenceService.getPermisos();
+      }
+
+
       if (this.persistenceService.getDatos() != undefined) {
         this.newEvent = this.persistenceService.getDatos();
 
