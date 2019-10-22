@@ -5,7 +5,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
-import { KEY_CODE } from '../../../../../../commons/login-develop/login-develop.component';
+import { KEY_CODE } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 
 @Component({
   selector: 'app-filtro-calendario-agenda-laboral',
