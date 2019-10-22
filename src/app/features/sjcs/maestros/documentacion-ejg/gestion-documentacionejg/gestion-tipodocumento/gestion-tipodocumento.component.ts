@@ -95,16 +95,16 @@ export class GestionTipodocumentoComponent implements OnInit {
           this.nuevo = false;
           let tipodocs = JSON.parse(data.body);
           // this.areasItem = JSON.parse(data.body);
-          this.documentacionEjgItem.idTipoDocumento = tipodocs.id;
+          this.body.idTipoDocumento = tipodocs.id;
           let send = {
             modoEdicion: this.modoEdicion,
-            idTipoDoc: this.documentacionEjgItem.idTipoDocumento
+            idTipoDoc: this.body.idTipoDocumento
           }
           this.modoEdicionSend.emit(send);
         }
 
-        this.bodyInicial = JSON.parse(JSON.stringify(this.documentacionEjgItem));
-        this.persistenceService.setDatos(this.documentacionEjgItem);
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.body);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

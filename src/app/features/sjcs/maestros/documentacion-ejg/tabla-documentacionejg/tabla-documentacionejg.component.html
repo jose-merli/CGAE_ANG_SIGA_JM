@@ -31,9 +31,12 @@
               <span>{{dato[col.field]}}</span>
             </div>
 
-            <div *ngIf="(col.field == 'abreviaturaDoc' || col.field == 'descripcionDoc') && setItalic(dato)" [innerHTML]="dato.abreviaturaDoc"
-              [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}"></div>
-            <div *ngIf=" (col.field == 'abreviaturaDoc' || col.field == 'descripcionDoc') && !setItalic(dato)" [innerHTML]="dato.descripcionDoc"></div>
+            <div *ngIf="(col.field == 'abreviaturaDoc') && setItalic(dato)" [innerHTML]="dato.abreviaturaDoc" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}"></div>
+            <div *ngIf=" (col.field == 'abreviaturaDoc') && !setItalic(dato)" [innerHTML]="dato.abreviaturaDoc"></div>
+
+
+            <div *ngIf="(col.field == 'descripcionDoc') && setItalic(dato)" [innerHTML]="dato.descripcionDoc" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}"></div>
+            <div *ngIf=" (col.field == 'descripcionDoc') && !setItalic(dato)" [innerHTML]="dato.descripcionDoc"></div>
 
           </td>
 
