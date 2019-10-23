@@ -3,8 +3,9 @@ import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { JusticiableObject } from '../../../../../models/sjcs/JusticiableObject';
-import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
-import { Router } from '../../../../../../../node_modules/@angular/router';
+import { DataTable } from 'primeng/primeng';
+import { Router } from '@angular/router';
+import { JusticiableBusquedaObject } from '../../../../../models/sjcs/JusticiableBusquedaObject';
 
 @Component({
   selector: 'app-tabla-justiciables',
@@ -101,8 +102,8 @@ export class TablaJusticiablesComponent implements OnInit {
 
   delete() {
 
-    let justiciablesDelete = new JusticiableObject();
-    justiciablesDelete.justiciablesItems = this.selectedDatos;
+    let justiciablesDelete = new JusticiableBusquedaObject();
+    justiciablesDelete.justiciableBusquedaItems = this.selectedDatos;
     this.sigaServices.post("calendarioLaboralAgenda_deleteFestivos", justiciablesDelete).subscribe(
 
       data => {
@@ -128,8 +129,8 @@ export class TablaJusticiablesComponent implements OnInit {
   }
 
   activate() {
-    let justiciablesActivate = new JusticiableObject();
-    justiciablesActivate.justiciablesItems = this.selectedDatos;
+    let justiciablesActivate = new JusticiableBusquedaObject();
+    justiciablesActivate.justiciableBusquedaItems = this.selectedDatos;
     this.sigaServices.post("calendarioLaboralAgenda_activateFestivos", justiciablesActivate).subscribe(
       data => {
 
@@ -196,24 +197,24 @@ export class TablaJusticiablesComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (this.selectAll) {
+    // if (this.selectAll) {
 
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null) || dato.title == 'Fiesta Autonómica');
-      } else {
-        this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica');
-      }
+    //   if (this.historico) {
+    //     this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null) || dato.title == 'Fiesta Autonómica');
+    //   } else {
+    //     this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica');
+    //   }
 
-      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-        this.selectMultiple = true;
-        this.numSelected = this.selectedDatos.length;
-      }
+    //   if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+    //     this.selectMultiple = true;
+    //     this.numSelected = this.selectedDatos.length;
+    //   }
 
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-    }
+    // } else {
+    //   this.selectedDatos = [];
+    //   this.numSelected = 0;
+    //   this.selectMultiple = false;
+    // }
 
   }
 
