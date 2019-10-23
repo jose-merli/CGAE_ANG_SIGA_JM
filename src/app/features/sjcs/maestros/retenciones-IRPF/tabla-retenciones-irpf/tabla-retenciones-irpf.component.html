@@ -46,7 +46,7 @@
             </div>
             <div *ngIf="dato.editable && col.field == 'claveModelo'">
               <input class="form-control paddingInput" [(ngModel)]="dato.claveModelo" name="claveModelo" type="text" [(disabled)]="!permisos"
-                maxLength="20" on-focusout="changeClaveModelo(dato)" (onBlur)="changeClaveModelo(dato)" (input)="changeClaveModelo(dato)"
+                maxLength="10" on-focusout="changeClaveModelo(dato)" (onBlur)="changeClaveModelo(dato)" (input)="changeClaveModelo(dato)"
               />
             </div>
             <div *ngIf="dato.editable && col.field == 'descripcion'">
