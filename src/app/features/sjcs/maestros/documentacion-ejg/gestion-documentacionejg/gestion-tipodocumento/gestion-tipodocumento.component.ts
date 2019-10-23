@@ -66,9 +66,9 @@ export class GestionTipodocumentoComponent implements OnInit {
 
   rest() {
     if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) this.documentacionEjgItem = JSON.parse(JSON.stringify(this.bodyInicial));
+      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     } else {
-      this.documentacionEjgItem = new DocumentacionEjgItem();
+      this.body = new DocumentacionEjgItem();
     }
   }
 
