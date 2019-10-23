@@ -10,21 +10,24 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="60"
-            pInputText>
+        <div class="form-group col-lg-3 col-md-3 form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+            <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="60"
+              pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
+            <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.apellido1' pInputText maxLength="60"
+              pInputText>
+          </div>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.apellido1' pInputText maxLength="60"
-            pInputText>
-        </div>
-
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'general.boton.code' | translate }}</label>
-          <input #prueba type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoExt' maxLength="10"
-            pInputText>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ 'general.boton.code' | translate }}</label>
+            <input #prueba type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoExt' maxLength="10"
+              pInputText>
+          </div>
         </div>
       </div>
     </div>

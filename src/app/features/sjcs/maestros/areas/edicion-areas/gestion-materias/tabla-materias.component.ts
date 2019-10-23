@@ -70,7 +70,7 @@ export class TablaMateriasComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (datos.fechabaja != undefined) {
+    if (datos != null && datos != undefined && datos.fechabaja != undefined) {
       this.disableAll = true;
     }
     if (this.persistenceService.getPermisos() != true) {
