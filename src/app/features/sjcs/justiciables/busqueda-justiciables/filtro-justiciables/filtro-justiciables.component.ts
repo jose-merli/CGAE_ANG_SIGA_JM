@@ -15,20 +15,32 @@ import { CommonsService } from '../../../../../_services/commons.service';
 export class FiltroJusticiablesComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
+  showDatosDirecciones: boolean = true;
+  showAsuntos: boolean = true;
   msgs = [];
 
   filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
   filtroAux: JusticiableBusquedaItem = new JusticiableBusquedaItem();
   historico: boolean = false;
 
-  @Input() permisoEscritura;
 
+  isDisabledPoblacion: boolean = true;
+  resultadosPoblaciones: any;
+
+  @Input() permisoEscritura;
   @Output() isOpen = new EventEmitter<boolean>();
+
+  comboProvincias = [];
+  comboPoblacion = [];
+  comboRoles = [];
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
 
   ngOnInit() {
+
+    this.getComboProvincias();
+    this.getComboRoles();
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtroAux = this.persistenceService.getFiltros();
@@ -43,8 +55,84 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   }
 
+  getComboRoles() {
+    this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
+      n => {
+        this.comboRoles = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboRoles);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getComboProvincias() {
+    this.sigaServices.get("busquedaJuzgados_provinces").subscribe(
+      n => {
+        this.comboProvincias = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboProvincias);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  onChangeProvincia() {
+
+    this.filtros.idPoblacion = "";
+    this.comboPoblacion = [];
+
+    if (this.filtros.idProvincia != undefined && this.filtros.idProvincia != "") {
+      this.isDisabledPoblacion = false;
+    } else {
+      this.isDisabledPoblacion = true;
+    }
+
+  }
+
+  buscarPoblacion(e) {
+    if (e.target.value && e.target.value !== null && e.target.value !== "") {
+      if (e.target.value.length >= 3) {
+        this.getComboPoblacion(e.target.value);
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+      } else {
+        this.comboPoblacion = [];
+        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
+      }
+    } else {
+      this.comboPoblacion = [];
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+    }
+  }
+
+  getComboPoblacion(dataFilter) {
+    this.sigaServices
+      .getParam(
+        "busquedaJuzgados_population",
+        "?idProvincia=" + this.filtros.idProvincia + "&dataFilter=" + dataFilter
+      )
+      .subscribe(
+        n => {
+          this.isDisabledPoblacion = false;
+          this.comboPoblacion = n.combooItems;
+        },
+        error => { },
+        () => { }
+      );
+  }
+
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  onHideDatosDirecciones() {
+    this.showDatosDirecciones = !this.showDatosDirecciones;
+  }
+
+  onHideAsuntos() {
+    this.showAsuntos = !this.showAsuntos;
   }
 
   search() {
@@ -65,17 +153,30 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   checkFilters() {
-    // if (
-    //   (this.filtros.anio == null || this.filtros.anio == "" || this.filtros.anio.trim().length < 4)) {
-    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    //   return false;
-    // } else {
+    if (
+      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.length < 3) &&
+      (this.filtros.codigoPostal == null || this.filtros.codigoPostal.trim() == "" || this.filtros.codigoPostal.length < 3) &&
+      (this.filtros.anio == null || this.filtros.anio.trim() == "" || this.filtros.anio.length < 3) &&
+      (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
+      (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "")) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+        this.filtros.nombre = this.filtros.nombre.trim();
+      }
 
-    //   if (this.filtros.anio != undefined && this.filtros.anio != null) {
-    //     this.filtros.anio = this.filtros.anio.trim();
-    //   }
-    //   return true;
-    // }
+      if (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null) {
+        this.filtros.codigoPostal = this.filtros.codigoPostal.trim();
+      }
+
+      if (this.filtros.anio != undefined && this.filtros.anio != null) {
+        this.filtros.anio = this.filtros.anio.trim();
+      }
+
+      return true;
+    }
   }
 
   clearFilters() {

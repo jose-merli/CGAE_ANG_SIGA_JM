@@ -21,6 +21,8 @@ import { ConfirmationService } from "primeng/api";
 import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
+import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+
 
 @Injectable()
 export class SigaServices {
@@ -714,6 +716,7 @@ export class SigaServices {
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
     dialogo_envioTest: "dialogoComunicacion/envioTest",
+    ...endpoints_justiciables,
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",
     ...endpoints_maestros
   };
