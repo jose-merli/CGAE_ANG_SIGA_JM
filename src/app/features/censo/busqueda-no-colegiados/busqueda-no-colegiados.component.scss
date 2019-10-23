@@ -64,6 +64,11 @@
   width: 100%;
 }
 
-.inheritTable .ui-datatable-tablewrapper table {
-  table-layout: inherit !important;
+// .inheritTable .ui-datatable-tablewrapper table {
+//   table-layout: inherit !important;
+// }
+
+.ui-datatable table {
+  table-layout: auto !important;
 }
+

@@ -3,5 +3,6 @@ import { ErrorItem } from "./ErrorItem";
 export class BusquedaJuridicaObject {
   error: Error;
   busquedaPerJuridicaItems: BusquedaJuridicaItem[] = [];
-  constructor() {}
+  onlyNif: Boolean;
+  constructor() { }
 }

@@ -241,7 +241,7 @@ export class DatosCvComponent implements OnInit {
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosCV.xls");
+          saveAs(blob, this.body.nombreFichero);
           this.progressSpinner = true;
         },
         err => {
@@ -268,7 +268,7 @@ export class DatosCvComponent implements OnInit {
 
           if (data.size != 0) {
             const blob = new Blob([data], { type: "text/csv" });
-            saveAs(blob, "PlantillaMasivaDatosCV_Original.xls");
+            saveAs(blob, this.body.nombreFichero);
           } else {
             let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
             this.showFail(msg);
@@ -299,7 +299,7 @@ export class DatosCvComponent implements OnInit {
 
           if (data.size != 0) {
             const blob = new Blob([data], { type: "text/csv" });
-            saveAs(blob, "PlantillaMasivaDatosCV_Errores.xls");
+            saveAs(blob, this.body.nombreFichero);
           } else {
             let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
             this.showFail(msg);
@@ -344,7 +344,7 @@ export class DatosCvComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
   }

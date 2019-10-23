@@ -5,7 +5,9 @@ import {
   ViewChild,
   ChangeDetectorRef,
   HostListener,
-  ElementRef
+  ElementRef,
+  Output,
+  EventEmitter
 } from "@angular/core";
 import { SigaServices } from "./../../../_services/siga.service";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
@@ -38,6 +40,7 @@ export enum KEY_CODE {
   encapsulation: ViewEncapsulation.None
 })
 export class CatalogosMaestros extends SigaWrapper implements OnInit {
+  @Output() valueFocus = new EventEmitter();
   maestros_update: String;
   maestros_create: String;
   maestros_delete: String;
@@ -55,6 +58,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   tablaHistorico: boolean = false;
   editar: boolean = false;
   eliminar: boolean = false;
+  progressSpinner: boolean = false;
 
   selectMultiple: boolean = false;
   selectedItem: number = 10;
@@ -91,6 +95,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   blockBuscar: boolean = true;
   blockCrear: boolean = true;
   pressNew: boolean = false;
+  eliminado: boolean = false;
   //validacion permisos
   permisosTree: any;
   permisosArray: any[];
@@ -135,8 +140,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     );
     this.cols2 = [{ field: "codigoExt", header: "general.codigoext" }];
     this.cols = [{ field: "descripcion", header: "general.description" }];
-
-
 
     this.rowsPerPage = [
       {
@@ -192,6 +195,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   isEditar() {
     sessionStorage.setItem("first", JSON.stringify(this.table.first));
+
     this.datosHist.forEach(
       (value: CatalogoMaestroItem, key: number) => {
         if (value.editar) {
@@ -211,7 +215,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
           this.sigaServices.post("maestros_update", this.upd).subscribe(
             data => {
               this.showSuccess();
-              console.log(data);
               sessionStorage.setItem(
                 "registroAuditoriaUsuariosActualizado",
                 JSON.stringify(true)
@@ -222,7 +225,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
               this.searchCatalogo = JSON.parse(error["error"]);
               let mensaje = JSON.stringify(this.searchCatalogo.error.message);
               this.showFail(mensaje.substring(1, mensaje.length - 1));
-              console.log(error);
 
               this.isBuscar();
             }
@@ -230,11 +232,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         }
 
         value.editar = false;
-      },
-      () => {
-        this.volver();
       }
     );
+
+    this.editar = false;
+    this.blockCrear = true;
+
   }
 
   confirmEdit() {
@@ -242,7 +245,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   newData() {
     this.blockSeleccionar = true;
-    console.log(this.datosHist);
     let dummy = {
       catalogo: "",
       codigoExt: "",
@@ -279,7 +281,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   editarCompleto(event) {
-    console.log(event);
     let data = event.data;
 
     if (data.codigoExt != null && data.codigoExt != undefined) {
@@ -308,7 +309,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
               value.editar = true;
             }
           });
-          console.log(this.datosHist);
         }
       }
     } else {
@@ -323,9 +323,13 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             value.editar = true;
           }
         });
-        console.log(this.datosHist);
       }
     }
+  }
+
+  onEditCancel(event) {
+    this.editar = false;
+    this.valueFocus.emit(event);
   }
 
   guardarCodigo(event) {
@@ -347,15 +351,19 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.cre.idInstitucion = "";
       this.cre.local = this.local;
 
+      this.progressSpinner = true;
+
       this.sigaServices.post("maestros_create", this.cre).subscribe(
         data => {
+          this.progressSpinner = false;
           this.showSuccess();
         },
         error => {
           this.searchCatalogo = JSON.parse(error["error"]);
           let mensaje = JSON.stringify(this.searchCatalogo.error.message);
           this.showFail(mensaje.substring(1, mensaje.length - 1));
-          console.log(error);
+          this.pressNew = false;
+          this.isBuscar();
         },
         () => {
           this.reset();
@@ -476,7 +484,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.newCatalogo.descripcion = this.newCatalogo.descripcion.trim();
       this.descripcion = this.newCatalogo.descripcion;
       this.inputDesc.nativeElement.value = e.srcElement.value.trim();
-      console.log(this.inputDesc);
     }
   }
 
@@ -486,7 +493,6 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.newCatalogo.codigoExt = this.newCatalogo.codigoExt.trim();
       this.cdgoExt = this.newCatalogo.codigoExt;
       this.inputCdgoExt.nativeElement.value = e.srcElement.value.trim();
-      console.log(this.inputCdgoExt);
     }
   }
 
@@ -510,6 +516,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
 
   historico() {
     sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
+    this.progressSpinner = true;
     this.buscar = false;
     this.selectMultiple = false;
     this.catalogoSeleccionado = this.body.catalogo;
@@ -530,13 +537,13 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.eliminar = true;
     this.sigaServices.post("maestros_historico", this.his).subscribe(
       data => {
-        console.log(data);
         this.searchCatalogo = JSON.parse(data["body"]);
         this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
         this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        console.log(err); this.progressSpinner = false;
       },
       () => {
         if (this.datosHist != null && this.datosHist != undefined) {
@@ -550,16 +557,19 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.numSelected = 0;
   }
   isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-    } else {
-      this.pressNew = false;
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
+    if (this.activacionEditar) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.pressNew = false;
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     }
+
     // this.volver();
   }
 
@@ -573,10 +583,11 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
 
   isBuscar() {
+    this.progressSpinner = true;
     sessionStorage.setItem("searchOrHistory", JSON.stringify("search"));
     this.buscar = true;
     this.blockBuscar = false;
-    this.blockCrear = false;
+    // this.blockCrear = false;
     this.selectAll = false;
     this.selectMultiple = false;
     this.tablaHistorico = false;
@@ -602,14 +613,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       .postPaginado("maestros_search", "?numPagina=1", this.body)
       .subscribe(
         data => {
-          console.log(data);
-
           this.searchCatalogo = JSON.parse(data["body"]);
           this.datosEdit = this.searchCatalogo.catalogoMaestroItem;
           this.datosHist = this.searchCatalogo.catalogoMaestroItem;
+
+          this.progressSpinner = false;
         },
         err => {
           console.log(err);
+          this.progressSpinner = false;
         },
         () => {
           this.datosHist.forEach((value: CatalogoMaestroItem, key: number) => {
@@ -645,8 +657,8 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         this.searchCatalogo = JSON.parse(error["error"]);
         let mensaje = JSON.stringify(this.searchCatalogo.error.message);
         this.showFail(mensaje.substring(1, mensaje.length - 1));
-        console.log(error);
         this.table.reset();
+        this.pressNew = false;
         this.isBuscar();
       },
       () => {
@@ -660,6 +672,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
       this.table.reset();
     }
     this.editar = false;
+    this.selectedDatos = [];
     this.catalogoSeleccionado = this.body.catalogo;
     this.local = this.body.local;
     this.body = new CatalogoRequestDto();
@@ -684,13 +697,16 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     this.formDescripcion = this.body.descripcion;
     this.formCodigo = this.body.codigoExt;
   }
-  irEditarCatalogo(id) {
-    if (!this.selectMultiple) {
-      var ir = null;
-      if (id && id.length > 0) {
-        ir = id[0];
+  irEditarCatalogo(selectedDatos) {
+    if (selectedDatos && selectedDatos.length > 0) {
+      if (selectedDatos[0].fechaBaja == null) {
+        this.eliminado = false;
+      } else {
+        this.eliminado = true;
       }
-    } else {
+    }
+
+    if (this.selectMultiple) {
       this.editar = false;
       this.numSelected = this.selectedDatos.length;
     }
@@ -716,56 +732,85 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   isEliminar(selectedDatos) {
     this.del = new CatalogoDeleteRequestDto();
     selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
-      console.log(value);
       this.del.idRegistro.push(value.idRegistro);
       this.del.tabla = value.catalogo;
       this.del.local = this.local;
     });
     this.sigaServices.post("maestros_delete", this.del).subscribe(
       data => {
-        if (selectedDatos == 1) {
-          this.msgs = [];
-          this.msgs.push({
-            severity: "success",
-            summary: "Correcto",
-            detail: this.translateService.instant("messages.deleted.success")
-          });
+        let status = JSON.parse(data["body"]);
+
+        if (status.status == 'OK') {
+          if (selectedDatos == 1) {
+            this.msgs = [];
+            this.msgs.push({
+              severity: "success",
+              summary: "Correcto",
+              detail: this.translateService.instant("messages.deleted.success")
+            });
+          } else {
+            this.msgs = [];
+            this.msgs.push({
+              severity: "success",
+              summary: "Correcto",
+              detail:
+                selectedDatos.length +
+                " " +
+                this.translateService.instant("messages.deleted.selected.success")
+            });
+          }
         } else {
           this.msgs = [];
           this.msgs.push({
-            severity: "success",
-            summary: "Correcto",
+            severity: "error",
+            summary: "Incorrecto",
             detail:
               selectedDatos.length +
               " " +
-              this.translateService.instant("messages.deleted.selected.success")
+              this.translateService.instant("general.message.error.realiza.accion")
           });
         }
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.isBuscar();
+
+        if (this.tablaHistorico == true) {
+          this.historico();
+        } else {
+          this.isBuscar();
+        }
         this.editar = false;
+        this.eliminar = true;
+        this.selectedDatos = [];
+        this.progressSpinner = false;
       }
     );
   }
   isHabilitadoEliminar() {
+    if (this.activacionEditar) {
+      if (this.selectedDatos != null && this.selectedDatos != '') {
+        if (this.eliminado) {
+          this.eliminar = true;
+        } else {
+          this.eliminar = false;
+        }
+      } else {
+        this.eliminar = true;
+      }
+    } else {
+      this.eliminar = true;
+    }
     return this.eliminar;
   }
   confirmarBorrar(selectedDatos) {
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
 
-    if (selectedDatos.length > 1) {
-      mess =
-        this.translateService.instant("messages.deleteConfirmation.much") +
-        selectedDatos.length +
-        " " +
-        this.translateService.instant("messages.deleteConfirmation.register") +
-        "?";
-    }
+    // if (selectedDatos.length > 1) {
+    //   mess =
+    //     this.translateService.instant("messages.deleteConfirmation.much") +
+    //     selectedDatos.length +
+    //     " " +
+    //     this.translateService.instant("messages.deleteConfirmation.register") +
+    //     "?";
+    // }
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
@@ -782,6 +827,12 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
             )
           }
         ];
+
+        this.selectAll = false;
+        this.selectMultiple = false;
+        this.selectedDatos = [];
+        this.eliminar = false;
+        this.progressSpinner = false;
       }
     });
   }
@@ -806,6 +857,15 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datosHist;
+
+      this.selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+        if (value.fechaBaja == null) {
+          this.eliminado = false;
+        } else {
+          this.eliminado = true;
+          this.selectedDatos.splice(key, 1);
+        }
+      });
       this.numSelected = this.datosHist.length;
     } else {
       this.selectedDatos = [];
@@ -816,7 +876,7 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER && !this.blockBuscar) {
+    if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
   }

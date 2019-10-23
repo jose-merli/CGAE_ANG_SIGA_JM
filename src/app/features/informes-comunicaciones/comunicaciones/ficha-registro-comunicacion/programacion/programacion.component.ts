@@ -4,6 +4,8 @@ import { ProgComunicacionItem } from '../../../../../models/ProgramacionComunica
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
+import { TramosLECComponent } from '../../../../sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
+import { TranslateService } from '../../../../../commons/translate';
 
 
 @Component({
@@ -61,7 +63,8 @@ export class ProgramacionComponent implements OnInit {
   ];
 
   constructor(
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices, 
+    private translateService: TranslateService
   ) {
 
 
@@ -169,13 +172,15 @@ export class ProgramacionComponent implements OnInit {
     this.arrayProgramar.push(objProgramar);
     this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
       data => {
-        this.showSuccess('Se ha programado el envío correctamente');
+        let msg = this.translateService.instant("informesycomunicaciones.enviosMasivos.programCorrect");
+        this.showSuccess(msg);
         this.body.fechaProgramada = objProgramar.fechaProgramada;
         sessionStorage.setItem("comunicacionesSearch", JSON.stringify(this.body));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       },
       err => {
-        this.showFail('Error al programar el envío');
+        let msg = this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEnvio");
+        this.showFail(msg);
         console.log(err);
       },
       () => {
@@ -187,7 +192,7 @@ export class ProgramacionComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        this.estados.unshift({ label: 'Seleccionar', value: '' });
+        this.estados.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo") , value: '' });
       },
       err => {
         console.log(err);

@@ -89,7 +89,9 @@ export class DatosPersonaJuridicaComponent implements OnInit {
       sessionStorage.setItem("filtrosBusquedaSociedadesFichaSociedad", JSON.stringify(body));
       this.router.navigate(["searchNoColegiados"]);
     } else {
-      this.location.back();
+      this.router.navigate(["searchNoColegiados"]);
+      /*} else {
+        this.location.back();*/
     }
     // this.router.navigate(["searchNoColegiados"]);
   }

@@ -137,6 +137,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     sessionStorage.removeItem("nuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiadoGen");
     sessionStorage.removeItem('consultasSearch');
+    sessionStorage.removeItem("abrirSociedad");
+    sessionStorage.removeItem("abrirSolicitudIncorporacion");
 
     this.getLetrado();
 
@@ -388,16 +390,16 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
         this.body.idPoblacion = null;
       }
     } else {
       this.comboPoblacion = [];
       this.body.idPoblacion = null;
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
 
@@ -893,7 +895,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

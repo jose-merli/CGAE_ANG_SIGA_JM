@@ -10,7 +10,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Consulta</label>
+            <label class="mr-auto title-ficha">{{ 'menu.informesYcomunicaciones.consultas.fichaConsulta.consulta' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>
@@ -25,7 +25,7 @@
           <i class="fas fa-comment-alt icon-ficha">
           </i>
         </div>
-        <label class="title-ficha">Consulta</label>
+        <label class="title-ficha">{{ 'menu.informesYcomunicaciones.consultas.fichaConsulta.consulta' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -34,15 +34,15 @@
       <div *ngIf="showAyuda" class="ayuda-consulta">
         <i (click)="onShowAyuda()" class="fa fa-close float-right cursor-pointer"></i>
         <p class="mb-2">
-          <strong>NORMATIVA DE USO</strong>
+          <strong>{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.consulta.normativaUso' | translate }}</strong>
         </p>
         <p *ngFor=" let texto of ayuda" class="mb-2">
-          {{texto.texto}}
+          {{ texto.texto | translate }}
         </p>
       </div>
       <div class=" form-row">
         <div class="form-group col-lg-12 col-md-12">
-          <label>Cuerpo</label>
+          <label>{{ 'enviosMasivos.literal.cuerpo' | translate }}</label>
           <i (click)="onShowAyuda()" class="fa fa-info-circle ml-1 cursor-pointer"></i>
           <textarea (input)="onChangeConsulta()" pInputTextarea autoResize="autoResize" style="height:250px
          " [(ngModel)]="body.sentencia" [disabled]="editMode"></textarea>
@@ -66,7 +66,7 @@
 <p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="false
          " [minWidth]="500">
   <p-header>
-    <label>Valores</label>
+    <label>{{ 'header.consultas.informesYcomunicaciones.valores' | translate }}</label>
   </p-header>
   <div *ngIf="valores">
     <div class="form-row mt-3" *ngFor="let dato of valores">

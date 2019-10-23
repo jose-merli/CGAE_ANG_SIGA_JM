@@ -114,6 +114,11 @@ export class TarjetaInformesComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
 
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+        this.soloLectura = true;
+      }
+
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
       } else {

@@ -194,8 +194,9 @@
                         <label>
                             {{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
                             <span>{{solicitudEditar.apellidos}}</span>
+
                         </label>
-                        <label class="mr-3" *ngIf="solicitudEditar.idEstado == '50'">
+                        <label class="mr-8" *ngIf="solicitudEditar.idEstado == '50'">
                             <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
                             <a (click)="searchSolicitante();$event.stopPropagation();">
                                 <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
@@ -212,7 +213,18 @@
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
                 <label class="title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
-                <i class="fa fa-angle-up ml-auto"></i>
+
+                <div class="ml-auto">
+                    <label class="mr-3" *ngIf="solicitudEditar.idEstado == '50'">
+                        <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                        <a (click)="searchSolicitante();$event.stopPropagation();">
+                            <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                            </span>
+                        </a>
+                    </label>
+                    <i class="fa fa-angle-up"></i>
+                </div>
+
             </div>
         </div>
         <!--cuerpo datos personales-->
@@ -365,7 +377,7 @@
                     </label> -->
                 <!-- <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
                         [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
-                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [emptyFilterMessage]="resultadosPoblaciones"></p-dropdown> -->
+                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"></p-dropdown> -->
 
                 <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
                 <!-- </div> -->
@@ -374,7 +386,7 @@
                         {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                     </label>
                     <p-dropdown #input2 class="select-form" [(ngModel)]='poblacionSelected' [filter]="true" filterBy="label,labelSinTilde" [disabled]="consulta || deshabilitarDireccion()"
-                        [options]="poblaciones" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
+                        [options]="poblaciones" (input)="buscarPoblacion($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
                         id="dropdown">
                     </p-dropdown>
 

@@ -37,10 +37,11 @@
     </div>
     <!--tarjetas destinatario-->
     <div *ngIf="openFicha" class=" card-body card-body-ficha">
-      <p-pickList [source]="perfilesNoSeleccionados" [target]="perfilesSeleccionados" sourceHeader="Perfiles sin acceso" targetHeader="Perfiles con acceso"
-        [responsive]="true" filterBy="label" dragdrop="true" dragdropScope="perfilesSeleccionados" sourceFilterPlaceholder="Buscar perfil"
-        targetFilterPlaceholder="Buscar perfil" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ height: '300px' }"
-        [targetStyle]="{ height: '300px' }" [disabled]="soloLectura">
+      <p-pickList [source]="perfilesNoSeleccionados" [target]="perfilesSeleccionados" sourceHeader="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.sinAcceso' | translate }}"
+        targetHeader="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.conAcceso' | translate }}" [responsive]="true"
+        filterBy="label" dragdrop="true" dragdropScope="perfilesSeleccionados" sourceFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}"
+        targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}" [showSourceControls]="false"
+        [showTargetControls]="false" [sourceStyle]="{ height: '300px' }" [targetStyle]="{ height: '300px' }" [disabled]="soloLectura">
         <ng-template let-item pTemplate="item">
           <div>{{ item.label }}</div>
         </ng-template>

@@ -55,14 +55,15 @@
                 <ng-template pTemplate="emptymessage" let-columns>
                     <tr>
                         <td [attr.colspan]="columns.length +1">
-                            No hay resultados.
+                            {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="paginatorleft">
                     <div class="mostrar d-flex text-right justify-content-end">
-                        <label class="pr-3 registros-totales">Mostrando registros del {{tableModelos.first + 1}} al {{tableModelos.first + tableModelos.rows}}
-                            de un total de {{tableModelos.totalRecords}}</label>
+                        <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{tableModelos.first
+                            + 1}} al {{tableModelos.first + tableModelos.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{tableModelos.totalRecords}}</label>
 
                     </div>
                 </ng-template>
@@ -82,14 +83,14 @@
                 type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.enviar' | translate }}"></button>
             <button [disabled]="!selectedModelos || selectedModelos.length == 0" (click)="obtenerCamposDinamicos('descargar')" pButton
                 type="button" icon="fas fa-download" iconPos="left" label="{{'dialogo.boton.descargar' | translate }}"></button>
-            <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+            <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
         </div>
     </div>
 </div>
 <p-dialog [(visible)]="showValores" responsive="true" [draggable]="false" modal="modal" resizable="true" [minWidth]="850">
 
     <p-header>
-        <label>Valores</label>
+        <label>{{ 'header.consultas.informesYcomunicaciones.valores' | translate }}</label>
     </p-header>
     <div *ngIf="valores">
         <div class="form-row" *ngFor="let dato of valores">
