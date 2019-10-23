@@ -748,6 +748,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "justiciables",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: "documentacionEJG",
     component: DocumentacionEJGComponent,
     canActivate: [AuthGuard]
