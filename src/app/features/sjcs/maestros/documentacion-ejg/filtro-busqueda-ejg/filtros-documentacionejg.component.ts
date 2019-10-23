@@ -22,6 +22,7 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
   // partidoJudicial:string;
   msgs: any[] = [];
   filtros: DocumentacionEjgItem = new DocumentacionEjgItem();
+  filtroAux: DocumentacionEjgItem = new DocumentacionEjgItem();
   jurisdicciones: any[] = [];
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
@@ -57,7 +58,6 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
   }
 
   isBuscar() {
-    this.persistenceService.setFiltros(this.filtros);
     if ((this.filtros.abreviaturaDoc == undefined || this.filtros.abreviaturaDoc == "" || this.filtros.abreviaturaDoc.trim().length < 3)
       && (this.filtros.abreviaturaTipoDoc == undefined || this.filtros.abreviaturaTipoDoc == "" || this.filtros.abreviaturaTipoDoc.trim().length < 3)
       && (this.filtros.descripcionDoc == undefined || this.filtros.descripcionDoc == "" || this.filtros.descripcionDoc.trim().length < 3)
@@ -79,6 +79,9 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
       if (this.filtros.descripcionTipoDoc != undefined && this.filtros.descripcionTipoDoc != null) {
         this.filtros.descripcionTipoDoc = this.filtros.descripcionTipoDoc.trim();
       }
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux();
       this.busqueda.emit(false);
     }
   }

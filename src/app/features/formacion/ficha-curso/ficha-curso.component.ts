@@ -276,6 +276,7 @@ export class FichaCursoComponent implements OnInit {
 
   ngOnInit() {
 
+    sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
@@ -904,9 +905,15 @@ export class FichaCursoComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        this.showFail(
-          this.translateService.instant("general.message.error.realiza.accion")
-        );
+
+        if (JSON.parse(err.error).error.description != null) {
+          this.showFail(JSON.parse(err.error).error.description);
+        } else {
+          this.showFail(
+            this.translateService.instant("general.message.error.realiza.accion")
+          );
+        }
+
       },
       () => {
         this.progressSpinner = false;
@@ -1124,7 +1131,7 @@ export class FichaCursoComponent implements OnInit {
     if (this.activacionEditar) {
       this.fechaInicioInscripcion.calendar.overlayVisible = false;
 
-      let mess = "¿Desea acceder a editar la fecha en el evento asociado?";
+      let mess = this.translateService.instant("formacion.fichaCurso.mensaje.editar.fechaInscripcion");
 
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
@@ -1175,7 +1182,7 @@ export class FichaCursoComponent implements OnInit {
     if (this.activacionEditar) {
       this.fechaFinInscripcion.calendar.overlayVisible = false;
 
-      let mess = "¿Desea acceder a editar la fecha en el evento asociado?";
+      let mess = this.translateService.instant("formacion.fichaCurso.mensaje.editar.fechaInscripcion");
 
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
@@ -3007,8 +3014,8 @@ export class FichaCursoComponent implements OnInit {
       .postDownloadFiles("fichaCursos_downloadTemplateFile", this.curso)
       .subscribe(
         data => {
-            const blob = new Blob([data], { type: "text/csv" });
-            saveAs(blob, "PlantillaInscripciones.xls");
+          const blob = new Blob([data], { type: "text/csv" });
+          saveAs(blob, "PlantillaInscripciones.xls");
           this.progressSpinner = false;
 
         },

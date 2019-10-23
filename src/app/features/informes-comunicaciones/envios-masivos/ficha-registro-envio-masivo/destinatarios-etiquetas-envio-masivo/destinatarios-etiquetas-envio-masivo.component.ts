@@ -3,6 +3,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { DataTable } from "primeng/datatable";
 import { DestinatariosEnviosMasivosItem } from '../../../../../models/DestinatariosEnviosMasivosItem';
 import { Message, ConfirmationService } from "primeng/components/common/api";
+import { TranslateService } from '../../../../../commons/translate';
 
 @Component({
   selector: 'app-destinatarios-etiquetas-envio-masivo',
@@ -57,7 +58,8 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   constructor(
     // private router: Router,
     // private translateService: TranslateService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -193,14 +195,14 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
       .post("enviosMasivos_guardarEtiquetas", objEtiquetas)
       .subscribe(
         n => {
-          this.showSuccess('Se han guardado las etiquetas correctamente');
+          this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.guardar.etiquetas.ok"));
           this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
           this.progressSpinner = false;
 
         },
         err => {
-          this.showSuccess('Error al guardar las etiquetas');
+          this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.error.guardar.etiquetas"));
           console.log(err);
           this.progressSpinner = false;
 

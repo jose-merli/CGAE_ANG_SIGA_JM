@@ -231,7 +231,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )

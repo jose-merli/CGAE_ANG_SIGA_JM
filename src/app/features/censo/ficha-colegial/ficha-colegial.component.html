@@ -3,7 +3,7 @@
   <i class="fa fa-info-circle pr-2"></i>
   <div class="d-inline-block">
     <div>
-      <span *ngIf="emptyLoadFichaColegial" class="pr-2 text-left">No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado</span>
+      <span *ngIf="emptyLoadFichaColegial" class="pr-2 text-left">{{ 'censo.fichaColegial.mensaje.noCargaDatos.noColegiado' | translate }}</span>
       <span *ngIf="publicarDatosContacto" class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
       <span *ngIf="solicitudModificacionMens != undefined" class="pr-2 text-left">{{solicitudModificacionMens}}</span>
 
@@ -145,7 +145,7 @@
         <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
           <div class="positionUpload img-colegiado text-center my-0 mx-auto">
             <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona"  />
+            <img *ngIf="existeImagen" [src]="imagenPersona" />
             <p-fileUpload #fubauto chooseLabel="" class=" edit my-0 mx-auto main-button" [(disabled)]="(tarjetaGenerales == 2) || disabledAction"
               mode="basic" name="file" auto="true" accept="image/*" (onSelect)="uploadImage($event)" auto="true">
             </p-fileUpload>
@@ -159,7 +159,7 @@
               <input [(ngModel)]="generalBody.nif" type="text" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledNif || disabledAction"
                 class="form-control" (ngModelChange)="compruebaDNI()" pInputText />
               <div *ngIf="identificacionValida == false">
-                <label class="labelError">{{ "El documento es inválido" }}
+                <label class="labelError">{{ "censo.fichaColegial.mensaje.documento.noValido" | translate }}
                 </label>
               </div>
             </div>
@@ -194,8 +194,9 @@
               <!--
                 <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" [maxLength]="99" pInputText>
               -->
-              <p-dropdown class="select-form" [(ngModel)]="generalBody.sexo" [options]="comboSexo" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
-                (onChange)="activacionGuardarGenerales()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody.sexo" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [options]="comboSexo" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
+                [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
             </div>
 
             <!--
@@ -233,7 +234,7 @@
               </label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalTratamiento"
                 [(ngModel)]="generalBody.idTratamiento" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
-                (onChange)="activacionGuardarGenerales()"></p-dropdown>
+                [showClear]="true" (onChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosGenerales.literal.nacido" | translate }}
@@ -246,7 +247,7 @@
               </label>
               <p-dropdown class="select-form" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idEstadoCivil" [(disabled)]="isLetrado || (tarjetaGenerales == 2)  || disabledAction"
-                [options]="generalEstadoCivil"></p-dropdown>
+                [showClear]="true" [options]="generalEstadoCivil"></p-dropdown>
             </div>
 
             <div class="form-check col-lg-6 col-md-6">
@@ -332,7 +333,7 @@
               <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
               </label>
               <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
+                placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "censo.consultaDatosGenerales.literal.cuentaContable" | translate }}
@@ -418,7 +419,7 @@
               <span>{{ colegialesBody.colegioResultado }}</span>
             </label>
             <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}
-              <span>{{ estadoColegial }}</span>
+              <span>{{ colegialesBody.estadoColegial }}</span>
             </label>
             <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
               <span>{{ colegialesBody.numColegiado }}</span>
@@ -479,7 +480,8 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
               <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
-                [(ngModel)]="colegialesBody.idTiposSeguro" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
+                [(ngModel)]="colegialesBody.idTiposSeguro" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
               <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
@@ -627,11 +629,12 @@
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{ tableColegiales.first + 1 }} al {{ tableColegiales.first + tableColegiales.rows }}
-              de un total de {{ tableColegiales.totalRecords }}
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first +
+              1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{ tableColegiales.totalRecords }}
             </label>
 
-            <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedColegiales }}</label>
+            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales }}</label>
 
             <label>{{ "general.message.mostrar" | translate }}</label>
             <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
@@ -680,11 +683,12 @@
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{ tableColegiales.first + 1 }} al {{ tableColegiales.first + tableColegiales.rows }}
-              de un total de {{ tableColegiales.totalRecords }}
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first +
+              1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{ tableColegiales.totalRecords }}
             </label>
 
-            <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedColegiales }}</label>
+            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales }}</label>
 
             <label>{{ "general.message.mostrar" | translate }}</label>
             <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
@@ -767,11 +771,12 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tableColegiaciones.first + 1 }} al {{ tableColegiaciones.first + tableColegiaciones.rows
-                }} de un total de {{ tableColegiaciones.totalRecords }}
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiaciones.first
+                + 1 }} al {{ tableColegiaciones.first + tableColegiaciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{ tableColegiaciones.totalRecords }}
               </label>
               <!--
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
               -->
               <label>{{ "general.message.mostrar" | translate }}</label>
               <p-dropdown [(ngModel)]="selectedItemColegiaciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiaciones($event)"></p-dropdown>
@@ -844,10 +849,11 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tableCertificados.first + 1 }} al {{ tableCertificados.first + tableCertificados.rows
-                }} de un total de {{ tableCertificados.totalRecords }}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCertificados.first
+                + 1 }} al {{ tableCertificados.first + tableCertificados.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{ tableCertificados.totalRecords }}</label>
               <!--
-                <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
               -->
               <label>{{ "general.message.mostrar" | translate }}</label>
               <p-dropdown [(ngModel)]="selectedItemCertificados" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCertificados($event)"></p-dropdown>
@@ -914,8 +920,8 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{tableSanciones.first + 1}} al {{tableSanciones.first + tableSanciones.rows}} de
-                  un total de {{tableSanciones.totalRecords}}
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableSanciones.first
+                  + 1}} al {{tableSanciones.first + tableSanciones.rows}} de un total de {{tableSanciones.totalRecords}}
                 </label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
                 <p-dropdown [(ngModel)]="selectedItemSanciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSanciones($event)"></p-dropdown>
@@ -982,8 +988,9 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tableSociedades.first + 1 }} al {{ tableSociedades.first + tableSociedades.rows
-                }} de un total de {{ tableSociedades.totalRecords }}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableSociedades.first
+                + 1 }} al {{ tableSociedades.first + tableSociedades.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{ tableSociedades.totalRecords }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
               <p-dropdown [(ngModel)]="selectedItemSociedades" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSociedades($event)"></p-dropdown>
               <label class="pl-1">
@@ -1069,10 +1076,11 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tableCurriculares.first + 1 }} al {{ tableCurriculares.first + tableCurriculares.rows
-                }} de un total de {{ tableCurriculares.totalRecords }}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCurriculares.first
+                + 1 }} al {{ tableCurriculares.first + tableCurriculares.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{ tableCurriculares.totalRecords }}</label>
 
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelectedCurriculares}}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelectedCurriculares}}</label>
 
               <label>{{ "general.message.mostrar" | translate }}</label>
               <p-dropdown [(ngModel)]="selectedItemCurriculares" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCurriculares($event)"></p-dropdown>
@@ -1080,7 +1088,7 @@
                 {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
               </label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAllCurriculares()" [(ngModel)]="selectAllCurriculares" binary="true" label="Seleccionar todo"
+                <p-checkbox (onChange)="onChangeSelectAllCurriculares()" [(ngModel)]="selectAllCurriculares" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
 
@@ -1183,9 +1191,12 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tableDirecciones.first + 1 }} al {{ tableDirecciones.first + tableDirecciones.rows
-                }} de un total de {{ tableDirecciones.totalRecords }}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedDirecciones }}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableDirecciones.first
+                + 1 }} al {{ tableDirecciones.first + tableDirecciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{ tableDirecciones.totalRecords }}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedDirecciones
+                }}
+              </label>
               <label>{{ "general.message.mostrar" | translate }}</label>
               <p-dropdown [(ngModel)]="selectedItemDirecciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesDirecciones($event)"></p-dropdown>
               <label class="pl-1">
@@ -1194,7 +1205,8 @@
               <div class="ml-3 selectAll">
                 <p-checkbox (onChange)="
                     onChangeSelectAllDirecciones()
-                  " [(ngModel)]="selectAllDirecciones" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                  " [(ngModel)]="selectAllDirecciones" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                  name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleDirecciones }" (click)="
                   isSelectMultipleDirecciones();
@@ -1291,16 +1303,17 @@
           </p-column>
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{ tableBancarios.first + 1 }} al {{ tableBancarios.first + tableBancarios.rows }}
-                de un total de {{ tableBancarios.totalRecords }}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedBancarios }}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableBancarios.first
+                + 1 }} al {{ tableBancarios.first + tableBancarios.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{ tableBancarios.totalRecords }}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedBancarios }}</label>
               <label>{{ "general.message.mostrar" | translate }}</label>
               <p-dropdown [(ngModel)]="selectedItemBancarios" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesBancarios($event)"></p-dropdown>
               <label class="pl-1">
                 {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
               </label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="Seleccionar todo"
+                <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleBancarios }" (click)="
@@ -1368,9 +1381,9 @@
         <div class="row">
 
           <p-dataTable emptyMessage="{{ messageRegtel }}" [(selection)]="selectedDatosRegtel" [responsive]="true" selectionMode="single"
-            dataKey="id" #tableRegTel class="tabla-listado" [value]="bodyRegTel" [sortOrder]="0" [sortField]="fechaModificacion"  [paginator]="activarPaginacionRegTel()"
-            (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)" (onRowUnselect)=" onRowDesselectedRegTel()" paginatorPosition="both"
-            [rows]="selectedItemRegtel" pageLinks="4">
+            dataKey="id" #tableRegTel class="tabla-listado" [value]="bodyRegTel" [sortOrder]="0" [sortField]="fechaModificacion"
+            [paginator]="activarPaginacionRegTel()" (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)" (onRowUnselect)=" onRowDesselectedRegTel()"
+            paginatorPosition="both" [rows]="selectedItemRegtel" pageLinks="4">
             <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
               <ng-template let-datoH="rowData" pTemplate="body">
@@ -1389,16 +1402,16 @@
                   <span>{{ datoH[col.field] }}</span>
                 </div>
               </ng-template>
-              <ng-template  *ngIf="col.field == 'fechaModificacion'" let-datoH="rowData" pTemplate="body"> 
+              <ng-template *ngIf="col.field == 'fechaModificacion'" let-datoH="rowData" pTemplate="body">
                 <span *ngIf="!setItalicRegtel(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
                 <span *ngIf="setItalicRegtel(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
-              </ng-template >
+              </ng-template>
             </p-column>
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">Mostrando registros del {{ tableRegTel.first + 1 }} al {{ tableRegTel.first + tableRegTel.rows }} de un total
-                  de {{ tableRegTel.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">Seleccionados: {{ numSelectedRegtel }}</label>
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableRegTel.first +
+                  1 }} al {{ tableRegTel.first + tableRegTel.rows }} de un total de {{ tableRegTel.totalRecords }}</label>
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedRegtel }}</label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
                 <p-dropdown [(ngModel)]="selectedItemRegtel" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesRegtel($event)"></p-dropdown>
                 <label class="pl-1">
@@ -1434,8 +1447,7 @@
       <div *ngIf="!fichaMutua" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            <i class="fa fa-user icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -1473,7 +1485,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Mutualidad de la abogacía</label>
+            <label class="mr-auto title-ficha">{{ 'censo.fichaColegial.mutualidadAbogacia.literal.titulo' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>
@@ -1632,7 +1644,7 @@
 
 
 
-    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
     <p-footer>
       <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
       <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
@@ -1665,7 +1677,8 @@
   </p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425" #bajaInscripcionesUpdate>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
+    #bajaInscripcionesUpdate>
     <p-footer>
       <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
       <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
@@ -1673,7 +1686,8 @@
   </p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425" #bajaInscripcionesDelete>
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
+    #bajaInscripcionesDelete>
     <p-footer>
       <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
       <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>

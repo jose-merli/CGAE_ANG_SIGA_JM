@@ -59,6 +59,7 @@ export class DatosColegiadosItem {
   subTipoCV2: string;
 
   noAparecerRedAbogacia: string;
+  noAparecerRedAbogacia2: string;
   colegioResultado: string;
 
   //Filtro Busqueda de colegios

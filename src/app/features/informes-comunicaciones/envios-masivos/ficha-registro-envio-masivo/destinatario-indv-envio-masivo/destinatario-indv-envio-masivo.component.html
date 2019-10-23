@@ -13,7 +13,7 @@
             <label class="mr-auto title-ficha">{{'facturacion.asignacionConceptos.destIndividuales.cabecera' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Nº destinatarios individuales:
+            <label>Nº {{'facturacion.asignacionConceptos.destIndividuales.cabecera' | translate}}:
               <span *ngIf="datos">{{datos.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -91,7 +91,7 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button [disabled]="selectMultiple || selectAll || noEditar" (click)="addDestinatario()" pButton type="button" icon="fa fa-plus"
-          iconPos="left" label="Añadir"></button>
+          iconPos="left" label="{{ 'general.boton.anadir' | translate }}"></button>
         <!-- <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button> -->
         <button [disabled]="selectedDatos =='' || noEditar" (click)="desasociar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"

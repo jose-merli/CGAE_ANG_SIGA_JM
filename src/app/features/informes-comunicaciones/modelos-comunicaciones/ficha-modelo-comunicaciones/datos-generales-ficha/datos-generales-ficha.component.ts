@@ -218,18 +218,26 @@ export class DatosGeneralesFichaComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
 
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (this.institucionActual != '2000' && sessionStorage.getItem("permisoModoLectura") == 'true') {
+        this.soloLectura = true;
+      }
+
+      // El modo de la pantalla viene por las restricción del tipo de colegio y/o campo genérico 
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
       } else {
 
         this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
-          if (
-            sessionStorage.getItem("soloLectura") != null &&
-            sessionStorage.getItem("soloLectura") != undefined &&
-            sessionStorage.getItem("soloLectura") == "true"
-          ) {
-            this.soloLectura = true;
+        if (this.bodyModelo != undefined && this.bodyModelo != null) {
+          if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
+            if (
+              sessionStorage.getItem("soloLectura") != null &&
+              sessionStorage.getItem("soloLectura") != undefined &&
+              sessionStorage.getItem("soloLectura") == "true"
+            ) {
+              this.soloLectura = true;
+            }
           }
         }
       }
@@ -273,7 +281,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
         } else {
           this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
-        this.colegios.unshift({ label: "", value: "" });
+        // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -366,7 +374,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
       data => {
         this.plantillas = data.combooItems;
-        this.plantillas.unshift({ label: "Seleccionar", value: "" });
+        // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);

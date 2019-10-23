@@ -78,7 +78,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-
+      //this.persistenceService.setHistorico(this.historico);
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestiondocumentacionejg"]);
     } else {

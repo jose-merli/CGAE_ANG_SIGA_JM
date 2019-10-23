@@ -475,7 +475,7 @@ label {
   display: flex;
   justify-content: start;
   align-items: center;
-  position: absolute;
+  position: relative;
   background: white;
   bottom: 0;
   width: 100%;
@@ -763,7 +763,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 //tree permisos
 
 .permisos-tree {
-  padding-bottom: 4rem;
+  padding-bottom: 1rem; // había 4rem
   .ui-tree
     .ui-treenode-content.ui-treenode-selectable
     .ui-treenode-label:not(.ui-state-highlight):hover {

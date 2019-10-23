@@ -35,6 +35,8 @@ export class GestionDocumentosComponent implements OnInit {
   datosInicial;
   body;
   selectionMode: string = "multiple";
+  @Input() modoEdicion: boolean = false;
+  @Input() idTipoDoc;
   //Resultados de la busqueda
   @Input() datos;
   @ViewChild("tabla") tabla;
@@ -55,6 +57,7 @@ export class GestionDocumentosComponent implements OnInit {
     // this.dato = this.persistenceService.getDatos()
     if (this.datos != null && this.datos != undefined) {
       //UPDATE
+      this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
 

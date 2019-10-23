@@ -78,6 +78,9 @@ export class MenuComponent implements OnInit {
         if (ruta == "fichaColegial") {
           sessionStorage.setItem("fichaColegialByMenu", "true");
         } else {
+          if (ruta == "modelosComunicaciones") {
+            sessionStorage.setItem("esMenu", "true");
+          }
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 

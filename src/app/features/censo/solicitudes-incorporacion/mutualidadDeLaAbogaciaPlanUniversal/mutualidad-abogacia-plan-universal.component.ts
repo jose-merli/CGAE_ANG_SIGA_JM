@@ -640,14 +640,14 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.poblaciones = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
       }
     } else {
       this.poblaciones = [];
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
   obtenerProvinciaDesc(e) {
@@ -826,7 +826,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
