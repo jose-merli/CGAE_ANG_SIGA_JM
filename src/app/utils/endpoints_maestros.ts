@@ -1,4 +1,5 @@
 export let endpoints_maestros: any = {
+
     fichaZonas_getPartidosJudiciales: "maestros/fichaZonas/partidosJudiciales",
     gestionZonas_searchZones: "maestros/gestionZonas/searchZones",
     fichaZonas_createZones: "maestros/fichaZonas/createZones",
@@ -76,6 +77,21 @@ export let endpoints_maestros: any = {
     gestionPrisiones_createPrision: "maestros/gestionPrisiones/createPrision",
     gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
 
+    //Documentacion EJG
+    busquedaDocumentacionEjg_searchDocumento: "maestros/busquedaDocumentacionEjg/searchDocumento",
+    //busquedaDocumentacionEjg_searchTipoDocumento: "maestros/busquedaDocumentacionEjg/searchTipoDocumento",
+    busquedaDocumentacionEjg_createDocumento: "maestros/busquedaDocumentacionEjg/createDocumentacionejg",
+    busquedaDocumentacionEjg_updateDocumento: "maestros/busquedaDocumentacionEjg/updateDocumentacionejg",
+    busquedaDocumentacionEjg_deleteTipoDoc: "maestros/busquedaDocumentacionEjg/deleteTipoDoc",
+    busquedaDocumentacionEjg_searchDocumentos: "maestros/busquedaDocumentacionEjg/searchDocumentos",
+    gestionDocumentacionEjg_deleteDoc: "maestros/gestionDocumentacionEjg/deleteDoc",
+    gestionDocumentacionEjg_createTipoDoc: "maestros/gestionDocumentacionEjg/createTipoDoc",
+    gestionDocumentacionEjg_updateTipoDoc: "maestros/gestionDocumentacionEjg/updateTipoDoc",
+    gestionDocumentacionEjg_createDoc: "maestros/gestionDocumentacionEjg/createDoc",
+    gestionDocumentacionEjg_updateDoc: "maestros/gestionDocumentacionEjg/updateDoc",
+
+
+
 
     //Fundamentos calificacion
     busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
@@ -119,13 +135,14 @@ export let endpoints_maestros: any = {
     busquedaRetencionesIRPF_createRetencionesIRPF: "maestros/gestionRetencionesIRPF/createRetencionIRPF",
     busquedaRetencionesIRPF_updateRetencionesIRPF: "maestros/gestionRetencionesIRPF/updateRetencionesIRPF",
 
-
-
     gestionPartidosJudi_busquedaPartidosJudi: "maestros/gestionPartidosJudi/searchoPartidosJudi",
     deletePartidosJudi_deletePartidosJudi: "maestros/deletePartidosJudi/deletePartidosJudi",
     gestionPartidosJudi_ComboPartidosJudi: "maestros/gestionPartidosJudi/ComboPartidosJudi",
     gestionPartidosJudi_createPartidosJudi: "maestros/gestionPartidosJudi/createPartidosJudi",
 
+    calendarioLaboralAgenda_searchFestivos: "calendarioLaboralAgenda/searchFestivos",
+    calendarioLaboralAgenda_deleteFestivos: "calendarioLaboralAgenda/deleteFestivos",
+    calendarioLaboralAgenda_activateFestivos: "calendarioLaboralAgenda/activateFestivos",
 
     gestionTiposAsistencia_busquedaTiposAsistencia: "maestros/gestionTiposAsistencia/busquedaTiposAsistencia",
     gestionTiposAsistencia_ComboTiposAsistencia: "maestros/gestionTiposAsistencia/ComboTiposAsistencia",

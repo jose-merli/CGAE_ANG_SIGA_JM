@@ -8,8 +8,10 @@ export class EventoItem {
 
   start: Date;
   end: Date;
+  fechaInicioOld: Date;
   lugar: string;
   descripcion: string;
+  descripcionOld: string;
   recursos: string;
   idTipoCalendario: string;
   tipoCalendario: string;
@@ -38,6 +40,10 @@ export class EventoItem {
 
   formadores: string;
   idEventoOriginal: string;
+  anio: string;
+  fiestaLocalPartido: string;
+  historico: boolean;
+  nombre: string;
 
   constructor() { }
 }

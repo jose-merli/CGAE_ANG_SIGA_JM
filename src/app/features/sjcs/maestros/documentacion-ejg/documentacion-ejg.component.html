@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <!-- <app-filtros-documentacionejg (busqueda)="searchModulos($event)" [permisos]="permisoEscritura"></app-filtros-documentacionejg> -->
-    <!-- <app-tabla-modulos *ngIf="buscar" [datos]="datos" (searchModulos)="searchModulos($event)"></app-tabla-modulos> -->
+    <app-filtros-documentacionejg (busqueda)="searchModulos($event)"></app-filtros-documentacionejg>
+    <app-tabla-documentacionejg *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="searchModulos($event)"></app-tabla-documentacionejg>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

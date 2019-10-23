@@ -19,13 +19,16 @@ import { BusquedaPrisionesComponent } from './prisiones/busqueda-prisiones/busqu
 import { GestionPrisionesComponent } from './prisiones/gestion-prisiones/gestion-prisiones.component';
 import { ComisariasComponent } from './comisarias/comisarias/comisarias.component';
 import { GestionComisariasComponent } from './comisarias/comisarias/gestion-comisarias/gestion-comisarias.component';
+import { BusquedaCalendarioAgendaLaboralComponent } from './calendario-laboral-agenda/busqueda-calendario-agenda-laboral/busqueda-calendario-agenda-laboral.component';
 import { TiposAsistenciaComponent } from './tiposAsistencia/tiposAsistencia.component';
 import { BusquedaProcuradoresComponent } from './procuradores/busqueda-procuradores/busqueda-procuradores.component';
 import { GestionProcuradoresComponent } from './procuradores/busqueda-procuradores/gestion-procuradores/gestion-procuradores.component';
+import { GestionDocumentacionejgComponent } from './documentacion-ejg/gestion-documentacionejg/gestion-documentacionejg.component';
 import { TiposActuacionComponent } from './tiposActuacion/tiposActuacion.component';
 import { DestinatariosRetencionesComponent } from './destinatarios-retenciones/destinatarios-retenciones.component';
 import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
 import { RetencionesIRPFComponent } from './retenciones-IRPF/retenciones-IRPF.component';
+import { DocumentacionEJGComponent } from './documentacion-ejg/documentacion-ejg.component';
 
 const routesMaestros: Routes = [
   {
@@ -118,6 +121,11 @@ const routesMaestros: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "calendarioLaboralAgenda",
+    component: BusquedaCalendarioAgendaLaboralComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "gestionProcuradores",
     component: GestionProcuradoresComponent,
     canActivate: [AuthGuard]
@@ -128,6 +136,15 @@ const routesMaestros: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "documentacionEJG",
+    component: DocumentacionEJGComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestiondocumentacionejg",
+    component: GestionDocumentacionejgComponent,
+    canActivate: [AuthGuard]
+  }, {
     path: "tiposActuacion",
     component: TiposActuacionComponent,
     canActivate: [AuthGuard]
@@ -143,12 +160,10 @@ const routesMaestros: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: "documentacionEJG",
+    path: "retencionesIRPF",
     component: RetencionesIRPFComponent,
     canActivate: [AuthGuard]
   }
-
-
 ];
 
 @NgModule({

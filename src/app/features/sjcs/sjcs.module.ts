@@ -20,12 +20,14 @@ import { JwtInterceptor } from '../../_interceptor/jwt.interceptor';
 import { CookieService } from 'ngx-cookie-service';
 import { TranslatePipe } from '../../commons/translate';
 import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
+import { JusticiablesModule } from './justiciables/justiciables.module';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     MaestrosModule,
+    JusticiablesModule,
     routingSjcs,
 
   ],
