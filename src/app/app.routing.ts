@@ -235,6 +235,7 @@ import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicac
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
+import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -719,7 +720,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoComisarias",
-    component: MantenimientoComisariasComponent,
+    component: ComisariasComponent,
     canActivate: [AuthGuard]
   },
   {
