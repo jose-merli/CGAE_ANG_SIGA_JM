@@ -4,6 +4,7 @@ import { BusquedaJusticiablesComponent } from './busqueda-justiciables/busqueda-
 import { FiltroJusticiablesComponent } from './busqueda-justiciables/filtro-justiciables/filtro-justiciables.component';
 import { GestionJusticiablesComponent } from './gestion-justiciables/gestion-justiciables.component';
 import { DatosGeneralesComponent } from './gestion-justiciables/datos-generales/datos-generales.component';
+import { DatosSolicitudComponent } from './gestion-justiciables/datos-solicitud/datos-solicitud.component';
 import { TablaJusticiablesComponent } from './busqueda-justiciables/tabla-justiciables/tabla-justiciables.component';
 import { DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, GrowlModule, MenubarModule, MultiSelectModule, ConfirmationService } from '../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../node_modules/@angular/forms';
@@ -49,7 +50,8 @@ import { FechaModule } from '../../../commons/fecha/fecha.module';
     FiltroJusticiablesComponent,
     TablaJusticiablesComponent,
     GestionJusticiablesComponent,
-    DatosGeneralesComponent
+    DatosGeneralesComponent,
+    DatosSolicitudComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

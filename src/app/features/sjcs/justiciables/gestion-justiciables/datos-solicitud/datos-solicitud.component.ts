@@ -6,11 +6,11 @@ import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-datos-generales',
-  templateUrl: './datos-generales.component.html',
-  styleUrls: ['./datos-generales.component.scss']
+  selector: 'app-datos-solicitud',
+  templateUrl: './datos-solicitud.component.html',
+  styleUrls: ['./datos-solicitud.component.scss']
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosSolicitudComponent implements OnInit {
 
   body: AreasItem = new AreasItem();
   bodyInicial;
