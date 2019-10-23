@@ -96,6 +96,12 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
 
   callSaveService(url) {
 
+    if (this.body.codigo != undefined && this.body.codigo != null)
+      this.body.codigo = this.body.codigo.trim();
+
+    if (this.body.textoEnPlantilla != undefined && this.body.textoEnPlantilla != null)
+      this.body.textoEnPlantilla = this.body.textoEnPlantilla.trim();
+
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -150,18 +156,10 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
     });
   }
 
+
   disabledSave() {
-    if (this.body.descripcionFundamento != undefined || this.body.codigo != undefined)
-      this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
-    this.body.codigo = this.body.codigo.trim();
-    if (this.body.textoEnPlantilla != undefined)
-      this.body.textoEnPlantilla = this.body.textoEnPlantilla.trim();
-    if (this.body.descripcionFundamento != undefined)
-      this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
-    if (this.body.codigo != undefined)
-      this.body.codigo = this.body.codigo.trim();
-    if (!this.historico && (this.body.idTipoDictamenEjg != undefined &&
-      this.body.idTipoDictamenEjg.trim() != "" && this.body.descripcionFundamento != null && this.body.descripcionFundamento.trim() != ""
+    if (!this.historico && ((this.body.idTipoDictamenEjg != undefined && this.body.idTipoDictamenEjg != null && this.body.idTipoDictamenEjg.trim() != "") &&
+      (this.body.descripcionFundamento != undefined && this.body.descripcionFundamento != null && this.body.descripcionFundamento.trim() != "")
     ) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
