@@ -18,8 +18,12 @@ export class EdicionModulosComponent implements OnInit {
   modoEdicion: boolean = false;
   msgs;
   jurisdicciones;
+  procedimientos;
+  textFilter;
   showTarjeta: boolean = true;
   esComa: boolean = false;
+  textSelected: String = "{label}";
+
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   @ViewChild("importe") importe;
@@ -31,6 +35,7 @@ export class EdicionModulosComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.textFilter = this.translateService.instant("general.boton.seleccionar");
     if (this.modulosItem != undefined) {
       this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
       if (this.modulosItem.fechadesdevigor != undefined) {
@@ -43,22 +48,65 @@ export class EdicionModulosComponent implements OnInit {
       } else {
         this.modulosItem.fechahastavigor = undefined;
       }
-      this.body = this.modulosItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
+      if (this.modulosItem.idjurisdiccion != undefined) {
+        this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + this.modulosItem.idjurisdiccion).subscribe(
+          n => {
+            this.procedimientos = n.combooItems;
+            /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+        para poder filtrar el dato con o sin estos caracteres*/
+            this.procedimientos.map(e => {
+              let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+              let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+              let i;
+              let x;
+              for (i = 0; i < e.label.length; i++) {
+                if ((x = accents.indexOf(e.label[i])) != -1) {
+                  e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                  return e.labelSinTilde;
+                }
+              }
+            });
+
+          },
+          err => {
+            console.log(err);
+          }, () => {
+            if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
+              this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
+            } else {
+              this.modulosItem.procedimientosReal = [];
+            }
+            this.body = this.modulosItem;
+            this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
+            if (this.body.idProcedimiento == undefined) {
+              this.modoEdicion = false;
+            } else {
+              this.modoEdicion = true;
+            }
+          }
+        );
+      } else {
+        this.body = this.modulosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
+        if (this.body.idProcedimiento == undefined) {
+          this.modoEdicion = false;
+        } else {
+          this.modoEdicion = true;
+        }
+      }
+
     } else {
       this.modulosItem = new ModulosItem();
       this.modulosItem.fechadesdevigor = undefined;
       this.modulosItem.fechahastavigor = undefined;
     }
-    if (this.body.idProcedimiento == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+
     this.arreglaChecks();
 
   }
   ngOnInit() {
+
+    this.textFilter = this.translateService.instant("general.boton.seleccionar");
     if (this.modulosItem != undefined) {
       this.body = this.modulosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
@@ -71,6 +119,10 @@ export class EdicionModulosComponent implements OnInit {
     } else {
       this.modoEdicion = true;
     }
+    this.getCombos();
+  }
+
+  getCombos() {
     this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
       n => {
         this.jurisdicciones = n.combooItems;
@@ -95,8 +147,61 @@ export class EdicionModulosComponent implements OnInit {
         console.log(err);
       }
     );
+
   }
 
+  onChangeJurisdiccion(evento) {
+    this.modulosItem.procedimientosReal = [];
+    this.modulosItem.procedimientos = "";
+    this.getProcedimientos(evento.value);
+  }
+
+  getProcedimientos(id) {
+
+    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + id).subscribe(
+      n => {
+        this.procedimientos = n.combooItems;
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.procedimientos.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
+          this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
+          // seleccionados.forEach(element => {
+          //   seleccionadosFinales.push(this.procedimientos.find(x => x.value == element));
+          // });
+          // this.modulosItem.procedimientosReal = seleccionados;
+        } else {
+          this.modulosItem.procedimientosReal = [];
+        }
+      }
+    );
+
+
+  }
+
+  disableJurisdiccion() {
+    if (this.modulosItem.procedimientosReal != undefined && this.modulosItem.procedimientosReal.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   transformaFecha(fecha) {
     if (fecha != null) {
@@ -147,6 +252,9 @@ export class EdicionModulosComponent implements OnInit {
 
   rest() {
     if (this.modoEdicion) {
+      if (this.modulosItem.idjurisdiccion != undefined) {
+        this.getProcedimientos(this.modulosItem.idjurisdiccion);
+      }
       if (this.bodyInicial != undefined) this.modulosItem = JSON.parse(JSON.stringify(this.bodyInicial));
       this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
       this.modulosItem.fechadesdevigor = this.transformaFecha(this.modulosItem.fechadesdevigor);
@@ -158,6 +266,15 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   save() {
+    if (this.modulosItem.procedimientosReal != undefined) {
+      let procedimientos = "";
+      this.modulosItem.procedimientos = "";
+      for (let i in this.modulosItem.procedimientosReal) {
+        this.modulosItem.procedimientos += "," + this.modulosItem.procedimientosReal[i];
+      }
+      this.modulosItem.procedimientos = this.modulosItem.procedimientos.substring(1, this.modulosItem.procedimientos.length);
+    }
+
     this.guardarChecks();
     this.progressSpinner = true;
     let url = "";
@@ -227,6 +344,8 @@ export class EdicionModulosComponent implements OnInit {
       () => {
         this.progressSpinner = false;
         this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
+        this.body = this.modulosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.modulosItem));
       }
     );
 
@@ -254,11 +373,10 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.modulosItem.nombre != undefined || this.modulosItem.importe != undefined || this.modulosItem.codigo != undefined
-      || this.modulosItem.codigoext != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
-    this.modulosItem.importe = this.modulosItem.importe.trim();
-    this.modulosItem.codigo = this.modulosItem.codigo.trim();
-    this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
+    if (this.modulosItem.nombre != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
+    if (this.modulosItem.importe != undefined) this.modulosItem.importe = this.modulosItem.importe.trim();
+    if (this.modulosItem.codigo != undefined) this.modulosItem.codigo = this.modulosItem.codigo.trim();
+    if (this.modulosItem.codigoext != undefined) this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
 
     if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.nombre != "" &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&

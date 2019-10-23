@@ -49,6 +49,7 @@ export let endpoints_maestros: any = {
     gestionFundamentosResolucion_createFundamentoResolucion: "maestros/gestionFundamentosResolucion/createFundamentoResolucion",
     gestionFundamentosResolucion_updateFundamentoResolucion: "maestros/gestionFundamentosResolucion/updateFundamentoResolucion",
 
+    // Módulos y bases de compensación
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
     modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
     modulosybasesdecompensacion_searchAcreditaciones: "maestros/modulosybasesdecompensacion/searchAcreditaciones",
@@ -59,7 +60,9 @@ export let endpoints_maestros: any = {
     modulosybasesdecompensacion_deleteAcreditacion: "maestros/modulosybasesdecompensacion/deleteAcreditacion",
     modulosybasesdecompensacion_updateAcreditacion: "maestros/modulosybasesdecompensacion/updateAcreditacion",
     modulosybasesdecompensacion_createAcreditacion: "maestros/modulosybasesdecompensacion/createAcreditacion",
+    modulosybasesdecompensacion_procedimientos: "maestros/modulosybasesdecompensacion/procedimientos",
 
+    // Gestion partidas presupuestarias
     gestionPartidasPres_searchPartidasPres: "maestros/gestionPartidasPres/searchPartidasPres",
     gestionPartidasPres_eliminatePartidasPres: "maestros/gestionPartidasPres/eliminatePartidasPres",
     gestionPartidasPres_updatePartidasPres: "maestros/gestionPartidasPres/updatePartidasPres",

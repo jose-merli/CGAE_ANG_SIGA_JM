@@ -84,6 +84,7 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
         this.buscar = true
         if (this.datos != undefined)
           this.datos.forEach(element => {
+            element.precio = element.importe.replace(".", ",");
             if (element.precio[0] == '.' || element.precio[0] == ',')
               element.precio = "0".concat(element.precio)
           });
