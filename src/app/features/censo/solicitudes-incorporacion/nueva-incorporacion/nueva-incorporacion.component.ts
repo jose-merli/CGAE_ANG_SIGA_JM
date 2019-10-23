@@ -109,6 +109,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   fax2Valido: boolean = true;
   mvlValido: boolean = true;
 
+  numColegiadoDuplicado: boolean = false;
+
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -384,14 +386,14 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (e.target.value && e.target.value !== null) {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.poblaciones = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
       }
     } else {
       this.poblaciones = [];
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
 
@@ -794,7 +796,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
@@ -949,7 +951,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.fechaIncorporacion != undefined) {
 
         this.isSave = false;
-        if (this.isGuardar()) {
+        if (this.isGuardar() || this.numColegiadoDuplicado) {
           this.guardar(false);
         }
 
@@ -1016,6 +1018,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
               } else {
                 this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
+                this.numColegiadoDuplicado = true;
                 this.progressSpinner = false;
               }
 
@@ -1160,6 +1163,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   guardar(back) {
     this.progressSpinner = true;
+    this.numColegiadoDuplicado = false;
 
     this.solicitudEditar.idEstado = this.estadoSolicitudSelected;
     this.solicitudEditar.idTipo = this.tipoSolicitudSelected;
@@ -1410,6 +1414,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.solicitudEditar.idTipoIdentificacion = "30";
       this.tipoIdentificacionSelected = "30";
       return true;
+
     } else {
       return false;
     }
@@ -1477,7 +1482,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.solicitudEditar.correoElectronico != null &&
         this.solicitudEditar.correoElectronico != undefined &&
         this.emailValido &&
-        this.numColegiadoDisponible != false &&
+        this.solicitudEditar.numColegiado != null &&
+        this.solicitudEditar.numColegiado != undefined &&
         this.tipoIdentificacionSelected != "" &&
         this.tipoIdentificacionSelected != undefined &&
         this.solicitudEditar.numeroIdentificacion != null &&

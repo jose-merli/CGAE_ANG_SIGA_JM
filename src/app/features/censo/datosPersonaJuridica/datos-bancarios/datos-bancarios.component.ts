@@ -80,24 +80,27 @@ export class DatosBancariosComponent implements OnInit {
     this.checkAcceso();
     this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
 
-    if (this.usuarioBody[0] != undefined) {
-      this.idPersona = this.usuarioBody[0].idPersona;
-      this.nif = this.usuarioBody[0].nif;
+    if (sessionStorage.getItem("nuevoRegistro") == null) {
+      if (this.usuarioBody[0] != undefined) {
+        this.idPersona = this.usuarioBody[0].idPersona;
+        this.nif = this.usuarioBody[0].nif;
 
-      this.body.idPersona = this.idPersona;
-      this.body.nifTitular = this.nif;
+        this.body.idPersona = this.idPersona;
+        this.body.nifTitular = this.nif;
 
-      this.cargarDatosBancarios();
-    }
-
-    this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
-      id => {
-        if (id !== null) {
-          this.idPersona = id;
-          this.cargarDatosBancarios();
-        }
+        this.cargarDatosBancarios();
       }
-    );
+
+
+      this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(
+        id => {
+          if (id !== null) {
+            this.idPersona = id;
+            this.cargarDatosBancarios();
+          }
+        }
+      );
+    }
 
     this.cols = [
       {
@@ -347,10 +350,9 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   abrirFicha() {
-    // si no se esta creando una nueva sociedad
+    // si no se esta creando una nueva sociedad  
     if (
-      (this.tarjeta == "3" || this.tarjeta == "2") &&
-      sessionStorage.getItem("crearnuevo") == null
+      (this.tarjeta == "3" || this.tarjeta == "2") && sessionStorage.getItem("nuevoRegistro") == null
     ) {
       this.openFicha = !this.openFicha;
     }

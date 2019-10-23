@@ -587,7 +587,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.body.idPoblacion == undefined) ||
           this.body.idPoblacion == "")
       ) {
-        this.showFail("Debe seleccionar una población");
+        this.showFail(this.translateService.instant("censo.datosDirecciones.mensaje.seleccionar.poblacion"));
         this.isDisabledPoblacion = false;
         this.isDisabledProvincia = true;
         this.checkbox.checked = false;
@@ -616,7 +616,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   guardar() {
     if (this.body.codigoPostal == null || this.body.codigoPostal == undefined) {
-      this.showFail("Debe especificar el Código Postal");
+      this.showFail(this.translateService.instant("censo.datosDirecciones.mensaje.especificar.codigoPostal"));
     } else {
 
       if (this.isNoColegiado) {
@@ -651,16 +651,16 @@ para poder filtrar el dato con o sin estos caracteres*/
     let idFindTipoDirCorreo = this.body.idTipoDireccion.findIndex(tipoDir => tipoDir == this.valorPreferenteCorreo);
 
     if (idFindTipoDirSMS != -1 && (this.body.movil == undefined || this.body.movil == "")) {
-      this.showInfo("Para el tipo Preferente SMS/BuroSMS es necesario rellenar el campo móvil");
+      this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.preferenteSMS"));
       return false;
     } else if (idFindTipoDirFax != -1 && (this.body.fax == undefined || this.body.fax == "")) {
-      this.showInfo("Para el tipo Preferente Fax es necesario rellenar el campo fax");
+      this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.preferenteFax"));
       return false;
     } else if (idFindTipoDirEmail != -1 && (this.body.correoElectronico == undefined || this.body.correoElectronico == "")) {
-      this.showInfo("Para el tipo Preferente Email es necesario rellenar el campo correo electrónico");
+      this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.preferenteEmail"));
       return false;
     } else if (idFindTipoDirTel != -1 && (this.body.telefono == undefined || this.body.telefono == "")) {
-      this.showInfo("Para el tipo Guardia es necesario rellenar el campo teléfono");
+      this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.guardia"));
       return false;
     } else if (idFindTipoDirCenso != -1 || idFindTipoDirFact != -1 || idFindTipoDirDes != -1 || idFindTipoDirTras != -1 || idFindTipoDirGuia != -1 || idFindTipoDirCorreo != -1) {
 
@@ -668,7 +668,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         if (this.body.domicilio == undefined || this.body.domicilio == "" || this.body.idPoblacion == undefined
           || this.body.idPoblacion == "" || this.body.codigoPostal == undefined || this.body.codigoPostal == ""
           || this.body.idProvincia == undefined || this.body.idProvincia == "") {
-          this.showInfo("Para el tipo dirección asignado es necesario rellenar el domicilio completo");
+          this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.domicilioCompleto"));
           return false;
         } else {
           return true;
@@ -676,13 +676,13 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else if (this.body.idPais != "191" && this.body.idPais != undefined) {
         if (this.body.domicilio == undefined || this.body.domicilio == "" || this.body.poblacionExtranjera == undefined ||
           this.body.poblacionExtranjera == "" || this.body.codigoPostal == undefined || this.body.codigoPostal == "") {
-          this.showInfo("Para el tipo dirección añadido es necesario rellenar el domicilio completo");
+          this.showInfo(this.translateService.instant("message.consultarDirecciones.direccion.anadida.campoObligatorio.domicilioCompleto"));
           return false;
         } else {
           return true;
         }
       } else {
-        this.showInfo("Para el tipo dirección añadido es necesario rellenar el domicilio completo");
+        this.showInfo(this.translateService.instant("message.consultarDirecciones.direccion.anadida.campoObligatorio.domicilioCompleto"));
         return false;
       }
     } else {
@@ -827,11 +827,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     let msg;
 
     if (this.tiposChangeUnSelected.length == 1) {
-      msg = "Es necesario disponer de una dirección de tipo " + this.tiposChangeUnSelected[0].label + " antes de guardar.";
+      msg = this.translateService.instant("message.consultarDirecciones.necesario.disponer.tipoDireccion") + this.tiposChangeUnSelected[0].label + this.translateService.instant("message.consultarDirecciones.antes.guardar");
       this.unSelectedTipoDir = true;
       this.showMessageTipos(msg);
     } else if (this.tiposChangeUnSelected.length > 1) {
-      msg = "Es necesario disponer de una dirección de tipo ";
+      msg = this.translateService.instant("message.consultarDirecciones.necesario.disponer.tipoDireccion");
 
       for (const key in this.tiposChangeUnSelected) {
         let x = key;
@@ -844,15 +844,15 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       }
 
-      msg += " antes de guardar";
+      msg += this.translateService.instant("message.consultarDirecciones.antes.guardar");
       this.unSelectedTipoDir = true;
       this.showMessageTipos(msg);
     } else if (this.tiposChangeSelected.length == 1) {
-      msg = "¿Desea mover el tipo " + this.tiposChangeSelected[0].label + " a esta dirección?";
+      msg = this.translateService.instant("message.consultarDirecciones.desea.mover.tipoDireccion") + this.tiposChangeSelected[0].label + this.translateService.instant("message.consultarDirecciones.esta.direccion");
       this.unSelectedTipoDir = false;
       this.showMessageTipos(msg);
     } else {
-      msg = "¿Desea mover los tipos ";
+      msg = this.translateService.instant("message.consultarDirecciones.desea.mover.tipoDireccion.plural");
 
       for (const key in this.tiposChangeSelected) {
         let x = key;
@@ -865,7 +865,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       }
 
-      msg += " a esta dirección?";
+      msg += this.translateService.instant("message.consultarDirecciones.esta.direccion");
       this.unSelectedTipoDir = false;
       this.showMessageTipos(msg);
     }
@@ -1182,7 +1182,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
@@ -1322,7 +1322,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   showInfo(mensaje: string) {
     this.displayAuditoria = false;
     this.msgs = [];
-    this.msgs.push({ severity: "error", summary: "Incorrecto", detail: mensaje });
+    this.msgs.push({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: mensaje });
   }
 
   backTo() {
@@ -1335,14 +1335,14 @@ para poder filtrar el dato con o sin estos caracteres*/
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
 
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
       }
     } else {
       this.comboPoblacion = [];
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
 

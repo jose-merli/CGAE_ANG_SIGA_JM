@@ -39,7 +39,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	clasesComunicaciones: any = [];
 	currentRoute: String;
 	selectedModelos: any = [];
-	consultasSearch: any ;
+	consultasSearch: any;
 	idClaseComunicacion: String;
 	idModulo: String;
 	keys: String[] = [];
@@ -79,7 +79,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
 		sessionStorage.removeItem('back');
 		this.getInstitucion();
-		
+
 		this.getMaxNumeroModelos();
 		this.getFechaProgramada();
 		this.getPlantillas();
@@ -175,9 +175,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 		if (this.consultasSearch != undefined) {
 			this.idInstitucion = this.consultasSearch.idInstitucion;
 		}
- 		if (sessionStorage.getItem('idInstitucion') != undefined) {
-            this.idInstitucion = sessionStorage.getItem('idInstitucion');
-        } 
+		if  (sessionStorage.getItem('idInstitucion')  !=  undefined) {
+			            this.idInstitucion  =  sessionStorage.getItem('idInstitucion');
+		        }
 		let modeloSearch = {
 			idModulo: this.idModulo,
 			idClaseComunicacion: this.idClaseComunicacion,
@@ -218,23 +218,27 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	getTipoEnvios(dato) {
-		this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
-			(data) => {
-				let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
-				dato.tipoEnvio = tipoEnvio.tipoEnvio;
-				dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
-			},
-			(err) => {
-				console.log(err);
-			}
-		);
+		if (dato.idPlantillaEnvio == "") {
+			dato.tipoEnvio = "";
+		} else {
+			this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
+				(data) => {
+					let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
+					dato.tipoEnvio = tipoEnvio.tipoEnvio;
+					dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
+				},
+				(err) => {
+					console.log(err);
+				}
+			);
+		}
 	}
 
 	obtenerCamposDinamicos(accion) {
 		this.bodyComunicacion.modelos = this.selectedModelos;
 		this.bodyComunicacion.idClaseComunicacion = this.idClaseComunicacion;
 
-		if (this.consultasSearch != undefined ) {
+		if (this.consultasSearch != undefined) {
 			this.bodyComunicacion.idInstitucion = this.consultasSearch.idInstitucion;
 		} else {
 			this.bodyComunicacion.idInstitucion = this.idInstitucion;
@@ -564,10 +568,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	getInstitucion() {
-        this.sigaServices.get('institucionActual').subscribe((n) => {
-            this.idInstitucion = n.value;
-            this.getClaseComunicaciones();
-        });
+		        this.sigaServices.get('institucionActual').subscribe((n)  =>  {
+			            this.idInstitucion  =  n.value;
+			            this.getClaseComunicaciones();
+		        });
 	}
 
 	getMaxNumeroModelos() {
@@ -616,7 +620,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.sigaServices.get('modelos_detalle_plantillasComunicacion').subscribe(
 			(data) => {
 				this.plantillas = data.combooItems;
-				this.plantillas.unshift({ label: 'Seleccionar', value: '' });
+				this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
 			},
 			(err) => {
 				console.log(err);

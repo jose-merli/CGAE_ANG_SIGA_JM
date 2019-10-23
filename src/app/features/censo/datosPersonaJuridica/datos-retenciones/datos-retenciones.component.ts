@@ -436,7 +436,7 @@ export class DatosRetencionesComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )
@@ -681,7 +681,7 @@ export class DatosRetencionesComponent implements OnInit {
   }
 
   abrirFicha() {
-    if (sessionStorage.getItem("crearnuevo") == null) {
+    if (sessionStorage.getItem("nuevoRegistro") == null) {
       this.openFicha = !this.openFicha;
     }
   }
@@ -733,7 +733,7 @@ export class DatosRetencionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 }

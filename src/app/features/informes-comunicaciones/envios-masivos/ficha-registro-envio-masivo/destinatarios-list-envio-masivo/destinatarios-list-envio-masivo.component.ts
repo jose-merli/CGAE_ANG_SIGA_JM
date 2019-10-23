@@ -361,12 +361,12 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
             .post("enviosMasivos_desAsociarConsulta", this.eliminarArray)
             .subscribe(
                 data => {
-                    this.showSuccess(this.translateService.instant("La consulta se ha borrado correctamente."));
+                    this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioListEnv.mensaje.borrar.consulta.ok"));
                     this.selectedDatos = [];
                 },
                 err => {
                     this.showFail(
-                        this.translateService.instant("Error al borrar la consulta"));
+                        this.translateService.instant("informesycomunicaciones.consultas.errorEliminarConsulta"));
                     console.log(err);
                 },
                 () => {
@@ -419,7 +419,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                     this.consultas = data.consultas;
 
                     if (this.consultas != undefined || this.consultas.length == 0) {
-                        this.resultadosConsultas = "No hay resultados";
+                        this.resultadosConsultas = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
                     }
                     // console.log(this.consultas);
                 },
@@ -487,11 +487,11 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                 this.getConsultasFiltro(e.target.value);
             } else {
                 this.consultas = [];
-                this.resultadosConsultas = "Debe introducir al menos 3 caracteres";
+                this.resultadosConsultas = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
             }
         } else {
             this.consultas = [];
-            this.resultadosConsultas = "No hay resultados";
+            this.resultadosConsultas = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
         }
     }
 }

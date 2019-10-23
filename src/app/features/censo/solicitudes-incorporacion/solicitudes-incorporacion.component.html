@@ -16,11 +16,13 @@
             <div class="form-row">
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.tipoSolicitud' | translate}}</label>
-                    <p-dropdown class="select-form" [options]="tiposSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.tipoSolicitud"></p-dropdown>
+                    <p-dropdown class="select-form" [options]="tiposSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"
+                        [(ngModel)]="body.tipoSolicitud"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.estadoSolicitud' | translate}}</label>
-                    <p-dropdown class="select-form" [options]="estadosSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.estadoSolicitud"></p-dropdown>
+                    <p-dropdown class="select-form" [options]="estadosSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"
+                        [(ngModel)]="body.estadoSolicitud"></p-dropdown>
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{'censo.solicitudincorporacion.fechaDesde' | translate}} (*)</label>
@@ -73,8 +75,10 @@
             </p-column>
             <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
-                    <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                    <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                    <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}}
+                        al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' |
+                        translate }} {{table.totalRecords}}</label>
+                    <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
                     <label>{{ "general.message.mostrar" | translate}}</label>
                     <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                     <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>

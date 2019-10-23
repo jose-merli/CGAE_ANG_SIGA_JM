@@ -19,6 +19,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   openFicha: boolean = true;
   editar: boolean;
+  esDuplicar: boolean;
   editMode: boolean = false;
   datos: any[];
   cols: any[];
@@ -214,11 +215,12 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   getClasesComunicaciones() {
+    let msg = "Seleccionar todo";
     if (this.body.idModulo != undefined && this.body.idModulo != "") {
       this.cargaComboClaseCom(null);
     } else {
       this.clasesComunicaciones = [];
-      this.clasesComunicaciones.unshift({ label: 'Seleccionar', value: '' });
+      this.clasesComunicaciones.unshift({ label: msg, value: '' });
     }
   }
 
@@ -383,7 +385,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   habilitarBotones() {
-    if (this.institucionActual != '2000' && (this.body.generica == "Si" || this.body.generica == "S" || this.body.generica == "1")) {
+    if (this.institucionActual != '2000' && (
+      (this.body.generica == "Si" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "Si") ||
+      (this.body.generica == "S" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "S")) ||
+      this.body.generica == "1" ||
+      (sessionStorage.getItem("permisoModoLectura") == 'true' && sessionStorage.getItem("esDuplicar") === 'false') || sessionStorage.getItem("permisoModoLectura") == 'true') {
       this.editar = false;
     } else {
       this.editar = true;
@@ -391,10 +397,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.editar == false) {
       this.sigaServices.notifyRefreshEditar();
     }
+    // }else{
+    //   this.esDuplicar = true;
+    //   this.sigaServices.notifyRefreshEditar();
+    // }
   }
 
   confirmEdit() {
-    let mess = "Se va a cambiar el modelo de comunicaciones asociado a esta consulta";
+    let mess = this.translateService.instant("informesYcomunicaciones.consultas.datosGenerales.mensaje.cambio.modeloComunicacion");
     let icon = "fa fa-info";
     this.confirmationService.confirm({
       message: mess,

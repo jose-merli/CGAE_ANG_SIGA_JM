@@ -89,7 +89,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: 'nombre', header: 'Modelo' },
+      { field: 'nombre', header: 'informesYcomunicaciones.consultas.ficha.modelosComunicacion.modelo' },
     ]
 
 

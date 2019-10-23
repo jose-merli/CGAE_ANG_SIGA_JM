@@ -3,7 +3,7 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p> {{ 'menu.administracion' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.gestionCatalogosMaestros' | translate}}</p>
+      <i class="fa fa-angle-right"></i>{{ 'menu.administracion.gestionCatalogosMaestros' | translate}}</p>
   </div>
   <div class="card">
     <div class="card-body">
@@ -16,8 +16,9 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'administracion.catalogos.seleccionar' | translate}} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)"
-              [filter]="true" filterBy="label">
+            <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" class="select-form" [(ngModel)]="body.catalogo"
+              [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)" [filter]="true"
+              filterBy="label">
               <ng-template let-item pTemplate="item">
                 <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
                 <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
@@ -41,8 +42,9 @@
       <div>
 
         <div class="text-right main-button ">
+          <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
           <button (click)="isBuscar(); selectedDatos=[]; pressNew = false" pButton type="button " icon="fa fa-search " iconPos="left"
-            label="{{ 'general.boton.search' | translate}}" [(disabled)]="blockBuscar"></button>
+            label="{{ 'general.boton.search' | translate}}" [disabled]="blockBuscar"></button>
         </div>
       </div>
       <!--botones que se activan al editar-->
@@ -51,6 +53,9 @@
     <!--FIN CARD-->
   </div>
   <!--FIN DE PRINCIPAL-->
+  <!-- <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
+  #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+  [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"> -->
 
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
@@ -69,13 +74,15 @@
 
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+                + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                  name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
                 <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
@@ -83,13 +90,12 @@
           </ng-template>
           <p-footer>
             <div class="text-right main-button">
-              <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
-                type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-              <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
-                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-              <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-
+              <button *ngIf="selectedDatos && selectedDatos != '' && eliminar == false && activacionEditar" (click)="confirmarBorrar(selectedDatos)"
+                pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              <button *ngIf="selectedDatos && selectedDatos != '' && eliminar == false && !activacionEditar" disabled pButton type="button"
+                icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              <button (click)="newData();" [disabled]="!activacionEditar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
           </p-footer>
         </p-dataTable>
@@ -97,24 +103,28 @@
       <div *ngIf="selectMultiple == false">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
           [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="datosHist" [paginator]="true" paginatorPosition="both"
-          datakey="descripcion" [(selection)]="selectedDatos" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
-          (onEditInit)="editar=true; guardarCodigo($event)" [(first)]="first">
+          datakey="descripcion" [(selection)]="selectedDatos" [rows]="selectedItem" [editable]="!selectMultiple && activacionEditar"
+          (onEdit)="editarCompleto($event)" (onEditInit)="editar=true; guardarCodigo($event)" (onEditCancel)="onEditCancel($event)"
+          [(first)]="first">
 
           <p-column [sortable]="true" [style]="{'width': '20%'}" field="codigoExt" [header]="'general.codeext' | translate" [filter]="true"
-            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains" [editable]="!selectMultiple">
+            filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains" [editable]="!selectMultiple && activacionEditar">
           </p-column>
-          <p-column [sortable]="true" [editable]="!selectMultiple" field="descripcion" [header]="'general.description' | translate"
+
+          <p-column [sortable]="true" [editable]="!selectMultiple && activacionEditar" field="descripcion" [header]="'general.description' | translate"
             [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
           </p-column>
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-              <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+                + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
               <label>{{ "general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+                <p-checkbox [disabled]="!activacionEditar" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                  name="groupname"></p-checkbox>
               </div>
               <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
                 <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
@@ -122,24 +132,23 @@
           </ng-template>
           <p-footer>
 
-            <div *ngIf="editar == true" class="text-right main-button">
-
+            <div *ngIf="editar == true && activacionEditar" class="text-right main-button">
+              <button (click)="volver();" #input1 pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button (click)="confirmEdit();" [disabled]="blockCrear" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+              <button (click)="historico(); selectedDatos=[];" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
                 type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
                 iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-              <button (click)="volver();" #input1 pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-              <button (click)="confirmEdit();" [(disabled)]="blockCrear" pButton type="button" icon="	far fa-save " iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-              <button (click)="historico(); selectedDatos=[];" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-              <button (click)="newData();" (disabled)="!activacionEditar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+              <button (click)="newData();" [disabled]="!activacionEditar" pButton type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
             <div *ngIf="editar == false" class="text-right main-button">
-              <button *ngIf="selectedDatos && selectedDatos != '' && activacionEditar" (click)="confirmarBorrar(selectedDatos)" pButton
-                type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-              <button *ngIf="selectedDatos && selectedDatos != '' && !activacionEditar" disabled pButton type="button" icon="fa fa-trash-alt "
-                iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
               <button (click)="historico(); selectedDatos=[]" pButton type="button" icon="fa fa-history " iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-              <button (click)="newData();" pButton (disabled)="!activacionEditar" type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+              <button *ngIf="selectedDatos && selectedDatos != '' && eliminar == false && activacionEditar" (click)="confirmarBorrar(selectedDatos)"
+                pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              <button *ngIf="selectedDatos && selectedDatos != '' && eliminar == false && !activacionEditar" disabled pButton type="button"
+                icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+              <button (click)="newData();" pButton [disabled]="!activacionEditar" type="button" icon="fa fa-plus  " iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
 
           </p-footer>
@@ -176,13 +185,15 @@
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatñosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
@@ -233,15 +244,17 @@
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo" name="groupname"></p-checkbox>
+              <p-checkbox [disabled]="!activacionEditar" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
@@ -249,12 +262,18 @@
         <p-footer>
           <div class="text-right main-button">
             <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
+            <button *ngIf="!tablaHistorico" (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
               iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button *ngIf="tablaHistorico" (click)="confirmarActivar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
+              iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
           </div>
         </p-footer>
       </p-dataTable>
     </div>
   </div>
   <app-dialog></app-dialog>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

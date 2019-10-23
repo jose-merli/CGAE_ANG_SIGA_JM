@@ -13,10 +13,10 @@
             <label class="mr-auto title-ficha">{{'enviosMasivos.literal.etiquetas' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>Nº etiquetas existentes:
+            <label>Nº {{ 'enviosMasivos.literal.etiquetasExistentes' | translate }}:
               <span *ngIf="etiquetasNoSeleccionadas">{{etiquetasNoSeleccionadas.length}}</span>
             </label>
-            <label>Nº etiquetas seleccionadas:
+            <label>Nº {{ 'enviosMasivos.literal.etiquetasSeleccionadas' | translate }}:
               <span *ngIf="etiquetasSeleccionadas">{{etiquetasSeleccionadas.length}}</span>
             </label>
             <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
@@ -36,7 +36,7 @@
       <p-pickList [source]="etiquetasNoSeleccionadas" [target]="etiquetasSeleccionadas" sourceHeader="{{'enviosMasivos.literal.etiquetasExistentes' | translate}}"
         targetHeader="{{'enviosMasivos.literal.etiquetasSeleccionadas' | translate}}" [responsive]="true" filterBy="label"
         dragdrop="true" dragdropScope="etiquetasSeleccionadas" sourceFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}"
-        targetFilterPlaceholder="Buscar etiqueta" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} "
+        targetFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}" [showSourceControls]="false" [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} "
         [targetStyle]="{ 'height': '300px'}" [disabled]="noEditar">
         <ng-template let-item pTemplate="item">
           <div>{{item.label}}</div>

@@ -55,15 +55,7 @@ export class PerfilesFichaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getDatos();
 
-    this.sigaServices.deshabilitarEditar$.subscribe(() => {
-      this.editar = false;
-    });
-
-    this.sigaServices.perfilesRefresh$.subscribe(() => {
-      this.getDatos();
-    });
 
     this.getInstitucionActual();
   }
@@ -71,6 +63,11 @@ export class PerfilesFichaComponent implements OnInit {
   getInstitucionActual() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+        this.soloLectura = true;
+      }
 
       if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
         this.soloLectura = true;
@@ -86,6 +83,16 @@ export class PerfilesFichaComponent implements OnInit {
           }
         }
       }
+
+      this.getDatos();
+
+      this.sigaServices.deshabilitarEditar$.subscribe(() => {
+        this.editar = false;
+      });
+
+      this.sigaServices.perfilesRefresh$.subscribe(() => {
+        this.getDatos();
+      });
     });
   }
 
@@ -144,6 +151,7 @@ export class PerfilesFichaComponent implements OnInit {
   }
 
   getPerfilesSeleccionados() {
+    this.body.idInstitucion = this.institucionActual.toString();
     this.sigaServices
       .post("modelos_detalle_perfilesModelo", this.body)
       .subscribe(

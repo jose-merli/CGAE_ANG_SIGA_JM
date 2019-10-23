@@ -15,6 +15,7 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -64,6 +65,12 @@ export class ConsultasComponent implements OnInit {
   idClaseComunicacion: String;
   currentRoute: String = "";
 
+  controlAcceso: ControlAccesoDto = new ControlAccesoDto();
+  permisosArray: any[];
+  derechoAcceso: any;
+  permisos: any;
+  activacionEditar: boolean;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -76,12 +83,15 @@ export class ConsultasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkAcceso();
     this.currentRoute = this.router.url;
 
+    sessionStorage.removeItem("esDuplicar");
     sessionStorage.removeItem("consultasSearch");
     sessionStorage.removeItem('idInstitucion');
     sessionStorage.removeItem('esPorDefecto');
     sessionStorage.removeItem("soloLectura");
+    sessionStorage.removeItem("permisoModoLectura");
 
     this.getInstitucion();
 
@@ -192,6 +202,32 @@ export class ConsultasComponent implements OnInit {
 
   }
 
+  checkAcceso() {
+    this.controlAcceso = new ControlAccesoDto();
+    this.controlAcceso.idProceso = "30C";
+    this.sigaServices.post("acces_control", this.controlAcceso).subscribe(
+      data => {
+        this.permisos = JSON.parse(data.body);
+        this.permisosArray = this.permisos.permisoItems;
+        this.derechoAcceso = this.permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        if (this.derechoAcceso == 3) {
+          this.activacionEditar = true;
+        } else if (this.derechoAcceso == 2) {
+          this.activacionEditar = false;
+        } else {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    );
+  }
+
   recuperarBusqueda() {
     if (sessionStorage.getItem("filtrosConsulta") != null) {
       this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
@@ -237,7 +273,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: "", value: "" });
+        // this.clasesComunicaciones.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -246,7 +282,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: "", value: "" });
+        // this.objetivos.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -255,7 +291,7 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
-          this.modulos.unshift({ label: "", value: "" });
+          // this.modulos.unshift({ label: "", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
           this.modulos.map(e => {
@@ -322,24 +358,28 @@ export class ConsultasComponent implements OnInit {
   }
 
   controlBtnEliminar(array) {
-    if (this.institucionActual == 2000) {
-      this.eliminar = true;
+    if (!this.activacionEditar) {
+      this.eliminar = false;
     } else {
-      var keepGoing = true;
+      if (this.institucionActual == 2000) {
+        this.eliminar = true;
+      } else {
+        var keepGoing = true;
 
-      array.forEach(element => {
+        array.forEach(element => {
 
-        if (keepGoing) {
-          if (element.generica == 'No') {
-            this.eliminar = true;
-          } else {
-            keepGoing = false;
+          if (keepGoing) {
+            if (element.generica == 'No') {
+              this.eliminar = true;
+            } else {
+              keepGoing = false;
+            }
           }
-        }
-      });
+        });
 
-      if (!keepGoing) {
-        this.eliminar = false;
+        if (!keepGoing) {
+          this.eliminar = false;
+        }
       }
     }
   }
@@ -381,7 +421,7 @@ export class ConsultasComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )
@@ -409,6 +449,7 @@ export class ConsultasComponent implements OnInit {
 
   duplicar(dato) {
     sessionStorage.setItem("soloLectura", "false");
+    sessionStorage.setItem("permisoModoLectura", "false");
     this.progressSpinner = true;
     this.sigaServices.post("consultas_duplicar", dato[0]).subscribe(
       data => {
@@ -424,6 +465,10 @@ export class ConsultasComponent implements OnInit {
         sessionStorage.setItem(
           "filtrosConsulta",
           JSON.stringify(this.bodySearch)
+        );
+        sessionStorage.setItem(
+          "esDuplicar",
+          "true"
         );
         this.progressSpinner = false;
         this.router.navigate(["/fichaConsulta"]);
@@ -561,10 +606,12 @@ export class ConsultasComponent implements OnInit {
       // }
     }
 
-    if (this.institucionActual != 2000 && dato[0].idInstitucion == '2000' && dato[0].generica == "Si") {
+    if (this.institucionActual != 2000 && dato[0].idInstitucion == '2000' && dato[0].generica == "Si" || !this.activacionEditar) {
       sessionStorage.setItem("soloLectura", "true");
+      sessionStorage.setItem("permisoModoLectura", "true");
     } else {
       sessionStorage.setItem("soloLectura", "false");
+      sessionStorage.setItem("permisoModoLectura", "false");
     }
   }
 
@@ -628,7 +675,6 @@ export class ConsultasComponent implements OnInit {
 
   getComboGenerica() {
     this.comboGenerica = [
-      { label: "", value: "" },
       { label: "No", value: "N" },
       { label: "Sí", value: "S" }
 
@@ -703,14 +749,14 @@ export class ConsultasComponent implements OnInit {
         // debugger;
         this.showValores = false;
         if (data == null) {
-          this.showInfo("La consulta no devuelve resultados");
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
         } else {
           saveAs(data, "ResultadoConsulta.xlsx");
         }
       }, error => {
         console.log(error);
         this.progressSpinner = false;
-        this.showFail("Error al ejecutar la consulta");
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
       }, () => {
         this.progressSpinner = false;
       });
@@ -749,7 +795,7 @@ export class ConsultasComponent implements OnInit {
   getDatosComunicar(selectedDatos) {
 
     let dato = selectedDatos[0];
-    sessionStorage.setItem('idInstitucion',  dato.idInstitucion);
+    sessionStorage.setItem('idInstitucion', dato.idInstitucion);
     let rutaClaseComunicacion = this.currentRoute.toString();
     sessionStorage.removeItem('datosComunicar');
     sessionStorage.setItem('idConsulta', dato.idConsulta);

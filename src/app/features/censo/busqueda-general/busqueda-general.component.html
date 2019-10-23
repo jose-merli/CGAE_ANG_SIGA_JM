@@ -47,7 +47,9 @@
         <div class="card-body">
             <div class="form-row">
                 <div class="col-4">
-                    <p-radioButton name="person" value="f" label="Personas Fisicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
+                    <p-radioButton *ngIf="!isSociedad" name="person" [disabled]="esSociedad" value="f" label="Personas Fisicas" [(ngModel)]='persona'
+                        (click)="changeColsAndData();"></p-radioButton>
+                    <p-radioButton *ngIf="isSociedad" name="person" disabled value="f" label="Personas Fisicas" [(ngModel)]='persona'></p-radioButton>
                     <p-radioButton *ngIf="!isFormador" name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
                     <p-radioButton *ngIf="isFormador" disabled name="person" value="j" label="Personas Juridicas" [(ngModel)]='persona'></p-radioButton>
 
@@ -142,8 +144,10 @@
                     filterMatchMode="contains"></p-column>
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
-                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
-                        <label class="pr-3 numSeleccionados">Seleccionados: {{numSelected}}</label>
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
                         <label>{{ "general.message.mostrar" | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                         <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>

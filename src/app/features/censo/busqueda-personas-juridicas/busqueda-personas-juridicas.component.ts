@@ -83,6 +83,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.checkAcceso(); //coger tipos
     this.onInitSessionStorage();
 
+    //sessionStorage.removeItem("solicitudIncorporacion");
+
     if (sessionStorage.getItem("filtrosBusquedaSociedadesFichaSociedad") != null) {
       this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaSociedadesFichaSociedad"));
       sessionStorage.removeItem("busqueda");
@@ -170,6 +172,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("filtrosBusquedaColegiados");
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("datosCuenta");
+
+    sessionStorage.removeItem("nuevoNoColegiado");
+    sessionStorage.removeItem("nuevoNoColegiadoGen");
+    sessionStorage.removeItem("solicitudIncorporacion")
+    sessionStorage.removeItem("migaPan");
   }
 
   onChangeSelectAll() {
@@ -513,11 +520,18 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   crear() {
-    sessionStorage.setItem("crearnuevo", JSON.stringify("true"));
-    this.body = new PersonaJuridicaItem();
+    let migaPan = this.translateService.instant("censo.busquedaClientes.sociedades.titulo");
+    let menuProcede = this.translateService.instant("menu.censo");
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.setItem("menuProcede", menuProcede);
+
+    sessionStorage.setItem("crearnuevo", "true");
+    sessionStorage.setItem("abrirSociedad", "true");
+    //this.body = new PersonaJuridicaItem();
     sessionStorage.setItem("esColegiado", "false");
-    sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
-    this.router.navigate(["fichaPersonaJuridica"]);
+    //sessionStorage.setItem("usuarioBody", JSON.stringify(this.body));
+    this.router.navigate(["/busquedaGeneral"]);
+    //this.router.navigate(["fichaPersonaJuridica"]);
   }
 
   showSuccess() {
@@ -669,7 +683,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

@@ -328,7 +328,6 @@ export class FichaColegialComponent implements OnInit {
   calendar: Calendar;
 
   comboSexo = [
-    { label: "", value: null },
     { label: "Hombre", value: "H" },
     { label: "Mujer", value: "M" }
   ];
@@ -586,6 +585,7 @@ export class FichaColegialComponent implements OnInit {
         this.generalBody.soloNombre = enviar.nombre;
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
+        this.situacionPersona = enviar.idEstado;
         if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
           this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
         }
@@ -951,7 +951,7 @@ export class FichaColegialComponent implements OnInit {
       key == "regtel"
     ) {
 
-      if (this.generalBody.identificadords != null) {
+      if (this.generalBody.identificadords != null || (this.bodyRegTel  !=  null  &&  this.bodyRegTel.length  >  0)) {
         this.activacionEditar = true;
       } else {
         this.activacionEditar = false;
@@ -1308,7 +1308,7 @@ export class FichaColegialComponent implements OnInit {
       this.cargarImagen(this.idPersona);
       this.stringAComisiones();
       this.fechaNacimiento = this.generalBody.fechaNacimiento;
-      this.fechaAlta = this.generalBody.incorporacion;
+      this.fechaAlta = this.generalBody.fechaAlta;
     }
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
@@ -2823,33 +2823,33 @@ export class FichaColegialComponent implements OnInit {
       this.information = true;
 
       if (isEjerciente) {
-        this.msgDir = "Antes de pasar el colegiado a Ejerciente, tendrá que introducir una dirección para el colegiado.";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.direccion.pasarColegiado");
         return false;
       } else {
-        this.msgDir = "Antes de cambiar la situación, tendrá que introducir una dirección para el colegiado.";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.cambiar.situacion.pasarColegiado");
         return false;
       }
     } else {
       this.information = false;
 
       if (isEjerciente) {
-        this.msgDir = "Para finalizar el cambio a Ejerciente ";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.finalizar.cambio.ejerciente");
       } else {
-        this.msgDir = "Para finalizar el cambio ";
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.finalizar.cambio");
       }
 
       if (tipos.length == 0) {
         return true;
       } else if (tipos.length == 1) {
-        this.msgDir += "es necesaria una dirección de ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.necesaria.direccion");
         this.msgDir += tipos[0];
-        this.msgDir += ". Se asignará automáticamente el tipo ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.asignar.automaticamente.tipoDireccion");
         this.msgDir += tipos[0];
-        this.msgDir += " a la actual dirección de Censo Web ¿Desea continuar?";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.actual.censoWeb.deseaContinuar");
         return false;
       } else if (tipos.length > 1) {
 
-        this.msgDir += "son necesarias las direcciones de ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.necesaria.direccion.plural");
         let msgTipos = "";
         for (const key in tipos) {
           let x = key;
@@ -2863,9 +2863,9 @@ export class FichaColegialComponent implements OnInit {
         }
 
         this.msgDir += msgTipos;
-        this.msgDir += " .Se asignará automáticamente los tipos ";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.asignar.automaticamente.tipoDireccion.plural");
         this.msgDir += msgTipos;
-        this.msgDir += " a la actual dirección de Censo Web ¿Desea continuar?";
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.actual.censoWeb.deseaContinuar");
         return false;
       }
     }
@@ -2947,7 +2947,7 @@ export class FichaColegialComponent implements OnInit {
                         this.progressSpinner = false;
                         if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
                           let msg = JSON.parse(error.error).error.message;
-                          this.showFailDetalle(msg);
+                          this.showFailDetalle(this.translateService.instant(msg));
                         } else {
                           this.showFail();
                         }
@@ -3131,7 +3131,7 @@ export class FichaColegialComponent implements OnInit {
                   // this.datosColegiales = JSON.parse(data["body"]);
                   this.colegialesObject = JSON.parse(data["body"]);
                   this.datosColegialesActual = this.colegialesObject.colegiadoItem;
-                  this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
+                  //this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
                   this.residente = this.datosColegialesActual[0].situacionResidente;
 
                 }
@@ -4668,6 +4668,7 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
             //     JSON.stringify(new Date(element.fechaModificacion))
@@ -4701,12 +4702,12 @@ export class FichaColegialComponent implements OnInit {
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+
+            // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
             } else {
@@ -4778,26 +4779,24 @@ export class FichaColegialComponent implements OnInit {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
     this.selectedDatosRegtel.id = this.selectedDatosRegtel.parent;
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
           "fichaColegialRegTel_searchListDir",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-
-
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
 
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = true;
@@ -4825,18 +4824,17 @@ export class FichaColegialComponent implements OnInit {
         .postPaginado(
           "fichaColegialRegTel_searchListDirNoCol",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
-
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+            // this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
 
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = true;
@@ -4858,18 +4856,25 @@ export class FichaColegialComponent implements OnInit {
       this.atrasRegTel = this.selectedDatosRegtel.parent;
     }
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
           "fichaColegialRegTel_searchListDir",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            //  this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
+
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = false;
             } else {
@@ -4885,12 +4890,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -4904,12 +4904,17 @@ export class FichaColegialComponent implements OnInit {
         .postPaginado(
           "fichaColegialRegTel_searchListDirNoCol",
           "?numPagina=1",
-          this.selectedDatosRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
             this.bodySearchRegTel = JSON.parse(data["body"]);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+            //  this.bodyRegTel.forEach(element => {
+            //   element.fechaModificacion = this.arreglarFechaRegtel(
+            //     JSON.stringify(new Date(element.fechaModificacion))
+            //   );
+            // });
             if (this.atrasRegTel != "") {
               this.buttonVisibleRegtelAtras = false;
             } else {
@@ -4925,12 +4930,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.bodyRegTel.forEach(element => {
-              element.fechaModificacion = this.arreglarFechaRegtel(
-                JSON.stringify(new Date(element.fechaModificacion))
-              );
-            });
+
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -4944,20 +4944,23 @@ export class FichaColegialComponent implements OnInit {
   onClickDescargarRegTel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    this.selectedDatosRegtel.fechaModificacion = undefined;
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    selectedRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",
 
-        this.selectedDatosRegtel
+        selectedRegtel
       )
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "application/octet-stream" });
           saveAs(blob, this.selectedDatosRegtel.originalFilename);
+          //this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
           this.progressSpinner = false;
         },
         err => {
+          //this.selectedDatosRegtel.fechaModificacion = fechaModificacionRegtel;
           this.progressSpinner = false;
         }
       );
