@@ -95,8 +95,8 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     this.getDatos();
     this.cols = [
-      { field: 'nombreDocumento', header: 'Nombre del documento' },
-      { field: 'pathDocumento', header: 'Enlace de descarga' }
+      { field: 'nombreDocumento', header: this.translateService.instant("informesycomunicaciones.comunicaciones.documento.nombre") },
+      { field: 'pathDocumento', header: this.translateService.instant("informesycomunicaciones.comunicaciones.documento.path") }
     ]
 
     this.sigaServices.habilitarDocs$.subscribe(() => {
@@ -259,7 +259,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: '¿Está seguro de eliminar los documentos?',
+      message: this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.seguroEliminarDocumentos"),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -292,17 +292,17 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     });
     this.sigaServices.post("enviosMasivos_borrarDocumento", this.eliminarArray).subscribe(
       data => {
-        this.showSuccess('Se ha eliminado el documento correctamente');
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.eliminadoDocumentoCorrectamente"));
       },
       err => {
         let error = JSON.parse(err.error);
         if (error.code == 400) {
-          this.showInfo('No se ha encontrado el documento');
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.enviosMasivos.documentos.mensaje.noDocumento"));
 
           this.getDocumentos();
           this.resetTableProperties();
         } else {
-          this.showFail('Error al eliminar el envío');
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorEliminadoEnvio"));
           console.log(err);
         }
 
@@ -329,7 +329,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
     if (this.file != null) {
       let longitudMaximaNombreFichero = 60;
-      
+
       if (this.file.name.length > longitudMaximaNombreFichero) {
         this.confirmationService.confirm({
           message: this.translateService.instant("mensaje.enviomasivo.adjunto.longitudnombre"),
@@ -362,10 +362,10 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
       } else {
         this.addFile();
       }*/
-      
+
     }
 
-    
+
   }
 
   navigateTo(dato) {
@@ -392,10 +392,10 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
           if (err.error.error.description != null) {
             this.showFail(err.error.error.description);
           } else {
-            this.showFail('Formato no permitido o tamaño maximo superado');
+            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
           }
         } else {
-          this.showFail('Error al subir el documento');
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
           console.log(err);
         }
         this.progressSpinner = false;
@@ -415,12 +415,12 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     }
     this.sigaServices.post("enviosMasivos_guardarDocumento", objDoc).subscribe(
       data => {
-        this.showSuccess('Se ha subido el documento correctamente');
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.subidoDocumentoCorrectamente"));
         this.progressSpinner = false;
 
       },
       err => {
-        this.showFail('Error al guardar el documento');
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorGuardarDocumento"));
         this.progressSpinner = false;
 
         console.log(err);

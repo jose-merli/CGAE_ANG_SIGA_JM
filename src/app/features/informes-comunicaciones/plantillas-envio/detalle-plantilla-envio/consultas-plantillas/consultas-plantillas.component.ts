@@ -41,7 +41,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 	objetivo: string;
 	institucionActual: any;
 	consultaBuscada;
-	resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
+	// resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
+	resultadosConsultas = "formacion.busquedaCursos.controlFiltros.minimoCaracteres";
 
 	@ViewChild("table") table: DataTable;
 	selectedDatos;
@@ -316,7 +317,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 					this.consultas = data.consultas;
 
 					if (this.consultas != undefined || this.consultas.length == 0) {
-						this.resultadosConsultas = "No hay resultados";
+						this.resultadosConsultas = "censo.busquedaClientesAvanzada.literal.sinResultados";
 					}
 					console.log(this.consultas);
 				},
@@ -334,11 +335,11 @@ export class ConsultasPlantillasComponent implements OnInit {
 				this.getConsultasFiltro(e.target.value);
 			} else {
 				this.consultas = [];
-				this.resultadosConsultas = "Debe introducir al menos 3 caracteres";
+				this.resultadosConsultas = "formacion.busquedaCursos.controlFiltros.minimoCaracteres";
 			}
 		} else {
 			this.consultas = [];
-			this.resultadosConsultas = "No hay resultados";
+			this.resultadosConsultas = "censo.busquedaClientesAvanzada.literal.sinResultados";
 		}
 	}
 

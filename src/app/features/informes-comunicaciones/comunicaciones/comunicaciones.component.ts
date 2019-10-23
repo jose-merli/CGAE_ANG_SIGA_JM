@@ -152,7 +152,8 @@ export class ComunicacionesComponent implements OnInit {
           this.bodySearch.idInstitucion = this.destinatario.idInstitucion;
         },
         err => {
-          this.showFail("Error al obtener la persona");
+          let msg = this.translateService.instant("informesYcomunicaciones.comunicaciones.mensaje.error.obtenerPersona");
+          this.showFail(msg);
           console.log(err);
         },
         () => {
@@ -176,12 +177,12 @@ export class ComunicacionesComponent implements OnInit {
     }
 
     this.cols = [
-      { field: "claseComunicacion", header: "informesycomunicaciones.comunicaciones.busqueda.claseComunicacion" },
+      { field: "claseComunicacion", header: "comunicaciones.literal.claseComunicaciones" },
       { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
-      { field: "fechaCreacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" },
-      { field: "fechaProgramada", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada" },
-      { field: "tipoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.tipoEnvio" },
-      { field: "estadoEnvio", header: "informesycomunicaciones.comunicaciones.busqueda.estadoEnvio" }
+      { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
+      { field: "fechaProgramada", header: "enviosMasivos.literal.fechaProgramacion" },
+      { field: "tipoEnvio", header: "enviosMasivos.literal.tipoEnvio" },
+      { field: "estadoEnvio", header: "enviosMasivos.literal.estado" }
     ];
 
     this.rowsPerPage = [
@@ -228,7 +229,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: "", value: "" });
+        // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -268,7 +269,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        this.estados.unshift({ label: "Seleccionar", value: "" });
+        // this.estados.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);
@@ -280,7 +281,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
+        // this.clasesComunicaciones.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -374,6 +375,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   cancelar(dato) {
+
+    let msg = this.translateService.instant("informesYcomunicaciones.comunicaciones.mensaje.cancelar.datosEnvios");
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:

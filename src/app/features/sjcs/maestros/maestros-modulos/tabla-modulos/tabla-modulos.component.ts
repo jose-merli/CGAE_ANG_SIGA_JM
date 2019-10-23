@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
@@ -62,6 +62,12 @@ export class TablaModulosComponent implements OnInit {
     } else {
       this.permisos = false;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.datos.forEach(element => {
+      element.importe = +element.importe;
+    });
   }
 
   seleccionaFila(evento) {
@@ -140,7 +146,7 @@ export class TablaModulosComponent implements OnInit {
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio" },
       { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin" },
-      { field: "precio", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
 
     ];
 

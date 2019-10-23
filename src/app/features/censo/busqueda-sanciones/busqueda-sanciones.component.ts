@@ -64,6 +64,7 @@ export class BusquedaSancionesComponent implements OnInit {
   currentRoute: String;
   idClaseComunicacion: String;
   keys: any[] = [];
+  sortO: number = 1;
 
   constructor(
     private sigaServices: SigaServices,
@@ -213,11 +214,11 @@ export class BusquedaSancionesComponent implements OnInit {
           "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal"
       },
       {
-        field: "fechaDesde",
+        field: "fechaDesdeDate",
         header: "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde"
       },
       {
-        field: "fechaHasta",
+        field: "fechaHastaDate",
         header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta"
       },
       {
@@ -253,7 +254,6 @@ export class BusquedaSancionesComponent implements OnInit {
 
   getDataDatesType() {
     this.datesType = [
-      { label: "", value: "" },
       { label: "Acuerdo", value: "Acuerdo" },
       { label: "Fin", value: "Fin" },
       { label: "Firmeza", value: "Firmeza" },
@@ -302,6 +302,7 @@ export class BusquedaSancionesComponent implements OnInit {
           data => {
             this.bodySearch = JSON.parse(data["body"]);
             this.data = this.bodySearch.busquedaSancionesItem;
+            this.convertirStringADate(this.data);
             this.progressSpinner = false;
           },
           err => {
@@ -342,6 +343,32 @@ export class BusquedaSancionesComponent implements OnInit {
     } else {
       body.fechaArchivadaHastaDate = null;
     }
+  }
+
+  convertirStringADate(data) {
+    data.forEach(element => {
+      if (element.fechaDesde == "" || element.fechaDesde == null) {
+        element.fechaDesdeDate = null;
+      } else {
+        var posIni = element.fechaDesde.indexOf("/");
+        var posFin = element.fechaDesde.lastIndexOf("/");
+        var year = element.fechaDesde.substring(posFin + 1);
+        var day = element.fechaDesde.substring(0, posIni);
+        var month = element.fechaDesde.substring(posIni + 1, posFin);
+        element.fechaDesdeDate = new Date(year, month - 1, day);
+      }
+
+      if (element.fechaHasta == "" || element.fechaHasta == null) {
+        element.fechaHastaDate = null;
+      } else {
+        var posIni = element.fechaHasta.indexOf("/");
+        var posFin = element.fechaHasta.lastIndexOf("/");
+        var year = element.fechaHasta.substring(posFin + 1);
+        var day = element.fechaHasta.substring(0, posIni);
+        var month = element.fechaHasta.substring(posIni + 1, posFin);
+        element.fechaHastaDate = new Date(year, month - 1, day);
+      }
+    });
   }
 
   restore() {
@@ -464,7 +491,7 @@ export class BusquedaSancionesComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
   }
@@ -584,7 +611,7 @@ export class BusquedaSancionesComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

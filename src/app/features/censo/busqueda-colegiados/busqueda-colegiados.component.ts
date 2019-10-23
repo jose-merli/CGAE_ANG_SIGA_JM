@@ -245,8 +245,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           JSON.stringify(this.fechaNacimientoHastaSelect)
         );
       }
+
+      // orden es, fallecido, colegiado, de baja, no colegiado
+      this.getSituacion(id);
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
-      console.log(id);
 
       // if (id[0].situacion == 30) {
       //   sessionStorage.setItem("disabledAction", "true");
@@ -257,6 +259,27 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.router.navigate(["/fichaColegial"]);
     } else {
       this.actualizaSeleccionados(this.selectedDatos);
+    }
+  }
+
+  getSituacion(id) {
+    let idSituacionValues = [];
+    this.datos.forEach(element => {
+      idSituacionValues.push(element.situacion);
+    });
+
+    if (idSituacionValues.indexOf("60") != -1) {
+      id[0].situacion = "60";
+    } else {
+      if (idSituacionValues.indexOf("20") != -1) {
+        id[0].situacion = "20";
+      } else {
+        if (idSituacionValues.indexOf("30") == -1 || idSituacionValues.indexOf("40") == -1 || idSituacionValues.indexOf("50") == -1) {
+          if (idSituacionValues.indexOf("10") != -1) {
+            id[0].situacion = "10";
+          }
+        }
+      }
     }
   }
 
@@ -332,14 +355,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     if (e.target.value && e.target.value !== null && e.target.value !== "") {
       if (e.target.value.length >= 3) {
         this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = "No hay resultados";
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = "Debe introducir al menos 3 caracteres";
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
       }
     } else {
       this.comboPoblacion = [];
-      this.resultadosPoblaciones = "No hay resultados";
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
 
@@ -670,7 +693,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaNacimientoDesdeSelect = undefined;
     this.fechaNacimientoHastaSelect = undefined;
 
-    if(!this.deshabilitarCombCol){
+    if (!this.deshabilitarCombCol) {
       this.colegiosSeleccionados = [];
     }
   }
@@ -753,7 +776,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.datosDireccion.literal.movil"
       },
       {
-        field: "noAparecerRedAbogacia",
+        field: "noAparecerRedAbogacia2",
         header: "censo.busquedaColegial.lopd"
       }
     ];
@@ -855,7 +878,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )

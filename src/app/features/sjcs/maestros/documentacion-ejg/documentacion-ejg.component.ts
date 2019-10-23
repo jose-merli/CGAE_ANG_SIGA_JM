@@ -75,12 +75,13 @@ export class DocumentacionEJGComponent implements OnInit, AfterViewInit {
 
 
   searchModulos(event) {
-    this.filtros.filtros.historico = event;
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
+    this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
 
     this.progressSpinner = true;
 
-    this.sigaServices.post("busquedaDocumentacionEjg_searchDocumento", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaDocumentacionEjg_searchDocumento", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).documentacionejgItems;
         this.buscar = true;

@@ -2,6 +2,8 @@ import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, UpperCasePipe, APP_BASE_HREF } from '@angular/common';
 import { BusquedaJusticiablesComponent } from './busqueda-justiciables/busqueda-justiciables.component';
 import { FiltroJusticiablesComponent } from './busqueda-justiciables/filtro-justiciables/filtro-justiciables.component';
+import { GestionJusticiablesComponent } from './gestion-justiciables/gestion-justiciables.component';
+import { DatosGeneralesComponent } from './gestion-justiciables/datos-generales/datos-generales.component';
 import { TablaJusticiablesComponent } from './busqueda-justiciables/tabla-justiciables/tabla-justiciables.component';
 import { DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, GrowlModule, MenubarModule, MultiSelectModule, ConfirmationService } from '../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../node_modules/@angular/forms';
@@ -21,6 +23,7 @@ import { environment } from '../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
+import { FechaModule } from '../../../commons/fecha/fecha.module';
 
 @NgModule({
   imports: [
@@ -38,11 +41,15 @@ import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
     TableModule,
     MultiSelectModule,
     PrecioModule,
+    FechaModule,
+
   ],
   declarations: [
     BusquedaJusticiablesComponent,
     FiltroJusticiablesComponent,
-    TablaJusticiablesComponent
+    TablaJusticiablesComponent,
+    GestionJusticiablesComponent,
+    DatosGeneralesComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

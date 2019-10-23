@@ -48,7 +48,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
         console.log(err);
       }
     );
-    
+
 
     this.textFilter = "Elegir";
     this.correcto = false;
@@ -157,7 +157,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "general.message.error.realiza.accion"
       )

@@ -3,7 +3,9 @@ import {
   OnInit,
   ViewEncapsulation,
   ViewChild,
-  OnDestroy
+  OnDestroy,
+  ViewChildren,
+  AfterViewInit
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { CalendarItem } from "../../models/CalendarItem";
@@ -11,6 +13,10 @@ import { Checkbox, Schedule } from "primeng/primeng";
 import { SigaServices } from "../../_services/siga.service";
 import { EventoItem } from "../../models/EventoItem";
 import { findIndex } from "rxjs/operators";
+import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../utils/calendar';
+import { TranslateService } from "../../commons/translate";
+import { months } from "../../../../node_modules/moment";
+
 @Component({
   selector: "app-agenda",
   templateUrl: "./agenda.component.html",
@@ -39,31 +45,68 @@ export class AgendaComponent implements OnInit {
   selectedCalendario: any;
   color: any;
   selectedCalendarios: any[];
+  es: any;
+  week: any;
+  allDayText: string;
 
   @ViewChild("calendario") calendarioSchedule;
 
   checked: boolean = true;
 
   fechaActual: Date = new Date();
-  constructor(private router: Router, private sigaServices: SigaServices) { }
+  constructor(private router: Router, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.listLecturaSelect = [];
     this.listAccesoSelect = [];
     sessionStorage.setItem("isFormacionCalendar", "false");
 
+    this.getLenguage();
+
     this.options = {
       header: {
         left: "prev,next",
         center: "title",
-        right: "month,agendaWeek,agendaDay",
-        locale: "es"
+        right: "month,agendaWeek,agendaDay"
       },
-      editable: false
-    };
+      editable: false,
+      views: {
+        month: {
+          buttonText: this.translateService.instant("menu.agenda.mes.literal")
+        },
+        agendaDay: {
+          buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.dia")
+        },
+        agendaWeek: {
+          buttonText: this.translateService.instant("fichaEventos.datosRepeticion.repetirCada.semana")
+        }
+      },
+      viewRender: function (view) {
+        console.log("rerer", this.es);
+        if (view.options.locale == 'ca_ES') {
+          this.allDayText = 'Tot<br/>el dia';
+        } else if (view.options.locale == 'gl_ES') {
+          this.allDayText = 'Todo<br/>o día';
+        } else if (view.options.locale == 'eu_ES') {
+          this.allDayText = 'Egun<br/>osoan';
+        } else if (view.options.locale == 'es') {
+          this.allDayText = 'Todo<br/>el día';
+        }
+
+        if (view.name == 'month') {
+          view.options.allDayText = '';
+          view.options.allDayHtml = '';
+        }
+
+        if (view.name == 'agendaWeek' || view.name == 'agendaDay') {
+          view.el[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].innerHTML = this.allDayText;
+        }
+
+        console.log("d", view);
+      }
+    }
 
     this.calendarioSchedule.timezone = "local";
-
     this.events = [];
     sessionStorage.removeItem("eventoEdit");
     sessionStorage.removeItem("modoEdicionEventoByAgenda");
@@ -72,9 +115,31 @@ export class AgendaComponent implements OnInit {
     this.getCalendarios();
   }
 
-  // ngOnDestroy() {
-  //   sessionStorage.removeItem("calendarEdit");
-  // }
+  getLenguage() {
+    //let allDayText = this.calendarioSchedule.el.nativeElement.querySelector('td.fc-axis.ui-widget-content').querySelector('span');
+
+    this.sigaServices.get('usuario').subscribe((response) => {
+      let currentLang = response.usuarioItem[0].idLenguaje;
+
+      switch (currentLang) {
+        case "1":
+          this.es = "es";
+          break;
+        case "2":
+          this.es = "ca_ES";
+          break;
+        case "3":
+          this.es = "eu_ES";
+          break;
+        case "4":
+          this.es = "gl_ES";
+          break;
+        default:
+          this.es = "es";
+          break;
+      }
+    });
+  }
 
   onClickCheckBox(calendario) {
     calendario.checked = !calendario.checked;
@@ -109,6 +174,9 @@ export class AgendaComponent implements OnInit {
             }
           });
         }
+
+        let allDayText = this.calendarioSchedule.el.nativeElement.children[0].children[1].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].firstChild.children[0].innerTextHTML = "jol";
+        console.log("fweff", allDayText);
         this.progressSpinner = false;
       },
       err => {
@@ -238,7 +306,7 @@ export class AgendaComponent implements OnInit {
     while (!encontrado && contador < this.calendarios.length) {
       calendar = this.calendarios[contador];
       if (
-        calendar.descripcion == "Calendario General" &&
+        calendar.idTipoCalendario == '1' &&
         calendar.tipoAcceso == 3
       )
         encontrado = true;

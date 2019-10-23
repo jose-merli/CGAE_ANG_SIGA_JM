@@ -34,6 +34,7 @@ export class GestionDocumentacionejgComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   documentacionEjgItem;
+  idTipoDoc;
 
   @ViewChild(GestionDocumentosComponent) tabla;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -56,10 +57,13 @@ export class GestionDocumentacionejgComponent implements OnInit {
     this.dato = this.persistenceService.getDatos();
     if (this.dato != undefined || this.dato != null) {
       this.searchDocumentos(this.persistenceService.getHistorico());
+      this.modoEdicion = true;
 
     } else {
       this.documentacionEjgItem = new DocumentacionEjgItem();
       this.buscar = false;
+      this.modoEdicion = false;
+
     }
   }
 
@@ -90,6 +94,11 @@ export class GestionDocumentacionejgComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  modoEdicionSend(event) {
+    this.modoEdicion = event.modoEdicion;
+    this.idTipoDoc = event.idTipoDoc;
   }
 
   getFichasPosibles() {

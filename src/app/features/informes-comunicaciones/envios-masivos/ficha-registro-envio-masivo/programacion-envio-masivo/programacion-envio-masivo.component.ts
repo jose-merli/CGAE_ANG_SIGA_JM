@@ -177,13 +177,13 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
       this.arrayProgramar.push(objProgramar);
       this.sigaServices.post("enviosMasivos_programar", this.arrayProgramar).subscribe(
         data => {
-          this.showSuccess('Se ha programado el envío correctamente');
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.programCorrect"));
           this.body.fechaProgramada = objProgramar.fechaProgramada;
           sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         },
         err => {
-          this.showFail('Error al programar el envío');
+          this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEnvio"));
           console.log(err);
         },
         () => {
@@ -196,7 +196,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_estado").subscribe(
       data => {
         this.estados = data.combooItems;
-        this.estados.unshift({ label: 'Seleccionar', value: '' });
+        this.estados.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
         console.log(this.estados)
       },
       err => {
@@ -253,7 +253,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
               const blob = new Blob([data], { type: "application/octet-stream" });
               if (blob.size == 0) {          
                 this.showFail(this.translateService.instant(
-                  "messages.general.error.ficheroNoExiste"
+                  "message.enviomasivo.log.noexiste"
                 ));          
 
               } else {
@@ -263,7 +263,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
         },
         err => {
           this.showFail(this.translateService.instant(
-            "messages.general.error.ficheroNoExiste"
+            "message.enviomasivo.log.noexiste"
           ));  
         }
     );

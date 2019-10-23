@@ -1,11 +1,11 @@
 import { Component, OnInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
-import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 
 @Component({
   selector: 'app-filtro-justiciables',

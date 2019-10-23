@@ -43,7 +43,8 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modo" | translate}}</label>
-            <p-dropdown class="select-form" [(disabled)]="!editar" [(ngModel)]="body.modo" [options]="contadores_modo"></p-dropdown>
+            <p-dropdown class="select-form" [(disabled)]="!editar" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.modo"
+              [options]="contadores_modo"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.prefijo" | translate}}</label>
@@ -106,9 +107,9 @@
 
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="volver();" pButton type="button" icon="	fa fa-close " iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-        <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="	fa fa-undo " iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="confirmEdit();" pButton type="button" icon="	fa fa-edit " iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
+        <button (click)="volver();" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="confirmEdit();" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
           [disabled]="checkEditar()"></button>
       </div>
     </div>

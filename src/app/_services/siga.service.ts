@@ -52,6 +52,7 @@ export class SigaServices {
     maestros_update: "catmaestros/update",
     maestros_create: "catmaestros/create",
     maestros_delete: "catmaestros/delete",
+    maestros_activate: "catmaestros/activate",
     maestros_historico: "catmaestros/historico",
     parametros_modulo: "parametros/modulo",
     parametros_search: "parametros/search",
@@ -257,6 +258,7 @@ export class SigaServices {
     cargasMasivas_downloadLogFile: "cargasMasivas/downloadLogFile",
 
     busquedaCensoGeneral_search: "busquedaCensoGeneral/search",
+    busquedaCensoGeneral_searchExact: "busquedaCensoGeneral/searchExact",
 
     //Formación
     busquedaCursos_visibilidadCursos: "busquedaCursos/visibilidadCursos",

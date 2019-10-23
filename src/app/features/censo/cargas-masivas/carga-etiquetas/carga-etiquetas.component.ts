@@ -249,7 +249,7 @@ export class CargaEtiquetasComponent implements OnInit {
         data => {
           if (data.size != 0) {
             const blob = new Blob([data], { type: "text/csv" });
-            saveAs(blob, "PlantillaMasivaDatosGF_Original.xls");
+            saveAs(blob, this.body.nombreFichero);
           } else {
             let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
             this.showFail(msg);
@@ -275,7 +275,7 @@ export class CargaEtiquetasComponent implements OnInit {
         data => {
           if (data.size != 0) {
             const blob = new Blob([data], { type: "text/csv" });
-            saveAs(blob, "PlantillaMasivaDatosGF_Errores.xls");
+            saveAs(blob, this.body.nombreFichero);
           } else {
             let msg = this.translateService.instant("messages.general.error.ficheroNoExiste");
             this.showFail(msg);
@@ -311,7 +311,7 @@ export class CargaEtiquetasComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
   }

@@ -83,7 +83,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
 
     this.cols = [
       { field: 'nombre', header: "informesycomunicaciones.consultas.ficha.plantilla" },
-      { field: 'tipoEnvio', header: "informesycomunicaciones.consultas.ficha.tipoenvio" }
+      { field: 'tipoEnvio', header: "informesycomunicaciones.consultas.objetivo" }
     ]
 
   }

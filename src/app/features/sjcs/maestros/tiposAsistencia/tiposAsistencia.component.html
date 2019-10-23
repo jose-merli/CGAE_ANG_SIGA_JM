@@ -54,8 +54,8 @@
                                 {{dato.importemaximo}} €
                             </span>
 
-                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importe' && col.field !='visiblemovil' 
-                            && col.field != 'importemaximo'&& col.field != 'pordefecto'">
+                            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importeReal' && col.field !='visiblemovil' 
+                            && col.field != 'importemaximoReal'&& col.field != 'pordefecto'">
                                 {{ dato[col.field] }}
                             </span>
 
@@ -67,11 +67,11 @@
                                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importemaximo}} €</span>
                             </div>
 
-                            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importe' && col.field != 'importemaximo' && col.field !='visiblemovil' && col.field != 'pordefecto'">
+                            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importeReal' && col.field != 'importemaximoReal' && col.field !='visiblemovil' && col.field != 'pordefecto'">
                                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                             </div>
 
-                            <span *ngIf="dato.editable && !setItalic(dato) && col.field != 'importe'">
+                            <span *ngIf="dato.editable && !setItalic(dato) && col.field != 'importeReal'">
                             </span>
 
                             <div *ngIf="dato.editable && col.field == 'tiposguardia'">

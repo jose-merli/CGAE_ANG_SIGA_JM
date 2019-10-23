@@ -74,7 +74,9 @@
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar">
-                        <label class="pr-3 registros-totales">Mostrando registros del {{table.first + 1}} al {{table.first + table.rows}} de un total de {{table.totalRecords}}</label>
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
                         <label>{{ 'general.message.mostrar' | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                         <label>{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
@@ -87,7 +89,7 @@
 </div>
 
 <div *ngIf="volver==true" class="mt-3 text-right main-button ">
-    <button (click)="volverAFicha()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="Volver"></button>
+    <button (click)="volverAFicha()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

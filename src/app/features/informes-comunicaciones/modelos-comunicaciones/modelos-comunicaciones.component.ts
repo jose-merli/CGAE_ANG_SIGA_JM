@@ -1,16 +1,10 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
-} from "@angular/core";
-import { DataTable } from "primeng/datatable";
-import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { SigaServices } from "../../../_services/siga.service";
-import { Message, ConfirmationService } from "primeng/components/common/api";
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { ConfirmationService, Message } from "primeng/components/common/api";
+import { DataTable } from "primeng/datatable";
+import { TranslateService } from "../../../commons/translate/translation.service";
+import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
+import { SigaServices } from "../../../_services/siga.service";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -44,6 +38,9 @@ export class ModelosComunicacionesComponent implements OnInit {
   preseleccionar: any = [];
   visible: any = [];
   fichaBusqueda: boolean = false;
+  labelColegio: any; // = this.translateService.instant("informesYcomunicaciones.plantillasEnvios.modelos.porDefecto");
+  isReload: boolean = false;
+  anotherPage: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -57,9 +54,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     sessionStorage.removeItem("esPorDefecto");
-    this.getInstitucion();
     this.bodySearch.visible = 1;
     this.bodySearch.preseleccionar = "";
     sessionStorage.removeItem("crearNuevoModelo");
@@ -67,17 +62,26 @@ export class ModelosComunicacionesComponent implements OnInit {
 
     this.selectedItem = 10;
 
+
+    if (sessionStorage.getItem("esMenu")) {
+      this.labelColegio = this.translateService.instant('informesYcomunicaciones.plantillasEnvios.modelos.porDefecto');
+      localStorage.setItem("recoverLabel", JSON.stringify(this.labelColegio));
+      this.getInstitucion();
+    } else {
+      let recoverLabel = localStorage.getItem("recoverLabel");
+      this.labelColegio = JSON.parse(recoverLabel);
+      this.getInstitucion();
+    }
+
     this.getComboClases();
     // this.body.visible = true;
 
     this.preseleccionar = [
-      { label: "", value: "" },
       { label: "No", value: "NO" },
       { label: "Sí", value: "SI" }
     ];
 
     this.visible = [
-      { label: "", value: "3" },
       { label: "No", value: 0 },
       { label: "Sí", value: 1 }
 
@@ -128,6 +132,8 @@ export class ModelosComunicacionesComponent implements OnInit {
         value: 40
       }
     ];
+
+
   }
 
   // Mensajes
@@ -158,14 +164,15 @@ export class ModelosComunicacionesComponent implements OnInit {
           for (let e of this.colegios) {
             if (e.value == "2000") {
               e.value = "0";
-              e.label = "POR DEFECTO";
+              e.label = this.labelColegio;
             }
           }
         } else {
-          this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
+          this.colegios.unshift({ label: this.labelColegio, value: "0" });
         }
 
-        this.colegios.unshift({ label: "", value: "" });
+        // this.colegios.unshift({ label: "", value: "" });
+        sessionStorage.removeItem("esMenu");
       },
       err => {
         console.log(err);
@@ -177,7 +184,6 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       n => {
         this.clasesComunicaciones = n.combooItems;
-        this.clasesComunicaciones.unshift({ label: "", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
@@ -266,7 +272,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
     this.msgs.push({
       severity: "error",
-      summary: "Incorrecto",
+      summary: this.translateService.instant("general.message.incorrect"),
       detail: this.translateService.instant(
         "cen.busqueda.error.busquedageneral"
       )
@@ -357,6 +363,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onDuplicar(dato) {
+    this.anotherPage = true;
     this.progressSpinner = true;
 
     let modelo = {
@@ -545,6 +552,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   navigateTo(dato) {
+    this.anotherPage = true;
     let id = dato[0].id;
     this.body = dato[0];
     console.log(dato);
@@ -567,6 +575,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   addModelo() {
+    this.anotherPage = true;
     this.router.navigate(["/fichaModeloComunicaciones"]);
     sessionStorage.removeItem("modelosSearch");
     sessionStorage.setItem("crearNuevoModelo", JSON.stringify("true"));
@@ -579,5 +588,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   abreCierraFicha() {
     this.fichaBusqueda = !this.fichaBusqueda;
+  }
+
+  ngOnDestroy() {
+    if (!this.anotherPage) {
+      localStorage.removeItem("recoverLabel");
+    }
   }
 }

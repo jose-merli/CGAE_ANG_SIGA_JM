@@ -1,5 +1,7 @@
 export class ModulosItem {
   idInstitucion: string;
+  procedimientos: string;
+  procedimientosReal: any[];
   nombre: string;
   importe: string;
   codigo: string;

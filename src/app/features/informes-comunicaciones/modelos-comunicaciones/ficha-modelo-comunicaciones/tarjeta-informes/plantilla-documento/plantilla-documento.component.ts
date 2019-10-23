@@ -81,6 +81,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   institucionActual: number;
   consultasGuardadas: boolean = true;
   esPorDefecto: boolean = false;
+  label1: string;
+  controlSelectionMode: string;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -98,15 +100,10 @@ export class PlantillaDocumentoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
     this.getInstitucionActual();
-
-
 
     //sessionStorage.removeItem('esPorDefecto');
 
-    this.textFilter = "Elegir";
-    this.textSelected = "{0} ficheros seleccionadas";
     this.firstDocs = 0;
 
     this.getDatos();
@@ -118,9 +115,9 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.selectedItem = 10;
 
     this.cols = [
-      { field: "objetivo", header: "Objetivo" },
-      { field: "idConsulta", header: "Consulta" },
-      { field: "region", header: "Region" }
+      { field: "objetivo", header: "informesycomunicaciones.consultas.objetivo" },
+      { field: "idConsulta", header: "menu.informesYcomunicaciones.consultas.fichaConsulta.consulta" },
+      { field: "region", header: "informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.region" }
     ];
 
     this.consultas = [
@@ -149,8 +146,8 @@ export class PlantillaDocumentoComponent implements OnInit {
     ];
 
     this.colsDocumentos = [
-      { field: "idioma", header: "Idioma" },
-      { field: "nombreDocumento", header: "Plantilla" }
+      { field: "idioma", header: "censo.usuario.labelIdioma" },
+      { field: "nombreDocumento", header: "informesycomunicaciones.consultas.ficha.plantilla" }
     ];
 
     this.datos = [
@@ -215,9 +212,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       if (!this.esPorDefecto) {
         this.selectMultipleDocs = !this.selectMultipleDocs;
         if (!this.selectMultipleDocs) {
+          // this.controlSelectionMode = "none";
           this.selectedDocs = [];
         } else {
-          this.selectAll = false;
+          this.selectAllDocs = false;
+          this.controlSelectionMode = "multiple";
           this.selectedDocs = [];
         }
       }
@@ -240,8 +239,10 @@ export class PlantillaDocumentoComponent implements OnInit {
       if (this.selectAllDocs === true) {
         this.selectMultipleDocs = false;
         this.selectedDocs = this.documentos;
+        this.numSelected = this.documentos.length;
       } else {
         this.selectedDocs = [];
+        this.numSelected = 0;
       }
     }
   }
@@ -576,7 +577,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
       },
       err => {
-        this.showFail("Error al cargar las consultas");
+        this.showFail(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargaConsulta"));
         console.log(err);
       }
     );
@@ -601,8 +602,8 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.file = undefined;
       this.showMessage(
         "info",
-        "Información",
-        "La extensión del fichero no es correcta."
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
       );
     } else if (
       extensionArchivo == null ||
@@ -613,8 +614,8 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.file = undefined;
       this.showMessage(
         "info",
-        "Información",
-        "La extensión del fichero no es correcta."
+        this.translateService.instant("general.message.informacion"),
+        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
       );
     } else {
       this.validateSizeFile(dato);
@@ -631,7 +632,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           if (this.file.size < tamBytes) {
             this.addFile(dato);
           } else {
-            this.showFail("Error al cargar el archivo. El tamaño del archivo no puede exceder de " + tam + " MB");
+            this.showFail(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB");
             this.progressSpinner = false;
           }
         });
@@ -655,10 +656,10 @@ export class PlantillaDocumentoComponent implements OnInit {
             if (err.error.error.description != null) {
               this.showFail(err.error.error.description);
             } else {
-              this.showFail("Formato no permitido o tamaño maximo superado");
+              this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
             }
           } else {
-            this.showFail("Error al subir el documento");
+            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
             console.log(err);
           }
         },
@@ -684,7 +685,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
-        this.showSuccess("La plantilla se ha guardado correctamente");
+        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"));
         this.nuevoDocumento = false;
         this.body.idInforme = JSON.parse(data["body"]).data;
         sessionStorage.setItem(
@@ -700,7 +701,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
       },
       err => {
-        this.showFail("Error al guardar la plantilla");
+        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"));
         console.log(err);
       },
       () => {
@@ -715,19 +716,18 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post("plantillasDoc_insertarPlantilla", plantilla)
       .subscribe(
         data => {
-          this.showInfo("Plantilla cargada, no olvide pulsar en guardar para asociar la plantilla correctamente");
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.plantillaCargada"));
           plantilla.idPlantillaDocumento = JSON.parse(
             data["body"]
           ).idPlantillaDocumento;
           this.body.plantillas.push(plantilla);
           this.documentos = this.body.plantillas;
           this.documentos = [...this.documentos];
-
           this.progressSpinner = false;
         },
         err => {
           this.progressSpinner = false;
-          this.showFail("Error al subir el documento");
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
           console.log(err);
         }
       );
@@ -745,7 +745,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     if (destinatarios.indexOf(true) != -1 || this.body.idClaseComunicacion == "5") {
       this.guardarConsultasOk();
     } else {
-      this.showFail("Seleccione una consulta para destinatarios");
+      this.showFail(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.mensaje.seleccionaConsulta.destinatarios"));
     }
   }
 
@@ -767,11 +767,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post("plantillasDoc_consultas_guardar", this.body)
       .subscribe(
         data => {
-          this.showSuccess("La consulta se ha guardado correctamente");
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.consultas.ficha.correctGuardadoConsulta"));
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         },
         err => {
-          this.showFail("Error al guardar la consulta");
+          this.showFail(this.translateService.instant("informesycomunicaciones.consultas.ficha.errorGuardadoConsulta"));
           console.log(err);
         },
         () => {
@@ -879,10 +879,12 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   eliminar(dato) {
+
+    let msg = this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.eliminar") + dato.length +
+      this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.eliminar.consultas");
+
     this.confirmationService.confirm({
-      // message: this.translateService.instant("messages.deleteConfirmation"),
-      message:
-        "¿Está seguro de eliminar " + dato.length + " consultas seleccionadas?",
+      message: msg,
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarEliminar(dato);
@@ -916,11 +918,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post("plantillasDoc_consultas_borrar", this.eliminarArray)
       .subscribe(
         data => {
-          this.showSuccess("Se ha eliminado la consulta correctamente");
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctConsultaEliminado"));
           this.selectedDatos = [];
         },
         err => {
-          this.showFail("Error al eliminar la consulta");
+          this.showFail(this.translateService.instant("informesycomunicaciones.consultas.errorEliminarConsulta"));
           console.log(err);
         },
         () => {
@@ -947,7 +949,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   eliminarPlantilla(dato) {
     if (this.isPlantillaUnica()) {
-      this.showFail("La plantilla de documento ha de tener al menos una plantilla física");
+      this.showFail(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.mensaje.plantillaFisica"));
     } else {
       this.confirmationService.confirm({
         // message: this.translateService.instant("messages.deleteConfirmation"),
@@ -969,6 +971,9 @@ export class PlantillaDocumentoComponent implements OnInit {
               )
             }
           ];
+          this.selectAllDocs = false;
+          this.selectMultipleDocs = false;
+          this.selectedDocs = [];
         }
       });
     }
@@ -989,13 +994,16 @@ export class PlantillaDocumentoComponent implements OnInit {
       .post("plantillasDoc_plantillas_borrar", this.eliminarArrayPlantillas)
       .subscribe(
         data => {
-          this.showSuccess("Se ha eliminado la plantilla correctamente");
+          this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaEliminado"));
         },
         err => {
-          this.showFail("Error al eliminar la plantilla");
+          this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado"));
           console.log(err);
         },
         () => {
+          this.selectAllDocs = false;
+          this.selectMultipleDocs = false;
+          this.selectedDocs = [];
           this.getDocumentos();
         }
       );
@@ -1044,43 +1052,35 @@ export class PlantillaDocumentoComponent implements OnInit {
   getSteps() {
     this.steps = [
       {
-        label: "Datos",
+        label: this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.fichaModeloComuncaciones.datos"),
         command: (event: any) => {
           this.activeStep = 0;
           this.msgsSteps = [];
-          this.showInfoSteps(
-            "Busque y añada a continuación las consultas que necesita para obtener los datos. Pídale ayuda a su soporte si no conoce las consultas que existen."
-          );
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.uno"));
         }
       },
       {
-        label: "Destinatarios",
+        label: this.translateService.instant("enviosMasivos.literal.destinatarios"),
         command: (event: any) => {
           this.activeStep = 1;
           this.msgsSteps = [];
-          this.showInfoSteps(
-            "Seleccione los destinatarios de este modelo. Esto hará que se comuniquen los documentos a las personas correspondientes en cada comunicación. Si no selecciona destinatarios, se generará un documento por cada comunicación solicitada. "
-          );
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.dos"));
         }
       },
       {
-        label: "Multidocumento",
+        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.multidocumento"),
         command: (event: any) => {
           this.activeStep = 2;
           this.msgsSteps = [];
-          this.showInfoSteps(
-            "Seleccione el modo de generación de varios documentos. Además de la generación por cada destinatario del paso anterior, puede hacer que se generen varios documentos, por ejemplo, si son para que el destinatario reparta copias personalizadas para otras personas. "
-          );
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.tres"));
         }
       },
       {
-        label: "Condicional",
+        label: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.condicional"),
         command: (event: any) => {
           this.activeStep = 3;
           this.msgsSteps = [];
-          this.showInfoSteps(
-            "Por último, puede seleccionar una condición para que se genere este documento al solicitar la comunicación. Esta selección se utiliza si va a incorporar varias plantillas en el mismo modelo y quiere que se use una u otra en función de una condición. Si siempre quiere que se genere, no seleccione nada. "
-          );
+          this.showInfoSteps(this.translateService.instant("infoYcom.modelosComunicaciones.plantillaDocumento.steps.cuatro"));
         }
       }
     ];
@@ -1120,8 +1120,7 @@ export class PlantillaDocumentoComponent implements OnInit {
     } else {
       this.confirmationService.confirm({
         // message: this.translateService.instant("messages.deleteConfirmation"),
-        message:
-          "Si continúa perderá los datos no guardados. ¿Desea continuar?",
+        message: this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.continuar"),
         icon: "fa fa-trash-alt",
         accept: () => {
           this.confirmarNavegar(dato);
@@ -1197,6 +1196,11 @@ export class PlantillaDocumentoComponent implements OnInit {
   getInstitucionActual() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+
+      // El modo de la pantalla viene por los permisos de la aplicación
+      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+        this.esPorDefecto = true;
+      }
 
       if (sessionStorage.getItem("esPorDefecto") != undefined) {
         if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000 || sessionStorage.getItem("soloLectura") === 'true') {

@@ -208,8 +208,8 @@ export class DatosDireccionesComponent implements OnInit {
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     // si no se esta creando una nueva sociedad
-    if (sessionStorage.getItem("crearnuevo") == null) {
-      fichaPosible.activa = !fichaPosible.activa;
+    if (sessionStorage.getItem("nuevoRegistro") == null) {
+    fichaPosible.activa = !fichaPosible.activa;
     }
   }
 
