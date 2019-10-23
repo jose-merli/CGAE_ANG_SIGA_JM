@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from '../../_guards/auth.guards';
+import { BusquedaJusticiablesComponent } from './justiciables/busqueda-justiciables/busqueda-justiciables.component';
 
 const routesSjcs: Routes = [
   {
@@ -61,6 +63,11 @@ const routesSjcs: Routes = [
   {
     path: "documentacionEJG",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "justiciables",
+    component: BusquedaJusticiablesComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

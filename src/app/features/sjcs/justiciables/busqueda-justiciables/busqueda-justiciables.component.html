@@ -1,0 +1,17 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS
+    <i class="pl-1 fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.justiciables' | translate }}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura"></app-filtro-justiciables>
+  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)"></app-tabla-justiciables>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

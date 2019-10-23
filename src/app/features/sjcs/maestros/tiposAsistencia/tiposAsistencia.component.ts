@@ -317,8 +317,12 @@ export class TiposAsistenciaComponent implements OnInit {
             let seleccionados = [];
             element.editable = false
             element.overlayVisible = false;
+            element.importeReal = +element.importe;
+            element.importemaximoReal = +element.importemaximo;
+
             element.importe = element.importe.replace(".", ",");
             element.importemaximo = element.importemaximo.replace(".", ",");
+
             if (element.visiblemovil == 1) {
               element.visibleMovilBoolean = true;
             } else {
