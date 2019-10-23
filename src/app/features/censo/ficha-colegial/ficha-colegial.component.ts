@@ -328,7 +328,6 @@ export class FichaColegialComponent implements OnInit {
   calendar: Calendar;
 
   comboSexo = [
-    { label: "", value: null },
     { label: "Hombre", value: "H" },
     { label: "Mujer", value: "M" }
   ];
@@ -952,7 +951,7 @@ export class FichaColegialComponent implements OnInit {
       key == "regtel"
     ) {
 
-      if (this.generalBody.identificadords != null || (this.bodyRegTel != null && this.bodyRegTel.length > 0)) {
+      if (this.generalBody.identificadords != null || (this.bodyRegTel  !=  null  &&  this.bodyRegTel.length  >  0)) {
         this.activacionEditar = true;
       } else {
         this.activacionEditar = false;
@@ -4707,7 +4706,7 @@ export class FichaColegialComponent implements OnInit {
             //   element.fechaModificacion = this.arreglarFechaRegtel(
             //     JSON.stringify(new Date(element.fechaModificacion))
             //   );
-              
+
             // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
@@ -4780,7 +4779,7 @@ export class FichaColegialComponent implements OnInit {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
     this.selectedDatosRegtel.id = this.selectedDatosRegtel.parent;
-    let selectedRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
     selectedRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
@@ -4857,14 +4856,14 @@ export class FichaColegialComponent implements OnInit {
       this.atrasRegTel = this.selectedDatosRegtel.parent;
     }
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    let selectedRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
     selectedRegtel.fechaModificacion = undefined;
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
           "fichaColegialRegTel_searchListDir",
           "?numPagina=1",
-         selectedRegtel
+          selectedRegtel
         )
         .subscribe(
           data => {
@@ -4891,7 +4890,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-           
+
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -4931,7 +4930,7 @@ export class FichaColegialComponent implements OnInit {
                 "general.message.no.registros"
               );
             }
-           
+
           },
           err => {
             this.messageRegtel = this.translateService.instant(
@@ -4945,7 +4944,7 @@ export class FichaColegialComponent implements OnInit {
   onClickDescargarRegTel() {
     this.progressSpinner = true;
     this.selectedDatosRegtel.idPersona = this.idPersona;
-    let selectedRegtel =  JSON.parse(JSON.stringify(this.selectedDatosRegtel));
+    let selectedRegtel = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
     selectedRegtel.fechaModificacion = undefined;
     this.sigaServices
       .postDownloadFiles(

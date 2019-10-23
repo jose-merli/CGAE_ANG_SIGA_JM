@@ -273,7 +273,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_claseComunicaciones").subscribe(
       data => {
         this.clasesComunicaciones = data.combooItems;
-        this.clasesComunicaciones.unshift({ label: "", value: "" });
+        // this.clasesComunicaciones.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -282,7 +282,7 @@ export class ConsultasComponent implements OnInit {
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: "", value: "" });
+        // this.objetivos.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);
@@ -291,7 +291,7 @@ export class ConsultasComponent implements OnInit {
       this.sigaServices.get("consultas_comboModulos").subscribe(
         data => {
           this.modulos = data.combooItems;
-          this.modulos.unshift({ label: "", value: "" });
+          // this.modulos.unshift({ label: "", value: "" });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
           this.modulos.map(e => {
@@ -675,7 +675,6 @@ export class ConsultasComponent implements OnInit {
 
   getComboGenerica() {
     this.comboGenerica = [
-      { label: "", value: "" },
       { label: "No", value: "N" },
       { label: "Sí", value: "S" }
 

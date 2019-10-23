@@ -281,7 +281,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
         } else {
           this.colegios.unshift({ label: "POR DEFECTO", value: "0" });
         }
-        this.colegios.unshift({ label: "", value: "" });
+        // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);

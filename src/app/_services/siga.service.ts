@@ -19,7 +19,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ConfirmationService } from "primeng/api";
 import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
-import { Subject } from "rxjs/Subject"; 
+import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class SigaServices {
@@ -49,6 +49,7 @@ export class SigaServices {
     maestros_update: "catmaestros/update",
     maestros_create: "catmaestros/create",
     maestros_delete: "catmaestros/delete",
+    maestros_activate: "catmaestros/activate",
     maestros_historico: "catmaestros/historico",
     parametros_modulo: "parametros/modulo",
     parametros_search: "parametros/search",
@@ -807,17 +808,17 @@ export class SigaServices {
   }
 
   parseErrorBlob(err: HttpErrorResponse): Observable<any> {
-		const reader: FileReader = new FileReader();
-	
-		const obs = Observable.create((observer: any) => {
-		  reader.onloadend = (e) => {
-			observer.error(JSON.parse(reader.result as string));
-			observer.complete();			
-		  }
-		});
-		reader.readAsText(err.error);
-		return obs;
-	}
+    const reader: FileReader = new FileReader();
+
+    const obs = Observable.create((observer: any) => {
+      reader.onloadend = (e) => {
+        observer.error(JSON.parse(reader.result as string));
+        observer.complete();
+      }
+    });
+    reader.readAsText(err.error);
+    return obs;
+  }
 
   postDownloadFiles(service: string, body: any): Observable<any> {
     let headers = new HttpHeaders({
@@ -825,7 +826,7 @@ export class SigaServices {
     });
     return this.http
       .post(environment.newSigaUrl + this.endpoints[service], body, {
-        headers: headers, 
+        headers: headers,
         observe: "body", // si observe: "response" no sirve. Si se quita el observe sirve
         responseType: "blob"
       })

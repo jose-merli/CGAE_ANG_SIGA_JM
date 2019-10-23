@@ -77,13 +77,11 @@ export class ModelosComunicacionesComponent implements OnInit {
     // this.body.visible = true;
 
     this.preseleccionar = [
-      { label: "", value: "" },
       { label: "No", value: "NO" },
       { label: "Sí", value: "SI" }
     ];
 
     this.visible = [
-      { label: "", value: "3" },
       { label: "No", value: 0 },
       { label: "Sí", value: 1 }
 
@@ -173,7 +171,7 @@ export class ModelosComunicacionesComponent implements OnInit {
           this.colegios.unshift({ label: this.labelColegio, value: "0" });
         }
 
-        this.colegios.unshift({ label: "", value: "" });
+        // this.colegios.unshift({ label: "", value: "" });
         sessionStorage.removeItem("esMenu");
       },
       err => {
@@ -186,7 +184,6 @@ export class ModelosComunicacionesComponent implements OnInit {
     this.sigaServices.get("comunicaciones_claseComunicaciones").subscribe(
       n => {
         this.clasesComunicaciones = n.combooItems;
-        this.clasesComunicaciones.unshift({ label: "", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.clasesComunicaciones.map(e => {
