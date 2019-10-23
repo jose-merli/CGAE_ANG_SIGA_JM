@@ -7,9 +7,12 @@ import { LoginDevelopComponent } from "./commons/login-develop/login-develop.com
 import { HomeComponent } from "./features/home/home.component";
 
 // Censo
+import { SearchColegiadosComponent } from "./features/censo/search-colegiados/search-colegiados.component";
+import { SearchNoColegiadosComponent } from "./features/censo/search-no-colegiados/search-no-colegiados.component";
 import { BusquedaNoColegiadosComponent } from "./features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component";
 import { CertificadosAcaComponent } from "./features/censo/certificados-aca/certificados-aca.component";
 import { ComisionesCargosComponent } from "./features/censo/comisiones-cargos/comisiones-cargos.component";
+import { SolicitudesGenericasComponent } from "./features/censo/solicitudes-genericas/solicitudes-genericas.component";
 import { SolicitudesEspecificasComponent } from "./features/censo/solicitudes-especificas/solicitudes-especificas.component";
 import { SolicitudesIncorporacionComponent } from "./features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component";
 import { AlterMutuaComponent } from "./features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component";
@@ -26,6 +29,7 @@ import { MantenimientoDuplicadosComponent } from "./features/censo/mantenimiento
 import { MediadoresComponent } from "./features/censo/mediadores/mediadores.component";
 import { CargasPeriodicasComponent } from "./features/censo/cargas-periodicas/cargas-periodicas.component";
 import { ConfigurarPerfilComponent } from "./features/censo/configurar-perfil/configurar-perfil.component";
+import { CensoDocumentacionComponent } from "./features/censo/censo-documentacion/censo-documentacion.component";
 import { TipoCurricularComponent } from "./features/censo/gestion-subtiposCV/tipo-curricular.component";
 import { BusquedaGeneralComponent } from "./features/censo/busqueda-general/busqueda-general.component";
 import { DetalleIntegranteComponent } from "./features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component";
@@ -90,8 +94,9 @@ import { CertificacionComponent } from './features/sjcs/certificacion/certificac
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
-
+import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
 import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
+
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
 import { MantenimientoProcuradoresComponent } from "./features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component";
 import { MantenimientoPrisionesComponent } from "./features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component";
@@ -228,10 +233,8 @@ import { FichaRegistroComunicacionComponent } from './features/informes-comunica
 import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
 import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
-import { SjcsModule } from './features/sjcs/sjcs.module';
-import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
-import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
-import { BusquedaProcedimientosComponent } from "./features/sjcs/maestros/procedimientos/busqueda-procedimientos/busqueda-procedimientos.component";
+import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
+
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
@@ -670,35 +673,17 @@ const appRoutes: Routes = [
   //Justicia Gratuita
   {
     path: "zonasYsubzonas",
-    // component: ZonasYSubzonasComponent,
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    component: ZonasYSubzonasComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "areasYMaterias",
-    // component: AreasYMateriasComponent,
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "costesFijos",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "funcamentosCalificacion",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "fundamentosResolucion",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    component: AreasYMateriasComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "partidas",
-    // component: PartidasPresupuestarias,
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    component: PartidasComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -713,8 +698,7 @@ const appRoutes: Routes = [
   },
   {
     path: "maestrosModulos",
-    // component: MaestrosModulosComponent,
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    component: MaestrosModulosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -729,27 +713,17 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoPrisiones",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    component: MantenimientoPrisionesComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "mantenimientoComisarias",
-    component: ComisariasComponent,
+    component: MantenimientoComisariasComponent,
     canActivate: [AuthGuard]
   },
   {
     path: "mantenimientoJuzgados",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "calendarioLaboralAgenda",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: "justiciables",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    component: MantenimientoJuzgadosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -1182,8 +1156,8 @@ const appRoutes: Routes = [
   // Administracion
   {
     path: "catalogosMaestros",
-    //component: CatalogosMaestros,
-    component: CatalogosMaestrosComponent,
+    component: CatalogosMaestros,
+    // component: CatalogosMaestrosComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -1306,13 +1280,7 @@ const appRoutes: Routes = [
     component: DialogoComunicacionesComponent,
     canActivate: [AuthGuard]
   },
-  {
-    path: "procedimientos",
-    component: BusquedaProcedimientosComponent,
-    canActivate: [AuthGuard]
-  },
 
   { path: " ", redirectTo: "home" }
 ];
-
 export const routing = RouterModule.forRoot(appRoutes);
