@@ -44,6 +44,11 @@ export class GestionTipodocumentoComponent implements OnInit {
     } else {
       this.modoEdicion = true;
     }
+
+    if (this.persistenceService.getHistorico()) {
+      this.modoEdicion = false;
+    }
+
   }
 
   ngOnInit() {

@@ -184,7 +184,6 @@ import { CertificacionComponent } from './features/sjcs/certificacion/certificac
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
-import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component';
 import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
 import { CalendarioLaboralComponent } from './features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
@@ -452,7 +451,6 @@ import { PrecioModule } from './commons/precio/precio.module';
 		//Justicia Gratuita
 		ZonasYSubzonasComponent,
 		AreasYMateriasComponent,
-		PartidosJudicialesComponent,
 		CalendarioLaboralComponent,
 		MantenimientoProcuradoresComponent,
 		MantenimientoPrisionesComponent,

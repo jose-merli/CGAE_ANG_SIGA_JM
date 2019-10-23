@@ -2,12 +2,12 @@ import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, Event
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
-import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
 import { PartidasPresupuestarias } from '../partidas/partidasPresupuestarias/partidasPresupuestarias.component';
 import { TablaPartidasComponent } from '../partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 import { FiltrosPartidasJudiciales } from './filtrosPartidosJudiciales/filtros-partidasjudiciales.component';
+import { PersistenceService } from '../../../../_services/persistence.service';
 // import { PartidasPresupuestarias } from './partidasPresupuestarias/partidasPresupuestarias.component';
 // import { GestionPartidasComponent } from './partidas.module';
 // import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
@@ -15,7 +15,7 @@ import { FiltrosPartidasJudiciales } from './filtrosPartidosJudiciales/filtros-p
 @Component({
   selector: 'app-partidasjudiciales',
   templateUrl: './partidas-judiciales.component.html',
-  styleUrls: ['./partidos-judiciales.component.scss']
+  styleUrls: ['./partidas-judiciales.component.scss']
 })
 export class PartidosJudicialesComponent implements OnInit, AfterViewInit {
 
