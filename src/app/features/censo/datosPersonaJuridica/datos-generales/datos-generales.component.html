@@ -137,7 +137,8 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
-              <p-dropdown class="select-form" [options]="idiomas" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="idiomaPreferenciaSociedad"
+              <p-dropdown class="select-form" [showClear]="true" [options]="idiomas" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="idiomaPreferenciaSociedad"
                 [filter]="true" (ngModelChange)="onChangeForm()" filterBy="label"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">

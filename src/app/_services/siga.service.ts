@@ -50,6 +50,7 @@ export class SigaServices {
     maestros_update: "catmaestros/update",
     maestros_create: "catmaestros/create",
     maestros_delete: "catmaestros/delete",
+    maestros_activate: "catmaestros/activate",
     maestros_historico: "catmaestros/historico",
     parametros_modulo: "parametros/modulo",
     parametros_search: "parametros/search",

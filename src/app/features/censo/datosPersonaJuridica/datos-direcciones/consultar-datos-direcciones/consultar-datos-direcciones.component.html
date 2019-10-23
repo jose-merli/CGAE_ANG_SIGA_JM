@@ -72,8 +72,9 @@
                 <label>
                   {{"censo.datosDireccion.literal.pais2" | translate}}
                 </label>
-                <p-dropdown class="select-form" [(ngModel)]="body.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais"
-                  [disabled]="historyDisable || permisoTarjeta == '2'" (onChange)="onChangePais()">
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idPais" [showClear]="true"
+                  [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="historyDisable || permisoTarjeta == '2'"
+                  (onChange)="onChangePais()">
                 </p-dropdown>
               </div>
 
@@ -92,9 +93,9 @@
                   {{"censo.datosDireccion.literal.provincia" | translate}}
                 </label>
                 <!--  -->
-                <p-dropdown class="select-form" [(ngModel)]='provinciaSelecionada' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                  filterMatchMode="contains" [disabled]="isDisabledProvincia || permisoTarjeta == '2' || poblacionExtranjera"
-                  [options]="comboProvincia">
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='provinciaSelecionada'
+                  [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                  [disabled]="isDisabledProvincia || permisoTarjeta == '2' || poblacionExtranjera" [options]="comboProvincia">
                 </p-dropdown>
               </div>
 
@@ -108,7 +109,8 @@
                 <label>
                   {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                 </label>
-                <p-dropdown #input2 class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || permisoTarjeta == '2'"
+                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idPoblacion'
+                  [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || permisoTarjeta == '2'"
                   [options]="comboPoblacion" (input)="buscarPoblacion($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
                   id="dropdown">
                 </p-dropdown>

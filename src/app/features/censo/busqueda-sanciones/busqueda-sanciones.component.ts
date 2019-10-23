@@ -254,7 +254,6 @@ export class BusquedaSancionesComponent implements OnInit {
 
   getDataDatesType() {
     this.datesType = [
-      { label: "", value: "" },
       { label: "Acuerdo", value: "Acuerdo" },
       { label: "Fin", value: "Fin" },
       { label: "Firmeza", value: "Firmeza" },

@@ -3,7 +3,7 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p> {{ 'menu.administracion' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.gestionCatalogosMaestros' | translate}}</p>
+      <i class="fa fa-angle-right"></i>{{ 'menu.administracion.gestionCatalogosMaestros' | translate}}</p>
   </div>
   <div class="card">
     <div class="card-body">
@@ -16,8 +16,9 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'administracion.catalogos.seleccionar' | translate}} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]="body.catalogo" [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)"
-              [filter]="true" filterBy="label">
+            <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" class="select-form" [(ngModel)]="body.catalogo"
+              [options]="catalogoArray" [(disabled)]="blockSeleccionar" (onChange)="onChangeCatalogo($event)" [filter]="true"
+              filterBy="label">
               <ng-template let-item pTemplate="item">
                 <div *ngIf="setBold(item)==false" [ngStyle]="{'font-weight':'bold'}">{{item.label}}</div>
                 <div *ngIf="setBold(item)==true" [ngStyle]="{'font-weight': 'normal'}">{{item.label}}</div>
@@ -52,6 +53,9 @@
     <!--FIN CARD-->
   </div>
   <!--FIN DE PRINCIPAL-->
+  <!-- <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
+  #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+  [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"> -->
 
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
@@ -250,7 +254,7 @@
               <p-checkbox [disabled]="!activacionEditar" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
@@ -258,8 +262,10 @@
         <p-footer>
           <div class="text-right main-button">
             <button (click)="isBuscar(); selectedDatos=[]" pButton type="button" icon="fa fa-undo " iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
+            <button *ngIf="!tablaHistorico" (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
               iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button *ngIf="tablaHistorico" (click)="confirmarActivar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt " [disabled]="isHabilitadoEliminar()"
+              iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
           </div>
         </p-footer>
       </p-dataTable>

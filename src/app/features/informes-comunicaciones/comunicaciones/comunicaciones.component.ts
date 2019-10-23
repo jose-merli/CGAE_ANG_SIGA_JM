@@ -229,7 +229,7 @@ export class ComunicacionesComponent implements OnInit {
     this.sigaServices.get("modelos_colegio").subscribe(
       n => {
         this.colegios = n.combooItems;
-        this.colegios.unshift({ label: "", value: "" });
+        // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
         console.log(err);

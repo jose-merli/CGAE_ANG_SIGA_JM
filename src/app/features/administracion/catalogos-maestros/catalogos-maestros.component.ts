@@ -26,6 +26,7 @@ import { CatalogoMaestroItem } from "./../../../../app/models/CatalogoMaestroIte
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { Router } from "@angular/router";
+import { isObject } from "util";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -559,10 +560,21 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   isSelectMultiple() {
     if (this.activacionEditar) {
       this.selectMultiple = !this.selectMultiple;
+      this.selectedDatos = this.datosHist;
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {
+        // if (this.tablaHistorico) {
+        //   this.eliminado = false;
+        // }
+        this.selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.fechaBaja == null) {
+            this.eliminado = true;
+          } else {
+            this.eliminado = false;
+          }
+        });
         this.pressNew = false;
         this.selectAll = false;
         this.selectedDatos = [];
@@ -699,10 +711,19 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
   }
   irEditarCatalogo(selectedDatos) {
     if (selectedDatos && selectedDatos.length > 0) {
-      if (selectedDatos[0].fechaBaja == null) {
-        this.eliminado = false;
-      } else {
-        this.eliminado = true;
+      if (this.tablaHistorico) {
+        this.selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.fechaBaja == null) {
+            this.eliminado = true;
+          } else {
+            this.eliminado = false;
+          }
+        });
+      }
+      else {
+        if (selectedDatos[0].fechaBaja == null) {
+          this.eliminado = false;
+        }
       }
     }
 
@@ -776,7 +797,56 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
         } else {
           this.isBuscar();
         }
-        this.editar = false;
+        this.editar = true;
+        this.eliminar = true;
+        this.selectedDatos = [];
+        this.progressSpinner = false;
+      }
+    );
+  }
+  isActivar(selectedDatos) {
+    this.del = new CatalogoDeleteRequestDto();
+    selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+      this.del.idRegistro.push(value.idRegistro);
+      this.del.tabla = value.catalogo;
+      this.del.local = this.local;
+    });
+    this.sigaServices.post("maestros_activate", this.del).subscribe(
+      data => {
+        let status = JSON.parse(data["body"]);
+
+        if (status.status == 'OK') {
+          if (selectedDatos == 1) {
+            this.msgs = [];
+            this.msgs.push({
+              severity: "success",
+              summary: "Correcto",
+              detail: this.translateService.instant("messages.activate.success")
+            });
+          } else {
+            this.msgs = [];
+            this.msgs.push({
+              severity: "success",
+              summary: "Correcto",
+              detail:
+                selectedDatos.length +
+                " " +
+                this.translateService.instant("messages.activate.selected.success")
+            });
+          }
+        } else {
+          this.msgs = [];
+          this.msgs.push({
+            severity: "error",
+            summary: "Incorrecto",
+            detail:
+              selectedDatos.length +
+              " " +
+              this.translateService.instant("general.message.error.realiza.accion")
+          });
+        }
+        this.isBuscar();
+        this.editar = true;
         this.eliminar = true;
         this.selectedDatos = [];
         this.progressSpinner = false;
@@ -837,6 +907,44 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     });
   }
 
+  confirmarActivar(selectedDatos) {
+    let mess = this.translateService.instant("messages.activateConfirmation");
+    let icon = "fa fa-trash-alt";
+
+    // if (selectedDatos.length > 1) {
+    //   mess =
+    //     this.translateService.instant("messages.deleteConfirmation.much") +
+    //     selectedDatos.length +
+    //     " " +
+    //     this.translateService.instant("messages.deleteConfirmation.register") +
+    //     "?";
+    // }
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.isActivar(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+
+        this.selectAll = false;
+        this.selectMultiple = false;
+        this.selectedDatos = [];
+        this.eliminar = false;
+        this.progressSpinner = false;
+      }
+    });
+  }
+
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
@@ -857,16 +965,26 @@ export class CatalogosMaestros extends SigaWrapper implements OnInit {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.datosHist;
-
-      this.selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
-        if (value.fechaBaja == null) {
-          this.eliminado = false;
-        } else {
-          this.eliminado = true;
-          this.selectedDatos.splice(key, 1);
-        }
-      });
-      this.numSelected = this.datosHist.length;
+      if (this.tablaHistorico) {
+        this.selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.fechaBaja == null) {
+            this.eliminado = false;
+          } else {
+            // this.eliminado = false;
+            this.selectedDatos = this.datosHist.filter(datoHist => datoHist.fechaBaja != undefined && datoHist.fechaBaja != null);
+          }
+        });
+      } else {
+        this.selectedDatos.forEach((value: CatalogoMaestroItem, key: number) => {
+          if (value.fechaBaja == null) {
+            this.eliminado = false;
+          } else {
+            // this.eliminado = true;
+            this.selectedDatos = this.datosHist.filter(datoHist => datoHist.fechaBaja != undefined && datoHist.fechaBaja != null);
+          }
+        });
+      }
+      this.numSelected = this.selectedDatos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
