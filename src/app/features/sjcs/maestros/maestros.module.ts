@@ -18,6 +18,8 @@ import { ComisariasModule } from './comisarias/comisarias.module';
 import { CalendarioLaboralAgendaModule } from './calendario-laboral-agenda/calendario-laboral-agenda.module';
 import { GestionTiposAsistenciaModule } from './tiposAsistencia/tiposAsistencia.module';
 import { ProcuradoresModule } from './procuradores/procuradores.module';
+import { DocumentacionEJGComponent } from './documentacion-ejg/documentacion-ejg.component';
+import { GestionDocumentacionEJGModule } from './documentacion-ejg/documentacion-ejg.module';
 import { GestionTiposActuacionModule } from './tiposActuacion/tiposActuacion.module';
 import { GestionDestinatariosComponent } from './destinatarios-retenciones/destinatarios.module';
 import { ProcedimientosModule } from './procedimientos/procedimientos.module';
@@ -41,6 +43,7 @@ import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.modul
                 GestionPartidasComponent,
                 ProcuradoresModule,
                 GestionPartidasJudicialesComponent,
+                GestionDocumentacionEJGModule,
                 ComisariasModule,
                 CalendarioLaboralAgendaModule,
                 ProcedimientosModule,
@@ -48,8 +51,7 @@ import { RetencionesIrpfModule } from './retenciones-IRPF/retenciones-irpf.modul
                 RetencionesIrpfModule,
                 SpinnerModule,
                 GestionTiposActuacionModule,
-                GestionDestinatariosComponent,
-                GestionTiposAsistenciaModule
+                GestionDestinatariosComponent
         ],
 
         providers: []

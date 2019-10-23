@@ -342,7 +342,6 @@ export class ConsultaComponent implements OnInit {
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body)
       .subscribe(data => {
-        debugger;
         this.showValores = false;
         if (data == null) {
           this.showInfo("La consulta no devuelve resultados");

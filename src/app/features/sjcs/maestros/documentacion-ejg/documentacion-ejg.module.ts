@@ -28,6 +28,10 @@ import { FechaModule } from '../../../../commons/fecha/fecha.module';
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from '../partidas/partidas.component';
+import { TablaDocumentacionejgComponent } from './tabla-documentacionejg/tabla-documentacionejg.component';
+import { GestionDocumentacionejgComponent } from './gestion-documentacionejg/gestion-documentacionejg.component';
+import { GestionTipodocumentoComponent } from './gestion-documentacionejg/gestion-tipodocumento/gestion-tipodocumento.component';
+import { GestionDocumentosComponent } from './gestion-documentacionejg/gestion-documentos/gestion-documentos.component';
 
 // import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
@@ -52,7 +56,11 @@ import { PartidasComponent } from '../partidas/partidas.component';
   ],
   declarations: [
     FiltrosdocumentacionejgComponent,
-    DocumentacionEJGComponent
+    DocumentacionEJGComponent,
+    TablaDocumentacionejgComponent,
+    GestionDocumentacionejgComponent,
+    GestionTipodocumentoComponent,
+    GestionDocumentosComponent,
     // MaestrosModulosComponent,
     // TablaModulosComponent,
     // GestionModulosYBasesComponent, 
@@ -87,4 +95,4 @@ import { PartidasComponent } from '../partidas/partidas.component';
     { provide: LOCALE_ID, useValue: 'es-ES' }
   ]
 })
-export class GestionModulosModule { }
+export class GestionDocumentacionEJGModule { }

@@ -1,0 +1,448 @@
+import { Component, OnInit, Input, Output, ChangeDetectorRef, ViewChild, EventEmitter, SimpleChanges } from '@angular/core';
+import { TranslateService } from '../../../../../../commons/translate';
+import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { DocumentacionEjgObject } from '../../../../../../models/sjcs/DocumentacionEjgObject';
+import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
+
+@Component({
+  selector: 'app-gestion-documentos',
+  templateUrl: './gestion-documentos.component.html',
+  styleUrls: ['./gestion-documentos.component.scss']
+})
+export class GestionDocumentosComponent implements OnInit {
+  [x: string]: any;
+  rowsPerPage: any = [];
+  cols: any[] = [];
+  msgs: any;
+
+  openFicha: boolean = true;
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  historico: boolean = false;
+  message;
+  filtros;
+  nuevo: boolean = true;
+  progressSpinner: boolean = false;
+  permisos: boolean = false;
+  updateDocumentos = [];
+  datosInicial;
+  body;
+  selectionMode: string = "multiple";
+  //Resultados de la busqueda
+  @Input() datos;
+  @ViewChild("tabla") tabla;
+
+
+  @Output() searchHistoricalSend = new EventEmitter<boolean>();
+
+
+  constructor(private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService
+  ) { }
+
+  ngOnInit() {
+    this.getCols();
+    // this.dato = this.persistenceService.getDatos()
+    if (this.datos != null && this.datos != undefined) {
+      //UPDATE
+      this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
+    }
+
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisos = this.persistenceService.getPermisos();
+    }
+
+
+
+    if (this.persistenceService.getHistorico() != undefined) {
+      this.historico = this.persistenceService.getHistorico();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.historico == false) {
+      this.selectMultiple = false;
+      this.selectionMode = "single"
+    }
+    this.selectedDatos = [];
+    this.updateDocumentos = [];
+    this.nuevo = false;
+    if (this.datos != null && this.datos != undefined)
+      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+  }
+
+  searchHistorical() {
+
+    this.selectAll = false;
+    this.selectedDatos = [];
+    this.selectMultiple = false;
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchHistoricalSend.emit(this.historico);
+
+  }
+
+  callSaveService(url) {
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        if (this.nuevo) {
+          this.nuevo = false;
+        }
+
+        this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
+        this.searchHistoricalSend.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+
+      },
+      err => {
+
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+
+  deleteDoc() {
+
+    let tipoDocDelete = new DocumentacionEjgObject();
+    tipoDocDelete.documentacionejgItems = this.selectedDatos;
+    this.sigaServices.post("gestionDocumentacionEjg_deleteDoc", tipoDocDelete).subscribe(
+
+      data => {
+
+        this.selectedDatos = [];
+        this.searchHistoricalSend.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.selectAll = false;
+        this.progressSpinner = false;
+
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  edit(evento) {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = [];
+    }
+    if (!this.nuevo && this.permisos) {
+
+      if (!this.selectAll && !this.selectMultiple && !this.historico) {
+
+        this.datos.forEach(element => {
+          element.editable = false;
+          element.overlayVisible = false;
+        });
+
+        evento.data.editable = true;
+        this.editMode = true;
+
+        this.selectedDatos = [];
+        this.selectedDatos.push(evento.data);
+
+        let findDato = this.datosInicial.find(item => item.abreviaturaDoc === this.selectedDatos[0].abreviaturaDoc && item.descripcionDoc === this.selectedDatos[0].descripcionDoc && item.codigoExt === this.selectedDatos[0].codigoExt);
+
+        this.selectedBefore = findDato;
+      } else {
+        if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
+          if (this.selectedDatos[0] != undefined) {
+            this.selectedDatos.pop();
+          } else {
+            this.selectedDatos = [];
+          }
+        }
+
+      }
+
+    }
+  }
+  activate() {
+    let docActivate = new DocumentacionEjgObject();
+    docActivate.documentacionejgItems = this.selectedDatos;
+    this.sigaServices.post("gestionDocumentacionEjg_deleteDoc", docActivate).subscribe(
+      data => {
+
+        this.selectedDatos = [];
+        this.searchHistoricalSend.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  abreCierraFicha() {
+    this.openFicha = !this.openFicha;
+  }
+  setItalic(dato) {
+    if (dato.fechabaja == null) return false;
+    else return true;
+  }
+
+  getCols() {
+
+    this.cols = [
+
+      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
+      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos" },
+      { field: "codigoExt", header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno" },
+
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll) {
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+      } else {
+        this.selectedDatos = this.datos;
+      }
+
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
+      }
+
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = false;
+    }
+
+  }
+
+  isSelectMultiple() {
+    if (this.permisos) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single";
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "multiple";
+      }
+    }
+    // this.volver();
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+    this.seleccion = false;
+  }
+
+  newDocumento() {
+    this.editMode = false;
+    this.selectionMode = "single";
+    if (this.datosInicial != undefined && this.datosInicial != null) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+
+    let Documento = {
+      abreviaturaDoc: undefined,
+      descripcionDoc: undefined,
+      codigoDescripcion: undefined,
+      idDocumento: undefined,
+      idTipoDocumento: this.persistenceService.getDatos().idTipoDocumento,
+      editable: true
+    };
+    if (this.datos.length == 0) {
+      this.datos.push(Documento);
+    } else {
+      this.datos = [Documento, ...this.datos];
+    }
+
+  }
+  changeAbreviatura(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
+
+    if (findDato != undefined) {
+      if (dato.abreviaturaDoc != findDato.abreviaturaDoc) {
+        let findUpdate = this.updateDocumentos.find(item => item.abreviaturaDoc === dato.abreviaturaDoc);
+
+        if (findUpdate == undefined) {
+          this.updateDocumentos.push(dato);
+        }
+      }
+    }
+
+  }
+  changeCodigoExt(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
+
+    if (findDato != undefined) {
+      if (dato.codigoExt != findDato.codigoExt) {
+        let findUpdate = this.updateDocumentos.find(item => item.codigoExt === dato.codigoExt);
+
+        if (findUpdate == undefined) {
+          this.updateDocumentos.push(dato);
+        }
+      }
+    }
+
+  }
+
+
+  changeDescripcion(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
+
+    if (findDato != undefined) {
+      if (dato.descripcionDoc != findDato.descripcionDoc) {
+        let findUpdate = this.updateDocumentos.find(item => item.descripcionDoc === dato.descripcionDoc);
+
+        if (findUpdate == undefined) {
+          this.updateDocumentos.push(dato);
+        }
+      }
+    }
+
+  }
+
+
+  save() {
+    this.progressSpinner = true;
+    let url = "";
+    if (this.datos[0].idDocumento == null || this.datos[0].idDocumento == undefined) {
+      this.body = this.datos[0]
+      url = "gestionDocumentacionEjg_createDoc";
+      this.callSaveService(url);
+    } else {
+      this.body = new DocumentacionEjgObject();
+      this.body.documentacionejgItems = this.updateDocumentos;
+      url = "gestionDocumentacionEjg_updateDoc";
+      this.callSaveService(url);
+    }
+
+  }
+  disabledSave() {
+    if (this.nuevo) {
+      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined && this.datos[0].abreviaturaDoc != undefined) {
+        return false;
+      } else {
+        return true;
+      }
+
+    } else {
+      if (!this.historico && (this.updateDocumentos != undefined && this.updateDocumentos.length > 0) && this.permisos) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+  rest() {
+    if (this.datosInicial != undefined) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+    this.editElementDisabled();
+    this.selectedDatos = [];
+    this.updateDocumentos = [];
+    this.nuevo = false;
+    this.editMode = false;
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
+  }
+
+}
+
+

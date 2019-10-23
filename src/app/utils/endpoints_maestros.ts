@@ -74,6 +74,21 @@ export let endpoints_maestros: any = {
     gestionPrisiones_createPrision: "maestros/gestionPrisiones/createPrision",
     gestionPrisiones_updatePrision: "maestros/gestionPrisiones/updatePrision",
 
+    //Documentacion EJG
+    busquedaDocumentacionEjg_searchDocumento: "maestros/busquedaDocumentacionEjg/searchDocumento",
+    //busquedaDocumentacionEjg_searchTipoDocumento: "maestros/busquedaDocumentacionEjg/searchTipoDocumento",
+    busquedaDocumentacionEjg_createDocumento: "maestros/busquedaDocumentacionEjg/createDocumentacionejg",
+    busquedaDocumentacionEjg_updateDocumento: "maestros/busquedaDocumentacionEjg/updateDocumentacionejg",
+    busquedaDocumentacionEjg_deleteTipoDoc: "maestros/busquedaDocumentacionEjg/deleteTipoDoc",
+    busquedaDocumentacionEjg_searchDocumentos: "maestros/busquedaDocumentacionEjg/searchDocumentos",
+    gestionDocumentacionEjg_deleteDoc: "maestros/gestionDocumentacionEjg/deleteDoc",
+    gestionDocumentacionEjg_createTipoDoc: "maestros/gestionDocumentacionEjg/createTipoDoc",
+    gestionDocumentacionEjg_updateTipoDoc: "maestros/gestionDocumentacionEjg/updateTipoDoc",
+    gestionDocumentacionEjg_createDoc: "maestros/gestionDocumentacionEjg/createDoc",
+    gestionDocumentacionEjg_updateDoc: "maestros/gestionDocumentacionEjg/updateDoc",
+
+
+
 
     //Fundamentos calificacion
     busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",

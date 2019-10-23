@@ -1,6 +1,6 @@
 import { Component, OnInit, HostBinding, ViewChild, AfterViewInit, Output, EventEmitter, ContentChildren, QueryList } from '@angular/core';
 import { FiltrosdocumentacionejgComponent } from './filtro-busqueda-ejg/filtros-documentacionejg.component';
-// import { TablaModulosComponent } from './tabla-modulos/tabla-modulos.component';
+import { TablaDocumentacionejgComponent } from './tabla-documentacionejg/tabla-documentacionejg.component';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 export class DocumentacionEJGComponent implements OnInit, AfterViewInit {
 
   buscar: boolean = false;
+  historico: boolean = false;
   messageShow: string;
 
   datos;
@@ -29,8 +30,9 @@ export class DocumentacionEJGComponent implements OnInit, AfterViewInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltrosdocumentacionejgComponent) filtros;
+  @ViewChild(TablaDocumentacionejgComponent) tabla;
 
-  //comboPartidosJudiciales
+
   msgs;
   permisoEscritura: any;
 
@@ -46,7 +48,7 @@ export class DocumentacionEJGComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.buscar = this.filtros.buscar
 
-    this.commonsService.checkAcceso(procesos_maestros.modulo)
+    this.commonsService.checkAcceso(procesos_maestros.documentacionEjg)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
@@ -74,20 +76,37 @@ export class DocumentacionEJGComponent implements OnInit, AfterViewInit {
 
   searchModulos(event) {
     this.filtros.filtros.historico = event;
+    this.persistenceService.setHistorico(event);
 
     this.progressSpinner = true;
 
-    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtros).subscribe(
+    this.sigaServices.post("busquedaDocumentacionEjg_searchDocumento", this.filtros.filtros).subscribe(
       n => {
-        this.datos = JSON.parse(n.body).modulosItem;
+        this.datos = JSON.parse(n.body).documentacionejgItems;
         this.buscar = true;
         this.progressSpinner = false;
+        if (this.tabla != null && this.tabla != undefined) {
+          this.tabla.historico = event;
+        }
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
       }
     );
+    /*
+        this.sigaServices.post("maestros/busquedaDocumentacionEjg/searchTipoDocumento", this.filtros.filtros).subscribe(
+          n => {
+            this.datos = JSON.parse(n.body).modulosItem;
+            this.buscar = true;
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          }
+        );
+    */
   }
 
   showMessage(event) {
