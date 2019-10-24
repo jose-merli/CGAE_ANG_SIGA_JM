@@ -56,16 +56,41 @@ export class FiltrosModulosComponent implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  isBuscar() {
-    this.persistenceService.setFiltros(this.filtros);
-    if ((this.filtros.nombre == undefined || this.filtros.nombre == "" ||
-      this.filtros.nombre.trim().length < 3) && (this.filtros.codigo == undefined || this.filtros.codigo == ""
-        || this.filtros.codigo.trim().length < 3)) {
-      this.showSearchIncorrect();
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  checkFilters() {
+    if (
+      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
+      (this.filtros.codigo == null || this.filtros.codigo.trim() == "" || this.filtros.codigo.trim().length < 3)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
     } else {
+      // quita espacios vacios antes de buscar
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+        this.filtros.nombre = this.filtros.nombre.trim();
+      }
+
+      if (this.filtros.codigo != undefined && this.filtros.codigo != null) {
+        this.filtros.codigo = this.filtros.codigo.trim();
+      }
+
+      return true;
+    }
+  }
+
+  isBuscar() {
+    if (this.checkFilters()) {
+      this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.busqueda.emit(false);
+      this.busqueda.emit(false)
     }
   }
 

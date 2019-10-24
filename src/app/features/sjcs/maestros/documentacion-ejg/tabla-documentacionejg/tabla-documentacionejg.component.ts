@@ -61,13 +61,35 @@ export class TablaDocumentacionejgComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
   }
+  editElementDisabled() {
+    this.datos.forEach(element => {
+      element.editable = false
+      element.overlayVisible = false;
+    });
+  }
 
   searchHistorical() {
-
-    this.selectAll = false;
-    this.selectedDatos = [];
-    this.selectMultiple = false;
     this.historico = !this.historico;
+    if (this.historico) {
+
+      this.editElementDisabled();
+      this.editMode = false;
+      this.nuevo = false;
+      // this.selectMultiple = true;
+
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectionMode = "multiple";
+    }
+    else {
+      this.selectMultiple = false;
+      this.selectionMode = "single";
+    }
+    // this.selectAll = false;
+    // this.selectedDatos = [];
+    // this.selectMultiple = false;
+    // this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
 
@@ -102,6 +124,8 @@ export class TablaDocumentacionejgComponent implements OnInit {
         this.searchHistoricalSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
 
       },
       err => {
@@ -114,6 +138,8 @@ export class TablaDocumentacionejgComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.selectMultiple = false;
+        this.selectAll = false;
         this.progressSpinner = false;
       }
     );
@@ -129,6 +155,8 @@ export class TablaDocumentacionejgComponent implements OnInit {
         this.searchHistoricalSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
       },
       err => {
 
@@ -140,6 +168,8 @@ export class TablaDocumentacionejgComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.selectMultiple = false;
+        this.selectAll = false;
         this.progressSpinner = false;
       }
     );
@@ -188,36 +218,51 @@ export class TablaDocumentacionejgComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (this.selectAll) {
+    if (this.selectAll === true) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
+      this.editMode = false;
+      this.selectMultiple = false;
+      this.editElementDisabled();
+
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        this.selectMultiple = true;
+        this.selectionMode = "single";
       } else {
         this.selectedDatos = this.datos;
+        this.selectMultiple = false;
+        this.selectionMode = "single";
       }
-
-      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-        this.selectMultiple = true;
-        this.numSelected = this.selectedDatos.length;
-      }
-
+      this.selectionMode = "multiple";
+      this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      this.selectMultiple = false;
+      if (this.historico)
+        this.selectMultiple = true;
+      this.selectionMode = "multiple";
     }
 
   }
 
   isSelectMultiple() {
-    if (this.permisoEscritura) {
+    if (this.permisoEscritura && !this.historico) {
+      if (this.nuevo) this.datos.shift();
+      this.editElementDisabled();
+      this.editMode = false;
+      this.nuevo = false;
       this.selectMultiple = !this.selectMultiple;
+
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.selectionMode = "single";
       } else {
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.selectionMode = "multiple";
       }
     }
   }

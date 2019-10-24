@@ -15,6 +15,7 @@ export class PartidasPresupuestarias implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
+  filtroAux: PartidasItems = new PartidasItems();
   // grupoZona:string;
   // zona:string;
   // partidoJudicial:string;
@@ -51,38 +52,43 @@ export class PartidasPresupuestarias implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-
-  isBuscar() {
-    this.persistenceService.setFiltros(this.filtros);
-    if ((this.filtros.nombrepartida == undefined || this.filtros.nombrepartida == "" ||
-      this.filtros.nombrepartida.trim().length < 3) && (this.filtros.descripcion == undefined || this.filtros.descripcion == ""
-        || this.filtros.descripcion.trim().length < 3)) {
-      this.showSearchIncorrect();
+  checkFilters() {
+    if (
+      (this.filtros.nombrepartida == null || this.filtros.nombrepartida.trim() == "" || this.filtros.nombrepartida.trim().length < 3) &&
+      (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.trim().length < 3)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
     } else {
-      this.buscar = true;
-      this.filtros.historico = false;
-      this.filtros.nombrepartidatemp = this.filtros.nombrepartida;
-      this.filtros.descripciontemp = this.filtros.descripcion;
-      if (this.filtros.nombrepartidatemp != this.filtros.nombrepartida) {
-        this.filtros.nombrepartidatemp = this.filtros.nombrepartida;
-      }
-      if (this.filtros.descripciontemp != this.filtros.descripcion) {
-        this.filtros.descripciontemp = this.filtros.descripcion;
+      // quita espacios vacios antes de buscar
+      if (this.filtros.nombrepartida != undefined && this.filtros.nombrepartida != null) {
+        this.filtros.nombrepartida = this.filtros.nombrepartida.trim();
       }
 
-      if (this.filtros.nombrepartidatemp != undefined && this.filtros.nombrepartidatemp != null) {
-        this.filtros.nombrepartidatemp = this.filtros.nombrepartidatemp.trim();
-        // this.filtros.nombrepartida = this.filtros.nombrepartida.trim();
+      if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
+        this.filtros.descripcion = this.filtros.descripcion.trim();
       }
 
-      if (this.filtros.descripciontemp != undefined && this.filtros.descripciontemp != null) {
-        this.filtros.descripciontemp = this.filtros.descripciontemp.trim();
-        // this.filtros.descripcion = this.filtros.descripcion.trim();
-      }
-
-      this.busqueda.emit(false);
+      return true;
     }
   }
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  isBuscar() {
+    if (this.checkFilters()) {
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.busqueda.emit(false)
+    }
+  }
+
 
   showSearchIncorrect() {
     this.msgs = [];
