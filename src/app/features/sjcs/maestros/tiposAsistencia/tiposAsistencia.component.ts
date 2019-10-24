@@ -38,7 +38,7 @@ export class TiposAsistenciaComponent implements OnInit {
   comboTiposGuardia;
   comboAsistencias;
   comboActuacion;
-  maximaLong: any = 11;
+  maximaLong: any = 8;
   progressSpinner: boolean = false;
   msgs;
   body;

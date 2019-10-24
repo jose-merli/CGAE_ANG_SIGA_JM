@@ -37,7 +37,7 @@
               <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
@@ -53,7 +53,7 @@
                 pInputText>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
@@ -61,7 +61,7 @@
                 [disabled]="historico || !permisoEscritura" pInputText>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.datosDireccion.literal.provincia" | translate}} (*)
               </label>
@@ -72,7 +72,7 @@
             </div>
 
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
               </label>
@@ -84,29 +84,29 @@
 
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 1
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
+              <input type="text" class="form-control" maxLength="9" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
                 pInputText>
               <div *ngIf="!tlf1Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 2
               </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.telefono2"
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="9" [(ngModel)]="body.telefono2"
                 (input)="changeTelefono2()" pInputText>
               <div *ngIf="!tlf2Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.ws.literal.fax" | translate}}
               </label>
@@ -116,14 +116,13 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
               </div>
             </div>
-
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
               <div *ngIf="edicionEmail" class="row">
-                <div class="col-10 mr-4 pr-0">
-                  <input type="text" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
+                <div class="col-lg-9 col-md-8 mr-4 pr-0">
+                  <input type="text" [disabled]="historico || !permisoEscritura" maxlength="9" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
                     style="width: 100%" />
                 </div>
                 <div>
@@ -142,7 +141,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-group col-lg-6 col-md-6" id="divMovil">
+            <div class="form-group col-lg-3 pt-2 col-md-3" id="divMovil">
 
               <label id="labelMovil">{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate}}</label>
               <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
@@ -156,7 +155,7 @@
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"administracion.parametrosGenerales.literal.codigo" | translate}}
               </label>
@@ -177,7 +176,8 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-  </div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
