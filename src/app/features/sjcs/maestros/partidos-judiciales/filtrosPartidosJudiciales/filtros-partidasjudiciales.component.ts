@@ -20,6 +20,7 @@ export class FiltrosPartidasJudiciales implements OnInit {
   // partidoJudicial:string;
   msgs: any[] = [];
   filtros: PartidasJudicialesItems = new PartidasJudicialesItems();
+  filtroAux: PartidasJudicialesItems = new PartidasJudicialesItems();
   jurisdicciones: any[] = [];
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -50,10 +51,21 @@ export class FiltrosPartidasJudiciales implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
+  checkFilters() {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+      this.filtros.nombre = this.filtros.nombre.trim();
+    }
+    return true;
+  }
+
   isBuscar() {
-    this.persistenceService.setFiltros(this.filtros);
-    this.buscar = true;
-    this.busqueda.emit(false);
+    if (this.checkFilters()) {
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.busqueda.emit(false)
+    }
   }
 
   showSearchIncorrect() {

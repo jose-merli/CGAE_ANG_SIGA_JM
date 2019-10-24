@@ -73,32 +73,12 @@ export class DestinatariosRetencionesComponent implements OnInit {
 
 
   searchPartidas(event) {
-    let permanencia = false;
-    let nombre;
-    let descripcion;
-    let cuentacontable;
-    if (this.filtros.filtros.nombrepartidatemp != undefined) {
-      nombre = this.filtros.filtros.nombre;
-      this.filtros.filtros.nombre = this.filtros.filtros.nombrepartidatemp;
-      permanencia = true;
-    }
-    if (this.filtros.filtros.descripciontemp != undefined) {
-      descripcion = this.filtros.filtros.orden;
-      this.filtros.filtros.orden = this.filtros.filtros.descripciontemp;
-      permanencia = true;
-    }
-    if (this.filtros.filtros.cuentacontabletemp != undefined) {
-      cuentacontable = this.filtros.filtros.cuentacontable;
-      this.filtros.filtros.cuentacontable = this.filtros.filtros.cuentacontabletemp;
-      permanencia = true;
-    }
-    this.filtros.filtros.historico = event;
-    if (this.tablapartida != undefined) {
-      this.tablapartida.historico = event;
-    }
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
 
-    this.sigaServices.post("gestionDestinatariosRetenc_searchDestinatariosRetenc", this.filtros.filtros).subscribe(
+    this.sigaServices.post("gestionDestinatariosRetenc_searchDestinatariosRetenc", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).destinatariosItem;
         this.datos.forEach(element => {
@@ -112,13 +92,7 @@ export class DestinatariosRetencionesComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         console.log(err);
-      }, () => {
-        if (permanencia) {
-          this.filtros.filtros.orden = descripcion;
-          this.filtros.filtros.nombre = nombre;
-        }
-      }
-    );
+      });
   }
 
   showMessage(event) {

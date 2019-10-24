@@ -136,14 +136,14 @@
     <div class="card-footer" *ngIf="modoEdicion && openFicha">
       <div class="text-right main-button">
 
-        <button [disabled]="nuevo" *ngIf="!historico" (click)="searchHistorical(); selectedDatos = []" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-        <button [disabled]="nuevo" *ngIf="historico" (click)="searchHistorical(); selectedDatos = []" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        <button [disabled]="nuevo || editMode || !permisos" *ngIf="!historico" (click)="searchHistorical(); selectedDatos = []" pButton
+          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+        <button [disabled]="nuevo || !permisos" *ngIf="historico" (click)="searchHistorical(); selectedDatos = []" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
         <button [disabled]="historico || !permisos" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-        <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
+        <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0 || selectedDatos[0].idDocumento == undefined"
           (click)="deleteDoc()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
 
         <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
