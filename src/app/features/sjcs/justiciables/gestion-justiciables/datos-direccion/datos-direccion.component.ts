@@ -1,63 +1,71 @@
 
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-datos-generales',
-  templateUrl: './datos-generales.component.html',
-  styleUrls: ['./datos-generales.component.scss']
+  selector: 'app-datos-direccion',
+  templateUrl: './datos-direccion.component.html',
+  styleUrls: ['./datos-direccion.component.scss']
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosDireccionComponent implements OnInit {
 
-  body: AreasItem = new AreasItem();
+  body: any;
   bodyInicial;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   msgs;
-  showTarjeta: boolean = true;
+  showTarjeta: boolean = false;
   generalBody: any;
   comboTipo;
+  datos: any[] = [];
+  selectedDatos;
+  cols;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   //Resultados de la busqueda
-  @Input() areasItem: AreasItem;
+  @Input() item: any;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.areasItem != undefined) {
-      this.body = this.areasItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
+    if (this.item != undefined) {
+      this.body = this.item;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.item));
     } else {
-      this.areasItem = new AreasItem();
+      // this.item = new item();
     }
-    if (this.body.idArea == undefined) {
+    if (this.body == undefined) {
       this.modoEdicion = false;
     } else {
       this.modoEdicion = true;
     }
   }
 
-  ngOnInit() {
-    // if (this.areasItem != undefined) {
 
-    // this.areasItem = new AreasItem();
-    if (this.areasItem != undefined) {
-      this.body = this.areasItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
+  ngOnInit() {
+    // if (this.item != undefined) {
+
+    // this.item = new item();
+    if (this.item != undefined) {
+      this.body = this.item;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.item));
     } else {
-      this.areasItem = new AreasItem();
+      // this.item = new item();
     }
-    if (this.body.idArea == undefined) {
+    if (this.body == undefined) {
       this.modoEdicion = false;
     } else {
       this.modoEdicion = true;
     }
+    this.cols = [
+      { field: 'tipo', header: this.translateService.instant("censo.busquedaClientesAvanzada.literal.tipoCliente") },
+      { field: 'valor', header: this.translateService.instant("administracion.parametrosGenerales.literal.valor") }
+    ]
   }
 
   ngAfterViewInit() {
@@ -65,9 +73,9 @@ export class DatosGeneralesComponent implements OnInit {
 
   rest() {
     // if (this.modoEdicion) {
-    //   if (this.bodyInicial != undefined) this.areasItem = JSON.parse(JSON.stringify(this.bodyInicial));
+    //   if (this.bodyInicial != undefined) this.item = JSON.parse(JSON.stringify(this.bodyInicial));
     // } else {
-    //   this.areasItem = new AreasItem();
+    //   this.item = new item();
     // }
   }
 
@@ -84,24 +92,30 @@ export class DatosGeneralesComponent implements OnInit {
 
   }
 
+  activarPaginacion() {
+    if (!this.body || this.body.length == 0)
+      return false;
+    else return true;
+  }
+
   callSaveService(url) {
-    this.sigaServices.post(url, this.areasItem).subscribe(
+    this.sigaServices.post(url, this.item).subscribe(
       data => {
 
         // if (!this.modoEdicion) {
         //   this.modoEdicion = true;
         //   let areas = JSON.parse(data.body);
-        //   // this.areasItem = JSON.parse(data.body);
-        //   this.areasItem.idArea = areas.id;
+        //   // this.item = JSON.parse(data.body);
+        //   this.item = areas.id;
         //   let send = {
         //     modoEdicion: this.modoEdicion,
-        //     idArea: this.areasItem.idArea
+        //     idArea: this.item
         //   }
         //   this.modoEdicionSend.emit(send);
         // }
 
-        this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
-        this.persistenceService.setDatos(this.areasItem);
+        this.bodyInicial = JSON.parse(JSON.stringify(this.item));
+        this.persistenceService.setDatos(this.item);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -135,13 +149,22 @@ export class DatosGeneralesComponent implements OnInit {
   }
 
   disabledSave() {
-    // if (this.areasItem.nombreArea != undefined) this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
-    // if (this.areasItem.nombreArea != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
+    // if (this.item.nombreArea != undefined) this.item.nombreArea = this.item.nombreArea.trim();
+    // if (this.item.nombreArea != "" && (JSON.stringify(this.item) != JSON.stringify(this.bodyInicial))) {
     //   return false;
     // } else {
     //   return true;
     // }
   }
+
+  newData() {
+    let dato = {
+      tipo: "",
+      valor: ""
+    }
+    this.datos.push(dato);
+  }
+
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;

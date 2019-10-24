@@ -3,25 +3,15 @@
 <div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
-      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-user icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
-        <i class="fa fa-angle-down ml-auto"></i>
-      </div>
-      <div *ngIf="!showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="!showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+            <i class="fa fa-file icon-ficha"></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.nuevaSolicitud.headerSolicitud" | translate }}
-            </label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ 'censo.nuevaSolicitud.headerSolicitud' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ "gratuita.personaJG.literal.autorizaavisotel" | translate }}
@@ -38,6 +28,13 @@
             <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
+      </div>
+      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-file icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'censo.nuevaSolicitud.headerSolicitud' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
