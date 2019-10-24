@@ -37,7 +37,7 @@
               <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
             </div>
 
-            <div class="form-group col-lg-2 col-md-2">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate}}
               </label>
@@ -45,7 +45,7 @@
                 type="text" class="form-control" [maxLength]="20" pInputText>
             </div>
 
-            <div class="form-group col-lg-2 col-md-2">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
@@ -53,22 +53,20 @@
                 pInputText>
             </div>
 
-            <div class="form-group col-lg-4 col-md-4 form-row">
-              <div class="form-group col-lg-6 col-md-6">
-                <label>
-                  {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)
-                </label>
-                <input [(ngModel)]="body.apellido1" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="100"
-                  pInputText>
-              </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)
+              </label>
+              <input [(ngModel)]="body.apellido1" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="100"
+                pInputText>
+            </div>
 
-              <div class="form-group col-lg-6 col-md-6">
-                <label>
-                  {{"censo.busquedaClientes.literal.apellido2" | translate}}
-                </label>
-                <input type="text" class="form-control" [maxLength]="100" [(ngModel)]="body.apellido2" [disabled]="historico || !permisoEscritura"
-                  pInputText>
-              </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"censo.busquedaClientes.literal.apellido2" | translate}}
+              </label>
+              <input type="text" class="form-control" [maxLength]="100" [(ngModel)]="body.apellido2" [disabled]="historico || !permisoEscritura"
+                pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
