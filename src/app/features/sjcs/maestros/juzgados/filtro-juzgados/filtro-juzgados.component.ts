@@ -31,6 +31,7 @@ export class FiltroJuzgadosComponent implements OnInit {
 
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
+
   @Output() isOpen = new EventEmitter<boolean>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
@@ -118,7 +119,6 @@ export class FiltroJuzgadosComponent implements OnInit {
   }
 
   search() {
-
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
@@ -135,8 +135,8 @@ export class FiltroJuzgadosComponent implements OnInit {
 
   checkFilters() {
     if (
-      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.length < 3) &&
-      (this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.length < 3) &&
+      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
+      (this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.trim().length < 3) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "")) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));

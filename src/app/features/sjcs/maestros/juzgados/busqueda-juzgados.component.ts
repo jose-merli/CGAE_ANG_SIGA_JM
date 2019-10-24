@@ -26,7 +26,6 @@ export class BusquedaJuzgadosComponent implements OnInit {
   @ViewChild(FiltroJuzgadosComponent) filtros;
 
   @ViewChild(TablaJuzgadosComponent) tabla;
-
   //comboPartidosJudiciales
   comboPJ;
   msgs;
