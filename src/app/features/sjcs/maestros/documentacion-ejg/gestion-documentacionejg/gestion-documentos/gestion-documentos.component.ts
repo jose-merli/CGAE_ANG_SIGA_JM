@@ -65,12 +65,7 @@ export class GestionDocumentosComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-
-
-
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.historico = this.persistenceService.getHistorico();
-    }
+    this.validateHistorical();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -87,7 +82,7 @@ export class GestionDocumentosComponent implements OnInit {
 
   searchHistorical() {
     this.historico = !this.historico;
-    if (this.historico) {
+    if (this.historico && this.permisos) {
 
       this.editElementDisabled();
       this.editMode = false;
@@ -106,7 +101,7 @@ export class GestionDocumentosComponent implements OnInit {
     // this.selectAll = false;
     // this.selectMultiple = false;
     // this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
+    // this.persistenceService.setHistorico(this.historico);
     this.searchHistoricalSend.emit(this.historico);
 
   }
@@ -140,6 +135,19 @@ export class GestionDocumentosComponent implements OnInit {
       }
     );
 
+  }
+  validateHistorical() {
+    if (this.persistenceService.getDatos() != undefined) {
+
+      if (this.persistenceService.getDatos().fechabaja != null) {
+        this.historico = true;
+        this.selectionMode = "null";
+      } else {
+        this.historico = false;
+        this.selectionMode = "multiple";
+
+      }
+    }
   }
 
   deleteDoc() {

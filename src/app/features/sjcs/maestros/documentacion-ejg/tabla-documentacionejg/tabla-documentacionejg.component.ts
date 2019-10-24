@@ -75,12 +75,11 @@ export class TablaDocumentacionejgComponent implements OnInit {
       this.editElementDisabled();
       this.editMode = false;
       this.nuevo = false;
-      // this.selectMultiple = true;
-
+      this.selectMultiple = false;
+      this.selectionMode = "single";
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
-      this.selectionMode = "multiple";
     }
     else {
       this.selectMultiple = false;
@@ -100,7 +99,12 @@ export class TablaDocumentacionejgComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      //this.persistenceService.setHistorico(this.historico);
+      if (this.historico) {
+        this.persistenceService.setHistorico(!this.historico);
+      }
+      else {
+        this.persistenceService.setHistorico(this.historico);
+      }
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestiondocumentacionejg"]);
     } else {
@@ -152,7 +156,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
+        this.searchHistoricalSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.selectMultiple = false;
@@ -247,7 +251,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
   }
 
   isSelectMultiple() {
-    if (this.permisoEscritura && !this.historico) {
+    if (this.permisoEscritura) {
       if (this.nuevo) this.datos.shift();
       this.editElementDisabled();
       this.editMode = false;

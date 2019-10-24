@@ -58,7 +58,10 @@ export class GestionDocumentacionejgComponent implements OnInit {
     if (this.dato != undefined || this.dato != null) {
       this.searchDocumentos(this.persistenceService.getHistorico());
       this.modoEdicion = true;
-
+      if (this.dato.fechabaja != null) {
+        this.modoEdicion = true;
+        this.persistenceService.setPermisos(false);
+      }
     } else {
       this.documentacionEjgItem = new DocumentacionEjgItem();
       this.buscar = false;
