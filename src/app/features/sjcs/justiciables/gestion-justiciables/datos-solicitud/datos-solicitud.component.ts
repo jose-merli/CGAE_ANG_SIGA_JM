@@ -17,7 +17,7 @@ export class DatosSolicitudComponent implements OnInit {
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   msgs;
-  showTarjeta: boolean = true;
+  showTarjeta: boolean = false;
   generalBody: any;
   comboTipo;
   @Output() modoEdicionSend = new EventEmitter<any>();

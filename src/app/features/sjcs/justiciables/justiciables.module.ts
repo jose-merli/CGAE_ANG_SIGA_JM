@@ -25,6 +25,7 @@ import { HTTP_INTERCEPTORS } from '../../../../../node_modules/@angular/common/h
 import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { FechaModule } from '../../../commons/fecha/fecha.module';
+import { DatosDireccionComponent } from './gestion-justiciables/datos-direccion/datos-direccion.component';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { FechaModule } from '../../../commons/fecha/fecha.module';
     TablaJusticiablesComponent,
     GestionJusticiablesComponent,
     DatosGeneralesComponent,
-    DatosSolicitudComponent
+    DatosSolicitudComponent,
+    DatosDireccionComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
