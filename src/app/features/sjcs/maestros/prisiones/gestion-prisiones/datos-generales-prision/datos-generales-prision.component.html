@@ -37,7 +37,7 @@
               <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
@@ -45,7 +45,7 @@
                 pInputText>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-4 col-md-4">
               <label>
                 {{"censo.consultaDirecciones.literal.direccion" | translate}}
               </label>
@@ -54,7 +54,7 @@
             </div>
 
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2 form-row">
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
@@ -62,7 +62,7 @@
                 [disabled]="historico || !permisoEscritura" pInputText>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{"censo.datosDireccion.literal.provincia" | translate}} (*)
               </label>
@@ -73,7 +73,7 @@
             </div>
 
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
               </label>
@@ -85,7 +85,7 @@
 
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 1
               </label>
@@ -96,7 +96,7 @@
               </div>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 2
               </label>
@@ -107,7 +107,7 @@
               </div>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-2 col-md-2">
               <label>
                 {{"censo.ws.literal.fax" | translate}}
               </label>
@@ -117,12 +117,12 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
               </div>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-4 col-md-4">
               <label>
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
               <div *ngIf="edicionEmail" class="row">
-                <div class="col-10 mr-4 pr-0">
+                <div class="col-9 mr-4 pr-0">
                   <input type="text" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
                     style="width: 100%" />
                 </div>
@@ -134,7 +134,7 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
               </div>
               <div *ngIf="!edicionEmail" class="row">
-                <div class="col-6 mr-4 pr-0">
+                <div class="col-3 mr-4 pr-0">
                   <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
                 </div>
                 <div>
@@ -143,7 +143,7 @@
               </div>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6" id="divMovil">
+            <div class="form-group col-lg-2 pt-4 col-md-2" id="divMovil">
               <label id="labelMovil">{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate}}</label>
               <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
 
@@ -155,7 +155,7 @@
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-4 col-md-4">
               <label>
                 {{"general.codeext" | translate}}
               </label>
