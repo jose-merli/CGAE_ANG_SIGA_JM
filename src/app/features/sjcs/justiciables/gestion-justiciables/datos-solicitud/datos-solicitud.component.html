@@ -1,0 +1,76 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="ficha-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="onHideTarjeta()">
+      <div *ngIf="showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
+        <i class="fa fa-angle-down ml-auto"></i>
+      </div>
+      <div *ngIf="!showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "censo.nuevaSolicitud.headerSolicitud" | translate }}
+            </label>
+            <!-- <label class="registros-ficha">(0 registros)</label> -->
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ "gratuita.personaJG.literal.autorizaavisotel" | translate }}
+              <!-- <span>{{ generalBody.nif }}</span> -->
+            </label>
+            <label>{{ "gratuita.personaJG.literal.solicitajg" | translate }}
+              <!-- <span>{{ generalBody.soloNombre }} {{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span> -->
+            </label>
+
+            <label>{{ "gratuita.personaJG.literal.autorizaeejg" | translate }}
+              <!-- <span>{{ generalBody.fechaNacimiento }}</span> -->
+
+            </label>
+            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--cuerpo datos generales-->
+    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "gratuita.personaJG.literal.autorizaavisotel" | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboTipo" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
+            [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "gratuita.personaJG.literal.solicitajg" | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboTipo" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
+            [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "gratuita.personaJG.literal.autorizaeejg" | translate }} </label>
+          <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboTipo" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
+            [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="!showTarjeta" class="card-footer">
+      <div class="text-right main-button">
+        <button [disabled]="areasItem.historico" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="disabledSave() || areasItem.historico" (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

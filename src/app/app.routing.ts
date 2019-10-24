@@ -94,7 +94,7 @@ import { CertificacionComponent } from './features/sjcs/certificacion/certificac
 import { ZonasYSubzonasComponent } from "./features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component";
 import { AreasYMateriasComponent } from "./features/sjcs/maestros/areas-materias/areas-materias.component";
 import { PartidasComponent } from "./features/sjcs/maestros/partidas/partidas.component";
-import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidos-judiciales.component";
+
 import { RetencionesIRPFComponent } from "./features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component";
 
 import { CalendarioLaboralComponent } from "./features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component";
@@ -234,6 +234,8 @@ import { EnviosMasivosComponent } from './features/informes-comunicaciones/envio
 import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
+import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
+import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
@@ -718,7 +720,7 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoComisarias",
-    component: MantenimientoComisariasComponent,
+    component: ComisariasComponent,
     canActivate: [AuthGuard]
   },
   {
