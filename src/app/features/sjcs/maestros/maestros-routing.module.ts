@@ -29,6 +29,7 @@ import { DestinatariosRetencionesComponent } from './destinatarios-retenciones/d
 import { BusquedaProcedimientosComponent } from './procedimientos/busqueda-procedimientos/busqueda-procedimientos.component';
 import { RetencionesIRPFComponent } from './retenciones-IRPF/retenciones-IRPF.component';
 import { DocumentacionEJGComponent } from './documentacion-ejg/documentacion-ejg.component';
+import { PartidosJudicialesComponent } from './partidos-judiciales/partidas-judiciales.component';
 
 const routesMaestros: Routes = [
   {
@@ -111,6 +112,11 @@ const routesMaestros: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: "mantenimientoComisarias",
+    component: ComisariasComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: "gestionComisarias",
     component: GestionComisariasComponent,
     canActivate: [AuthGuard]
@@ -162,6 +168,11 @@ const routesMaestros: Routes = [
   {
     path: "retencionesIRPF",
     component: RetencionesIRPFComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "partidosJudiciales",
+    component: PartidosJudicialesComponent,
     canActivate: [AuthGuard]
   }
 ];

@@ -3,6 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 
 @Component({
   selector: 'app-datos-direccion',
@@ -11,12 +13,11 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 })
 export class DatosDireccionComponent implements OnInit {
 
-  body: any;
+  body: JusticiableItem = new JusticiableItem();
   bodyInicial;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   msgs;
-  showTarjeta: boolean = false;
   generalBody: any;
   comboTipo;
   datos: any[] = [];
@@ -27,27 +28,30 @@ export class DatosDireccionComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() item: any;
+  @Input() showTarjeta;
+
+  comboPais;
+  comboProvincia;
+  poblacionBuscada;
+  comboPoblacion;
+  provinciaSelecionada;
+  isDisabledPoblacion;
+  isDisabledProvincia;
+  codigoPostalValido;
+  poblacionExtranjera;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.item != undefined) {
-      this.body = this.item;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.item));
-    } else {
-      // this.item = new item();
-    }
-    if (this.body == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
   }
 
 
   ngOnInit() {
+
+    this.getCombos();
     // if (this.item != undefined) {
 
     // this.item = new item();
@@ -79,60 +83,116 @@ export class DatosDireccionComponent implements OnInit {
     // }
   }
 
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-    if (!this.modoEdicion) {
-      url = "fichaAreas_createAreas";
-      this.callSaveService(url);
-    } else {
-      url = "fichaAreas_updateAreas";
-      this.callSaveService(url);
-    }
-
+  getCombos() {
+    this.getComboPais();
   }
 
-  activarPaginacion() {
-    if (!this.body || this.body.length == 0)
-      return false;
-    else return true;
+  getComboPais() {
+    this.sigaServices.get("direcciones_comboPais").subscribe(
+      n => {
+        this.comboPais = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboPais);
+
+      },
+      error => { }
+    );
   }
 
-  callSaveService(url) {
-    this.sigaServices.post(url, this.item).subscribe(
-      data => {
-
-        // if (!this.modoEdicion) {
-        //   this.modoEdicion = true;
-        //   let areas = JSON.parse(data.body);
-        //   // this.item = JSON.parse(data.body);
-        //   this.item = areas.id;
-        //   let send = {
-        //     modoEdicion: this.modoEdicion,
-        //     idArea: this.item
-        //   }
-        //   this.modoEdicionSend.emit(send);
-        // }
-
-        this.bodyInicial = JSON.parse(JSON.stringify(this.item));
-        this.persistenceService.setDatos(this.item);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
+  getComboProvincia() {
+    // Combo de identificación
+    this.sigaServices.get("integrantes_provincias").subscribe(
+      n => {
+        this.comboProvincia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboProvincia);
       },
-      err => {
-
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
+      error => { },
       () => {
         this.progressSpinner = false;
       }
     );
+  }
 
+  getComboPoblacion(filtro: string) {
+    this.progressSpinner = true;
+    this.poblacionBuscada = this.getLabelbyFilter(filtro);
+
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" +
+        this.body.idProvincia +
+        "&filtro=" +
+        this.poblacionBuscada
+      )
+      .subscribe(
+        n => {
+          this.comboPoblacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPoblacion)
+
+        },
+        error => {
+          this.progressSpinner = false;
+
+        }, () => {
+          this.progressSpinner = false;
+
+        }
+      );
+  }
+
+  onChangeCodigoPostal() {
+    if (this.body.idPais == "191") {
+      if (
+        this.commonsService.validateCodigoPostal(this.body.codigoPostal) &&
+        this.body.codigoPostal.length == 5) {
+        let value = this.body.codigoPostal.substring(0, 2);
+        this.provinciaSelecionada = value;
+        this.isDisabledPoblacion = false;
+        if (value != this.body.idProvincia) {
+          this.body.idProvincia = this.provinciaSelecionada;
+          this.body.idPoblacion = "";
+          this.body.nombrePoblacion = "";
+          this.comboPoblacion = [];
+          this.isDisabledProvincia = true;
+        }
+        this.codigoPostalValido = true;
+      } else {
+        this.codigoPostalValido = false;
+        this.isDisabledPoblacion = true;
+        this.provinciaSelecionada = "";
+      }
+    }
+  }
+
+  onChangeProvincia() {
+    this.body.idPoblacion = "";
+    this.comboPoblacion = [];
+  }
+
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+    let accentsOut =
+      "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    let i;
+    let x;
+    for (i = 0; i < string.length; i++) {
+      if ((x = accents.indexOf(string.charAt(i))) != -1) {
+        labelSinTilde = string.replace(string.charAt(i), accentsOut[x]);
+        return labelSinTilde;
+      }
+    }
+
+    return labelSinTilde;
+  }
+
+  activarPaginacion() {
+    if (!this.datos || this.datos.length == 0)
+      return false;
+    else return true;
   }
 
   clear() {
