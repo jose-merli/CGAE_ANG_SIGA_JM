@@ -1,0 +1,117 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+
+        <!-- TURNO -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- NOMBRE -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"administracion.usuarios.literal.nombre" | translate}}</label>
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='' pInputText pInputText>
+        </div>
+
+        <!-- AREAS -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Area" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- MATERIA -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Materia" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- GRUPOZONA -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- ZONA -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- PARTIDO JUDICIAL -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate}}</label>
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='' pInputText pInputText>
+        </div>
+
+        <!-- JURISDICCION -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- GRUPO FACTURACION -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- PARTIDA PRESUPUESTARIA -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.partidaPresupuestaria" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- TIPO TURNO -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+        <!-- TIPO GUARDIA -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}</label>
+          <p-dropdown class="select-form" [(ngModel)]='' [filter]="true" filterMatchMode="contains" [(disabled)]="" [options]="" (input)=""
+            placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="" [showClear]="true">
+          </p-dropdown>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <button [disabled]="" (click)="" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>
