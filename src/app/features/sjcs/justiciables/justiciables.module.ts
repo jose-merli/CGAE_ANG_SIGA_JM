@@ -28,6 +28,8 @@ import { routingJusticiables } from './justiciables-routing.module';
 import { DatosRepresentanteComponent } from './gestion-justiciables/datos-representante/datos-representante.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { AsuntosComponent } from './gestion-justiciables/asuntos/asuntos.component';
+import { DatosDireccionComponent } from './gestion-justiciables/datos-direccion/datos-direccion.component';
+import { DatosSolicitudComponent } from './gestion-justiciables/datos-solicitud/datos-solicitud.component';
 
 @NgModule({
   imports: [
@@ -57,7 +59,9 @@ import { AsuntosComponent } from './gestion-justiciables/asuntos/asuntos.compone
     GestionJusticiablesComponent,
     DatosGeneralesComponent,
     DatosRepresentanteComponent,
-    AsuntosComponent
+    AsuntosComponent,
+    DatosSolicitudComponent,
+    DatosDireccionComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

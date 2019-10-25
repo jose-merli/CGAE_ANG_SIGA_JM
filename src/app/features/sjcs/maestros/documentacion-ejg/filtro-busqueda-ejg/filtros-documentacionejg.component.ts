@@ -20,6 +20,7 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
   // grupoZona:string;
   // zona:string;
   // partidoJudicial:string;
+  historico: boolean = false;
   msgs: any[] = [];
   filtros: DocumentacionEjgItem = new DocumentacionEjgItem();
   filtroAux: DocumentacionEjgItem = new DocumentacionEjgItem();
@@ -35,20 +36,23 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.filtros.historico = this.persistenceService.getHistorico();
-      // this.isBuscar();
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisos = this.persistenceService.getPermisos();
     }
+
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if (this.filtros.abreviaturaDoc != undefined || this.filtros.descripcionDoc != undefined || this.filtros.abreviaturaTipoDoc != undefined || this.filtros.descripcionTipoDoc != undefined) {
-        this.isBuscar();
+      if (this.persistenceService.getHistorico() != undefined) {
+        this.historico = this.persistenceService.getHistorico();
       }
+      this.busqueda.emit(this.historico)
+
+    } else {
+      this.filtros = new DocumentacionEjgItem();
     }
   }
 
   newDoc() {
-    this.persistenceService.setFiltros(this.filtros);
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestiondocumentacionejg"]);
   }
@@ -99,6 +103,7 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new DocumentacionEjgItem();
+    this.persistenceService.clearFiltros();
   }
 
   //búsqueda con enter

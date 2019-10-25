@@ -37,29 +37,35 @@
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
             </div>
-            <div class="form-group col-lg-4 col-md-4">
-              <label>
-                {{"general.codeext"|translate}}
-              </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.codigo" [disabled]="historico || !permisoEscritura"
-                pInputText>
-            </div>
-
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"general.description" | translate}} (*)
               </label>
               <input type="text" class="form-control" maxLength="250" [(ngModel)]="body.descripcionFundamento" [disabled]="historico || !permisoEscritura"
                 pInputText>
             </div>
+            <div class="form-group col-lg-3 col-md-3">
+              <div class="row">
 
-            <div class="form-group col-lg-4 col-md-4">
-              <label>
-                {{"justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate}} (*)
-              </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idTipoDictamenEjg' placeholder="Seleccionar" [disabled]="historico || !permisoEscritura"
-                [options]="comboDictamen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                <div class="form-group col-lg-6 col-md-6">
+                  <label>
+                    {{"general.codeext"|translate}}
+                  </label>
+                  <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.codigo" [disabled]="historico || !permisoEscritura"
+                    pInputText>
+                </div>
+                <div class="form-group col-lg-6 col-md-6">
+                  <label>
+                    {{"justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen" | translate}} (*)
+                  </label>
+                  <p-dropdown class="select-form" [(ngModel)]='body.idTipoDictamenEjg' placeholder="Seleccionar" [disabled]="historico || !permisoEscritura"
+                    [options]="comboDictamen" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="form-row">
+
             <div class="form-group col-lg-6 col-md-6">
               <label class="d-block pb-2">{{"justiciaGratuita.maestros.fundamentosResolucion.textoEnPlantilla" | translate}} 0</label>
 

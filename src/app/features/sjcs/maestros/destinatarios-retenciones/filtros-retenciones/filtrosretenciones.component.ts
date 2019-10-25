@@ -21,6 +21,7 @@ export class FiltrosRetenciones implements OnInit {
   // partidoJudicial:string;
   msgs: any[] = [];
   filtros: DestinatariosRetencItem = new DestinatariosRetencItem();
+  filtroAux: DestinatariosRetencItem = new DestinatariosRetencItem();
   jurisdicciones: any[] = [];
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -55,44 +56,44 @@ export class FiltrosRetenciones implements OnInit {
   }
 
   isBuscar() {
-    this.persistenceService.setFiltros(this.filtros);
-    if ((this.filtros.nombre == undefined || this.filtros.nombre == "" ||
-      this.filtros.nombre.trim().length < 3) && (this.filtros.orden == undefined || this.filtros.orden == ""
-        || this.filtros.orden.trim().length < 3) && (this.filtros.cuentacontable == undefined || this.filtros.cuentacontable == ""
-          || this.filtros.cuentacontable.trim().length < 3)) {
-      this.showSearchIncorrect();
-    } else {
-      this.buscar = true;
-      this.filtros.historico = false;
-      this.filtros.nombrepartidatemp = this.filtros.nombre;
-      this.filtros.descripciontemp = this.filtros.orden;
-      this.filtros.cuentacontabletemp = this.filtros.cuentacontable;
-      if (this.filtros.nombrepartidatemp != this.filtros.nombre) {
-        this.filtros.nombrepartidatemp = this.filtros.nombre;
-      }
-      if (this.filtros.descripciontemp != this.filtros.orden) {
-        this.filtros.descripciontemp = this.filtros.orden;
-      }
-      if (this.filtros.cuentacontabletemp != this.filtros.cuentacontable) {
-        this.filtros.cuentacontabletemp = this.filtros.cuentacontable;
-      }
-
-      if (this.filtros.nombrepartidatemp != undefined && this.filtros.nombrepartidatemp != null) {
-        this.filtros.nombrepartidatemp = this.filtros.nombrepartidatemp.trim();
-        // this.filtros.nombrepartida = this.filtros.nombrepartida.trim();
-      }
-
-      if (this.filtros.descripciontemp != undefined && this.filtros.descripciontemp != null) {
-        this.filtros.descripciontemp = this.filtros.descripciontemp.trim();
-        // this.filtros.descripcion = this.filtros.descripcion.trim();
-      }
-      if (this.filtros.cuentacontabletemp != undefined && this.filtros.cuentacontabletemp != null) {
-        this.filtros.cuentacontabletemp = this.filtros.cuentacontabletemp.trim();
-        // this.filtros.descripcion = this.filtros.descripcion.trim();
-      }
-
-      this.busqueda.emit(false);
+    if (this.checkFilters()) {
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.busqueda.emit(false)
     }
+  }
+  checkFilters() {
+    if (
+      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
+      (this.filtros.orden == null || this.filtros.orden.trim() == "" || this.filtros.orden.trim().length < 3) &&
+      (this.filtros.cuentacontable == null || this.filtros.cuentacontable == "")) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
+    } else {
+      // quita espacios vacios antes de buscar
+      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+        this.filtros.nombre = this.filtros.nombre.trim();
+      }
+
+      if (this.filtros.orden != undefined && this.filtros.orden != null) {
+        this.filtros.orden = this.filtros.orden.trim();
+      }
+      if (this.filtros.cuentacontable != undefined && this.filtros.cuentacontable != null) {
+        this.filtros.cuentacontable = this.filtros.cuentacontable.trim();
+      }
+
+      return true;
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   showSearchIncorrect() {

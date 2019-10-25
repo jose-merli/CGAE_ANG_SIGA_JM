@@ -148,7 +148,8 @@ export class TiposActuacionComponent implements OnInit {
             let seleccionados = [];
             element.editable = false
             element.overlayVisible = false;
-
+            element.importeReal = +element.importe;
+            element.importemaximoReal = +element.importemaximo;
             this.beautifyData(element)
 
             let prueba = [];

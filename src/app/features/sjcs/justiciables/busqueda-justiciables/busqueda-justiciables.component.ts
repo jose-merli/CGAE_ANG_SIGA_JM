@@ -35,7 +35,19 @@ export class BusquedaJusticiablesComponent implements OnInit {
       activa: true
     },
     {
+      key: "direccion",
+      activa: true
+    },
+    {
+      key: "solicitud",
+      activa: false
+    },
+    {
       key: "representante",
+      activa: false
+    },
+    {
+      key: "asuntos",
       activa: false
     }
 

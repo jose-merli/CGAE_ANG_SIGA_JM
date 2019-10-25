@@ -15,13 +15,13 @@
           <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="60"
             pInputText>
         </div>
-        <div class="form-group col-lg-3 col-md-2">
+        <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.idProvincia' placeholder="{{'general.boton.seleccionar' | translate}}"
             [options]="comboProvincias" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeProvincia()" [showClear]="true"></p-dropdown>
         </div>
 
-        <div class="form-group col-lg-3 col-md-2">
+        <div class="form-group col-lg-3 col-md-3">
           <label>{{"gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.idPoblacion' [filter]="true" filterMatchMode="contains" filterBy="label,labelSinTilde"
             [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion" (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
