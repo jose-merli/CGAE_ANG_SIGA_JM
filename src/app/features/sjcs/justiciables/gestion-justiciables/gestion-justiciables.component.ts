@@ -29,60 +29,16 @@ export class GestionJusticiablesComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    // this.getFichasPosibles();
-    this.route.queryParams
-      .subscribe(params => {
-        this.idProcedimiento = params.idProcedimiento
-        console.log(params);
-      });
-    if (this.idProcedimiento != undefined) {
-      this.searchModulos();
+
+    if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
+      this.fichasPosibles = this.persistenceService.getFichasPosibles();
     }
-
-
-  }
-
-  searchModulos() {
-    // this.filtros.filtros.historico = event;
-    // this.progressSpinner = true;
-    let filtros: ModulosItem = new ModulosItem;
-    filtros.idProcedimiento = this.idProcedimiento;
-    filtros.historico = false;
-    if (this.persistenceService.getHistorico() != undefined) {
-      filtros.historico = this.persistenceService.getHistorico();
-    }
-    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", filtros).subscribe(
-      n => {
-        this.modulosItem = JSON.parse(n.body).modulosItem[0];
-        if (this.modulosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-          this.modulosItem.historico = true;
-        }
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
 
   modoEdicionSend(event) {
     this.modoEdicion = event.modoEdicion;
     this.idProcedimiento = event.idProcedimiento
   }
-
-  // getFichasPosibles() {
-
-  //   this.fichasPosibles = [
-  //     {
-  //       key: "edicionAreas",
-  //       activa: true
-  //     },
-  //     {
-  //       key: "tablaMaterias",
-  //       activa: true
-  //     }
-
-  //   ];
-  // }
 
   backTo() {
     this.location.back();

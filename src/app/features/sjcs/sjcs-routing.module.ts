@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../_guards/auth.guards';
 import { GestionJusticiablesComponent } from './justiciables/gestion-justiciables/gestion-justiciables.component';
+import { JusticiablesModule } from './justiciables/justiciables.module';
 
 const routesSjcs: Routes = [
   {
@@ -66,8 +67,7 @@ const routesSjcs: Routes = [
   },
   {
     path: "justiciables",
-    component: GestionJusticiablesComponent,
-    canActivate: [AuthGuard]
+    loadChildren: () => import('./justiciables/justiciables.module').then(m => m.JusticiablesModule),
   }
 ];
 

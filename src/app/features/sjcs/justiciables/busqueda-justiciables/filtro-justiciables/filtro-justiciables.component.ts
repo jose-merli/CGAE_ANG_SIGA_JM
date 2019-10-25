@@ -15,8 +15,8 @@ import { KEY_CODE } from '../../../../administracion/parametros/parametros-gener
 export class FiltroJusticiablesComponent implements OnInit {
 
   showDatosGenerales: boolean = true;
-  showDatosDirecciones: boolean = true;
-  showAsuntos: boolean = true;
+  showDatosDirecciones: boolean = false;
+  showAsuntos: boolean = false;
   msgs = [];
 
   filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
@@ -149,7 +149,7 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   nuevo() {
     this.persistenceService.clearDatos();
-    // this.router.navigate(["/fichaEventos"]);
+    this.router.navigate(["/gestionJusticiables"]);
   }
 
   checkFilters() {

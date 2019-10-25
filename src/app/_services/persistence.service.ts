@@ -1,6 +1,5 @@
 
 import { Injectable } from '../../../node_modules/@angular/core';
-import { Subject } from '../../../node_modules/rxjs';
 
 @Injectable()
 export class PersistenceService {
@@ -10,6 +9,7 @@ export class PersistenceService {
     private datosName: string = "datos";
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
+    private fichasPosibles: string = "fichasPosibles";
 
     constructor() { }
 
@@ -78,12 +78,26 @@ export class PersistenceService {
         sessionStorage.removeItem(this.permisosName);
     }
 
+    setFichasPosibles(data: any) {
+        sessionStorage.setItem(this.fichasPosibles, JSON.stringify(data));
+    }
+
+    getFichasPosibles() {
+        let data = sessionStorage.getItem(this.fichasPosibles);
+        return JSON.parse(data);
+    }
+
+    clearFichasPosibles() {
+        sessionStorage.removeItem(this.fichasPosibles);
+    }
+
     clearPersistence() {
         this.clearFiltros();
         this.clearHistorico();
         this.clearDatos();
         this.clearPermisos();
         this.clearFiltrosAux();
+        this.clearFichasPosibles();
     }
 
 }

@@ -24,10 +24,15 @@ import { HTTP_INTERCEPTORS } from '../../../../../node_modules/@angular/common/h
 import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { FechaModule } from '../../../commons/fecha/fecha.module';
+import { routingJusticiables } from './justiciables-routing.module';
+import { DatosRepresentanteComponent } from './gestion-justiciables/datos-representante/datos-representante.component';
+import { FileUploadModule } from 'primeng/fileupload';
+import { AsuntosComponent } from './gestion-justiciables/asuntos/asuntos.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    routingJusticiables,
     DataTableModule,
     PaginatorModule,
     InputTextModule,
@@ -42,6 +47,7 @@ import { FechaModule } from '../../../commons/fecha/fecha.module';
     MultiSelectModule,
     PrecioModule,
     FechaModule,
+    FileUploadModule
 
   ],
   declarations: [
@@ -49,7 +55,9 @@ import { FechaModule } from '../../../commons/fecha/fecha.module';
     FiltroJusticiablesComponent,
     TablaJusticiablesComponent,
     GestionJusticiablesComponent,
-    DatosGeneralesComponent
+    DatosGeneralesComponent,
+    DatosRepresentanteComponent,
+    AsuntosComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
