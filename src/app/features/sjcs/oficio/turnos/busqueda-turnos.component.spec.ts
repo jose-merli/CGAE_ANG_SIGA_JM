@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TurnosComponent } from './turnos.component';
+import { TurnosComponent } from './busqueda-turnos.component';
 
 describe('TurnosComponent', () => {
   let component: TurnosComponent;

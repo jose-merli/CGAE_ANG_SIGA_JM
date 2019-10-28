@@ -192,7 +192,6 @@ import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mante
 import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { BajasTemporalesComponent } from './features/sjcs/oficio/bajas-temporales/bajas-temporales.component';
 import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
@@ -457,7 +456,6 @@ import { PrecioModule } from './commons/precio/precio.module';
 		MantenimientoComisariasComponent,
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
-		TurnosComponent,
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,

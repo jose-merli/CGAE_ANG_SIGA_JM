@@ -68,6 +68,10 @@ const routesSjcs: Routes = [
   {
     path: "justiciables",
     loadChildren: () => import('./justiciables/justiciables.module').then(m => m.JusticiablesModule),
+  },
+  {
+    path: "turnos",
+    loadChildren: () => import('./oficio/oficio.module').then(m => m.OficioModule),
   }
 ];
 

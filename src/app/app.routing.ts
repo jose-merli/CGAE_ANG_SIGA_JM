@@ -106,7 +106,6 @@ import { DocumentacionEJGComponent } from "./features/sjcs/maestros/documentacio
 import { MaestroPJComponent } from "./features/sjcs/maestros/maestro-pj/maestro-pj.component";
 import { DestinatariosRetencionesComponent } from "./features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component";
 import { TiposAsistenciaComponent } from "./features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component";
-import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component";
 import { SolicitudesTurnosGuardiasComponent } from "./features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component";
 import { BajasTemporalesComponent } from "./features/sjcs/oficio/bajas-temporales/bajas-temporales.component";
 import { SaltosYCompensacionesComponent } from "./features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component";
@@ -236,6 +235,7 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
 import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
+import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 
 const appRoutes: Routes = [
   { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
