@@ -1,12 +1,12 @@
 import { NgModule } from "../../../../../node_modules/@angular/core";
-import { BusquedaGuardiasModule } from "../../guardias/busqueda-guardias/busqueda-guardias.module";
 import { routingGuardia } from "./guardia-routing.module";
+import { BusquedaGuardiasModule } from "./busqueda-guardias/busqueda-guardias.module";
 
 @NgModule({
     declarations: [],
     imports: [
-        BusquedaGuardiasModule,
         routingGuardia,
+        BusquedaGuardiasModule,
     ],
 
     providers: []

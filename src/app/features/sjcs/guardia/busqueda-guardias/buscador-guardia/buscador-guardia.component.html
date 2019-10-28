@@ -11,8 +11,9 @@
 
 <div class="busqueda-container">
   <app-filtros-guardia></app-filtros-guardia>
-  <!-- <app-tabla-prisiones *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)"></app-tabla-prisiones> -->
+  <app-tabla-guardias></app-tabla-guardias>
 </div>
+
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

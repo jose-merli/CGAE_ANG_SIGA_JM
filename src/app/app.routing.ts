@@ -1282,6 +1282,10 @@ const appRoutes: Routes = [
     component: DialogoComunicacionesComponent,
     canActivate: [AuthGuard]
   },
+  {     //GUARDIAS ---------------------------------------------------------------------------------
+    path: "guardias",
+    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+  },
 
   { path: " ", redirectTo: "home" }
 ];

@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { TranslateService } from '../../../../../../commons/translate';
+import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-tabla-guardias',
@@ -7,9 +12,144 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TablaGuardiasComponent implements OnInit {
 
-  constructor() { }
+  rowsPerPage: any = [];
+  cols;
+  msgs;
+
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  historico: boolean = false;
+
+  message;
+
+  initDatos;
+  nuevo: boolean = false;
+  progressSpinner: boolean = false;
+  permisoEscritura: boolean = false;
+
+  //Resultados de la busqueda
+  @Input() datos;
+
+  @ViewChild("table") table: DataTable;
+
+  @Output() searchHistoricalSend = new EventEmitter<boolean>();
+
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
+    private router: Router,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService
+  ) { }
 
   ngOnInit() {
+    this.getCols();
   }
+
+  isSelectMultiple() {
+    this.selectAll = false;
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+    }
+  }
+
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+
+  getCols() {
+
+    this.cols = [
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "tipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
+      { field: "Obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
+      { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
+      { field: "duracion", header: "dato.jgr.guardia.guardias.duracion" },
+      { field: "letradosGuardia", header: "dato.jgr.guardia.guardias.letradosGuardia" },
+      { field: "validaJustificacion", header: "dato.jgr.guardia.guardias.validaJustificacion" },
+      { field: "letradosInscritos", header: "dato.jgr.guardia.guardias.letradosInscritos" },
+
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  setItalic(dato) {
+    if (dato.fechabaja == null) return false;
+    else return true;
+  }
+
+  onChangeSelectAll() {
+    if (this.permisoEscritura) {
+      if (!this.historico) {
+        if (this.selectAll) {
+          this.selectMultiple = true;
+          this.selectedDatos = this.datos;
+          this.numSelected = this.datos.length;
+        } else {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectMultiple = false;
+        }
+      } else {
+        if (this.selectAll) {
+          this.selectMultiple = true;
+          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
+          this.numSelected = this.selectedDatos.length;
+        } else {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectMultiple = false;
+        }
+      }
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 
 }
