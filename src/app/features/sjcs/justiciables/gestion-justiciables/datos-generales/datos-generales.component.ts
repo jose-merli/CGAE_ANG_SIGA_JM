@@ -4,6 +4,7 @@ import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-generales',
@@ -17,50 +18,174 @@ export class DatosGeneralesComponent implements OnInit {
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   msgs;
-  showTarjeta: boolean = true;
   generalBody: any;
-  comboTipo;
+  comboTipoIdentificacion;
+  comboSexo;
+  comboTipoPersona;
+  comboEstadoCivil;
+  comboIdiomas;
+  comboProfesion;
+  comboRegimenConyugal;
+  comboMinusvalia;
+  comboPais;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
 
-  //Resultados de la busqueda
-  @Input() areasItem: AreasItem;
+  @Input() showTarjeta;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.areasItem != undefined) {
-      this.body = this.areasItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
-    } else {
-      this.areasItem = new AreasItem();
-    }
-    if (this.body.idArea == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+
   }
 
   ngOnInit() {
-    // if (this.areasItem != undefined) {
 
-    // this.areasItem = new AreasItem();
-    if (this.areasItem != undefined) {
-      this.body = this.areasItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
-    } else {
-      this.areasItem = new AreasItem();
-    }
-    if (this.body.idArea == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+    this.getCombos();
   }
 
-  ngAfterViewInit() {
+  getCombos() {
+    this.getComboSexo();
+    this.getComboEstadoCivil();
+    this.getComboTipoPersona();
+    this.getComboIdiomas();
+    this.getComboTiposIdentificacion();
+    this.getComboProfesion();
+    this.getComboRegimenConyugal();
+    this.getComboMinusvalia();
+    this.getComboPais();
+  }
+
+  getComboMinusvalia() {
+
+    this.progressSpinner = true;
+
+    this.sigaServices.get("gestionJusticiables_comboMinusvalias").subscribe(
+      n => {
+        this.comboMinusvalia = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboMinusvalia);
+        this.progressSpinner = false;
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+
+      }
+    );
+  }
+
+
+  getComboPais() {
+    this.sigaServices.get("direcciones_comboPais").subscribe(
+      n => {
+        this.comboPais = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboPais);
+
+      },
+      error => { }
+    );
+  }
+
+  getComboProfesion() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("gestionJusticiables_comboProfesiones").subscribe(
+      n => {
+        this.comboProfesion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboProfesion);
+
+
+        this.progressSpinner = false;
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+
+      }
+    );
+  }
+
+  getComboRegimenConyugal() {
+    this.comboRegimenConyugal = [
+      { label: "Indetermninado", value: "I" },
+      { label: "Gananciales", value: "G" },
+      { label: "Separación de bienes", value: "S" }
+    ];
+  }
+
+  getComboTipoPersona() {
+    this.comboTipoPersona = [
+      { label: "Física", value: "F" },
+      { label: "Jurídica", value: "J" }
+    ];
+
+    this.commonsService.arregloTildesCombo(this.comboTipoPersona);
+
+  }
+
+  getComboSexo() {
+    this.comboSexo = [
+      { label: "Hombre", value: "H" },
+      { label: "Mujer", value: "M" },
+      { label: "No Consta", value: "N" }
+    ];
+  }
+
+  getComboTiposIdentificacion() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
+      n => {
+        this.comboTipoIdentificacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTipoIdentificacion);
+
+        this.progressSpinner = false;
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+
+      }
+    );
+  }
+
+  getComboEstadoCivil() {
+    this.progressSpinner = true;
+    this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
+      n => {
+        this.comboEstadoCivil = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboEstadoCivil);
+
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+
+  getComboIdiomas() {
+    this.progressSpinner = true;
+    this.sigaServices.get("etiquetas_lenguaje").subscribe(
+      n => {
+        this.comboIdiomas = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboIdiomas);
+
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
   }
 
   rest() {
@@ -69,56 +194,6 @@ export class DatosGeneralesComponent implements OnInit {
     // } else {
     //   this.areasItem = new AreasItem();
     // }
-  }
-
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-    if (!this.modoEdicion) {
-      url = "fichaAreas_createAreas";
-      this.callSaveService(url);
-    } else {
-      url = "fichaAreas_updateAreas";
-      this.callSaveService(url);
-    }
-
-  }
-
-  callSaveService(url) {
-    this.sigaServices.post(url, this.areasItem).subscribe(
-      data => {
-
-        // if (!this.modoEdicion) {
-        //   this.modoEdicion = true;
-        //   let areas = JSON.parse(data.body);
-        //   // this.areasItem = JSON.parse(data.body);
-        //   this.areasItem.idArea = areas.id;
-        //   let send = {
-        //     modoEdicion: this.modoEdicion,
-        //     idArea: this.areasItem.idArea
-        //   }
-        //   this.modoEdicionSend.emit(send);
-        // }
-
-        this.bodyInicial = JSON.parse(JSON.stringify(this.areasItem));
-        this.persistenceService.setDatos(this.areasItem);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
   }
 
   clear() {

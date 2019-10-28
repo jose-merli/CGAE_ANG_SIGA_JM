@@ -4,7 +4,6 @@ import { BusquedaJusticiablesComponent } from './busqueda-justiciables/busqueda-
 import { FiltroJusticiablesComponent } from './busqueda-justiciables/filtro-justiciables/filtro-justiciables.component';
 import { GestionJusticiablesComponent } from './gestion-justiciables/gestion-justiciables.component';
 import { DatosGeneralesComponent } from './gestion-justiciables/datos-generales/datos-generales.component';
-import { DatosSolicitudComponent } from './gestion-justiciables/datos-solicitud/datos-solicitud.component';
 import { TablaJusticiablesComponent } from './busqueda-justiciables/tabla-justiciables/tabla-justiciables.component';
 import { DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, CheckboxModule, GrowlModule, MenubarModule, MultiSelectModule, ConfirmationService } from '../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../node_modules/@angular/forms';
@@ -25,11 +24,17 @@ import { HTTP_INTERCEPTORS } from '../../../../../node_modules/@angular/common/h
 import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { FechaModule } from '../../../commons/fecha/fecha.module';
+import { routingJusticiables } from './justiciables-routing.module';
+import { DatosRepresentanteComponent } from './gestion-justiciables/datos-representante/datos-representante.component';
+import { FileUploadModule } from 'primeng/fileupload';
+import { AsuntosComponent } from './gestion-justiciables/asuntos/asuntos.component';
 import { DatosDireccionComponent } from './gestion-justiciables/datos-direccion/datos-direccion.component';
+import { DatosSolicitudComponent } from './gestion-justiciables/datos-solicitud/datos-solicitud.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    routingJusticiables,
     DataTableModule,
     PaginatorModule,
     InputTextModule,
@@ -44,6 +49,7 @@ import { DatosDireccionComponent } from './gestion-justiciables/datos-direccion/
     MultiSelectModule,
     PrecioModule,
     FechaModule,
+    FileUploadModule
 
   ],
   declarations: [
@@ -52,6 +58,8 @@ import { DatosDireccionComponent } from './gestion-justiciables/datos-direccion/
     TablaJusticiablesComponent,
     GestionJusticiablesComponent,
     DatosGeneralesComponent,
+    DatosRepresentanteComponent,
+    AsuntosComponent,
     DatosSolicitudComponent,
     DatosDireccionComponent
   ],

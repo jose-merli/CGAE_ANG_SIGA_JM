@@ -6,7 +6,7 @@ export class JusticiableItem {
   nombre: string;
   asuntos: string;
   fechaModificacion: Date;
-  fechanacimiento: string;
+  fechaNacimiento: string;
   idPais: string;
   apellido1: string;
   apellido2: string;
@@ -56,6 +56,7 @@ export class JusticiableItem {
   asistidoAutorizaeejg: string;
   autorizaAvisoTelematico: string;
 
+  nombrePoblacion: string;
 
   constructor() { }
 }

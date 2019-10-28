@@ -29,12 +29,38 @@ export class BusquedaJusticiablesComponent implements OnInit {
   comboPJ;
   msgs;
 
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "direccion",
+      activa: true
+    },
+    {
+      key: "solicitud",
+      activa: false
+    },
+    {
+      key: "representante",
+      activa: false
+    },
+    {
+      key: "asuntos",
+      activa: false
+    }
+
+  ];
+
   permisoEscritura;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+
+    this.persistenceService.setFichasPosibles(this.fichasPosibles);
 
     this.commonsService.checkAcceso(procesos_maestros.justiciables)
       .then(respuesta => {

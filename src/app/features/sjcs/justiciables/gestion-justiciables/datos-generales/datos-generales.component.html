@@ -53,42 +53,38 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoPersona" | translate}}
               </label>
-              <!-- <input [(ngModel)]="generalBody.sexo" type="text" class="form-control" [maxLength]="99" pInputText> -->
-              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboTipo" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboTipoPersona" [filter]="true" filterBy="label,labelSinTilde"
+                placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody" [(disabled)]="disabledAction" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
-                [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody" [(disabled)]="disabledAction" type="text" class="form-control" [maxLength]="100" pInputText
+              />
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboSexo" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboTipoIdentificacion" [filter]="true" filterBy="label,labelSinTilde"
+                placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"></p-dropdown>
             </div>
           </div>
           <div class="row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody" [(disabled)]="disabledAction" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
-                [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody" type="text" class="form-control" [maxLength]="100" pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody" [(disabled)]="disabledAction" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
-                [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody" type="text" class="form-control" [maxLength]="100" pInputText />
             </div>
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
               </label>
-              <input [(ngModel)]="generalBody" [(disabled)]="disabledAction" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
-                [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody" type="text" class="form-control" [maxLength]="100" pInputText />
             </div>
           </div>
         </div>
@@ -100,37 +96,37 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
               </label>
-              <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" [disabled]="disabledAction" (valueChangeSelected)="fillFechaAlta($event)"
+              <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" (valueChangeSelected)="fillFechaAlta($event)"
                 [utc]="false"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}
               </label>
-              <input type="text " class="form-control " disabled [(ngModel)]="generalBody" [maxLength]="3" pInputText />
+              <input type="text" class="form-control" disabled [(ngModel)]="generalBody" pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.datosDireccion.literal.pais2" | translate }}
               </label>
-              <input type="text " class="form-control " [(disabled)]="disabledAction" (ngModelChange)="activacionGuardarGenerales()" [(ngModel)]="generalBody"
-                [maxLength]="19" pInputText />
+              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboPais" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [filter]="true" filterBy="label,labelSinTilde" showClear="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}
               </label>
-              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboSexo" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboSexo" [filter]="true" filterBy="label,labelSinTilde"
+                showClear="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
               </label>
-              <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" [disabled]="disabledAction" (valueChangeSelected)="fillFechaAlta($event)"
+              <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" (valueChangeSelected)="fillFechaAlta($event)"
                 [utc]="false"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboIdiomas" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody"></p-dropdown>
             </div>
 
           </div>
@@ -145,26 +141,26 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboEstadoCivil" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.personaJG.literal.regimenConyugal" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "gratuita.personaJG.literal.profesion" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboProfesion" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "gratuita.busquedaSOJ.literal.minusvalia" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="generalBody"></p-dropdown>
+              <p-dropdown class="select-form" [options]="comboMinusvalia" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="generalBody"></p-dropdown>
             </div>
           </div>
         </div>
@@ -173,10 +169,8 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="areasItem.historico" (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button [disabled]="areasItem.historico" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="disabledSave() || areasItem.historico" (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
   </div>
