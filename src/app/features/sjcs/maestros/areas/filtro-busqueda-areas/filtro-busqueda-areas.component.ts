@@ -88,24 +88,24 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   }
 
   checkFilters() {
-    if (
-      (this.filtros.nombreArea == null || this.filtros.nombreArea.trim() == "" || this.filtros.nombreArea.trim().length < 3) &&
-      (this.filtros.nombreMateria == null || this.filtros.nombreMateria.trim() == "" || this.filtros.nombreMateria.trim().length < 3) &&
-      (this.filtros.jurisdiccion == null || this.filtros.jurisdiccion == "")) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.nombreArea != undefined && this.filtros.nombreArea != null) {
-        this.filtros.nombreArea = this.filtros.nombreArea.trim();
-      }
-
-      if (this.filtros.nombreMateria != undefined && this.filtros.nombreMateria != null) {
-        this.filtros.nombreMateria = this.filtros.nombreMateria.trim();
-      }
-
-      return true;
+    // if (
+    //   (this.filtros.nombreArea == null || this.filtros.nombreArea.trim() == "" || this.filtros.nombreArea.trim().length < 3) &&
+    //   (this.filtros.nombreMateria == null || this.filtros.nombreMateria.trim() == "" || this.filtros.nombreMateria.trim().length < 3) &&
+    //   (this.filtros.jurisdiccion == null || this.filtros.jurisdiccion == "")) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.nombreArea != undefined && this.filtros.nombreArea != null) {
+      this.filtros.nombreArea = this.filtros.nombreArea.trim();
     }
+
+    if (this.filtros.nombreMateria != undefined && this.filtros.nombreMateria != null) {
+      this.filtros.nombreMateria = this.filtros.nombreMateria.trim();
+    }
+
+    return true;
+    // }
   }
 
   showMessage(severity, summary, msg) {

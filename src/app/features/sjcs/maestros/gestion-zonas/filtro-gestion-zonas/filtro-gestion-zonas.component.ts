@@ -68,27 +68,27 @@ export class FiltroGestionZonasComponent implements OnInit {
   }
 
   checkFilters() {
-    if (
-      (this.filtros.descripcionzona == null || this.filtros.descripcionzona.trim() == "" || this.filtros.descripcionzona.trim().length < 3) &&
-      (this.filtros.descripcionsubzona == null || this.filtros.descripcionsubzona.trim() == "" || this.filtros.descripcionsubzona.trim().length < 3) &&
-      (this.filtros.descripcionpartido == null || this.filtros.descripcionpartido.trim() == "" || this.filtros.descripcionpartido.trim().length < 3)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.descripcionzona != undefined && this.filtros.descripcionzona != null) {
-        this.filtros.descripcionzona = this.filtros.descripcionzona.trim();
-      }
-
-      if (this.filtros.descripcionsubzona != undefined && this.filtros.descripcionsubzona != null) {
-        this.filtros.descripcionsubzona = this.filtros.descripcionsubzona.trim();
-      }
-
-      if (this.filtros.descripcionpartido != undefined && this.filtros.descripcionpartido != null) {
-        this.filtros.descripcionpartido = this.filtros.descripcionpartido.trim();
-      }
-      return true;
+    // if (
+    //   (this.filtros.descripcionzona == null || this.filtros.descripcionzona.trim() == "" || this.filtros.descripcionzona.trim().length < 3) &&
+    //   (this.filtros.descripcionsubzona == null || this.filtros.descripcionsubzona.trim() == "" || this.filtros.descripcionsubzona.trim().length < 3) &&
+    //   (this.filtros.descripcionpartido == null || this.filtros.descripcionpartido.trim() == "" || this.filtros.descripcionpartido.trim().length < 3)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.descripcionzona != undefined && this.filtros.descripcionzona != null) {
+      this.filtros.descripcionzona = this.filtros.descripcionzona.trim();
     }
+
+    if (this.filtros.descripcionsubzona != undefined && this.filtros.descripcionsubzona != null) {
+      this.filtros.descripcionsubzona = this.filtros.descripcionsubzona.trim();
+    }
+
+    if (this.filtros.descripcionpartido != undefined && this.filtros.descripcionpartido != null) {
+      this.filtros.descripcionpartido = this.filtros.descripcionpartido.trim();
+    }
+    return true;
+    // }
   }
 
   clearFilters() {

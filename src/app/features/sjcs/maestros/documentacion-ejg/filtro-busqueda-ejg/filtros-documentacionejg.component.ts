@@ -62,32 +62,32 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
   }
 
   isBuscar() {
-    if ((this.filtros.abreviaturaDoc == undefined || this.filtros.abreviaturaDoc == "" || this.filtros.abreviaturaDoc.trim().length < 3)
-      && (this.filtros.abreviaturaTipoDoc == undefined || this.filtros.abreviaturaTipoDoc == "" || this.filtros.abreviaturaTipoDoc.trim().length < 3)
-      && (this.filtros.descripcionDoc == undefined || this.filtros.descripcionDoc == "" || this.filtros.descripcionDoc.trim().length < 3)
-      && (this.filtros.descripcionTipoDoc == undefined || this.filtros.descripcionTipoDoc == "" || this.filtros.descripcionTipoDoc.trim().length < 3)
-    ) {
-      this.showSearchIncorrect();
-    } else {
-      this.buscar = true;
-      this.filtros.historico = false;
-      if (this.filtros.abreviaturaDoc != undefined && this.filtros.abreviaturaDoc != null) {
-        this.filtros.abreviaturaDoc = this.filtros.abreviaturaDoc.trim();
-      }
-      if (this.filtros.abreviaturaTipoDoc != undefined && this.filtros.abreviaturaTipoDoc != null) {
-        this.filtros.abreviaturaTipoDoc = this.filtros.abreviaturaTipoDoc.trim();
-      }
-      if (this.filtros.descripcionDoc != undefined && this.filtros.descripcionDoc != null) {
-        this.filtros.descripcionDoc = this.filtros.descripcionDoc.trim();
-      }
-      if (this.filtros.descripcionTipoDoc != undefined && this.filtros.descripcionTipoDoc != null) {
-        this.filtros.descripcionTipoDoc = this.filtros.descripcionTipoDoc.trim();
-      }
-      this.persistenceService.setFiltros(this.filtros);
-      this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux();
-      this.busqueda.emit(false);
+    // if ((this.filtros.abreviaturaDoc == undefined || this.filtros.abreviaturaDoc == "" || this.filtros.abreviaturaDoc.trim().length < 3)
+    //   && (this.filtros.abreviaturaTipoDoc == undefined || this.filtros.abreviaturaTipoDoc == "" || this.filtros.abreviaturaTipoDoc.trim().length < 3)
+    //   && (this.filtros.descripcionDoc == undefined || this.filtros.descripcionDoc == "" || this.filtros.descripcionDoc.trim().length < 3)
+    //   && (this.filtros.descripcionTipoDoc == undefined || this.filtros.descripcionTipoDoc == "" || this.filtros.descripcionTipoDoc.trim().length < 3)
+    // ) {
+    //   this.showSearchIncorrect();
+    // } else {
+    this.buscar = true;
+    this.filtros.historico = false;
+    if (this.filtros.abreviaturaDoc != undefined && this.filtros.abreviaturaDoc != null) {
+      this.filtros.abreviaturaDoc = this.filtros.abreviaturaDoc.trim();
     }
+    if (this.filtros.abreviaturaTipoDoc != undefined && this.filtros.abreviaturaTipoDoc != null) {
+      this.filtros.abreviaturaTipoDoc = this.filtros.abreviaturaTipoDoc.trim();
+    }
+    if (this.filtros.descripcionDoc != undefined && this.filtros.descripcionDoc != null) {
+      this.filtros.descripcionDoc = this.filtros.descripcionDoc.trim();
+    }
+    if (this.filtros.descripcionTipoDoc != undefined && this.filtros.descripcionTipoDoc != null) {
+      this.filtros.descripcionTipoDoc = this.filtros.descripcionTipoDoc.trim();
+    }
+    this.persistenceService.setFiltros(this.filtros);
+    this.persistenceService.setFiltrosAux(this.filtros);
+    this.filtroAux = this.persistenceService.getFiltrosAux();
+    this.busqueda.emit(false);
+    // }
   }
 
   showSearchIncorrect() {

@@ -35,7 +35,7 @@ export class TablaComisariasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -102,10 +102,11 @@ export class TablaComisariasComponent implements OnInit {
       this.router.navigate(["/gestionComisarias"]);
     } else {
 
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (evento.data.idInstitucion != this.institucionActual) {
+        this.selectedDatos.pop();
+      } else if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
-
     }
   }
 
@@ -209,10 +210,11 @@ export class TablaComisariasComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.permisoEscritura) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
       if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos;
+          // this.selectedDatos = this.datos;
           this.numSelected = this.datos.length;
         } else {
           this.selectedDatos = [];
@@ -222,7 +224,7 @@ export class TablaComisariasComponent implements OnInit {
       } else {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
+          this.selectedDatos = this.selectedDatos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
           this.numSelected = this.selectedDatos.length;
         } else {
           this.selectedDatos = [];

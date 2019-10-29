@@ -84,10 +84,11 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
       // quita espacios vacios antes de buscar
 
       return true;
-    } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
     }
+    // else {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // }
   }
 
 
