@@ -23,6 +23,8 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
 import { TurnosComponent } from './busqueda-turnos.component';
 import { FiltrosTurnos } from './filtros-turnos/filtros-turnos.component';
 import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component';
+import { FichaTurnosComponent } from './ficha-turnos/ficha-turnos.component';
+import { DatosGeneralesTurnosComponent } from './ficha-turnos/datos-generales-consulta/datos-generales-consulta.component';
 
 @NgModule({
   imports: [
@@ -47,7 +49,9 @@ import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component'
   declarations: [
     TurnosComponent,
     FiltrosTurnos,
-    TablaTurnosComponent
+    TablaTurnosComponent,
+    FichaTurnosComponent,
+    DatosGeneralesTurnosComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

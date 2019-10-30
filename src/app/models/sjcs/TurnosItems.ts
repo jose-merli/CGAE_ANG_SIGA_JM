@@ -10,6 +10,7 @@ export class TurnosItems {
   materia: string;
   idzona: string;
   zona: string;
+  idzubzona: string;
   idsubzona: string;
   subzona: string;
   idpartido: string;

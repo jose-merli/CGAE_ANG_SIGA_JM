@@ -76,17 +76,15 @@ export class TurnosComponent implements OnInit {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
-    this.sigaServices.post("gestionPartidasPres_searchPartidasPres", this.filtros.filtroAux).subscribe(
+    this.progressSpinner = true;
+    this.sigaServices.post("turnos_busquedaTurnos", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).turnosItem;
+        this.datos.forEach(element => {
+          element.nletrados = +element.nletrados;
+        });
         this.buscar = true;
         this.progressSpinner = false;
-        // this.datos.forEach(element => {
-        //   element.importepartidaReal = + element.importepartida;
-        //   element.importepartida = element.importepartida.replace(".", ",");
-        //   if (element.importepartida[0] == ',')
-        //     element.importepartida = "0".concat(element.importepartida)
-        // });
       },
       err => {
         this.progressSpinner = false;

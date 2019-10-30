@@ -5,9 +5,10 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
+import { MultiSelect, SortEvent } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
 
 
 @Component({
@@ -37,9 +38,9 @@ export class TablaTurnosComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-
+  sortO: number = 1;
   message;
-
+  public ascNumberSort = true;
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -55,6 +56,8 @@ export class TablaTurnosComponent implements OnInit {
   @Output() searchPartidas = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
+  rows: any;
+  sort: (compareFn?: (a: any, b: any) => number) => any[];
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -135,6 +138,27 @@ export class TablaTurnosComponent implements OnInit {
       }
 
     }
+  }
+
+  mySort(event: any, field: string) {
+    if (event.order === 1) {
+      this.rows.sort((a, b) => {
+        if (typeof a[field] === 'string') {
+          const sortDesc = a[field] < b[field] ? -1 : 0;
+          return a[field] > b[field] ? 1 : sortDesc;
+        }
+        return a[field] - b[field];
+      });
+    } else {
+      this.rows.sort((a, b) => {
+        if (typeof a[field] === 'string') {
+          const sortDesc = a[field] < b[field] ? 1 : 0;
+          return a[field] > b[field] ? -1 : sortDesc;
+        }
+        return b[field] - a[field];
+      });
+    }
+    this.rows = [...this.rows];
   }
 
   getId() {
@@ -312,11 +336,23 @@ export class TablaTurnosComponent implements OnInit {
     return check;
   }
 
+  searchHistorical() {
+
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchPartidas.emit(this.historico);
+    this.selectAll = false
+    if (this.historico) {
+      this.selectMultiple = true;
+      this.selectionMode = "multiple";
+    }
+  }
+
 
   delete() {
-    let PartidasPresDelete = new PartidasObject();
-    PartidasPresDelete.partidasItem = this.selectedDatos
-    this.sigaServices.post("gestionPartidasPres_eliminatePartidasPres", PartidasPresDelete).subscribe(
+    let turnosDelete = new TurnosObject();
+    turnosDelete.turnosItem = this.selectedDatos
+    this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
       data => {
         this.selectedDatos = [];
         this.searchPartidas.emit(false);
@@ -401,9 +437,14 @@ export class TablaTurnosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "abreviatura", header: "censo.usuario.nombre" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "area", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "abreviatura", header: "gratuita.definirTurnosIndex.literal.abreviatura" },
+      { field: "nombre", header: "censo.usuario.nombre" },
+      { field: "area", header: "menu.justiciaGratuita.maestros.Area" },
+      { field: "materia", header: "menu.justiciaGratuita.maestros.Materia" },
+      { field: "zona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" },
+      { field: "subzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zonas.cabecera" },
+      { field: "grupofacturacion", header: "justiciaGratuita.oficio.turnos.grupofacturacion" },
+      { field: "nletrados", header: "justiciaGratuita.oficio.turnos.nletrados" },
 
     ];
 
@@ -439,7 +480,7 @@ export class TablaTurnosComponent implements OnInit {
         this.persistenceService.setHistorico(this.historico);
       }
       this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/gestiondocumentacionejg"]);
+      this.router.navigate(["/gestionTurnos"]);
     } else {
 
       if (evento.data.fechabaja == undefined && this.historico) {
