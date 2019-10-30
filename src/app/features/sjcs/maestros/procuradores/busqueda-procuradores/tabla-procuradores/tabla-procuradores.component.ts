@@ -7,6 +7,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { ProcuradoresItem } from '../../../../../../models/sjcs/ProcuradoresItem';
 import { ProcuradoresModule } from '../../procuradores.module';
 import { ProcuradoresObject } from '../../../../../../models/sjcs/ProcuradoresObject';
+import { Identifiers } from '../../../../../../../../node_modules/@angular/compiler';
 
 
 
@@ -21,6 +22,7 @@ export class TablaProcuradoresComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
+  @Input() institucionActual;
 
   selectedItem: number = 10;
   selectAll;
@@ -100,14 +102,17 @@ export class TablaProcuradoresComponent implements OnInit {
     }
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
+
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestionProcuradores"]);
+
     } else {
-
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (this.institucionActual != evento.data.idInstitucion)
         this.selectedDatos.pop();
-      }
-
+      else if (evento.data.fechabaja == undefined && this.historico)
+        this.selectedDatos.pop();
     }
   }
 
@@ -212,10 +217,12 @@ export class TablaProcuradoresComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.permisoEscritura) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
+
       if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos;
+          // this.selectedDatos = this.datos;
           this.numSelected = this.datos.length;
         } else {
           this.selectedDatos = [];

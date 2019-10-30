@@ -60,6 +60,7 @@ export class TablaComisariasComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
+
   }
 
   isSelectMultiple() {
@@ -98,7 +99,11 @@ export class TablaComisariasComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
       this.persistenceService.setDatos(evento.data);
+
+
       this.router.navigate(["/gestionComisarias"]);
     } else {
 

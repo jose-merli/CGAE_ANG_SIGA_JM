@@ -5,7 +5,7 @@
     <!-- TABLA RESULTADOS -->
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-      #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaFila()" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaFila($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
