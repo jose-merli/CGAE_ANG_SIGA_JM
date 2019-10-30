@@ -188,6 +188,11 @@ export class GestionCostesfijosComponent implements OnInit {
       url = "gestionCostesFijos_createCosteFijo";
       let costeFijo = this.datos[0];
       this.body = costeFijo;
+      this.body.importe = this.body.importe.replace(",", ".");
+      this.body.importeReal = +this.body.importe;
+      if (this.body.importe == ".") {
+        this.body.importe = 0;
+      }
       this.callSaveService(url);
 
     } else {
@@ -287,7 +292,8 @@ export class GestionCostesfijosComponent implements OnInit {
       idCosteFijo: undefined,
       idTipoAusencia: undefined,
       idTipoActuacion: undefined,
-      importe: 0,
+      importe: "0",
+      importepartidaReal: 0,
       editable: true
     };
 
@@ -397,7 +403,7 @@ export class GestionCostesfijosComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].idCosteFijo != undefined && this.datos[0].idTipoAsistencia != undefined && this.datos[0].idTipoActuacion != undefined
-        && this.datos[0].importe != "" && this.datos[0].importe != undefined) {
+        && this.datos[0].valorNum != "" && this.datos[0].valorNum != undefined) {
         return false;
       } else {
         return true;
