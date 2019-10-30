@@ -22,6 +22,7 @@ import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+import { endpoints_guardia } from "../utils/endpoints_guardia";
 
 
 @Injectable()
@@ -717,6 +718,7 @@ export class SigaServices {
     dialogo_keys: "dialogoComunicacion/keys",
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
+    ...endpoints_guardia,
     dialogo_envioTest: "dialogoComunicacion/envioTest",
     ...endpoints_justiciables,
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",

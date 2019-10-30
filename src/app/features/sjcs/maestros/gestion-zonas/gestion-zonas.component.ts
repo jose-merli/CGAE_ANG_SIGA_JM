@@ -48,6 +48,7 @@ export class GestionZonasComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
+
         this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {

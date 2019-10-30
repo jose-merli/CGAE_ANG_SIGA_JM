@@ -21,6 +21,8 @@ import { environment } from '../../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
+import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gestion-guardia.component';
+import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-generales-guardias/datos-generales-guardias.component';
 
 @NgModule({
   imports: [
@@ -39,7 +41,7 @@ import { CookieService } from '../../../../../../node_modules/ngx-cookie-service
     MultiSelectModule,
     PrecioModule,
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,

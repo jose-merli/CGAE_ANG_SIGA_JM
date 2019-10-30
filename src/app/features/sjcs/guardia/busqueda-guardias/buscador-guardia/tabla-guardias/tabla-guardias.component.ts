@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { GuardiaObject } from '../../../../../../models/guardia/GuardiaObject';
 
 @Component({
   selector: 'app-tabla-guardias',
@@ -46,7 +47,16 @@ export class TablaGuardiasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
+
     this.getCols();
+    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+
+    if (this.persistenceService.getHistorico() != undefined) {
+      this.historico = this.persistenceService.getHistorico();
+    }
   }
 
   isSelectMultiple() {
@@ -75,15 +85,15 @@ export class TablaGuardiasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "idTurno", header: "dato.jgr.guardia.guardias.turno" },
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "tipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
-      { field: "Obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
+      { field: "obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
       { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
       { field: "duracion", header: "dato.jgr.guardia.guardias.duracion" },
       { field: "letradosGuardia", header: "dato.jgr.guardia.guardias.letradosGuardia" },
       { field: "validaJustificacion", header: "dato.jgr.guardia.guardias.validaJustificacion" },
-      { field: "letradosInscritos", header: "dato.jgr.guardia.guardias.letradosInscritos" },
+      { field: "letradosIns", header: "dato.jgr.guardia.guardias.letradosInscritos" },
 
     ];
 
@@ -137,6 +147,98 @@ export class TablaGuardiasComponent implements OnInit {
       }
     }
   }
+
+  searchHistorical() {
+
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    this.searchHistoricalSend.emit(this.historico);
+    this.selectAll = false
+    if (this.selectMultiple) {
+      this.selectMultiple = false;
+    }
+
+  }
+  openTab(evento) {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
+
+    if (!this.selectAll && !this.selectMultiple) {
+      this.progressSpinner = true;
+      this.persistenceService.setDatos(evento.data);
+      this.router.navigate(["/gestionGuardias"]);
+    } else {
+
+      if (evento.data.fechabaja == undefined && this.historico) {
+        this.selectedDatos.pop();
+      }
+
+    }
+  }
+
+  delete() {
+
+    let guardiaDelete = new GuardiaObject();
+    guardiaDelete.guardiaItems = this.selectedDatos;
+    this.sigaServices.post("busquedaGuardias_deleteGuardias", guardiaDelete).subscribe(
+
+      data => {
+
+        this.selectedDatos = [];
+        this.searchHistoricalSend.emit(false);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+
+  activate() {
+    let guardiaActivate = new GuardiaObject();
+    guardiaActivate.guardiaItems = this.selectedDatos;
+    this.sigaServices.post("busquedaGuardias_activateGuardias", guardiaActivate).subscribe(
+      data => {
+
+        this.selectedDatos = [];
+        this.searchHistoricalSend.emit(true);
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+    this.seleccion = false;
+  }
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

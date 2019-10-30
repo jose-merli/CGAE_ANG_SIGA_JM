@@ -4,8 +4,9 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [columns]="cols" [value]="datos" selectionMode="multiple" [responsive]="true" #table class="tabla-listado" [paginator]="true"
-      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" [(selection)]="selectedDatos" paginatorPosition="both">
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -51,15 +52,15 @@
           <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
-          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
           </div>
           <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer">
-            </i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>
     </p-table>
@@ -67,10 +68,14 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-      <button *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historico" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <button *ngIf="historico" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+      <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
+        label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+      <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
+        label="{{'general.message.ocultarHistorico' | translate}}"></button>
+      <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) || selectedDatos.length == 0)"
+        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) || selectedDatos.length == 0)"
+        (click)="activate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
     </div>
   </div>
 </div>
