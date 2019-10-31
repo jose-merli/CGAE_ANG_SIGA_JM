@@ -23,7 +23,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from './partidas.component';
 import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
 import { PrecioModule } from '../../../../commons/precio/precio.module';
-import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
+// import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
 
 @NgModule({
     imports: [
@@ -64,7 +64,7 @@ import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
         MessageService,
         AuthenticationService,
         ConfirmationService,
-        NumberPipe,
+        // NumberPipe,
         AuthGuard,
         {
             provide: APP_BASE_HREF,
