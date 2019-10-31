@@ -19,7 +19,7 @@ export class BusquedaPrisionesComponent implements OnInit {
   historico: boolean = false;
 
   datos;
-
+  institucionActual;
   progressSpinner: boolean = false;
 
   @ViewChild(FiltroPrisionesComponent) filtros;
@@ -52,6 +52,8 @@ export class BusquedaPrisionesComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.getInstitucion();
+
       }
       ).catch(error => console.error(error));
   }
@@ -61,7 +63,11 @@ export class BusquedaPrisionesComponent implements OnInit {
     this.search(event);
   }
 
-
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
   search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;

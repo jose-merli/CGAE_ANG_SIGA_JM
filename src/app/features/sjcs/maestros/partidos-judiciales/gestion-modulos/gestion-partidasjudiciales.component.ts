@@ -24,7 +24,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  @Input() institucionActual;
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -63,6 +63,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     this.nuevo = false;
+    this.getInstitucion();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -104,7 +105,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       if (this.nuevo) this.datos.shift();
       this.nuevo = false;
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
@@ -318,10 +319,11 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     }
   }
 
-  actualizaFila() {
+  actualizaFila(event) {
     if (this.selectedDatos[0] == undefined) {
       this.selectedDatos = []
     }
+    if (this.institucionActual != event.data.idInstitucion) this.selectedDatos.pop();
   }
   disabledSave() {
     if (this.permisos) {
@@ -349,7 +351,11 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       detail: msg
     });
   }
-
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
   clear() {
     this.msgs = [];
   }

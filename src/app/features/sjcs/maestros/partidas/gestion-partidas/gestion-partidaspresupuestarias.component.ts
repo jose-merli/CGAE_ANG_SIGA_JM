@@ -137,11 +137,11 @@ export class TablaPartidasComponent implements OnInit {
     }
   }
 
-  getId() {
-    let seleccionados = [];
-    seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
-  }
+  // getId() {
+  //   let seleccionados = [];
+  //   seleccionados.push(this.selectedDatos);
+  //   this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
+  // }
 
 
   changeImporte(dato) {

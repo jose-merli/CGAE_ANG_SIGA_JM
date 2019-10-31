@@ -28,6 +28,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   editMode: boolean = false;
 
+
+
   datos = [];
 
   historico: boolean = false;

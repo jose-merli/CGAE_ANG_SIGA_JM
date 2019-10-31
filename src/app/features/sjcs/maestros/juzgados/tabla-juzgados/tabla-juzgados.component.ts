@@ -34,7 +34,7 @@ export class TablaJuzgadosComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -79,14 +79,15 @@ export class TablaJuzgadosComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
       this.persistenceService.setDatos(evento.data);
+
       this.router.navigate(["/gestionJuzgados"]);
     } else {
-
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-
+      if (this.institucionActual != evento.data.idInstitucion) this.selectedDatos.pop();
+      else if (evento.data.fechabaja == undefined && this.historico) this.selectedDatos.pop();
     }
   }
 
@@ -190,10 +191,10 @@ export class TablaJuzgadosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion != undefined && dato.idInstitucion == this.institucionActual);
+
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-      } else {
-        this.selectedDatos = this.datos;
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {

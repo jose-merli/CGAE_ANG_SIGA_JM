@@ -16,7 +16,6 @@ export class TablaPrisionesComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -34,7 +33,7 @@ export class TablaPrisionesComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -78,14 +77,14 @@ export class TablaPrisionesComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
       this.persistenceService.setDatos(evento.data);
+
       this.router.navigate(["/gestionPrisiones"]);
     } else {
-
-      if (evento.data.fechaBaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-
+      if (evento.data.idInstitucion != this.institucionActual) this.selectedDatos.pop()
+      else if (evento.data.fechaBaja == undefined && this.historico) this.selectedDatos.pop();
     }
   }
 
@@ -189,11 +188,10 @@ export class TablaPrisionesComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
 
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
-      } else {
-        this.selectedDatos = this.datos;
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
