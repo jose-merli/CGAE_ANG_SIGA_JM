@@ -4,6 +4,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PretensionObject } from '../../../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../../../models/sjcs/PretensionItem';
+import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-tabla-procedimientos',
@@ -55,7 +56,8 @@ export class TablaProcedimientosComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -76,6 +78,31 @@ export class TablaProcedimientosComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+  }
+
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   edit(evento) {

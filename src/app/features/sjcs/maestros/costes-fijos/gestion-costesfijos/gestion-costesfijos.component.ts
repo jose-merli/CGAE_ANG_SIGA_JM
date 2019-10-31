@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { MultiSelect } from '../../../../../../../node_modules/primeng/primeng';
+import { MultiSelect, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CosteFijoItem } from '../../../../../models/sjcs/CosteFijoItem';
@@ -29,7 +29,7 @@ export class GestionCostesfijosComponent implements OnInit {
   editMode: boolean = false;
 
 
-  
+
   datos = [];
 
   historico: boolean = false;
@@ -57,7 +57,10 @@ export class GestionCostesfijosComponent implements OnInit {
   @ViewChild("importe") importe;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
-    private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router) { }
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private commonsService: CommonsService,
+    private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getCols();
@@ -181,7 +184,30 @@ export class GestionCostesfijosComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
 
   }
-
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   save() {
     this.progressSpinner = true;
     let url = "";
