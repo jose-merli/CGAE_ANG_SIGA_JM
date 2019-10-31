@@ -59,6 +59,9 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.getComboArea();
     this.getComboTipoGuardia();
     this.getComboTipoTurno();
+    this.getComboArea();
+    this.getComboGrupoZona();
+
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
@@ -88,7 +91,7 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.sigaServices.get("busquedaGuardia_jurisdicciones").subscribe(
       n => {
         this.comboJurisdicciones = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboGrupoZona);
+        this.commonServices.arregloTildesCombo(this.comboJurisdicciones);
       },
       err => {
         console.log(err);
@@ -100,7 +103,7 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.sigaServices.get("busquedaGuardia_gruposFacturacion").subscribe(
       n => {
         this.comboGrupoFacturacion = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboGrupoZona);
+        this.commonServices.arregloTildesCombo(this.comboGrupoFacturacion);
       },
       err => {
         console.log(err);
@@ -112,7 +115,7 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.sigaServices.get("busquedaGuardia_partidaspresupuestarias").subscribe(
       n => {
         this.comboPartidasPresupuestarias = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboGrupoZona);
+        this.commonServices.arregloTildesCombo(this.comboPartidasPresupuestarias);
       },
       err => {
         console.log(err);
@@ -135,6 +138,7 @@ export class FiltrosGuardiaComponent implements OnInit {
       n => {
         this.comboArea = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboArea);
+
       },
       err => {
         console.log(err);
@@ -172,11 +176,40 @@ export class FiltrosGuardiaComponent implements OnInit {
 
     if (this.filtros.grupoZona != undefined && this.filtros.grupoZona != "") {
       this.isDisabledZona = false;
+      this.getSubZona();
     } else {
       this.isDisabledZona = true;
     }
 
   }
+  getSubZona() {
+
+    this.sigaServices.getParam(
+      "fichaZonas_searchSubzones",
+      "?idZona=" + this.filtros.grupoZona + "&idSubZona=" + this.filtros.zona
+    ).subscribe(
+      data => {
+        data.zonasItems.forEach(it => {
+          this.comboZona.push({
+            label: it.descripcionsubzona,
+            value: it.idsubzona,
+            partido: it.nombrePartidosJudiciales
+          })
+        })
+        this.commonServices.arregloTildesCombo(this.comboZona);
+
+      },
+      err => {
+        console.log(err);
+
+      }
+    )
+
+  }
+  onChangeSubZona() {
+    this.filtros.partidoJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+  }
+
 
   buscarZona(e) {
     if (e.target.value && e.target.value !== null && e.target.value !== "") {
@@ -227,9 +260,10 @@ export class FiltrosGuardiaComponent implements OnInit {
 
     this.filtros.materia = "";
     this.comboMateria = [];
-
     if (this.filtros.area != undefined && this.filtros.area != "") {
       this.isDisabledMateria = false;
+      this.getComboMateria("");
+
     } else {
       this.isDisabledMateria = true;
     }
