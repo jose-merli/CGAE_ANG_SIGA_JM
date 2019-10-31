@@ -174,6 +174,11 @@ export class GestionCostesfijosComponent implements OnInit {
   searchHistorical() {
     this.historico = !this.historico;
     this.searchCostesFijos();
+    if (this.historico) {
+      this.selectMultiple = true;
+      this.selectionMode = "multiple";
+    }
+
   }
 
   getTipoActuacion() {
@@ -216,6 +221,7 @@ export class GestionCostesfijosComponent implements OnInit {
       url = "gestionCostesFijos_createCosteFijo";
       let costeFijo = this.datos[0];
       this.body = costeFijo;
+      this.body.importe = this.body.valorNum;
       this.body.importe = this.body.importe.replace(",", ".");
       this.body.importeReal = +this.body.importe;
       if (this.body.importe == ".") {
@@ -321,7 +327,7 @@ export class GestionCostesfijosComponent implements OnInit {
       idTipoAusencia: undefined,
       idTipoActuacion: undefined,
       importe: "0",
-      importepartidaReal: 0,
+      importeReal: 0,
       editable: true
     };
 
@@ -431,7 +437,7 @@ export class GestionCostesfijosComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].idCosteFijo != undefined && this.datos[0].idTipoAsistencia != undefined && this.datos[0].idTipoActuacion != undefined
-        && this.datos[0].valorNum != "" && this.datos[0].valorNum != undefined) {
+        && this.datos[0].valorNum != undefined && this.datos[0].valorNum != "") {
         return false;
       } else {
         return true;
@@ -619,23 +625,28 @@ export class GestionCostesfijosComponent implements OnInit {
 
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
+        this.selectMultiple = true;
+        this.selectionMode = "single";
       } else {
         this.selectedDatos = this.datos;
-
+        this.selectMultiple = false;
+        this.selectionMode = "single";
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
         this.selectMultiple = true;
         this.numSelected = this.selectedDatos.length;
       }
-
+      this.numSelected = this.datos.length;
       this.selectionMode = "multiple";
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      this.selectMultiple = false;
-      this.selectionMode = "single";
+      if (this.historico)
+        this.selectMultiple = true;
+      this.selectionMode = "multiple";
     }
+
 
   }
 
