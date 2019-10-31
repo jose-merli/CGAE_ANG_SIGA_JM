@@ -30,11 +30,11 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importepartidaReal'">
-              {{dato.importepartida}} €
+              {{dato.importepartida | number}} €
             </span>
 
             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartidaReal'">
-              {{ dato[col.field] }}
+              {{ dato[col.field]}}
             </span>
 
             <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importepartidaReal'">
