@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -40,7 +40,8 @@ import { TablaPartidasJudicialesComponent } from './gestion-modulos/gestion-part
         PipeTranslationModule,
         MenubarModule,
         TableModule,
-        MultiSelectModule
+        MultiSelectModule,
+        ConfirmDialogModule
 
         // FichaGrupoZonaModule
 

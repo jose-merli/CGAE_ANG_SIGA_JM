@@ -69,7 +69,7 @@
   <div class="card-footer">
     <div class="text-right main-button">
       <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
-        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        (click)="confirmDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
 
       <button [disabled]="!permisos" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
@@ -80,7 +80,12 @@
     </div>
   </div>
 </div>
-
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

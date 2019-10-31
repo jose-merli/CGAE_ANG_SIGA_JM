@@ -3,7 +3,7 @@ import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/c
 import { TablaGestionZonasComponent } from './tabla-gestion-zonas/tabla-gestion-zonas.component';
 import { FiltroGestionZonasComponent } from './filtro-gestion-zonas/filtro-gestion-zonas.component';
 import { GestionZonasComponent } from './gestion-zonas.component';
-import { PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -39,7 +39,8 @@ import { PersistenceService } from '../../../../_services/persistence.service';
     GrowlModule,
     PipeTranslationModule,
     MenubarModule,
-    MultiSelectModule
+    MultiSelectModule,
+    ConfirmDialogModule
 
   ],
   declarations: [

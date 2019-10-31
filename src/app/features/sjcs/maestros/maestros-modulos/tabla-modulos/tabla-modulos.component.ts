@@ -5,7 +5,7 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { ModulosObject } from '../../../../../models/sjcs/ModulosObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
+import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 
@@ -51,7 +51,8 @@ export class TablaModulosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private  confirmationService:  ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -83,7 +84,33 @@ export class TablaModulosComponent implements OnInit {
 
   }
 
-  delete() {
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
+  delete(selectedDatos) {
     let ModulosDelete = new ModulosObject();
     ModulosDelete.modulosItem = this.selectedDatos
     this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
