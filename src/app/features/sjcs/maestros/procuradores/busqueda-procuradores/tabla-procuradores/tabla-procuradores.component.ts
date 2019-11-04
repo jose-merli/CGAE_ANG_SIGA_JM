@@ -205,7 +205,7 @@ export class TablaProcuradoresComponent implements OnInit {
 
     this.cols = [
       { field: "nColegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
-      { field: "nombreApe", header: "administracion.usuarios.literal.nombre" },
+      { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "codigoExt", header: "administracion.parametrosGenerales.literal.codigo" },
       { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
       { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },

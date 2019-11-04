@@ -4,7 +4,7 @@ import { FiltroComisariasComponent } from './comisarias/filtro-comisarias/filtro
 import { TablaComisariasComponent } from './comisarias/tabla-comisarias/tabla-comisarias.component';
 import { ComisariasComponent } from './comisarias/comisarias.component';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { PaginatorModule, InputTextModule, DropdownModule, ButtonModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, InputTextModule, DropdownModule, ButtonModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService, ConfirmDialogModule, TooltipModule } from '../../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
@@ -39,7 +39,8 @@ import { DatosGeneralesComisariaComponent } from './comisarias/gestion-comisaria
     MenubarModule,
     CheckboxModule,
     FechaModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TooltipModule
   ],
   declarations: [
     ComisariasComponent,

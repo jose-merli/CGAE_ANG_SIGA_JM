@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { ProcuradoresItem } from '../../../../../../../models/sjcs/ProcuradoresItem';
 
+
 @Component({
   selector: 'app-datos-direcciones-procuradores',
   templateUrl: './datos-direcciones-procuradores.component.html',
