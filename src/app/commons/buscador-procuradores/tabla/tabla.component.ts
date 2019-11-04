@@ -68,7 +68,7 @@ export class TablaBuscadorProcuradorComponent implements OnInit {
       { field: "nombreApe", header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
       { field: "idInstitucion", header: "censo.busquedaClientesAvanzada.literal.colegio" },
       { field: "nColegiado", header: "censo.resultadoDuplicados.numeroColegiado" },
-      { field: "estadoColegial", header: "" },
+      { field: "estadoColegial", header: "menu.justiciaGratuita.componentes.estadoColegial" },
       { field: "residencia", header: "censo.busquedaClientes.noResidente" },
 
     ];
