@@ -339,6 +339,9 @@ import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
 import { PrecioModule } from './commons/precio/precio.module';
+import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
+import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
+import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 
 
 
@@ -634,7 +637,10 @@ import { PrecioModule } from './commons/precio/precio.module';
 		DestinatarioIndvEnvioMasivoComponent,
 		DevolucionComponent,
 		JustificacionComponent,
-		CertificacionComponent
+		CertificacionComponent,
+		BuscadorProcuradoresComponent,
+		FiltroBuscadorProcuradorComponent,
+		TablaBuscadorProcuradorComponent,
 	],
 	imports: [
 		BrowserModule,

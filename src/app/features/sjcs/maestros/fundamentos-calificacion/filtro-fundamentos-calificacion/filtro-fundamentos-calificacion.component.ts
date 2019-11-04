@@ -21,7 +21,6 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
   filtroAux: FundamentosCalificacionItem = new FundamentosCalificacionItem();
 
   @Output() isOpen = new EventEmitter<boolean>();
-  @Input() buscar: boolean
   @Input() permisoEscritura
 
   constructor(private persistenceService: PersistenceService, private translateService: TranslateService,
