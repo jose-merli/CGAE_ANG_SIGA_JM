@@ -20,6 +20,7 @@ import { HTTP_INTERCEPTORS } from '../../../../../../../node_modules/@angular/co
 import { JwtInterceptor } from '../../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../../node_modules/ngx-cookie-service';
 import { PrecioModule } from '../../../../../commons/precio/precio.module';
+import { PipeNumberModule } from '../../../../../commons/number-pipe/number-pipe.module';
 
 @NgModule({
   imports: [
@@ -37,7 +38,7 @@ import { PrecioModule } from '../../../../../commons/precio/precio.module';
     MultiSelectModule,
     PrecioModule,
     ConfirmDialogModule,
-
+    PipeNumberModule
   ],
   declarations: [GestionCostesfijosComponent],
   providers: [

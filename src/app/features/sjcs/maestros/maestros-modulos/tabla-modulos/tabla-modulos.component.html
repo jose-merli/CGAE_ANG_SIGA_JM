@@ -6,7 +6,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #tabla
       class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+      [ngClass]="{ 'customCursor': selectMultiple}" (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -51,7 +51,7 @@
                 <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.precio }} €</label>
               </div>
               <div *ngIf="!setItalic(dato)">
-                <label>{{ dato.precio}} €</label>
+                <label>{{ dato.precio | numberPipe}} €</label>
               </div>
             </div>
 

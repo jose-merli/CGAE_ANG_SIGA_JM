@@ -51,7 +51,7 @@
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importe}} €</span>
               </div>
               <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importeReal'">
-                {{ dato.importe }} €
+                {{ dato.importe | numberPipe }} €
               </span>
 
               <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importeReal'">

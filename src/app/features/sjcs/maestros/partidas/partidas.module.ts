@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
 import { TrimPipePipe } from '../../../../commons/trim-pipe/trim-pipe.pipe';
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 import { SigaServices } from '../../../../_services/siga.service';
 import { cardService } from '../../../../_services/cardSearch.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -23,7 +24,6 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from './partidas.component';
 import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
 import { PrecioModule } from '../../../../commons/precio/precio.module';
-import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
 
 @NgModule({
     imports: [
@@ -41,7 +41,7 @@ import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
         TableModule,
         MultiSelectModule,
         PrecioModule,
-
+        PipeNumberModule
         // FichaGrupoZonaModule
 
     ],
@@ -63,7 +63,7 @@ import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
         MessageService,
         AuthenticationService,
         ConfirmationService,
-        NumberPipe,
+
         AuthGuard,
         {
             provide: APP_BASE_HREF,

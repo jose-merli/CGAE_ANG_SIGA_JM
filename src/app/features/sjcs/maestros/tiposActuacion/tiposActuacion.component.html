@@ -49,11 +49,11 @@
                         <td class="text-center" *ngFor="let col of columns">
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importeReal'">
-                                {{dato.importe}} €
+                                {{dato.importe | numberPipe}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importemaximoReal' && col.field !='importeReal'">
-                                {{dato.importemaximo}} €
+                                {{dato.importemaximo | numberPipe}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importeReal' && col.field !='visiblemovil' 

@@ -41,10 +41,9 @@ export class FiltrosModulosComponent implements OnInit {
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if (this.filtros.nombre != undefined || this.filtros.codigo != undefined) {
-        this.isBuscar();
-      }
+      this.isBuscar();
     }
+
   }
 
   newModulo() {
