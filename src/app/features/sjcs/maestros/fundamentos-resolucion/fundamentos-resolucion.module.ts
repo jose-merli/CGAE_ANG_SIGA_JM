@@ -24,6 +24,7 @@ import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
 import { GestionFundamentosresolucionComponent } from './busqueda-fundamentosresolucion/gestion-fundamentosresolucion/gestion-fundamentosresolucion.component';
 import { DatosGeneralesFundamentosComponent } from './busqueda-fundamentosresolucion/gestion-fundamentosresolucion/datos-generales-fundamentos/datos-generales-fundamentos.component';
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { DatosGeneralesFundamentosComponent } from './busqueda-fundamentosresolu
     MenubarModule,
     CheckboxModule,
     FechaModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    PipeNumberModule
   ],
   declarations: [BusquedaFundamentosresolucionComponent, FiltrosFundamentosresolucionComponent, TablaFundamentosresolucionComponent, GestionFundamentosresolucionComponent, DatosGeneralesFundamentosComponent],
   providers: [

@@ -25,6 +25,7 @@ import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edici
 import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { SpinnerModule } from 'primeng/spinner';
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
@@ -53,7 +54,7 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     PrecioModule,
     ConfirmDialogModule
     // FichaGrupoZonaModule
-
+    PipeNumberModule
   ],
   declarations: [
     FiltrosModulosComponent,

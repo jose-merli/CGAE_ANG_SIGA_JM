@@ -26,6 +26,7 @@ import { GestionJuzgadosComponent } from './gestion-juzgados/gestion-juzgados.co
 import { DatosGeneralesJuzgadoComponent } from './gestion-juzgados/datos-generales-juzgado/datos-generales-juzgado.component';
 import { ProcedimientosJuzgadoComponent } from './gestion-juzgados/procedimientos-juzgado/procedimientos-juzgado.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 
 @NgModule({
   imports: [
@@ -41,8 +42,8 @@ import { FechaModule } from '../../../../commons/fecha/fecha.module';
     MenubarModule,
     CheckboxModule,
     FechaModule,
-    ConfirmDialogModule
-
+    ConfirmDialogModule,
+    PipeNumberModule
   ],
   declarations: [
     BusquedaJuzgadosComponent,
