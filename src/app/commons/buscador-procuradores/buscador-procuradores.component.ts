@@ -36,7 +36,7 @@ export class BuscadorProcuradoresComponent implements OnInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso("91H")
+    this.commonsService.checkAcceso(this.proceso)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
         this.persistenceService.setPermisos(this.permisoEscritura);
