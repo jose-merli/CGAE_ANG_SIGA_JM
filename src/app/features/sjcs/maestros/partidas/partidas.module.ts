@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -24,6 +24,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from './partidas.component';
 import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
 import { PrecioModule } from '../../../../commons/precio/precio.module';
+// import { NumberPipe } from '../../../../commons/number-pipe/number-pipe.pipe';
 
 @NgModule({
     imports: [
@@ -41,7 +42,9 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
         TableModule,
         MultiSelectModule,
         PrecioModule,
-        PipeNumberModule
+        PipeNumberModule,
+        ConfirmDialogModule
+
         // FichaGrupoZonaModule
 
     ],
@@ -64,6 +67,7 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
         AuthenticationService,
         ConfirmationService,
 
+        // NumberPipe,
         AuthGuard,
         {
             provide: APP_BASE_HREF,
