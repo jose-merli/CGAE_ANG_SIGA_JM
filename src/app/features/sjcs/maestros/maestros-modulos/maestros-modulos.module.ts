@@ -52,7 +52,7 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     FechaModule,
     SpinnerModule,
     PrecioModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
     // FichaGrupoZonaModule
     PipeNumberModule
   ],
