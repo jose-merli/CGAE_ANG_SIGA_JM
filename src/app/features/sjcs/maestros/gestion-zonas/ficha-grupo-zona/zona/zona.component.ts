@@ -25,7 +25,7 @@ export class ZonaComponent implements OnInit {
   seleccion: boolean = false;
   cols;
   rowsPerPage;
-
+  fechaEvento;
   datos = [];
 
   historico: boolean = false;
@@ -64,6 +64,7 @@ export class ZonaComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
+    this.validateHistorical();
   }
 
   getComboPartidosJudiciales() {
@@ -87,8 +88,31 @@ export class ZonaComponent implements OnInit {
       }
     );
   }
+  validateHistorical() {
+    this.sigaServices.sendFechaBaja$.subscribe(
+      fecha => {
+        this.fechaEvento = fecha;
+        if (this.fechaEvento != null) {
+          this.historico = true;
+        } else {
+          this.historico = false;
+        }
+      });
+    // if (this.datos != undefined && this.datos.length > 0) {
+
+    //   if (this.datos[0].fechabaja != null) {
+    //     this.historico = true;
+    //   } else {
+    //     this.historico = false;
+    //   }
+
+    //   this.persistenceService.setHistorico(this.historico);
+
+    // }
+  }
 
   getZonas() {
+
     this.sigaServices
       .getParam(
         "fichaZonas_searchSubzones",
@@ -98,7 +122,7 @@ export class ZonaComponent implements OnInit {
         res => {
           this.datos = res.zonasItems;
 
-          this.validateHistorical();
+
 
           this.datos.forEach(element => {
             element.editable = false
@@ -117,19 +141,7 @@ export class ZonaComponent implements OnInit {
       );
   }
 
-  validateHistorical() {
-    if (this.datos != undefined && this.datos.length > 0) {
 
-      if (this.datos[0].fechabaja != null) {
-        this.historico = true;
-      } else {
-        this.historico = false;
-      }
-
-      this.persistenceService.setHistorico(this.historico);
-
-    }
-  }
 
   getPartidosJudiciales() {
 

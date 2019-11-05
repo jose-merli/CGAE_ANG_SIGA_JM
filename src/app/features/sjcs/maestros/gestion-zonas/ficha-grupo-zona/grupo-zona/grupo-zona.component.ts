@@ -48,6 +48,8 @@ export class GrupoZonaComponent implements OnInit {
           this.validateHistorical();
 
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+          this.sigaServices.notifysendFechaBaja(this.body.fechabaja);
           this.progressSpinner = false;
         },
         err => {

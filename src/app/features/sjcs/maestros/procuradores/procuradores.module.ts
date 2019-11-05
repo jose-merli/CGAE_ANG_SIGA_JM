@@ -25,6 +25,7 @@ import { PipeTranslationModule } from '../../../../commons/translate/pipe-transl
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { DatosGeneralesProcuradoresComponent } from './busqueda-procuradores/gestion-procuradores/datos-generales-procuradores/datos-generales-procuradores.component';
 import { DatosDireccionesProcuradoresComponent } from './busqueda-procuradores/gestion-procuradores/datos-direcciones-procuradores/datos-direcciones-procuradores.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { DatosDireccionesProcuradoresComponent } from './busqueda-procuradores/g
     MenubarModule,
     CheckboxModule,
     FechaModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TooltipModule
   ],
   declarations: [BusquedaProcuradoresComponent, FiltrosProcuradoresComponent, TablaProcuradoresComponent, GestionProcuradoresComponent, DatosGeneralesProcuradoresComponent, DatosDireccionesProcuradoresComponent],
 

@@ -47,7 +47,7 @@
 
             <div class="form-group col-lg-3 col-md-3">
               <label>
-                {{"censo.ws.literal.codigopostal" | translate}} (*)
+                {{"censo.ws.literal.codigopostal" | translate}}
               </label>
               <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
                 [disabled]="historico || !permisoEscritura" pInputText>
@@ -55,7 +55,7 @@
 
             <div class="form-group col-lg-3 col-md-3">
               <label>
-                {{"censo.datosDireccion.literal.provincia" | translate}} (*)
+                {{"censo.datosDireccion.literal.provincia" | translate}}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -66,7 +66,7 @@
 
             <div class="form-group col-lg-3 col-md-3">
               <label>
-                {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
+                {{"censo.consultaDirecciones.literal.poblacion" | translate}}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' (onChange)="onChangePoblacion()" [filter]="true" filterBy="label,labelSinTilde"
                 [disabled]="isDisabledPoblacion || historico || !permisoEscritura" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
@@ -117,7 +117,7 @@
                   <input type="text" maxlength="100" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
                     style="width: 100%" />
                 </div>
-                <div>
+                <div pTooltip="Verificar e-mail" tooltipPosition="bottom" style="display:inline-block;">
                   <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn button-edit" [disabled]="!emailValido"></button>
                 </div>
               </div>
