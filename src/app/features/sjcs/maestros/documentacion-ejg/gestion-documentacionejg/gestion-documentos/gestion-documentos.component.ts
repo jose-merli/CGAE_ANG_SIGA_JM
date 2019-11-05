@@ -55,9 +55,9 @@ export class GestionDocumentosComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    // this.dato = this.persistenceService.getDatos()
+    // this.datos = this.persistenceService.getDatos();
+
     if (this.datos != null && this.datos != undefined) {
-      //UPDATE
       this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
@@ -392,12 +392,13 @@ export class GestionDocumentosComponent implements OnInit {
       this.datos = [];
     }
 
+
     let Documento = {
       abreviaturaDoc: undefined,
       descripcionDoc: undefined,
       codigoDescripcion: undefined,
       idDocumento: undefined,
-      idTipoDocumento: undefined,
+      idTipoDocumento: this.idTipoDoc,
       editable: true
     };
     this.tabla.sortOrder = 0;
