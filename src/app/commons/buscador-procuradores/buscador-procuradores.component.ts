@@ -80,6 +80,10 @@ export class BuscadorProcuradoresComponent implements OnInit {
       n => {
 
         this.datos = JSON.parse(n.body).procuradorItems;
+        this.datos = this.datos.map(it => {
+          it.nColegiado = +it.nColegiado;
+          return it;
+        })
         this.buscar = true;
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
