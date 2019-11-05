@@ -5,7 +5,6 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
-import { KEY_CODE } from '../../../../../../commons/login-develop/login-develop.component';
 
 @Component({
   selector: 'app-filtros-guardia',
@@ -39,7 +38,9 @@ export class FiltrosGuardiaComponent implements OnInit {
   comboTipoTurno = [];
   comboTurno = [];
   comboTipoGuardia = [];
-
+  KEY_CODE = {
+    ENTER: 13
+  }
   constructor(private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -51,7 +52,6 @@ export class FiltrosGuardiaComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
-    this.getComboGrupoZona();
     this.getComboGrupoFacturacion();
     this.getComboJurisdiccion();
     this.getComboPartidaPresupuestaria();
@@ -384,10 +384,13 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.filtros = new GuardiaItem();
   }
 
+
+
+
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (event.keyCode === KEY_CODE.ENTER) {
+    if (event.keyCode === this.KEY_CODE.ENTER) {
       this.search();
     }
   }
