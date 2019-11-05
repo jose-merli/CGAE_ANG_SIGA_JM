@@ -214,7 +214,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
+        this.searchHistoricalSend.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

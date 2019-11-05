@@ -139,7 +139,8 @@ export class TablaFundamentosresolucionComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
+        this.searchHistoricalSend.emit(false);
+        this.selectMultiple = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
