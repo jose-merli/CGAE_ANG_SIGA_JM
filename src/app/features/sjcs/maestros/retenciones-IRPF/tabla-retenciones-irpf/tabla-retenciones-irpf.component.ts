@@ -57,7 +57,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private  confirmationService:  ConfirmationService
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -74,6 +74,9 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     if (this.historico == false) {
       this.selectMultiple = false;
       this.selectionMode = "single"
+    } else {
+      this.selectMultiple = true;
+      this.selectionMode = "multiple"
     }
     this.selectedDatos = [];
     this.updatePartidasPres = [];
@@ -289,7 +292,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
         this.callSaveService(url);
       } else {
 
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.procedimientos.existeProcedimiento"));
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.existeRetencionMismoNombre"));
         this.progressSpinner = false;
       }
     }
