@@ -57,13 +57,13 @@
                 </span>
 
                 <p-multiSelect #multiSelectPJ *ngIf="!(selectMultiple || selectAll) && ((nuevo && dato.zonaNueva == undefined) || (!nuevo && !seleccion) || historico)"
-                  [disabled]="nuevo || historico" defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.partidosJudiciales"
-                  [options]="comboPJ" optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
-                  (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato); openMultiSelect(dato)"></p-multiSelect>
+                  [disabled]="nuevo || historico" defaultLabel="Seleccionar al menos un partido judicial" filterBy="label"
+                  [(ngModel)]="dato.partidosJudiciales" [options]="comboPJ" optionLabel="label" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [panelStyle]="{ width: '100%' }" (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato); openMultiSelect(dato)"></p-multiSelect>
 
                 <p-multiSelect *ngIf="!(selectMultiple || selectAll) && (!historico && ((seleccion && !nuevo)  || (nuevo && dato.zonaNueva)))"
-                  #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.partidosJudiciales" [options]="comboPJ"
-                  optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
+                  #multiSelectPJ defaultLabel="Seleccionar al menos un partido judicial" filterBy="label" [(ngModel)]="dato.partidosJudiciales"
+                  [options]="comboPJ" optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
                   [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato)"></p-multiSelect>
               </div>
 
@@ -111,7 +111,7 @@
     </div>
     <div *ngIf="modoEdicion" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="(!selectMultiple && !selectAll) || selectedDatos.length == 0 || nuevo || historico" (click)="delete()"
+        <button [disabled]="(!selectMultiple && !selectAll) || selectedDatos.length == 0 || nuevo || historico" (click)="confirmDelete(selectedDatos)"
           pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
         <button [disabled]="historico || (updateZonas.length == 0 && !nuevo)" (click)="rest()" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
@@ -123,6 +123,14 @@
     </div>
   </div>
 </div>
+
+
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

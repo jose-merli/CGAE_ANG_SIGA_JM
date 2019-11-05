@@ -49,11 +49,11 @@ export class GestionDocumentacionejgComponent implements OnInit {
 
   ngOnInit() {
     // this.getFichasPosibles();
-    // this.route.queryParams
-    //   .subscribe(params => {
-    //     this.idTipoDoc = params.idTipoDoc
-    //     console.log(params);
-    //   });
+    this.route.queryParams
+      .subscribe(params => {
+        this.idTipoDoc = params.idTipoDoc
+        console.log(params);
+      });
     this.dato = this.persistenceService.getDatos();
     if (this.dato != undefined || this.dato != null) {
       this.searchDocumentos(this.persistenceService.getHistorico());
@@ -72,7 +72,7 @@ export class GestionDocumentacionejgComponent implements OnInit {
 
   searchDocumentos(event) {
     this.filtros = this.persistenceService.getDatos();
-    //this.filtros.idInstitucion = null;
+    this.idTipoDoc = this.filtros.idTipoDocumento;
     this.filtros.historico = this.persistenceService.getHistorico();
 
     this.persistenceService.setHistorico(event);

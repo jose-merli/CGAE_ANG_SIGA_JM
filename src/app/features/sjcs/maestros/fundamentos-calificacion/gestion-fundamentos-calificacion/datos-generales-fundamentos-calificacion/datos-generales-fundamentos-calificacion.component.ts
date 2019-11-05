@@ -158,8 +158,8 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
 
 
   disabledSave() {
-    if (!this.historico && ((this.body.idTipoDictamenEjg != undefined && this.body.idTipoDictamenEjg != null && this.body.idTipoDictamenEjg.trim() != "") &&
-      (this.body.descripcionFundamento != undefined && this.body.descripcionFundamento != null && this.body.descripcionFundamento.trim() != "")
+    if (!this.historico && ((this.body.idTipoDictamenEjg != undefined && this.body.idTipoDictamenEjg != null && this.body.idTipoDictamenEjg != "") &&
+      (this.body.descripcionFundamento != undefined && this.body.descripcionFundamento != null && this.body.descripcionFundamento != "")
     ) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {

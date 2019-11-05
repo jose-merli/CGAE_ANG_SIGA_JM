@@ -1,7 +1,7 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, UpperCasePipe, APP_BASE_HREF } from '@angular/common';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { PaginatorModule, InputTextModule, DropdownModule, ButtonModule, MenubarModule, CheckboxModule, GrowlModule, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, InputTextModule, DropdownModule, ButtonModule, MenubarModule, CheckboxModule, GrowlModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
@@ -38,7 +38,8 @@ import { DatosGeneralesFundamentosCalificacionComponent } from './gestion-fundam
     PipeTranslationModule,
     MenubarModule,
     CheckboxModule,
-    FechaModule
+    FechaModule,
+    ConfirmDialogModule
   ],
   declarations: [
     FiltroFundamentosCalificacionComponent,

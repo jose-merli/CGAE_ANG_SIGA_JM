@@ -109,9 +109,9 @@
                 <label>
                   {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                 </label>
-                <p-dropdown placeholder="{{ 'administracion.parametrosGenerales.literal.minCaracteres' | translate }}" #input2 class="select-form"
-                  [(ngModel)]='body.idPoblacion' [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || permisoTarjeta == '2'"
-                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
+                <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" #input2 class="select-form" [(ngModel)]='body.idPoblacion'
+                  [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || permisoTarjeta == '2'"
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
                   id="dropdown">
                 </p-dropdown>
 

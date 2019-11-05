@@ -4,7 +4,7 @@ import { BusquedaFundamentosresolucionComponent } from './busqueda-fundamentosre
 import { FiltrosFundamentosresolucionComponent } from './busqueda-fundamentosresolucion/filtros-fundamentosresolucion/filtros-fundamentosresolucion.component';
 import { TablaFundamentosresolucionComponent } from './busqueda-fundamentosresolucion/tabla-fundamentosresolucion/tabla-fundamentosresolucion.component';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
@@ -24,6 +24,7 @@ import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
 import { GestionFundamentosresolucionComponent } from './busqueda-fundamentosresolucion/gestion-fundamentosresolucion/gestion-fundamentosresolucion.component';
 import { DatosGeneralesFundamentosComponent } from './busqueda-fundamentosresolucion/gestion-fundamentosresolucion/datos-generales-fundamentos/datos-generales-fundamentos.component';
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 
 @NgModule({
   imports: [
@@ -38,7 +39,9 @@ import { DatosGeneralesFundamentosComponent } from './busqueda-fundamentosresolu
     PipeTranslationModule,
     MenubarModule,
     CheckboxModule,
-    FechaModule
+    FechaModule,
+    ConfirmDialogModule,
+    PipeNumberModule
   ],
   declarations: [BusquedaFundamentosresolucionComponent, FiltrosFundamentosresolucionComponent, TablaFundamentosresolucionComponent, GestionFundamentosresolucionComponent, DatosGeneralesFundamentosComponent],
   providers: [

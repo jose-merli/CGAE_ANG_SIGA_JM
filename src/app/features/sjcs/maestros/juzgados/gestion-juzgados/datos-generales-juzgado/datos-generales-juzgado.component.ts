@@ -21,6 +21,8 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   openFicha: boolean = true;
   msgs = [];
   historico: boolean = false;
+  codigoPostalValido: boolean = false;
+  provinciaSelecionada: string;
 
 
   body: JuzgadoItem;
@@ -82,7 +84,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
 
-      if (this.persistenceService.getDatos().fechabaja != null) {
+      if (this.persistenceService.getDatos().fechabaja != null || this.persistenceService.getDatos().institucionVal != undefined) {
         this.historico = true;
       } else {
         this.historico = false;
@@ -144,7 +146,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     } else {
       this.isDisabledPoblacion = true;
     }
-
+    this.disabledSave();
   }
 
   buscarPoblacion(e) {
@@ -160,6 +162,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
       this.comboPoblacion = [];
       this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
+    this.disabledSave();
   }
 
   getComboPoblacion(dataFilter) {
@@ -277,32 +280,77 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     }
   }
 
+  onChangeCodigoPostal() {
+    if (
+      this.isValidCodigoPostal() &&
+      this.body.codigoPostal.length == 5
+    ) {
+      let value = this.body.codigoPostal.substring(0, 2);
+      this.provinciaSelecionada = value;
+      this.isDisabledPoblacion = false;
+      if (value != this.body.idProvincia) {
+        this.body.idProvincia = this.provinciaSelecionada;
+        this.body.idPoblacion = "";
+        this.body.nombrePoblacion = "";
+        this.comboPoblacion = [];
+        if (this.historico == true) {
+          this.isDisabledPoblacion = true;
+        } else {
+          this.isDisabledPoblacion = false;
+        }
+      }
+      this.codigoPostalValido = true;
+    } else {
+      this.codigoPostalValido = false;
+      this.isDisabledPoblacion = true;
+      this.provinciaSelecionada = "";
+
+    }
+    this.disabledSave();
+  }
+
+  isValidCodigoPostal(): boolean {
+    return (
+      this.body.codigoPostal &&
+      typeof this.body.codigoPostal === "string" &&
+      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+    );
+  }
+
+
+  deshabilitarDireccion(): boolean {
+    if (!this.codigoPostalValido) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   changeEmail() {
     this.body.email = this.body.email.trim();
     this.emailValido = this.commonsServices.validateEmail(this.body.email);
   }
 
   changeTelefono1() {
-    if (this.body.telefono1.length > 8) {
-      this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
-    }
+    // if (this.body.telefono1.length > 8) {
+    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+    // }
   }
-
   changeTelefono2() {
-    if (this.body.telefono2.length > 8) {
-      this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
-    }
+    // if (this.body.telefono2.length > 8) {
+    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+    // }
   }
   changeFax() {
-    if (this.body.fax.length > 8) {
-      this.faxValido = this.commonsServices.validateFax(this.body.fax);
-    }
+    // if (this.body.fax.length > 8) {
+    this.faxValido = this.commonsServices.validateFax(this.body.fax);
+    // }
   }
 
   changeMovil() {
-    if (this.body.movil.length > 8) {
-      this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
-    }
+    // if (this.body.movil.length > 8) {
+    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
+    // }
   }
 
   numberOnly(event): boolean {

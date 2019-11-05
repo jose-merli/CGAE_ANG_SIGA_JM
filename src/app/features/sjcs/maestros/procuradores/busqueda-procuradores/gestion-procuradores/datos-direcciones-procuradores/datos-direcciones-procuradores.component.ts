@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { ProcuradoresItem } from '../../../../../../../models/sjcs/ProcuradoresItem';
 
+
 @Component({
   selector: 'app-datos-direcciones-procuradores',
   templateUrl: './datos-direcciones-procuradores.component.html',
@@ -100,7 +101,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
 
-      if (this.persistenceService.getDatos().fechabaja != null) {
+      if (this.persistenceService.getDatos().fechabaja != null || this.persistenceService.getDatos().institucionVal != undefined) {
         this.historico = true;
       } else {
         this.historico = false;

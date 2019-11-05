@@ -53,23 +53,23 @@ export class PartidasPresupuestarias implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    if (
-      (this.filtros.nombrepartida == null || this.filtros.nombrepartida.trim() == "" || this.filtros.nombrepartida.trim().length < 3) &&
-      (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.trim().length < 3)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.nombrepartida != undefined && this.filtros.nombrepartida != null) {
-        this.filtros.nombrepartida = this.filtros.nombrepartida.trim();
-      }
-
-      if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
-        this.filtros.descripcion = this.filtros.descripcion.trim();
-      }
-
-      return true;
+    // if (
+    //   (this.filtros.nombrepartida == null || this.filtros.nombrepartida.trim() == "" || this.filtros.nombrepartida.trim().length < 3) &&
+    //   (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.trim().length < 3)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.nombrepartida != undefined && this.filtros.nombrepartida != null) {
+      this.filtros.nombrepartida = this.filtros.nombrepartida.trim();
     }
+
+    if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
+      this.filtros.descripcion = this.filtros.descripcion.trim();
+    }
+
+    return true;
+    // }
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];

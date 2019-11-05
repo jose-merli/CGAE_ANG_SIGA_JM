@@ -30,11 +30,11 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importepartidaReal'">
-              {{dato.importepartida}} €
+              {{dato.importepartida | numberPipe}} €
             </span>
 
             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartidaReal'">
-              {{ dato[col.field] }}
+              {{ dato[col.field]}}
             </span>
 
             <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importepartidaReal'">
@@ -104,8 +104,8 @@
 
       <button [disabled]="historico || !permisos" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0 || selectedDatos[0].idpartidapresupuestaria == undefined"
-        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
+        (click)="confirmDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
 
       <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
         (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
@@ -117,7 +117,12 @@
     </div>
   </div>
 </div>
-
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
