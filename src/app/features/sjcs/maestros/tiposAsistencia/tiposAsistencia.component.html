@@ -89,13 +89,13 @@
 
                             <div *ngIf="dato.editable && col.field == 'importemaximoReal'">
                                 <app-precio [(value)]="dato.importemaximo" [dato]="dato" [maxLength]="maximaLong" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                                    (valueChangeInput)="editarImporteMaximo(dato)"></app-precio>
+                                    (input)="editarImporteMaximo(dato)"></app-precio>
 
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importeReal'">
                                 <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="maximaLong" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                                    (valueChangeInput)="editarImporte(dato)"></app-precio>
+                                    (input)="editarImporte(dato)"></app-precio>
                             </div>
 
                             <div *ngIf="col.field == 'visiblemovil'">
@@ -106,7 +106,7 @@
                                     ❌
                                 </span>
                                 <p-checkbox *ngIf="!disableAll &&((!nuevo && !selectMultiple && dato.editable)) || (nuevo && dato.acreditacionNueva)" [disabled]="disableAll"
-                                    (onChange)="editarTipoAsistencia(dato)" [(ngModel)]="dato.visibleMovilBoolean" binary="true"
+                                    (onChange)="editarVisibilidadMovil(dato)" [(ngModel)]="dato.visibleMovilBoolean" binary="true"
                                     name="visiblemovil"></p-checkbox>
                             </div>
 

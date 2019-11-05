@@ -380,6 +380,7 @@ export class TiposActuacionComponent implements OnInit {
       idtipoasistencia: undefined,
       editable: true
     };
+
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();

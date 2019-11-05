@@ -90,11 +90,11 @@
 
                             <div *ngIf="dato.editable && col.field == 'importemaximoReal'">
                                 <app-precio [(value)]="dato.importemaximo" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                                    (valueChangeInput)="changeImporteMaximo(dato)"></app-precio>
+                                    (input)="changeImporteMaximo(dato)"></app-precio>
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importeReal'">
-                                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico" (valueChangeInput)="changeImporte(dato)"></app-precio>
+                                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico" (input)="changeImporte(dato)"></app-precio>
                             </div>
                         </td>
 
