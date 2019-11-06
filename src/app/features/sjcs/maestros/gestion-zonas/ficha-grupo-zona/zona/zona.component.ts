@@ -112,7 +112,6 @@ export class ZonaComponent implements OnInit {
   }
 
   getZonas() {
-
     this.sigaServices
       .getParam(
         "fichaZonas_searchSubzones",
