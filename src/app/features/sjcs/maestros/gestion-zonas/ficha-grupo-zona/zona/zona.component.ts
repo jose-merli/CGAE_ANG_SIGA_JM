@@ -122,7 +122,7 @@ export class ZonaComponent implements OnInit {
         res => {
           this.datos = res.zonasItems;
 
-
+  
 
           this.datos.forEach(element => {
             element.editable = false
