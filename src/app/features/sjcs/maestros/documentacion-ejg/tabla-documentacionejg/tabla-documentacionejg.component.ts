@@ -37,7 +37,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
   @Input() datos;
 
 
-
+  @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
 
 
