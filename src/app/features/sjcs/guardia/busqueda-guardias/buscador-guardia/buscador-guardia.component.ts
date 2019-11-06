@@ -67,6 +67,10 @@ export class BuscadorGuardiaComponent implements OnInit {
 
         this.datos = JSON.parse(n.body).guardiaItems;
         this.buscar = true;
+        this.datos = this.datos.map(it => {
+          it.letradosIns = +it.letradosIns;
+          return it;
+        })
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;

@@ -1284,7 +1284,7 @@ const appRoutes: Routes = [
   },
   {     //GUARDIAS ---------------------------------------------------------------------------------
     path: "guardias",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
 
   { path: " ", redirectTo: "home" }

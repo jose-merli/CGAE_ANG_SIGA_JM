@@ -634,7 +634,7 @@ import { PrecioModule } from './commons/precio/precio.module';
 		DestinatarioIndvEnvioMasivoComponent,
 		DevolucionComponent,
 		JustificacionComponent,
-		CertificacionComponent
+		CertificacionComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -677,7 +677,6 @@ import { PrecioModule } from './commons/precio/precio.module';
 		PipeTranslationModule,
 		FechaModule,
 		PrecioModule,
-
 		KeyFilterModule,
 		StepsModule,
 

@@ -23,6 +23,7 @@ import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
 import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gestion-guardia.component';
 import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-generales-guardias/datos-generales-guardias.component';
+import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guar
     TableModule,
     MultiSelectModule,
     PrecioModule,
+    TarjetaResumenFijaModule,
   ],
   declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent],
   providers: [
