@@ -320,7 +320,7 @@ export class GestionDocumentosComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
+    this.tabla.reset();
   }
 
   onChangeSelectAll() {
@@ -377,7 +377,9 @@ export class GestionDocumentosComponent implements OnInit {
 
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
+    if (selectedDatos != null) {
+      this.numSelected = selectedDatos.length;
+    }
     this.seleccion = false;
   }
 
