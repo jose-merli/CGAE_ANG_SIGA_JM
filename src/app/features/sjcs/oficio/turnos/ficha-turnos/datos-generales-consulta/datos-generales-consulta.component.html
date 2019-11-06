@@ -30,14 +30,22 @@
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque col-lg-9 col-md-9">
+        <div class="bloque col-lg-4 col-md-4">
 
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
             </div>
 
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }} (*)
+              </label>
+              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
@@ -47,24 +55,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"censo.consultaDirecciones.literal.direccion" | translate}}
-              </label>
-              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-                pInputText>
-            </div>
-
-
-            <div class="form-group col-lg-3 col-md-3 form-row">
-              <label>
-                {{"censo.ws.literal.codigopostal" | translate}} (*)
-              </label>
-              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
-                [disabled]="historico || !permisoEscritura" pInputText>
-            </div>
-
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.datosDireccion.literal.provincia" | translate}} (*)
+                {{"menu.justiciaGratuita.maestros.partidas" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -72,8 +63,35 @@
               </p-dropdown>
             </div>
 
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
+            </div>
 
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ "general.codeext" | translate }} (*)
+              </label>
+              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <!-- <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
               </label>
@@ -83,87 +101,98 @@
                 [showClear]="true">
               </p-dropdown>
 
+            </div>  -->
+
+          </div>
+        </div>
+
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"menu.justiciaGratuita.maestros.Area" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
             </div>
 
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"censo.ws.literal.telefono" | translate}} 1
+                {{"menu.justiciaGratuita.maestros.Materia" | translate}} (*)
               </label>
-              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate }} (*)
+              </label>
+              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
                 pInputText>
-              <div *ngIf="!tlf1Valido">
-                <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-              </div>
             </div>
 
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"censo.ws.literal.telefono" | translate}} 2
+                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}} (*)
               </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.telefono2"
-                (input)="changeTelefono2()" pInputText>
-              <div *ngIf="!tlf2Valido">
-                <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-              </div>
-            </div>
-
-            <div class="form-group col-lg-3 mr-1 col-md-3">
-              <label>
-                {{"censo.ws.literal.fax" | translate}}
-              </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.fax"
-                (input)="changeFax()" pInputText>
-              <div *ngIf="!faxValido">
-                <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
-              </div>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.datosDireccion.literal.correo" | translate}}
-              </label>
-              <div *ngIf="edicionEmail" class="row">
-                <div class="form-row col-9 mr-4 pr-0">
-                  <input type="text" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
-                    style="width: 100%" />
-                </div>
-                <div>
-                  <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn button-edit" [disabled]="!emailValido"></button>
-                </div>
-              </div>
-              <div *ngIf="avisoMail">
-                <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
-              </div>
-              <div *ngIf="!edicionEmail" class="row">
-                <div class="col-3 mr-4 pr-0">
-                  <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
-                </div>
-                <div>
-                  <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group col-lg-3 pt-4 col-md-3" id="divMovil">
-              <label id="labelMovil">{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate}}</label>
-              <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
-
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
             </div>
           </div>
         </div>
+
         <div class="bloque col-lg-3 col-md-3">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
             </div>
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-12 col-md-12">
               <label>
-                {{"general.codeext" | translate}}
+                {{"general.boton.description" | translate}}
               </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt"
-                pInputText>
+              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" maxLength="3900"></textarea>
             </div>
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.requisitosacceso" | translate}}
+              </label>
+              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" maxLength="3900"></textarea>
+            </div>
+
           </div>
         </div>
+
       </div>
       <br>
     </div>
