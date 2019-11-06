@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../../_guards/auth.guards';
-import { GestionJusticiablesComponent } from './justiciables/gestion-justiciables/gestion-justiciables.component';
-import { JusticiablesModule } from './justiciables/justiciables.module';
+import { RouterModule, Routes } from '@angular/router';
 
 const routesSjcs: Routes = [
   {
@@ -38,7 +35,11 @@ const routesSjcs: Routes = [
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   },
   {
-    path: "comisarias",
+    path: "partidosJudiciales",
+    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+  },
+  {
+    path: "mantenimientoComisarias",
     loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
   },
   {

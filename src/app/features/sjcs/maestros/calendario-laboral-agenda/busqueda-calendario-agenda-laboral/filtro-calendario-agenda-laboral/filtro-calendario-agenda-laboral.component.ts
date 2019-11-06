@@ -66,17 +66,17 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
   }
 
   checkFilters() {
-    if (
-      (this.filtros.anio == null || this.filtros.anio == "" || this.filtros.anio.trim().length < 4)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
+    // if (
+    //   (this.filtros.anio == null || this.filtros.anio == "" || this.filtros.anio.trim().length < 4)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
 
-      if (this.filtros.anio != undefined && this.filtros.anio != null) {
-        this.filtros.anio = this.filtros.anio.trim();
-      }
-      return true;
+    if (this.filtros.anio != undefined && this.filtros.anio != null) {
+      this.filtros.anio = this.filtros.anio.trim();
     }
+    return true;
+    // }
   }
 
   clearFilters() {

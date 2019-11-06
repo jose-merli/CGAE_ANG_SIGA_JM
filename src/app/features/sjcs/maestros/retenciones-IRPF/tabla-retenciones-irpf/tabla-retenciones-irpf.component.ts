@@ -4,7 +4,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { RetencionIrpfItem } from '../../../../../models/sjcs/RetencionIrpfItem';
 import { RetencionIrpfObject } from '../../../../../models/sjcs/RetencionIrpfObject';
-import { SortEvent } from '../../../../../../../node_modules/primeng/api';
+import { SortEvent, ConfirmationService } from '../../../../../../../node_modules/primeng/api';
 import { truncateSync } from 'fs';
 
 @Component({
@@ -56,7 +56,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -73,6 +74,9 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     if (this.historico == false) {
       this.selectMultiple = false;
       this.selectionMode = "single"
+    } else {
+      this.selectMultiple = true;
+      this.selectionMode = "multiple"
     }
     this.selectedDatos = [];
     this.updatePartidasPres = [];
@@ -288,7 +292,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
         this.callSaveService(url);
       } else {
 
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.procedimientos.existeProcedimiento"));
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.existeRetencionMismoNombre"));
         this.progressSpinner = false;
       }
     }
@@ -376,8 +380,33 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     return check;
   }
 
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
 
-  delete() {
+
+  delete(selectedDatos) {
     let del = new RetencionIrpfObject();
     del.retencionItems = this.selectedDatos
     let url;

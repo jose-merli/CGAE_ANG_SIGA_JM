@@ -56,6 +56,7 @@ export class JusticiableItem {
   asistidoAutorizaeejg: string;
   autorizaAvisoTelematico: string;
 
+  nombrePoblacion: string;
 
   constructor() { }
 }

@@ -13,6 +13,7 @@ export class GestionComisariasComponent implements OnInit {
   fichasPosibles;
   datos: ComisariaItem = new ComisariaItem();
   modoEdicion: boolean = true;
+  institucionActual: any;
 
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
@@ -21,6 +22,7 @@ export class GestionComisariasComponent implements OnInit {
 
     if (this.persistenceService.getDatos() != undefined) {
       this.datos = this.persistenceService.getDatos();
+
       this.modoEdicion = true;
     } else {
       this.datos = new ComisariaItem();
@@ -38,6 +40,4 @@ export class GestionComisariasComponent implements OnInit {
     this.modoEdicion = event.modoEdicion;
     this.datos.idComisaria = event.idComisaria;
   }
-
-
 }

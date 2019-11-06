@@ -73,7 +73,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     }
 
     let datos = this.persistenceService.getDatos();
-    if (this.datos != undefined) {
+    if (datos != undefined) {
       if (datos.fechabaja != undefined) {
         this.disableAll = true;
       }
@@ -357,7 +357,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].idAcreditacion != undefined && this.datos[0].idAcreditacion != "" && this.datos[0].porcentaje != "") {
+      if (this.datos[0].idAcreditacion != undefined && this.datos[0].idAcreditacion != "") {
         return false;
       } else {
         return true;
@@ -574,9 +574,14 @@ export class TablaAcreditacionesComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+
     if (!this.disableAll) {
       this.selectMultiple = false;
       if (this.selectAll) {
+        if (this.nuevo) this.datos.shift();
+        this.nuevo = false;
+        this.editElementDisabled();
+        this.selectMultiple = false;
         this.selectedDatos = this.datos;
         this.numSelected = this.datos.length;
         this.selectionMode = "multiple";
@@ -590,7 +595,12 @@ export class TablaAcreditacionesComponent implements OnInit {
       this.selectionMode = undefined;
     }
   }
-
+  editElementDisabled() {
+    this.datos.forEach(element => {
+      element.editable = false
+      element.overlayVisible = false;
+    });
+  }
   isSelectMultiple() {
     if (!this.disableAll) {
       this.selectAll = false;

@@ -3,7 +3,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
-import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { DocumentacionEjgObject } from '../../../../../../models/sjcs/DocumentacionEjgObject';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
 
@@ -49,14 +49,15 @@ export class GestionDocumentosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
     this.getCols();
-    // this.dato = this.persistenceService.getDatos()
+    // this.datos = this.persistenceService.getDatos();
+
     if (this.datos != null && this.datos != undefined) {
-      //UPDATE
       this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
@@ -80,8 +81,35 @@ export class GestionDocumentosComponent implements OnInit {
       this.datosInicial = JSON.parse(JSON.stringify(this.datos));
   }
 
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.deleteDoc()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+
   searchHistorical() {
     this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
     if (this.historico && this.permisos) {
 
       this.editElementDisabled();
@@ -364,12 +392,13 @@ export class GestionDocumentosComponent implements OnInit {
       this.datos = [];
     }
 
+
     let Documento = {
       abreviaturaDoc: undefined,
       descripcionDoc: undefined,
       codigoDescripcion: undefined,
       idDocumento: undefined,
-      idTipoDocumento: undefined,
+      idTipoDocumento: this.idTipoDoc,
       editable: true
     };
     this.tabla.sortOrder = 0;

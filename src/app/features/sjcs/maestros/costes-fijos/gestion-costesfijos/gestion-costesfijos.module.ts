@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe, UpperCasePipe, APP_BASE_HREF } from '@angular/common';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { InputTextModule, PaginatorModule, ButtonModule, DropdownModule, CheckboxModule, GrowlModule, MenubarModule, MultiSelectModule, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { InputTextModule, PaginatorModule, ButtonModule, DropdownModule, CheckboxModule, GrowlModule, MenubarModule, MultiSelectModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../../node_modules/primeng/primeng';
 import { TableModule } from '../../../../../../../node_modules/primeng/table';
 import { GestionCostesfijosComponent } from './gestion-costesfijos.component';
 import { FormsModule } from '../../../../../../../node_modules/@angular/forms';
@@ -20,6 +20,7 @@ import { HTTP_INTERCEPTORS } from '../../../../../../../node_modules/@angular/co
 import { JwtInterceptor } from '../../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../../node_modules/ngx-cookie-service';
 import { PrecioModule } from '../../../../../commons/precio/precio.module';
+import { PipeNumberModule } from '../../../../../commons/number-pipe/number-pipe.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,9 @@ import { PrecioModule } from '../../../../../commons/precio/precio.module';
     PipeTranslationModule,
     MenubarModule,
     MultiSelectModule,
-    PrecioModule
+    PrecioModule,
+    ConfirmDialogModule,
+    PipeNumberModule
   ],
   declarations: [GestionCostesfijosComponent],
   providers: [

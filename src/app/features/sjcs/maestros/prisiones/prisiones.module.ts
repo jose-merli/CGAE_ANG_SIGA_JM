@@ -4,7 +4,7 @@ import { BusquedaPrisionesComponent } from './busqueda-prisiones/busqueda-prisio
 import { FiltroPrisionesComponent } from './busqueda-prisiones/filtro-prisiones/filtro-prisiones.component';
 import { TablaPrisionesComponent } from './busqueda-prisiones/tabla-prisiones/tabla-prisiones.component';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService, ConfirmDialogModule, TooltipModule } from '../../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
@@ -24,6 +24,7 @@ import { CookieService } from '../../../../../../node_modules/ngx-cookie-service
 import { GestionPrisionesComponent } from './gestion-prisiones/gestion-prisiones.component';
 import { DatosGeneralesPrisionComponent } from './gestion-prisiones/datos-generales-prision/datos-generales-prision.component';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -37,7 +38,9 @@ import { DatosGeneralesPrisionComponent } from './gestion-prisiones/datos-genera
     PipeTranslationModule,
     MenubarModule,
     CheckboxModule,
-    FechaModule
+    FechaModule,
+    ConfirmDialogModule,
+    TooltipModule
   ],
   declarations: [
     BusquedaPrisionesComponent,

@@ -5,7 +5,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
-import { MultiSelect } from '../../../../../../node_modules/primeng/primeng';
+import { MultiSelect, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
 import { TiposActuacionObject } from '../../../../models/sjcs/TiposActuacionObject';
 
 
@@ -55,7 +55,9 @@ export class TiposActuacionComponent implements OnInit {
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
-    private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router) { }
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private commonsService: CommonsService, private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getComboTiposAsistencia();
@@ -85,7 +87,30 @@ export class TiposActuacionComponent implements OnInit {
     this.updateTiposActuacion = [];
     this.nuevo = false;
   }
-
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
@@ -355,6 +380,7 @@ export class TiposActuacionComponent implements OnInit {
       idtipoasistencia: undefined,
       editable: true
     };
+
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();

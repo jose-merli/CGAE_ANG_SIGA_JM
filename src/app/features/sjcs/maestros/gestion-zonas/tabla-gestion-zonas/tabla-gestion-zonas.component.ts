@@ -4,7 +4,7 @@ import { findIndex } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ZonasObject } from '../../../../../models/sjcs/ZonasObject';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { DataTable } from 'primeng/primeng';
+import { DataTable, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
@@ -47,7 +47,8 @@ export class TablaGestionZonasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -78,7 +79,32 @@ export class TablaGestionZonasComponent implements OnInit {
     }
   }
 
-  delete() {
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  delete(selectedDatos) {
 
     let zonasDelete = new ZonasObject();
     zonasDelete.zonasItems = this.selectedDatos

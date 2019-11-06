@@ -18,13 +18,14 @@ import { environment } from '../../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
-import { PaginatorModule, ButtonModule, InputTextModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, ButtonModule, InputTextModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { DatosGeneralesProcuradoresComponent } from './busqueda-procuradores/gestion-procuradores/datos-generales-procuradores/datos-generales-procuradores.component';
 import { DatosDireccionesProcuradoresComponent } from './busqueda-procuradores/gestion-procuradores/datos-direcciones-procuradores/datos-direcciones-procuradores.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   imports: [
@@ -39,7 +40,9 @@ import { DatosDireccionesProcuradoresComponent } from './busqueda-procuradores/g
     PipeTranslationModule,
     MenubarModule,
     CheckboxModule,
-    FechaModule
+    FechaModule,
+    ConfirmDialogModule,
+    TooltipModule
   ],
   declarations: [BusquedaProcuradoresComponent, FiltrosProcuradoresComponent, TablaProcuradoresComponent, GestionProcuradoresComponent, DatosGeneralesProcuradoresComponent, DatosDireccionesProcuradoresComponent],
 
