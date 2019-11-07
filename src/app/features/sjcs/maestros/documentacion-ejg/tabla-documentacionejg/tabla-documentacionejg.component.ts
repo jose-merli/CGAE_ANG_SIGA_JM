@@ -3,7 +3,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
 import { DocumentacionEjgObject } from '../../../../../models/sjcs/DocumentacionEjgObject';
 
@@ -37,7 +37,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
   @Input() datos;
 
 
-
+  @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
 
 
@@ -45,7 +45,8 @@ export class TablaDocumentacionejgComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -114,6 +115,31 @@ export class TablaDocumentacionejgComponent implements OnInit {
       }
 
     }
+  }
+
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.deleteTipoDoc()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   deleteTipoDoc() {

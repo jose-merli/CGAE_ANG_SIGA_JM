@@ -17,7 +17,7 @@ import { environment } from '../../../../../environments/environment';
 import { HTTP_INTERCEPTORS } from '../../../../../../node_modules/@angular/common/http';
 import { JwtInterceptor } from '../../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../../node_modules/ngx-cookie-service';
-import { PaginatorModule, ButtonModule, InputTextModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, ButtonModule, InputTextModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
@@ -39,6 +39,7 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     CheckboxModule,
     FechaModule,
     PrecioModule,
+    ConfirmDialogModule
 
   ],
   declarations: [FiltrosRetencionesIrpfComponent, TablaRetencionesIrpfComponent, RetencionesIRPFComponent],

@@ -103,16 +103,16 @@ export class FiltrosProcedimientosComponent implements OnInit {
     if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
       this.filtros.descripcion = this.filtros.descripcion.trim();
     }
-    if (
-      (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.trim().length < 3) &&
-      (this.filtros.idJurisdiccion == null || this.filtros.idJurisdiccion == "") &&
-      (this.filtros.idPretension == null || this.filtros.idPretension == "")) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
+    // if (
+    //   (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.trim().length < 3) &&
+    //   (this.filtros.idJurisdiccion == null || this.filtros.idJurisdiccion == "") &&
+    //   (this.filtros.idPretension == null || this.filtros.idPretension == "")) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
 
-      return true;
-    }
+    return true;
+    // }
   }
 
   clearFilters() {

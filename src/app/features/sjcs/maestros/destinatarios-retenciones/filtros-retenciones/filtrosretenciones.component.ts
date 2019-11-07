@@ -64,27 +64,27 @@ export class FiltrosRetenciones implements OnInit {
     }
   }
   checkFilters() {
-    if (
-      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
-      (this.filtros.orden == null || this.filtros.orden.trim() == "" || this.filtros.orden.trim().length < 3) &&
-      (this.filtros.cuentacontable == null || this.filtros.cuentacontable == "")) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-        this.filtros.nombre = this.filtros.nombre.trim();
-      }
-
-      if (this.filtros.orden != undefined && this.filtros.orden != null) {
-        this.filtros.orden = this.filtros.orden.trim();
-      }
-      if (this.filtros.cuentacontable != undefined && this.filtros.cuentacontable != null) {
-        this.filtros.cuentacontable = this.filtros.cuentacontable.trim();
-      }
-
-      return true;
+    // if (
+    //   (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
+    //   (this.filtros.orden == null || this.filtros.orden.trim() == "" || this.filtros.orden.trim().length < 3) &&
+    //   (this.filtros.cuentacontable == null || this.filtros.cuentacontable == "")) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+      this.filtros.nombre = this.filtros.nombre.trim();
     }
+
+    if (this.filtros.orden != undefined && this.filtros.orden != null) {
+      this.filtros.orden = this.filtros.orden.trim();
+    }
+    if (this.filtros.cuentacontable != undefined && this.filtros.cuentacontable != null) {
+      this.filtros.cuentacontable = this.filtros.cuentacontable.trim();
+    }
+
+    return true;
+    // }
   }
 
   showMessage(severity, summary, msg) {

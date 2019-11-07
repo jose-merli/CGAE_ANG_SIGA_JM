@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -7,6 +7,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { ProcuradoresItem } from '../../../../../../models/sjcs/ProcuradoresItem';
 import { ProcuradoresModule } from '../../procuradores.module';
 import { ProcuradoresObject } from '../../../../../../models/sjcs/ProcuradoresObject';
+import { Identifiers } from '../../../../../../../../node_modules/@angular/compiler';
 
 
 
@@ -21,6 +22,7 @@ export class TablaProcuradoresComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
+  @Input() institucionActual;
 
   selectedItem: number = 10;
   selectAll;
@@ -49,7 +51,8 @@ export class TablaProcuradoresComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -64,7 +67,30 @@ export class TablaProcuradoresComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
   }
-
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -100,14 +126,17 @@ export class TablaProcuradoresComponent implements OnInit {
     }
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
+
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestionProcuradores"]);
+
     } else {
-
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (this.institucionActual != evento.data.idInstitucion)
         this.selectedDatos.pop();
-      }
-
+      else if (evento.data.fechabaja == undefined && this.historico)
+        this.selectedDatos.pop();
     }
   }
 
@@ -176,7 +205,7 @@ export class TablaProcuradoresComponent implements OnInit {
 
     this.cols = [
       { field: "nColegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
-      { field: "nombreApe", header: "administracion.usuarios.literal.nombre" },
+      { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
       { field: "codigoExt", header: "administracion.parametrosGenerales.literal.codigo" },
       { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
       { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
@@ -212,10 +241,12 @@ export class TablaProcuradoresComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.permisoEscritura) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
+
       if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos;
+          // this.selectedDatos = this.datos;
           this.numSelected = this.datos.length;
         } else {
           this.selectedDatos = [];

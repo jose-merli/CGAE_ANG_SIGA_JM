@@ -4,6 +4,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PretensionObject } from '../../../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../../../models/sjcs/PretensionItem';
+import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-tabla-procedimientos',
@@ -55,7 +56,8 @@ export class TablaProcedimientosComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -68,14 +70,39 @@ export class TablaProcedimientosComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.historico == false) {
-      this.selectMultiple = false;
-      this.selectionMode = "single"
+    if (this.historico) {
+      this.selectMultiple = true;
+      this.selectionMode = "multiple"
     }
     this.selectedDatos = [];
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+  }
+
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   edit(evento) {
@@ -174,14 +201,10 @@ export class TablaProcedimientosComponent implements OnInit {
   }
 
   changeJurisdiccion(dato) {
-
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
-
     if (findDato != undefined) {
       if (dato.idJurisdiccion != findDato.idJurisdiccion) {
-
         let findUpdate = this.updatePartidasPres.find(item => item.idJurisdiccion === dato.idJurisdiccion);
-
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
         }
@@ -237,14 +260,13 @@ export class TablaProcedimientosComponent implements OnInit {
 
     } else {
       url = "gestionPretensiones_updatePretension";
-      this.editMode = false;
       if (this.validateUpdate()) {
         this.body = new PretensionObject();
         this.body.pretensionItems = this.updatePartidasPres;
         this.callSaveService(url);
       } else {
 
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.procedimientos.existeProcedimiento"));
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.pretension.existeProcedimientoMismoNombre"));
         this.progressSpinner = false;
       }
     }
@@ -298,12 +320,8 @@ export class TablaProcedimientosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined) {
-        if (this.datos[0].descripcion.trim() != "" && this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion != "") {
-          return false;
-        } else {
-          return true;
-        }
+      if (this.datos[0].descripcion != undefined && this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion != "") {
+        return false;
       } else {
         return true;
       }

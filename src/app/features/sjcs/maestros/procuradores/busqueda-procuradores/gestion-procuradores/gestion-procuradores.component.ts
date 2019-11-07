@@ -16,7 +16,7 @@ export class GestionProcuradoresComponent implements OnInit {
 
   disableSave: boolean;
   fichasPosibles;
-  datos: ProcuradoresItem = new ProcuradoresItem();
+  datos
   modoEdicion: boolean = true;
   progressSpinner: boolean = false;
   body: ProcuradoresItem = new ProcuradoresItem();
@@ -44,13 +44,15 @@ export class GestionProcuradoresComponent implements OnInit {
       this.datos = this.persistenceService.getDatos();
       this.body = this.datos;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      if (this.datos.fechabaja != null) {
+      if (this.datos.fechabaja != null || this.datos.institucionVal != undefined) {
         this.historico = true;
       } else {
         this.historico = false;
       }
       this.modoEdicion = true;
+
     } else {
+      this.datos = new ProcuradoresItem();
       this.body = new ProcuradoresItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.modoEdicion = false;

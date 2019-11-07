@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -25,6 +25,7 @@ import { EdicionModulosComponent } from './edicion-modulos/gestion-modulos/edici
 import { TablaAcreditacionesComponent } from './edicion-modulos/tabla-acreditaciones/tabla-acreditaciones.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { SpinnerModule } from 'primeng/spinner';
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 
 // import { TablaMateriasComponent } from "./edicion-areas/gestion-materias/tabla-materias.component";
 import { MultiSelectModule } from "primeng/multiselect";
@@ -51,8 +52,9 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     FechaModule,
     SpinnerModule,
     PrecioModule,
+    ConfirmDialogModule,
     // FichaGrupoZonaModule
-
+    PipeNumberModule
   ],
   declarations: [
     FiltrosModulosComponent,

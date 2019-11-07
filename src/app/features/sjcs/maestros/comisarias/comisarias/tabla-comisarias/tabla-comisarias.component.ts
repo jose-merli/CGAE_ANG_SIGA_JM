@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -35,7 +35,7 @@ export class TablaComisariasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -45,7 +45,8 @@ export class TablaComisariasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -60,8 +61,32 @@ export class TablaComisariasComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
-  }
 
+  }
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -98,14 +123,19 @@ export class TablaComisariasComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
       this.persistenceService.setDatos(evento.data);
+
+
       this.router.navigate(["/gestionComisarias"]);
     } else {
 
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (evento.data.idInstitucion != this.institucionActual) {
+        this.selectedDatos.pop();
+      } else if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
-
     }
   }
 
@@ -209,10 +239,11 @@ export class TablaComisariasComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.permisoEscritura) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
       if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos;
+          // this.selectedDatos = this.datos;
           this.numSelected = this.datos.length;
         } else {
           this.selectedDatos = [];
@@ -222,7 +253,7 @@ export class TablaComisariasComponent implements OnInit {
       } else {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
+          this.selectedDatos = this.selectedDatos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
           this.numSelected = this.selectedDatos.length;
         } else {
           this.selectedDatos = [];

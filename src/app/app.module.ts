@@ -306,6 +306,10 @@ import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.se
 import { OldSigaServices } from './_services/oldSiga.service';
 import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
+import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
+import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
+import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
+import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
 
 
 
@@ -626,6 +630,9 @@ registerLocaleData(es);
 		DevolucionComponent,
 		JustificacionComponent,
 		CertificacionComponent,
+		BuscadorProcuradoresComponent,
+		FiltroBuscadorProcuradorComponent,
+		TablaBuscadorProcuradorComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -666,6 +673,7 @@ registerLocaleData(es);
 		FileUploadModule,
 		DialogModule,
 		PipeTranslationModule,
+		PipeNumberModule,
 		FechaModule,
 		PrecioModule,
 		KeyFilterModule,

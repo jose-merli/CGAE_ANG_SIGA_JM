@@ -6,7 +6,7 @@ import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/c
 import { TablaBusquedaAreasComponent } from './tabla-busqueda-areas/tabla-busqueda-areas.component';
 import { FiltroBusquedaAreasComponent } from './filtro-busqueda-areas/filtro-busqueda-areas.component';
 import { BusquedaAreasComponent } from './busqueda-areas.component';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -47,6 +47,7 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     TableModule,
     MultiSelectModule,
     PrecioModule,
+    ConfirmDialogModule
 
     // FichaGrupoZonaModule
 

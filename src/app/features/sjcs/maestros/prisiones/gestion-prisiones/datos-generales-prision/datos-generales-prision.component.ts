@@ -96,7 +96,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
 
-      if (this.persistenceService.getDatos().fechaBaja != null) {
+      if (this.persistenceService.getDatos().fechaBaja != null || this.persistenceService.getDatos().institucionVal != undefined) {
         this.historico = true;
       } else {
         this.historico = false;

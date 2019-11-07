@@ -44,7 +44,7 @@ export class GestionZonasComponent implements OnInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_maestros.fundamentoResolucion)
+    this.commonsService.checkAcceso(procesos_maestros.zonasYSubzonas)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
