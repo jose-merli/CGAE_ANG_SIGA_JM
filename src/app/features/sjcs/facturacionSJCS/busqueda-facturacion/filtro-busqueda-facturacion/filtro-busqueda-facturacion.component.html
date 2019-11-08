@@ -1,0 +1,81 @@
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS<i class="fa fa-angle-right"></i>Buscar Facturación</p>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <p class="title-module">
+        <p-radioButton name="filtroBusquedaFacturacion" value="facturacion" label="Facturación" [(ngModel)]="selectedValue"></p-radioButton>
+        <p-radioButton name="filtroBusquedaFacturacion" value="pagos" label="Pago" [(ngModel)]="selectedValue"></p-radioButton>  
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">   
+            <label>Estado</label>
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" #dropdown ></p-dropdown>
+          </div>  
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Fecha Desde</label>
+            <p-calendar class="arreglo-fecha" [(ngModel)]="value" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="yearRange"
+              [locale]="es" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true"
+              #calendar [minDate]="minDate" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="utc" (onBlur)="blur($event)"
+              (onFocus)="focus($event)">
+
+              <p-footer>
+                <div class="main-button d-flex col-lg-12">
+                  <button [disabled]="disabledToday" (click)="fechaHoy()" pButton type="button" label="{{'general.boton.hoy'| translate }}"
+                    class="mr-auto"></button>
+                  <button [disabled]="disabledDelete" (click)="borrarFecha()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                </div>
+              </p-footer>
+            </p-calendar>
+          </div>  
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Fecha Hasta</label>
+            <p-calendar class="arreglo-fecha" [(ngModel)]="value" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="yearRange"
+              [locale]="es" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true"
+              #calendar [minDate]="minDate" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="utc" (onBlur)="blur($event)"
+              (onFocus)="focus($event)">
+
+              <p-footer>
+                <div class="main-button d-flex col-lg-12">
+                  <button [disabled]="disabledToday" (click)="fechaHoy()" pButton type="button" label="{{'general.boton.hoy'| translate }}"
+                    class="mr-auto"></button>
+                  <button [disabled]="disabledDelete" (click)="borrarFecha()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                </div>
+              </p-footer>
+            </p-calendar>  
+          </div>  
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Conceptos y Servicios</label>
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" #dropdown ></p-dropdown>      
+          </div>  
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">   
+            <label>Nombre</label>
+            <input type="text" name="nombre" class="form-control" pInputText />
+          </div>  
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Grupo de Turnos</label>
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" #dropdown ></p-dropdown>    
+          </div>  
+          <div class="form-group col-lg-3 col-md-3">
+            <label>Partida Presupuestaria</label>
+            <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" #dropdown ></p-dropdown>      
+          </div>  
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button icon="fa fa-eraser " iconpos="left" pbutton="" type="button " ng-reflect-icon-pos="left" ng-reflect-label="Limpiar" ng-reflect-icon="fa fa-eraser " class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"><span aria-hidden="true" class="ui-button-icon-left ui-clickable fa fa-fw fa fa-eraser "></span><span class="ui-button-text ui-clickable">Limpiar</span></button>
+        <button icon="fa fa-search" iconpos="left" pbutton="" type="button" ng-reflect-icon-pos="left" ng-reflect-label="Buscar" ng-reflect-icon="fa fa-search" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"><span aria-hidden="true" class="ui-button-icon-left ui-clickable fa fa-fw fa fa-search"></span><span class="ui-button-text ui-clickable">Buscar</span></button>
+        <button icon="fa fa-plus" iconpos="left" pbutton="" type="button" ng-reflect-icon-pos="left" ng-reflect-label="Nuevo" ng-reflect-icon="fa fa-plus" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left"><span aria-hidden="true" class="ui-button-icon-left ui-clickable fa fa-fw fa fa-plus"></span><span class="ui-button-text ui-clickable">Nuevo</span></button>
+      </div>
+    </div>
+  </div>
+</div>
