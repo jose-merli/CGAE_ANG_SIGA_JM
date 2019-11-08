@@ -36,7 +36,7 @@ export class PartidosJudicialesComponent implements OnInit, AfterViewInit {
   msgs;
   permisoEscritura: any;
 
-
+  institucionActual;
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -62,6 +62,7 @@ export class PartidosJudicialesComponent implements OnInit, AfterViewInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.getInstitucion();
       }
       ).catch(error => console.error(error));
   }
@@ -91,7 +92,11 @@ export class PartidosJudicialesComponent implements OnInit, AfterViewInit {
       }
     );
   }
-
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({

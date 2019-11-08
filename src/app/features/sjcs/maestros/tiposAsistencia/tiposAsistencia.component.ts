@@ -106,155 +106,31 @@ export class TiposAsistenciaComponent implements OnInit {
     seleccionados.push(this.selectedDatos);
     this.id = this.datos.findIndex(item => item.idTipoAsistencia === seleccionados[0].idTipoAsistencia);
   }
-  validateAcreditacionMaximo(e) {
-    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
-      this.selectedDatos = [];
-      this.selectedDatos.push(this.datos.find(item => item.editable == true));
-    }
-    if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.selectedDatos[0].idtipoasistenciacolegio);
-      let dato = this.datos[datoId];
-      dato.importemaximo = "" + dato.importemaximo;
 
-
-      if (dato.importemaximo.split(",").length - 1 > 1) {
-        let partePrimera = dato.importemaximo.split(",");
-        dato.importemaximo = partePrimera[0];
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
       }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-      if (dato.importemaximo.includes(",")) {
-        this.maximaLong = 11;
-        let partes = dato.importemaximo.split(",");
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          dato.importemaximo = partes[0] + "," + segundaParte;
-        }
-        if (numero >= 100) {
-          // dato.importemaximo = 100;
-        } else if (numero < 0) {
-          dato.importemaximo = 0;
-        }
-      } else {
-        this.maximaLong = 9;
-        dato.importemaximo = dato.importemaximo.substring(0, 8);
-        let numero = + dato.importemaximo;
-        if (numero < 0) {
-          dato.importemaximo = 0;
-        }
-      }
-      this.importeMax.nativeElement.value = dato.importemaximo;
-
-      this.editarTipoAsistencia(dato);
-
-    } else {
-      if (this.datos[0].importemaximo == undefined || this.datos[0].importemaximo == "") {
-        this.datos[0].importemaximo = "0";
-      }
-      if (this.datos[0].importemaximo.split(",").length - 1 > 1) {
-        let partePrimera = this.datos[0].importemaximo.split(",");
-        this.datos[0].importemaximo = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-      if (this.datos[0].importemaximo.includes(",")) {
-        this.maximaLong = 11;
-        let partes = this.datos[0].importemaximo.split(",");
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importemaximo = partes[0] + "," + segundaParte;
-          // this.importe.nativeElement.value = this.modulosItem.importe;
-        }
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importemaximo = partes[0] + "," + segundaParte;
-        }
-      } else {
-        this.maximaLong = 9;
-        this.datos[0].importemaximo = this.datos[0].importemaximo.substring(0, 8);
-      }
-      if (+this.datos[0].importemaximo > 999999999) this.datos[0].importemaximo = 99999999;
-      this.importeMax.nativeElement.value = this.datos[0].importemaximo;
-
-    }
+    });
   }
-
-  validateAcreditacion(e) {
-    if (this.selectedDatos == null || this.selectedDatos.length == 0) {
-      this.selectedDatos = [];
-      this.selectedDatos.push(this.datos.find(item => item.editable == true));
-    }
-    if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idtipoasistenciacolegio === this.selectedDatos[0].idtipoasistenciacolegio);
-      let dato = this.datos[datoId];
-      dato.importe = "" + dato.importe;
-
-
-      if (dato.importe.split(",").length - 1 > 1) {
-        let partePrimera = dato.importe.split(",");
-        dato.importe = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-      if (dato.importe.includes(",")) {
-        this.maximaLong = 11;
-        let partes = dato.importe.split(",");
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          dato.importe = partes[0] + "," + segundaParte;
-        }
-        if (numero < 0) {
-          dato.importe = 0;
-        }
-      } else {
-        this.maximaLong = 9;
-        dato.importe = dato.importe.substring(0, 8);
-
-        let numero = + dato.importe;
-        if (numero < 0) {
-          dato.importe = 0;
-
-        }
-      }
-      this.importe.nativeElement.value = dato.importe;
-
-      this.editarTipoAsistencia(dato);
-
-    } else {
-      if (this.datos[0].importe == undefined || this.datos[0].importe == "") {
-        this.datos[0].importe = "0";
-      }
-      if (this.datos[0].importe.split(",").length - 1 > 1) {
-
-        let partePrimera = this.datos[0].importe.split(",");
-        this.datos[0].importe = partePrimera[0];
-      }
-      if (this.datos[0].importe == ",") this.datos[0].importe = "0";
-
-      if (this.datos[0].importe.includes(",")) {
-        this.maximaLong = 11;
-        let partes = this.datos[0].importe.split(",");
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importe = partes[0] + "," + segundaParte;
-          // this.importe.nativeElement.value = this.modulosItem.importe;
-        }
-        let numero = + partes[0];
-        if (partes[1].length > 2) {
-          let segundaParte = partes[1].substring(0, 2);
-          this.datos[0].importe = partes[0] + "," + segundaParte;
-        }
-      } else {
-        this.maximaLong = 9;
-        this.datos[0].importe = this.datos[0].importe.substring(0, 8);
-
-      }
-      if (+this.datos[0].importe > 999999999) this.datos[0].importe = 99999999;
-      this.importe.nativeElement.value = this.datos[0].importe;
-
-    }
-  }
-
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
@@ -319,9 +195,7 @@ export class TiposAsistenciaComponent implements OnInit {
             element.overlayVisible = false;
             element.importeReal = +element.importe;
             element.importemaximoReal = +element.importemaximo;
-
-            element.importe = element.importe.replace(".", ",");
-            element.importemaximo = element.importemaximo.replace(".", ",");
+            this.beautifyData(element);
 
             if (element.visiblemovil == 1) {
               element.visibleMovilBoolean = true;
@@ -366,6 +240,27 @@ export class TiposAsistenciaComponent implements OnInit {
 
   }
 
+  beautifyData(element) {
+    if (element.importe != null) {
+      element.importe = element.importe.replace(".", ",");
+      if (element.importe[0] == "," && element.importe.length > 1)
+        element.importe = "0".concat(element.importe);
+      else if (element.importe[0] == "," && element.importe.length == 1)
+        element.importe = "0"
+    } else
+      element.importe = "0"
+
+    if (element.importemaximo != null) {
+      element.importemaximo = element.importemaximo.replace(".", ",");
+      if (element.importemaximo[0] == "," && element.importemaximo.length > 1)
+        element.importemaximo = "0".concat(element.importemaximo);
+      else if (element.importemaximo[0] == "," && element.importemaximo.length == 1)
+        element.importemaximo = "0"
+    } else
+      element.importemaximo = "0"
+  }
+
+
   searchHistorical() {
     this.historico = !this.historico;
     if (this.historico) {
@@ -402,19 +297,6 @@ export class TiposAsistenciaComponent implements OnInit {
       this.datos[0].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       let tipoAsistencia = this.datos[0];
       this.body = tipoAsistencia;
-      this.body.tiposAsistenciasItem.forEach(element => {
-        element.importe = element.importe.replace(",", ".");
-        element.importeReal = +element.importe;
-        element.importemaximo = element.importemaximo.replace(",", ".");
-        element.importemaximoReal = +element.importemaximo;
-        if (element.importe == ".") {
-          element.importe = 0;
-        }
-        if (element.importemaximo == ".") {
-          element.importemaximo = 0;
-        }
-      });
-
       this.callSaveService(url);
 
     } else {
@@ -424,22 +306,11 @@ export class TiposAsistenciaComponent implements OnInit {
         if (this.validateUpdate()) {
           this.body = new TiposAsistenciaObject();
           this.body.tiposAsistenciasItem = this.updateTiposAsistencia;
-          this.body.tiposAsistenciasItem.forEach(element => {
-            element.importe = element.importe.replace(",", ".");
-            element.importeReal = +element.importe;
-            element.importemaximo = element.importemaximo.replace(",", ".");
-            element.importemaximoReal = +element.importemaximo;
-            if (element.importe == ".") {
-              element.importe = 0;
-            }
-            if (element.importemaximo == ".") {
-              element.importemaximo = 0;
-            }
-          });
           this.callSaveService(url);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
           this.progressSpinner = false;
+          this.updateTiposAsistencia = [];
         }
 
       }
@@ -471,7 +342,16 @@ export class TiposAsistenciaComponent implements OnInit {
 
 
   callSaveService(url) {
+    if (this.body.tiposAsistenciasItem != undefined) {
+      this.body.tiposAsistenciasItem.forEach(element => {
+        element.importe = + element.importe.replace(",", ".");
+        element.importemaximo = + element.importemaximo.replace(",", ".");
+      });
+    } else {
+      this.body.importe = + this.body.importe.replace(",", ".");
+      this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
 
+    }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -480,13 +360,6 @@ export class TiposAsistenciaComponent implements OnInit {
         }
 
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.datos.forEach(element => {
-
-          element.importeReal = + element.importe;
-          element.importe = element.importe.replace(".", ",");
-          element.importemaximoReal = + element.importemaximo;
-          element.importemaximo = element.importemaximo.replace(".", ",");
-        });
         this.searchTiposAsistencias();
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -532,6 +405,8 @@ export class TiposAsistenciaComponent implements OnInit {
       tipoasistencia: undefined,
       importe: "0",
       importemaximo: "0",
+      importeReal: 0,
+      importemaximoReal: 0,
       visiblemovil: "0",
       pordefecto: "0",
       seleccionadosReal: undefined,
@@ -622,7 +497,6 @@ export class TiposAsistenciaComponent implements OnInit {
       }
       dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       dato2.seleccionados = "";
-      this.updateTiposAsistencia.push(dato2);
     }
   }
 
@@ -636,7 +510,8 @@ export class TiposAsistenciaComponent implements OnInit {
         message: mess,
         icon: icon,
         accept: () => {
-          this.pordefectotabla = false
+          this.pordefectotabla = false;
+          this.updateTiposAsistencia.push(dato);
         },
         reject: () => {
           dato.porDefectoBoolean = false
@@ -698,30 +573,17 @@ export class TiposAsistenciaComponent implements OnInit {
   editarTipoAsistencia(dato) {
 
     let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
-
     if (findDato != undefined) {
-      let dato2 = dato;
       let tiposAsistenciaString = "";
-      for (let i in dato2.seleccionadosReal) {
-        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
       }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-      dato2.seleccionados = "";
-      this.updateTiposAsistencia.push(dato2);
+      dato.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
+      if (dato.seleccionadosReal != findDato.seleccionadosReal) {
 
-      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
-        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
-
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-
-        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
-
+        let findUpdate = this.updateTiposAsistencia.find(item => item.seleccionadosReal === dato.seleccionadosReal);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -731,32 +593,19 @@ export class TiposAsistenciaComponent implements OnInit {
 
   editarImporte(dato) {
     dato.importe = dato.valorNum;
-
     let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
 
     if (findDato != undefined) {
-      let dato2 = dato;
       let tiposAsistenciaString = "";
-      for (let i in dato2.seleccionadosReal) {
-        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
       }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-      dato2.seleccionados = "";
-      this.updateTiposAsistencia.push(dato2);
+      dato.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
+      if (dato.importe != findDato.importe) {
 
-      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
-        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
-
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-
-        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
-
+        let findUpdate = this.updateTiposAsistencia.find(item => item.importe === dato.importe);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -769,28 +618,16 @@ export class TiposAsistenciaComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
 
     if (findDato != undefined) {
-      let dato2 = dato;
       let tiposAsistenciaString = "";
-      for (let i in dato2.seleccionadosReal) {
-        tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value;
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
       }
-      dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-      dato2.seleccionados = "";
-      this.updateTiposAsistencia.push(dato2);
+      dato.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
+      if (dato.importemaximo != findDato.importemaximo) {
 
-      if (dato.tipoasistencia != findDato.tipoasistencia || dato.importe != findDato.importe ||
-        dato.importemaximo != findDato.importemaximo || dato.visibleMovilBoolean != findDato.visibleMovilBoolean
-        || dato.porDefectoBoolean != findDato.porDefectoBoolean) {
-
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-
-        let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
-
+        let findUpdate = this.updateTiposAsistencia.find(item => item.importemaximo === dato.importemaximo);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -798,46 +635,43 @@ export class TiposAsistenciaComponent implements OnInit {
     }
   }
 
-  editTiposAsistencia(dato) {
-
-    if (!this.nuevo) {
-
-      // if (dato.jurisdicciones.length == 0) {
-      //   this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
-      //   let findUpdate = this.updateZonas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-
-      //   if (findUpdate != undefined) {
-      //     this.updateZonas.splice(findUpdate);
-      //   }
-
-      // } else {
-      let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
-
-      if (findUpdate == undefined) {
-        let dato2 = dato;
-        let tiposAsistenciaString = "";
-        for (let i in dato2.seleccionadosReal) {
-          tiposAsistenciaString += "," + dato2.seleccionadosReal[i].value.trim();
-        }
-
-        dato2.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-        dato2.seleccionados = "";
-        this.updateTiposAsistencia.push(dato2);
-      } else {
-        let updateFind = this.updateTiposAsistencia.findIndex(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
-        let tiposAsistenciaString = "";
-        for (let i in findUpdate.seleccionadosReal) {
-          tiposAsistenciaString += "," + dato.seleccionadosReal[i].value.trim();
-        }
-        this.updateTiposAsistencia[updateFind].seleccionadosReal = dato.seleccionadosReal;
-        this.updateTiposAsistencia[updateFind].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-        this.updateTiposAsistencia[updateFind].seleccionados = "";
+  editarVisibilidadMovil(dato) {
+    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+    // if (dato.visibleMovilBoolean == false) {
+    //   dato.visiblemovil = "0";
+    // }
+    // else {
+    //   dato.visiblemovil = "1";
+    // }
+    // // this.arregloCombo(dato);
+    // let findUpdate = this.updateTiposAsistencia.find(item => item.tipoasistencia === dato.tipoasistencia && item.importe === dato.importe && item.visiblemovil === dato.visiblemovil && item.importemaximo === dato.importemaximo && item.pordefecto === dato.pordefecto);
+    // if (findUpdate == undefined) {
+    //   this.updateTiposAsistencia.push(dato);
+    // }
+    if (findDato != undefined) {
+      let tiposAsistenciaString = "";
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
       }
-      // }
-    } else {
-      this.selectedDatos = [];
+      dato.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
+      // this.updateTiposActuacion.push(dato);
+      if (dato.visibleMovilBoolean != findDato.visibleMovilBoolean) {
+        if (dato.visibleMovilBoolean == false) {
+          dato.visiblemovil = "0";
+        }
+        else {
+          dato.visiblemovil = "1";
+        }
+        let findUpdate = this.updateTiposAsistencia.find(item => item.visiblemovil === dato.visiblemovil);
+        if (findUpdate == undefined) {
+          this.updateTiposAsistencia.push(dato);
+        }
+      }
     }
+
   }
+
 
   disabledSave() {
     if (this.nuevo) {

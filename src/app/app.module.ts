@@ -336,6 +336,8 @@ import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comuni
 import { CommonsService } from './_services/commons.service';
 import { SjcsModule } from './features/sjcs/sjcs.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
+
 import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
@@ -682,6 +684,7 @@ import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradore
 		FileUploadModule,
 		DialogModule,
 		PipeTranslationModule,
+		PipeNumberModule,
 		FechaModule,
 		PrecioModule,
 		KeyFilterModule,

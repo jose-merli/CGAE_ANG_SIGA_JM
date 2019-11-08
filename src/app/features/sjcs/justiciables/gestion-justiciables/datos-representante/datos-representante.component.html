@@ -1,4 +1,4 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!--<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="ficha-container">
   <div class="card">
@@ -30,14 +30,11 @@
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ 'justiciaGratuita.justiciables.rol.representante' | translate }}
             </label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
             <label>NIF
-              <!-- <span>{{ generalBody.nif }}</span> -->
             </label>
             <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-              <!-- <span>{{ generalBody.soloNombre }} {{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span> -->
             </label>
 
             <label>
@@ -72,9 +69,7 @@
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
               <input [(ngModel)]="generalBody" type="text" class="form-control" pInputText />
-              <!-- <div *ngIf="identificacionValida == false">
-                                          <label class="labelError">{{ "censo.fichaColegial.mensaje.documento.noValido" | translate }}
-                                          </label>  </div> -->
+              
             </div>
             <div class="form-group col-lg-3 col-md-3 main-button pt-3">
               <label></label>
@@ -109,4 +104,4 @@
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
-</div>
+</div>-->

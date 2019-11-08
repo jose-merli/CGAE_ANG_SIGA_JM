@@ -17,8 +17,9 @@ export class ComisariasComponent implements OnInit {
 
   buscar: boolean = false;
   historico: boolean = false;
-
+  institucionActual: any;
   datos;
+  prueba: any;
 
   progressSpinner: boolean = false;
 
@@ -52,6 +53,8 @@ export class ComisariasComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+
+        this.getInstitucion();
       }
       ).catch(error => console.error(error));
   }
@@ -105,5 +108,9 @@ export class ComisariasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
 }

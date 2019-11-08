@@ -57,8 +57,7 @@ export class TablaBuscadorProcuradorComponent implements OnInit {
   }
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
+
   }
 
   getCols() {
@@ -99,109 +98,7 @@ export class TablaBuscadorProcuradorComponent implements OnInit {
     this.table.reset();
   }
 
-
-
-  delete() {
-
-    let procuradorDelete = new ProcuradoresObject();
-    procuradorDelete.procuradorItems = this.selectedDatos;
-    this.sigaServices.post("busquedaComisarias_deleteComisarias", procuradorDelete).subscribe(
-
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  openTab(evento) {
-
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
-    if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      // this.persistenceService.setDatos(evento.data);
-      // this.router.navigate(["/gestionComisarias"]);
-    } else {
-
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-
-    }
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll) {
-
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-      } else {
-        this.selectedDatos = this.datos;
-      }
-
-      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-        this.selectMultiple = true;
-        this.numSelected = this.selectedDatos.length;
-      }
-
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-    }
-
-  }
-
-  searchHistorical() {
-
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
-    }
-
-  }
-
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
-  }
-
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectAll = false;
-
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
+  openTab() { }
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

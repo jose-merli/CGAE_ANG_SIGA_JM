@@ -5,7 +5,7 @@ import { MateriasItem } from '../../../../../../models/sjcs/MateriasItem';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
 import { AreasObject } from '../../../../../../models/sjcs/AreasObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
+import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 
@@ -56,7 +56,7 @@ export class TablaMateriasComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService, private  confirmationService:  ConfirmationService) { }
 
   ngOnInit() {
     this.getCols();
@@ -78,6 +78,31 @@ export class TablaMateriasComponent implements OnInit {
     }
 
 
+  }
+
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   getComboJurisdicciones() {
@@ -407,7 +432,7 @@ export class TablaMateriasComponent implements OnInit {
     }
   }
 
-  delete() {
+  delete(selectedDatos) {
     this.body = new AreasObject();
     for (let i in this.selectedDatos) {
       this.selectedDatos[i].jurisdicciones = "";

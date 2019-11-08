@@ -38,8 +38,9 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'censo.datosDireccion.literal.tipo.direccion' | translate }} (*)</label>
-              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body" [showClear]="true"
-                [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="historyDisable" (onChange)="onChangePais()">
+              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idTipodir"
+                [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="historyDisable"
+                (onChange)="onChangePais()">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -48,42 +49,42 @@
               <label>
                 {{"censo.consultaDirecciones.literal.direccion" | translate}}
               </label>
-              <input [(ngModel)]="body" type="text" class="form-control" [disabled]="historyDisable" [maxLength]="99" pInputText>
+              <input [(ngModel)]="body.direccion" type="text" class="form-control" [disabled]="historyDisable" [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.busquedaAsistencias.literal.numero" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body" (ngModelChange)="onChangeCodigoPostal()"
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.numeroDir" (ngModelChange)="onChangeCodigoPostal()"
                 pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.busquedaAsistencias.literal.escalera" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body" (ngModelChange)="onChangeCodigoPostal()"
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.escaleraDir" (ngModelChange)="onChangeCodigoPostal()"
                 pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.personaJG.literal.pisodir" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body" (ngModelChange)="onChangeCodigoPostal()"
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.pisoDir" (ngModelChange)="onChangeCodigoPostal()"
                 pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.personaJG.literal.puertadir" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body" (ngModelChange)="onChangeCodigoPostal()"
+              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.puertaDir" (ngModelChange)="onChangeCodigoPostal()"
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{"censo.datosDireccion.literal.pais2" | translate}}
               </label>
-              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body" [showClear]="true"
-                [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="historyDisable" (onChange)="onChangePais()">
+              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idPais" [showClear]="true"
+                [filter]="true" filterMatchMode="contains" [options]="comboPais">
               </p-dropdown>
             </div>
 
@@ -91,8 +92,9 @@
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body" (ngModelChange)="onChangeCodigoPostal()"
+              <input *ngIf="!poblacionExtranjera" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
                 pInputText>
+              <input *ngIf="poblacionExtranjera" [(ngModel)]="body.codigoPostal" type="text" class="form-control" [maxLength]="5" pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -102,7 +104,7 @@
               <!--  -->
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='provinciaSelecionada'
                 [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                [disabled]="" [options]="comboProvincia">
+                [options]="comboProvincia">
               </p-dropdown>
             </div>
 
@@ -115,11 +117,10 @@
               <label>
                 {{"censo.consultaDirecciones.literal.poblacion" | translate}}
               </label>
-              <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body' [showClear]="true"
-                [filter]="true" filterBy="label,labelSinTilde" [disabled]="" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" id="dropdown">
+              <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idPoblacion'
+                [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
+                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}">
               </p-dropdown>
-
             </div>
 
           </div>
@@ -182,16 +183,12 @@
     </div>
     <div *ngIf="showTarjeta" class="card-footer ">
       <div class="text-right main-button ">
-        <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="" icon="fa fa-reply-all" iconPos="left"
-          label="{{ 'general.boton.duplicar' | translate}}"></button>
+        <!-- <button *ngIf="nuevo == false" (click)="duplicarRegistro()" pButton type="button" [disabled]="" icon="fa fa-reply-all" iconPos="left"
+          label="{{ 'general.boton.duplicar' | translate}}"></button> -->
 
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="" label="{{ 'general.boton.restablecer' | translate}}"></button>
-
-        <button *ngIf="!isLetrado" (click)="comprobarAuditoria('noletrado')" pButton type="button" icon="far fa-save" iconPos="left"
-          [disabled]="" label="{{ 'general.boton.guardar' | translate}}"></button>
-
-        <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left"
-          [disabled]="" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+        <!-- <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left"
+          [disabled]="" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
 
         <!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
               label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->

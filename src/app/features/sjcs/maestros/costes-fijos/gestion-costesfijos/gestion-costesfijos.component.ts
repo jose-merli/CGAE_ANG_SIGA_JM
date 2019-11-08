@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { MultiSelect } from '../../../../../../../node_modules/primeng/primeng';
+import { MultiSelect, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CosteFijoItem } from '../../../../../models/sjcs/CosteFijoItem';
@@ -28,6 +28,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   editMode: boolean = false;
 
+
+
   datos = [];
 
   historico: boolean = false;
@@ -55,7 +57,10 @@ export class GestionCostesfijosComponent implements OnInit {
   @ViewChild("importe") importe;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
-    private sigaServices: SigaServices, private translateService: TranslateService, private commonsService: CommonsService, private router: Router) { }
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private commonsService: CommonsService,
+    private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getCols();
@@ -169,6 +174,11 @@ export class GestionCostesfijosComponent implements OnInit {
   searchHistorical() {
     this.historico = !this.historico;
     this.searchCostesFijos();
+    if (this.historico) {
+      this.selectMultiple = true;
+      this.selectionMode = "multiple";
+    }
+
   }
 
   getTipoActuacion() {
@@ -179,7 +189,30 @@ export class GestionCostesfijosComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
 
   }
-
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -188,6 +221,12 @@ export class GestionCostesfijosComponent implements OnInit {
       url = "gestionCostesFijos_createCosteFijo";
       let costeFijo = this.datos[0];
       this.body = costeFijo;
+      this.body.importe = this.body.valorNum;
+      this.body.importe = this.body.importe.replace(",", ".");
+      this.body.importeReal = +this.body.importe;
+      if (this.body.importe == ".") {
+        this.body.importe = 0;
+      }
       this.callSaveService(url);
 
     } else {
@@ -287,7 +326,8 @@ export class GestionCostesfijosComponent implements OnInit {
       idCosteFijo: undefined,
       idTipoAusencia: undefined,
       idTipoActuacion: undefined,
-      importe: 0,
+      importe: "0",
+      importeReal: 0,
       editable: true
     };
 
@@ -397,7 +437,7 @@ export class GestionCostesfijosComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].idCosteFijo != undefined && this.datos[0].idTipoAsistencia != undefined && this.datos[0].idTipoActuacion != undefined
-        && this.datos[0].importe != "" && this.datos[0].importe != undefined) {
+        && this.datos[0].valorNum != undefined && this.datos[0].valorNum != "") {
         return false;
       } else {
         return true;
@@ -585,23 +625,28 @@ export class GestionCostesfijosComponent implements OnInit {
 
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
+        this.selectMultiple = true;
+        this.selectionMode = "single";
       } else {
         this.selectedDatos = this.datos;
-
+        this.selectMultiple = false;
+        this.selectionMode = "single";
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
         this.selectMultiple = true;
         this.numSelected = this.selectedDatos.length;
       }
-
+      this.numSelected = this.datos.length;
       this.selectionMode = "multiple";
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      this.selectMultiple = false;
-      this.selectionMode = "single";
+      if (this.historico)
+        this.selectMultiple = true;
+      this.selectionMode = "multiple";
     }
+
 
   }
 

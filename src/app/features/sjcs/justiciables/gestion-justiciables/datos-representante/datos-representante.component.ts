@@ -44,10 +44,10 @@ export class DatosRepresentanteComponent implements OnInit {
         // 3: {label: "NIF", value: "10"}
         // 4: {label: "Otro", value: "50"}
         // 5: {label: "Pasaporte", value: "30"}
-        this.tipoIdentificacion[5].label =
-          this.tipoIdentificacion[5].label +
-          " / " +
-          this.tipoIdentificacion[4].label;
+        // this.tipoIdentificacion[5].label =
+        //   this.tipoIdentificacion[5].label +
+        //   " / " +
+        //   this.tipoIdentificacion[4].label;
       },
       err => {
         console.log(err);

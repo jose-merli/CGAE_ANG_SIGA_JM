@@ -19,6 +19,7 @@ export class BusquedaProcuradoresComponent implements OnInit {
   historico: boolean = false;
 
   datos;
+  institucionActual: any;
 
   progressSpinner: boolean = false;
 
@@ -52,6 +53,8 @@ export class BusquedaProcuradoresComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.getInstitucion();
+
       }
       ).catch(error => console.error(error));
   }
@@ -102,6 +105,11 @@ export class BusquedaProcuradoresComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
   }
 
 }

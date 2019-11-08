@@ -5,8 +5,11 @@ import { TranslateService } from '../../translate';
 import { SigaServices } from '../../../_services/siga.service';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { CommonsService } from '../../../_services/commons.service';
-import { KEY_CODE } from '../../login-develop/login-develop.component';
 
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 @Component({
   selector: 'app-filtro-buscador-procurador',
   templateUrl: './filtro.component.html',
@@ -58,43 +61,39 @@ export class FiltroBuscadorProcuradorComponent implements OnInit {
 
 
   search() {
-    if (this.checkFilters()) {
-      if (this.institucionGeneral)
-        this.filtros.idInstitucion = this.filtros.inst.map(it => {
-          return it.value;
-        }).join()
-      this.persistenceService.setFiltros(this.filtros);
-      this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
-      this.isOpen.emit(false)
-    }
-
+    if (this.institucionGeneral && this.filtros != null && this.filtros.inst != null)
+      this.filtros.idInstitucion = this.filtros.inst.map(it => {
+        return it.value;
+      }).join();
+    this.persistenceService.setFiltros(this.filtros);
+    this.persistenceService.setFiltrosAux(this.filtros);
+    this.filtroAux = this.persistenceService.getFiltrosAux()
+    this.isOpen.emit(false)
 
   }
 
-  checkFilters() {
-    if (
-      (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
-      (this.filtros.apellido1 == null || this.filtros.apellido1.trim() == "" || this.filtros.apellido1.trim().length < 3) &&
-      (this.filtros.apellido2 == null || this.filtros.apellido2.trim() == "" || this.filtros.apellido2.trim().length < 3) &&
-      (this.filtros.nColegiado == null || this.filtros.nColegiado == "")) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  onHideDatosGenerales() {
-    this.showDatosGenerales = !this.showDatosGenerales;
-  }
+  // checkFilters() {
+  //   if (
+  //     (this.filtros.nombre == null || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3) &&
+  //     (this.filtros.apellido1 == null || this.filtros.apellido1.trim() == "" || this.filtros.apellido1.trim().length < 3) &&
+  //     (this.filtros.apellido2 == null || this.filtros.apellido2.trim() == "" || this.filtros.apellido2.trim().length < 3) &&
+  //     (this.filtros.nColegiado == null || this.filtros.nColegiado == "")) {
+  //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   clearFilters() {
     this.filtros.nColegiado = null;
     this.filtros.nombre = null;
     this.filtros.apellido1 = null;
     this.filtros.apellido2 = null;
-    if (this.institucionGeneral) this.filtros.inst = null;
+    if (this.institucionGeneral) {
+      this.filtros.inst = null;
+      this.filtros.idInstitucion = null;
+    }
     this.persistenceService.clearFiltros();
   }
 
@@ -115,7 +114,7 @@ export class FiltroBuscadorProcuradorComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      // this.search();
+      this.search();
     }
   }
 

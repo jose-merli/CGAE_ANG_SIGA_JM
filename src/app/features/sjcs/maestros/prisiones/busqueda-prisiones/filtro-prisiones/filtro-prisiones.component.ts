@@ -134,25 +134,25 @@ export class FiltroPrisionesComponent implements OnInit {
   }
 
   checkFilters() {
-    if (
-      (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.trim().length < 3) &&
-      (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.trim().length < 3) &&
-      (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
-      (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "")) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
-        this.filtros.nombre = this.filtros.nombre.trim();
-      }
-
-      if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
-        this.filtros.codigoExt = this.filtros.codigoExt.trim();
-      }
-
-      return true;
+    // if (
+    //   (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.trim().length < 3) &&
+    //   (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.trim().length < 3) &&
+    //   (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
+    //   (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "")) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.nombre != undefined && this.filtros.nombre != null) {
+      this.filtros.nombre = this.filtros.nombre.trim();
     }
+
+    if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
+      this.filtros.codigoExt = this.filtros.codigoExt.trim();
+    }
+
+    return true;
+    // }
   }
 
   clearFilters() {

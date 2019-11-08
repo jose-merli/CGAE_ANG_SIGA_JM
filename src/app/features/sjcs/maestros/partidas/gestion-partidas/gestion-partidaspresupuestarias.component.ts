@@ -5,7 +5,7 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
+import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 
@@ -60,7 +60,8 @@ export class TablaPartidasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private  confirmationService:  ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -137,11 +138,11 @@ export class TablaPartidasComponent implements OnInit {
     }
   }
 
-  getId() {
-    let seleccionados = [];
-    seleccionados.push(this.selectedDatos);
-    this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
-  }
+  // getId() {
+  //   let seleccionados = [];
+  //   seleccionados.push(this.selectedDatos);
+  //   this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
+  // }
 
 
   changeImporte(dato) {
@@ -327,6 +328,31 @@ export class TablaPartidasComponent implements OnInit {
     this.tabla.reset();
   }
 
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
@@ -364,7 +390,7 @@ export class TablaPartidasComponent implements OnInit {
   }
 
 
-  delete() {
+  delete(selectedDatos) {
     let PartidasPresDelete = new PartidasObject();
     PartidasPresDelete.partidasItem = this.selectedDatos
     this.sigaServices.post("gestionPartidasPres_eliminatePartidasPres", PartidasPresDelete).subscribe(

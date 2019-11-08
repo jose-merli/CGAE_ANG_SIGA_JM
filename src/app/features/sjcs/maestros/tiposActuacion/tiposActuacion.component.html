@@ -49,11 +49,11 @@
                         <td class="text-center" *ngFor="let col of columns">
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importeReal'">
-                                {{dato.importe}} €
+                                {{dato.importe | numberPipe}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importemaximoReal' && col.field !='importeReal'">
-                                {{dato.importemaximo}} €
+                                {{dato.importemaximo | numberPipe}} €
                             </span>
 
                             <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importeReal' && col.field !='visiblemovil' 
@@ -90,11 +90,11 @@
 
                             <div *ngIf="dato.editable && col.field == 'importemaximoReal'">
                                 <app-precio [(value)]="dato.importemaximo" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                                    (valueChangeInput)="changeImporteMaximo(dato)"></app-precio>
+                                    (input)="changeImporteMaximo(dato)"></app-precio>
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'importeReal'">
-                                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico" (valueChangeInput)="changeImporte(dato)"></app-precio>
+                                <app-precio [(value)]="dato.importe" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico" (input)="changeImporte(dato)"></app-precio>
                             </div>
                         </td>
 
@@ -142,7 +142,7 @@
                     type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
                 <button *ngIf="!historico" [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || editMode || !permisoEscritura || nuevo"
-                    (click)="delete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+                    (click)="confirmDelete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
 
                 <button *ngIf="historico" pButton [disabled]="(!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
                     (click)="activate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
@@ -156,7 +156,12 @@
         </div>
     </div>
 </div>
-
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+    </p-footer>
+</p-confirmDialog>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
 </div>

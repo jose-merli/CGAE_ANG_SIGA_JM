@@ -25,6 +25,7 @@ export class GestionTipodocumentoComponent implements OnInit {
   //Resultados de la busqueda
   @Input() documentacionEjgItem: DocumentacionEjgItem;
 
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService) { }

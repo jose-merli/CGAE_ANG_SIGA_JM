@@ -9,8 +9,8 @@
   <div>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
       <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa"></app-datos-generales>
-      <app-datos-direccion *ngSwitchCase="'direccion'"></app-datos-direccion>
-      <app-datos-solicitud *ngSwitchCase="'solicitud'"></app-datos-solicitud>
+      <app-datos-direccion *ngSwitchCase="'direccion'" [showTarjeta]="ficha.activa"></app-datos-direccion>
+      <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa"></app-datos-solicitud>
       <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa"></app-datos-representante>
       <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="activa"></app-asuntos>
     </div>

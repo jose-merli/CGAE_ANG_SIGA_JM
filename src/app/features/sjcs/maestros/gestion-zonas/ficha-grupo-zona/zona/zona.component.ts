@@ -5,7 +5,7 @@ import { ZonasItem } from '../../../../../../models/sjcs/ZonasItem';
 import { UpperCasePipe } from '@angular/common';
 import { ZonasObject } from '../../../../../../models/sjcs/ZonasObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
+import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class ZonaComponent implements OnInit {
   seleccion: boolean = false;
   cols;
   rowsPerPage;
-
+  fechaEvento;
   datos = [];
 
   historico: boolean = false;
@@ -52,7 +52,8 @@ export class ZonaComponent implements OnInit {
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService) { }
+    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService, private confirmationService: ConfirmationService
+  ) { }
 
   ngOnInit() {
     this.getCols();
@@ -63,6 +64,7 @@ export class ZonaComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
+    this.validateHistorical();
   }
 
   getComboPartidosJudiciales() {
@@ -86,6 +88,28 @@ export class ZonaComponent implements OnInit {
       }
     );
   }
+  validateHistorical() {
+    this.sigaServices.sendFechaBaja$.subscribe(
+      fecha => {
+        this.fechaEvento = fecha;
+        if (this.fechaEvento != null) {
+          this.historico = true;
+        } else {
+          this.historico = false;
+        }
+      });
+    // if (this.datos != undefined && this.datos.length > 0) {
+
+    //   if (this.datos[0].fechabaja != null) {
+    //     this.historico = true;
+    //   } else {
+    //     this.historico = false;
+    //   }
+
+    //   this.persistenceService.setHistorico(this.historico);
+
+    // }
+  }
 
   getZonas() {
     this.sigaServices
@@ -97,7 +121,7 @@ export class ZonaComponent implements OnInit {
         res => {
           this.datos = res.zonasItems;
 
-          this.validateHistorical();
+  
 
           this.datos.forEach(element => {
             element.editable = false
@@ -116,19 +140,7 @@ export class ZonaComponent implements OnInit {
       );
   }
 
-  validateHistorical() {
-    if (this.datos != undefined && this.datos.length > 0) {
 
-      if (this.datos[0].fechabaja != null) {
-        this.historico = true;
-      } else {
-        this.historico = false;
-      }
-
-      this.persistenceService.setHistorico(this.historico);
-
-    }
-  }
 
   getPartidosJudiciales() {
 
@@ -386,7 +398,32 @@ export class ZonaComponent implements OnInit {
 
   }
 
-  delete() {
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  delete(selectedDatos) {
     this.body = new ZonasObject();
     this.body.zonasItems = this.selectedDatos;
 

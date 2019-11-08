@@ -6,6 +6,7 @@ import { AreasObject } from '../../../../../models/sjcs/AreasObject';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TableModule } from 'primeng/table';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 
 
 @Component({
@@ -49,7 +50,9 @@ export class TablaBusquedaAreasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
+
   ) { }
 
   ngOnInit() {
@@ -74,10 +77,35 @@ export class TablaBusquedaAreasComponent implements OnInit {
     }
 
   }
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
 
-  delete() {
+
+  delete(selectedDatos) {
     let AreasDelete = new AreasObject();
-    AreasDelete.areasItems = this.selectedDatos
+    AreasDelete.areasItems = selectedDatos
     this.sigaServices.post("fichaAreas_deleteAreas", AreasDelete).subscribe(
       data => {
         this.selectedDatos = [];
@@ -200,6 +228,5 @@ export class TablaBusquedaAreasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 
 }
