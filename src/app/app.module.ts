@@ -40,6 +40,7 @@ import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
+import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 
 //PRIMENG
 
@@ -683,10 +684,9 @@ import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradore
 		PipeTranslationModule,
 		FechaModule,
 		PrecioModule,
-
 		KeyFilterModule,
 		StepsModule,
-
+		BusquedaColegiadoExpressModule,
 
 		SelectButtonModule,
 		ColorPickerModule,
