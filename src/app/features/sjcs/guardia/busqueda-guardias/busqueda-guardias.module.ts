@@ -24,6 +24,7 @@ import { CookieService } from '../../../../../../node_modules/ngx-cookie-service
 import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gestion-guardia.component';
 import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-generales-guardias/datos-generales-guardias.component';
 import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { TablaDinamicaModule } from '../../../../commons/tabla-dinamica/tabla-dinamica.module';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fi
     MultiSelectModule,
     PrecioModule,
     TarjetaResumenFijaModule,
+    TablaDinamicaModule
   ],
   declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent],
   providers: [

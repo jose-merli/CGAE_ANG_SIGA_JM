@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { DataTable } from '../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -7,17 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TablaDinamicaComponent implements OnInit {
 
-  cols = []
+  @Input() cols = []
   rowsPerPage: any = [];
   msgs;
-
-  selectedItem: number = 10;
+  @ViewChild("table") tabla: DataTable;
+  selectedItem = 10;
   selectedDatos = [];
   seleccion: boolean = false;
 
   message;
 
-  initDatos;
+  @Input() datos
   progressSpinner: boolean = false;
 
 
@@ -26,19 +27,64 @@ export class TablaDinamicaComponent implements OnInit {
 
   ngOnInit() {
     this.getCols()
+    this.datos = [
+      {
+        "turno": 1
+      },
+      {
+        "turno": 2
+      },
+      {
+        "turno": 3
+      },
+      {
+        "turno": 4
+      },
+      {
+        "turno": 5
+      },
+      {
+        "turno": 6
+      },
+      {
+        "turno": 7
+      },
+      {
+        "turno": 8
+      },
+      {
+        "turno": 9
+      },
+      {
+        "turno": 10
+      },
+      {
+        "turno": 11
+      },
+      {
+        "turno": 12
+      }
+
+    ]
   }
 
 
+  sube(selected) {
+    let index = this.datos.indexOf(selected);
+    if (index != 0)
+      [this.datos[index], this.datos[index - 1]] = [this.datos[index - 1], this.datos[index]];
+  }
 
+  baja(selected) {
+    let index = this.datos.indexOf(selected);
+    if (index != this.datos.length - 1)
+      [this.datos[index], this.datos[index + 1]] = [this.datos[index + 1], this.datos[index]];
+
+  }
   getCols() {
 
     this.cols = [
       { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "tipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
-      { field: "obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
-      { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
-
     ];
 
     this.rowsPerPage = [

@@ -1,11 +1,11 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="card mt-3">
-  <div class="card-body p-0">
+  <div class="card-body form-row p-0">
     <!-- TABLA RESULTADOS -->
-    <div class="col-11">
+    <div class="col-11  ">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of cols" [style.width]="col.width">
@@ -25,12 +25,12 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="setItalic(dato)">
+              <!-- <div *ngIf="setItalic(dato)">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(dato)">
-                <span>{{dato[col.field]}}</span>
-              </div>
+              </div> -->
+              <!-- <div *ngIf="!setItalic(dato)"> -->
+              <span>{{dato[col.field]}}</span>
+              <!-- </div> -->
             </td>
 
           </tr>
@@ -54,9 +54,15 @@
         </ng-template>
       </p-table>
     </div>
-    <div class="col-1" id="botones">
-      <button pButton icon="pi pi-chevron-up col-12"> </button>
-      <button pButton icon="pi pi-chevron-down col-12"> </button>
+    <div class="col-1 row cuerpo">
+      <div id="botones">
+        <div class="col-12 boton">
+          <button pButton (click)="sube(selectedDatos)" icon="fas fa-chevron-up"> </button>
+        </div>
+        <div class="col-12 boton">
+          <button pButton (click)="baja(selectedDatos)" icon="fas fa-chevron-down"> </button>
+        </div>
+      </div>
     </div>
   </div>
 
