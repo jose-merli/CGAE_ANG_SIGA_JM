@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, PickListModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -25,6 +25,9 @@ import { FiltrosTurnos } from './filtros-turnos/filtros-turnos.component';
 import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component';
 import { FichaTurnosComponent } from './ficha-turnos/ficha-turnos.component';
 import { DatosGeneralesTurnosComponent } from './ficha-turnos/datos-generales-consulta/datos-generales-consulta.component';
+import { ConfiguracionTurnosComponent } from './ficha-turnos/configuracion-turnos/configuracion-turnos.component';
+import { ConfiguracionColaOficioComponent } from './ficha-turnos/configuracion-colaoficio/configuracion-colaoficio.component';
+import { TarjetaColaOficio } from './ficha-turnos/tarjeta-colaoficio/tarjeta-colaoficio.component';
 
 @NgModule({
   imports: [
@@ -42,7 +45,7 @@ import { DatosGeneralesTurnosComponent } from './ficha-turnos/datos-generales-co
     TableModule,
     MultiSelectModule,
     PrecioModule,
-
+    PickListModule
     // FichaGrupoZonaModule
 
   ],
@@ -51,7 +54,10 @@ import { DatosGeneralesTurnosComponent } from './ficha-turnos/datos-generales-co
     FiltrosTurnos,
     TablaTurnosComponent,
     FichaTurnosComponent,
-    DatosGeneralesTurnosComponent
+    DatosGeneralesTurnosComponent,
+    ConfiguracionTurnosComponent,
+    ConfiguracionColaOficioComponent,
+    TarjetaColaOficio
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

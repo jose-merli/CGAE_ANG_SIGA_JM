@@ -10,12 +10,16 @@ export class TurnosItems {
   materia: string;
   idzona: string;
   zona: string;
+  idguardias: string;
+  guardias: string;
   idzubzona: string;
   idsubzona: string;
   subzona: string;
   idpartido: string;
   partido: string;
   idpartidapresupuestaria: string;
+  idjurisdiccion: string;
+  partidapresupuestariaReal: any[];
   grupofacturacion: string;
   historico: boolean;
   fechabaja: Date;

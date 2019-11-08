@@ -6,9 +6,10 @@ export let endpoints_oficio: any = {
     combossjcs_comboTiposGuardia: "oficio/combossjcs/comboTiposGuardia",
     combossjcs_comboZonas: "oficio/combossjcs/comboZonas",
     combossjcs_comboSubZonas: "oficio/combossjcs/comboSubZonas",
-    combossjcs_comboPartidaPresupuestaria: "oficio/combossjcs/comboPartidaPresupuestaria",
+    combossjcs_comboPartidasPresupuestaria: "oficio/combossjcs/comboPartidasPresupuestaria",
     combossjcs_comboGruposFacturacion: "oficio/combossjcs/comboGruposFacturacion",
     turnos_busquedaTurnos: "oficio/turnos/busquedaTurnos",
-    turnos_eliminateTurnos: "oficio/turnos/eliminateTurnos"
-
+    turnos_busquedaFichaTurnos: "oficio/turnos/busquedaFichaTurnos",
+    turnos_eliminateTurnos: "oficio/turnos/eliminateTurnos",
+    turnos_updateDatosGenerales: "oficio/turnos/updateDatosGenerales"
 }

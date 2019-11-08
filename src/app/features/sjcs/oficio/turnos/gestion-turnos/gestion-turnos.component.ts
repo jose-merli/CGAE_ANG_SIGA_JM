@@ -469,18 +469,10 @@ export class TablaTurnosComponent implements OnInit {
   }
 
   openTab(evento) {
-
-
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      if (this.historico) {
-        this.persistenceService.setHistorico(!this.historico);
-      }
-      else {
-        this.persistenceService.setHistorico(this.historico);
-      }
       this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/gestionTurnos"]);
+      this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
     } else {
 
       if (evento.data.fechabaja == undefined && this.historico) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -10,6 +10,8 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
+import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
+import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 @Component({
   selector: "app-datos-generales-consulta",
   templateUrl: "./datos-generales-consulta.component.html",
@@ -17,277 +19,385 @@ import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 })
 export class DatosGeneralesTurnosComponent implements OnInit {
 
-  //Resultados de la busqueda
-  @Input() datos: PrisionItem;
-  @Input() modoEdicion;
-  @Output() modoEdicionSend = new EventEmitter<any>();
-
   openFicha: boolean = true;
-  msgs = [];
-  historico: boolean = false;
-
-  provinciaSelecionada: string;
-
-
-  body: PrisionItem;
-  bodyInicial: PrisionItem;
-  idPrision;
-  isDisabledProvincia: boolean = true;
-
-  comboProvincias;
-  comboPoblacion;
-  isDisabledPoblacion: boolean = true;
-  resultadosPoblaciones;
-  codigoPostalValido: boolean = true;
-
-  permisoEscritura: boolean = true;
-  movilCheck: boolean = false
-
-  visibleMovilValue: boolean = false;
-  esDecanoValue: boolean = false;
-  isCodigoEjisValue: boolean = false;
-
+  body: TurnosItems = new TurnosItems();
+  bodyInicial;
   progressSpinner: boolean = false;
-  avisoMail: boolean = false
+  modoEdicion: boolean = false;
+  msgs;
+  // jurisdicciones;
+  procedimientos;
+  textFilter;
+  showTarjeta: boolean = true;
+  esComa: boolean = false;
+  textSelected: String = "{label}";
+  permisoEscritura: boolean = true;
+  jurisdicciones: any[] = [];
+  areas: any[] = [];
+  tiposturno: any[] = [];
+  zonas: any[] = [];
+  subzonas: any[] = [];
+  materias: any[] = [];
+  partidas: any[] = [];
+  partidoJudicial: string;
+  grupofacturacion: any[] = [];
+  isDisabledMateria: boolean = true;
+  isDisabledSubZona: boolean = true;
+  @Output() modoEdicionSend = new EventEmitter<any>();
+  @ViewChild("importe") importe;
+  //Resultados de la busqueda
+  @Input() turnosItem: TurnosItems;
 
-  emailValido: boolean = false;
-  tlf1Valido: boolean = true;
-  tlf2Valido: boolean = true;
-  faxValido: boolean = true;
-  mvlValido: boolean = true;
-  edicionEmail: boolean = false;
+  constructor(private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private persistenceService: PersistenceService) { }
 
-  @ViewChild("mailto") mailto;
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.turnosItem != undefined) {
+      if (this.turnosItem.idturno != undefined) {
+        this.body = this.turnosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        if (this.body.idturno == undefined) {
+          this.modoEdicion = false;
+        } else {
+          this.modoEdicion = true;
+        }
+      }
+    } else {
+      this.turnosItem = new TurnosItems();
+    }
+  }
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
-
+  abreCierraFicha() {
+    this.openFicha = !this.openFicha;
+  }
   ngOnInit() {
-
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
-
     }
-    this.getComboProvincias();
-
-    this.validateHistorical();
-
-    if (this.modoEdicion) {
-      this.body = this.datos;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      if (this.datos.visibleMovil == "1")
-        this.movilCheck = true
-      if (this.body.email != undefined && this.body.email != "") {
-        this.edicionEmail = false;
-      } else {
-        this.edicionEmail = true;
-      }
-
-      if (this.body != undefined && this.datos.nombrePoblacion != null) {
-        this.getComboPoblacion(this.body.nombrePoblacion);
-      } else {
-        this.progressSpinner = false;
-      }
-
+    if (this.turnosItem != undefined) {
+      this.body = this.turnosItem;
+      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
     } else {
-      this.body = new PrisionItem();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.edicionEmail = true;
-
+      this.turnosItem = new TurnosItems();
     }
-  }
-
-
-  validateHistorical() {
-    if (this.persistenceService.getDatos() != undefined) {
-
-      if (this.persistenceService.getDatos().fechaBaja != null) {
-        this.historico = true;
-      } else {
-        this.historico = false;
-      }
+    if (this.body.idturno == undefined) {
+      this.modoEdicion = false;
+    } else {
+      this.modoEdicion = true;
     }
+    this.getCombos();
   }
 
-  cambiaMovil() {
-    if (this.movilCheck)
-      this.body.visibleMovil = 1
-    else
-      this.body.visibleMovil = 0
-  }
+  getCombos() {
 
-  getComboProvincias() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
+    this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
       n => {
-        this.comboProvincias = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboProvincias);
-        this.progressSpinner = false;
+        this.jurisdicciones = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.jurisdicciones.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
 
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
-      }, () => {
       }
     );
-  }
 
-  onChangeProvincia() {
+    this.sigaServices.get("combossjcs_comboAreas").subscribe(
+      n => {
+        this.areas = n.combooItems;
 
-    this.body.idPoblacion = "";
-    this.comboPoblacion = [];
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.areas.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
 
-    if (this.body.idProvincia != undefined && this.body.idProvincia != "") {
-      this.isDisabledPoblacion = false;
-    } else {
-      this.isDisabledPoblacion = true;
-    }
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        if (this.turnosItem.idarea != null) {
+          this.sigaServices
+            .getParam(
+              "combossjcs_comboMaterias",
+              "?idArea=" + this.turnosItem.idarea)
+            .subscribe(
+              n => {
+                // this.isDisabledPoblacion = false;
+                this.materias = n.combooItems;
+              },
+              error => { },
+              () => {
 
-  }
-
-  onChangePoblacion() {
-    if (this.body.idPoblacion != undefined && this.body.idPoblacion != null) {
-      let poblacionSelected = this.comboPoblacion.filter(pob => pob.value == this.body.idPoblacion);
-      this.body.nombrePoblacion = poblacionSelected[0].label;
-    }
-  }
-
-  buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null && e.target.value !== "") {
-      if (e.target.value.length >= 3) {
-        this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-      } else {
-        this.comboPoblacion = [];
-        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
+              }
+            );
+        }
       }
-    } else {
-      this.comboPoblacion = [];
-      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-    }
+    );
+
+    this.sigaServices.get("combossjcs_comboTiposTurno").subscribe(
+      n => {
+        this.tiposturno = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.tiposturno.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("combossjcs_comboZonas").subscribe(
+      n => {
+        this.zonas = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.zonas.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        if (this.turnosItem.idzona != null) {
+          this.sigaServices
+            .getParam(
+              "combossjcs_comboSubZonas",
+              "?idZona=" + this.turnosItem.idzona)
+            .subscribe(
+              n => {
+                // this.isDisabledPoblacion = false;
+                this.subzonas = n.combooItems;
+              },
+              error => { },
+              () => {
+                this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
+                this.body = this.turnosItem;
+                this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+              }
+            );
+        }
+      }
+    );
+    this.sigaServices.get("combossjcs_comboPartidasPresupuestaria").subscribe(
+      n => {
+        this.partidas = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.partidas.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    this.sigaServices.get("combossjcs_comboGruposFacturacion").subscribe(
+      n => {
+        this.grupofacturacion = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.grupofacturacion.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        this.body = this.turnosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        if (this.turnosItem.idturno == undefined) {
+          this.modoEdicion = false;
+        } else {
+          this.modoEdicion = true;
+        }
+      }
+    );
+    //   } else {
+    //     this.body = this.turnosItem;
+    //     this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+    //     if (this.turnosItem.idturno == undefined) {
+    //       this.modoEdicion = false;
+    //     } else {
+    //       this.modoEdicion = true;
+    //     }
+    //   }
+    // } else {
+    //   this.turnosItem = new TurnosItems();
+    // }
   }
 
-  getComboPoblacion(dataFilter) {
-    this.progressSpinner = true;
+  onChangeArea() {
 
+    this.turnosItem.idmateria = "";
+    this.materias = [];
+
+    if (this.turnosItem.idarea != undefined && this.turnosItem.idarea != "") {
+      this.isDisabledMateria = false;
+      this.getComboMaterias();
+    } else {
+      this.isDisabledMateria = true;
+    }
+
+  }
+  onChangeZona() {
+
+    this.turnosItem.idsubzona = "";
+    this.subzonas = [];
+
+    if (this.turnosItem.idzona != undefined && this.turnosItem.idzona != "") {
+      this.isDisabledSubZona = false;
+      this.getComboSubZonas();
+
+    } else {
+      this.isDisabledSubZona = true;
+    }
+
+  }
+  getComboMaterias() {
     this.sigaServices
       .getParam(
-        "busquedaPrisiones_population",
-        "?idProvincia=" + this.body.idProvincia + "&dataFilter=" + dataFilter
-      )
+        "combossjcs_comboMaterias",
+        "?idArea=" + this.turnosItem.idarea)
       .subscribe(
         n => {
-          this.isDisabledPoblacion = false;
-          this.comboPoblacion = n.combooItems;
-          this.progressSpinner = false;
-          this.commonsServices.arregloTildesCombo(this.comboPoblacion);
-
+          // this.isDisabledPoblacion = false;
+          this.materias = n.combooItems;
         },
-        error => {
-          this.progressSpinner = false;
-        },
+        error => { },
         () => { }
       );
   }
 
-  onChangeCodigoPostal() {
-    if (
-      this.isValidCodigoPostal() &&
-      this.body.codigoPostal.length == 5
-    ) {
-      let value = this.body.codigoPostal.substring(0, 2);
-      this.provinciaSelecionada = value;
-      this.isDisabledPoblacion = false;
-      if (value != this.body.idProvincia) {
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.body.idPoblacion = "";
-        this.body.nombrePoblacion = "";
-        this.comboPoblacion = [];
-        this.isDisabledProvincia = true;
-      }
-      this.codigoPostalValido = true;
-    } else {
-      this.codigoPostalValido = false;
-      this.body.idProvincia = "";
+  getComboSubZonas() {
+    this.sigaServices
+      .getParam(
+        "combossjcs_comboSubZonas",
+        "?idZona=" + this.turnosItem.idzona)
+      .subscribe(
+        n => {
+          // this.isDisabledPoblacion = false;
+          this.subzonas = n.combooItems;
+        },
+        error => { },
+        () => {
 
-    }
+        }
+      );
+
+
   }
-
-
-  isValidCodigoPostal(): boolean {
-    return (
-      this.body.codigoPostal &&
-      typeof this.body.codigoPostal === "string" &&
-      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
-    );
+  rest() {
+    if (this.turnosItem != undefined)
+      this.turnosItem = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
   save() {
     this.progressSpinner = true;
     let url = "";
-
     if (!this.modoEdicion) {
-      url = "gestionPrisiones_createPrision";
+      url = "turnos_updateDatosGenerales";
       this.callSaveService(url);
-
     } else {
-      url = "gestionPrisiones_updatePrision";
+      url = "turnos_updateDatosGenerales";
       this.callSaveService(url);
     }
-
-  }
-  trimeando() {
-    this.body.nombre = this.body.nombre.trim()
-    if (this.body.domicilio != null && this.body.domicilio != undefined)
-      this.body.domicilio = this.body.domicilio.trim()
-
-    if (this.body.telefono1 != null && this.body.telefono1 != undefined)
-      this.body.telefono1 = this.body.telefono1.trim()
-
-    if (this.body.telefono2 != null && this.body.telefono2 != undefined)
-      this.body.telefono2 = this.body.telefono2.trim()
-
-    if (this.body.fax != null && this.body.fax != undefined)
-      this.body.fax = this.body.fax.trim()
-
-    if (this.body.email != null && this.body.email != undefined)
-      this.body.email = this.body.email.trim()
-
-    if (this.body.codigoExt != null && this.body.codigoExt != undefined)
-      this.body.codigoExt = this.body.codigoExt.trim()
-
   }
 
   callSaveService(url) {
-    if (this.body.visibleMovil == null) {
-      this.body.visibleMovil = 0
-    }
-    this.trimeando()
-    this.sigaServices.post(url, this.body).subscribe(
+    this.sigaServices.post(url, this.turnosItem).subscribe(
       data => {
-
+        this.esComa = false;
         if (!this.modoEdicion) {
           this.modoEdicion = true;
-          this.idPrision = JSON.parse(data.body).id;
+          let turnos = JSON.parse(data.body);
+          // this.modulosItem = JSON.parse(data.body);
+          this.turnosItem.idturno = turnos.idturno;
           let send = {
             modoEdicion: this.modoEdicion,
-            idPrision: this.idPrision
+            idturno: this.turnosItem.idturno
           }
-          this.body.idPrision = this.idPrision
-          this.persistenceService.setDatos(this.body);
           this.modoEdicionSend.emit(send);
         }
 
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        this.persistenceService.setDatos(this.turnosItem);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
 
-        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+        if (JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -296,34 +406,15 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+        this.body = this.turnosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
       }
     );
 
   }
 
-  rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
-    this.edicionEmail = true
-    this.tlf1Valido = true
-    this.tlf2Valido = true
-    this.faxValido = true
-
-  }
-
-  editEmail() {
-    if (this.edicionEmail)
-      this.edicionEmail = false;
-    else this.edicionEmail = true;
-  }
-
-  openOutlook(dato) {
-    let correo = dato.email;
-    this.commonsServices.openOutlook(correo);
-  }
-
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+  clear() {
+    this.msgs = [];
   }
 
   showMessage(severity, summary, msg) {
@@ -335,47 +426,17 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     });
   }
 
-  changeEmail() {
-    if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
-      this.emailValido = true
-      this.avisoMail = false
-    }
-    else {
-      this.emailValido = false
-      this.avisoMail = false
-
-      if (this.body.email != null && this.body.email != "")
-        this.avisoMail = true
-    }
-  }
-
   disabledSave() {
-    if (!this.historico && (this.body.nombre != undefined && this.body.nombre != null && this.body.nombre.trim() != "" &&
-      this.body.idProvincia != undefined && this.body.idProvincia != "" && this.body.idPoblacion != undefined && this.body.idPoblacion != null && this.body.idPoblacion != ""
-      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5 && !this.avisoMail && this.tlf1Valido
-      && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+    if (this.turnosItem.nombre != undefined) this.turnosItem.nombre = this.turnosItem.nombre.trim();
+    if ((this.turnosItem.nombre != undefined && this.turnosItem.idjurisdiccion != "" &&
+      this.turnosItem.idjurisdiccion != undefined) && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;
     }
   }
 
-  changeTelefono1() {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
-  }
-
-  changeTelefono2() {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
-  }
-  changeFax() {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
-  }
-
-  changeMovil() {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
-  }
-
-  clear() {
-    this.msgs = [];
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
   }
 }

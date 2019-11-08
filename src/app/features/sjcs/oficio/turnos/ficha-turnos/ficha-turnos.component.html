@@ -8,7 +8,10 @@
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-generales-consulta *ngSwitchCase="'generales'"></app-datos-generales-consulta>
+    <app-datos-generales-consulta [turnosItem]="turnosItem" (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'"></app-datos-generales-consulta>
+    <app-configuracion-turnos *ngSwitchCase="'configuracion'"></app-configuracion-turnos>
+    <app-configuracion-colaoficio *ngSwitchCase="'configuracioncolaoficio'"></app-configuracion-colaoficio>
+    <app-tarjeta-colaoficio *ngSwitchCase="'tablacolaoficio'"></app-tarjeta-colaoficio>
     <!-- <app-consulta *ngSwitchCase="'consultas'"></app-consulta>
     <app-modelos-comunicaciones-consulta *ngSwitchCase="'modelos'"></app-modelos-comunicaciones-consulta>
     <app-plantillas-envios-consultas *ngSwitchCase="'plantillas'"></app-plantillas-envios-consultas> -->

@@ -150,7 +150,7 @@ export class FiltrosTurnos implements OnInit {
       }
     );
 
-    this.sigaServices.get("combossjcs_comboPartidaPresupuestaria").subscribe(
+    this.sigaServices.get("combossjcs_comboPartidasPresupuestaria").subscribe(
       n => {
         this.partidas = n.combooItems;
 

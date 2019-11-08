@@ -1,0 +1,95 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('configuracion')">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha"> {{"justiciaGratuita.oficio.turnos.configuracionturnos" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <br>
+            <i (click)="abrirFicha('configuracion')" *ngIf="!esFichaActiva('configuracion')" class="fa fa-angle-up float-right"></i>
+            <i (click)="cerrarFicha('configuracion')" *ngIf="esFichaActiva('configuracion')" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{"justiciaGratuita.oficio.turnos.configuracionturnos" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('configuracion') && openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-12 col-md-12">
+
+          <div class="form-row">
+            <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                disabled="true" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4">
+              <br>
+              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}" name="groupname"></p-checkbox>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4">
+              <br>
+              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}" name="groupname"></p-checkbox>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <br>
+              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}" name="groupname"></p-checkbox>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <br>
+              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}" name="groupname"></p-checkbox>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <br>
+              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}" name="groupname"></p-checkbox>
+            </div>
+
+            <div class="form-group col-lg-3 col-md-3">
+              <br>
+              <p-checkbox binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}" name="groupname"></p-checkbox>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

@@ -1,0 +1,64 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('configuracioncolaoficio')">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha"> {{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <br>
+            <i (click)="abrirFicha('configuracioncolaoficio')" *ngIf="!esFichaActiva('configuracioncolaoficio')" class="fa fa-angle-up float-right"></i>
+            <i (click)="cerrarFicha('configuracioncolaoficio')" *ngIf="esFichaActiva('configuracioncolaoficio')" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('configuracioncolaoficio') && openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-12 col-md-12">
+          <div class="form-group col-lg-6 col-md-6 ">
+            <div class="form-row">
+              <p-pickList [source]="list1" [target]="list2">
+                <ng-template let-car pTemplate="item">
+                  <div class="ui-helper-clearfix">
+                    <img src="assets/showcase/images/demo/car/{{car.brand}}.png" style="display:inline-block;margin:2px 0 2px 2px" width="48">
+                    <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{list1.nombre}}</div>
+                  </div>
+                </ng-template>
+              </p-pickList>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

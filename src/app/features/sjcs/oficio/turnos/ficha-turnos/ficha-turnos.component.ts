@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
 	selector: 'app-ficha-turnos',
@@ -11,15 +14,22 @@ export class FichaTurnosComponent implements OnInit {
 	idModelo: string;
 	fichasPosibles: any[];
 	filtrosConsulta;
-
-	constructor(private activatedRoute: ActivatedRoute, private location: Location) { }
+	idTurno: string;
+	turnosItem;
+	modoEdicion: boolean;
+	idProcedimiento;
+	datos: TurnosItems = new TurnosItems();
+	messageShow: string;
+	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService) { }
 
 	ngOnInit() {
-
-		if (sessionStorage.getItem("filtrosConsulta")) {
-			this.filtrosConsulta = JSON.parse(sessionStorage.getItem("filtrosConsulta"));
-			sessionStorage.setItem("filtrosConsultaConsulta", JSON.stringify(this.filtrosConsulta));
-			sessionStorage.removeItem("filtrosConsulta");
+		this.route.queryParams
+			.subscribe(params => {
+				this.idTurno = params.idturno
+				console.log(params);
+			});
+		if (this.idTurno != undefined) {
+			this.searchTurnos();
 		}
 
 		this.fichasPosibles = [
@@ -28,24 +38,47 @@ export class FichaTurnosComponent implements OnInit {
 				activa: true
 			},
 			{
-				key: 'consultas',
+				key: 'configuracion',
 				activa: false
 			},
 			{
-				key: 'modelos',
+				key: 'configuracioncolaoficio',
 				activa: false
 			},
 			{
-				key: 'plantillas',
+				key: 'tablacolaoficio',
 				activa: false
-			}
+			},
 		];
 	}
 
+	searchTurnos() {
+		// this.filtros.filtros.historico = event;
+		// this.progressSpinner = true;
+		let filtros: TurnosItems = new TurnosItems;
+		filtros.idturno = this.idTurno;
+		filtros.historico = false;
+		if (this.persistenceService.getHistorico() != undefined) {
+			filtros.historico = this.persistenceService.getHistorico();
+		}
+		this.sigaServices.post("turnos_busquedaFichaTurnos", filtros).subscribe(
+			n => {
+				this.turnosItem = JSON.parse(n.body).turnosItem[0];
+				if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+					this.turnosItem.historico = true;
+				}
+			},
+			err => {
+				console.log(err);
+			}
+		);
+	}
+
+	modoEdicionSend(event) {
+		this.modoEdicion = event.modoEdicion;
+		this.idTurno = event.idturno
+	}
 	backTo() {
-		let filtros = JSON.parse(sessionStorage.getItem("filtrosConsultaConsulta"));
-		sessionStorage.setItem("filtrosConsulta", JSON.stringify(filtros));
-		sessionStorage.removeItem("filtrosConsultaConsulta");
 		this.location.back();
 	}
 }
