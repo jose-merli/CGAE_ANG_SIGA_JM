@@ -17,7 +17,11 @@ export class TablaDinamicaComponent implements OnInit {
   message;
 
   @Input() datos;
-  @Input() cols = []
+  @Input() cols = [
+    {
+      header: "", filed: ""
+    }
+  ]
 
   progressSpinner: boolean = false;
 
