@@ -8,17 +8,17 @@ import { DataTable } from '../../../../../node_modules/primeng/primeng';
 })
 export class TablaDinamicaComponent implements OnInit {
 
-  @Input() cols = []
   rowsPerPage: any = [];
   msgs;
-  @ViewChild("table") tabla: DataTable;
   selectedItem = 10;
   selectedDatos = [];
   seleccion: boolean = false;
 
   message;
 
-  @Input() datos
+  @Input() datos;
+  @Input() cols = []
+
   progressSpinner: boolean = false;
 
 
@@ -27,45 +27,7 @@ export class TablaDinamicaComponent implements OnInit {
 
   ngOnInit() {
     this.getCols()
-    this.datos = [
-      {
-        "turno": 1
-      },
-      {
-        "turno": 2
-      },
-      {
-        "turno": 3
-      },
-      {
-        "turno": 4
-      },
-      {
-        "turno": 5
-      },
-      {
-        "turno": 6
-      },
-      {
-        "turno": 7
-      },
-      {
-        "turno": 8
-      },
-      {
-        "turno": 9
-      },
-      {
-        "turno": 10
-      },
-      {
-        "turno": 11
-      },
-      {
-        "turno": 12
-      }
 
-    ]
   }
 
 
@@ -82,10 +44,6 @@ export class TablaDinamicaComponent implements OnInit {
 
   }
   getCols() {
-
-    this.cols = [
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
-    ];
 
     this.rowsPerPage = [
       {

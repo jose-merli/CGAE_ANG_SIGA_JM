@@ -3,9 +3,9 @@
 <div class="card mt-3">
   <div class="card-body form-row p-0">
     <!-- TABLA RESULTADOS -->
-    <div class="col-11  ">
+    <div class="col-11" style="padding-left: 4px;">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
+        class="tabla-listado" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of cols" [style.width]="col.width">
@@ -42,7 +42,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="paginatorleft">
+        <!-- <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
               + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
@@ -51,16 +51,16 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           </div>
-        </ng-template>
+        </ng-template> -->
       </p-table>
     </div>
     <div class="col-1 row cuerpo">
-      <div id="botones">
+      <div id="botones" class="row">
         <div class="col-12 boton">
-          <button pButton (click)="sube(selectedDatos)" icon="fas fa-chevron-up"> </button>
+          <button pButton (click)="sube(selectedDatos)" style="width: -webkit-fill-available;" icon="fas fa-chevron-up"> </button>
         </div>
         <div class="col-12 boton">
-          <button pButton (click)="baja(selectedDatos)" icon="fas fa-chevron-down"> </button>
+          <button pButton (click)="baja(selectedDatos)" style="width: -webkit-fill-available;" icon="fas fa-chevron-down"> </button>
         </div>
       </div>
     </div>
