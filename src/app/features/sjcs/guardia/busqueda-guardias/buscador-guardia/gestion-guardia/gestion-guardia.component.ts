@@ -14,7 +14,10 @@ export class GestionGuardiaComponent implements OnInit {
 
 
   datos: GuardiaItem = new GuardiaItem();
-  modoEdicion: boolean = true;
+
+  modoEdicion: boolean;
+  permisoEscritura: boolean = false;
+  historico: boolean = false;
 
   constructor(private persistenceService: PersistenceService,
     private location: Location) { }
@@ -23,11 +26,18 @@ export class GestionGuardiaComponent implements OnInit {
 
     if (this.persistenceService.getDatos() != undefined) {
       this.datos = this.persistenceService.getDatos();
+      if (this.datos.fechabaja != null) {
+        this.historico = true;
+        this.persistenceService.setHistorico(true);
+      } else this.persistenceService.setHistorico(false);
+
       this.modoEdicion = true;
     } else {
       this.datos = new GuardiaItem();
       this.modoEdicion = false;
     }
+    if (this.persistenceService.getPermisos())
+      this.permisoEscritura = true;
 
   }
 

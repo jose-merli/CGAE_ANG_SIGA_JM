@@ -2,8 +2,7 @@
 
 <div class="busqueda-container">
   <div class="card">
-    <!-- <div class="card-header header-ficha" (click)="abreCierraFicha()"> -->
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -30,146 +29,170 @@
     </div>
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="bloque col-lg-9 col-md-9">
+      <div class="row col-12">
+        <div class="form-group col-lg-12 col-md-12">
+          <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
+        </div>
 
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
-              <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
-            </div>
+        <!-- Nombre -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+          </label>
+          <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+            pInputText>
+        </div>
 
-            <!-- Nombre -->
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
-              </label>
-              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-                pInputText>
-            </div>
+        <!-- Descripcion -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"general.description" | translate}} (*)
+          </label>
+          <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+            pInputText>
+        </div>
 
-            <!-- Nombre -->
-            <div class="form-group col-lg-6 col-md-6">
-              <label>
-                {{"censo.consultaDirecciones.literal.direccion" | translate}}
-              </label>
-              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-                pInputText>
-            </div>
-
-            <!-- Nombre -->
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.ws.literal.codigopostal" | translate}} (*)
-              </label>
-              <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
-                [disabled]="historico || !permisoEscritura" pInputText>
-            </div>
-
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.datosDireccion.literal.provincia" | translate}} (*)
-              </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                disabled="true" [showClear]="true">
-              </p-dropdown>
-            </div>
+        <!-- Tipo Guardia -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"dato.jgr.guardia.guardias.tipoGuardia" | translate}} (*)
+          </label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoGuardia'
+            (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTipoGuardia"
+            [disabled]="historico || !permisoEscritura" disabled="true" [showClear]="true">
+          </p-dropdown>
+        </div>
 
 
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
-              </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' (onChange)="onChangePoblacion()" [filter]="true" filterBy="label,labelSinTilde"
-                [disabled]="isDisabledPoblacion || historico || !permisoEscritura" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                [emptyFilterMessage]="resultadosPoblaciones" id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [showClear]="true">
-              </p-dropdown>
-
-            </div>
-
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.ws.literal.telefono" | translate}} 1
-              </label>
-              <input type="text" class="form-control" maxLength="9" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
-                pInputText>
-              <div *ngIf="!tlf1Valido">
-                <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-              </div>
-            </div>
-
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.ws.literal.telefono" | translate}} 2
-              </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="9" [(ngModel)]="body.telefono2"
-                (input)="changeTelefono2()" pInputText>
-              <div *ngIf="!tlf2Valido">
-                <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-              </div>
-            </div>
-
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.ws.literal.fax" | translate}}
-              </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.fax1"
-                (input)="changeFax()" pInputText>
-              <div *ngIf="!faxValido">
-                <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
-              </div>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"censo.datosDireccion.literal.correo" | translate}}
-              </label>
-              <div *ngIf="edicionEmail" class="row">
-                <div class="col-lg-9 col-md-8 mr-4 pr-0">
-                  <input type="text" [disabled]="historico || !permisoEscritura" maxlength="9" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
-                    style="width: 100%" />
-                </div>
-                <div>
-                  <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn button-edit" [disabled]="!emailValido"></button>
-                </div>
-              </div>
-              <div *ngIf="avisoMail">
-                <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
-              </div>
-              <div *ngIf="!edicionEmail" class="row">
-                <div class="col-6 mr-4 pr-0">
-                  <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
-                </div>
-                <div>
-                  <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>
-                </div>
-              </div>
-            </div>
-            <div class="form-group col-lg-3 pt-2 col-md-3" id="divMovil">
-
-              <label id="labelMovil">{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate}}</label>
-              <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
-
-            </div>
+        <!-- Tipo Centralita Guardias -->
+        <div class="form-group col-3 row p-0" id="tipoCentDiv">
+          <div class="col-9 p-0">
+            <label class="lab">
+              {{"justiciaGratuita.guardia.gestion.tipoCentralitaGuardias" | translate}} (*)
+            </label>
+          </div>
+          <div class="col-3 p-0">
+            <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
           </div>
         </div>
 
-        <div class="bloque col-lg-3 col-md-3">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
-              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio' | translate }}</label>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>
-                {{"administracion.parametrosGenerales.literal.codigo" | translate}}
-              </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="10" [(ngModel)]="body.codigoExt"
-                pInputText>
-            </div>
+        <div class="row col-6" id="div1">
+          <!-- Descripcion Facturacion -->
+          <div class="form-group col-lg-6 col-md-6" id="desFact">
+            <label>
+              {{"general.description" | translate}} {{"menu.facturacion" | translate}}
+            </label>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control" pInputTextarea [(ngModel)]="body.textoEnPlantilla"
+              autoResize="autoResize" maxlength="3999"></textarea>
+          </div>
+
+          <!-- Descripcion Pago -->
+          <div class="form-group col-lg-6 col-md-6" id="desPago">
+            <label>
+              {{"general.description" | translate}} {{"justiciaGratuita.guardia.gestion.pago" | translate}}
+            </label>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control" pInputTextarea [(ngModel)]="body.textoEnPlantilla"
+              autoResize="autoResize" maxlength="3999"></textarea>
+          </div>
+        </div>
+
+        <!-- MODO CREACION -->
+        <div class="row col-6" id="div2" *ngIf="!modoEdicion">
+          <!-- Vincular con -->
+          <div class="form-group col-lg-6">
+            <label>
+              {{"justiciaGratuita.guardia.gestion.vincularCon" | translate}}
+            </label>
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTurno' (onChange)="onChangeTurno()"
+              [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [disabled]="historico || !permisoEscritura"
+              disabled="true" [showClear]="true">
+            </p-dropdown>
+          </div>
+          <div class="col-6" style="margin-top: 20px">
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idGuardia' [filter]="true"
+              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia"
+              disabled="true" [showClear]="true"></p-dropdown>
+          </div>
+
+          <!--TABLA-->
+
+          <div class="form-group col-lg-12 col-md-12">
+            <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
+              class="tabla-listado" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th colspan="2">
+                    {{ 'justiciaGratuita.guardia.gestion.guardiaVinculada' | translate}}
+                  </th>
+                </tr>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <span>{{dato[col.field]}}</span>
+                  </td>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+        <!-- MODO EDICION -->
+        <div class="row col-6" id="div2" *ngIf="modoEdicion">
+          <!--TABLA-->
+
+          <div class="form-group col-lg-12 col-md-12">
+            <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
+              class="tabla-listado" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <strong *ngIf="col.field =='vinculacion'">{{dato[col.field]}}</strong>
+                    <span *ngIf="col.field !='vinculacion'">{{dato[col.field]}}</span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
           </div>
         </div>
       </div>
-      <br>
     </div>
 
     <div *ngIf="openFicha" class="card-footer ">
