@@ -21,6 +21,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TranslatePipe } from '../../commons/translate';
 import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
 import { JusticiablesModule } from './justiciables/justiciables.module';
+import { EJGModule } from './ejg/ejg.module';
 
 @NgModule({
   declarations: [],
@@ -29,6 +30,7 @@ import { JusticiablesModule } from './justiciables/justiciables.module';
     MaestrosModule,
     JusticiablesModule,
     routingSjcs,
+    EJGModule
 
   ],
   providers: []

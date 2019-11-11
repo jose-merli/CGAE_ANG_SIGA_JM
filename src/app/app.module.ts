@@ -475,7 +475,6 @@ import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradore
 		GuardiasCentralitaComponent,
 		VolanteExpresComponent,
 		SOJComponent,
-		EJGComponent,
 		GestionActasComponent,
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,
