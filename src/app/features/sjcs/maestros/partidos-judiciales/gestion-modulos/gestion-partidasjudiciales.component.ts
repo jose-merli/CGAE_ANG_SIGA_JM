@@ -5,7 +5,7 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { ModulosObject } from '../../../../../models/sjcs/ModulosObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect } from 'primeng/primeng';
+import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { PartidasJudicialesObject } from '../../../../../models/sjcs/PartidasJudicialesObject';
@@ -24,7 +24,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  @Input() institucionActual;
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -54,7 +54,8 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -63,6 +64,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     this.nuevo = false;
+    this.getInstitucion();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -72,7 +74,32 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.selectMultiple = false;
   }
 
-  delete() {
+  confirmDelete(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete(selectedDatos)
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  delete(selectedDatos) {
     let PartidasJudicialesDelete = new PartidasJudicialesObject();
     PartidasJudicialesDelete.partidasJudicialesItem = this.selectedDatos
     this.sigaServices.post("deletePartidosJudi_deletePartidosJudi", PartidasJudicialesDelete).subscribe(
@@ -104,7 +131,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       if (this.nuevo) this.datos.shift();
       this.nuevo = false;
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
+      this.selectedDatos = this.datos.filter(dato => dato.idinstitucion == this.institucionActual);
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
@@ -318,10 +345,11 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     }
   }
 
-  actualizaFila() {
+  actualizaFila(event) {
     if (this.selectedDatos[0] == undefined) {
       this.selectedDatos = []
     }
+    if (this.institucionActual != event.data.idinstitucion) this.selectedDatos.pop();
   }
   disabledSave() {
     if (this.permisos) {
@@ -349,7 +377,11 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       detail: msg
     });
   }
-
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
   clear() {
     this.msgs = [];
   }

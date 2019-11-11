@@ -98,19 +98,19 @@ export class FiltrosRetencionesIrpfComponent implements OnInit {
     }
   }
   checkFilters() {
-    if (
-      (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.length < 3) &&
-      (this.filtros.retencion == null || this.filtros.retencion == "") &&
-      (this.filtros.tipoSociedad == null || this.filtros.tipoSociedad == "" || this.filtros.tipoSociedad == undefined)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
-        this.filtros.descripcion = this.filtros.descripcion.trim();
-      }
-      return true;
+    // if (
+    //   (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.length < 3) &&
+    //   (this.filtros.retencion == null || this.filtros.retencion == "") &&
+    //   (this.filtros.tipoSociedad == null || this.filtros.tipoSociedad == "" || this.filtros.tipoSociedad == undefined)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
+      this.filtros.descripcion = this.filtros.descripcion.trim();
     }
+    return true;
+    // }
   }
 
   clearFilters() {

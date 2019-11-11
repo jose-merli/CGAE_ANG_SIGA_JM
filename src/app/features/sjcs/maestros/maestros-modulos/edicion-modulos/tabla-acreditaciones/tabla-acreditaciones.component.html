@@ -83,7 +83,7 @@
 
                 <app-precio *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
                   [(value)]="dato.porcentaje" [dato]="dato" [porcentaje]="true" [maxLength]="3" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                  (valueChangeInput)="changePorcentaje(dato)"></app-precio>
+                  (input)="changePorcentaje(dato)"></app-precio>
               </div>
 
               <div *ngIf="col.field == 'nig_numprocedimiento'">
@@ -94,7 +94,7 @@
                   ❌
                 </span>
                 <p-checkbox *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
-                  [disabled]="disableAll" (onChange)="changeNigNumprocedimiento($event)" [(ngModel)]="dato.nigProcedimiento"
+                  [disabled]="disableAll" (onChange)="changeNigNumprocedimiento(dato)" [(ngModel)]="dato.nig_numprocedimiento"
                   binary="true" name="nig_numprocedimiento"></p-checkbox>
               </div>
 
@@ -104,8 +104,8 @@
                 </span>
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
-                  type="text" class="form-control paddingInput" [(ngModel)]="dato.codigoext" name="codigoext" type="text" on-focusout="changeCodigoExt($event)"
-                  (input)="changeCodigoExt($event)" maxLength="3900" />
+                  type="text" class="form-control paddingInput" [(ngModel)]="dato.codigoext" name="codigoext" type="text" on-focusout="changeCodigoExt(dato)"
+                  (input)="changeCodigoExt(dato)" maxLength="3900" />
               </div>
 
               <div *ngIf="col.field == 'codSubTarifa'">
@@ -115,7 +115,7 @@
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.codSubTarifa" name="codSubTarifa" type="text"
-                  on-focusout="changeCodSubTarifa($event)" (input)="changeCodSubTarifa($event)" maxLength="3900" />
+                  on-focusout="changeCodSubTarifa(dato)" (input)="changeCodSubTarifa(dato)" maxLength="3900" />
               </div>
             </td>
 

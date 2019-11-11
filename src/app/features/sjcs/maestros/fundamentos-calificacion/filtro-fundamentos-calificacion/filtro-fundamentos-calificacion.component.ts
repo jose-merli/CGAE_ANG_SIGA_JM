@@ -21,7 +21,6 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
   filtroAux: FundamentosCalificacionItem = new FundamentosCalificacionItem();
 
   @Output() isOpen = new EventEmitter<boolean>();
-  @Input() buscar: boolean
   @Input() permisoEscritura
 
   constructor(private persistenceService: PersistenceService, private translateService: TranslateService,
@@ -77,17 +76,7 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
     if (this.filtros.descripcionFundamento != undefined && this.filtros.descripcionFundamento != null) {
       this.filtros.descripcionFundamento = this.filtros.descripcionFundamento.trim();
     }
-    if (
-      ((this.filtros.descripcionFundamento != null && this.filtros.descripcionFundamento.trim().length > 2)
-        || this.filtros.descripcionDictamen != undefined)) {
-
-      // quita espacios vacios antes de buscar
-
-      return true;
-    } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    }
+    return true;
   }
 
 

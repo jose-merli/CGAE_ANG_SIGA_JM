@@ -59,22 +59,22 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   }
 
   checkFilters() {
-    if ((this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.trim().length < 3) &&
-      (this.filtros.descripcionFundamento == null || this.filtros.descripcionFundamento.trim() == "" || this.filtros.descripcionFundamento.trim().length < 3)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.filtros.descripcionFundamento != undefined && this.filtros.descripcionFundamento != null) {
-        this.filtros.descripcionFundamento = this.filtros.descripcionFundamento.trim();
-      }
-
-      if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
-        this.filtros.codigoExt = this.filtros.codigoExt.trim();
-      }
-
-      return true;
+    // if ((this.filtros.codigoExt == null || this.filtros.codigoExt.trim() == "" || this.filtros.codigoExt.trim().length < 3) &&
+    //   (this.filtros.descripcionFundamento == null || this.filtros.descripcionFundamento.trim() == "" || this.filtros.descripcionFundamento.trim().length < 3)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    // quita espacios vacios antes de buscar
+    if (this.filtros.descripcionFundamento != undefined && this.filtros.descripcionFundamento != null) {
+      this.filtros.descripcionFundamento = this.filtros.descripcionFundamento.trim();
     }
+
+    if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
+      this.filtros.codigoExt = this.filtros.codigoExt.trim();
+    }
+
+    return true;
+    // }
   }
 
   showMessage(severity, summary, msg) {

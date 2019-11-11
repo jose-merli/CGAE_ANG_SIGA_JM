@@ -22,7 +22,11 @@ import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+
 import { endpoints_oficio } from "../utils/endpoints_oficio";
+
+import { endpoints_componentes } from "../utils/endpoints_components";
+
 
 
 @Injectable()
@@ -715,6 +719,7 @@ export class SigaServices {
     dialogo_enviar: "dialogoComunicacion/enviar",
     dialogo_descargar: "dialogoComunicacion/descargar",
     dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
+    ...endpoints_componentes,
     dialogo_keys: "dialogoComunicacion/keys",
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
@@ -734,6 +739,7 @@ export class SigaServices {
   private modelosRefresh = new Subject<any>();
   private habilitarDocs = new Subject<any>();
   private desHabilitarDocs = new Subject<any>();
+  private sendFechaBaja = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
@@ -742,6 +748,8 @@ export class SigaServices {
   modelosRefresh$ = this.modelosRefresh.asObservable();
   habilitarDocs$ = this.habilitarDocs.asObservable();
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
+  sendFechaBaja$ = this.sendFechaBaja.asObservable();
+
 
   constructor(
     private http: HttpClient,
@@ -1004,6 +1012,10 @@ export class SigaServices {
 
   notifyDesHabilitarDocumentos() {
     this.desHabilitarDocs.next();
+  }
+
+  notifysendFechaBaja(fecha) {
+    this.sendFechaBaja.next(fecha);
   }
 
   postSendContentAndParameter(

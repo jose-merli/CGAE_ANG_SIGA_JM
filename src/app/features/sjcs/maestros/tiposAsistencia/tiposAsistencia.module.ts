@@ -21,7 +21,7 @@ import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from "primeng/multiselect";
 import { TiposAsistenciaComponent } from './tiposAsistencia.component';
 import { PrecioModule } from '../../../../commons/precio/precio.module';
-
+import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -39,7 +39,7 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     MultiSelectModule,
     PrecioModule,
     ConfirmDialogModule,
-
+    PipeNumberModule
     // FichaGrupoZonaModule
 
   ],

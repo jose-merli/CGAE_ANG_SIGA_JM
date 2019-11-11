@@ -133,7 +133,7 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
   disabledSave() {
     if (this.body.codigoExt != undefined) this.body.codigoExt = this.body.codigoExt.trim();
     if (this.body.descripcionFundamento != undefined) this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
-    if (!this.historico && (this.body.descripcionFundamento && this.body.idTipoResolucion) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial) && this.body.codigoExt.trim() != "" && this.body.codigoExt != undefined)) {
+    if (!this.historico && (this.body.descripcionFundamento && this.body.idTipoResolucion) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;

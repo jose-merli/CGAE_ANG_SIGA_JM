@@ -68,7 +68,7 @@
               <input type="text" class="form-control" [maxLength]="100" [(ngModel)]="body.apellido2" [disabled]="historico || !permisoEscritura"
                 pInputText>
             </div>
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idColProcurador' [filter]="true" filterBy="label,labelSinTilde" [disabled]="historico || !permisoEscritura"

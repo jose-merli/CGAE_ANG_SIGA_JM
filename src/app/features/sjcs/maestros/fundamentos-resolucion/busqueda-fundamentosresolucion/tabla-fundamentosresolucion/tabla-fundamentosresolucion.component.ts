@@ -4,6 +4,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { FundamentoResolucionObject } from '../../../../../../models/sjcs/FundamentoResolucionObject';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-tabla-fundamentosresolucion',
@@ -34,7 +35,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
 
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private router: Router) { }
+    private translateService: TranslateService, private router: Router, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
 
@@ -49,6 +50,30 @@ export class TablaFundamentosresolucionComponent implements OnInit {
     this.getCols();
   }
 
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
 
   openTab(evento) {
 
@@ -114,7 +139,8 @@ export class TablaFundamentosresolucionComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
+        this.searchHistoricalSend.emit(false);
+        this.selectMultiple = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

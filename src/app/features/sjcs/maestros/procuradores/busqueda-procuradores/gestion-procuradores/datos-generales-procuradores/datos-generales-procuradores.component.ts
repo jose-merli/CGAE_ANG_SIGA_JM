@@ -61,7 +61,7 @@ export class DatosGeneralesProcuradoresComponent implements OnInit {
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
 
-      if (this.persistenceService.getDatos().fechabaja != null) {
+      if (this.persistenceService.getDatos().fechabaja != null || this.persistenceService.getDatos().institucionVal != undefined) {
         this.historico = true;
       } else {
         this.historico = false;
