@@ -75,7 +75,7 @@
 
             <div class="form-group col-lg-4 col-md-4">
               <label>
-                {{ "general.codeext" | translate }} (*)
+                {{ "general.codeext" | translate }}
               </label>
               <input [(ngModel)]="turnosItem.codigoext" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
                 pInputText>
@@ -83,7 +83,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}} (*)
+                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='turnosItem.idtipoturno' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="tiposturno" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -133,7 +133,7 @@
               <label>
                 {{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idzona' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idzona' (onChange)="onChangeZona()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="zonas" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
               </p-dropdown>
             </div>
@@ -142,14 +142,14 @@
               <label>
                 {{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idsubzona' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idsubzona' (onChange)="partidoJudiciales()" [filter]="true" filterBy="label,labelSinTilde"
                 filterMatchMode="contains" [options]="subzonas" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
               </p-dropdown>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <label>
-                {{ "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate }} (*)
+                {{ "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate }}
               </label>
               <input [placeholder]="partidoJudicial" [(ngModel)]='turnosItem.idpartido' disabled="true" [disabled]="!permisoEscritura || historico"
                 type="text" class="form-control" [maxLength]="200" pInputText>
@@ -157,7 +157,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}} (*)
+                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='turnosItem.idjurisdiccion' (onChange)="onChangeProvincia()" [filter]="true"
                 filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -176,14 +176,16 @@
               <label>
                 {{"general.boton.description" | translate}}
               </label>
-              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" maxLength="3900"></textarea>
+              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="turnosItem.descripcion"
+                maxLength="3900"></textarea>
             </div>
 
             <div class="form-group col-lg-12 col-md-12">
               <label>
                 {{"justiciaGratuita.oficio.turnos.requisitosacceso" | translate}}
               </label>
-              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" maxLength="3900"></textarea>
+              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="turnosItem.requisitos"
+                maxLength="3900"></textarea>
             </div>
 
           </div>

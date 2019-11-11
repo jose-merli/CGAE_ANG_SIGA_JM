@@ -10,6 +10,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
+import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 @Component({
   selector: "app-configuracion-turnos",
   templateUrl: "./configuracion-turnos.component.html",
@@ -18,8 +19,8 @@ import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 export class ConfiguracionTurnosComponent implements OnInit {
 
   //Resultados de la busqueda
-  @Input() datos: PrisionItem;
-  @Input() modoEdicion;
+  @Input() turnosItem: TurnosItems;
+  modoEdicion: boolean = false;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   openFicha: boolean = false;
@@ -28,9 +29,9 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   provinciaSelecionada: string;
 
-
-  body: PrisionItem;
-  bodyInicial: PrisionItem;
+  idTurno;
+  body: TurnosItems;
+  bodyInicial: TurnosItems;
   idPrision;
   isDisabledProvincia: boolean = true;
 
@@ -84,24 +85,17 @@ export class ConfiguracionTurnosComponent implements OnInit {
     this.validateHistorical();
 
     if (this.modoEdicion) {
-      this.body = this.datos;
+      this.body = this.turnosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      if (this.datos.visibleMovil == "1")
-        this.movilCheck = true
-      if (this.body.email != undefined && this.body.email != "") {
-        this.edicionEmail = false;
-      } else {
-        this.edicionEmail = true;
-      }
 
-      if (this.body != undefined && this.datos.nombrePoblacion != null) {
-        this.getComboPoblacion(this.body.nombrePoblacion);
-      } else {
-        this.progressSpinner = false;
-      }
+      // if (this.body != undefined && this.datos.nombrePoblacion != null) {
+      //   this.getComboPoblacion(this.body.nombrePoblacion);
+      // } else {
+      //   this.progressSpinner = false;
+      // }
 
     } else {
-      this.body = new PrisionItem();
+      this.body = new TurnosItems();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.edicionEmail = true;
 
@@ -135,14 +129,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
     return {};
   }
 
-
-  cambiaMovil() {
-    if (this.movilCheck)
-      this.body.visibleMovil = 1
-    else
-      this.body.visibleMovil = 0
-  }
-
   getComboProvincias() {
     this.progressSpinner = true;
 
@@ -160,97 +146,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
       }
     );
   }
-
-  onChangeProvincia() {
-
-    this.body.idPoblacion = "";
-    this.comboPoblacion = [];
-
-    if (this.body.idProvincia != undefined && this.body.idProvincia != "") {
-      this.isDisabledPoblacion = false;
-    } else {
-      this.isDisabledPoblacion = true;
-    }
-
-  }
-
-  onChangePoblacion() {
-    if (this.body.idPoblacion != undefined && this.body.idPoblacion != null) {
-      let poblacionSelected = this.comboPoblacion.filter(pob => pob.value == this.body.idPoblacion);
-      this.body.nombrePoblacion = poblacionSelected[0].label;
-    }
-  }
-
-  buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null && e.target.value !== "") {
-      if (e.target.value.length >= 3) {
-        this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-      } else {
-        this.comboPoblacion = [];
-        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
-      }
-    } else {
-      this.comboPoblacion = [];
-      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-    }
-  }
-
-  getComboPoblacion(dataFilter) {
-    this.progressSpinner = true;
-
-    this.sigaServices
-      .getParam(
-        "busquedaPrisiones_population",
-        "?idProvincia=" + this.body.idProvincia + "&dataFilter=" + dataFilter
-      )
-      .subscribe(
-        n => {
-          this.isDisabledPoblacion = false;
-          this.comboPoblacion = n.combooItems;
-          this.progressSpinner = false;
-          this.commonsServices.arregloTildesCombo(this.comboPoblacion);
-
-        },
-        error => {
-          this.progressSpinner = false;
-        },
-        () => { }
-      );
-  }
-
-  onChangeCodigoPostal() {
-    if (
-      this.isValidCodigoPostal() &&
-      this.body.codigoPostal.length == 5
-    ) {
-      let value = this.body.codigoPostal.substring(0, 2);
-      this.provinciaSelecionada = value;
-      this.isDisabledPoblacion = false;
-      if (value != this.body.idProvincia) {
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.body.idPoblacion = "";
-        this.body.nombrePoblacion = "";
-        this.comboPoblacion = [];
-        this.isDisabledProvincia = true;
-      }
-      this.codigoPostalValido = true;
-    } else {
-      this.codigoPostalValido = false;
-      this.body.idProvincia = "";
-
-    }
-  }
-
-
-  isValidCodigoPostal(): boolean {
-    return (
-      this.body.codigoPostal &&
-      typeof this.body.codigoPostal === "string" &&
-      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
-    );
-  }
-
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -265,44 +160,21 @@ export class ConfiguracionTurnosComponent implements OnInit {
     }
 
   }
-  trimeando() {
-    this.body.nombre = this.body.nombre.trim()
-    if (this.body.domicilio != null && this.body.domicilio != undefined)
-      this.body.domicilio = this.body.domicilio.trim()
-
-    if (this.body.telefono1 != null && this.body.telefono1 != undefined)
-      this.body.telefono1 = this.body.telefono1.trim()
-
-    if (this.body.telefono2 != null && this.body.telefono2 != undefined)
-      this.body.telefono2 = this.body.telefono2.trim()
-
-    if (this.body.fax != null && this.body.fax != undefined)
-      this.body.fax = this.body.fax.trim()
-
-    if (this.body.email != null && this.body.email != undefined)
-      this.body.email = this.body.email.trim()
-
-    if (this.body.codigoExt != null && this.body.codigoExt != undefined)
-      this.body.codigoExt = this.body.codigoExt.trim()
-
-  }
 
   callSaveService(url) {
-    if (this.body.visibleMovil == null) {
-      this.body.visibleMovil = 0
-    }
-    this.trimeando()
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
         if (!this.modoEdicion) {
           this.modoEdicion = true;
-          this.idPrision = JSON.parse(data.body).id;
+          let turnos = JSON.parse(data.body);
+          // this.modulosItem = JSON.parse(data.body);
+          this.turnosItem.idturno = turnos.idturno;
           let send = {
             modoEdicion: this.modoEdicion,
-            idPrision: this.idPrision
+            idturno: this.turnosItem.idturno
           }
-          this.body.idPrision = this.idPrision
+          this.body.idturno = this.idPrision
           this.persistenceService.setDatos(this.body);
           this.modoEdicionSend.emit(send);
         }
@@ -371,44 +243,26 @@ export class ConfiguracionTurnosComponent implements OnInit {
     });
   }
 
-  changeEmail() {
-    if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
-      this.emailValido = true
-      this.avisoMail = false
-    }
-    else {
-      this.emailValido = false
-      this.avisoMail = false
+  // changeEmail() {
+  //   if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
+  //     this.emailValido = true
+  //     this.avisoMail = false
+  //   }
+  //   else {
+  //     this.emailValido = false
+  //     this.avisoMail = false
 
-      if (this.body.email != null && this.body.email != "")
-        this.avisoMail = true
-    }
-  }
+  //     if (this.body.email != null && this.body.email != "")
+  //       this.avisoMail = true
+  //   }
+  // }
 
   disabledSave() {
-    if (!this.historico && (this.body.nombre != undefined && this.body.nombre != null && this.body.nombre.trim() != "" &&
-      this.body.idProvincia != undefined && this.body.idProvincia != "" && this.body.idPoblacion != undefined && this.body.idPoblacion != null && this.body.idPoblacion != ""
-      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5 && !this.avisoMail && this.tlf1Valido
-      && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+    if (!this.historico && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;
     }
-  }
-
-  changeTelefono1() {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
-  }
-
-  changeTelefono2() {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
-  }
-  changeFax() {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
-  }
-
-  changeMovil() {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
   }
 
   clear() {

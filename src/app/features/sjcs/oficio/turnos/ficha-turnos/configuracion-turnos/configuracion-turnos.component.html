@@ -46,32 +46,38 @@
 
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox [(ngModel)]="turnosItem.validarjustificaciones" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox [(ngModel)]="turnosItem.validarinscripciones" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox [(ngModel)]="turnosItem.letradoasistencias" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox [(ngModel)]="turnosItem.letradoactuaciones" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox [(ngModel)]="turnosItem.activarretriccionacredit" binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox [(ngModel)]="turnosItem.visibleMovil" binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
 
           </div>

@@ -44,6 +44,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
   @Output() modoEdicionSend = new EventEmitter<any>();
+
   @ViewChild("importe") importe;
   //Resultados de la busqueda
   @Input() turnosItem: TurnosItems;
@@ -318,11 +319,16 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     if (this.turnosItem.idzona != undefined && this.turnosItem.idzona != "") {
       this.isDisabledSubZona = false;
       this.getComboSubZonas();
-
+      this.partidoJudicial = "";
     } else {
       this.isDisabledSubZona = true;
     }
 
+  }
+  partidoJudiciales() {
+    // let dato = this.zonas.find(x => x.value == this.turnosItem.idzona);
+    // let dato2 = this.subzonas.find(x => x.value == this.turnosItem.idzubzona)
+    this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
   }
   getComboMaterias() {
     this.sigaServices
@@ -366,7 +372,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.progressSpinner = true;
     let url = "";
     if (!this.modoEdicion) {
-      url = "turnos_updateDatosGenerales";
+      url = "turnos_createnewTurno";
       this.callSaveService(url);
     } else {
       url = "turnos_updateDatosGenerales";
@@ -382,7 +388,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           this.modoEdicion = true;
           let turnos = JSON.parse(data.body);
           // this.modulosItem = JSON.parse(data.body);
-          this.turnosItem.idturno = turnos.idturno;
+          this.turnosItem.idturno = turnos.id;
           let send = {
             modoEdicion: this.modoEdicion,
             idturno: this.turnosItem.idturno
@@ -428,8 +434,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   disabledSave() {
     if (this.turnosItem.nombre != undefined) this.turnosItem.nombre = this.turnosItem.nombre.trim();
-    if ((this.turnosItem.nombre != undefined && this.turnosItem.idjurisdiccion != "" &&
-      this.turnosItem.idjurisdiccion != undefined) && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
+    if ((JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;

@@ -25,5 +25,7 @@ export class TurnosItems {
   fechabaja: Date;
   jurisdiccion: string;
   idtipoturno: string;
+  partidosJudiciales: any[];
+  idPartidosJudiciales: string;
   constructor() { }
 }

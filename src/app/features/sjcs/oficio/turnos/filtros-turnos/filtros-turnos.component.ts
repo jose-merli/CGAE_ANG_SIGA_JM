@@ -32,6 +32,7 @@ export class FiltrosTurnos implements OnInit {
   materias: any[] = [];
   partidas: any[] = [];
   grupofacturacion: any[] = [];
+  comboPJ;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -50,6 +51,17 @@ export class FiltrosTurnos implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
       this.isBuscar();
     }
+
+    this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
+      n => {
+        this.comboPJ = n.combooItems;
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
     this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
       n => {
         this.jurisdicciones = n.combooItems;
@@ -224,7 +236,7 @@ export class FiltrosTurnos implements OnInit {
     if (this.filtros.idzona != undefined && this.filtros.idzona != "") {
       this.isDisabledSubZona = false;
       this.getComboSubZonas();
-
+      this.partidoJudicial = "";
     } else {
       this.isDisabledSubZona = true;
     }
@@ -284,40 +296,15 @@ export class FiltrosTurnos implements OnInit {
     this.partidoJudicial = dato.label + "," + dato2.label;
   }
 
-  newModulo() {
+  newTurno() {
     this.persistenceService.setFiltros(this.filtros);
-    this.router.navigate(["/fichaGrupomodulos"]);
+    this.router.navigate(["/gestionTurnos"]);
   }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
   checkFilters() {
-    // if ((this.filtros.nombre == null ||
-    //   this.filtros.nombre == null ||
-    //   this.filtros.nombre.trim().length < 3) &&
-    //   (this.filtros.abreviatura == null ||
-    //     this.filtros.abreviatura == null ||
-    //     this.filtros.abreviatura.trim().length < 3) &&
-    //   (this.filtros.idarea == undefined || this.filtros.idarea == null)
-    //   &&
-    //   (this.filtros.idmateria == undefined || this.filtros.idmateria == null)
-    //   &&
-    //   (this.filtros.idpartidapresupuestaria == undefined || this.filtros.idpartidapresupuestaria == null)
-    //   &&
-    //   (this.filtros.idtipoturno == undefined || this.filtros.idtipoturno == null)
-    //   &&
-    //   (this.filtros.idzona == undefined || this.filtros.idzona == null)
-    //   &&
-    //   (this.filtros.idzubzona == undefined || this.filtros.idzubzona == null)
-    //   &&
-    //   (this.filtros.jurisdiccion == undefined || this.filtros.jurisdiccion == null)
-    //   &&
-    //   (this.filtros.grupofacturacion == undefined || this.filtros.grupofacturacion == null)
-    // ) {
-    //   this.showSearchIncorrect();
-    //   return false;
-    // }
     // quita espacios vacios antes de buscar
     if (this.filtros.abreviatura != undefined && this.filtros.abreviatura != null) {
       this.filtros.abreviatura = this.filtros.abreviatura.trim();
