@@ -39,8 +39,8 @@
           <label>
             {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
           </label>
-          <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-            pInputText>
+          <input [(ngModel)]="body.nombre" maxlength="30" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+            [maxLength]="200" pInputText>
         </div>
 
         <!-- Descripcion -->

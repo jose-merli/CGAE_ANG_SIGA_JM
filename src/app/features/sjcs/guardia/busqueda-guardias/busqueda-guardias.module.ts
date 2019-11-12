@@ -25,6 +25,7 @@ import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gest
 import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-generales-guardias/datos-generales-guardias.component';
 import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { TablaDinamicaModule } from '../../../../commons/tabla-dinamica/tabla-dinamica.module';
+import { DatosCalendariosGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-calendarios-guardias/datos-calendarios-guardias.component';
 
 @NgModule({
   imports: [
@@ -45,7 +46,7 @@ import { TablaDinamicaModule } from '../../../../commons/tabla-dinamica/tabla-di
     TarjetaResumenFijaModule,
     TablaDinamicaModule
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
