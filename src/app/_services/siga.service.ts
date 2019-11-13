@@ -23,6 +23,7 @@ import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
 import { endpoints_componentes } from "../utils/endpoints_components";
+import { endpoints_EJG } from "../utils/endpoints_EJG";
 
 
 @Injectable()
@@ -714,6 +715,7 @@ export class SigaServices {
     dialogo_tipoEnvios: "dialogoComunicacion/tipoEnvios",
     dialogo_enviar: "dialogoComunicacion/enviar",
     dialogo_descargar: "dialogoComunicacion/descargar",
+    ...endpoints_EJG,
     dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
     ...endpoints_componentes,
     dialogo_keys: "dialogoComunicacion/keys",

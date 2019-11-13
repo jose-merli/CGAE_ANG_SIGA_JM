@@ -20,6 +20,7 @@ export class FiltrosEjgComponent implements OnInit {
   textSelected: String = "{0} etiquetas seleccionadas";
   body: EJGItem = new EJGItem();
   bodyAux: EJGItem = new EJGItem();
+  nuevo: boolean = true; //ojo no poner a pelo
 
   showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = true;
@@ -29,15 +30,25 @@ export class FiltrosEjgComponent implements OnInit {
   showTramitador: boolean = true;
   //inicializar los combos
   comboProcedimeinto = [];
-  comboCalidad = [];
+  comboCalidad = [
+    {
+      label: "Demandado",
+      value: "O"
+    },
+    {
+      label: "Demandante",
+      value: "D"
+    }
+  ];
   comboPerceptivo = [];
   comboRenuncia = [];
   comboDictamen = [];
   comboFundamentoCalif = [];
   comboResolucion = [];
+  comboFundamentosResolucion = [];
   comboFundamentoJurid = [];
   comboImpugnacion = [];
-  comboFundamentoImput = [];
+  comboFundamentoImpug = [];
   comboPonente = [];
   comboColegio = [];
   comboTipoEJG = [];
@@ -49,6 +60,7 @@ export class FiltrosEjgComponent implements OnInit {
   comboTipoLetrado = [];
   comboRol = [];
   comboJuzgado = [];
+  isDisabledFundamentosJurid: boolean = true;
   @Input() permisos;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
@@ -93,7 +105,7 @@ export class FiltrosEjgComponent implements OnInit {
     this.getComboResolucion();
     this.getComboRenuncia();
     this.getComboImpugnacion();
-    this.getComboFundamentoImput();
+    this.getComboFundamentoImpug();
     this.getComboPonente();
     this.getComboColegio();
     this.getComboTipoEJG();
@@ -105,18 +117,31 @@ export class FiltrosEjgComponent implements OnInit {
     this.getComboTipoLetrado();
     this.getComboRol();
     this.getComboJuzgado();
+    // this.getComboFundamentosResoluc();
+  }
+
+  onChangeResolucion() {
+    // this.body.resolucion = "";
+    this.comboFundamentosResolucion = [];
+
+    if (this.body.resolucion != undefined && this.body.resolucion != "") {
+      this.isDisabledFundamentosJurid = true;
+    } else {
+      this.isDisabledFundamentosJurid = false;
+      this.getComboFundamentoJurid();
+    }
   }
 
   getComboProcedimiento() {
-    this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
-      n => {
-        this.comboProcedimeinto = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboProcedimeinto);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    //   this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
+    //     n => {
+    //       this.comboProcedimeinto = n.combooItems;
+    //       this.commonServices.arregloTildesCombo(this.comboProcedimeinto);
+    //     },
+    //     err => {
+    //       console.log(err);
+    //     }
+    //   );
   }
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
@@ -137,25 +162,81 @@ export class FiltrosEjgComponent implements OnInit {
     this.comboCalidad;
   }
   getComboPerceptivo() {
-    this.comboPerceptivo;
+    this.sigaServices.get("filtrosejg_comboPreceptivo").subscribe(
+      n => {
+        this.comboPerceptivo = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboPerceptivo);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboRenuncia() {
-    this.comboRenuncia;
+    this.sigaServices.get("filtrosejg_comboRenuncia").subscribe(
+      n => {
+        this.comboRenuncia = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboRenuncia);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboFundamentoCalif() {
-    this.comboFundamentoCalif;
+    this.sigaServices.get("filtrosejg_comboFundamentoCalif").subscribe(
+      n => {
+        this.comboFundamentoCalif = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboResolucion() {
-    this.comboResolucion;
+    this.sigaServices.get("filtrosejg_comboResolucion").subscribe(
+      n => {
+        this.comboResolucion = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboResolucion);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  getComboFundamentosResoluc() {
+
   }
   getComboFundamentoJurid() {
-    this.comboFundamentoJurid;
+    this.sigaServices
+      .getParam(
+        "filtrosejg_comboFundamentoJurid",
+        "?resolucion=" + "3"/*"this.body.resolucion*"*/
+      )
+      .subscribe(
+        n => {
+          this.isDisabledFundamentosJurid = false;
+          this.comboFundamentoJurid = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboFundamentoJurid);
+        },
+        error => { },
+        () => { }
+      );
   }
   getComboImpugnacion() {
     this.comboImpugnacion;
   }
-  getComboFundamentoImput() {
-    this.comboFundamentoImput;
+  getComboFundamentoImpug() {
+    this.sigaServices.get("filtrosejg_comboFundamentoImpug").subscribe(
+      n => {
+        this.comboFundamentoImpug = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboFundamentoImpug);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboPonente() {
     this.comboPonente;
@@ -175,10 +256,54 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboTipoEJGColegio() {
-    this.comboTipoEJGColegio;
+    this.sigaServices.get("filtrosejg_comboTipoEJGColegio").subscribe(
+      n => {
+        this.comboTipoEJGColegio = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboTipoEJGColegio);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboCreadoDesde() {
-    this.comboCreadoDesde;
+    if (this.nuevo) {
+      // LABEL MAL REVISAR
+      this.comboCreadoDesde = [
+        {
+          label: "Manual",
+          value: "M"
+        },
+        {
+          label: "Asistencia",
+          value: "A"
+        },
+        {
+          label: "Designa",
+          value: "D"
+        },
+        {
+          label: "SOJ",
+          value: "O"
+        }
+      ];
+      // this.comboCreadoDesde.push("Manual");
+      // this.comboCreadoDesde.push("Asistencia");
+      // this.comboCreadoDesde.push("Designa");
+      // this.comboCreadoDesde.push("SOJ");
+
+    } else {
+      this.sigaServices.get("filtrosejg_comboCreadoDesde").subscribe(
+        n => {
+          this.comboCreadoDesde = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboCreadoDesde);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+
   }
   getComboEstadoEJG() {
     this.comboEstadoEJG;

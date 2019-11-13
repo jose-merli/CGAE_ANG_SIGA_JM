@@ -1,4 +1,4 @@
-export let endpoints_maestros: any = {
+export let endpoints_EJG: any = {
 
     // fichaZonas_getPartidosJudiciales: "maestros/fichaZonas/partidosJudiciales",
     // gestionZonas_searchZones: "maestros/gestionZonas/searchZones",
@@ -13,8 +13,15 @@ export let endpoints_maestros: any = {
     // fichaZonas_deleteGroupZones: "maestros/fichaZonas/deleteGroupZones",
     // fichaZonas_activateGroupZones: "maestros/fichaZonas/activateGroupZones",
     // Combos
-
+    // busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
     filtrosejg_comboTipoEJG: "ejg/filtros-ejg/comboTipoEJG",
-    filtrosejg_gestionCostesFijos_comboCombo2: "ejg/filtros-ejg/combo2",
-    filtrosejg_gestionCostesFijos_comboCombon: "ejg/filtros-ejg/combon",
+    filtrosejg_comboTipoEJGColegio: "ejg/filtros-ejg/comboTipoEJGColegio",
+    filtrosejg_comboFundamentoCalif: "ejg/filtros-ejg/comboFundamentoCalif",
+    filtrosejg_comboResolucion: "ejg/filtros-ejg/comboResolucion",
+    filtrosejg_comboFundamentoImpug: "ejg/filtros-ejg/comboFundamentoImpug",
+    filtrosejg_comboPreceptivo: "ejg/filtros-ejg/comboPreceptivo",
+    filtrosejg_comboRenuncia: "ejg/filtros-ejg/comboRenuncia",
+    filtrosejg_comboCreadoDesde: "ejg/filtros-ejg/comboCreadoDesde",
+    filtrosejg_comboFundamentoJurid: "ejg/filtros-ejg/comboFundamentoJurid"
+
 }
