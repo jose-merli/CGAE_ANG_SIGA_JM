@@ -12,5 +12,10 @@ export let endpoints_oficio: any = {
     turnos_busquedaFichaTurnos: "oficio/turnos/busquedaFichaTurnos",
     turnos_eliminateTurnos: "oficio/turnos/eliminateTurnos",
     turnos_updateDatosGenerales: "oficio/turnos/updateDatosGenerales",
-    turnos_createnewTurno: "oficio/turnos/createnewTurno"
+    turnos_createnewTurno: "oficio/turnos/createnewTurno",
+    fichaZonas_searchSubzones: "maestros/fichaZonas/searchSubzones",
+    combossjcs_comboGuardias: "oficio/combossjcs/comboGuardias",
+    combossjcs_ordenCola: "oficio/combossjcs/ordenCola",
+    combossjcs_ordenColaEnvios: "oficio/combossjcs/ordenColaEnvios",
+    combossjcs_comboRequisitosGuardias: "oficio/combossjcs/comboRequisitosGuardias"
 }

@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, PickListModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, PickListModule, TooltipModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -45,7 +45,8 @@ import { TarjetaColaOficio } from './ficha-turnos/tarjeta-colaoficio/tarjeta-col
     TableModule,
     MultiSelectModule,
     PrecioModule,
-    PickListModule
+    PickListModule,
+    TooltipModule
     // FichaGrupoZonaModule
 
   ],

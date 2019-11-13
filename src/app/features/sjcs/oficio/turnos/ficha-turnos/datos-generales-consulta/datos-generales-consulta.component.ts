@@ -41,8 +41,22 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   partidas: any[] = [];
   partidoJudicial: string;
   grupofacturacion: any[] = [];
-  isDisabledMateria: boolean = true;
-  isDisabledSubZona: boolean = true;
+  partidasJudiciales: any[] = [];
+  isDisabledMateria: boolean = false;
+  comboPJ
+  tipoturnoDescripcion;
+  MateriaDescripcion
+  isDisabledSubZona: boolean = false;
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: false
+    },
+    {
+      key: "configuracion",
+      activa: false
+    },
+  ];
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   @ViewChild("importe") importe;
@@ -58,6 +72,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       if (this.turnosItem.idturno != undefined) {
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        this.getCombos();
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -91,6 +106,16 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
 
   getCombos() {
+    this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
+      n => {
+        this.comboPJ = n.combooItems;
+
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
 
     this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
       n => {
@@ -141,6 +166,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         console.log(err);
       }, () => {
         if (this.turnosItem.idarea != null) {
+
           this.sigaServices
             .getParam(
               "combossjcs_comboMaterias",
@@ -181,6 +207,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       },
       err => {
         console.log(err);
+      }, () => {
+        for (let i = 0; i < this.tiposturno.length; i++) {
+          if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
+            this.tipoturnoDescripcion = this.tiposturno[i].label
+          }
+
+        }
       }
     );
 
@@ -210,6 +243,23 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         if (this.turnosItem.idzona != null) {
           this.sigaServices
             .getParam(
+              "fichaZonas_searchSubzones",
+              "?idZona=" + this.turnosItem.idzona
+            )
+            .subscribe(
+              n => {
+                this.partidasJudiciales = n.zonasItems;
+              },
+              err => {
+                console.log(err);
+
+              }, () => {
+                this.getPartidosJudiciales();
+              }
+            );
+
+          this.sigaServices
+            .getParam(
               "combossjcs_comboSubZonas",
               "?idZona=" + this.turnosItem.idzona)
             .subscribe(
@@ -219,7 +269,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
               },
               error => { },
               () => {
-                this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
+                // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
                 this.body = this.turnosItem;
                 this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
               }
@@ -322,13 +372,58 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.partidoJudicial = "";
     } else {
       this.isDisabledSubZona = true;
+      this.partidoJudicial = "";
     }
 
   }
+
+  onChangeTipoturno() {
+    for (let i = 0; i < this.tiposturno.length; i++) {
+      if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
+        this.tipoturnoDescripcion = this.tiposturno[i].label
+      }
+    }
+  }
+
+  getPartidosJudiciales() {
+
+    for (let i = 0; i < this.partidasJudiciales.length; i++) {
+      this.partidasJudiciales[i].partidosJudiciales = [];
+      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
+        let findPartido = this.comboPJ.find(x => x.value === partido);
+
+        this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
+
+        if (findPartido != undefined) {
+          // this.partidasJudiciales[i].partidosJudiciales.push(findPartido);
+        }
+
+      });
+    }
+  }
+
   partidoJudiciales() {
-    // let dato = this.zonas.find(x => x.value == this.turnosItem.idzona);
-    // let dato2 = this.subzonas.find(x => x.value == this.turnosItem.idzubzona)
-    this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
+    if (this.turnosItem.idsubzona != null || this.turnosItem.idsubzona != undefined) {
+      this.sigaServices
+        .getParam(
+          "fichaZonas_searchSubzones",
+          "?idZona=" + this.turnosItem.idzona
+        )
+        .subscribe(
+          n => {
+            this.partidasJudiciales = n.zonasItems;
+          },
+          err => {
+            console.log(err);
+
+          }, () => {
+            this.getPartidosJudiciales();
+          }
+        );
+    } else {
+      this.isDisabledSubZona = true;
+    }
+
   }
   getComboMaterias() {
     this.sigaServices
@@ -341,7 +436,11 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           this.materias = n.combooItems;
         },
         error => { },
-        () => { }
+        () => {
+          if (this.turnosItem.idarea != null) {
+            this.isDisabledMateria = false;
+          }
+        }
       );
   }
 
@@ -360,12 +459,125 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
         }
       );
-
-
   }
+
+  arreglaCombos() {
+    this.sigaServices.get("combossjcs_comboAreas").subscribe(
+      n => {
+        this.areas = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.areas.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        if (this.turnosItem.idarea != null) {
+
+          this.sigaServices
+            .getParam(
+              "combossjcs_comboMaterias",
+              "?idArea=" + this.turnosItem.idarea)
+            .subscribe(
+              n => {
+                // this.isDisabledPoblacion = false;
+                this.materias = n.combooItems;
+              },
+              error => { },
+              () => {
+                if (this.turnosItem.idarea != null) {
+                  this.isDisabledMateria = false;
+                }
+              }
+            );
+        }
+      }
+    );
+
+    this.sigaServices.get("combossjcs_comboZonas").subscribe(
+      n => {
+        this.zonas = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.zonas.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        if (this.turnosItem.idzona != null) {
+          this.sigaServices
+            .getParam(
+              "fichaZonas_searchSubzones",
+              "?idZona=" + this.turnosItem.idzona
+            )
+            .subscribe(
+              n => {
+                this.partidasJudiciales = n.zonasItems;
+              },
+              err => {
+                console.log(err);
+
+              }, () => {
+                if (this.turnosItem.idzona != null) {
+                  this.isDisabledSubZona = false;
+                }
+                this.getPartidosJudiciales();
+              }
+            );
+
+          this.sigaServices
+            .getParam(
+              "combossjcs_comboSubZonas",
+              "?idZona=" + this.turnosItem.idzona)
+            .subscribe(
+              n => {
+                // this.isDisabledPoblacion = false;
+                this.subzonas = n.combooItems;
+              },
+              error => { },
+              () => {
+                // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
+                this.body = this.turnosItem;
+                this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+              }
+            );
+        }
+      }
+    );
+  }
+
   rest() {
-    if (this.turnosItem != undefined)
+    if (this.turnosItem != undefined) {
       this.turnosItem = JSON.parse(JSON.stringify(this.bodyInicial));
+      this.arreglaCombos();
+    }
+
   }
 
   save() {
@@ -395,7 +607,16 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           }
           this.modoEdicionSend.emit(send);
         }
-
+        for (let i = 0; i < this.tiposturno.length; i++) {
+          if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
+            this.tipoturnoDescripcion = this.tiposturno[i].label
+          }
+        }
+        for (let i = 0; i < this.subzonas.length; i++) {
+          if (this.subzonas[i].value == this.turnosItem.idsubzona) {
+            this.turnosItem.subzona = this.subzonas[i].label
+          }
+        }
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         this.persistenceService.setDatos(this.turnosItem);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -443,5 +664,20 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
+  }
+
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
+
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
   }
 }

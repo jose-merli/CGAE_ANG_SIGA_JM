@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -40,7 +40,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
-
+  requisitosGuardiasDescripcion;
   permisoEscritura: boolean = true;
   movilCheck: boolean = false
 
@@ -50,7 +50,10 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   progressSpinner: boolean = false;
   avisoMail: boolean = false
-
+  guardias: any[] = [];
+  validJustificacion;
+  validInscripyBajas;
+  visibleMovilTexto;
   emailValido: boolean = false;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
@@ -74,14 +77,60 @@ export class ConfiguracionTurnosComponent implements OnInit {
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private translateService: TranslateService, private commonsServices: CommonsService) { }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.turnosItem != undefined) {
+      if (this.turnosItem.idturno != undefined) {
+        this.body = this.turnosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        if (this.body.idturno == undefined) {
+          this.modoEdicion = false;
+        } else {
+          this.modoEdicion = true;
+        }
+      }
+    } else {
+      this.turnosItem = new TurnosItems();
+    }
+    this.arreglaChecks();
+
+    this.sigaServices.get("combossjcs_comboRequisitosGuardias").subscribe(
+      n => {
+        this.guardias = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.guardias.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+        for (let i = 0; i < this.guardias.length; i++) {
+          if (this.guardias[i].value == this.turnosItem.idguardias) {
+            this.requisitosGuardiasDescripcion = this.guardias[i].label
+          }
+        }
+      }
+    );
+  }
+
   ngOnInit() {
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
-    this.getComboProvincias();
-
     this.validateHistorical();
 
     if (this.modoEdicion) {
@@ -95,6 +144,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
       // }
 
     } else {
+      this.nuevoChecks();
       this.body = new TurnosItems();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.edicionEmail = true;
@@ -113,7 +163,13 @@ export class ConfiguracionTurnosComponent implements OnInit {
       }
     }
   }
-
+  onChangeRequisitosGuardias() {
+    for (let i = 0; i < this.guardias.length; i++) {
+      if (this.guardias[i].value == this.turnosItem.idguardias) {
+        this.requisitosGuardiasDescripcion = this.guardias[i].label
+      }
+    }
+  }
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
@@ -149,44 +205,60 @@ export class ConfiguracionTurnosComponent implements OnInit {
   save() {
     this.progressSpinner = true;
     let url = "";
-
+    this.guardarChecks();
     if (!this.modoEdicion) {
       url = "gestionPrisiones_createPrision";
       this.callSaveService(url);
 
     } else {
-      url = "gestionPrisiones_updatePrision";
+      url = "turnos_updateDatosGenerales";
       this.callSaveService(url);
     }
 
   }
 
   callSaveService(url) {
-    this.sigaServices.post(url, this.body).subscribe(
+    this.sigaServices.post(url, this.turnosItem).subscribe(
       data => {
-
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           let turnos = JSON.parse(data.body);
           // this.modulosItem = JSON.parse(data.body);
-          this.turnosItem.idturno = turnos.idturno;
+          this.turnosItem.idturno = turnos.id;
           let send = {
             modoEdicion: this.modoEdicion,
             idturno: this.turnosItem.idturno
           }
-          this.body.idturno = this.idPrision
-          this.persistenceService.setDatos(this.body);
           this.modoEdicionSend.emit(send);
         }
-
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
+        if (this.turnosItem.validarjustificaciones == 'S') {
+          this.validJustificacion = "SI";
+        } else {
+          this.validJustificacion = "NO";
+        }
+        if (this.turnosItem.validarinscripciones == 'S') {
+          this.validInscripyBajas = "SI";
+        } else {
+          this.validInscripyBajas = "NO";
+        }
+        if (this.turnosItem.visiblemovil == '1') {
+          this.visibleMovilTexto = "SI";
+        } else {
+          this.visibleMovilTexto = "NO";
+        }
+        for (let i = 0; i < this.guardias.length; i++) {
+          if (this.guardias[i].value == this.turnosItem.idguardias) {
+            this.requisitosGuardiasDescripcion = this.guardias[i].label
+          }
+        }
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        this.persistenceService.setDatos(this.turnosItem);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
 
-        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+        if (JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -195,19 +267,16 @@ export class ConfiguracionTurnosComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+        this.body = this.turnosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
       }
     );
+
 
   }
 
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
-    this.edicionEmail = true
-    this.tlf1Valido = true
-    this.tlf2Valido = true
-    this.faxValido = true
-
+    this.turnosItem = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
   editEmail() {
@@ -243,19 +312,118 @@ export class ConfiguracionTurnosComponent implements OnInit {
     });
   }
 
-  // changeEmail() {
-  //   if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
-  //     this.emailValido = true
-  //     this.avisoMail = false
-  //   }
-  //   else {
-  //     this.emailValido = false
-  //     this.avisoMail = false
+  guardarChecks() {
+    if (this.turnosItem.visibleMovilCheck == true) {
+      this.turnosItem.visiblemovil = '1';
+    } else {
+      this.turnosItem.visiblemovil = '0';
+    }
+    if (this.turnosItem.validarinscripcionesCheck == true) {
+      this.turnosItem.validarinscripciones = 'S';
+    } else {
+      this.turnosItem.validarinscripciones = 'N';
+    }
 
-  //     if (this.body.email != null && this.body.email != "")
-  //       this.avisoMail = true
-  //   }
-  // }
+    if (this.turnosItem.validarjustificacionesCheck == true) {
+      this.turnosItem.validarjustificaciones = 'S';
+    } else {
+      this.turnosItem.validarjustificaciones = 'N';
+    }
+
+    if (this.turnosItem.letradoactuacionesCheck == true) {
+      this.turnosItem.letradoactuaciones = 'S';
+    } else {
+      this.turnosItem.letradoactuaciones = 'N';
+    }
+
+    if (this.turnosItem.letradoasistenciasCheck == true) {
+      this.turnosItem.letradoasistencias = 'S';
+    } else {
+      this.turnosItem.letradoasistencias = 'N';
+    }
+
+    if (this.turnosItem.activarretriccionacreditCheck == true) {
+      this.turnosItem.activarretriccionacredit = 'S';
+    } else {
+      this.turnosItem.activarretriccionacredit = 'N';
+    }
+
+  }
+
+  nuevoChecks() {
+    if (!this.modoEdicion) {
+      this.turnosItem.visiblemovil = '1';
+      this.turnosItem.visibleMovilCheck = true;
+      this.visibleMovilTexto = "SI";
+
+      this.turnosItem.validarinscripciones = 'S';
+      this.turnosItem.validarinscripcionesCheck = true;
+      this.validInscripyBajas = "SI";
+
+      this.turnosItem.validarjustificaciones = 'S';
+      this.turnosItem.validarjustificacionesCheck = true;
+      this.validJustificacion = "SI";
+
+      this.turnosItem.letradoactuaciones = 'N';
+      this.turnosItem.letradoactuacionesCheck = false;
+
+      this.turnosItem.letradoasistencias = 'N';
+      this.turnosItem.letradoasistenciasCheck = false;
+
+      this.turnosItem.activarretriccionacredit = 'S';
+      this.turnosItem.activarretriccionacreditCheck = true;
+
+      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+    }
+
+  }
+
+  arreglaChecks() {
+    // idjurisdiccion complemento permitiraniadirletrado
+    if (this.turnosItem.visiblemovil == '1') {
+      this.turnosItem.visibleMovilCheck = true;
+      this.visibleMovilTexto = "SI";
+    } else {
+      this.turnosItem.visibleMovilCheck = false;
+      this.visibleMovilTexto = "NO";
+    }
+
+    if (this.turnosItem.validarinscripciones == 'S') {
+      this.turnosItem.validarinscripcionesCheck = true;
+      this.validInscripyBajas = "SI";
+    } else {
+      this.turnosItem.validarinscripcionesCheck = false;
+      this.validInscripyBajas = "NO";
+    }
+
+    if (this.turnosItem.validarjustificaciones == 'S') {
+      this.turnosItem.validarjustificacionesCheck = true;
+      this.validJustificacion = "SI";
+    } else {
+      this.turnosItem.validarjustificacionesCheck = false;
+      this.validJustificacion = "NO";
+    }
+
+    if (this.turnosItem.letradoactuaciones == 'S') {
+      this.turnosItem.letradoactuacionesCheck = true;
+    } else {
+      this.turnosItem.letradoactuacionesCheck = false;
+    }
+
+    if (this.turnosItem.letradoasistencias == 'S') {
+      this.turnosItem.letradoasistenciasCheck = true;
+    } else {
+      this.turnosItem.letradoasistenciasCheck = false;
+    }
+    if (this.turnosItem.activarretriccionacredit == 'S') {
+      this.turnosItem.activarretriccionacreditCheck = true;
+    } else {
+      this.turnosItem.activarretriccionacreditCheck = false;
+    }
+
+    this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+
+  }
 
   disabledSave() {
     if (!this.historico && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {

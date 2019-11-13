@@ -31,6 +31,7 @@ export class FiltrosTurnos implements OnInit {
   subzonas: any[] = [];
   materias: any[] = [];
   partidas: any[] = [];
+  partidasJudiciales: any[] = [];
   grupofacturacion: any[] = [];
   comboPJ;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
@@ -214,6 +215,8 @@ export class FiltrosTurnos implements OnInit {
     this.partidoJudicial = "";
   }
 
+
+
   onChangeArea() {
 
     this.filtros.idmateria = "";
@@ -290,10 +293,39 @@ export class FiltrosTurnos implements OnInit {
       );
   }
 
+  getPartidosJudiciales() {
+
+    for (let i = 0; i < this.partidasJudiciales.length; i++) {
+      this.partidasJudiciales[i].partidosJudiciales = [];
+      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
+        let findPartido = this.comboPJ.find(x => x.value === partido);
+
+        if (findPartido != undefined) {
+          // this.partidasJudiciales[i].partidosJudiciales.push(findPartido);
+          this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
+        }
+
+      });
+    }
+  }
+
   partidoJudiciales() {
-    let dato = this.zonas.find(x => x.value == this.filtros.idzona);
-    let dato2 = this.subzonas.find(x => x.value == this.filtros.idzubzona)
-    this.partidoJudicial = dato.label + "," + dato2.label;
+    this.sigaServices
+      .getParam(
+        "fichaZonas_searchSubzones",
+        "?idZona=" + this.filtros.idzona
+      )
+      .subscribe(
+        n => {
+          this.partidasJudiciales = n.zonasItems;
+        },
+        err => {
+          console.log(err);
+
+        }, () => {
+          this.getPartidosJudiciales();
+        }
+      );
   }
 
   newTurno() {

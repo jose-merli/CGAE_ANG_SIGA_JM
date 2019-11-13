@@ -10,10 +10,12 @@ export class TurnosItems {
   materia: string;
   idzona: string;
   zona: string;
+  idordenacioncolas: string;
   idguardias: string;
   guardias: string;
   idzubzona: string;
   idsubzona: string;
+  nombrepartidojudicial: string;
   subzona: string;
   idpartido: string;
   partido: string;
@@ -27,5 +29,17 @@ export class TurnosItems {
   idtipoturno: string;
   partidosJudiciales: any[];
   idPartidosJudiciales: string;
+  validarjustificaciones: string;
+  validarjustificacionesCheck: boolean;
+  validarinscripciones: string;
+  validarinscripcionesCheck: boolean;
+  letradoasistencias: string;
+  letradoasistenciasCheck: boolean;
+  letradoactuaciones: string;
+  letradoactuacionesCheck: boolean;
+  activarretriccionacredit: string;
+  activarretriccionacreditCheck: boolean;
+  visiblemovil: string;
+  visibleMovilCheck: boolean;
   constructor() { }
 }

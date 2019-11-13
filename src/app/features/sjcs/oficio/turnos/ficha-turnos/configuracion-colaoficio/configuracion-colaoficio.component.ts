@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -10,6 +10,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
+import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 @Component({
   selector: "app-configuracion-colaoficio",
   templateUrl: "./configuracion-colaoficio.component.html",
@@ -18,9 +19,10 @@ import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 export class ConfiguracionColaOficioComponent implements OnInit {
 
   //Resultados de la busqueda
-  @Input() datos: PrisionItem;
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
+
+  @Input() turnosItem: TurnosItems;
 
   openFicha: boolean = false;
   msgs = [];
@@ -29,10 +31,15 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   provinciaSelecionada: string;
 
 
-  body: PrisionItem;
-  bodyInicial: PrisionItem;
+  body: TurnosItems;
+  bodyInicial: TurnosItems;
   idPrision;
   isDisabledProvincia: boolean = true;
+  perfilesSeleccionadosInicial: any[];
+  perfilesSeleccionados: any[];
+  perfilesNoSeleccionados: any[];
+  numeroPerfilesExistentes: number = 0;
+  perfilesNoSeleccionadosInicial: any[];
 
   comboProvincias;
   comboPoblacion;
@@ -77,34 +84,42 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private translateService: TranslateService, private commonsServices: CommonsService) { }
 
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.turnosItem != undefined) {
+      if (this.turnosItem.idturno != undefined) {
+        this.getPerfilesExtistentes();
+        this.getPerfilesSeleccionados();
+        this.body = this.turnosItem;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+        if (this.body.idturno == undefined) {
+          this.modoEdicion = false;
+        } else {
+          this.modoEdicion = true;
+        }
+      }
+    } else {
+      this.turnosItem = new TurnosItems();
+    }
+
+  }
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
+
+
+
     this.getComboProvincias();
 
     this.validateHistorical();
 
     if (this.modoEdicion) {
-      this.body = this.datos;
+      this.body = this.turnosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      if (this.datos.visibleMovil == "1")
-        this.movilCheck = true
-      if (this.body.email != undefined && this.body.email != "") {
-        this.edicionEmail = false;
-      } else {
-        this.edicionEmail = true;
-      }
-
-      if (this.body != undefined && this.datos.nombrePoblacion != null) {
-        this.getComboPoblacion(this.body.nombrePoblacion);
-      } else {
-        this.progressSpinner = false;
-      }
-
     } else {
-      this.body = new PrisionItem();
+      this.body = new TurnosItems();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.edicionEmail = true;
 
@@ -138,14 +153,6 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     return {};
   }
 
-
-  cambiaMovil() {
-    if (this.movilCheck)
-      this.body.visibleMovil = 1
-    else
-      this.body.visibleMovil = 0
-  }
-
   getComboProvincias() {
     this.progressSpinner = true;
 
@@ -164,96 +171,75 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     );
   }
 
-  onChangeProvincia() {
-
-    this.body.idPoblacion = "";
-    this.comboPoblacion = [];
-
-    if (this.body.idProvincia != undefined && this.body.idProvincia != "") {
-      this.isDisabledPoblacion = false;
-    } else {
-      this.isDisabledPoblacion = true;
-    }
-
-  }
-
-  onChangePoblacion() {
-    if (this.body.idPoblacion != undefined && this.body.idPoblacion != null) {
-      let poblacionSelected = this.comboPoblacion.filter(pob => pob.value == this.body.idPoblacion);
-      this.body.nombrePoblacion = poblacionSelected[0].label;
-    }
-  }
-
-  buscarPoblacion(e) {
-    if (e.target.value && e.target.value !== null && e.target.value !== "") {
-      if (e.target.value.length >= 3) {
-        this.getComboPoblacion(e.target.value);
-        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-      } else {
-        this.comboPoblacion = [];
-        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
-      }
-    } else {
-      this.comboPoblacion = [];
-      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-    }
-  }
-
-  getComboPoblacion(dataFilter) {
-    this.progressSpinner = true;
-
+  getPerfilesSeleccionados() {
     this.sigaServices
-      .getParam(
-        "busquedaPrisiones_population",
-        "?idProvincia=" + this.body.idProvincia + "&dataFilter=" + dataFilter
-      )
+      .post("combossjcs_ordenCola", this.turnosItem)
       .subscribe(
         n => {
-          this.isDisabledPoblacion = false;
-          this.comboPoblacion = n.combooItems;
-          this.progressSpinner = false;
-          this.commonsServices.arregloTildesCombo(this.comboPoblacion);
+          // coger etiquetas de una persona juridica
+          this.perfilesSeleccionados = JSON.parse(n["body"]).colaOrden;
+          this.perfilesSeleccionadosInicial = JSON.parse(
+            JSON.stringify(this.perfilesSeleccionados)
+          );
 
+          //por cada perfil seleccionado lo eliminamos de la lista de existentes
+          // if (this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial) {
+          //   this.perfilesSeleccionados.forEach(element => {
+          //     let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados, element);
+          //     if (x > -1) {
+          //       this.perfilesNoSeleccionados.splice(x, 1);
+          //     }
+          //   });
+          //   this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
+          // }
         },
-        error => {
-          this.progressSpinner = false;
-        },
-        () => { }
+        err => {
+          console.log(err);
+        }
       );
   }
 
-  onChangeCodigoPostal() {
-    if (
-      this.isValidCodigoPostal() &&
-      this.body.codigoPostal.length == 5
-    ) {
-      let value = this.body.codigoPostal.substring(0, 2);
-      this.provinciaSelecionada = value;
-      this.isDisabledPoblacion = false;
-      if (value != this.body.idProvincia) {
-        this.body.idProvincia = this.provinciaSelecionada;
-        this.body.idPoblacion = "";
-        this.body.nombrePoblacion = "";
-        this.comboPoblacion = [];
-        this.isDisabledProvincia = true;
+  arrayObjectIndexOf(arr, obj) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].value == obj.value) {
+        return i;
       }
-      this.codigoPostalValido = true;
-    } else {
-      this.codigoPostalValido = false;
-      this.body.idProvincia = "";
-
-    }
+    };
+    return -1;
   }
-
-
-  isValidCodigoPostal(): boolean {
-    return (
-      this.body.codigoPostal &&
-      typeof this.body.codigoPostal === "string" &&
-      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
+  getPerfilesExtistentes() {
+    this.progressSpinner = true;
+    this.sigaServices.getParam("combossjcs_ordenColaEnvios", "?idordenacioncolas=" + this.turnosItem.idordenacioncolas).subscribe(
+      n => {
+        // coger etiquetas de una persona juridica
+        this.perfilesNoSeleccionados = n.combooItems;
+        this.numeroPerfilesExistentes = this.perfilesNoSeleccionados.length;
+        this.perfilesNoSeleccionadosInicial = JSON.parse(
+          JSON.stringify(this.perfilesNoSeleccionados)
+        );
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        let i = 0;
+        if (this.perfilesSeleccionados != undefined) {
+          let perfilesFiltrados = this.perfilesNoSeleccionados;
+          this.perfilesNoSeleccionados = [];
+          perfilesFiltrados.forEach(element => {
+            let find = this.perfilesSeleccionados.find(x => x.value == element.value);
+            if (find != undefined) {
+              // console.log(perfilesFiltrados[i]);
+            } else {
+              this.perfilesNoSeleccionados.push(perfilesFiltrados[i]);
+            }
+            i++;
+          });
+        }
+        this.progressSpinner = false;
+      }
     );
   }
-
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -268,33 +254,9 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     }
 
   }
-  trimeando() {
-    this.body.nombre = this.body.nombre.trim()
-    if (this.body.domicilio != null && this.body.domicilio != undefined)
-      this.body.domicilio = this.body.domicilio.trim()
-
-    if (this.body.telefono1 != null && this.body.telefono1 != undefined)
-      this.body.telefono1 = this.body.telefono1.trim()
-
-    if (this.body.telefono2 != null && this.body.telefono2 != undefined)
-      this.body.telefono2 = this.body.telefono2.trim()
-
-    if (this.body.fax != null && this.body.fax != undefined)
-      this.body.fax = this.body.fax.trim()
-
-    if (this.body.email != null && this.body.email != undefined)
-      this.body.email = this.body.email.trim()
-
-    if (this.body.codigoExt != null && this.body.codigoExt != undefined)
-      this.body.codigoExt = this.body.codigoExt.trim()
-
-  }
 
   callSaveService(url) {
-    if (this.body.visibleMovil == null) {
-      this.body.visibleMovil = 0
-    }
-    this.trimeando()
+
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -305,7 +267,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
             modoEdicion: this.modoEdicion,
             idPrision: this.idPrision
           }
-          this.body.idPrision = this.idPrision
+          this.body.idturno = this.idPrision
           this.persistenceService.setDatos(this.body);
           this.modoEdicionSend.emit(send);
         }
@@ -374,44 +336,13 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     });
   }
 
-  changeEmail() {
-    if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
-      this.emailValido = true
-      this.avisoMail = false
-    }
-    else {
-      this.emailValido = false
-      this.avisoMail = false
-
-      if (this.body.email != null && this.body.email != "")
-        this.avisoMail = true
-    }
-  }
 
   disabledSave() {
-    if (!this.historico && (this.body.nombre != undefined && this.body.nombre != null && this.body.nombre.trim() != "" &&
-      this.body.idProvincia != undefined && this.body.idProvincia != "" && this.body.idPoblacion != undefined && this.body.idPoblacion != null && this.body.idPoblacion != ""
-      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5 && !this.avisoMail && this.tlf1Valido
-      && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+    if (!this.historico && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;
     }
-  }
-
-  changeTelefono1() {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
-  }
-
-  changeTelefono2() {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
-  }
-  changeFax() {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
-  }
-
-  changeMovil() {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
   }
 
   clear() {

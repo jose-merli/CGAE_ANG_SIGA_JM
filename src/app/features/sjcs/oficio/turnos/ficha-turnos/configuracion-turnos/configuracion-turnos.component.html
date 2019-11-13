@@ -10,11 +10,22 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha"> {{"justiciaGratuita.oficio.turnos.configuracionturnos" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <br>
+            <label>{{ "justiciaGratuita.oficio.turnos.validjustificación" | translate }}
+              <span>{{ validJustificacion }}</span>
+            </label>
+            <label>{{ "justiciaGratuita.oficio.turnos.validinscripbajas" | translate }}
+              <span>{{ validInscripyBajas }}</span>
+            </label>
+            <label>{{ "justiciaGratuita.oficio.turnos.requisitosguardias" | translate }}
+              <span>{{ requisitosGuardiasDescripcion }}</span>
+            </label>
+            <label>{{ "administracion.informes.literal.visibleMovil" | translate }}
+              <span>{{ visibleMovilTexto }}</span>
+            </label>
             <i (click)="abrirFicha('configuracion')" *ngIf="!esFichaActiva('configuracion')" class="fa fa-angle-up float-right"></i>
             <i (click)="cerrarFicha('configuracion')" *ngIf="esFichaActiva('configuracion')" class="fa fa-angle-down float-right"></i>
           </div>
@@ -36,47 +47,47 @@
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>
-                {{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}} (*)
+                {{"justiciaGratuita.oficio.turnos.requisitosguardias" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                disabled="true" [showClear]="true">
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idguardias' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                [options]="guardias" (onChange)="onChangeRequisitosGuardias()" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
               </p-dropdown>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox [(ngModel)]="turnosItem.validarjustificaciones" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}"
+              <p-checkbox [(ngModel)]="turnosItem.validarjustificacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox [(ngModel)]="turnosItem.validarinscripciones" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}"
+              <p-checkbox [(ngModel)]="turnosItem.validarinscripcionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [(ngModel)]="turnosItem.letradoasistencias" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}"
+              <p-checkbox [(ngModel)]="turnosItem.letradoasistenciasCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [(ngModel)]="turnosItem.letradoactuaciones" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
+              <p-checkbox [(ngModel)]="turnosItem.letradoactuacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [(ngModel)]="turnosItem.activarretriccionacredit" binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}"
+              <p-checkbox [(ngModel)]="turnosItem.activarretriccionacreditCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [(ngModel)]="turnosItem.visibleMovil" binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}"
+              <p-checkbox [(ngModel)]="turnosItem.visibleMovilCheck" binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 

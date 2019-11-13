@@ -9,6 +9,8 @@ import { MultiSelect, SortEvent } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
+import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
+import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 
 
 @Component({
@@ -22,6 +24,7 @@ export class TablaTurnosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
+  partidoJudicial;
   id;
   datosInicial = [];
   editMode: boolean = false;
@@ -30,6 +33,7 @@ export class TablaTurnosComponent implements OnInit {
   updatePartidasPres = [];
 
   body;
+  partidasJudiciales: any[] = [];
 
   selectedItem: number = 10;
   selectAll;
@@ -51,7 +55,7 @@ export class TablaTurnosComponent implements OnInit {
 
   @Input() permisos;
   //Combo partidos judiciales
-  @Input() comboPJ;
+  comboPJ;
 
   @Output() searchPartidas = new EventEmitter<boolean>();
 
@@ -496,6 +500,8 @@ export class TablaTurnosComponent implements OnInit {
     });
   }
 
+
+
   isSelectMultiple() {
     if (this.permisos && !this.historico) {
       if (this.nuevo) this.datos.shift();
@@ -541,6 +547,8 @@ export class TablaTurnosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
+  obtenerPartidos(dato) {
+    return dato.nombrepartidosjudiciales;
+  }
 
 }
