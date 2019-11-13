@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SigaServices } from '../../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-datos-calendarios-guardias',
@@ -85,14 +86,40 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(private sigaServices: SigaServices) { }
 
   ngOnInit() {
     if (this.modoEdicion)
       this.openFicha = true;
-
+    this.search();
 
   }
+
+  search() {
+    this.sigaServices.getParam(
+      "busquedaGuardias_getGuardia",
+      "?idGuardia=" + '1003').subscribe(
+        n => {
+          if (n != null && n.diasFes != null && n.diasFes.length > 0)
+            Array.from(n.diasFes).forEach(element => {
+              this.festividades.forEach(it => {
+                if (it.label == element)
+                  it.value = true;
+              })
+            });
+          if (n != null && n.diasLab != null && n.diasLab.length > 0)
+            Array.from(n.diasLab).forEach(element => {
+              this.laborables.forEach(it => {
+                if (it.label == element)
+                  it.value = true;
+              })
+            });
+        },
+        err => {
+          console.log(err);
+        })
+  }
+
 
   onChangeSeleccLaborables() {
     if (!this.selectLaborables)

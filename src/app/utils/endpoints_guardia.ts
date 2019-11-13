@@ -13,4 +13,5 @@ export let endpoints_guardia: any = {
     busquedaGuardias_searchGuardias: "guardia/busquedaGuardia/searchGuardias",
     busquedaGuardias_deleteGuardias: "guardia/busquedaGuardia/deleteGuardias",
     busquedaGuardias_activateGuardias: "guardia/busquedaGuardia/activateGuardias",
+    busquedaGuardias_getGuardia: "guardia/busquedaGuardia/detalleGuardia",
 }

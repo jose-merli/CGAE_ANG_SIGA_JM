@@ -16,6 +16,8 @@ export class GuardiaItem {
     partidaPresupuestaria: string;
     tipoTurno: string;
     tipoGuardia: string;
+    diasFe: string;
+    diasLab: string;
     tipoDia: string;
     letradosGuardia: string;
     letradosIns: string;
