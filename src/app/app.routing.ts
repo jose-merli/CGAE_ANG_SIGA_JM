@@ -197,7 +197,6 @@ import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solic
 import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { AuthGuard } from './_guards/auth.guards';
-import { BusquedaGeneralSJCSComponent } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.component';
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -224,7 +223,7 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'busquedaColegiados',
-		component: BusquedaGeneralSJCSComponent,
+		component: BusquedaColegiadosComponent,
 		canActivate: [AuthGuard]
 	},
 	{
