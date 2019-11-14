@@ -96,7 +96,7 @@
 
                 <input *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.nombreMateria" name="nombreMateria" type="text"
-                  on-focusout="validateArea($event)" (input)="validateArea($event)" maxLength="60" />
+                  on-focusout="disabledSave($event)" (input)="disabledSave($event)" maxLength="60" />
               </div>
 
               <div *ngIf="col.field == 'contenido'">
@@ -105,8 +105,8 @@
                 </span>
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text"
-                  class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="validateArea($event)"
-                  (input)="validateArea($event)" maxLength="3900" />
+                  class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="disabledSave($event)"
+                  (input)="disabledSave($event)" maxLength="3900" />
               </div>
             </td>
 

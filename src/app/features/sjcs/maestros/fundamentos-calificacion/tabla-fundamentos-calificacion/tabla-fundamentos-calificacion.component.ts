@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { FundamentosCalificacionObject } from '../../../../../models/sjcs/FundamentosCalificacionObject';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -9,11 +9,11 @@ import { ConfirmationService } from '../../../../../../../node_modules/primeng/p
 @Component({
 	selector: 'app-tabla-fundamentos-calificacion',
 	templateUrl: './tabla-fundamentos-calificacion.component.html',
-	styleUrls: [ './tabla-fundamentos-calificacion.component.scss' ]
+	styleUrls: ['./tabla-fundamentos-calificacion.component.scss']
 })
 export class TablaFundamentosCalificacionComponent implements OnInit {
 	@Input() datos;
-
+	@ViewChild("table") table;
 	rowsPerPage: any = [];
 	cols;
 	msgs;
@@ -39,8 +39,9 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 		private sigaService: SigaServices,
 		private translateService: TranslateService,
 		private router: Router,
+		private changeDetectorRef: ChangeDetectorRef,
 		private confirmationService: ConfirmationService
-	) {}
+	) { }
 
 	ngOnInit() {
 		if (this.persistenceService.getPermisos() == true) {
@@ -157,6 +158,11 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			}
 		}
 	}
+	onChangeRowsPerPages(event) {
+		this.selectedItem = event.value;
+		this.changeDetectorRef.detectChanges();
+		this.table.reset();
+	}
 	openTab(evento) {
 		if (this.persistenceService.getPermisos() != undefined) {
 			this.permisoEscritura = this.persistenceService.getPermisos();
@@ -164,7 +170,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 		if (!this.selectAll && !this.selectMultiple) {
 			this.progressSpinner = true;
 			this.persistenceService.setDatos(evento.data);
-			this.router.navigate([ '/gestionFundamentos' ]);
+			this.router.navigate(['/gestionFundamentos']);
 		} else {
 			if (evento.data.fechabaja == undefined && this.historico) {
 				this.selectedDatos.pop();

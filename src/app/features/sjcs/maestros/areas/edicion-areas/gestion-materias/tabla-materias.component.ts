@@ -56,7 +56,7 @@ export class TablaMateriasComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private  confirmationService:  ConfirmationService) { }
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getCols();
@@ -331,6 +331,10 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   disabledSave() {
+
+    if (this.selectMultiple || this.selectAll) {
+      return true;
+    }
     if (this.nuevo) {
       if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
         return false;
@@ -339,6 +343,7 @@ export class TablaMateriasComponent implements OnInit {
       }
 
     } else {
+
       if ((this.updateAreas != undefined && this.updateAreas.length > 0) || this.selectedDatos.length > 0) {
         return false;
       } else {
