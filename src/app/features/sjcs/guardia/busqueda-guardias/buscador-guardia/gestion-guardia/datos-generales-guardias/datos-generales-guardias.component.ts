@@ -126,29 +126,23 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
   getComboGuardia() {
 
-    this.sigaService.post(
-      "busquedaGuardias_searchGuardias", this.buscaGuardia
-    ).subscribe(
-      data => {
-        data = JSON.parse(JSON.parse(JSON.stringify(data.body)));
-        if (data.guardiaItems != null && data.guardiaItems.length > 0) {
-          data.guardiaItems.forEach(it => {
-            this.comboGuardia.push({
-              label: it.nombre,
-              value: it.idGuardia,
-            })
-          })
+    this.sigaService.getParam(
+      "busquedaGuardia_guardia", "?idTurno=" + this.body.idTurno).subscribe(
+        data => {
+
+          this.comboGuardia = data.combooItems
           this.commonServices.arregloTildesCombo(this.comboGuardia);
+        },
+        err => {
+          console.log(err);
         }
-      },
-      err => {
-        console.log(err);
-      }
-    )
+      )
 
   }
 
   save() {
-    this.modoEdicion = !this.modoEdicion
+    this.modoEdicion = !this.modoEdicion;
+    this.getData();
+    this.getCols();
   }
 }

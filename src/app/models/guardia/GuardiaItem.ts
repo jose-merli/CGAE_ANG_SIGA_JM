@@ -19,6 +19,8 @@ export class GuardiaItem {
     diasFe: string;
     diasLab: string;
     tipoDia: string;
+    descripcionFact: string;
+    descripcionPago: string;
     letradosGuardia: string;
     letradosIns: string;
     historico: string;

@@ -9,6 +9,7 @@ export let endpoints_guardia: any = {
     busquedaGuardia_materia: "combo/materias",
     busquedaGuardia_tipoTurno: "combo/tipoTurno",
     busquedaGuardia_tiposGuardia: "combo/tipoGuardia",
+    busquedaGuardia_guardia: "combo/guardias",
 
     busquedaGuardias_searchGuardias: "guardia/busquedaGuardia/searchGuardias",
     busquedaGuardias_deleteGuardias: "guardia/busquedaGuardia/deleteGuardias",

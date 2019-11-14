@@ -8,12 +8,23 @@
           <i class="fas fa-calendar-alt icon-ficha"></i>
         </div>
       </div>
-      <div class="col-lg-11 col-md-10 ">
+      <div class="col-lg-11 col-md-10 cabeza">
         <div class="d-flex justify-content-end mb-1">
           <label class="mr-auto title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
         </div>
-        <div class="d-flex justify-content-between">
-          <br>
+        <div class="d-flex justify-content-between sub">
+          <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
+            <strong>3 meses</strong>
+          </label>
+          <label>{{'justiciaGratuita.guardia.gestion.tipoDias' | translate}}:
+            <strong> L-S, Fest.- S-D</strong>
+          </label>
+          <label>{{'justiciaGratuita.guardia.gestion.diasSeparacionGuardias' | translate}}:
+            <strong>2</strong>
+          </label>
+          <label>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario' | translate}}:
+            <strong>NO</strong>
+          </label>
           <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
         </div>
       </div>
@@ -26,6 +37,7 @@
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
+
 
   <div *ngIf="openFicha" class="card-body card-body-ficha">
     <div class="row">
@@ -52,7 +64,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+            <p-dropdown class="select-form" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
             <!-- <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
               filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
               [disabled]="!permisoEscritura || historico" [showClear]="true">
@@ -73,7 +85,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+            <p-dropdown class="select-form" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
 
 
           </div>
@@ -104,7 +116,7 @@
           <div class="col-12 ">
             <label>{{'justiciaGratuita.guardia.gestion.tipoDias'| translate}} </label>
           </div>
-          <div class="form-group col-6 pt-4">
+          <div class="form-group col-5 pt-4">
             <label>{{'justiciaGratuita.guardia.gestion.laborables' | translate }}/{{ 'justiciaGratuita.guardia.gestion.noFestivos'
               | translate }}</label>
             <div class="form-group selectAll">
@@ -117,7 +129,7 @@
               </div>
               <div class="form-row m-0">
                 <div *ngFor="let dia of laborables" class="col-1 p-0">
-                  <p-checkbox [(ngModel)]="dia.value" (onChange)="isAllLaborables()" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="dia.value" (onChange)="changeLaborables()" binary="true"></p-checkbox>
 
                 </div>
               </div>
@@ -131,7 +143,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group col-6 pt-4">
+          <div class="form-group col-5 pt-4">
             <label>{{ "justiciaGratuita.guardia.gestion.festividades" | translate }}</label>
             <div class="form-group selectAll">
               <div class="form-row">
@@ -143,7 +155,7 @@
               </div>
               <div class="form-row m-0">
                 <div *ngFor="let dia of festividades" class="col-1 p-0">
-                  <p-checkbox [(ngModel)]="dia.value" (onChange)="isAllFestividades()" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="dia.value" (onChange)="changeFestividades()" binary="true"></p-checkbox>
                 </div>
               </div>
               <div class="form-row mt-3">
@@ -156,6 +168,13 @@
               </div>
             </div>
           </div>
+          <div class="col-2 p-1">
+            {{ 'justiciaGratuita.guardia.gestion.seleccion' | translate}}:
+            <br>
+            <strong> {{infoDiasLab}}</strong>
+            <br>
+            <strong>{{infoDiasFes}}</strong>
+          </div>
           <div class="form-group col-12">
             <div class="form-row mt-3">
               <div class="col-7 ml-2 p-0">
@@ -164,12 +183,11 @@
               <div class="col-2">
                 <p-checkbox binary="true"></p-checkbox>
               </div>
+
+
             </div>
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
-</div>
