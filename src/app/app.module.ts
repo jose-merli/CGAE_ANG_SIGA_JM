@@ -345,6 +345,7 @@ import { PrecioModule } from './commons/precio/precio.module';
 import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
+import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 
 
 
@@ -690,7 +691,7 @@ import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradore
 		KeyFilterModule,
 		StepsModule,
 		BusquedaColegiadoExpressModule,
-
+		GeneralSJCSModule,
 		SelectButtonModule,
 		ColorPickerModule,
 		EditorModule,
