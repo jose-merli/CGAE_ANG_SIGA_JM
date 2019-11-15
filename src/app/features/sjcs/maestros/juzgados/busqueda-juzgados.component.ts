@@ -20,7 +20,7 @@ export class BusquedaJuzgadosComponent implements OnInit {
 
   datos;
 
-
+  institucionActual;
 
   progressSpinner: boolean = false;
   @ViewChild(FiltroJuzgadosComponent) filtros;
@@ -54,6 +54,7 @@ export class BusquedaJuzgadosComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.getInstitucion();
       }
       ).catch(error => console.error(error));
   }
@@ -63,7 +64,11 @@ export class BusquedaJuzgadosComponent implements OnInit {
     this.search(event);
   }
 
-
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+  }
   search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;

@@ -48,6 +48,8 @@ export class GrupoZonaComponent implements OnInit {
           this.validateHistorical();
 
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+          this.sigaServices.notifysendFechaBaja(this.body.fechabaja);
           this.progressSpinner = false;
         },
         err => {
@@ -144,7 +146,9 @@ export class GrupoZonaComponent implements OnInit {
     if (this.body.descripcionzona != undefined)
       this.body.descripcionzona = this.body.descripcionzona.trim();
     if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona != null && this.body.descripcionzona.trim() != "")) {
-      return false;
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+        return false;
+      }
     } else {
       return true;
     }

@@ -57,6 +57,7 @@ export class GestionModulosYBasesComponent implements OnInit {
         if (this.modulosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
           this.modulosItem.historico = true;
         }
+        this.modulosItem.buscar = true;
       },
       err => {
         console.log(err);

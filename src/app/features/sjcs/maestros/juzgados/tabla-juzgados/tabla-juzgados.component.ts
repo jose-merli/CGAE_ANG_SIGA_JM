@@ -3,7 +3,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
 
 @Component({
@@ -34,7 +34,7 @@ export class TablaJuzgadosComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -44,7 +44,8 @@ export class TablaJuzgadosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -79,14 +80,15 @@ export class TablaJuzgadosComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
       this.persistenceService.setDatos(evento.data);
+
       this.router.navigate(["/gestionJuzgados"]);
     } else {
-
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-
+      if (this.institucionActual != evento.data.idInstitucion) this.selectedDatos.pop();
+      else if (evento.data.fechabaja == undefined && this.historico) this.selectedDatos.pop();
     }
   }
 
@@ -117,6 +119,32 @@ export class TablaJuzgadosComponent implements OnInit {
       }
     );
   }
+
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
 
   activate() {
     let judgedActivate = new JuzgadoObject();
@@ -190,10 +218,10 @@ export class TablaJuzgadosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion != undefined && dato.idInstitucion == this.institucionActual);
+
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-      } else {
-        this.selectedDatos = this.datos;
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {

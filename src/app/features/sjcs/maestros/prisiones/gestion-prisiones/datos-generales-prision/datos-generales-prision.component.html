@@ -126,7 +126,7 @@
                   <input type="text" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
                     style="width: 100%" />
                 </div>
-                <div>
+                <div pTooltip="Verificar e-mail" tooltipPosition="bottom" style="display:inline-block;">
                   <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn button-edit" [disabled]="!emailValido"></button>
                 </div>
               </div>

@@ -87,15 +87,15 @@ export class FiltrosProcuradoresComponent implements OnInit {
     if (this.filtros.codigoExt != undefined && this.filtros.codigoExt != null) {
       this.filtros.codigoExt = this.filtros.codigoExt.trim();
     }
-    if (
-      (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
-      (this.filtros.apellido1 == null || this.filtros.apellido1 == "" || this.filtros.apellido1.length < 3) &&
-      (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.length < 3)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
-    } else {
-      return true;
-    }
+    // if (
+    //   (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
+    //   (this.filtros.apellido1 == null || this.filtros.apellido1 == "" || this.filtros.apellido1.length < 3) &&
+    //   (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.length < 3)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
+    return true;
+    // }
   }
 
   clearFilters() {

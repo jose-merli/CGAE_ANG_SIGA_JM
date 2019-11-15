@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -16,7 +16,6 @@ export class TablaPrisionesComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -34,7 +33,7 @@ export class TablaPrisionesComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -44,7 +43,8 @@ export class TablaPrisionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -73,19 +73,44 @@ export class TablaPrisionesComponent implements OnInit {
 
   }
 
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   openTab(evento) {
 
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
+      if (evento.data.idInstitucion != this.institucionActual)
+        evento.data.institucionVal = false;
       this.persistenceService.setDatos(evento.data);
+
       this.router.navigate(["/gestionPrisiones"]);
     } else {
-
-      if (evento.data.fechaBaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-
+      if (evento.data.idInstitucion != this.institucionActual) this.selectedDatos.pop()
+      else if (evento.data.fechaBaja == undefined && this.historico) this.selectedDatos.pop();
     }
   }
 
@@ -189,11 +214,10 @@ export class TablaPrisionesComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
 
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
-      } else {
-        this.selectedDatos = this.datos;
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
