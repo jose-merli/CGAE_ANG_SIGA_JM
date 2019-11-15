@@ -1,16 +1,22 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
-import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { DataTable } from 'primeng/primeng';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-asuntos',
   templateUrl: './asuntos.component.html',
-  styleUrls: ['./asuntos.component.scss']
+  styleUrls: ['./asuntos.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class AsuntosComponent implements OnInit {
+export class AsuntosComponent implements OnInit, OnChanges {
 
   rowsPerPage: any = [];
   cols;
   msgs;
+  progressSpinner: boolean = false;
 
   selectedItem: number = 10;
   selectAll;
@@ -23,28 +29,64 @@ export class AsuntosComponent implements OnInit {
   permisoEscritura: boolean = true;
   datos;
 
+
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
+  @Input() body: JusticiableItem = new JusticiableItem();
+  @Input() modoEdicion;
+  @Input() fromJusticiable;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private persistenceService: PersistenceService,
+    private sigaServices: SigaServices) { }
 
   ngOnInit() {
     this.getCols();
+
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.body != undefined && this.body.idpersona == undefined) {
+      this.showTarjeta = false;
+    }
+  }
+
+
   onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
+    if (this.modoEdicion) {
+      this.showTarjeta = !this.showTarjeta;
+
+      if (this.datos == undefined || this.datos == null) {
+        this.search();
+      }
+    }
   }
 
   getCols() {
 
+    let headerRol = "";
+    let fieldRol = "";
+    let widthRol = "";
+
+    if (this.fromJusticiable) {
+      fieldRol = "rol";
+      headerRol = "administracion.usuarios.literal.rol";
+      widthRol = "10%";
+    } else {
+      fieldRol = "interesado";
+      headerRol = "justiciaGratuita.justiciables.literal.interesados";
+      widthRol = "20%";
+
+    }
+
     this.cols = [
-      { field: "identificador", header: "Identificador" },
-      { field: "fecha", header: "Fecha" },
-      { field: "turno", header: "Turno/Guardia" },
-      { field: "colegiado", header: "Colegiado" },
-      { field: "rol", header: "Rol" },
-      { field: "datosInteres", header: "Datos Interés" }
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "10%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
+      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      { field: fieldRol, header: headerRol, width: widthRol },
+      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
 
     ];
 
@@ -66,6 +108,22 @@ export class AsuntosComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  search() {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
+      n => {
+
+        this.datos = JSON.parse(n.body).asuntosJusticiableItems;
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
   }
 
   onChangeRowsPerPages(event) {
@@ -128,5 +186,9 @@ export class AsuntosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  openTab() {
+
   }
 }

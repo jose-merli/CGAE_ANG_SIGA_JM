@@ -120,7 +120,7 @@ export class DatosDireccionComponent implements OnInit {
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" +
-        this.body.idProvincia +
+        this.body.idprovincia +
         "&filtro=" +
         this.poblacionBuscada
       )
@@ -141,17 +141,16 @@ export class DatosDireccionComponent implements OnInit {
   }
 
   onChangeCodigoPostal() {
-    if (this.body.idPais == "191") {
+    if (this.body.idpais == "191") {
       if (
-        this.commonsService.validateCodigoPostal(this.body.codigoPostal) &&
-        this.body.codigoPostal.length == 5) {
-        let value = this.body.codigoPostal.substring(0, 2);
+        this.commonsService.validateCodigoPostal(this.body.codigopostal) &&
+        this.body.codigopostal.length == 5) {
+        let value = this.body.codigopostal.substring(0, 2);
         this.provinciaSelecionada = value;
         this.isDisabledPoblacion = false;
-        if (value != this.body.idProvincia) {
-          this.body.idProvincia = this.provinciaSelecionada;
-          this.body.idPoblacion = "";
-          this.body.nombrePoblacion = "";
+        if (value != this.body.idprovincia) {
+          this.body.idprovincia = this.provinciaSelecionada;
+          this.body.idpoblacion = "";
           this.comboPoblacion = [];
           this.isDisabledProvincia = true;
         }
@@ -165,7 +164,7 @@ export class DatosDireccionComponent implements OnInit {
   }
 
   onChangeProvincia() {
-    this.body.idPoblacion = "";
+    this.body.idpoblacion = "";
     this.comboPoblacion = [];
   }
 

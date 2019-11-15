@@ -4,71 +4,71 @@ import { RouterModule, Routes } from '@angular/router';
 const routesSjcs: Routes = [
   {
     path: "zonasYsubzonas",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "mantenimientoJuzgados",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "areasYMaterias",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "costesFijos",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "fundamentosCalificacion",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "fundamentosResolucion",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "maestrosModulos",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "mantenimientoPrisiones",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "partidosJudiciales",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "mantenimientoComisarias",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "calendarioLaboralAgenda",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "mantenimientoprocuradores",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "tiposActuacion",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "destinatariosRetenciones",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "procedimientos",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "documentacionEJG",
-    loadChildren: () => import('./maestros/maestros.module').then(m => m.MaestrosModule),
+    loadChildren: './maestros/maestros.module#MaestrosModule'
   },
   {
     path: "justiciables",
-    loadChildren: () => import('./justiciables/justiciables.module').then(m => m.JusticiablesModule),
+    loadChildren: './justiciables/justiciables.module#JusticiablesModule'
   }
 ];
 

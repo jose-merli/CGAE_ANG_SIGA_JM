@@ -10,8 +10,8 @@
         <label class="title-ficha">{{ 'justiciaGratuita.justiciables.rol.representante' | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
           <label class="mr-3">
-            <i (click)="navigateToJusticiable();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-            <a (click)="navigateToJusticiable();$event.stopPropagation();">
+            <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+            <a (click)="navigateToRepresentante();$event.stopPropagation();">
               <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
               </span>
             </a>
@@ -30,24 +30,36 @@
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ 'justiciaGratuita.justiciables.rol.representante' | translate }}
             </label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
-          <div class="d-flex justify-content-between">
-            <label>NIF
-              <!-- <span>{{ generalBody.nif }}</span> -->
-            </label>
-            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-              <!-- <span>{{ generalBody.soloNombre }} {{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span> -->
-            </label>
+          <div class="row">
+            <div class="col-3">
+              <label>NIF
+                <span>{{ generalBody.nif }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                <span>{{ generalBody.nombre }} {{ generalBody.apellidos }}</span>
+              </label>
 
-            <label>
-              <i (click)="navigateToJusticiable();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-              <a (click)="navigateToJusticiable();$event.stopPropagation();">
-                <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+            </div>
+            <div class="col-3">
+              <label *ngIf="!checkedViewRepresentante">
+                <i (click)="navigateToJusticiable();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                <a (click)="navigateToJusticiable();$event.stopPropagation();">
+                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
+                  </span>
+                </a>
+              </label>
+              <label *ngIf="checkedViewRepresentante">
+                <i class="fas fa-external-link-alt mr-2"></i>
+                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
                 </span>
-              </a>
-            </label>
-            <i class="fa fa-angle-down float-right"></i>
+              </label>
+            </div>
+            <div class="col-3">
+              <i class="fa fa-angle-down float-right"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -66,31 +78,28 @@
               <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} (*)
               </label>
               <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody" showClear="true"></p-dropdown>
+                [(ngModel)]="generalBody.idtipoidentificacion" showClear="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody" type="text" class="form-control" pInputText />
-              <!-- <div *ngIf="identificacionValida == false">
-                                          <label class="labelError">{{ "censo.fichaColegial.mensaje.documento.noValido" | translate }}
-                                          </label>  </div> -->
+              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" pInputText (click)="compruebaDNI()" />
             </div>
             <div class="form-group col-lg-3 col-md-3 main-button pt-3">
               <label></label>
-              <button pButton type="button" icon="fa fa-search" iconPos="center"></button>
+              <button (click)="searchRepresentanteByNif()" pButton type="button" icon="fa fa-search" iconPos="center"></button>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
-              <input [(ngModel)]="generalBody" type="text" class="form-control" [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody.apellidos" type="text" disabled class="form-control" [maxLength]="100" pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
               </label>
-              <input [(ngModel)]="generalBody" type="text" class="form-control" [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" pInputText />
             </div>
           </div>
         </div>
@@ -99,9 +108,10 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"></button>
-        <button pButton (click)="searchJusticiable()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton (click)="associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -7,6 +7,8 @@ export class PersistenceService {
     private filtrosName: string = "filtros";
     private filtrosAuxName: string = "filtroAux";
     private datosName: string = "datos";
+    private bodyName: string = "body";
+    private bodyAuxName: string = "bodyAux";
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
     private fichasPosibles: string = "fichasPosibles";
@@ -52,6 +54,32 @@ export class PersistenceService {
         sessionStorage.removeItem(this.datosName);
     }
 
+    setBody(data: any) {
+        sessionStorage.setItem(this.bodyName, JSON.stringify(data));
+    }
+
+    getBody() {
+        let data = sessionStorage.getItem(this.bodyName);
+        return JSON.parse(data);
+    }
+
+    clearBody() {
+        sessionStorage.removeItem(this.bodyName);
+    }
+
+    setBodyAux(data: any) {
+        sessionStorage.setItem(this.bodyAuxName, JSON.stringify(data));
+    }
+
+    getBodyAux() {
+        let data = sessionStorage.getItem(this.bodyAuxName);
+        return JSON.parse(data);
+    }
+
+    clearBodyAux() {
+        sessionStorage.removeItem(this.bodyAuxName);
+    }
+
     setHistorico(data: any) {
         sessionStorage.setItem(this.historicoName, JSON.stringify(data));
     }
@@ -91,6 +119,7 @@ export class PersistenceService {
         sessionStorage.removeItem(this.fichasPosibles);
     }
 
+
     clearPersistence() {
         this.clearFiltros();
         this.clearHistorico();
@@ -98,6 +127,9 @@ export class PersistenceService {
         this.clearPermisos();
         this.clearFiltrosAux();
         this.clearFichasPosibles();
+        this.clearBody();
+        this.clearBodyAux();
+
     }
 
 }

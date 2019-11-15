@@ -7,7 +7,7 @@
         <div class="img-colegiado">
           <i class="fas fa-certificate icon-ficha"></i>
         </div>
-        <label class="title-ficha">Asuntos</label>
+        <label class="title-ficha">{{ 'justiciaGratuita.justiciables.literal.asuntos' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
       <div *ngIf="!showTarjeta" class="form-row">
@@ -19,27 +19,33 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">Asuntos
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.justiciables.literal.asuntos' | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
-          <div class="d-flex justify-content-between">
-            <label>Último Asunto
-              <!-- <span>{{ generalBody.nif }}</span> -->
-            </label>
-            <label>Número total de asuntos
-              <!-- <span>{{ generalBody.soloNombre }} {{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span> -->
-            </label>
-            <i class="fa fa-angle-down float-right"></i>
+          <div class="row">
+            <div class="col-3">
+              <label>{{ 'justiciaGratuita.justiciables.literal.ultimoAsunto' | translate }}
+                <span>{{ body.ultimoAsunto }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ 'justiciaGratuita.justiciables.literal.numTotalAsuntos' | translate }}
+                <span>{{ body.numeroAsuntos }}</span>
+              </label>
+            </div>
+            <div class="col-3"></div>
+            <div class="col-3">
+              <i class="fa fa-angle-down float-right"></i>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
       <div class="row">
-        <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
-          class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-          [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="openTab()" [responsive]="true"
+          #table class="tabla-listado" [paginator]="true" paginatorPosition="both">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
@@ -48,7 +54,7 @@
           <ng-template pTemplate="header" let-columns>
             <tr>
               <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                {{ col.header }}
+                {{ col.header | translate }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
                 <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
                   table.filter($event.target.value, col.field, 'contains')
@@ -59,8 +65,16 @@
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div>
+                <div *ngIf="col.field != 'fecha' && col.field != 'datosInteres'">
                   <span>{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="col.field == 'fecha'">
+                  <div>
+                    <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                  </div>
+                </div>
+                <div *ngIf="col.field == 'datosInteres'">
+                  <div [innerHTML]="dato[col.field]"></div>
                 </div>
               </td>
 

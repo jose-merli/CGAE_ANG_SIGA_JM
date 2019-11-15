@@ -651,39 +651,39 @@ const appRoutes: Routes = [
   //Justicia Gratuita
   {
     path: "zonasYsubzonas",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "areasYMaterias",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "costesFijos",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "funcamentosCalificacion",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "fundamentosResolucion",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "partidas",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "partidosJudiciales",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "retencionesIRPF",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "maestrosModulos",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "calendarioLaboral",
@@ -692,23 +692,23 @@ const appRoutes: Routes = [
   },
   {
     path: "mantenimientoprocuradores",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "mantenimientoPrisiones",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "mantenimientoComisarias",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "mantenimientoJuzgados",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "documentacionEJG",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "maestroPJ",
@@ -717,27 +717,27 @@ const appRoutes: Routes = [
   },
   {
     path: "destinatariosRetenciones",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "tiposActuacion",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "tiposAsistencia",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "calendarioLaboralAgenda",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "procedimientos",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule)
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule'
   },
   {
     path: "justiciables",
-    loadChildren: () => import('./features/sjcs/sjcs.module').then(m => m.SjcsModule),
+    loadChildren: './features/sjcs/sjcs.module#SjcsModule',
   },
   {
     path: "turnos",

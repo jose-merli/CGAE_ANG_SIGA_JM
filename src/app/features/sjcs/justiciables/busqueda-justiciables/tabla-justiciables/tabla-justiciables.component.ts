@@ -35,6 +35,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
+  @Input() modoRepresentante;
 
   @ViewChild("table") table: DataTable;
 
@@ -57,104 +58,22 @@ export class TablaJusticiablesComponent implements OnInit {
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.historico = this.persistenceService.getHistorico();
-    }
-
   }
 
-  searchHistorical() {
-
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
-    }
-
-  }
 
   openTab(evento) {
 
+    if (!this.modoRepresentante) {
+      this.persistenceService.clearDatos();
+      this.persistenceService.setDatos(evento);
+      this.router.navigate(["/gestionJusticiables"]);
+    } else {
+      this.persistenceService.clearBody();
+      this.persistenceService.setBody(evento);
+      this.router.navigate(["/gestionJusticiables"]);
+    }
 
-    // if (!this.selectAll && !this.selectMultiple) {
-    //   this.progressSpinner = true;
-    //   this.persistenceService.setDatos(evento.data);
-    //   sessionStorage.setItem("calendarioLaboralAgenda", "true");
-    //   this.router.navigate(["/fichaEventos"]);
-    // } else {
-
-    //   if (evento.data.fechaBaja == undefined && this.historico) {
-    //     this.selectedDatos.pop();
-    //   } else if (this.institucionActual == "2000") {
-    //     if (evento.data.title == 'Fiesta Autonómica') {
-    //       this.selectedDatos.pop();
-    //     }
-    //   } else {
-    //     if (evento.data.title == 'Fiesta Autonómica' || evento.data.title == 'Fiesta Nacional') {
-    //       this.selectedDatos.pop();
-    //     }
-    //   }
-
-    // }
   }
-
-  delete() {
-
-    let justiciablesDelete = new JusticiableBusquedaObject();
-    justiciablesDelete.justiciableBusquedaItems = this.selectedDatos;
-    this.sigaServices.post("calendarioLaboralAgenda_deleteFestivos", justiciablesDelete).subscribe(
-
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  activate() {
-    let justiciablesActivate = new JusticiableBusquedaObject();
-    justiciablesActivate.justiciableBusquedaItems = this.selectedDatos;
-    this.sigaServices.post("calendarioLaboralAgenda_activateFestivos", justiciablesActivate).subscribe(
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-
 
   setItalic(dato) {
     if (dato.fechaBaja == null) return false;
@@ -218,20 +137,20 @@ export class TablaJusticiablesComponent implements OnInit {
 
   }
 
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
+  // isSelectMultiple() {
+  //   if (this.permisoEscritura) {
 
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
+  //     this.selectMultiple = !this.selectMultiple;
+  //     if (!this.selectMultiple) {
+  //       this.selectedDatos = [];
+  //       this.numSelected = 0;
+  //     } else {
+  //       this.selectAll = false;
+  //       this.selectedDatos = [];
+  //       this.numSelected = 0;
+  //     }
+  //   }
+  // }
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;

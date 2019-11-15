@@ -740,6 +740,18 @@ export class SigaServices {
   habilitarDocs$ = this.habilitarDocs.asObservable();
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
 
+  private searchRepresentanteJusticiable = new Subject<any>();
+  searchRepresentanteJusticiable$ = this.searchRepresentanteJusticiable.asObservable();
+
+  private sendRepresentanteJusticiable = new Subject<any>();
+  sendRepresentanteJusticiable$ = this.sendRepresentanteJusticiable.asObservable();
+
+  private createRepresentanteJusticiable = new Subject<any>();
+  createRepresentanteJusticiable$ = this.createRepresentanteJusticiable.asObservable();
+
+  private guardarDatosGeneralesJusticiable = new Subject<any>();
+  guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
+
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
@@ -1002,6 +1014,24 @@ export class SigaServices {
   notifyDesHabilitarDocumentos() {
     this.desHabilitarDocs.next();
   }
+
+  notifyGuardarDatosGeneralesJusticiable(data) {
+    this.guardarDatosGeneralesJusticiable.next(data);
+  }
+
+  notifySearchRepresentanteJusticiable() {
+    this.searchRepresentanteJusticiable.next();
+  }
+
+  notifyCreateRepresentanteJusticiable(data) {
+    this.createRepresentanteJusticiable.next(data);
+  }
+
+  notifySendRepresentanteJusticiable(data) {
+    this.sendRepresentanteJusticiable.next(data);
+  }
+
+
 
   postSendContentAndParameter(
     service: string,

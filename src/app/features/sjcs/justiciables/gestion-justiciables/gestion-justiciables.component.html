@@ -1,21 +1,31 @@
-<div class="ficha-comunicacion-container">
+<div class="ficha-comunicacion-container" id="mainContainer">
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
       <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.justiciables' | translate }}
-      <i class="fa fa-angle-right"></i> Gestion Justiciables
+      <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.justiciables.gestionjusticiables' | translate }}
     </p>
   </div>
   <div>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-      <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa"></app-datos-generales>
-      <app-datos-direccion *ngSwitchCase="'direccion'" [showTarjeta]="ficha.activa"></app-datos-direccion>
-      <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa"></app-datos-solicitud>
-      <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa"></app-datos-representante>
-      <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="activa"></app-asuntos>
+
+      <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable"
+        [modoRepresentante]="modoRepresentante"></app-datos-generales>
+
+      <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body"></app-datos-solicitud>
+
+      <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"
+        [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"></app-datos-representante>
+
+      <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [modoEdicion]="modoEdicion"></app-asuntos>
+
     </div>
   </div>
 </div>
 <div class="mt-3 text-right main-button ">
   <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

@@ -36,7 +36,6 @@ import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
-import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
@@ -339,6 +338,7 @@ import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
 import { PrecioModule } from './commons/precio/precio.module';
+import { DialogoModule } from './commons/dialog/dialogo.module';
 
 
 
@@ -354,7 +354,6 @@ import { PrecioModule } from './commons/precio/precio.module';
 		LoginDevelopComponent,
 		HeaderComponent,
 		HomeComponent,
-		ConfirmDialogComponent,
 		// Censo
 		AuditoriaComponent,
 		AccesoFichaPersonaComponent,
@@ -676,6 +675,7 @@ import { PrecioModule } from './commons/precio/precio.module';
 		DialogModule,
 		PipeTranslationModule,
 		FechaModule,
+		DialogoModule,
 		PrecioModule,
 
 		KeyFilterModule,

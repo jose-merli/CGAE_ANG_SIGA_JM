@@ -8,8 +8,8 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura"></app-filtro-justiciables>
-  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)"></app-tabla-justiciables>
+  <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante"></app-filtro-justiciables>
+  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante"></app-tabla-justiciables>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

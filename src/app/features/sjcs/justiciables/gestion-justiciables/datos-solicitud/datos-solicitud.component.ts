@@ -1,16 +1,18 @@
 
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
   styleUrls: ['./datos-solicitud.component.scss']
 })
-export class DatosSolicitudComponent implements OnInit {
+export class DatosSolicitudComponent implements OnInit, OnChanges {
 
   bodyInicial;
   progressSpinner: boolean = false;
@@ -21,47 +23,176 @@ export class DatosSolicitudComponent implements OnInit {
   comboAutorizaAvisotel;
   comboSolicitajg;
 
+  selectedAutorizaavisotel;
+  selectedAsistidosolicitajg;
+  selectedAsistidoautorizaeejg;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
 
-  //Resultados de la busqueda
   @Input() showTarjeta;
+  @Input() body: JusticiableItem;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
-
-  ngOnChanges(changes: SimpleChanges) {
-  }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
+
+    if (this.body != undefined && this.body.idpersona != undefined) {
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+      this.tratamientoDescripcionesTarjeta();
+
+    } else {
+      this.body = new JusticiableItem();
+    }
+
+    if (this.body.idpersona == undefined) {
+      this.modoEdicion = false;
+    } else {
+      this.modoEdicion = true;
+    }
+
+    this.getCombos();
+
+    this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+      this.body = data;
+      this.modoEdicion = true;
+
+    });
+
   }
 
-  ngAfterViewInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.body != undefined && this.body.idpersona != undefined) {
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+      this.tratamientoDescripcionesTarjeta();
+
+    } else {
+      this.body = new JusticiableItem();
+    }
+
+    if (this.body.idpersona == undefined) {
+      this.modoEdicion = false;
+
+    } else {
+      this.modoEdicion = true;
+    }
+  }
+
+  tratamientoDescripcionesTarjeta() {
+
+    if (this.body.autorizaavisotelematico != undefined && this.body.autorizaavisotelematico != null) {
+      if (this.body.autorizaavisotelematico == "0") {
+        this.selectedAutorizaavisotel = "NO";
+      } else {
+        this.selectedAutorizaavisotel = "SI";
+      }
+    }
+
+    if (this.body.asistidosolicitajg != undefined && this.body.asistidosolicitajg != null) {
+      if (this.body.asistidosolicitajg == "0") {
+        this.selectedAsistidosolicitajg = "NO";
+      } else {
+        this.selectedAsistidosolicitajg = "SI";
+      }
+    }
+
+    if (this.body.asistidoautorizaeejg != undefined && this.body.asistidoautorizaeejg != null) {
+      if (this.body.asistidoautorizaeejg == "0") {
+        this.selectedAsistidoautorizaeejg = "NO";
+      } else {
+        this.selectedAsistidoautorizaeejg = "SI";
+      }
+    }
   }
 
   rest() {
-    // if (this.modoEdicion) {
-    //   if (this.bodyInicial != undefined) this.areasItem = JSON.parse(JSON.stringify(this.bodyInicial));
-    // } else {
-    //   this.areasItem = new AreasItem();
-    // }
+    if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+  }
+
+  getCombos() {
+    this.getComboAutorizaAvisotel();
+    this.getComboAutorizaEjg();
+    this.getComboSolicitajg();
+  }
+
+  getComboAutorizaAvisotel() {
+    this.comboAutorizaAvisotel = [
+      { label: "No", value: "0" },
+      { label: "Sí", value: "1" }
+    ];
+
+    this.commonsService.arregloTildesCombo(this.comboAutorizaAvisotel);
+  }
+
+  getComboAutorizaEjg() {
+    this.comboAutorizaEjg = [
+      { label: "No", value: "0" },
+      { label: "Sí", value: "1" }
+    ];
+
+    this.commonsService.arregloTildesCombo(this.comboAutorizaEjg);
+  }
+
+  getComboSolicitajg() {
+    this.comboSolicitajg = [
+      { label: "No", value: "0" },
+      { label: "Sí", value: "1" }
+    ];
+
+    this.commonsService.arregloTildesCombo(this.comboSolicitajg);
+  }
+
+  onChangeAutorizaAvisoTelematico() {
+    if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+      if (this.body.autorizaavisotelematico == "1") {
+        this.body.autorizaavisotelematico = undefined;
+        this.showMessage("info", this.translateService.instant("general.message.informacion"), "Es necesario tener un correo electronico para poder recibir notificaciones");
+      }
+    }
   }
 
   save() {
-    this.progressSpinner = true;
-    let url = "";
-    if (!this.modoEdicion) {
-      url = "fichaAreas_createAreas";
-      this.callSaveService(url);
+    if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+      if (this.body.autorizaavisotelematico == "1") {
+        this.showMessage("info", this.translateService.instant("general.message.informacion"), "Es necesario tener un correo electronico para poder recibir notificaciones");
+      } else {
+        this.callServiceSave();
+      }
     } else {
-      url = "fichaAreas_updateAreas";
-      this.callSaveService(url);
+      this.callServiceSave();
     }
-
   }
 
-  callSaveService(url) {
+  callServiceSave() {
 
+    this.progressSpinner = true;
+    let url = "gestionJusticiables_updateDatosSolicitudJusticiable";
+
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.tratamientoDescripcionesTarjeta();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
 
   }
 
@@ -78,17 +209,10 @@ export class DatosSolicitudComponent implements OnInit {
     });
   }
 
-  disabledSave() {
-    // if (this.areasItem.nombreArea != undefined) this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
-    // if (this.areasItem.nombreArea != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
-    //   return false;
-    // } else {
-    //   return true;
-    // }
-  }
-
   onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
+    if (this.modoEdicion) {
+      this.showTarjeta = !this.showTarjeta;
+    }
   }
 
 }
