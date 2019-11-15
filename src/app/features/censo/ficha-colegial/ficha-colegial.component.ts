@@ -951,7 +951,7 @@ export class FichaColegialComponent implements OnInit {
       key == "regtel"
     ) {
 
-      if (this.generalBody.identificadords != null || (this.bodyRegTel  !=  null  &&  this.bodyRegTel.length  >  0)) {
+      if (this.generalBody.identificadords != null || (this.bodyRegTel != null && this.bodyRegTel.length > 0)) {
         this.activacionEditar = true;
       } else {
         this.activacionEditar = false;
@@ -1313,15 +1313,15 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       n => {
         this.tipoIdentificacion = n.combooItems;
-        // 1: {label: "CIF", value: "20"}
-        // 2: {label: "NIE", value: "40"}
-        // 3: {label: "NIF", value: "10"}
-        // 4: {label: "Otro", value: "50"}
-        // 5: {label: "Pasaporte", value: "30"}
-        this.tipoIdentificacion[5].label =
-          this.tipoIdentificacion[5].label +
+        // 0: {label: "CIF", value: "20"}
+        // 1: {label: "NIE", value: "40"}
+        // 2: {label: "NIF", value: "10"}
+        // 3: {label: "Otro", value: "50"}
+        // 4: {label: "Pasaporte", value: "30"}
+        this.tipoIdentificacion[4].label =
+          this.tipoIdentificacion[4].label +
           " / " +
-          this.tipoIdentificacion[4].label;
+          this.tipoIdentificacion[3].label;
       },
       err => {
         console.log(err);

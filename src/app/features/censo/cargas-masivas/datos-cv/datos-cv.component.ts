@@ -241,7 +241,11 @@ export class DatosCvComponent implements OnInit {
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, this.body.nombreFichero);
+          if (this.body.nombreFichero == undefined) {
+            saveAs(blob, "PlantillaMasivaDatosCV.xls");
+          } else {
+            saveAs(blob, this.body.nombreFichero);
+          }
           this.progressSpinner = true;
         },
         err => {

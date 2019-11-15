@@ -227,8 +227,11 @@ export class CargaEtiquetasComponent implements OnInit {
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosGF.xls");
-          this.progressSpinner = false;
+          if (this.body.nombreFichero == undefined) {
+            saveAs(blob, "PlantillaMasivaDatosGF.xls");
+          } else {
+            saveAs(blob, this.body.nombreFichero);
+          } this.progressSpinner = false;
         },
         err => {
           console.log(err);
