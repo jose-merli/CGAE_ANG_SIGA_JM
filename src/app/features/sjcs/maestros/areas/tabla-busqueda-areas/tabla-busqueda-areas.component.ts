@@ -44,7 +44,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   @Output() searchAreasSend = new EventEmitter<boolean>();
 
-  @ViewChild("tabla") tabla;
+  @ViewChild("table") tabla;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
