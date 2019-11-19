@@ -334,7 +334,7 @@ export class TablaDestinatariosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombre != undefined && this.datos[0].orden != undefined && this.datos[0].cuentacontable != undefined) {
+      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim() != "") {
         return false;
       } else {
         return true;
@@ -342,9 +342,7 @@ export class TablaDestinatariosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos
-        && (this.datos[0].nombre != undefined && this.datos[0].nombre != ""
-          && this.datos[0].orden != undefined && this.datos[0].orden != ""
-          && this.datos[0].cuentacontable != undefined && this.datos[0].cuentacontable != "")) {
+        && (this.datos[0].nombre != undefined && this.datos[0].nombre.trim() != "")) {
         return false;
       } else {
         return true;

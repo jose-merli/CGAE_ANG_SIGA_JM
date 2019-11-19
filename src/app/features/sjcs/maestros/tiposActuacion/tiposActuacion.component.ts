@@ -314,12 +314,12 @@ export class TiposActuacionComponent implements OnInit {
   callSaveService(url) {
     if (this.body.tiposActuacionItem != undefined) {
       this.body.tiposActuacionItem.forEach(element => {
-        element.importe = + element.importe.replace(",", ".");
-        element.importemaximo = + element.importemaximo.replace(",", ".");
+        element.importe = + (element.importe + "").replace(",", ".");
+        element.importemaximo = + (element.importemaximo + "").replace(",", ".");
       });
     } else {
-      this.body.importe = + this.body.importe.replace(",", ".");
-      this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
+      this.body.importe = + (this.body.importe + "").replace(",", ".");
+      this.body.importemaximo = + (this.body.importemaximo + "").replace(",", ".");
     }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -345,7 +345,7 @@ export class TiposActuacionComponent implements OnInit {
         }
         this.progressSpinner = false;
         this.editMode = true;
-        this.nuevo = false;
+        this.nuevo = true;
         this.updateTiposActuacion = [];
       },
       () => {
@@ -443,35 +443,7 @@ export class TiposActuacionComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
-    // if (findDato != undefined) {
-    //   // let dato2 = dato;
-    //   let tiposAsistenciaString = "";
-    //   for (let i in dato.seleccionadosReal) {
-    //     tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
-    //   }
-    //   dato.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
-    //   dato.seleccionados = "";
-    //   // this.updateTiposActuacion.push(dato);
 
-    //   if ((dato.descripciontipoactuacion == null || dato.descripciontipoactuacion == "")
-    //     || (dato.importe == null || dato.importe == "")
-    //     || (dato.importemaximo == null || dato.importemaximo == "")
-    //     || (dato.seleccionadosReal.length == 0 || dato.seleccionadosReal == "")) {
-    //     this.permitirGuardar = false;
-    //   } else {
-    //     this.permitirGuardar = true;
-    //   }
-    //   this.updateTiposActuacion.push(dato);
-    //   if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion || dato.importe != findDato.importe ||
-    //     dato.importemaximo != findDato.importemaximo) {
-
-    //     let findUpdate = this.updateTiposActuacion.find(item => item.descripciontipoactuacion === dato.descripciontipoactuacion && item.importe === dato.importe && item.importemaximo === dato.importemaximo);
-
-    //     if (findUpdate == undefined) {
-    //       // this.updateTiposActuacion.push(dato);
-    //     }
-    //   }
-    // }
     if (findDato != undefined) {
       let tiposAsistenciaString = "";
       for (let i in dato.seleccionadosReal) {
@@ -493,14 +465,22 @@ export class TiposActuacionComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].importe != undefined && this.datos[0].importemaximo != undefined
-        && this.datos[0].seleccionadosReal != undefined) {
+      if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].descripciontipoactuacion != "" &&
+        this.datos[0].importe != undefined && this.datos[0].importe != "" && this.datos[0].importemaximo != undefined
+        && this.datos[0].importemaximo != "" && (this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "")) {
         return false;
       } else {
         return true;
       }
 
     } else {
+      this.updateTiposActuacion = this.updateTiposActuacion.filter(it => {
+        if (it.descripciontipoactuacion != undefined && it.descripciontipoactuacion != "" &&
+          it.importe != undefined && it.importe != "" && it.importemaximo != undefined
+          && it.importemaximo != "" && (it.seleccionadosReal != undefined && it.seleccionadosReal != ""))
+          return true;
+        else false;
+      })
       if (!this.historico && (this.updateTiposActuacion != undefined && this.updateTiposActuacion.length > 0) && this.permisoEscritura && this.permitirGuardar) {
         return false;
       } else {

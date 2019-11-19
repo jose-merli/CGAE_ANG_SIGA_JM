@@ -58,7 +58,16 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
 
   }
 
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
+    }
+  }
   nuevo() {
     this.persistenceService.clearDatos();
     sessionStorage.setItem("calendarioLaboralAgenda", "true");

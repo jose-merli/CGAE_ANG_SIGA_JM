@@ -344,12 +344,12 @@ export class TiposAsistenciaComponent implements OnInit {
   callSaveService(url) {
     if (this.body.tiposAsistenciasItem != undefined) {
       this.body.tiposAsistenciasItem.forEach(element => {
-        element.importe = + element.importe.replace(",", ".");
-        element.importemaximo = + element.importemaximo.replace(",", ".");
+        element.importe = + (element.importe + "").replace(",", ".");
+        element.importemaximo = + (element.importemaximo + "").replace(",", ".");
       });
     } else {
-      this.body.importe = + this.body.importe.replace(",", ".");
-      this.body.importemaximo = + this.body.importemaximo.replace(",", ".");
+      this.body.importe = + (this.body.importe + "").replace(",", ".");
+      this.body.importemaximo = + (this.body.importemaximo + "").replace(",", ".");
 
     }
     this.sigaServices.post(url, this.body).subscribe(
@@ -374,7 +374,7 @@ export class TiposAsistenciaComponent implements OnInit {
         }
         this.progressSpinner = false;
         this.editMode = true;
-        this.nuevo = false;
+        this.nuevo = true;
       },
       () => {
         this.selectedDatos = [];
@@ -675,15 +675,25 @@ export class TiposAsistenciaComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].tipoasistencia != undefined && this.datos[0].importe != undefined && this.datos[0].importemaximo != undefined
-        && this.datos[0].seleccionadosReal != undefined) {
+      if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia != "" &&
+        this.datos[0].importe != undefined && this.datos[0].importe != ""
+        && this.datos[0].importemaximo != undefined && this.datos[0].importemaximo != ""
+        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
         return false;
       } else {
         return true;
       }
 
     } else {
-      if (!this.historico && (this.updateTiposAsistencia != undefined && this.updateTiposAsistencia.length > 0) && this.permisoEscritura) {
+      this.updateTiposAsistencia = this.updateTiposAsistencia.filter(it => {
+        if (it.tipoasistencia != undefined && it.tipoasistencia != "" &&
+          it.importe != undefined && it.importe != ""
+          && it.importemaximo != undefined && it.importemaximo != ""
+          && it.seleccionadosReal != undefined && it.seleccionadosReal != "")
+          return true;
+        else false;
+      })
+      if (!this.historico && (this.updateTiposAsistencia != undefined && this.updateTiposAsistencia.length > 0)) {
         return false;
       } else {
         return true;
