@@ -26,6 +26,7 @@ import { endpoints_justiciables } from "../utils/endpoints_justiciables";
 import { endpoints_oficio } from "../utils/endpoints_oficio";
 
 import { endpoints_componentes } from "../utils/endpoints_components";
+import { endpoints_generales } from "../utils/endpoints_generales";
 
 
 
@@ -721,6 +722,7 @@ export class SigaServices {
     dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
     ...endpoints_componentes,
     dialogo_keys: "dialogoComunicacion/keys",
+    ...endpoints_generales,
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
     dialogo_envioTest: "dialogoComunicacion/envioTest",

@@ -56,7 +56,7 @@ export class TablaMateriasComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private  confirmationService:  ConfirmationService) { }
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getCols();
@@ -300,7 +300,7 @@ export class TablaMateriasComponent implements OnInit {
         this.datos[datoId].nombreMateria = this.selectedDatos[0].nombreMateria;
       } else {
         let dato = this.datos[datoId];
-        this.editarMateria(dato);
+        // this.editarMateria(dato);
       }
 
       // this.seleccion = false;
@@ -331,6 +331,10 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   disabledSave() {
+
+    if (this.selectMultiple || this.selectAll) {
+      return true;
+    }
     if (this.nuevo) {
       if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
         return false;
@@ -339,7 +343,8 @@ export class TablaMateriasComponent implements OnInit {
       }
 
     } else {
-      if ((this.updateAreas != undefined && this.updateAreas.length > 0) || this.selectedDatos.length > 0) {
+
+      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
         return false;
       } else {
         return true;
@@ -374,12 +379,12 @@ export class TablaMateriasComponent implements OnInit {
 
   editarMateria(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idMateria === dato.idMateria && item.idArea === dato.idArea);
+    let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
 
     if (findDato != undefined) {
       if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
 
-        let findUpdate = this.updateAreas.find(item => item.idMateria === dato.idMateria && item.idArea === dato.idArea);
+        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
 
         if (findUpdate == undefined) {
           let dato2 = dato;
