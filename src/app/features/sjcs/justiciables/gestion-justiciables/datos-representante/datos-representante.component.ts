@@ -7,7 +7,6 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { THIS_EXPR } from '../../../../../../../node_modules/@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-datos-representante',
@@ -17,14 +16,11 @@ import { THIS_EXPR } from '../../../../../../../node_modules/@angular/compiler/s
 export class DatosRepresentanteComponent implements OnInit, OnChanges {
 
   generalBody: JusticiableItem = new JusticiableItem();
-  generalBodyInicial;
   existeImagen: boolean = false;
 
   tipoIdentificacion;
   progressSpinner: boolean = false;
   msgs = [];
-
-  idPersona;
 
   @Input() modoEdicion;
   @Input() showTarjeta;
@@ -32,6 +28,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
   @Input() checkedViewRepresentante;
 
   searchRepresentanteGeneral: boolean = false;
+  navigateToJusticiable: boolean = false;
+  idPersona;
 
   @Output() newRepresentante = new EventEmitter<JusticiableItem>();
   @Output() viewRepresentante = new EventEmitter<JusticiableItem>();
@@ -44,32 +42,60 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
     this.getTiposIdentificacion();
     this.persistenceService.clearFiltrosAux();
 
-    if (this.persistenceService.getBody() != undefined) {
-      this.generalBody = this.persistenceService.getBody();
-      this.idPersona = this.persistenceService.getBody().idPersona;
-      this.generalBody.nombre = this.persistenceService.getBody().nombreSolo;
-      this.compruebaDNI();
-      this.showTarjeta = true;
-      this.searchRepresentanteGeneral = true;
-    } else {
-      this.showTarjeta = false;
-      this.generalBody = new JusticiableItem();
-
-    }
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
 
-    if (!this.searchRepresentanteGeneral) {
-      if (this.body != undefined && this.body.idrepresentantejg != undefined && !this.checkedViewRepresentante) {
+    if (this.persistenceService.getBody() != undefined) {
+      this.generalBody = this.persistenceService.getBody();
+
+      if (this.persistenceService.getBody().nombreSolo != undefined && this.persistenceService.getBody().nombreSolo != null) {
+        this.generalBody.nombre = this.persistenceService.getBody().nombreSolo;
+      }
+
+      if (this.persistenceService.getBody().apellido1 != undefined && this.persistenceService.getBody().apellido1 != null) {
+        this.generalBody.apellidos = this.persistenceService.getBody().apellido1;
+      }
+
+      if (this.persistenceService.getBody().apellido2 != undefined && this.persistenceService.getBody().apellido2 != null) {
+        this.generalBody.apellidos += " " + this.persistenceService.getBody().apellido2;
+      }
+
+
+      this.compruebaDNI();
+      this.showTarjeta = true;
+      this.searchRepresentanteGeneral = true;
+    } else {
+      this.generalBody = new JusticiableItem();
+    }
+
+    //Se comprueba si proviene del enlace de navegacion del representante, si es ese caso
+    if (this.navigateToJusticiable) {
+
+      //Se comprueba si ese representante tiene representante asignado, comprobamos que que el cambio de informacion se haya realizado para ver la ficha del representante
+      if (this.body != undefined && this.body.idrepresentantejg != undefined && (this.generalBody.idpersona == undefined || this.generalBody.idpersona == null)
+        && this.idPersona != undefined && this.idPersona != null && this.idPersona == this.body.idpersona) {
         this.showTarjeta = true;
         this.searchJusticiable();
-      } else {
+      } else if (this.idPersona != undefined && this.idPersona != null && this.idPersona == this.body.idpersona) {
         this.showTarjeta = false;
         this.generalBody = new JusticiableItem();
-        this.generalBodyInicial = JSON.parse(JSON.stringify(this.generalBody));
+        this.navigateToJusticiable = false;
 
+      }
+
+    } else {
+      //En caso de venir de un punto de la app, comprobamos que el justiciable tenga representante
+      if (this.body != undefined && this.body.idrepresentantejg != undefined && (this.generalBody.idpersona == undefined || this.generalBody.idpersona == null)) {
+        this.searchJusticiable();
+      } else {
+        if (this.generalBody != undefined && this.generalBody.idpersona != undefined && this.generalBody.idpersona != null) {
+          this.showTarjeta = true;
+
+        } else {
+          this.showTarjeta = false;
+
+        }
       }
     }
 
@@ -84,15 +110,16 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
   searchJusticiable() {
     this.progressSpinner = true;
     let bodyBusqueda = new JusticiableBusquedaItem();
-    bodyBusqueda.idPersona = this.body.idrepresentantejg;
+    bodyBusqueda.idpersona = this.body.idrepresentantejg;
     bodyBusqueda.idInstitucion = this.body.idinstitucion;
 
     this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe(
       n => {
 
         this.generalBody = JSON.parse(n.body).justiciable;
-        this.generalBodyInicial = JSON.parse(JSON.stringify(this.generalBody));
+        this.persistenceService.clearBody();
         this.progressSpinner = false;
+        this.navigateToJusticiable = false;
 
       },
       err => {
@@ -114,7 +141,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
   }
 
   search() {
-    this.persistenceService.clearBody() //--> ESTO HACE Q NO SE RESTABLEZCA EL REPREENTANTE CUANDO SE CREA UNO DESDE EL BOTON BUSCAR TENGO Q MIRAR COMO HACERLO
+    this.persistenceService.clearBody();
     this.router.navigate(["/justiciables"], { queryParams: { rp: "1" } });
   }
 
@@ -129,7 +156,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
         n => {
 
           this.generalBody = JSON.parse(n.body).justiciable;
-          this.idPersona = this.generalBody.idpersona;
           this.progressSpinner = false;
 
           if (this.generalBody.idpersona == null || this.generalBody.idpersona == undefined) {
@@ -188,8 +214,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
       this.generalBody.nif != null && this.generalBody.nif != this.body.nif) {
 
       this.progressSpinner = true;
-      this.body.idrepresentantejg = this.idPersona;
-      this.generalBodyInicial = JSON.parse(JSON.stringify(this.generalBody));
+      this.body.idrepresentantejg = this.generalBody.idpersona;
 
       this.sigaServices.post("gestionJusticiables_associateRepresentante", this.body).subscribe(
         n => {
@@ -215,7 +240,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.generalBody = new JusticiableItem();
-        this.generalBodyInicial = JSON.parse(JSON.stringify(this.generalBody));
         this.body.idrepresentantejg = undefined;
         this.progressSpinner = false;
 
@@ -230,6 +254,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
 
     if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona != "") {
       this.commonsService.scrollTop();
+      this.idPersona = this.generalBody.idpersona;
+      this.navigateToJusticiable = true;
       this.viewRepresentante.emit(this.generalBody);
     }
 
@@ -237,9 +263,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges {
 
   rest() {
 
-    if (this.generalBodyInicial != undefined && this.generalBodyInicial.idpersona != undefined) {
-      this.generalBody = JSON.parse(JSON.stringify(this.generalBodyInicial));
-    } else if (this.generalBodyInicial != undefined && this.generalBodyInicial.idpersona == undefined && this.body.idrepresentantejg != undefined) {
+    if (this.body.idrepresentantejg != undefined) {
       this.searchJusticiable();
     } else {
       this.generalBody = new JusticiableItem();

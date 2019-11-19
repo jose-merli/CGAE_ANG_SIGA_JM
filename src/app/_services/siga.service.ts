@@ -742,16 +742,6 @@ export class SigaServices {
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
   sendFechaBaja$ = this.sendFechaBaja.asObservable();
 
-
-  private searchRepresentanteJusticiable = new Subject<any>();
-  searchRepresentanteJusticiable$ = this.searchRepresentanteJusticiable.asObservable();
-
-  private sendRepresentanteJusticiable = new Subject<any>();
-  sendRepresentanteJusticiable$ = this.sendRepresentanteJusticiable.asObservable();
-
-  private createRepresentanteJusticiable = new Subject<any>();
-  createRepresentanteJusticiable$ = this.createRepresentanteJusticiable.asObservable();
-
   private guardarDatosGeneralesJusticiable = new Subject<any>();
   guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
 
@@ -1020,18 +1010,6 @@ export class SigaServices {
 
   notifyGuardarDatosGeneralesJusticiable(data) {
     this.guardarDatosGeneralesJusticiable.next(data);
-  }
-
-  notifySearchRepresentanteJusticiable() {
-    this.searchRepresentanteJusticiable.next();
-  }
-
-  notifyCreateRepresentanteJusticiable(data) {
-    this.createRepresentanteJusticiable.next(data);
-  }
-
-  notifySendRepresentanteJusticiable(data) {
-    this.sendRepresentanteJusticiable.next(data);
   }
 
   notifysendFechaBaja(fecha) {

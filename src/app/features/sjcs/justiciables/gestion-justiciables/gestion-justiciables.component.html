@@ -10,7 +10,7 @@
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
 
       <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable"
-        [modoRepresentante]="modoRepresentante"></app-datos-generales>
+        [modoRepresentante]="modoRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"></app-datos-generales>
 
       <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body"></app-datos-solicitud>
 

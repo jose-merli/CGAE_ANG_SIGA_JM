@@ -1,5 +1,5 @@
 export class JusticiableBusquedaItem {
-  idPersona: string;
+  idpersona: string;
   idInstitucion: string;
   nif: string;
   nombre: string;

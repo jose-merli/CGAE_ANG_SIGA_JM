@@ -10,6 +10,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Subject } from '../../../../../../../node_modules/rxjs';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-generales',
@@ -60,6 +61,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   selectedItem;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
@@ -71,7 +73,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -200,6 +203,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         }
 
         if (this.modoRepresentante) {
+          this.persistenceService.setBody(this.body);
           this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
         } else {
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -771,6 +775,21 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.edad = edad;
     }
+  }
+
+  searchJusticiableByNif() {
+
+    if (this.body.nif.trim() != undefined && this.body.nif.trim() != "") {
+      let bodyBusqueda = new JusticiableBusquedaItem();
+      bodyBusqueda.nif = this.body.nif;
+      this.notifySearchJusticiableByNif.emit(bodyBusqueda);
+    }
+
+  }
+
+  search() {
+    this.persistenceService.clearBody();
+    this.router.navigate(["/justiciables"], { queryParams: { rp: "2" } });
   }
 
   clear() {

@@ -27,6 +27,7 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
   justiciableBusquedaItem: JusticiableBusquedaItem;
   representanteBusquedaItem: JusticiableBusquedaItem;
   progressSpinner: boolean = false;
+  msgs = [];
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
@@ -83,15 +84,13 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
 
       this.progressSpinner = true;
       this.commnosService.scrollTop();
-      this.idRepresentantejg = data.idpersona;
+      this.persistenceService.setBody(data);
       this.justiciableBusquedaItem = this.persistenceService.getDatos();
       this.checkedViewRepresentante = false;
       this.modoRepresentante = false;
       this.modoEdicion = true;
       this.progressSpinner = false;
       this.search();
-
-
 
     });
 
@@ -126,9 +125,6 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
         if (!this.modoRepresentante) {
           this.body.numeroAsuntos = this.justiciableBusquedaItem.numeroAsuntos;
           this.body.ultimoAsunto = this.justiciableBusquedaItem.ultimoAsunto;
-          if (this.idRepresentantejg != undefined) {
-            this.body.idrepresentantejg = this.idRepresentantejg;
-          }
         } else {
           this.body.numeroAsuntos = undefined;
           this.body.ultimoAsunto = undefined;
@@ -148,14 +144,18 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
   getAsuntos() {
 
     let busquedaJusticiable = new JusticiableBusquedaItem();
-    busquedaJusticiable.idPersona = this.body.idpersona;
+    busquedaJusticiable.idpersona = this.body.idpersona;
 
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", busquedaJusticiable).subscribe(
       n => {
 
         let justiciableBusquedaItem = JSON.parse(n.body).justiciableBusquedaItems;
-        this.body.numeroAsuntos = justiciableBusquedaItem[0].numeroAsuntos;
-        this.body.ultimoAsunto = justiciableBusquedaItem[0].ultimoAsunto;
+
+        if (justiciableBusquedaItem != undefined && justiciableBusquedaItem != null) {
+          this.body.numeroAsuntos = justiciableBusquedaItem[0].numeroAsuntos;
+          this.body.ultimoAsunto = justiciableBusquedaItem[0].ultimoAsunto;
+        }
+
 
         this.progressSpinner = false;
 
@@ -184,11 +184,53 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
     this.commnosService.scrollTop();
     this.checkedViewRepresentante = true;
     this.representanteBusquedaItem = new JusticiableBusquedaItem();
-    this.representanteBusquedaItem.idPersona = event.idpersona;
+    this.representanteBusquedaItem.idpersona = event.idpersona;
     this.representanteBusquedaItem.idInstitucion = event.idinstitucion;
     this.representanteBusquedaItem.nif = event.nif;
     this.search();
 
+  }
+
+  searchJusticiableByNif(bodyBusqueda) {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionJusticiables_getJusticiableByNif", bodyBusqueda).subscribe(
+      n => {
+
+        let justiciable = JSON.parse(n.body).justiciable
+
+        this.progressSpinner = false;
+
+        if (justiciable != undefined && (justiciable.idpersona == null || justiciable.idpersona == undefined)) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), "No existe registrado ese NIF en el sistema");
+        } else {
+
+          if (justiciable != undefined && this.body != undefined && justiciable.idpersona != this.body.idpersona) {
+            this.body = JSON.parse(n.body).justiciable;
+            this.body.numeroAsuntos = undefined;
+            this.body.ultimoAsunto = undefined;
+            this.getAsuntos();
+
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), "Es la misma persona");
+          }
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
+
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   modoEdicionSend(event) {

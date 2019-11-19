@@ -29,6 +29,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
   permisoEscritura: boolean = true;
   datos;
 
+  idPersona;
+
 
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
@@ -47,9 +49,20 @@ export class AsuntosComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
+    if (this.idPersona != undefined && this.idPersona != null &&
+      this.idPersona != this.body.idpersona) {
+      this.showTarjeta = false;
+      this.datos = undefined;
+    }
+
     if (this.body != undefined && this.body.idpersona == undefined) {
       this.showTarjeta = false;
+    } else {
+      this.idPersona = this.body.idpersona;
     }
+
+
   }
 
 

@@ -45,8 +45,8 @@
             </div>
             <div class="col-3">
               <label *ngIf="!checkedViewRepresentante">
-                <i (click)="navigateToJusticiable();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-                <a (click)="navigateToJusticiable();$event.stopPropagation();">
+                <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                <a (click)="navigateToRepresentante();$event.stopPropagation();">
                   <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
                   </span>
                 </a>

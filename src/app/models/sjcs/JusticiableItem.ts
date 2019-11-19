@@ -65,5 +65,7 @@ export class JusticiableItem {
   ultimoAsunto: string;
 
   telefonos: JusticiableTelefonoItem[];
+
+  representante: number;
   constructor() { }
 }

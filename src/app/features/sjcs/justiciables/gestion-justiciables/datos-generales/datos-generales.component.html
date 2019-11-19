@@ -74,10 +74,9 @@
               <p-dropdown class="select-form" disabled [(ngModel)]="body.idtipoidentificacion" [options]="comboTipoIdentificacion" [filter]="true"
                 filterBy="label,labelSinTilde" placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"></p-dropdown>
             </div>
-            <div *ngIf="!fromJusticiable" class="form-group col-lg-3 col-md-3">
-              <div class="pt-3 main-button">
-                <button pButton type="button" icon="fa fa-search" iconPos="center"></button>
-              </div>
+            <div *ngIf="fromJusticiable" class="form-group col-lg-3 col-md-3 main-button pt-3">
+              <label></label>
+              <button (click)="searchJusticiableByNif()" pButton type="button" icon="fa fa-search" iconPos="center"></button>
             </div>
           </div>
           <div class="row">
@@ -227,7 +226,7 @@
               </label>
               <input *ngIf="!poblacionExtranjera" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigopostal" (ngModelChange)="onChangeCodigoPostal()"
                 pInputText>
-              <input *ngIf="poblacionExtranjera" [(ngModel)]="body.codigopostal" type="text" class="form-control" [maxLength]="5" pInputText>
+              <input *ngIf="poblacionExtranjera" [(ngModel)]="body.codigopostal" type="number" class="form-control" [maxLength]="5" pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -370,7 +369,7 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
         <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button pButton (click)="save()" [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
 
