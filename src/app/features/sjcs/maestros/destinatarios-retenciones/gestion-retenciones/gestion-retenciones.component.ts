@@ -341,8 +341,12 @@ export class TablaDestinatariosComponent implements OnInit {
       }
 
     } else {
-      if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos
-        && (this.datos[0].nombre != undefined && this.datos[0].nombre.trim() != "")) {
+      this.updateDestinatariosRet = this.updateDestinatariosRet.filter(it => {
+        if (it.nombre != undefined && it.nombre.trim() != "")
+          return true;
+        else false;
+      })
+      if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos) {
         return false;
       } else {
         return true;

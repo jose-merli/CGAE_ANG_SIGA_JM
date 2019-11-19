@@ -331,6 +331,10 @@ export class TiposActuacionComponent implements OnInit {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         this.searchTiposActuaciones();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.selectedDatos = [];
+        this.updateTiposActuacion = [];
+        this.nuevo = false;
+        this.editMode = false;
         this.progressSpinner = false;
       },
       err => {
@@ -345,7 +349,8 @@ export class TiposActuacionComponent implements OnInit {
         }
         this.progressSpinner = false;
         this.editMode = true;
-        this.nuevo = true;
+        if (this.nuevo)
+          this.nuevo = true;
         this.updateTiposActuacion = [];
       },
       () => {
@@ -466,8 +471,17 @@ export class TiposActuacionComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].descripciontipoactuacion != "" &&
-        this.datos[0].importe != undefined && this.datos[0].importe != "" && this.datos[0].importemaximo != undefined
-        && this.datos[0].importemaximo != "" && (this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "")) {
+        this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
+        && this.datos[0].importemaximo != undefined && this.datos[0].importemaximo + "" != ""
+        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
+        // if (this.datos[0].descripciontipoactuacion != undefined) {
+        //   if (this.datos[0].descripciontipoactuacion != "")
+        //     if (this.datos[0].importe != undefined)
+        //       if (this.datos[0].importe + "" != "")
+        //         if (this.datos[0].importemaximo != undefined)
+        //           if (this.datos[0].importemaximo + "" != "")
+        //             if (this.datos[0].seleccionadosReal != undefined)
+        //               if (this.datos[0].seleccionadosReal != "")
         return false;
       } else {
         return true;
@@ -476,8 +490,8 @@ export class TiposActuacionComponent implements OnInit {
     } else {
       this.updateTiposActuacion = this.updateTiposActuacion.filter(it => {
         if (it.descripciontipoactuacion != undefined && it.descripciontipoactuacion != "" &&
-          it.importe != undefined && it.importe != "" && it.importemaximo != undefined
-          && it.importemaximo != "" && (it.seleccionadosReal != undefined && it.seleccionadosReal != ""))
+          it.importe != undefined && it.importe + "" != "" && it.importemaximo != undefined
+          && it.importemaximo + "" != "" && (it.seleccionadosReal != undefined && it.seleccionadosReal != ""))
           return true;
         else false;
       })

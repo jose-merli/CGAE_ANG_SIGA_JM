@@ -374,7 +374,8 @@ export class TiposAsistenciaComponent implements OnInit {
         }
         this.progressSpinner = false;
         this.editMode = true;
-        this.nuevo = true;
+        if (this.nuevo)
+          this.nuevo = true;
       },
       () => {
         this.selectedDatos = [];
@@ -676,8 +677,8 @@ export class TiposAsistenciaComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia != "" &&
-        this.datos[0].importe != undefined && this.datos[0].importe != ""
-        && this.datos[0].importemaximo != undefined && this.datos[0].importemaximo != ""
+        this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
+        && this.datos[0].importemaximo + "" != undefined && this.datos[0].importemaximo != ""
         && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
         return false;
       } else {
@@ -687,8 +688,8 @@ export class TiposAsistenciaComponent implements OnInit {
     } else {
       this.updateTiposAsistencia = this.updateTiposAsistencia.filter(it => {
         if (it.tipoasistencia != undefined && it.tipoasistencia != "" &&
-          it.importe != undefined && it.importe != ""
-          && it.importemaximo != undefined && it.importemaximo != ""
+          it.importe != undefined && it.importe + "" != ""
+          && it.importemaximo != undefined && it.importemaximo + "" != ""
           && it.seleccionadosReal != undefined && it.seleccionadosReal != "")
           return true;
         else false;
