@@ -18,7 +18,7 @@ import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
   styleUrls: ["./datos-generales-consulta.component.scss"]
 })
 export class DatosGeneralesTurnosComponent implements OnInit {
-
+  // datos;
   openFicha: boolean = true;
   body: TurnosItems = new TurnosItems();
   bodyInicial;
@@ -45,6 +45,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   isDisabledMateria: boolean = false;
   comboPJ
   tipoturnoDescripcion;
+  jurisdiccionDescripcion;
+  partidaPresupuestaria;
   MateriaDescripcion
   isDisabledSubZona: boolean = false;
   fichasPosibles = [
@@ -57,6 +59,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       activa: false
     },
   ];
+  @Output() datos;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   @ViewChild("importe") importe;
@@ -73,6 +77,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         this.getCombos();
+
+
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -139,6 +145,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       },
       err => {
         console.log(err);
+      }, () => {
+        for (let i = 0; i < this.jurisdicciones.length; i++) {
+          if (this.jurisdicciones[i].value == this.turnosItem.idjurisdiccion) {
+            this.jurisdiccionDescripcion = this.jurisdicciones[i].label
+          }
+
+        }
       }
     );
 
@@ -299,6 +312,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       },
       err => {
         console.log(err);
+      }, () => {
+        for (let i = 0; i < this.partidas.length; i++) {
+          if (this.partidas[i].value == this.turnosItem.idpartidapresupuestaria) {
+            this.partidaPresupuestaria = this.partidas[i].label
+          }
+
+        }
       }
     );
 
@@ -334,18 +354,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         }
       }
     );
-    //   } else {
-    //     this.body = this.turnosItem;
-    //     this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-    //     if (this.turnosItem.idturno == undefined) {
-    //       this.modoEdicion = false;
-    //     } else {
-    //       this.modoEdicion = true;
-    //     }
-    //   }
-    // } else {
-    //   this.turnosItem = new TurnosItems();
-    // }
   }
 
   onChangeArea() {
@@ -393,12 +401,45 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         let findPartido = this.comboPJ.find(x => x.value === partido);
 
         this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
-
-        if (findPartido != undefined) {
-          // this.partidasJudiciales[i].partidosJudiciales.push(findPartido);
-        }
-
       });
+      this.datos = [
+        {
+          label: "Nombre",
+          value: this.turnosItem.nombre
+        },
+        {
+          label: "Área",
+          value: this.turnosItem.area
+        },
+        {
+          label: "Materia",
+          value: this.turnosItem.materia
+        },
+        {
+          label: "Jurisdicción",
+          value: this.jurisdiccionDescripcion
+        },
+        {
+          label: "Tipo Turno",
+          value: this.tipoturnoDescripcion
+        },
+        {
+          label: "Grupo Zona",
+          value: this.turnosItem.zona
+        },
+        {
+          label: "Zona",
+          value: this.turnosItem.subzona
+        },
+        {
+          label: "Partida Presupuestaria",
+          value: this.partidaPresupuestaria
+        },
+        {
+          label: "Partido Judicial",
+          value: this.partidoJudicial
+        },
+      ]
     }
   }
 

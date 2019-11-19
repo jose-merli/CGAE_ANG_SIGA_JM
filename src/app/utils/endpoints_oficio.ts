@@ -17,5 +17,6 @@ export let endpoints_oficio: any = {
     combossjcs_comboGuardias: "oficio/combossjcs/comboGuardias",
     combossjcs_ordenCola: "oficio/combossjcs/ordenCola",
     combossjcs_ordenColaEnvios: "oficio/combossjcs/ordenColaEnvios",
-    combossjcs_comboRequisitosGuardias: "oficio/combossjcs/comboRequisitosGuardias"
+    combossjcs_comboRequisitosGuardias: "oficio/combossjcs/comboRequisitosGuardias",
+    turnos_tarjetaGuardarPesos: "oficio/turnos/tarjetaGuardarPesos"
 }

@@ -28,6 +28,7 @@ import { DatosGeneralesTurnosComponent } from './ficha-turnos/datos-generales-co
 import { ConfiguracionTurnosComponent } from './ficha-turnos/configuracion-turnos/configuracion-turnos.component';
 import { ConfiguracionColaOficioComponent } from './ficha-turnos/configuracion-colaoficio/configuracion-colaoficio.component';
 import { TarjetaColaOficio } from './ficha-turnos/tarjeta-colaoficio/tarjeta-colaoficio.component';
+import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import { TarjetaColaOficio } from './ficha-turnos/tarjeta-colaoficio/tarjeta-col
     MultiSelectModule,
     PrecioModule,
     PickListModule,
-    TooltipModule
+    TooltipModule,
+    TarjetaResumenFijaModule
     // FichaGrupoZonaModule
 
   ],

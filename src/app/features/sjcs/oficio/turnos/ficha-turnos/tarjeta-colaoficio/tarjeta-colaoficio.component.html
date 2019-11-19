@@ -34,7 +34,7 @@
         <div class="bloque col-lg-12 col-md-12">
           <div class="form-group col-lg-6 col-md-6 ">
             <div class="form-row">
-              <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
+              <p-table [value]="turnosItem" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
                 #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="editAreas($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
                 [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
                 <ng-template pTemplate="colgroup" let-columns>

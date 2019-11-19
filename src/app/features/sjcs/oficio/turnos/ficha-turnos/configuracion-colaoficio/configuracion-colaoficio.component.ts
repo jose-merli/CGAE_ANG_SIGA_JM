@@ -27,7 +27,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   openFicha: boolean = false;
   msgs = [];
   historico: boolean = false;
-
+  sufijos: any[];
   provinciaSelecionada: string;
 
 
@@ -35,12 +35,14 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   bodyInicial: TurnosItems;
   idPrision;
   isDisabledProvincia: boolean = true;
-  perfilesSeleccionadosInicial: any[];
-  perfilesSeleccionados: any[];
-  perfilesNoSeleccionados: any[];
+  pesosExistentesInicial: any[];
+  pesosSeleccionadosInicial: any[];
+  pesosExistentes: any[];
+  pesosSeleccionados: any[];
   numeroPerfilesExistentes: number = 0;
   perfilesNoSeleccionadosInicial: any[];
-
+  seleccionadasInicial;
+  noSeleccionadasInicial;
   comboProvincias;
   comboPoblacion;
   isDisabledPoblacion: boolean = true;
@@ -53,7 +55,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   visibleMovilValue: boolean = false;
   esDecanoValue: boolean = false;
   isCodigoEjisValue: boolean = false;
-
+  pesosSeleccionadosTarjeta: String;
   progressSpinner: boolean = false;
   avisoMail: boolean = false
 
@@ -88,7 +90,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (this.turnosItem != undefined) {
       if (this.turnosItem.idturno != undefined) {
-        this.getPerfilesExtistentes();
+        // this.getPerfilesExtistentes();
         this.getPerfilesSeleccionados();
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
@@ -177,9 +179,30 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       .subscribe(
         n => {
           // coger etiquetas de una persona juridica
-          this.perfilesSeleccionados = JSON.parse(n["body"]).colaOrden;
-          this.perfilesSeleccionadosInicial = JSON.parse(
-            JSON.stringify(this.perfilesSeleccionados)
+          this.pesosExistentes = JSON.parse(n["body"]).colaOrden;
+          this.pesosExistentes.forEach(element => {
+            if (element.por_filas == "ALFABETICOAPELLIDOS") {
+              element.por_filas = "Apellidos y nombre"
+            }
+            if (element.por_filas == "ANTIGUEDADCOLA") {
+              element.por_filas = "Antigüedad en la cola"
+            }
+            if (element.por_filas == "NUMEROCOLEGIADO") {
+              element.por_filas = "Nº Colegiado"
+            }
+            if (element.por_filas == "FECHANACIMIENTO") {
+              element.por_filas = "Edad Colegiado"
+            }
+            if (element.orden == "asc") {
+              element.orden = "ascendente"
+            }
+            if (element.orden == "desc") {
+              element.orden = "descendente"
+            }
+          });
+
+          this.pesosExistentesInicial = JSON.parse(
+            JSON.stringify(this.pesosExistentes)
           );
 
           //por cada perfil seleccionado lo eliminamos de la lista de existentes
@@ -195,61 +218,231 @@ export class ConfiguracionColaOficioComponent implements OnInit {
         },
         err => {
           console.log(err);
+        }, () => {
+          this.getPerfilesExtistentes();
         }
       );
   }
 
   arrayObjectIndexOf(arr, obj) {
     for (var i = 0; i < arr.length; i++) {
-      if (arr[i].value == obj.value) {
+      if (arr[i].por_filas == obj.items.por_filas) {
         return i;
       }
     };
     return -1;
   }
   getPerfilesExtistentes() {
-    this.progressSpinner = true;
-    this.sigaServices.getParam("combossjcs_ordenColaEnvios", "?idordenacioncolas=" + this.turnosItem.idordenacioncolas).subscribe(
-      n => {
-        // coger etiquetas de una persona juridica
-        this.perfilesNoSeleccionados = n.combooItems;
-        this.numeroPerfilesExistentes = this.perfilesNoSeleccionados.length;
-        this.perfilesNoSeleccionadosInicial = JSON.parse(
-          JSON.stringify(this.perfilesNoSeleccionados)
-        );
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        let i = 0;
-        if (this.perfilesSeleccionados != undefined) {
-          let perfilesFiltrados = this.perfilesNoSeleccionados;
-          this.perfilesNoSeleccionados = [];
-          perfilesFiltrados.forEach(element => {
-            let find = this.perfilesSeleccionados.find(x => x.value == element.value);
-            if (find != undefined) {
-              // console.log(perfilesFiltrados[i]);
-            } else {
-              this.perfilesNoSeleccionados.push(perfilesFiltrados[i]);
-            }
-            i++;
-          });
-        }
-        this.progressSpinner = false;
+
+    let pesosFiltrados = Object.assign([], this.pesosExistentes);
+    this.pesosSeleccionados = [];
+    pesosFiltrados.forEach(element => {
+      if (element.numero > 0) {
+        this.pesosSeleccionados.push(element);
       }
-    );
+      if (element.numero > 0) {
+        this.pesosExistentes.splice(this.pesosExistentes.indexOf(element), 1);
+        //this.pesosExistentes.splice(element, 1);
+      }
+    });
+    this.pesosExistentes.forEach(element => {
+      let e = { numero: element.numero, por_filas: element.por_filas, orden: element.orden };
+      if (e.orden == undefined || e.orden == null) {
+        element.orden = "ascendente";
+      }
+      if (e.orden != "desc") {
+        e.orden = "descendente";
+        this.pesosExistentes.push(e)
+      }
+    });
+    this.pesosSeleccionadosTarjeta = "";
+    this.pesosSeleccionados.forEach(element => {
+      this.pesosSeleccionadosTarjeta += element.por_filas + " " + element.orden + ","
+    });
+    this.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta.substring(0, this.pesosSeleccionadosTarjeta.length - 1);
+    this.pesosSeleccionadosInicial = JSON.parse(
+      JSON.stringify(this.pesosSeleccionados));
   }
+
+
+  cambioExistentes(event) {
+    let noexiste = this.pesosExistentes.find(item => item === event.items)
+    if (noexiste == undefined) {
+      event.items.forEach(element => {
+        let e = { numero: element.numero, por_filas: element.por_filas, orden: element.orden };
+        if (e.orden == "ascendente") {
+          e.orden = "descendente";
+          e.numero = "0";
+          this.pesosExistentes.push(e);
+        } else {
+          e.orden = "ascendente"
+          e.numero = "0";
+          this.pesosExistentes.push(e);
+        }
+      });
+    }
+  }
+
+  cambioSeleccionados(event) {
+    event.items.forEach(element => {
+      let find = this.pesosExistentes.findIndex(x => x.por_filas == event.items[0].por_filas);
+      if (find != undefined) {
+        // element.orden = "desc"
+        this.pesosExistentes.splice(find, 1);
+      } else {
+        // this.pesosSeleccionados.push(perfilesFiltrados);
+      }
+    });
+    if (this.pesosSeleccionados != undefined) {
+      if (this.pesosSeleccionados[0] != undefined) {
+        this.pesosSeleccionados[0].numero = "4";
+      }
+      if (this.pesosSeleccionados[1] != undefined) {
+        this.pesosSeleccionados[1].numero = "3";
+      }
+      if (this.pesosSeleccionados[2] != undefined) {
+        this.pesosSeleccionados[2].numero = "2";
+      }
+      if (this.pesosSeleccionados[3] != undefined) {
+        this.pesosSeleccionados[3].numero = "1";
+      }
+    }
+  }
+
+  moverSeleccionados(event) {
+    if (this.pesosSeleccionados != undefined) {
+      if (this.pesosSeleccionados[0] != undefined) {
+        this.pesosSeleccionados[0].numero = "4";
+      }
+      if (this.pesosSeleccionados[1] != undefined) {
+        this.pesosSeleccionados[1].numero = "3";
+      }
+      if (this.pesosSeleccionados[2] != undefined) {
+        this.pesosSeleccionados[2].numero = "2";
+      }
+      if (this.pesosSeleccionados[3] != undefined) {
+        this.pesosSeleccionados[3].numero = "1";
+      }
+    }
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  guardar() {
+    this.progressSpinner = true;
+    let array: any[] = [];
+    let arrayNoSel: any[] = [];
+    this.pesosSeleccionados.forEach(element => {
+      array.push(element);
+    });
+    this.pesosExistentes.forEach(element => {
+      arrayNoSel.push(element);
+    });
+    array.forEach(element => {
+      if (element.por_filas == "Apellidos y nombre") {
+        element.por_filas = "ALFABETICOAPELLIDOS"
+      }
+      if (element.por_filas == "Antigüedad en la cola") {
+        element.por_filas = "ANTIGUEDADCOLA"
+      }
+      if (element.por_filas == "Nº Colegiado") {
+        element.por_filas = "NUMEROCOLEGIADO"
+      }
+      if (element.por_filas == "Edad Colegiado") {
+        element.por_filas = "FECHANACIMIENTO"
+      }
+    });
+    let objPerfiles = {
+      pesosSeleccionados: array,
+      pesosExistentes: arrayNoSel,
+      idOrdenacionColas: this.turnosItem.idordenacioncolas,
+      idturno: this.turnosItem.idturno,
+    };
+    this.sigaServices
+      .post("turnos_tarjetaGuardarPesos", objPerfiles)
+      .subscribe(
+        n => {
+          this.showSuccess(this.translateService.instant("justiciaGratuita.oficio.turnos.guardadopesos"));
+          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
+          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
+          this.progressSpinner = false;
+
+        },
+        err => {
+          this.showFail(this.translateService.instant("justiciaGratuita.oficio.turnos.errorguardadopesos"));
+          console.log(err);
+          this.progressSpinner = false;
+
+        },
+        () => {
+          this.pesosSeleccionadosTarjeta = "";
+          this.progressSpinner = false;
+          this.pesosExistentes.forEach(element => {
+            if (element.por_filas == "ALFABETICOAPELLIDOS") {
+              element.por_filas = "Apellidos y nombre"
+            }
+            if (element.por_filas == "ANTIGUEDADCOLA") {
+              element.por_filas = "Antigüedad en la cola"
+            }
+            if (element.por_filas == "NUMEROCOLEGIADO") {
+              element.por_filas = "Nº Colegiado"
+            }
+            if (element.por_filas == "FECHANACIMIENTO") {
+              element.por_filas = "Edad Colegiado"
+            }
+            if (element.orden == "asc") {
+              element.orden = "ascendente"
+            }
+            if (element.orden == "desc") {
+              element.orden = "descendente"
+            }
+          });
+          this.pesosSeleccionados.forEach(element => {
+            if (element.por_filas == "ALFABETICOAPELLIDOS") {
+              element.por_filas = "Apellidos y nombre"
+            }
+            if (element.por_filas == "ANTIGUEDADCOLA") {
+              element.por_filas = "Antigüedad en la cola"
+            }
+            if (element.por_filas == "NUMEROCOLEGIADO") {
+              element.por_filas = "Nº Colegiado"
+            }
+            if (element.por_filas == "FECHANACIMIENTO") {
+              element.por_filas = "Edad Colegiado"
+            }
+            if (element.orden == "asc") {
+              element.orden = "ascendente"
+            }
+            if (element.orden == "desc") {
+              element.orden = "descendente"
+            }
+            this.pesosSeleccionadosTarjeta += element.por_filas + " " + element.orden + ","
+          });
+          this.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta.substring(0, this.pesosSeleccionadosTarjeta.length - 1);
+
+        }
+      );
+  }
+
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
 
     if (!this.modoEdicion) {
-      url = "gestionPrisiones_createPrision";
+      url = "";
       this.callSaveService(url);
 
     } else {
-      url = "gestionPrisiones_updatePrision";
+      url = "";
       this.callSaveService(url);
     }
 
@@ -292,15 +485,33 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     );
 
   }
-
+  arreglaOrden() {
+    let pesosFiltrados = Object.assign([], this.pesosExistentes);
+    this.pesosSeleccionados = [];
+    pesosFiltrados.forEach(element => {
+      if (element.numero > 0) {
+        this.pesosSeleccionados.push(element);
+      }
+      if (element.numero > 0) {
+        this.pesosExistentes.splice(this.pesosExistentes.indexOf(element), 1);
+        //this.pesosExistentes.splice(element, 1);
+      }
+    });
+    this.pesosExistentes.forEach(element => {
+      let e = { numero: element.numero, por_filas: element.por_filas, orden: element.orden };
+      if (e.orden == undefined || e.orden == null) {
+        element.orden = "ascendente";
+      }
+      if (e.orden != "desc") {
+        e.orden = "descendente";
+        this.pesosExistentes.push(e)
+      }
+    });
+  }
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
-    this.edicionEmail = true
-    this.tlf1Valido = true
-    this.tlf2Valido = true
-    this.faxValido = true
-
+    this.pesosExistentes = JSON.parse(JSON.stringify(this.pesosExistentesInicial));
+    this.pesosSeleccionados = JSON.parse(JSON.stringify(this.pesosSeleccionadosInicial));
+    this.arreglaOrden();
   }
 
   editEmail() {
@@ -338,7 +549,8 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
 
   disabledSave() {
-    if (!this.historico && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+    if (!this.historico && this.permisoEscritura && (JSON.stringify(this.pesosExistentes) != JSON.stringify(this.pesosExistentesInicial ||
+      JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)))) {
       return false;
     } else {
       return true;

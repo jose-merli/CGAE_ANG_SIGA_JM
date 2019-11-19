@@ -1,5 +1,5 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-
+<app-tarjeta-resumen-fija chincheta="true" icono="cog" titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datos"></app-tarjeta-resumen-fija>
 <div class="busqueda-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
@@ -216,7 +216,6 @@
       </div>
     </div>
   </div>
-
   <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
   </div>
