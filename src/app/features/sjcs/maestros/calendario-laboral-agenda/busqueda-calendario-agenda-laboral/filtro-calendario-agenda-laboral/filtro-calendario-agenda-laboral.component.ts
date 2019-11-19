@@ -31,7 +31,7 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
   ngOnInit() {
 
     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtroAux = this.persistenceService.getFiltros();
+      this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
