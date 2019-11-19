@@ -3,10 +3,10 @@ import { BuscadorGuardiaComponent } from './buscador-guardia/buscador-guardia.co
 import { FiltrosGuardiaComponent } from './buscador-guardia/filtros-guardia/filtros-guardia.component';
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, TreeTable, TreeTableModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
-import { TableModule } from 'primeng/table';
+import { TableModule, RowToggler } from 'primeng/table';
 import { MultiSelectModule } from "primeng/multiselect";
 import { PrecioModule } from '../../../../commons/precio/precio.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -26,6 +26,7 @@ import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guar
 import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { TablaDinamicaModule } from '../../../../commons/tabla-dinamica/tabla-dinamica.module';
 import { DatosCalendariosGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-calendarios-guardias/datos-calendarios-guardias.component';
+import { DatosBaremosComponent } from './buscador-guardia/gestion-guardia/datos-baremos/datos-baremos.component';
 
 @NgModule({
   imports: [
@@ -41,12 +42,14 @@ import { DatosCalendariosGuardiasComponent } from './buscador-guardia/gestion-gu
     PipeTranslationModule,
     MenubarModule,
     TableModule,
+    TreeTableModule,
     MultiSelectModule,
     PrecioModule,
     TarjetaResumenFijaModule,
-    TablaDinamicaModule
+    TablaDinamicaModule,
+
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
