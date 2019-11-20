@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
+import { datos_combos } from '../../../../utils/datos_combos';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -30,16 +31,7 @@ export class FiltrosEjgComponent implements OnInit {
   showTramitador: boolean = true;
   //inicializar los combos
   comboProcedimeinto = [];
-  comboCalidad = [
-    {
-      label: "Demandado",
-      value: "O"
-    },
-    {
-      label: "Demandante",
-      value: "D"
-    }
-  ];
+  comboCalidad = datos_combos.comboCalidad;
   comboPerceptivo = [];
   comboRenuncia = [];
   comboDictamen = [];
@@ -97,7 +89,7 @@ export class FiltrosEjgComponent implements OnInit {
   }
   getCombos() {
     this.getComboProcedimiento();
-    this.getComboCalidad();
+    // this.getComboCalidad();
     this.getComboDictamen();
     this.getComboPerceptivo();
     this.getComboRenuncia();
@@ -158,9 +150,9 @@ export class FiltrosEjgComponent implements OnInit {
     this.comboRol;
   }
 
-  getComboCalidad() {
-    this.comboCalidad;
-  }
+  // getComboCalidad() {
+  //   this.comboCalidad;
+  // }
   getComboPerceptivo() {
     this.sigaServices.get("filtrosejg_comboPreceptivo").subscribe(
       n => {
