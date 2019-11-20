@@ -61,7 +61,7 @@ export class TablaPartidasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private  confirmationService:  ConfirmationService
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -243,6 +243,10 @@ export class TablaPartidasComponent implements OnInit {
       if (this.body.importepartida == ".") {
         this.body.importepartida = 0;
       }
+      if (this.body.nombrepartida != undefined)
+        this.body.nombrepartida = this.body.nombrepartida.trim();
+      if (this.body.descripcion != undefined)
+        this.body.descripcion = this.body.descripcion.trim();
       this.callSaveService(url);
 
     } else {
@@ -257,7 +261,12 @@ export class TablaPartidasComponent implements OnInit {
           if (element.importepartida == ".") {
             element.importepartida = 0;
           }
+          if (element.nombrepartida != undefined)
+            element.nombrepartida = element.nombrepartida.trim();
+          if (element.descripcion != undefined)
+            element.descripcion = element.descripcion.trim();
         });
+
         this.callSaveService(url);
       } else {
         err => {
@@ -355,9 +364,11 @@ export class TablaPartidasComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
+      if (this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
         && this.datos[0].valorNum != undefined) {
-        return false;
+        if (this.datos[0].nombrepartida.trim() != "" && this.datos[0].descripcion.trim() != "") {
+          return false;
+        } else { return true; }
       } else {
         return true;
       }
@@ -378,7 +389,7 @@ export class TablaPartidasComponent implements OnInit {
 
     this.updatePartidasPres.forEach(dato => {
 
-      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
+      let findDatos = this.datos.filter(item => item.nombrepartida.trim() === dato.nombrepartida.trim() && item.descripcion.trim() === dato.descripcion.trim() && item.importepartida === dato.importepartida);
 
       if (findDatos != undefined && findDatos.length > 1) {
         check = false;

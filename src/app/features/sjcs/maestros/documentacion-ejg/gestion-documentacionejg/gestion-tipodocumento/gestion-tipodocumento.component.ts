@@ -94,6 +94,8 @@ export class GestionTipodocumentoComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.body.abreviaturaTipoDoc != undefined) this.body.abreviaturaTipoDoc = this.body.abreviaturaTipoDoc.trim();
+    if (this.body.descripcionTipoDoc != undefined) this.body.descripcionTipoDoc = this.body.descripcionTipoDoc.trim();
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 

@@ -71,6 +71,12 @@ export class EdicionAreasComponent implements OnInit {
   save() {
     this.progressSpinner = true;
     let url = "";
+    if (this.areasItem.contenido != undefined) {
+      this.areasItem.contenido = this.areasItem.contenido.trim();
+    }
+    if (this.areasItem.nombreArea != undefined) {
+      this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
+    }
     if (!this.modoEdicion) {
       url = "fichaAreas_createAreas";
       this.callSaveService(url);
@@ -132,9 +138,12 @@ export class EdicionAreasComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.areasItem.nombreArea != undefined) this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
-    if (this.areasItem.nombreArea != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
-      return false;
+
+    if (this.areasItem.nombreArea != undefined) {
+      if (this.areasItem.nombreArea.trim() != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
+        return false;
+      } else { return true; }
+
     } else {
       return true;
     }

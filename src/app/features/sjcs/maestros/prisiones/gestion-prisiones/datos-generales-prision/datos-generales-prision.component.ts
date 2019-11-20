@@ -256,6 +256,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.visibleMovil == null) {
       this.body.visibleMovil = 0
     }
@@ -347,7 +348,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   disabledSave() {
     if (!this.historico && (this.body.nombre != undefined && this.body.nombre != null && this.body.nombre.trim() != "" &&
       this.body.idProvincia != undefined && this.body.idProvincia != "" && this.body.idPoblacion != undefined && this.body.idPoblacion != null && this.body.idPoblacion != ""
-      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5 && !this.avisoMail && this.tlf1Valido
+      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length >= 4 && this.body.codigoPostal.trim().length <= 5 && !this.avisoMail && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {

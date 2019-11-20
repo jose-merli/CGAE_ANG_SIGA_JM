@@ -311,6 +311,10 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.modulosItem.nombre != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
+    if (this.modulosItem.importe != undefined) this.modulosItem.importe = this.modulosItem.importe.trim();
+    if (this.modulosItem.codigo != undefined) this.modulosItem.codigo = this.modulosItem.codigo.trim();
+    if (this.modulosItem.codigoext != undefined) this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
     this.modulosItem.importe = this.modulosItem.importe.replace(",", ".");
     this.sigaServices.post(url, this.modulosItem).subscribe(
       data => {
@@ -373,10 +377,7 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.modulosItem.nombre != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
-    if (this.modulosItem.importe != undefined) this.modulosItem.importe = this.modulosItem.importe.trim();
-    if (this.modulosItem.codigo != undefined) this.modulosItem.codigo = this.modulosItem.codigo.trim();
-    if (this.modulosItem.codigoext != undefined) this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
+
 
     if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.nombre != "" &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
