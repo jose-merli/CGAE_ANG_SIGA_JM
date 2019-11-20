@@ -13,8 +13,7 @@ import { ConfirmationService, DataTable } from '../../../../../../../node_module
 })
 export class TablaFundamentosCalificacionComponent implements OnInit {
 	@Input() datos;
-	@ViewChild("table") table: DataTable;
-
+	@ViewChild("table") table;
 	rowsPerPage: any = [];
 	cols;
 	msgs;
@@ -131,11 +130,6 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			this.selectMultiple = false;
 		}
 	}
-	onChangeRowsPerPages(event) {
-		this.selectedItem = event.value;
-		this.changeDetectorRef.detectChanges();
-		this.table.reset();
-	}
 	onChangeSelectAll() {
 		if (this.permisoEscritura) {
 			if (!this.historico) {
@@ -162,6 +156,11 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 				}
 			}
 		}
+	}
+	onChangeRowsPerPages(event) {
+		this.selectedItem = event.value;
+		this.changeDetectorRef.detectChanges();
+		this.table.reset();
 	}
 	openTab(evento) {
 		if (this.persistenceService.getPermisos() != undefined) {

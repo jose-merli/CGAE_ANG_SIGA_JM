@@ -40,6 +40,7 @@ import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
+import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 
 //PRIMENG
 
@@ -344,6 +345,7 @@ import { PrecioModule } from './commons/precio/precio.module';
 import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
+import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 
 
 
@@ -685,11 +687,10 @@ import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradore
 		PipeNumberModule,
 		FechaModule,
 		PrecioModule,
-
 		KeyFilterModule,
 		StepsModule,
-
-
+		BusquedaColegiadoExpressModule,
+		GeneralSJCSModule,
 		SelectButtonModule,
 		ColorPickerModule,
 		EditorModule,

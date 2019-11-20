@@ -225,6 +225,10 @@ export class TablaProcedimientosComponent implements OnInit {
         this.search.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.selectedDatos = [];
+        this.updatePartidasPres = [];
+        this.nuevo = false;
+        this.editMode = false;
       },
       err => {
 
