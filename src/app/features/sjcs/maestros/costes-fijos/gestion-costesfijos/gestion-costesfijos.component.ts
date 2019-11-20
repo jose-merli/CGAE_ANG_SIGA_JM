@@ -436,7 +436,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].idCosteFijo != undefined && this.datos[0].idTipoAsistencia != undefined && this.datos[0].idTipoActuacion != undefined
+      if (this.datos[0].idCosteFijo != undefined && this.datos[0].idTipoAsistencia != undefined &&
+        this.datos[0].idTipoAsistencia != "" && this.datos[0].idTipoActuacion != undefined && this.datos[0].idTipoActuacion != ""
         && this.datos[0].valorNum != undefined && this.datos[0].valorNum != "") {
         return false;
       } else {
@@ -444,6 +445,11 @@ export class GestionCostesfijosComponent implements OnInit {
       }
 
     } else {
+      this.updateCosteFijo = this.updateCosteFijo.filter(it => {
+        if (it.valorNum != undefined && it.valorNum != "")
+          return true;
+        else false;
+      })
       if (!this.historico && (this.updateCosteFijo != undefined && this.updateCosteFijo.length > 0) && this.permisoEscritura) {
         return false;
       } else {

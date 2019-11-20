@@ -334,17 +334,19 @@ export class TablaDestinatariosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombre != undefined && this.datos[0].orden != undefined && this.datos[0].cuentacontable != undefined) {
+      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim() != "") {
         return false;
       } else {
         return true;
       }
 
     } else {
-      if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos
-        && (this.datos[0].nombre != undefined && this.datos[0].nombre != ""
-          && this.datos[0].orden != undefined && this.datos[0].orden != ""
-          && this.datos[0].cuentacontable != undefined && this.datos[0].cuentacontable != "")) {
+      this.updateDestinatariosRet = this.updateDestinatariosRet.filter(it => {
+        if (it.nombre != undefined && it.nombre.trim() != "")
+          return true;
+        else false;
+      })
+      if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos) {
         return false;
       } else {
         return true;

@@ -50,7 +50,7 @@
             <div *ngIf="dato.editable && col.field == 'descripcionJurisdiccion'">
               <p-dropdown class="select-form" [(ngModel)]='dato.idJurisdiccion' placeholder="Seleccionar" [options]="comboJurisdiccion"
                 on-focusout="changeJurisdiccion(dato)" [filter]="true" filterBy="label,labelSinTilde" (onBlur)="changeJurisdiccion(dato)"
-                (input)="changeJurisdiccion(dato)"></p-dropdown>
+                (input)="changeJurisdiccion(dato)" (onChange)="changeJurisdiccion(dato)"></p-dropdown>
             </div>
           </td>
 

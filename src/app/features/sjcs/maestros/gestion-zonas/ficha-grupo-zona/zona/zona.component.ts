@@ -121,7 +121,7 @@ export class ZonaComponent implements OnInit {
         res => {
           this.datos = res.zonasItems;
 
-  
+
 
           this.datos.forEach(element => {
             element.editable = false
@@ -294,12 +294,13 @@ export class ZonaComponent implements OnInit {
   validateNewZone(url) {
     let zona = this.datos[0];
 
-    let findDato = this.datosInicial.find(item => item.idzona === zona.idzona && item.descripcionsubzona === zona.descripcionsubzona);
+    let findDato = this.datosInicial.find(item => item.idzona === zona.idzona && item.descripcionsubzona.trim() === zona.descripcionsubzona.trim());
 
     if (findDato != undefined) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.existeZonaMismaDescripcion"));
       this.progressSpinner = false;
     } else {
+      zona.descripcionsubzona = zona.descripcionsubzona.trim();
       this.body = zona;
       this.callSaveZoneService(url);
     }

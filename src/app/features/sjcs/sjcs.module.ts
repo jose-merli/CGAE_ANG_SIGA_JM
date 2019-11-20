@@ -22,12 +22,14 @@ import { TranslatePipe } from '../../commons/translate';
 import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
 import { JusticiablesModule } from './justiciables/justiciables.module';
 import { GuardiaModule } from './guardia/guardia.module';
+import { OficioModule } from './oficio/oficio.module';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     MaestrosModule,
+    OficioModule,
     JusticiablesModule,
     GuardiaModule,
     routingSjcs,

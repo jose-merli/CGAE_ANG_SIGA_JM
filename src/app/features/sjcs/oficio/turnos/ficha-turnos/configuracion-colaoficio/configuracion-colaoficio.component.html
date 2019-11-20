@@ -1,0 +1,57 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('configuracioncolaoficio')">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha"> {{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>{{ pesosSeleccionadosTarjeta }}</span>
+            <i (click)="abrirFicha('configuracioncolaoficio')" *ngIf="!esFichaActiva('configuracioncolaoficio')" class="fa fa-angle-up float-right"></i>
+            <i (click)="cerrarFicha('configuracioncolaoficio')" *ngIf="esFichaActiva('configuracioncolaoficio')" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('configuracioncolaoficio') && openFicha" class="card-body card-body-ficha">
+      <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
+        targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" filterBy="label"
+        dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}"
+        (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
+        targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}" [showSourceControls]="false"
+        [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }" [disabled]="soloLectura">
+        <ng-template let-item pTemplate="item">
+          <div>{{ item.por_filas}} {{ item.orden}}</div>
+        </ng-template>
+      </p-pickList>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="guardar()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

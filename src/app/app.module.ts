@@ -17,6 +17,8 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DataTableModule } from "primeng/datatable";
 import { DialogModule } from "primeng/dialog";
+import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { FileUploadModule } from "primeng/fileupload";
@@ -287,11 +289,11 @@ import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/manteni
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
+import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
+import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { BajasTemporalesComponent } from './features/sjcs/oficio/bajas-temporales/bajas-temporales.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
-import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { SjcsModule } from './features/sjcs/sjcs.module';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 /***NEW modules censo***/
@@ -311,6 +313,7 @@ import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procurador
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
 import { TreeTableComponent } from './commons/tree-table/tree-table.component';
+import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 
 
 
@@ -332,7 +335,6 @@ import { TreeTableComponent } from './commons/tree-table/tree-table.component';
 
 
 registerLocaleData(es);
-
 
 
 
@@ -453,7 +455,6 @@ registerLocaleData(es);
 		MantenimientoComisariasComponent,
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
-		TurnosComponent,
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
@@ -680,6 +681,8 @@ registerLocaleData(es);
 		PrecioModule,
 		KeyFilterModule,
 		StepsModule,
+		BusquedaColegiadoExpressModule,
+		GeneralSJCSModule,
 		SelectButtonModule,
 		ColorPickerModule,
 		EditorModule,

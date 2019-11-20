@@ -1,0 +1,221 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<app-tarjeta-resumen-fija chincheta="true" icono="cog" titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datos"></app-tarjeta-resumen-fija>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }}
+              <span>{{ turnosItem.abreviatura }}</span>
+            </label>
+            <label>{{ "menu.justiciaGratuita.maestros.Materia" | translate }}
+              <span>{{ turnosItem.materia }}</span>
+            </label>
+            <label>{{ "justiciaGratuita.maestros.zonasYSubzonas.zona" | translate }}
+              <span>{{ turnosItem.subzona }}</span>
+            </label>
+            <label>{{ "justiciaGratuita.oficio.turnos.tipoturno" | translate }}
+              <span>{{ tipoturnoDescripcion }}</span>
+            </label>
+            <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Datos Generales</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-4 col-md-4">
+
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.datosturno" | translate }}</label>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }} (*)
+              </label>
+              <input [(ngModel)]="turnosItem.abreviatura" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+                [maxLength]="200" pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+              </label>
+              <input [(ngModel)]="turnosItem.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"menu.justiciaGratuita.maestros.partidas" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idpartidapresupuestaria' [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="partidas" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idgrupofacturacion' [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="grupofacturacion" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ "general.codeext" | translate }}
+              </label>
+              <input [(ngModel)]="turnosItem.codigoext" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+                pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idtipoturno' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                [options]="tiposturno" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <!-- <div class="form-group col-lg-3 col-md-3">
+              <label>
+                {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' (onChange)="onChangePoblacion()" [filter]="true" filterBy="label,labelSinTilde"
+                [disabled]="isDisabledPoblacion || historico || !permisoEscritura" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
+                [emptyFilterMessage]="resultadosPoblaciones" id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
+              </p-dropdown>
+
+            </div>  -->
+
+          </div>
+        </div>
+
+        <div class="bloque col-lg-4 col-md-4">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.oficio.turnos.datosclasfificacion' | translate }}</label>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"menu.justiciaGratuita.maestros.Area" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idarea' (onChange)="onChangeArea()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="areas" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"menu.justiciaGratuita.maestros.Materia" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idmateria' [(disabled)]="isDisabledMateria" (onChange)="onChangeProvincia()"
+                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="materias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idzona' (onChange)="onChangeZona()" [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="zonas" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}} (*)
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idsubzona' [(disabled)]="isDisabledSubZona" (onChange)="partidoJudiciales()"
+                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="subzonas" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
+              </p-dropdown>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-4">
+              <label>
+                {{ "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate }}
+              </label>
+              <input [placeholder]="partidoJudicial" [(ngModel)]='turnosItem.idpartido' disabled="true" [disabled]="!permisoEscritura || historico"
+                type="text" class="form-control" [maxLength]="200" pInputText>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>
+                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}
+              </label>
+              <p-dropdown class="select-form" [(ngModel)]='turnosItem.idjurisdiccion' [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.oficio.turnos.datosadicionales' | translate }}</label>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>
+                {{"general.boton.description" | translate}}
+              </label>
+              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="turnosItem.descripcion"
+                maxLength="3900"></textarea>
+            </div>
+
+            <div class="form-group col-lg-12 col-md-12">
+              <label>
+                {{"justiciaGratuita.oficio.turnos.requisitosacceso" | translate}}
+              </label>
+              <textarea name="observaciones" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="turnosItem.requisitos"
+                maxLength="3900"></textarea>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
