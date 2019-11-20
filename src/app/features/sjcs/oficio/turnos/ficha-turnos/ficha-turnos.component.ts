@@ -76,7 +76,7 @@ export class FichaTurnosComponent implements OnInit {
 
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
-		this.idTurno = event.idturno
+		this.idTurno = event.idTurno
 	}
 	backTo() {
 		this.location.back();

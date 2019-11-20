@@ -19,6 +19,7 @@ export class TurnosItems {
   subzona: string;
   idpartido: string;
   partido: string;
+  idgrupofacturacion: string;
   idpartidapresupuestaria: string;
   idjurisdiccion: string;
   partidapresupuestariaReal: any[];

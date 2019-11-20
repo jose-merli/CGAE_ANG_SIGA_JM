@@ -20,7 +20,8 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() turnosItem: TurnosItems;
-  modoEdicion: boolean = false;
+  @Input() modoEdicion;
+  @Input() idTurno;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   openFicha: boolean = false;
@@ -29,7 +30,6 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   provinciaSelecionada: string;
 
-  idTurno;
   body: TurnosItems;
   bodyInicial: TurnosItems;
   idPrision;
@@ -79,8 +79,9 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.turnosItem != undefined) {
-      if (this.turnosItem.idturno != undefined) {
+      if (this.idTurno != undefined) {
         this.body = this.turnosItem;
+        this.turnosItem.idturno = this.idTurno;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
@@ -116,10 +117,15 @@ export class ConfiguracionTurnosComponent implements OnInit {
       err => {
         console.log(err);
       }, () => {
-        for (let i = 0; i < this.guardias.length; i++) {
-          if (this.guardias[i].value == this.turnosItem.idguardias) {
-            this.requisitosGuardiasDescripcion = this.guardias[i].label
+        if (this.turnosItem.idguardias != undefined) {
+          for (let i = 0; i < this.guardias.length; i++) {
+            if (this.guardias[i].value == this.turnosItem.idguardias) {
+              this.requisitosGuardiasDescripcion = this.guardias[i].label
+            }
           }
+        } else {
+          this.turnosItem.idguardias = "0";
+          this.requisitosGuardiasDescripcion = this.guardias[0].label
         }
       }
     );
@@ -206,31 +212,25 @@ export class ConfiguracionTurnosComponent implements OnInit {
     this.progressSpinner = true;
     let url = "";
     this.guardarChecks();
-    if (!this.modoEdicion) {
-      url = "gestionPrisiones_createPrision";
-      this.callSaveService(url);
-
-    } else {
-      url = "turnos_updateDatosGenerales";
-      this.callSaveService(url);
-    }
+    url = "turnos_updateConfiguracion";
+    this.callSaveService(url);
 
   }
 
   callSaveService(url) {
     this.sigaServices.post(url, this.turnosItem).subscribe(
       data => {
-        if (!this.modoEdicion) {
-          this.modoEdicion = true;
-          let turnos = JSON.parse(data.body);
-          // this.modulosItem = JSON.parse(data.body);
-          this.turnosItem.idturno = turnos.id;
-          let send = {
-            modoEdicion: this.modoEdicion,
-            idturno: this.turnosItem.idturno
-          }
-          this.modoEdicionSend.emit(send);
-        }
+        // if (!this.modoEdicion) {
+        //   this.modoEdicion = true;
+        //   let turnos = JSON.parse(data.body);
+        //   // this.modulosItem = JSON.parse(data.body);
+        //   this.turnosItem.idturno = turnos.id;
+        //   let send = {
+        //     modoEdicion: this.modoEdicion,
+        //     idturno: this.turnosItem.idturno
+        //   }
+        //   this.modoEdicionSend.emit(send);
+        // }
         if (this.turnosItem.validarjustificaciones == 'S') {
           this.validJustificacion = "SI";
         } else {
@@ -300,7 +300,11 @@ export class ConfiguracionTurnosComponent implements OnInit {
     fichaPosible.activa = false;
   }
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.modoEdicion) {
+      this.openFicha = !this.openFicha;
+    } else {
+      this.openFicha = false;
+    }
   }
 
   showMessage(severity, summary, msg) {
@@ -426,7 +430,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.historico && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+    if (this.turnosItem.idguardias != null && this.turnosItem.idguardias != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;

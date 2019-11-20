@@ -32,9 +32,9 @@
     <div *ngIf="esFichaActiva('configuracioncolaoficio') && openFicha" class="card-body card-body-ficha">
       <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
         targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" filterBy="label"
-        dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}"
+        dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
         (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
-        targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}" [showSourceControls]="false"
+        targetFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [showSourceControls]="false"
         [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }" [disabled]="soloLectura">
         <ng-template let-item pTemplate="item">
           <div>{{ item.por_filas}} {{ item.orden}}</div>

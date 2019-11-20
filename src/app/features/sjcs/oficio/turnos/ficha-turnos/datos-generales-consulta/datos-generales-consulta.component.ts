@@ -86,6 +86,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         }
       }
     } else {
+      this.partidoJudicial = "";
       this.turnosItem = new TurnosItems();
     }
   }
@@ -402,6 +403,54 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
         this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
       });
+      if (this.modoEdicion) {
+
+
+        this.datos = [
+          {
+            label: "Nombre",
+            value: this.turnosItem.nombre
+          },
+          {
+            label: "Área",
+            value: this.turnosItem.area
+          },
+          {
+            label: "Materia",
+            value: this.turnosItem.materia
+          },
+          {
+            label: "Jurisdicción",
+            value: this.jurisdiccionDescripcion
+          },
+          {
+            label: "Tipo Turno",
+            value: this.tipoturnoDescripcion
+          },
+          {
+            label: "Grupo Zona",
+            value: this.turnosItem.zona
+          },
+          {
+            label: "Zona",
+            value: this.turnosItem.subzona
+          },
+          {
+            label: "Partida Presupuestaria",
+            value: this.partidaPresupuestaria
+          },
+          {
+            label: "Partido Judicial",
+            value: this.partidoJudicial
+          },
+        ]
+      }
+    }
+  }
+  actualizarFichaResumen() {
+    if (this.modoEdicion) {
+
+
       this.datos = [
         {
           label: "Nombre",
@@ -442,7 +491,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       ]
     }
   }
-
   partidoJudiciales() {
     if (this.turnosItem.idsubzona != null || this.turnosItem.idsubzona != undefined) {
       this.sigaServices
@@ -644,7 +692,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           this.turnosItem.idturno = turnos.id;
           let send = {
             modoEdicion: this.modoEdicion,
-            idturno: this.turnosItem.idturno
+            idTurno: this.turnosItem.idturno
           }
           this.modoEdicionSend.emit(send);
         }
@@ -658,8 +706,34 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             this.turnosItem.subzona = this.subzonas[i].label
           }
         }
+        for (let i = 0; i < this.zonas.length; i++) {
+          if (this.zonas[i].value == this.turnosItem.idzona) {
+            this.turnosItem.zona = this.zonas[i].label
+          }
+        }
+        for (let i = 0; i < this.areas.length; i++) {
+          if (this.areas[i].value == this.turnosItem.idarea) {
+            this.turnosItem.area = this.areas[i].label
+          }
+        }
+        for (let i = 0; i < this.materias.length; i++) {
+          if (this.materias[i].value == this.turnosItem.idmateria) {
+            this.turnosItem.materia = this.materias[i].label
+          }
+        }
+        for (let i = 0; i < this.jurisdicciones.length; i++) {
+          if (this.jurisdicciones[i].value == this.turnosItem.idjurisdiccion) {
+            this.jurisdiccionDescripcion = this.jurisdicciones[i].label
+          }
+        }
+        for (let i = 0; i < this.partidas.length; i++) {
+          if (this.partidas[i].value == this.turnosItem.idpartidapresupuestaria) {
+            this.partidaPresupuestaria = this.partidas[i].label
+          }
+        }
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         this.persistenceService.setDatos(this.turnosItem);
+        this.actualizarFichaResumen();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -676,6 +750,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         this.progressSpinner = false;
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+
       }
     );
 
@@ -696,11 +771,17 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   disabledSave() {
     if (this.turnosItem.nombre != undefined) this.turnosItem.nombre = this.turnosItem.nombre.trim();
-    if ((JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
+    if (this.turnosItem.abreviatura != undefined) this.turnosItem.abreviatura = this.turnosItem.abreviatura.trim();
+
+    if (this.turnosItem.idpartidapresupuestaria != null && this.turnosItem.idpartidapresupuestaria != "" && this.turnosItem.idzona != null && this.turnosItem.idzona != "" && this.turnosItem.idsubzona != null && this.turnosItem.idsubzona != "" &&
+      this.turnosItem.idjurisdiccion != null && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idgrupofacturacion != null && this.turnosItem.idmateria != null && this.turnosItem.idmateria != "" &&
+      this.turnosItem.idarea != null && this.turnosItem.idarea != "" && this.turnosItem.idtipoturno != null && this.turnosItem.idtipoturno != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))
+    ) {
       return false;
     } else {
       return true;
     }
+
   }
 
   onHideTarjeta() {

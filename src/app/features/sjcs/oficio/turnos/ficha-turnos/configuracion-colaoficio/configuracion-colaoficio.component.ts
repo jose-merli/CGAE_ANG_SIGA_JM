@@ -21,7 +21,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   //Resultados de la busqueda
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
-
+  @Input() idTurno;
   @Input() turnosItem: TurnosItems;
 
   openFicha: boolean = false;
@@ -89,18 +89,20 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.turnosItem != undefined) {
-      if (this.turnosItem.idturno != undefined) {
-        // this.getPerfilesExtistentes();
-        this.getPerfilesSeleccionados();
+      if (this.idTurno != undefined) {
+        this.turnosItem.idturno = this.idTurno;
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
           this.modoEdicion = true;
+          this.getPerfilesSeleccionados();
         }
+
       }
     } else {
+      this.getPerfilesSeleccionados();
       this.turnosItem = new TurnosItems();
     }
 
@@ -111,16 +113,13 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
     }
 
-
-
-    this.getComboProvincias();
-
     this.validateHistorical();
 
     if (this.modoEdicion) {
       this.body = this.turnosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     } else {
+
       this.body = new TurnosItems();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.edicionEmail = true;
@@ -155,73 +154,60 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     return {};
   }
 
-  getComboProvincias() {
-    this.progressSpinner = true;
-
-    this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
-      n => {
-        this.comboProvincias = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboProvincias);
-        this.progressSpinner = false;
-
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-      }
-    );
-  }
-
   getPerfilesSeleccionados() {
-    this.sigaServices
-      .post("combossjcs_ordenCola", this.turnosItem)
-      .subscribe(
-        n => {
-          // coger etiquetas de una persona juridica
-          this.pesosExistentes = JSON.parse(n["body"]).colaOrden;
-          this.pesosExistentes.forEach(element => {
-            if (element.por_filas == "ALFABETICOAPELLIDOS") {
-              element.por_filas = "Apellidos y nombre"
-            }
-            if (element.por_filas == "ANTIGUEDADCOLA") {
-              element.por_filas = "Antigüedad en la cola"
-            }
-            if (element.por_filas == "NUMEROCOLEGIADO") {
-              element.por_filas = "Nº Colegiado"
-            }
-            if (element.por_filas == "FECHANACIMIENTO") {
-              element.por_filas = "Edad Colegiado"
-            }
-            if (element.orden == "asc") {
-              element.orden = "ascendente"
-            }
-            if (element.orden == "desc") {
-              element.orden = "descendente"
-            }
-          });
-
-          this.pesosExistentesInicial = JSON.parse(
-            JSON.stringify(this.pesosExistentes)
-          );
-
-          //por cada perfil seleccionado lo eliminamos de la lista de existentes
-          // if (this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial) {
-          //   this.perfilesSeleccionados.forEach(element => {
-          //     let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados, element);
-          //     if (x > -1) {
-          //       this.perfilesNoSeleccionados.splice(x, 1);
-          //     }
-          //   });
-          //   this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
-          // }
-        },
-        err => {
-          console.log(err);
-        }, () => {
-          this.getPerfilesExtistentes();
-        }
+    if (!this.modoEdicion) {
+      this.pesosExistentes = [];
+      let a = { numero: "4", por_filas: "Antigüedad en la cola", orden: "ascendente" };
+      let b = { numero: "0", por_filas: "Apellidos y nombre", orden: "ascendente" };
+      let c = { numero: "0", por_filas: "Nº Colegiado", orden: "ascendente" };
+      let d = { numero: "0", por_filas: "Edad Colegiado", orden: "ascendente" };
+      this.pesosExistentes.push(a);
+      this.pesosExistentes.push(b);
+      this.pesosExistentes.push(c);
+      this.pesosExistentes.push(d);
+      this.getPerfilesExtistentes();
+      this.pesosExistentesInicial = JSON.parse(
+        JSON.stringify(this.pesosExistentes)
       );
+    } else {
+      this.sigaServices
+        .post("combossjcs_ordenCola", this.turnosItem)
+        .subscribe(
+          n => {
+            // coger etiquetas de una persona juridica
+            this.pesosExistentes = JSON.parse(n["body"]).colaOrden;
+            this.pesosExistentes.forEach(element => {
+              if (element.por_filas == "ALFABETICOAPELLIDOS") {
+                element.por_filas = "Apellidos y nombre"
+              }
+              if (element.por_filas == "ANTIGUEDADCOLA") {
+                element.por_filas = "Antigüedad en la cola"
+              }
+              if (element.por_filas == "NUMEROCOLEGIADO") {
+                element.por_filas = "Nº Colegiado"
+              }
+              if (element.por_filas == "FECHANACIMIENTO") {
+                element.por_filas = "Edad Colegiado"
+              }
+              if (element.orden == "asc") {
+                element.orden = "ascendente"
+              }
+              if (element.orden == "desc") {
+                element.orden = "descendente"
+              }
+            });
+
+            // this.pesosExistentesInicial = JSON.parse(
+            //   JSON.stringify(this.pesosExistentes)
+            // );
+          },
+          err => {
+            console.log(err);
+          }, () => {
+            this.getPerfilesExtistentes();
+          }
+        );
+    }
   }
 
   arrayObjectIndexOf(arr, obj) {
@@ -262,6 +248,9 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     this.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta.substring(0, this.pesosSeleccionadosTarjeta.length - 1);
     this.pesosSeleccionadosInicial = JSON.parse(
       JSON.stringify(this.pesosSeleccionados));
+    this.pesosExistentesInicial = JSON.parse(
+      JSON.stringify(this.pesosExistentes)
+    );
   }
 
 
@@ -366,8 +355,8 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       .subscribe(
         n => {
           this.showSuccess(this.translateService.instant("justiciaGratuita.oficio.turnos.guardadopesos"));
-          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
-          this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
+          this.pesosSeleccionadosInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
+          this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
           this.progressSpinner = false;
 
         },
@@ -433,58 +422,6 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
 
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (!this.modoEdicion) {
-      url = "";
-      this.callSaveService(url);
-
-    } else {
-      url = "";
-      this.callSaveService(url);
-    }
-
-  }
-
-  callSaveService(url) {
-
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-
-        if (!this.modoEdicion) {
-          this.modoEdicion = true;
-          this.idPrision = JSON.parse(data.body).id;
-          let send = {
-            modoEdicion: this.modoEdicion,
-            idPrision: this.idPrision
-          }
-          this.body.idturno = this.idPrision
-          this.persistenceService.setDatos(this.body);
-          this.modoEdicionSend.emit(send);
-        }
-
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
-  }
   arreglaOrden() {
     let pesosFiltrados = Object.assign([], this.pesosExistentes);
     this.pesosSeleccionados = [];
@@ -514,17 +451,6 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     this.arreglaOrden();
   }
 
-  editEmail() {
-    if (this.edicionEmail)
-      this.edicionEmail = false;
-    else this.edicionEmail = true;
-  }
-
-  openOutlook(dato) {
-    let correo = dato.email;
-    this.commonsServices.openOutlook(correo);
-  }
-
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = true;
@@ -535,7 +461,12 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     fichaPosible.activa = false;
   }
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.modoEdicion) {
+      this.openFicha = !this.openFicha;
+    } else {
+      this.openFicha = false;
+    }
+
   }
 
   showMessage(severity, summary, msg) {
@@ -549,8 +480,8 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
 
   disabledSave() {
-    if (!this.historico && this.permisoEscritura && (JSON.stringify(this.pesosExistentes) != JSON.stringify(this.pesosExistentesInicial ||
-      JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)))) {
+    if ((JSON.stringify(this.pesosExistentes) != JSON.stringify(this.pesosExistentesInicial) &&
+      (JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)))) {
       return false;
     } else {
       return true;
