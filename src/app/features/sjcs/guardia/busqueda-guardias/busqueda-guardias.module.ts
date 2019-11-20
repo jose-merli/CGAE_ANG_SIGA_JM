@@ -27,6 +27,7 @@ import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fi
 import { TablaDinamicaModule } from '../../../../commons/tabla-dinamica/tabla-dinamica.module';
 import { DatosCalendariosGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-calendarios-guardias/datos-calendarios-guardias.component';
 import { DatosBaremosComponent } from './buscador-guardia/gestion-guardia/datos-baremos/datos-baremos.component';
+import { DatosConfColaComponent } from './buscador-guardia/gestion-guardia/datos-conf-cola/datos-conf-cola.component';
 
 @NgModule({
   imports: [
@@ -49,7 +50,7 @@ import { DatosBaremosComponent } from './buscador-guardia/gestion-guardia/datos-
     TablaDinamicaModule,
 
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
