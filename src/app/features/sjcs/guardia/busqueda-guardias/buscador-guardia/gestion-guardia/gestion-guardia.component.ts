@@ -19,6 +19,25 @@ export class GestionGuardiaComponent implements OnInit {
   permisoEscritura: boolean = false;
   historico: boolean = false;
 
+  titulo = "justiciaGratuita.oficio.turnos.inforesumen";
+  infoResumen = [
+    {
+      label: "Tarjeta",
+      value: "Resumen"
+    },
+    {
+      label: "Estado",
+      value: "Fijada"
+    },
+    {
+      label: "Día de la semana",
+      value: "Jueves"
+    },
+    {
+      label: "Pantalla",
+      value: "Gestión de Búsqueda guardias"
+    }
+  ]
   constructor(private persistenceService: PersistenceService,
     private location: Location) { }
 

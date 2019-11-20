@@ -310,6 +310,7 @@ import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/b
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
+import { TreeTableComponent } from './commons/tree-table/tree-table.component';
 
 
 
@@ -633,6 +634,7 @@ registerLocaleData(es);
 		BuscadorProcuradoresComponent,
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
+		TreeTableComponent,
 	],
 	imports: [
 		BrowserModule,

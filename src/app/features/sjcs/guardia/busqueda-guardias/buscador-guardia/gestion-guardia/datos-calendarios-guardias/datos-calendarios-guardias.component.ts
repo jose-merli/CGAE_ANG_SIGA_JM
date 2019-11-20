@@ -19,7 +19,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
   laborables;
   festividades;
-  comboUnidad = datos_combos.comboUnidad;
+  comboUnidad = datos_combos.comboUnidadesTiempo;
 
   constructor(private sigaServices: SigaServices) { }
 
