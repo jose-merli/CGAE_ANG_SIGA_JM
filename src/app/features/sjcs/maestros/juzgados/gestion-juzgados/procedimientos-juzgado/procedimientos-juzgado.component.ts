@@ -237,6 +237,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       this.selectMultiple = true;
       this.selectedDatos = this.procedimientos;
       this.numSelected = this.procedimientos.length;
@@ -250,6 +252,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   isSelectMultiple() {
 
     if (!this.historico && this.permisoEscritura) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       // if (this.selectedDatos != undefined && this.selectedDatos.length == 0) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {

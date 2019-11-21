@@ -62,7 +62,7 @@ export class BusquedaProcedimientosComponent implements OnInit {
   }
 
   search(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    // this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
