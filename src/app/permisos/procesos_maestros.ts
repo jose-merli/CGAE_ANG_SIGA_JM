@@ -18,6 +18,5 @@ export const procesos_maestros: any = {
     tiposAsistencias: "99J",
     retenciones: "92S",
     tiposActuaciones: "99F",
-    destinatariosRetenciones: "996",
-    justiciables: "89"
+    destinatariosRetenciones: "996"
 }

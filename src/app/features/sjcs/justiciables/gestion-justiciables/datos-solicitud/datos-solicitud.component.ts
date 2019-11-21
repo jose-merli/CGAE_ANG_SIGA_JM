@@ -6,6 +6,8 @@ import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -26,6 +28,9 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   selectedAutorizaavisotel;
   selectedAsistidosolicitajg;
   selectedAsistidoautorizaeejg;
+  permisoEscritura;
+  showTarjetaPermiso: boolean = false;
+
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
@@ -35,36 +40,52 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private router: Router) { }
 
   ngOnInit() {
 
-    if (this.body != undefined && this.body.idpersona != undefined) {
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosSolicitud)
+      .then(respuesta => {
 
-      this.tratamientoDescripcionesTarjeta();
+        this.permisoEscritura = respuesta;
 
-    } else {
-      this.body = new JusticiableItem();
-    }
+        if (this.permisoEscritura == undefined) {
+          this.showTarjetaPermiso = false;
 
-    if (this.body.idpersona == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+        } else {
+          this.showTarjetaPermiso = true;
 
-    this.getCombos();
+          if (this.body != undefined && this.body.idpersona != undefined) {
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-    this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
-      this.body = data;
-      this.modoEdicion = true;
+            this.tratamientoDescripcionesTarjeta();
 
-    });
+          } else {
+            this.body = new JusticiableItem();
+          }
+
+          if (this.body.idpersona == undefined) {
+            this.modoEdicion = false;
+          } else {
+            this.modoEdicion = true;
+          }
+
+          this.getCombos();
+
+          this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+            this.body = data;
+            this.modoEdicion = true;
+
+          });
+        }
+      }
+      ).catch(error => console.error(error));
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
+
     if (this.body != undefined && this.body.idpersona != undefined) {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 

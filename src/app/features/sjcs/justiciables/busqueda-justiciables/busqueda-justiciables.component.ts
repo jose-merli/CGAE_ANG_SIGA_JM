@@ -8,6 +8,8 @@ import { TranslateService } from '../../../../commons/translate';
 import { Router, ActivatedRoute } from '@angular/router';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
+import { Location } from '@angular/common';
+import { procesos_justiciables } from '../../../../permisos/procesos_justiciables';
 
 @Component({
   selector: 'app-busqueda-justiciables',
@@ -55,10 +57,11 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
   permisoEscritura;
   modoRepresentante: boolean = false;
+  searchJusticiable: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
 
@@ -66,13 +69,15 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
       if (params.rp == "1") {
         this.modoRepresentante = true;
+      } else if (params.rp == "2") {
+        this.searchJusticiable = true;
       }
 
     });
 
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
 
-    this.commonsService.checkAcceso(procesos_maestros.justiciables)
+    this.commonsService.checkAcceso(procesos_justiciables.justiciables)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -131,6 +136,11 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
   clear() {
     this.msgs = [];
+  }
+
+  backTo() {
+    this.location.back();
+
   }
 
 }

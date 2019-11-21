@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="ficha-container">
+<div *ngIf="showTarjetaPermiso" class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
@@ -13,8 +13,7 @@
       <div *ngIf="!showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i *ngIf="!existeImagen" class="fas fa-certificate icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+            <i class="fas fa-certificate icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">

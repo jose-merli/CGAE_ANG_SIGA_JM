@@ -745,6 +745,12 @@ export class SigaServices {
   private guardarDatosGeneralesJusticiable = new Subject<any>();
   guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
 
+  private createJusticiable = new Subject<any>();
+  createJusticiable$ = this.createJusticiable.asObservable();
+
+  // private esMenorEdad = new Subject<any>();
+  // esMenorEdad$ = this.esMenorEdad.asObservable();
+
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
@@ -1012,9 +1018,20 @@ export class SigaServices {
     this.guardarDatosGeneralesJusticiable.next(data);
   }
 
+  notifyCreateJusticiable(data) {
+    this.createJusticiable.next(data);
+  }
+
+
   notifysendFechaBaja(fecha) {
     this.sendFechaBaja.next(fecha);
   }
+
+  // notifyEsMenorEdad(edad) {
+  //   this.esMenorEdad.next(edad);
+  // }
+
+
 
   postSendContentAndParameter(
     service: string,

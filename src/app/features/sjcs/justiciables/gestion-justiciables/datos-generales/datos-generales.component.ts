@@ -8,9 +8,12 @@ import { JusticiableTelefonoItem } from '../../../../../models/sjcs/JusticiableT
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { Subject } from '../../../../../../../node_modules/rxjs';
+import { Subject } from 'rxjs';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { Router } from '@angular/router';
+import { SigaConstants } from '../../../../../utils/SigaConstants';
+import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
+import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 
 @Component({
   selector: 'app-datos-generales',
@@ -22,6 +25,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   bodyInicial;
   datosInicial;
   progressSpinner: boolean = false;
+
+  edadAdulta: number = 18;
   modoEdicion: boolean = false;
   msgs;
   comboTipoIdentificacion;
@@ -47,7 +52,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   cols;
   datos: JusticiableTelefonoItem[] = [];
   checkOtraProvincia;
-  edad: any;
 
   edicionEmail: boolean = false;
   emailValido: boolean = true;
@@ -59,14 +63,18 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   count: number = 1;
   selectedItem;
+  showTarjetaPermiso: boolean = false;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
+  @Output() newJusticiable = new EventEmitter<any>();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
+
+  menorEdadJusticiable: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -80,25 +88,39 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.progressSpinner = true;
 
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
+      .then(respuesta => {
 
-    if (this.body != undefined && this.body.idpersona != undefined) {
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.permisoEscritura = respuesta;
 
-      this.parseFechas();
+        if (this.permisoEscritura == undefined) {
+          this.progressSpinner = false;
+          this.showTarjetaPermiso = false;
+        } else {
+          this.showTarjetaPermiso = true;
+          if (this.body != undefined && this.body.idpersona != undefined) {
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-    } else {
-      this.body = new JusticiableItem();
+            this.parseFechas();
 
-    }
+          } else {
+            this.body = new JusticiableItem();
 
-    if (this.body.idpersona == undefined) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+          }
+
+          if (this.body.idpersona == undefined) {
+            this.modoEdicion = false;
+            this.body.fechaalta = new Date();
+          } else {
+            this.modoEdicion = true;
+          }
+
+          this.progressSpinner = false;
+
+        }
+      }
+      ).catch(error => console.error(error));
+
 
     this.getCombos();
     this.getColsDatosContacto();
@@ -116,10 +138,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       this.parseFechas();
 
-      if (this.body.fechaalta != undefined && this.body.fechaalta != null) {
-        let fechaAlta = new Date(this.body.fechaalta);
-        this.body.fechaalta = fechaAlta;
-      }
 
     } else {
       this.body = new JusticiableItem();
@@ -129,6 +147,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
+      this.body.fechaalta = new Date();
     } else {
       this.modoEdicion = true;
     }
@@ -136,6 +155,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     if (this.body.nif != undefined && this.body.nif != null && this.body.nif != "") {
       this.compruebaDNI();
     }
+
+
   }
 
   parseFechas() {
@@ -144,6 +165,12 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       let fechaNacimiento = new Date(this.body.fechanacimiento);
       this.body.fechanacimiento = fechaNacimiento;
     }
+
+    if (this.body.fechaalta != undefined && this.body.fechaalta != null) {
+      let fechaAlta = new Date(this.body.fechaalta);
+      this.body.fechaalta = fechaAlta;
+    }
+
   }
 
   getCombos() {
@@ -164,29 +191,96 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   save() {
     this.progressSpinner = true;
     let url = "";
-    if (!this.modoEdicion) {
-      url = "gestionJusticiables_createJusticiable";
-      this.callSaveService(url);
+
+    if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
+      || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
+      this.menorEdadJusticiable = false;
+
     } else {
-      url = "gestionJusticiables_updateJusticiable";
-      this.callSaveService(url);
+      this.menorEdadJusticiable = true;
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El justiciable es menor. Es obligatorio introducir su representante legal. Si no dispone del dato no introduzca fecha de nacimiento hasta que disponga de esa información");
     }
+
+
+    if (!this.modoEdicion) {
+      //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
+      if (this.menorEdadJusticiable) {
+        this.body.fechanacimiento = undefined;
+        this.body.edad = undefined;
+      }
+
+      url = "gestionJusticiables_createJusticiable";
+      this.validateCampos(url);
+    } else {
+
+      if (!this.menorEdadJusticiable) {
+        url = "gestionJusticiables_updateJusticiable";
+        this.validateCampos(url);
+      } else {
+        this.progressSpinner = false;
+
+      }
+
+    }
+
+  }
+
+  validateCampos(url) {
+
+    if (this.body.direccion != null && this.body.direccion != undefined) {
+      this.body.direccion = this.body.direccion.trim();
+    }
+
+    if (this.body.numerodir != null && this.body.numerodir != undefined) {
+      this.body.numerodir = this.body.numerodir.trim();
+    }
+
+    if (this.body.escaleradir != null && this.body.escaleradir != undefined) {
+      this.body.escaleradir = this.body.escaleradir.trim();
+    }
+
+    if (this.body.pisodir != null && this.body.pisodir != undefined) {
+      this.body.pisodir = this.body.pisodir.trim();
+    }
+
+    if (this.body.puertadir != null && this.body.puertadir != undefined) {
+      this.body.puertadir = this.body.puertadir.trim();
+    }
+
+    if (this.body.puertadir != null && this.body.puertadir != undefined) {
+      this.body.puertadir = this.body.puertadir.trim();
+    }
+
+    if (this.body.correoelectronico != null && this.body.correoelectronico != undefined) {
+      this.body.correoelectronico = this.body.correoelectronico.trim();
+    }
+
+    if (this.body.fax != null && this.body.fax != undefined) {
+      this.body.fax = this.body.fax.trim();
+    }
+
+    this.callSaveService(url);
 
   }
 
   callSaveService(url) {
 
-    if (this.edad != undefined) {
-      this.body.edad = this.edad;
+    if (this.body.edad != undefined) {
+      this.body.edad = this.body.edad;
     }
 
     if (this.datos != undefined && this.datos.length > 0) {
       let arrayTelefonos = JSON.parse(JSON.stringify(this.datos));
       arrayTelefonos.splice(0, 2);
+
+      for (let index = 0; index < arrayTelefonos.length; index++) {
+        arrayTelefonos[index].numeroTelefono = arrayTelefonos[index].numeroTelefono.trim();
+      }
+
       this.body.telefonos = arrayTelefonos;
     }
 
-
+    this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -195,6 +289,10 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           let idJusticiable = JSON.parse(data.body).id;
           this.body.idpersona = idJusticiable;
           this.body.idinstitucion = this.authenticationService.getInstitucionSession();
+
+          if (!this.modoRepresentante) {
+            this.newJusticiable.emit(this.body);
+          }
         }
 
         if (this.nuevoTelefono) {
@@ -210,7 +308,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
 
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        if (!this.menorEdadJusticiable) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        }
+
         this.progressSpinner = false;
       },
       err => {
@@ -631,7 +733,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   compruebaDNI() {
 
-    if (this.body.nif != undefined && this.body.nif != "" && this.body.nif != null) {
+    if (this.body.nif != undefined && this.body.nif.trim() != "" && this.body.nif != null) {
       if (this.body.idtipoidentificacion != "50") {
         if (this.commonsService.isValidDNI(this.body.nif)) {
           this.body.idtipoidentificacion = "10";
@@ -682,6 +784,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     if (this.modoEdicion) {
       if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+
+      this.parseFechas();
+
       if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
 
       if (this.body.idpaisdir1 != "191") {
@@ -771,10 +876,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
     if (edad < 0) {
-      this.edad = 0;
+      this.body.edad = "0";
     } else {
-      this.edad = edad;
+      this.body.edad = JSON.stringify(edad);
     }
+
+    // if (JSON.parse(this.body.edad) < this.edadAdulta) {
+    //   this.sigaServices.notifyEsMenorEdad(this.body);
+    // }
   }
 
   searchJusticiableByNif() {
@@ -808,10 +917,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   disabledSave() {
     if (this.body.idtipoidentificacion != undefined && this.body.idtipoidentificacion != "" &&
-      this.body.nif != undefined && this.body.nif != "" &&
-      this.body.nombre != undefined && this.body.nombre != "" &&
-      this.body.apellido1 != undefined && this.body.apellido1 != "" &&
-      this.body.codigopostal != undefined && this.body.codigopostal != "" &&
+      this.body.nif != undefined && this.body.nif.trim() != "" &&
+      this.body.nombre != undefined && this.body.nombre.trim() != "" &&
+      this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
+      this.body.codigopostal != undefined && this.body.codigopostal.trim() != "" &&
       this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" &&
       this.faxValido && this.emailValido
     ) {

@@ -66,6 +66,7 @@ export class TablaJusticiablesComponent implements OnInit {
     if (!this.modoRepresentante) {
       this.persistenceService.clearDatos();
       this.persistenceService.setDatos(evento);
+      this.persistenceService.clearBody();
       this.router.navigate(["/gestionJusticiables"]);
     } else {
       this.persistenceService.clearBody();

@@ -4,6 +4,10 @@ import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 
 @Component({
   selector: 'app-asuntos',
@@ -14,7 +18,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 export class AsuntosComponent implements OnInit, OnChanges {
 
   rowsPerPage: any = [];
-  cols;
+  cols = [];
   msgs;
   progressSpinner: boolean = false;
 
@@ -27,9 +31,11 @@ export class AsuntosComponent implements OnInit, OnChanges {
   historico: boolean = false;
 
   permisoEscritura: boolean = true;
-  datos;
+  datos = [];
+  datosInicio: boolean = false;
 
   idPersona;
+  showTarjetaPermiso: boolean = true;
 
 
   @ViewChild("table") table: DataTable;
@@ -41,36 +47,57 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
-    private sigaServices: SigaServices) { }
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.getCols();
+
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
+      .then(respuesta => {
+
+        this.permisoEscritura = respuesta;
+
+        if (this.permisoEscritura == undefined) {
+          this.showTarjetaPermiso = false;
+        } else {
+          this.showTarjetaPermiso = true;
+          this.getCols();
+
+        }
+      }
+      ).catch(error => console.error(error));
 
   }
 
   ngOnChanges(changes: SimpleChanges) {
 
+    //Se comprueba si es el justiciable que cargado al principio, si no es la misma se vuelve a restablecer los valores 
     if (this.idPersona != undefined && this.idPersona != null &&
       this.idPersona != this.body.idpersona) {
       this.showTarjeta = false;
       this.datos = undefined;
     }
 
+    //Se almacena el idpersona del justiciable cargado en la ficha de justiciable
     if (this.body != undefined && this.body.idpersona == undefined) {
       this.showTarjeta = false;
+    } else if (this.body == undefined) {
+      this.showTarjeta = false;
+      this.body = new JusticiableItem();
     } else {
       this.idPersona = this.body.idpersona;
     }
 
-
   }
-
 
   onHideTarjeta() {
     if (this.modoEdicion) {
       this.showTarjeta = !this.showTarjeta;
 
-      if (this.datos == undefined || this.datos == null) {
+      if (!this.datosInicio) {
+        this.datosInicio = true;
         this.search();
       }
     }

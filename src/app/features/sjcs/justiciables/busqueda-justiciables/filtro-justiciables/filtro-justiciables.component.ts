@@ -167,6 +167,7 @@ export class FiltroJusticiablesComponent implements OnInit {
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
     } else {
       this.persistenceService.clearDatos();
+      this.persistenceService.clearBody();
       this.router.navigate(["/gestionJusticiables"]);
     }
 

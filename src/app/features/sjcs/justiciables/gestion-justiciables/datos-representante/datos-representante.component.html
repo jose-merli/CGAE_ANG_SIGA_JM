@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="ficha-container">
+<div *ngIf="showTarjetaPermiso" class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
@@ -22,8 +22,7 @@
       <div *ngIf="!showTarjeta" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i *ngIf="!existeImagen" class="fa fa-gavel icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+            <i class="fa fa-gavel icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -68,8 +67,7 @@
       <div class="row">
         <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
           <div class="positionUpload img-colegiado text-center my-0 mx-auto">
-            <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona" />
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
           </div>
         </div>
         <div class="bloque col-lg-10 col-md-10 col-sm-10">
@@ -78,28 +76,31 @@
               <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} (*)
               </label>
               <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody.idtipoidentificacion" showClear="true"></p-dropdown>
+                [(ngModel)]="generalBody.idtipoidentificacion" showClear="true" [disabled]="!permisoEscritura"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" pInputText (click)="compruebaDNI()" />
+              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" pInputText (click)="compruebaDNI()" [disabled]="!permisoEscritura"
+              />
             </div>
             <div class="form-group col-lg-3 col-md-3 main-button pt-3">
               <label></label>
-              <button (click)="searchRepresentanteByNif()" pButton type="button" icon="fa fa-search" iconPos="center"></button>
+              <button (click)="searchRepresentanteByNif()" pButton type="button" icon="fa fa-search" iconPos="center" [disabled]="!permisoEscritura"></button>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.apellidos" type="text" disabled class="form-control" [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody.apellidos" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+                pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
               </label>
-              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" pInputText />
+              <input [(ngModel)]="generalBody.nombre" type="text" disabled class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+                pInputText />
             </div>
           </div>
         </div>
@@ -108,10 +109,14 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"></button>
-        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button pButton (click)="associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
+          [disabled]="!permisoEscritura"></button>
+        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
+          [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
+        <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
+          [disabled]="!permisoEscritura"></button>
+        <button pButton (click)="associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+          [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>
   </div>

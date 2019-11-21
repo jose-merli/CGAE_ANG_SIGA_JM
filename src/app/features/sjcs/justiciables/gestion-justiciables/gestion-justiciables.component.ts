@@ -1,21 +1,23 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit, SimpleChanges, ViewChild, OnChanges, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, SimpleChanges, ViewChild, OnChanges, Input, DoCheck } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
 import { JusticiableItem } from '../../../../models/sjcs/JusticiableItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 // import { TablaMateriasComponent } from "./gestion-materias/tabla-materias.component";
-import { TranslateService } from './../../../../commons/translate';
-import { SigaServices } from './../../../../_services/siga.service';
+import { TranslateService } from '../../../../commons/translate';
+import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { DatosRepresentanteComponent } from './datos-representante/datos-representante.component';
+import { AuthenticationService } from '../../../../_services/authentication.service';
+import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 
 @Component({
   selector: 'app-gestion-justiciables',
   templateUrl: './gestion-justiciables.component.html',
   styleUrls: ['./gestion-justiciables.component.scss']
 })
-export class GestionJusticiablesComponent implements OnInit, OnChanges {
+export class GestionJusticiablesComponent implements OnInit {
 
   fichasPosibles;
   modoEdicion: boolean;
@@ -38,75 +40,111 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
 
   bodySend;
   idRepresentantejg;
+  permisoEscritura;
 
   constructor(private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commnosService: CommonsService) { }
+    private commnosService: CommonsService,
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
 
     this.progressSpinner = true;
 
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.commnosService.checkAcceso(procesos_justiciables.gestionJusticiables)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
 
-      if (params.rp == "1") {
-        this.modoRepresentante = true;
-        this.body = new JusticiableItem();
-        this.nuevo();
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.progressSpinner = false;
+          this.router.navigate(["/errorAcceso"]);
+        } else {
+          //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del justiciable que se quiere mostrar
+
+          //Para indicar que estamos en modo de creacion de representante
+          this.activatedRoute.queryParams.subscribe(params => {
+
+            if (params.rp == "1") {
+              this.modoRepresentante = true;
+              this.body = new JusticiableItem();
+              this.nuevo();
+            }
+
+
+          });
+
+          this.commnosService.scrollTop();
+          //Carga configuracion de las tarjetas
+          if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
+            this.fichasPosibles = this.persistenceService.getFichasPosibles();
+            this.fromJusticiable = this.fichasPosibles[0].activa;
+          }
+
+          //Carga de la persistencia 
+          if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
+            this.justiciableBusquedaItem = this.persistenceService.getDatos();
+
+            this.search();
+            this.modoEdicion = true;
+
+          } else {
+            this.modoEdicion = false;
+            this.progressSpinner = false;
+          }
+
+          //Indicar que se han guardado los datos generales de un Representante y hay que mostrar de nuevo al justiciable que tiene asociado el representante creado
+          this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+
+            this.progressSpinner = true;
+            this.commnosService.scrollTop();
+            this.persistenceService.setBody(data);
+            this.justiciableBusquedaItem = this.persistenceService.getDatos();
+            this.checkedViewRepresentante = false;
+            this.modoRepresentante = false;
+            this.modoEdicion = true;
+            this.progressSpinner = false;
+            this.search();
+
+          });
+
+          this.progressSpinner = false;
+
+        }
       }
+      ).catch(error => console.error(error));
 
-
-    });
-
-    this.commnosService.scrollTop();
-    if (this.persistenceService.getFichasPosibles() != null && this.persistenceService.getFichasPosibles() != undefined) {
-      this.fichasPosibles = this.persistenceService.getFichasPosibles();
-      this.fromJusticiable = this.fichasPosibles[0].activa;
-    }
-
-    if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
-      this.justiciableBusquedaItem = this.persistenceService.getDatos();
-
-      this.search();
-      this.modoEdicion = true;
-
-    } else {
-      this.modoEdicion = false;
-      this.progressSpinner = false;
-    }
-
-    this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
-
-      this.progressSpinner = true;
-      this.commnosService.scrollTop();
-      this.persistenceService.setBody(data);
-      this.justiciableBusquedaItem = this.persistenceService.getDatos();
-      this.checkedViewRepresentante = false;
-      this.modoRepresentante = false;
-      this.modoEdicion = true;
-      this.progressSpinner = false;
-      this.search();
-
-    });
 
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-
+  newJusticiable(event) {
+    if (!this.modoRepresentante) {
+      this.justiciableBusquedaItem = new JusticiableBusquedaItem();
+      this.justiciableBusquedaItem.idpersona = event.idpersona;
+      this.justiciableBusquedaItem.idInstitucion = this.authenticationService.getInstitucionSession();
+      this.persistenceService.setDatos(this.justiciableBusquedaItem);
+      this.body = event;
+      this.modoEdicion = true;
+    }
   }
 
-
+  //BUSQUEDA JUSTICIABLE 
   search() {
     this.progressSpinner = true;
 
+    //VISTA JUSTICIABLE
     if (!this.checkedViewRepresentante) {
       let justiciableBusqueda = this.justiciableBusquedaItem;
       this.callServiceSearch(justiciableBusqueda);
+      //VISTA REPRESENTANTE
     } else {
       let representanteBusqueda = this.representanteBusquedaItem;
       this.callServiceSearch(representanteBusqueda);
@@ -171,8 +209,6 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
     this.body = new JusticiableItem();
     this.body.nif = event.nif;
     this.nuevo();
-
-
   }
 
   nuevo() {
@@ -191,6 +227,7 @@ export class GestionJusticiablesComponent implements OnInit, OnChanges {
 
   }
 
+  //BUSQUEDA POR NIF DESDE LA TARJETA DATOS GENERALES
   searchJusticiableByNif(bodyBusqueda) {
     this.progressSpinner = true;
 
