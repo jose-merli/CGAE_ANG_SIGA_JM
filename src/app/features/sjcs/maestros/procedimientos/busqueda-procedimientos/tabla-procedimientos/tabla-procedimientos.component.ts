@@ -155,7 +155,7 @@ export class TablaProcedimientosComponent implements OnInit {
 
   changeDescripcion(dato) {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
-
+    dato.descripcion = dato.descripcion.trim();
     if (findDato != undefined) {
       if (dato.descripcion.trim() != "") {
         if (dato.descripcion != findDato.descripcion) {
@@ -258,8 +258,9 @@ export class TablaProcedimientosComponent implements OnInit {
       let pretension: PretensionItem;
       pretension = this.datos[0];
       pretension.descripcionJurisdiccion = this.comboJurisdiccion[pretension.idJurisdiccion].label
-      this.body = pretension;
 
+      this.body = pretension;
+      this.body.descripcion = this.body.descripcion.trim();
       this.callSaveService(url);
 
     } else {
@@ -267,6 +268,10 @@ export class TablaProcedimientosComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new PretensionObject();
         this.body.pretensionItems = this.updatePartidasPres;
+        this.body.pretensionItems = this.body.pretensionItems.map(it => {
+          it.descripcion = it.descripcion.trim();
+          return it;
+        })
         this.callSaveService(url);
       } else {
 
@@ -324,7 +329,8 @@ export class TablaProcedimientosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined && this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion != "") {
+      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim() &&
+        this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion.trim() != "") {
         return false;
       } else {
         return true;
@@ -332,7 +338,15 @@ export class TablaProcedimientosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if (!it.descripcion.trim() && it.idJurisdiccion != undefined && it.idJurisdiccion.trim() != "")
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }

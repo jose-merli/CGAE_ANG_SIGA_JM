@@ -215,12 +215,17 @@ export class TablaMateriasComponent implements OnInit {
 
     if (this.nuevo) {
       url = "fichaAreas_createMaterias";
+      this.body.nombreMateria = this.body.nombreMateria.trim();
       this.validatenewMateria(url);
 
     } else {
       url = "fichaAreas_updateMaterias";
       this.body = new AreasObject();
       this.body.areasItems = this.updateAreas;
+      this.body.areasItems = this.body.areasItems.map(it => {
+        it.nombreMateria = it.nombreMateria.trim();
+        return it;
+      })
       this.callSaveService(url);
     }
 
@@ -336,7 +341,7 @@ export class TablaMateriasComponent implements OnInit {
       return true;
     }
     if (this.nuevo) {
-      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
+      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria.trim()) {
         return false;
       } else {
         return true;
@@ -345,7 +350,13 @@ export class TablaMateriasComponent implements OnInit {
     } else {
 
       if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
-        return false;
+        let val = true;
+        this.updateAreas.forEach(it => {
+          if (!it.nombreMateria.trim())
+            val = false;
+        });
+        if (val) return false;
+        else return true;
       } else {
         return true;
       }
@@ -380,6 +391,7 @@ export class TablaMateriasComponent implements OnInit {
   editarMateria(dato) {
 
     let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
+    dato.descripcion = dato.descripcion.trim();
 
     if (findDato != undefined) {
       if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {

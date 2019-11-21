@@ -417,6 +417,8 @@ export class GestionDocumentosComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
 
+    dato.abreviaturaDoc = dato.abreviaturaDoc.trim();
+
     if (findDato != undefined) {
       if (dato.abreviaturaDoc != findDato.abreviaturaDoc) {
         let findUpdate = this.updateDocumentos.find(item => item.abreviaturaDoc === dato.abreviaturaDoc);
@@ -448,6 +450,7 @@ export class GestionDocumentosComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
+    dato.descripcionDoc = dato.descripcionDoc.trim();
 
     if (findDato != undefined) {
       if (dato.descripcionDoc != findDato.descripcionDoc) {
@@ -468,10 +471,17 @@ export class GestionDocumentosComponent implements OnInit {
     if (this.datos[0].idDocumento == null || this.datos[0].idDocumento == undefined) {
       this.body = this.datos[0]
       url = "gestionDocumentacionEjg_createDoc";
+      this.body.abreviaturaDoc = this.body.abreviaturaDoc.trim();
+      this.body.descripcionDoc = this.body.descripcionDoc.trim();
       this.callSaveService(url);
     } else {
       this.body = new DocumentacionEjgObject();
       this.body.documentacionejgItems = this.updateDocumentos;
+      this.body.documentacionejgItems = this.body.documentacionejgItems.map(it => {
+        it.abreviaturaDoc = it.abreviaturaDoc.trim();
+        it.descripcionDoc = it.descripcionDoc.trim();
+        return it;
+      })
       url = "gestionDocumentacionEjg_updateDoc";
       this.callSaveService(url);
     }
@@ -479,7 +489,8 @@ export class GestionDocumentosComponent implements OnInit {
   }
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined && this.datos[0].abreviaturaDoc != undefined) {
+      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined
+        && this.datos[0].abreviaturaDoc.trim() && this.datos[0].descripcionDoc.trim()) {
         return false;
       } else {
         return true;
@@ -487,7 +498,16 @@ export class GestionDocumentosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updateDocumentos != undefined && this.updateDocumentos.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if (it.abreviaturaDoc == undefined || it.descripcionDoc == undefined || !it.abreviaturaDoc.trim() ||
+            !it.descripcionDoc.trim())
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }

@@ -140,6 +140,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
 
+    dato.descripcion = dato.descripcion.trim();
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
 
@@ -264,6 +265,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       // retencion.descripcion = this.comboSociedades[retencion.idRetencion].label
       if (retencion.retencion != null && retencion.retencion != undefined && retencion.retencion != "") {
         this.body = retencion;
+        this.body.descripcion = this.body.descripcion.trim();
         this.body.retencion = this.body.retencion.replace(",", ".");
         if (this.body.retencion == ".") {
           this.body.retencion = 0;
@@ -281,6 +283,10 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new RetencionIrpfItem();
         this.body.retencionItems = this.updatePartidasPres;
+        this.body.retencionItems = this.body.retencionItems.map(it => {
+          it.descripcion = it.descripcion.trim();
+          return it;
+        })
         this.body.retencionItems.forEach(element => {
           element.retencion = element.retencion.replace(",", ".");
           element.retencionReal = +element.retencion;
@@ -347,7 +353,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined) {
+      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim()) {
         return false;
       } else {
         return true;
@@ -355,7 +361,15 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if (!it.descripcion.trim())
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }

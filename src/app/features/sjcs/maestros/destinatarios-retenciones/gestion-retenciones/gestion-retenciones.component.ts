@@ -192,6 +192,7 @@ export class TablaDestinatariosComponent implements OnInit {
   changeNombre(dato) {
 
     let findDato = this.datosInicial.find(item => item.iddestinatario === dato.iddestinatario);
+    dato.nombre = dato.nombre.trim();
 
     if (findDato != undefined) {
       if (dato.nombre != findDato.nombre) {
@@ -264,6 +265,7 @@ export class TablaDestinatariosComponent implements OnInit {
       url = "gestionDestinatariosRetenc_createDestinatarioRetenc";
       let destinatariosRetenc = this.datos[0];
       this.body = destinatariosRetenc;
+      this.body.nombre = this.body.nombre.trim();
       this.callSaveService(url);
 
     } else {
@@ -272,6 +274,10 @@ export class TablaDestinatariosComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new DestinatariosRetencObject();
         this.body.destinatariosItem = this.updateDestinatariosRet;
+        this.body.destinatariosItem = this.body.destinatariosItem.map(it => {
+          it.nombre = it.nombre.trim();
+          return it;
+        })
         this.callSaveService(url);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de las partidas presupuestrias ya se encuentran registrados");
@@ -334,7 +340,7 @@ export class TablaDestinatariosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim() != "") {
+      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim()) {
         return false;
       } else {
         return true;

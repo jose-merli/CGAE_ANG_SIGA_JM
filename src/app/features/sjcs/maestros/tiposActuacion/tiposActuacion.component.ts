@@ -265,6 +265,7 @@ export class TiposActuacionComponent implements OnInit {
       this.datos[0].idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       let tipoAsistencia = this.datos[0];
       this.body = tipoAsistencia;
+      this.body.descripciontipoactuacion = this.body.descripciontipoactuacion.trim();
       this.callSaveService(url);
 
     } else {
@@ -273,7 +274,10 @@ export class TiposActuacionComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new TiposActuacionObject();
         this.body.tiposActuacionItem = this.updateTiposActuacion;
-
+        this.body.tiposActuacionItem = this.body.tiposActuacionItem.map(it => {
+          it.descripciontipoactuacion = it.descripciontipoactuacion.trim();
+          return it;
+        })
         this.callSaveService(url);
 
       } else {
@@ -467,21 +471,32 @@ export class TiposActuacionComponent implements OnInit {
       }
     }
   }
+  editarTipoActuacion(dato) {
+
+
+    let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
+
+    dato.descripciontipoactuacion = dato.descripciontipoactuacion.trim();
+    if (findDato != undefined) {
+      if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion) {
+
+        let findUpdate = this.updateTiposActuacion.find(item => item.descripciontipoactuacion === dato.descripciontipoactuacion);
+
+        if (findUpdate == undefined) {
+          this.updateTiposActuacion.push(dato);
+        }
+      }
+    }
+
+  }
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].descripciontipoactuacion != "" &&
+      if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].descripciontipoactuacion.trim() &&
         this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
         && this.datos[0].importemaximo != undefined && this.datos[0].importemaximo + "" != ""
-        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
-        // if (this.datos[0].descripciontipoactuacion != undefined) {
-        //   if (this.datos[0].descripciontipoactuacion != "")
-        //     if (this.datos[0].importe != undefined)
-        //       if (this.datos[0].importe + "" != "")
-        //         if (this.datos[0].importemaximo != undefined)
-        //           if (this.datos[0].importemaximo + "" != "")
-        //             if (this.datos[0].seleccionadosReal != undefined)
-        //               if (this.datos[0].seleccionadosReal != "")
+        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal.trim() != "") {
+
         return false;
       } else {
         return true;
@@ -489,9 +504,9 @@ export class TiposActuacionComponent implements OnInit {
 
     } else {
       this.updateTiposActuacion = this.updateTiposActuacion.filter(it => {
-        if (it.descripciontipoactuacion != undefined && it.descripciontipoactuacion != "" &&
+        if (it.descripciontipoactuacion != undefined && it.descripciontipoactuacion.trim() &&
           it.importe != undefined && it.importe + "" != "" && it.importemaximo != undefined
-          && it.importemaximo + "" != "" && (it.seleccionadosReal != undefined && it.seleccionadosReal != ""))
+          && it.importemaximo + "" != "" && (it.seleccionadosReal != undefined && it.seleccionadosReal.trim() != ""))
           return true;
         else false;
       })

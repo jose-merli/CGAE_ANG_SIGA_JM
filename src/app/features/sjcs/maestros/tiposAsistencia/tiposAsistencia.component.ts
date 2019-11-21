@@ -297,6 +297,7 @@ export class TiposAsistenciaComponent implements OnInit {
       this.datos[0].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       let tipoAsistencia = this.datos[0];
       this.body = tipoAsistencia;
+      this.body.tipoasistencia = this.body.tipoasistencia.trim();
       this.callSaveService(url);
 
     } else {
@@ -306,6 +307,11 @@ export class TiposAsistenciaComponent implements OnInit {
         if (this.validateUpdate()) {
           this.body = new TiposAsistenciaObject();
           this.body.tiposAsistenciasItem = this.updateTiposAsistencia;
+
+          this.body.tiposAsistenciasItem = this.body.tiposAsistenciasItem.map(it => {
+            it.tipoasistencia = it.tipoasistencia.trim();
+            return it;
+          })
           this.callSaveService(url);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
@@ -676,7 +682,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia != "" &&
+      if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia.trim() &&
         this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
         && this.datos[0].importemaximo + "" != undefined && this.datos[0].importemaximo != ""
         && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
@@ -687,7 +693,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
     } else {
       this.updateTiposAsistencia = this.updateTiposAsistencia.filter(it => {
-        if (it.tipoasistencia != undefined && it.tipoasistencia != "" &&
+        if (it.tipoasistencia != undefined && it.tipoasistencia.trim() &&
           it.importe != undefined && it.importe + "" != ""
           && it.importemaximo != undefined && it.importemaximo + "" != ""
           && it.seleccionadosReal != undefined && it.seleccionadosReal != "")

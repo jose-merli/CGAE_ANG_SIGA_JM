@@ -175,12 +175,18 @@ export class ZonaComponent implements OnInit {
 
     if (this.nuevo) {
       url = "fichaZonas_createZone";
+      this.body.descripcionsubzona = this.body.descripcionsubzona.trim();
+
       this.validateNewZone(url);
 
     } else {
       url = "fichaZonas_updateZones";
       this.body = new ZonasObject();
       this.body.zonasItems = this.updateZonas;
+      this.body.zonasItems = this.body.zonasItems.map(it => {
+        it.descripcionsubzona = it.descripcionsubzona.trim();
+        return it;
+      })
       this.callSaveZoneService(url);
     }
 
@@ -261,7 +267,7 @@ export class ZonaComponent implements OnInit {
         this.datos[datoId].descripcionsubzona = this.selectedBefore.descripcionsubzona;
 
       } else {
-        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e.srcElement.value.trim()));
+        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona.trim()) === this.upperCasePipe.transform(e.srcElement.value.trim()));
         this.editarDescripcionZona(dato);
       }
 
@@ -269,13 +275,12 @@ export class ZonaComponent implements OnInit {
     }
   }
 
-
-  validateZona(e) {
+  validateZoneChange(e) {
 
     if (!this.nuevo) {
       let datoId = this.datos.findIndex(item => item.idsubzona === this.selectedBefore.idsubzona);
 
-      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e));
+      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e.trim()));
 
       if (findDato.length > 1) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.existeZonaMismaDescripcion"));
@@ -283,11 +288,10 @@ export class ZonaComponent implements OnInit {
         this.datos[datoId].descripcionsubzona = this.selectedBefore.descripcionsubzona;
 
       } else {
-        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e));
+        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona.trim()) === this.upperCasePipe.transform(e.trim()));
         this.editarDescripcionZona(dato);
       }
 
-      this.seleccion = false;
     }
   }
 
@@ -358,6 +362,7 @@ export class ZonaComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
 
+    dato.descripcionsubzona = dato.descripcionsubzona.trim();
     if (findDato != undefined) {
       if (dato.descripcionsubzona != findDato.descripcionsubzona) {
 

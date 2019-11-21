@@ -61,7 +61,7 @@ export class TablaPartidasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private  confirmationService:  ConfirmationService
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -182,6 +182,7 @@ export class TablaPartidasComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
+    dato.descripcion = dato.descripcion.trim();
 
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
@@ -240,6 +241,8 @@ export class TablaPartidasComponent implements OnInit {
       this.body.importepartida = this.body.valorNum;
       this.body.importepartida = this.body.importepartida.replace(",", ".");
       this.body.importepartidaReal = +this.body.importepartida;
+      this.body.nombrepartida = this.body.nombrepartida.trim();
+      this.body.descripcion = this.body.descripcion.trim();
       if (this.body.importepartida == ".") {
         this.body.importepartida = 0;
       }
@@ -355,8 +358,8 @@ export class TablaPartidasComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
-        && this.datos[0].valorNum != undefined) {
+      if (this.datos[0].nombrepartida != undefined && this.datos[0].valorNum != undefined && this.datos[0].descripcion != undefined && this.datos[0].nombrepartida.trim() &&
+        this.datos[0].descripcion.trim() && this.datos[0].valorNum) {
         return false;
       } else {
         return true;
@@ -364,7 +367,17 @@ export class TablaPartidasComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if (it.nombrepartida == undefined || it.valorNum == undefined || it.descripcion == undefined || !it.nombrepartida.trim() ||
+            !it.descripcion.trim() || !it.valorNum)
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
+
       } else {
         return true;
       }
