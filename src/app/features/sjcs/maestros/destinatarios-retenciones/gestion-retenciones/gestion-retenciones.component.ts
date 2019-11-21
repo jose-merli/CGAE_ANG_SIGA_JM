@@ -179,7 +179,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.cuentacontable != findDato.cuentacontable) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.cuentacontable === dato.cuentacontable);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -197,7 +197,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.nombre != findDato.nombre) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.nombre === dato.nombre);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -213,7 +213,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.orden != findDato.orden) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.orden === dato.orden);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);

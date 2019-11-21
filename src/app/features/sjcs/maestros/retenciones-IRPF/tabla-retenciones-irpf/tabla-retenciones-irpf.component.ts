@@ -139,12 +139,12 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
-
-    dato.descripcion = dato.descripcion.trim();
+    if (dato.descripcion != undefined)
+      dato.descripcion = dato.descripcion.trim();
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -157,10 +157,12 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
 
+    if (dato.claveModelo != undefined)
+      dato.claveModelo = dato.claveModelo.trim();
     if (findDato != undefined) {
       if (dato.claveModelo != findDato.claveModelo) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.claveModelo === dato.claveModelo);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -176,7 +178,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.retencion != findDato.retencion) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.retencion === dato.retencion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -201,11 +203,10 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   changeSociedad(dato) {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
-
     if (findDato != undefined) {
       if (dato.descripcionSociedad != findDato.descripcionSociedad) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcionSociedad === dato.descripcionSociedad);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -363,7 +364,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
         let val = true;
         this.updatePartidasPres.forEach(it => {
-          if (!it.descripcion.trim())
+          if (!it.descripcion.trim() || !it.retencion)
             val = false;
         });
         if (val)

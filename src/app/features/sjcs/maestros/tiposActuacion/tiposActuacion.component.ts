@@ -414,7 +414,7 @@ export class TiposActuacionComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.importe != findDato.importe) {
 
-        let findUpdate = this.updateTiposActuacion.find(item => item.importe === dato.importe);
+        let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
         this.permitirGuardar = true
 
         if (findUpdate == undefined) {
@@ -438,7 +438,7 @@ export class TiposActuacionComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.importemaximo != findDato.importemaximo) {
 
-        let findUpdate = this.updateTiposActuacion.find(item => item.importemaximo === dato.importemaximo);
+        let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
         this.permitirGuardar = true
         if (findUpdate == undefined) {
           this.updateTiposActuacion.push(dato);
@@ -463,7 +463,7 @@ export class TiposActuacionComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.seleccionadosReal != findDato.seleccionadosReal) {
 
-        let findUpdate = this.updateTiposActuacion.find(item => item.seleccionadosReal === dato.seleccionadosReal);
+        let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
         this.permitirGuardar = true
         if (findUpdate == undefined) {
           this.updateTiposActuacion.push(dato);
@@ -474,20 +474,19 @@ export class TiposActuacionComponent implements OnInit {
   editarTipoActuacion(dato) {
 
 
-    let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
+    let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion && item.idtipoasistencia === dato.idtipoasistencia);
 
     dato.descripciontipoactuacion = dato.descripciontipoactuacion.trim();
     if (findDato != undefined) {
       if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion) {
 
-        let findUpdate = this.updateTiposActuacion.find(item => item.descripciontipoactuacion === dato.descripciontipoactuacion);
+        let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
 
         if (findUpdate == undefined) {
           this.updateTiposActuacion.push(dato);
         }
       }
     }
-
   }
 
   disabledSave() {
@@ -495,7 +494,7 @@ export class TiposActuacionComponent implements OnInit {
       if (this.datos[0].descripciontipoactuacion != undefined && this.datos[0].descripciontipoactuacion.trim() &&
         this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
         && this.datos[0].importemaximo != undefined && this.datos[0].importemaximo + "" != ""
-        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal.trim() != "") {
+        && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal.length > 0) {
 
         return false;
       } else {
@@ -503,15 +502,18 @@ export class TiposActuacionComponent implements OnInit {
       }
 
     } else {
-      this.updateTiposActuacion = this.updateTiposActuacion.filter(it => {
-        if (it.descripciontipoactuacion != undefined && it.descripciontipoactuacion.trim() &&
-          it.importe != undefined && it.importe + "" != "" && it.importemaximo != undefined
-          && it.importemaximo + "" != "" && (it.seleccionadosReal != undefined && it.seleccionadosReal.trim() != ""))
-          return true;
-        else false;
-      })
+
       if (!this.historico && (this.updateTiposActuacion != undefined && this.updateTiposActuacion.length > 0) && this.permisoEscritura && this.permitirGuardar) {
-        return false;
+        let val = true;
+        this.updateTiposActuacion.forEach(it => {
+          if ((it.descripciontipoactuacion == undefined || !it.descripciontipoactuacion.trim()) || (it.seleccionadosReal == undefined || it.seleccionadosReal.length == 0)
+            || (it.importemaximo == undefined || it.importemaximo + "" == "") || (it.importe == undefined || it.importe + "" == ""))
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }

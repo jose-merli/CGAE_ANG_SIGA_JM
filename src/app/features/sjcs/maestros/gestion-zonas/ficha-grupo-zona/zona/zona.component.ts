@@ -314,7 +314,7 @@ export class ZonaComponent implements OnInit {
   disabledSave() {
     if (this.nuevo) {
       if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona != null
-        && this.datos[0].descripcionsubzona != "" && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
+        && this.datos[0].descripcionsubzona.trim() && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
         return false;
       } else {
         return true;
