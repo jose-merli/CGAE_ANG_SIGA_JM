@@ -18,6 +18,7 @@ export class FichaTurnosComponent implements OnInit {
 	turnosItem;
 	modoEdicion: boolean;
 	idProcedimiento;
+	pesosSeleccionadosTarjeta: string;
 	datos: TurnosItems = new TurnosItems();
 	messageShow: string;
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService) { }
@@ -77,6 +78,7 @@ export class FichaTurnosComponent implements OnInit {
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
 		this.idTurno = event.idTurno
+		// this.pesosSeleccionadosTarjeta = event.pesosSeleccionadosTarjeta;
 	}
 	backTo() {
 		this.location.back();

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { Location } from "@angular/common";
+import { Location, UpperCasePipe } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Subject } from "rxjs/Subject";
 import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
@@ -11,43 +11,57 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
+import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
+import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
+import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 @Component({
   selector: "app-tarjeta-colaoficio",
   templateUrl: "./tarjeta-colaoficio.component.html",
   styleUrls: ["./tarjeta-colaoficio.component.scss"]
 })
 export class TarjetaColaOficio implements OnInit {
-  // datos;
-  openFicha: boolean = true;
-  body: TurnosItems = new TurnosItems();
-  bodyInicial;
-  progressSpinner: boolean = false;
-  modoEdicion: boolean = false;
-  msgs;
-  // jurisdicciones;
-  procedimientos;
-  textFilter;
-  showTarjeta: boolean = true;
-  esComa: boolean = false;
+
+
+  openFicha: boolean = false;
   textSelected: String = "{label}";
-  permisoEscritura: boolean = true;
-  jurisdicciones: any[] = [];
-  areas: any[] = [];
-  tiposturno: any[] = [];
-  zonas: any[] = [];
-  subzonas: any[] = [];
-  materias: any[] = [];
-  partidas: any[] = [];
-  partidoJudicial: string;
-  grupofacturacion: any[] = [];
-  partidasJudiciales: any[] = [];
-  isDisabledMateria: boolean = false;
-  comboPJ
-  tipoturnoDescripcion;
-  jurisdiccionDescripcion;
-  partidaPresupuestaria;
-  MateriaDescripcion
-  isDisabledSubZona: boolean = false;
+
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  cols;
+  rowsPerPage;
+  historico: boolean = false;
+  datos: any[];
+  listaTabla: TurnosItems = new TurnosItems();
+  fechaActual;
+  disableAll: boolean = false;
+  comboJurisdicciones: any[] = [];
+  bodyInicial: TurnosItems;
+
+  progressSpinner: boolean = false;
+  msgs;
+  body;
+  nuevo: boolean = false;
+  datosInicial = [];
+  updateAreas = [];
+  showTarjeta: boolean = true;
+  // selectedBefore;
+  overlayVisible: boolean = false;
+  selectionMode: string = "single";
+  pesosSeleccionadosTarjeta2;
+  //Resultados de la busqueda
+  @Input() turnosItem: TurnosItems;
+  @Input() modoEdicion;
+  @Input() idTurno;
+  // @Input() pesosSeleccionadosTarjeta;
+  //Resultados de la busqueda
+  // @Input() modoEdicion: boolean = false;
+
+  @ViewChild("table") table;
+  @ViewChild("multiSelect") multiSelect: MultiSelect;
   fichasPosibles = [
     {
       key: "generales",
@@ -57,27 +71,24 @@ export class TarjetaColaOficio implements OnInit {
       key: "configuracion",
       activa: false
     },
+    {
+      key: "tablacolaoficio",
+      activa: false
+    },
   ];
-  @Output() datos;
-
-  @Output() modoEdicionSend = new EventEmitter<any>();
-
-  @ViewChild("importe") importe;
-  //Resultados de la busqueda
-  @Input() turnosItem: TurnosItems;
-
-  constructor(private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.getCols();
     if (this.turnosItem != undefined) {
-      if (this.turnosItem.idturno != undefined) {
+      if (this.idTurno != undefined) {
+        this.turnosItem.fechaActual = new Date();
         this.body = this.turnosItem;
+        this.turnosItem.idturno = this.idTurno;
+        this.getMaterias();
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        this.getCombos();
-
-
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -87,584 +98,131 @@ export class TarjetaColaOficio implements OnInit {
     } else {
       this.turnosItem = new TurnosItems();
     }
+    // this.arreglaChecks();
   }
 
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
-  }
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos()
-    }
-    if (this.turnosItem != undefined) {
-      this.body = this.turnosItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-    } else {
-      this.turnosItem = new TurnosItems();
-    }
-    if (this.body.idturno == undefined) {
-      this.modoEdicion = false;
-    } else {
+    this.getCols();
+    if (this.idTurno != undefined) {
       this.modoEdicion = true;
-    }
-    this.getCombos();
-  }
-
-  getCombos() {
-    this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
-      n => {
-        this.comboPJ = n.combooItems;
-
-      },
-      err => {
-        console.log(err);
-      }
-    );
-
-
-    this.sigaServices.get("fichaAreas_getJurisdicciones").subscribe(
-      n => {
-        this.jurisdicciones = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.jurisdicciones.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        for (let i = 0; i < this.jurisdicciones.length; i++) {
-          if (this.jurisdicciones[i].value == this.turnosItem.idjurisdiccion) {
-            this.jurisdiccionDescripcion = this.jurisdicciones[i].label
-          }
-
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboAreas").subscribe(
-      n => {
-        this.areas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.areas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idarea != null) {
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboMaterias",
-              "?idArea=" + this.turnosItem.idarea)
-            .subscribe(
-              n => {
-                // this.isDisabledPoblacion = false;
-                this.materias = n.combooItems;
-              },
-              error => { },
-              () => {
-
-              }
-            );
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboTiposTurno").subscribe(
-      n => {
-        this.tiposturno = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.tiposturno.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        for (let i = 0; i < this.tiposturno.length; i++) {
-          if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
-            this.tipoturnoDescripcion = this.tiposturno[i].label
-          }
-
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboZonas").subscribe(
-      n => {
-        this.zonas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.zonas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idzona != null) {
-          this.sigaServices
-            .getParam(
-              "fichaZonas_searchSubzones",
-              "?idZona=" + this.turnosItem.idzona
-            )
-            .subscribe(
-              n => {
-                this.partidasJudiciales = n.zonasItems;
-              },
-              err => {
-                console.log(err);
-
-              }, () => {
-                this.getPartidosJudiciales();
-              }
-            );
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboSubZonas",
-              "?idZona=" + this.turnosItem.idzona)
-            .subscribe(
-              n => {
-                // this.isDisabledPoblacion = false;
-                this.subzonas = n.combooItems;
-              },
-              error => { },
-              () => {
-                // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
-                this.body = this.turnosItem;
-                this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-              }
-            );
-        }
-      }
-    );
-    this.sigaServices.get("combossjcs_comboPartidasPresupuestaria").subscribe(
-      n => {
-        this.partidas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.partidas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        for (let i = 0; i < this.partidas.length; i++) {
-          if (this.partidas[i].value == this.turnosItem.idpartidapresupuestaria) {
-            this.partidaPresupuestaria = this.partidas[i].label
-          }
-
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboGruposFacturacion").subscribe(
-      n => {
-        this.grupofacturacion = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.grupofacturacion.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        this.body = this.turnosItem;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        if (this.turnosItem.idturno == undefined) {
-          this.modoEdicion = false;
-        } else {
-          this.modoEdicion = true;
-        }
-      }
-    );
-  }
-
-  onChangeArea() {
-
-    this.turnosItem.idmateria = "";
-    this.materias = [];
-
-    if (this.turnosItem.idarea != undefined && this.turnosItem.idarea != "") {
-      this.isDisabledMateria = false;
-      this.getComboMaterias();
+      // this.getMaterias();
     } else {
-      this.isDisabledMateria = true;
+      this.modoEdicion = false;
     }
 
+    // let datos = this.persistenceService.getDatos();
+    // if (datos != null && datos != undefined && datos.fechabaja != undefined) {
+    //   this.disableAll = true;
+    // }
+    // if (this.persistenceService.getPermisos() != true) {
+    //   this.disableAll = true;
+    // }
   }
-  onChangeZona() {
-
-    this.turnosItem.idsubzona = "";
-    this.subzonas = [];
-
-    if (this.turnosItem.idzona != undefined && this.turnosItem.idzona != "") {
-      this.isDisabledSubZona = false;
-      this.getComboSubZonas();
-      this.partidoJudicial = "";
-    } else {
-      this.isDisabledSubZona = true;
-      this.partidoJudicial = "";
-    }
-
-  }
-
-  onChangeTipoturno() {
-    for (let i = 0; i < this.tiposturno.length; i++) {
-      if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
-        this.tipoturnoDescripcion = this.tiposturno[i].label
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
       }
-    }
-  }
-
-  getPartidosJudiciales() {
-
-    for (let i = 0; i < this.partidasJudiciales.length; i++) {
-      this.partidasJudiciales[i].partidosJudiciales = [];
-      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
-        let findPartido = this.comboPJ.find(x => x.value === partido);
-
-        this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
-      });
-      this.datos = [
-        {
-          label: "Nombre",
-          value: this.turnosItem.nombre
-        },
-        {
-          label: "Área",
-          value: this.turnosItem.area
-        },
-        {
-          label: "Materia",
-          value: this.turnosItem.materia
-        },
-        {
-          label: "Jurisdicción",
-          value: this.jurisdiccionDescripcion
-        },
-        {
-          label: "Tipo Turno",
-          value: this.tipoturnoDescripcion
-        },
-        {
-          label: "Grupo Zona",
-          value: this.turnosItem.zona
-        },
-        {
-          label: "Zona",
-          value: this.turnosItem.subzona
-        },
-        {
-          label: "Partida Presupuestaria",
-          value: this.partidaPresupuestaria
-        },
-        {
-          label: "Partido Judicial",
-          value: this.partidoJudicial
-        },
-      ]
-    }
-  }
-
-  partidoJudiciales() {
-    if (this.turnosItem.idsubzona != null || this.turnosItem.idsubzona != undefined) {
-      this.sigaServices
-        .getParam(
-          "fichaZonas_searchSubzones",
-          "?idZona=" + this.turnosItem.idzona
-        )
-        .subscribe(
-          n => {
-            this.partidasJudiciales = n.zonasItems;
-          },
-          err => {
-            console.log(err);
-
-          }, () => {
-            this.getPartidosJudiciales();
-          }
-        );
     } else {
-      this.isDisabledSubZona = true;
+      fecha = undefined;
     }
 
+    return fecha;
   }
-  getComboMaterias() {
-    this.sigaServices
-      .getParam(
-        "combossjcs_comboMaterias",
-        "?idArea=" + this.turnosItem.idarea)
-      .subscribe(
-        n => {
-          // this.isDisabledPoblacion = false;
-          this.materias = n.combooItems;
-        },
-        error => { },
-        () => {
-          if (this.turnosItem.idarea != null) {
-            this.isDisabledMateria = false;
-          }
-        }
-      );
+  fillFechaDesdeCalendar(event) {
+    this.turnosItem.fechaActual = this.transformaFecha(event);
+    this.getMaterias();
   }
-
-  getComboSubZonas() {
-    this.sigaServices
-      .getParam(
-        "combossjcs_comboSubZonas",
-        "?idZona=" + this.turnosItem.idzona)
-      .subscribe(
-        n => {
-          // this.isDisabledPoblacion = false;
-          this.subzonas = n.combooItems;
-        },
-        error => { },
-        () => {
-
-        }
-      );
+  setItalic(dato) {
+    if (dato.fechabajapersona == null) return false;
+    else return true;
   }
-
-  arreglaCombos() {
-    this.sigaServices.get("combossjcs_comboAreas").subscribe(
+  searchHistorical() {
+    this.historico = this.turnosItem.historico;
+    this.historico = !this.historico;
+    this.turnosItem.historico = !this.turnosItem.historico;
+    this.persistenceService.setHistorico(this.turnosItem.historico);
+    this.getMaterias();
+    this.selectAll = false
+  }
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
+  getMaterias() {
+    this.progressSpinner = true;
+    this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
       n => {
-        this.areas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.areas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
+        // this.datos = n.turnosItem;
+        this.datos = JSON.parse(n.body).turnosItem;
+        if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+          this.turnosItem.historico = true;
+        }
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }, () => {
-        if (this.turnosItem.idarea != null) {
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboMaterias",
-              "?idArea=" + this.turnosItem.idarea)
-            .subscribe(
-              n => {
-                // this.isDisabledPoblacion = false;
-                this.materias = n.combooItems;
-              },
-              error => { },
-              () => {
-                if (this.turnosItem.idarea != null) {
-                  this.isDisabledMateria = false;
-                }
-              }
-            );
-        }
-      }
-    );
-
-    this.sigaServices.get("combossjcs_comboZonas").subscribe(
-      n => {
-        this.zonas = n.combooItems;
-
-        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-    para poder filtrar el dato con o sin estos caracteres*/
-        this.zonas.map(e => {
-          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-          let i;
-          let x;
-          for (i = 0; i < e.label.length; i++) {
-            if ((x = accents.indexOf(e.label[i])) != -1) {
-              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-              return e.labelSinTilde;
-            }
-          }
-        });
-
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        if (this.turnosItem.idzona != null) {
-          this.sigaServices
-            .getParam(
-              "fichaZonas_searchSubzones",
-              "?idZona=" + this.turnosItem.idzona
-            )
-            .subscribe(
-              n => {
-                this.partidasJudiciales = n.zonasItems;
-              },
-              err => {
-                console.log(err);
-
-              }, () => {
-                if (this.turnosItem.idzona != null) {
-                  this.isDisabledSubZona = false;
-                }
-                this.getPartidosJudiciales();
-              }
-            );
-
-          this.sigaServices
-            .getParam(
-              "combossjcs_comboSubZonas",
-              "?idZona=" + this.turnosItem.idzona)
-            .subscribe(
-              n => {
-                // this.isDisabledPoblacion = false;
-                this.subzonas = n.combooItems;
-              },
-              error => { },
-              () => {
-                // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
-                this.body = this.turnosItem;
-                this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-              }
-            );
-        }
+        this.progressSpinner = false;
       }
     );
   }
 
-  rest() {
-    if (this.turnosItem != undefined) {
-      this.turnosItem = JSON.parse(JSON.stringify(this.bodyInicial));
-      this.arreglaCombos();
-    }
 
+  validateHistorical() {
+    // if (this.datos != undefined && this.datos.length > 0) {
+
+    //   if (this.datos[0].fechabaja != null) {
+    //     this.historico = true;
+    //   } else {
+    //     this.historico = false;
+    //   }
+
+    //   this.persistenceService.setHistorico(this.historico);
+
+    // }
   }
 
   save() {
     this.progressSpinner = true;
     let url = "";
-    if (!this.modoEdicion) {
-      url = "turnos_createnewTurno";
-      this.callSaveService(url);
+
+    if (this.nuevo) {
+      url = "fichaAreas_createMaterias";
+      this.validatenewMateria(url);
+
     } else {
-      url = "turnos_updateDatosGenerales";
+      url = "fichaAreas_updateMaterias";
+      this.body = new TurnosObject();
+      this.body.areasItems = this.updateAreas;
       this.callSaveService(url);
     }
+
   }
 
   callSaveService(url) {
-    this.sigaServices.post(url, this.turnosItem).subscribe(
+
+    this.sigaServices.post(url, this.body).subscribe(
       data => {
-        this.esComa = false;
-        if (!this.modoEdicion) {
-          this.modoEdicion = true;
-          let turnos = JSON.parse(data.body);
-          // this.modulosItem = JSON.parse(data.body);
-          this.turnosItem.idturno = turnos.id;
-          let send = {
-            modoEdicion: this.modoEdicion,
-            idturno: this.turnosItem.idturno
-          }
-          this.modoEdicionSend.emit(send);
+
+        if (this.nuevo) {
+          this.nuevo = false;
+          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
-        for (let i = 0; i < this.tiposturno.length; i++) {
-          if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
-            this.tipoturnoDescripcion = this.tiposturno[i].label
-          }
-        }
-        for (let i = 0; i < this.subzonas.length; i++) {
-          if (this.subzonas[i].value == this.turnosItem.idsubzona) {
-            this.turnosItem.subzona = this.subzonas[i].label
-          }
-        }
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        this.persistenceService.setDatos(this.turnosItem);
+
+        this.getMaterias();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
       err => {
-
-        if (JSON.parse(err.error).error.description != "") {
+        this.progressSpinner = false;
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -672,16 +230,241 @@ export class TarjetaColaOficio implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.selectedDatos = [];
+        this.updateAreas = [];
         this.progressSpinner = false;
-        this.body = this.turnosItem;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
       }
     );
 
   }
 
-  clear() {
-    this.msgs = [];
+  newMateria() {
+    this.nuevo = true;
+    this.seleccion = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    if (this.datosInicial != undefined && this.datosInicial != null) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+
+    let materia = {
+      nombreMateria: "",
+      contenido: "",
+      jurisdicciones: "",
+      jurisdiccion: "",
+      idArea: this.idTurno,
+      areaNueva: true
+    };
+
+    if (this.datos.length == 0) {
+      this.datos.push(materia);
+    } else {
+      this.datos = [materia, ...this.datos];
+    }
+
+  }
+
+  validateArea(e) {
+
+    if (!this.nuevo) {
+      let datoId = this.datos.findIndex(item => item.idMateria === this.selectedDatos[0].idMateria);
+
+      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.nombreMateria) === this.upperCasePipe.transform(e.srcElement.value.trim()));
+
+      if (findDato.length > 1) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+        this.progressSpinner = false;
+        this.datos[datoId].nombreMateria = this.selectedDatos[0].nombreMateria;
+      } else {
+        let dato = this.datos[datoId];
+        // this.editarMateria(dato);
+      }
+
+      // this.seleccion = false;
+    }
+  }
+
+  validatenewMateria(url) {
+    let materia = this.datos[0];
+
+    let findDato = this.datosInicial.find(item => item.idArea === materia.idArea && item.nombreMateria === materia.nombreMateria);
+
+    let jurisdiccionesString = "";
+    for (let i in materia.jurisdiccionesReal) {
+      jurisdiccionesString += ";" + materia.jurisdiccionesReal[i].value;
+    }
+
+    materia.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
+    materia.jurisdicciones = "";
+
+    if (findDato != undefined) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+      this.progressSpinner = false;
+    } else {
+      this.body = materia;
+      this.callSaveService(url);
+    }
+
+  }
+
+  disabledSave() {
+
+    if (this.selectMultiple || this.selectAll) {
+      return true;
+    }
+    if (this.nuevo) {
+      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
+        return false;
+      } else {
+        return true;
+      }
+
+    } else {
+
+      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  editAreas(evento) {
+
+    if (this.nuevo) {
+      this.seleccion = false;
+    } else {
+
+      if (!this.selectAll && !this.selectMultiple) {
+
+        this.datos.forEach(element => {
+          element.editable = false;
+          element.overlayVisible = false;
+        });
+
+        evento.data.editable = true;
+
+        this.selectedDatos = [];
+        this.selectedDatos.push(evento.data);
+
+        this.seleccion = true;
+
+      }
+
+    }
+  }
+
+  editarMateria(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
+
+    if (findDato != undefined) {
+      if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
+
+        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
+
+        if (findUpdate == undefined) {
+          let dato2 = dato;
+          dato2.jurisdicciones = "";
+          this.updateAreas.push(dato2);
+        }
+      }
+    }
+
+  }
+
+  editJurisdicciones(dato) {
+
+    if (!this.nuevo) {
+
+      // if (dato.jurisdicciones.length == 0) {
+      //   this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
+      //   let findUpdate = this.updateZonas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+
+      //   if (findUpdate != undefined) {
+      //     this.updateZonas.splice(findUpdate);
+      //   }
+
+      // } else {
+      let findUpdate = this.updateAreas.find(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+
+      if (findUpdate == undefined) {
+        let dato2 = dato;
+        let jurisdiccionesString = "";
+        for (let i in dato2.jurisdiccionesReal) {
+          jurisdiccionesString += ";" + dato2.jurisdiccionesReal[i].value;
+        }
+
+        dato2.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
+        dato2.jurisdicciones = "";
+        this.updateAreas.push(dato2);
+      } else {
+        let updateFind = this.updateAreas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
+        let jurisdiccionesString = "";
+        for (let i in findUpdate.jurisdiccionesReal) {
+          jurisdiccionesString += ";" + dato.jurisdiccionesReal[i].value;
+        }
+        this.updateAreas[updateFind].jurisdiccionesReal = dato.jurisdiccionesReal;
+        this.updateAreas[updateFind].jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
+        this.updateAreas[updateFind].jurisdicciones = "";
+      }
+      // }
+    } else {
+      this.selectedDatos = [];
+    }
+  }
+
+  delete(selectedDatos) {
+    this.body = new TurnosObject();
+    for (let i in this.selectedDatos) {
+      this.selectedDatos[i].jurisdicciones = "";
+    }
+    this.body.areasItems = this.selectedDatos;
+
+    this.sigaServices.post("fichaAreas_deleteMaterias", this.body).subscribe(
+      data => {
+
+        this.nuevo = false;
+        this.selectedDatos = [];
+        this.getMaterias();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {//areasmaterias.materias.ficha.materiaEnUso
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  rest() {
+    if (this.datosInicial != undefined) {
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    } else {
+      this.datos = [];
+    }
+
+    this.selectedDatos = [];
+    this.updateAreas = [];
+    this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -693,24 +476,92 @@ export class TarjetaColaOficio implements OnInit {
     });
   }
 
-  disabledSave() {
-    if (this.turnosItem.nombre != undefined) this.turnosItem.nombre = this.turnosItem.nombre.trim();
-    if ((JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
-      return false;
+  getCols() {
+
+    this.cols = [
+      { field: "orden", header: "administracion.informes.literal.orden" },
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre" },
+      // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
+      { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
+      { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  onChangeSelectAll() {
+    if (!this.disableAll) {
+      this.selectMultiple = false;
+      if (this.selectAll) {
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+        this.selectionMode = "multiple";
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single";
+      }
     } else {
-      return true;
+      this.selectionMode = undefined;
     }
   }
 
-  onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
+  isSelectMultiple() {
+    if (!this.disableAll) {
+      this.selectAll = false;
+      this.selectMultiple = !this.selectMultiple;
+
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single";
+
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "multiple";
+
+      }
+    } else {
+      this.selectionMode = undefined;
+    }
+    // this.volver();
   }
 
-  esFichaActiva(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    return fichaPosible.activa;
+  actualizaSeleccionados(selectedDatos) {
+    if (selectedDatos != undefined)
+      this.numSelected = selectedDatos.length;
+    // this.seleccion = false;
   }
 
+  clear() {
+    this.msgs = [];
+  }
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;
@@ -719,5 +570,31 @@ export class TarjetaColaOficio implements OnInit {
       return fichaPosible[0];
     }
     return {};
+  }
+  abrirFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = true;
+  }
+
+  cerrarFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    fichaPosible.activa = false;
+  }
+  abreCierraFicha() {
+    if (this.modoEdicion) {
+      this.openFicha = !this.openFicha;
+    } else {
+      this.openFicha = false;
+    }
+  }
+  openMultiSelect(dato) {
+    // console.log(this.multiSelect);
+    dato.onPanelShow;
+    // this.multiSelect.show();
+    // dato.overlayVisible = true;
+  }
+
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
   }
 }

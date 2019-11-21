@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule, DatePipe, APP_BASE_HREF, UpperCasePipe } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, PickListModule, TooltipModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, PickListModule, TooltipModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -29,6 +29,8 @@ import { ConfiguracionTurnosComponent } from './ficha-turnos/configuracion-turno
 import { ConfiguracionColaOficioComponent } from './ficha-turnos/configuracion-colaoficio/configuracion-colaoficio.component';
 import { TarjetaColaOficio } from './ficha-turnos/tarjeta-colaoficio/tarjeta-colaoficio.component';
 import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { FechaComponent } from '../../../../commons/fecha/fecha.component';
+import { FechaModule } from '../../../../commons/fecha/fecha.module';
 
 @NgModule({
   imports: [
@@ -48,8 +50,9 @@ import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fi
     PrecioModule,
     PickListModule,
     TooltipModule,
-    TarjetaResumenFijaModule
-    // FichaGrupoZonaModule
+    TarjetaResumenFijaModule,
+    ConfirmDialogModule,
+    FechaModule
 
   ],
   declarations: [
@@ -60,7 +63,8 @@ import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fi
     DatosGeneralesTurnosComponent,
     ConfiguracionTurnosComponent,
     ConfiguracionColaOficioComponent,
-    TarjetaColaOficio
+    TarjetaColaOficio,
+
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

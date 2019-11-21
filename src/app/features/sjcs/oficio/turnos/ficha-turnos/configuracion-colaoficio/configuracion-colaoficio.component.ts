@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
-import { Message, ConfirmationService } from "primeng/components/common/api";
+import { Message } from "primeng/components/common/api";
+import { MultiSelect, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { Subject } from "rxjs/Subject";
 import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
 import { DestinatariosItem } from '../../../../../../models/DestinatariosItem';
@@ -55,7 +56,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   visibleMovilValue: boolean = false;
   esDecanoValue: boolean = false;
   isCodigoEjisValue: boolean = false;
-  pesosSeleccionadosTarjeta: String;
+  @Output() pesosSeleccionadosTarjeta: string;
   progressSpinner: boolean = false;
   avisoMail: boolean = false
 
@@ -84,7 +85,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   ];
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
+    private translateService: TranslateService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -246,6 +247,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       this.pesosSeleccionadosTarjeta += element.por_filas + " " + element.orden + ","
     });
     this.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta.substring(0, this.pesosSeleccionadosTarjeta.length - 1);
+    // this.turnosItem.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta;
     this.pesosSeleccionadosInicial = JSON.parse(
       JSON.stringify(this.pesosSeleccionados));
     this.pesosExistentesInicial = JSON.parse(
@@ -411,7 +413,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
             this.pesosSeleccionadosTarjeta += element.por_filas + " " + element.orden + ","
           });
           this.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta.substring(0, this.pesosSeleccionadosTarjeta.length - 1);
-
+          // this.turnosItem.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta;
         }
       );
   }

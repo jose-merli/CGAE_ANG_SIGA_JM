@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
-import { Message, ConfirmationService } from "primeng/components/common/api";
+import { MultiSelect, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { Subject } from "rxjs/Subject";
 import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
 import { DestinatariosItem } from '../../../../../../models/DestinatariosItem';
@@ -75,7 +75,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   ];
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
+    private translateService: TranslateService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.turnosItem != undefined) {
@@ -180,7 +180,30 @@ export class ConfiguracionTurnosComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
-
+  confirmGuardar() {
+    let mess = this.translateService.instant(
+      "justiciaGratuita.oficio.turnos.confirmguardarturnos"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.save()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;

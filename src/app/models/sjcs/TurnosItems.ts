@@ -11,6 +11,7 @@ export class TurnosItems {
   idzona: string;
   zona: string;
   idordenacioncolas: string;
+  pesosSeleccionadosTarjeta: string;
   idguardias: string;
   guardias: string;
   idzubzona: string;
@@ -42,5 +43,19 @@ export class TurnosItems {
   activarretriccionacreditCheck: boolean;
   visiblemovil: string;
   visibleMovilCheck: boolean;
+  fechavalidacion: Date;
+  fechasolicitud: Date;
+  nifcif: string;
+  idpersona: string;
+  nombrepersona: string;
+  apellido1: string;
+  apellido2: string;
+  numerocolegiado: string;
+  fechanacimiento: Date;
+  antiguedadcola: string;
+  saltos: string;
+  compensaciones: string;
+  fechabajapersona: Date;
+  fechaActual: Date;
   constructor() { }
 }
