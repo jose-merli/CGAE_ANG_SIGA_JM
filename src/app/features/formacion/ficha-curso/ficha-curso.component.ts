@@ -9,7 +9,8 @@ import {
   AfterContentInit,
   AfterContentChecked,
   AfterViewInit,
-  AfterViewChecked
+  AfterViewChecked,
+  ElementRef
 } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
@@ -20,7 +21,8 @@ import {
   Dropdown,
   Editor,
   Calendar,
-  Button
+  Button,
+  InputText
 } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
@@ -129,6 +131,9 @@ export class FichaCursoComponent implements OnInit {
 
   @ViewChild("editor")
   editor: EditorModule;
+
+  @ViewChild("nombre")
+  inputNombre: ElementRef;
 
   persistenciaFichaCurso;
   fechaFinInscripcionSelected: boolean = true;
@@ -242,7 +247,7 @@ export class FichaCursoComponent implements OnInit {
   comboCargas;
   archivoDisponible: boolean = false;
   existeArchivo: boolean = false;
-  activacionEditar: boolean = false;
+  activacionEditar: boolean = true;
   otraInstitucion: boolean = false;
   file: File = undefined;
   apiKey: string = "";
@@ -275,7 +280,6 @@ export class FichaCursoComponent implements OnInit {
   }
 
   ngOnInit() {
-
     sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
@@ -510,6 +514,15 @@ export class FichaCursoComponent implements OnInit {
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
+    this.focusNombre(this.inputNombre);
+
+  }
+
+
+  focusNombre(inputNombre: ElementRef) {
+    const input: HTMLInputElement = inputNombre.nativeElement as HTMLInputElement;
+    input.focus();
+    input.select();
   }
 
   // Control Permisos
