@@ -221,7 +221,7 @@ export class TablaMateriasComponent implements OnInit {
 
     if (this.nuevo) {
       url = "fichaAreas_createMaterias";
-      this.body.nombreMateria = this.body.nombreMateria.trim();
+      this.body = this.datos[0];
       this.validatenewMateria(url);
 
     } else {
@@ -230,6 +230,7 @@ export class TablaMateriasComponent implements OnInit {
       this.body.areasItems = this.updateAreas;
       this.body.areasItems = this.body.areasItems.map(it => {
         it.nombreMateria = it.nombreMateria.trim();
+        it.contenido = it.contenido.trim();
         return it;
       })
       this.callSaveService(url);
@@ -358,7 +359,7 @@ export class TablaMateriasComponent implements OnInit {
       if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
         let val = true;
         this.updateAreas.forEach(it => {
-          if (!it.nombreMateria.trim())
+          if (it.nombreMateria.trim() == "")
             val = false;
         });
         if (val) return false;
@@ -397,24 +398,22 @@ export class TablaMateriasComponent implements OnInit {
   editarMateria(dato) {
 
     let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-    dato.descripcion = dato.descripcion.trim();
 
     if (findDato != undefined) {
-      if ((dato.nombreMateria.trim() != findDato.nombreMateria.trim())) {
-        if ((dato.contenido != undefined && findDato.contenido != undefined))
-          if (dato.contenido.trim() != findDato.contenido.trim()) {
-            let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
+      if ((dato.contenido != undefined && findDato.contenido != undefined && dato.contenido != findDato.contenido) ||
+        (dato.nombreMateria != findDato.nombreMateria)) {
+        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
 
-            if (findUpdate == undefined) {
-              let dato2 = dato;
-              dato2.jurisdicciones = "";
-              this.updateAreas.push(dato2);
-            }
-          }
+        if (findUpdate == undefined) {
+          let dato2 = dato;
+          dato2.jurisdicciones = "";
+          this.updateAreas.push(dato2);
+        }
       }
     }
-
   }
+
+
 
   editJurisdicciones(dato) {
 

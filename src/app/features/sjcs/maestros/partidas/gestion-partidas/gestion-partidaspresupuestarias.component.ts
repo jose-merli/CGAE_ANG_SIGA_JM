@@ -153,7 +153,7 @@ export class TablaPartidasComponent implements OnInit {
 
       if (dato.importepartida != findDato.importepartida) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.importepartida === dato.importepartida);
+        let findUpdate = this.updatePartidasPres.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -170,7 +170,7 @@ export class TablaPartidasComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.nombrepartida != findDato.nombrepartida) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.nombrepartida === dato.nombrepartida);
+        let findUpdate = this.updatePartidasPres.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -187,7 +187,7 @@ export class TablaPartidasComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -378,8 +378,7 @@ export class TablaPartidasComponent implements OnInit {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
         let val = true;
         this.updatePartidasPres.forEach(it => {
-          if (it.nombrepartida == undefined || it.valorNum == undefined || it.descripcion == undefined || !it.nombrepartida.trim() ||
-            !it.descripcion.trim() || !it.valorNum)
+          if ((it.nombrepartida == undefined || !it.nombrepartida.trim()) || (it.descripcion == undefined || !it.descripcion.trim()))
             val = false;
         });
         if (val)

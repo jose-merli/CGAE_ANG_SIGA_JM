@@ -160,14 +160,14 @@ export class TablaProcedimientosComponent implements OnInit {
       if (dato.descripcion.trim() != "") {
         if (dato.descripcion != findDato.descripcion) {
 
-          let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+          let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
 
           if (findUpdate == undefined) {
             this.updatePartidasPres.push(dato);
           }
         }
       } else {
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
         if (findUpdate != undefined) {
           let cambios = [];
           this.updatePartidasPres.forEach(data => {
@@ -190,7 +190,7 @@ export class TablaProcedimientosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.codigoExt != findDato.codigoExt) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.codigoExt === dato.codigoExt);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -204,7 +204,7 @@ export class TablaProcedimientosComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
     if (findDato != undefined) {
       if (dato.idJurisdiccion != findDato.idJurisdiccion) {
-        let findUpdate = this.updatePartidasPres.find(item => item.idJurisdiccion === dato.idJurisdiccion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
         }
@@ -340,7 +340,7 @@ export class TablaProcedimientosComponent implements OnInit {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
         let val = true;
         this.updatePartidasPres.forEach(it => {
-          if (!it.descripcion.trim() && it.idJurisdiccion != undefined && it.idJurisdiccion.trim() != "")
+          if (it.descripcion != undefined && !it.descripcion.trim())
             val = false;
         });
         if (val)

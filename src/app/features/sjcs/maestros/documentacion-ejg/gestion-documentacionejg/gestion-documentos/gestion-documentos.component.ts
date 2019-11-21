@@ -421,7 +421,7 @@ export class GestionDocumentosComponent implements OnInit {
 
     if (findDato != undefined) {
       if (dato.abreviaturaDoc != findDato.abreviaturaDoc) {
-        let findUpdate = this.updateDocumentos.find(item => item.abreviaturaDoc === dato.abreviaturaDoc);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -436,7 +436,7 @@ export class GestionDocumentosComponent implements OnInit {
 
     if (findDato != undefined) {
       if (dato.codigoExt != findDato.codigoExt) {
-        let findUpdate = this.updateDocumentos.find(item => item.codigoExt === dato.codigoExt);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -454,7 +454,7 @@ export class GestionDocumentosComponent implements OnInit {
 
     if (findDato != undefined) {
       if (dato.descripcionDoc != findDato.descripcionDoc) {
-        let findUpdate = this.updateDocumentos.find(item => item.descripcionDoc === dato.descripcionDoc);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -499,7 +499,7 @@ export class GestionDocumentosComponent implements OnInit {
     } else {
       if (!this.historico && (this.updateDocumentos != undefined && this.updateDocumentos.length > 0) && this.permisos) {
         let val = true;
-        this.updatePartidasPres.forEach(it => {
+        this.updateDocumentos.forEach(it => {
           if (it.abreviaturaDoc == undefined || it.descripcionDoc == undefined || !it.abreviaturaDoc.trim() ||
             !it.descripcionDoc.trim())
             val = false;

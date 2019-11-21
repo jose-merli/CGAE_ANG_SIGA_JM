@@ -590,7 +590,7 @@ export class TiposAsistenciaComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.seleccionadosReal != findDato.seleccionadosReal) {
 
-        let findUpdate = this.updateTiposAsistencia.find(item => item.seleccionadosReal === dato.seleccionadosReal);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -612,7 +612,7 @@ export class TiposAsistenciaComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.importe != findDato.importe) {
 
-        let findUpdate = this.updateTiposAsistencia.find(item => item.importe === dato.importe);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -634,7 +634,7 @@ export class TiposAsistenciaComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.importemaximo != findDato.importemaximo) {
 
-        let findUpdate = this.updateTiposAsistencia.find(item => item.importemaximo === dato.importemaximo);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -670,7 +670,7 @@ export class TiposAsistenciaComponent implements OnInit {
         else {
           dato.visiblemovil = "1";
         }
-        let findUpdate = this.updateTiposAsistencia.find(item => item.visiblemovil === dato.visiblemovil);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
