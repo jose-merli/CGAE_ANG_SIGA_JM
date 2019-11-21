@@ -315,6 +315,8 @@ export class EdicionModulosComponent implements OnInit {
     if (this.modulosItem.importe != undefined) this.modulosItem.importe = this.modulosItem.importe.trim();
     if (this.modulosItem.codigo != undefined) this.modulosItem.codigo = this.modulosItem.codigo.trim();
     if (this.modulosItem.codigoext != undefined) this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
+    if (this.modulosItem.observaciones != undefined) this.modulosItem.observaciones = this.modulosItem.observaciones.trim();
+
     this.modulosItem.importe = this.modulosItem.importe.replace(",", ".");
     this.sigaServices.post(url, this.modulosItem).subscribe(
       data => {
@@ -379,10 +381,12 @@ export class EdicionModulosComponent implements OnInit {
   disabledSave() {
 
 
-    if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.nombre != "" &&
+    if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
       this.modulosItem.idjurisdiccion != undefined) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {
-      return false;
+      if (this.modulosItem.nombre.trim() != "") {
+        return false;
+      } else { return true; }
     } else {
       return true;
     }

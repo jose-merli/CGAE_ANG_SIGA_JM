@@ -147,14 +147,10 @@ export class GestionTipodocumentoComponent implements OnInit {
 
   disabledSave() {
 
-    if (this.body.abreviaturaTipoDoc != null &&
-      this.body.abreviaturaTipoDoc != undefined &&
-      this.body.abreviaturaTipoDoc.trim() != "" &&
-      this.body.descripcionTipoDoc != null &&
-      this.body.descripcionTipoDoc != undefined &&
-      this.body.descripcionTipoDoc.trim() != ""
-      && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)))) {
-      return false;
+    if (this.body.abreviaturaTipoDoc != undefined && this.body.descripcionTipoDoc != undefined && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)))) {
+      if (this.body.abreviaturaTipoDoc.trim() != "" && this.body.descripcionTipoDoc.trim() != "") {
+        return false;
+      } else { return true; }
     } else {
       return true;
     }

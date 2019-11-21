@@ -141,11 +141,14 @@ export class GestionProcuradoresComponent implements OnInit {
   disabledSave() {
 
 
-    if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.nombre != "" && this.generales.body.apellido1 != undefined &&
-      this.generales.body.apellido1 != null && this.generales.body.apellido1 != "") && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
+    if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.apellido1 != undefined &&
+      this.generales.body.apellido1 != null) && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
       this.permisoEscritura && ((JSON.stringify(this.direcciones.body) != JSON.stringify(this.direcciones.bodyInicial))
         || (JSON.stringify(this.generales.body) != JSON.stringify(this.generales.bodyInicial)))) {
-      return false;
+      if (this.generales.body.apellido1.trim() != "" && this.generales.body.nombre.trim() != "") {
+        return false;
+      } else { return true; }
+
     } else {
       return true;
     }
