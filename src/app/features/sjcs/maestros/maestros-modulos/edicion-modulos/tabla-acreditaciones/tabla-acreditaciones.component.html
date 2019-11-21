@@ -115,7 +115,7 @@
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.codSubTarifa" name="codSubTarifa" type="text"
-                  on-focusout="changeCodSubTarifa(dato)" (input)="changeCodSubTarifa(dato)" maxLength="3900" />
+                  on-focusout="changeCodSubTarifa(dato)" (input)="changeCodSubTarifa(dato)" maxLength="10" />
               </div>
             </td>
 

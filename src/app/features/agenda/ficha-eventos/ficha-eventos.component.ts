@@ -1102,6 +1102,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
       }
     }
+    if (this.newEvent.descripcion != undefined) this.newEvent.descripcion = this.newEvent.descripcion.trim();
+    if (this.newEvent.recursos != undefined) this.newEvent.recursos = this.newEvent.recursos.trim()
 
     if (sessionStorage.getItem("calendarioLaboralAgenda") == "true") {
 
@@ -1677,11 +1679,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     if (validateFormDatos && validateFormRepeticion) {
 
       if ((this.selectedTipoLaboral && this.newEvent.title == 'Fiesta Local' && this.newEvent.lugar != undefined && this.newEvent.lugar != null &&
-        this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion != "") ||
+        this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion.trim() != "") ||
         (this.selectedTipoLaboral && this.newEvent.title != 'Fiesta Local' &&
-          this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion != "") ||
+          this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion.trim() != "") ||
         (!this.selectedTipoLaboral && this.newEvent.lugar != undefined && this.newEvent.lugar != null &&
-          this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion != "")) {
+          this.newEvent.descripcion != undefined && this.newEvent.descripcion != null && this.newEvent.descripcion.trim() != "")) {
         return false
       } else {
         return true;
