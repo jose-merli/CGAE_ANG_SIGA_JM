@@ -212,6 +212,12 @@ export class TablaMateriasComponent implements OnInit {
   save() {
     this.progressSpinner = true;
     let url = "";
+    if (this.datos[0].nombreMateria != undefined) {
+      this.datos[0].nombreMateria = this.datos[0].nombreMateria.trim();
+    }
+    if (this.datos[0].contenido != undefined) {
+      this.datos[0].contenido = this.datos[0].contenido.trim();
+    }
 
     if (this.nuevo) {
       url = "fichaAreas_createMaterias";
@@ -394,15 +400,17 @@ export class TablaMateriasComponent implements OnInit {
     dato.descripcion = dato.descripcion.trim();
 
     if (findDato != undefined) {
-      if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
+      if ((dato.nombreMateria.trim() != findDato.nombreMateria.trim())) {
+        if ((dato.contenido != undefined && findDato.contenido != undefined))
+          if (dato.contenido.trim() != findDato.contenido.trim()) {
+            let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
 
-        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-
-        if (findUpdate == undefined) {
-          let dato2 = dato;
-          dato2.jurisdicciones = "";
-          this.updateAreas.push(dato2);
-        }
+            if (findUpdate == undefined) {
+              let dato2 = dato;
+              dato2.jurisdicciones = "";
+              this.updateAreas.push(dato2);
+            }
+          }
       }
     }
 

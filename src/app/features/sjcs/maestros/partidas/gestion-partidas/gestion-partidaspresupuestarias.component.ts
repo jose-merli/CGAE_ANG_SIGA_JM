@@ -246,6 +246,10 @@ export class TablaPartidasComponent implements OnInit {
       if (this.body.importepartida == ".") {
         this.body.importepartida = 0;
       }
+      if (this.body.nombrepartida != undefined)
+        this.body.nombrepartida = this.body.nombrepartida.trim();
+      if (this.body.descripcion != undefined)
+        this.body.descripcion = this.body.descripcion.trim();
       this.callSaveService(url);
 
     } else {
@@ -260,7 +264,12 @@ export class TablaPartidasComponent implements OnInit {
           if (element.importepartida == ".") {
             element.importepartida = 0;
           }
+          if (element.nombrepartida != undefined)
+            element.nombrepartida = element.nombrepartida.trim();
+          if (element.descripcion != undefined)
+            element.descripcion = element.descripcion.trim();
         });
+
         this.callSaveService(url);
       } else {
         err => {
@@ -391,7 +400,7 @@ export class TablaPartidasComponent implements OnInit {
 
     this.updatePartidasPres.forEach(dato => {
 
-      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
+      let findDatos = this.datos.filter(item => item.nombrepartida.trim() === dato.nombrepartida.trim() && item.descripcion.trim() === dato.descripcion.trim() && item.importepartida === dato.importepartida);
 
       if (findDatos != undefined && findDatos.length > 1) {
         check = false;
