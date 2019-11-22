@@ -234,7 +234,17 @@ export class TablaMateriasComponent implements OnInit {
           it.contenido = it.contenido.trim();
         return it;
       })
-      this.callSaveService(url);
+      let findDato;
+      let prueba = this.body.areasItems;
+      this.body.areasItems.forEach(element => {
+        findDato = this.datosInicial.find(item => item.nombreMateria === element.nombreMateria);
+      });
+      if (findDato != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+        this.progressSpinner = false;
+      } else {
+        this.callSaveService(url);
+      }
     }
 
   }
