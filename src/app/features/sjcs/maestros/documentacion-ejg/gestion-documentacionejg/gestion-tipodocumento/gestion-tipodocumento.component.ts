@@ -15,7 +15,7 @@ export class GestionTipodocumentoComponent implements OnInit {
   body: DocumentacionEjgItem = new DocumentacionEjgItem();
   bodyInicial;
   progressSpinner: boolean = false;
-  modoEdicion: boolean = false;
+  @Input() modoEdicion: boolean = false;
   permisos;
   msgs;
   nuevo;
@@ -31,6 +31,7 @@ export class GestionTipodocumentoComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+
     this.permisos = this.persistenceService.getPermisos();
     if (this.documentacionEjgItem != undefined) {
       this.body = this.documentacionEjgItem;
@@ -40,15 +41,15 @@ export class GestionTipodocumentoComponent implements OnInit {
       this.nuevo = true;
       this.documentacionEjgItem = new DocumentacionEjgItem();
     }
-    if (!this.permisos) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+    // if (!this.permisos) {
+    //   this.modoEdicion = false;
+    // } else {
+    //   this.modoEdicion = true;
+    // }
 
-    if (this.persistenceService.getHistorico()) {
-      this.modoEdicion = false;
-    }
+    // if (this.persistenceService.getHistorico()) {
+    //   this.modoEdicion = false;
+    // }
 
   }
 

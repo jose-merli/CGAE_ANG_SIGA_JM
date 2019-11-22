@@ -472,12 +472,16 @@ export class TiposActuacionComponent implements OnInit {
     }
   }
   editarTipoActuacion(dato) {
-
-
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion && item.idtipoasistencia === dato.idtipoasistencia);
 
     dato.descripciontipoactuacion = dato.descripciontipoactuacion.trim();
     if (findDato != undefined) {
+      let tiposAsistenciaString = "";
+      for (let i in dato.seleccionadosReal) {
+        tiposAsistenciaString += "," + dato.seleccionadosReal[i].value;
+      }
+      dato.idtipoasistencia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
+      dato.seleccionados = "";
       if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion) {
 
         let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
