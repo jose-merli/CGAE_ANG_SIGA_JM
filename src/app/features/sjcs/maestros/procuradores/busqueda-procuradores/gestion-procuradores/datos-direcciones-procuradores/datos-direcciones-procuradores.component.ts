@@ -277,4 +277,18 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 	clear() {
 		this.msgs = [];
 	}
+
+	numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+      if (charCode == 188) {
+      }
+      return true;
+    }
+    else {
+      return false;
+
+    }
+  }
+  
 }
