@@ -28,7 +28,7 @@
       <div class="form-group col-lg-3 col-md-3">
         <label>{{ "administracion.auditoriaUsuarios.fechaDesde" | translate }} (*)
         </label>
-        <app-fecha [(value)]="fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+        <app-fecha [(value)]="turnosItem.fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
       </div>
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
