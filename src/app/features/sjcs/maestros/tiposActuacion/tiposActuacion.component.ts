@@ -481,7 +481,7 @@ export class TiposActuacionComponent implements OnInit {
       if (dato.descripciontipoactuacion != findDato.descripciontipoactuacion) {
 
         let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
-
+        this.permitirGuardar = true
         if (findUpdate == undefined) {
           this.updateTiposActuacion.push(dato);
         }
