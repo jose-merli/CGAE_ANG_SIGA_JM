@@ -117,7 +117,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
            if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
-            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }

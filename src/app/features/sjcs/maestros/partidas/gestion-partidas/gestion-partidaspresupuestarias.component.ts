@@ -378,7 +378,7 @@ export class TablaPartidasComponent implements OnInit {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
         let val = true;
         this.updatePartidasPres.forEach(it => {
-          if ((it.nombrepartida == undefined || !it.nombrepartida.trim()) || (it.descripcion == undefined || !it.descripcion.trim()))
+          if ((it.nombrepartida == undefined || !it.nombrepartida.trim()) || (it.descripcion == undefined || !it.descripcion.trim()) || (it.importepartida == undefined || !it.importepartida.trim()))
             val = false;
         });
         if (val)
