@@ -294,8 +294,9 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
+    this.emailValido = true
     this.edicionEmail = true
+    this.avisoMail = false
 
     this.tlf1Valido = true
     this.tlf2Valido = true
@@ -366,8 +367,19 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
     this.body.fax1 = this.body.fax1.trim();
     this.faxValido = this.commonsServices.validateFax(this.body.fax1);
   }
+  onChangeDireccion() {
+    this.body.domicilio = this.body.domicilio.trim();
+  }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
-
+    }
+  }
   clear() {
     this.msgs = [];
   }

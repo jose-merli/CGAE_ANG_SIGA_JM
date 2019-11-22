@@ -88,7 +88,7 @@ export class TablaPrisionesComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: "Cancelar",
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
