@@ -468,9 +468,9 @@ export class TablaAcreditacionesComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
-      if (dato.nig_numprocedimiento != findDato.nig_numprocedimiento) {
+      if (dato.nigProcedimiento != findDato.nigProcedimiento) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.nig_numprocedimiento === dato.porcentaje);
+        let findUpdate = this.updateAcreditaciones.find(item => item.nig_numprocedimiento === dato.nig_numprocedimiento);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);

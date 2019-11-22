@@ -94,7 +94,7 @@
                   ❌
                 </span>
                 <p-checkbox *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
-                  [disabled]="disableAll" (onChange)="changeNigNumprocedimiento(dato)" [(ngModel)]="dato.nig_numprocedimiento"
+                  [disabled]="disableAll" (onChange)="changeNigNumprocedimiento(dato)" [(ngModel)]="dato.nigProcedimiento"
                   binary="true" name="nig_numprocedimiento"></p-checkbox>
               </div>
 

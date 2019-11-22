@@ -269,9 +269,14 @@ export class TablaDocumentacionejgComponent implements OnInit {
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      if (this.historico)
-        this.selectMultiple = true;
-      this.selectionMode = "multiple";
+      this.selectAll = false;
+      this.selectMultiple = false;
+      this.selectionMode = "single";
+      // if (this.historico){
+
+      // }
+      //   this.selectMultiple = true;
+      // this.selectionMode = "multiple";
     }
 
   }
@@ -285,6 +290,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";

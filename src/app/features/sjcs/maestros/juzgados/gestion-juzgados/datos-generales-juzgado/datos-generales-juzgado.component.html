@@ -42,15 +42,15 @@
               <label>
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nombre" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-                pInputText>
+              <input [(ngModel)]="body.nombre" (onChange)="changeNombre(dato)" [disabled]="!permisoEscritura || historico" type="text"
+                class="form-control" [maxLength]="200" pInputText>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.consultaDirecciones.literal.direccion" | translate}}
               </label>
-              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
+              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="100"
                 pInputText>
             </div>
 
@@ -157,11 +157,11 @@
             <div class="form-group col-lg-2 pt-1 col-md-2">
               <br> {{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate
               }}
-              <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="setInfo()" [disabled]="historico || !permisoEscritura" binary="true"></p-checkbox>
+              <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura" binary="true"></p-checkbox>
             </div>
             <div class="form-group col-lg-2 pt-1 col-md-2">
               <br> {{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.decano' | translate }}
-              <p-checkbox [(ngModel)]="esDecanoValue" (onChange)="setInfo()" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+              <p-checkbox [(ngModel)]="esDecanoValue" (onChange)="cambiaDecano()" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
             </div>
           </div>
         </div>
@@ -206,7 +206,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6 pt-4 selectAll">
               <label>{{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.isCodigoEjis" | translate }}</label>
-              <p-checkbox [disabled]="historico || !permisoEscritura" (onChange)="setInfo()" [(ngModel)]="isCodigoEjisValue" binary="true"></p-checkbox>
+              <p-checkbox [disabled]="historico || !permisoEscritura" (onChange)="cambiaCodigoEjis()" [(ngModel)]="isCodigoEjisValue" binary="true"></p-checkbox>
             </div>
           </div>
         </div>
