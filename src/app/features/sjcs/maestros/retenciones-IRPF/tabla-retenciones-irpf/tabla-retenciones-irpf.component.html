@@ -53,10 +53,11 @@
               <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion" type="text" maxLength="58" on-focusout="changeDescripcion(dato)"
                 [(disabled)]="!permisos" (onBlur)="changeDescripcion(dato)" (input)="changeDescripcion(dato)" />
             </div>
-            <div *ngIf="dato.editable && col.field == 'tipoSociedad'">
-              <p-dropdown class="select-form" [(ngModel)]='dato.descripcionSociedad' placeholder="Seleccionar" [options]="comboSociedades"
-                on-focusout="changeSociedad(dato)" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onBlur)="changeSociedad(dato)"
-                (onChange)="changeSociedad(dato)"></p-dropdown>
+            <div *ngIf="dato.editable && col.field == 'descripcionSociedad'">
+              <p-dropdown class="select-form" [(ngModel)]='dato.tipoSociedad' (onChange)="changeSociedad(dato)" [filter]="true" filterBy="label,labelSinTilde"
+                [options]="comboSociedades" (input)="changeSociedad(dato)" (onBlur)="changeSociedad(dato)" [emptyFilterMessage]="resultadosPoblaciones"
+                id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
             </div>
           </td>
 

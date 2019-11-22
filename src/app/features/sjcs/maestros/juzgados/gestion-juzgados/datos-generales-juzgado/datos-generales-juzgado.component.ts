@@ -80,6 +80,26 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     }
   }
 
+  cambiaMovil() {
+    if (this.visibleMovilValue)
+      this.body.visibleMovil = "1"
+    else
+      this.body.visibleMovil = "0"
+  }
+
+  cambiaDecano() {
+    if (this.esDecanoValue)
+      this.body.esDecano = "1"
+    else
+      this.body.esDecano = "0"
+  }
+
+  cambiaCodigoEjis() {
+    if (this.isCodigoEjisValue)
+      this.body.isCodigoEjis = "1"
+    else
+      this.body.isCodigoEjis = "0"
+  }
 
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
@@ -202,7 +222,9 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   }
 
   callSaveService(url) {
-
+    if (this.body.nombre != undefined && this.body.nombre != "") {
+      this.body.nombre = this.body.nombre.trim();
+    }
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -246,6 +268,9 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     this.tlf2Valido = true;
     this.faxValido = true;
     this.mvlValido = true;
+    this.visibleMovilValue = false;
+    this.esDecanoValue = false;
+    this.isCodigoEjisValue = false;
     if (this.modoEdicion) {
       this.getInfo();
     }
@@ -325,7 +350,9 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
       return false;
     }
   }
-
+  changeNombre(dato) {
+    this.body.nombre = dato.nombre.trim();
+  }
   changeEmail() {
     this.body.email = this.body.email.trim();
     this.emailValido = this.commonsServices.validateEmail(this.body.email);

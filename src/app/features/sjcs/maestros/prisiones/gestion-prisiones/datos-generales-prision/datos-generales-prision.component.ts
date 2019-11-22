@@ -301,6 +301,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.emailValido = false
     this.edicionEmail = true
+    this.avisoMail = false
     this.tlf1Valido = true
     this.tlf2Valido = true
     this.faxValido = true
@@ -370,7 +371,16 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   changeMovil() {
     this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
   }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
+    }
+  }
   clear() {
     this.msgs = [];
   }

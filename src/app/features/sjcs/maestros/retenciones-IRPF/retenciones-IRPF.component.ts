@@ -77,7 +77,10 @@ export class RetencionesIRPFComponent implements OnInit {
         if (this.datos.length > 0) this.menorQueCero()
         if (this.datos.length > 0) this.ponComa()
         this.progressSpinner = false;
-
+        // this.datos = this.datos.map(it => {
+        //   it.retencionReal = + it.retencion;
+        //   return it;
+        // });
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
         }

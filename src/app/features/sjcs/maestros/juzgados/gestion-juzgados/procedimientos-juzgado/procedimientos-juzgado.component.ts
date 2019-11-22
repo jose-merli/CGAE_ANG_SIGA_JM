@@ -58,7 +58,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
     this.validateHistorical();
     this.getCols();
-    this.getProcJuged();
+    if (this.modoEdicion) {
+      this.getProcJuged();
+    }
+
     // this.getProcess();
 
   }

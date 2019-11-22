@@ -31,6 +31,7 @@ export class GestionTipodocumentoComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+
     this.permisos = this.persistenceService.getPermisos();
     if (this.documentacionEjgItem != undefined) {
       this.body = this.documentacionEjgItem;
@@ -40,11 +41,11 @@ export class GestionTipodocumentoComponent implements OnInit {
       this.nuevo = true;
       this.documentacionEjgItem = new DocumentacionEjgItem();
     }
-    if (!this.permisos) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+    // if (!this.permisos) {
+    //   this.modoEdicion = false;
+    // } else {
+    //   this.modoEdicion = true;
+    // }
 
     if (this.persistenceService.getHistorico()) {
       this.modoEdicion = false;
@@ -71,9 +72,8 @@ export class GestionTipodocumentoComponent implements OnInit {
   }
 
   rest() {
-    if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    } else {
+    if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    else {
       this.body = new DocumentacionEjgItem();
     }
   }
@@ -101,6 +101,7 @@ export class GestionTipodocumentoComponent implements OnInit {
 
         if (this.nuevo) {
           this.nuevo = false;
+          this.modoEdicion = true;
           let tipodocs = JSON.parse(data.body);
           // this.areasItem = JSON.parse(data.body);
           this.body.idTipoDocumento = tipodocs.id;

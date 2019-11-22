@@ -6,6 +6,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { DocumentacionEjgObject } from '../../../../../../models/sjcs/DocumentacionEjgObject';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
+import { DocumentacionEjgItem } from '../../../../../../models/sjcs/DocumentacionEjgItem';
 
 @Component({
   selector: 'app-gestion-documentos',
@@ -61,7 +62,6 @@ export class GestionDocumentosComponent implements OnInit {
       this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
-
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
@@ -536,9 +536,8 @@ export class GestionDocumentosComponent implements OnInit {
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
     }
+    this.datos.abreviaturaDoc = null;
     this.selectAll = false;
     this.selectMultiple = false;
     this.editElementDisabled();

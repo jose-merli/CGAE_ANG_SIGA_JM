@@ -204,7 +204,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
     if (findDato != undefined) {
-      if (dato.descripcionSociedad != findDato.descripcionSociedad) {
+      if (dato.tipoSociedad != findDato.tipoSociedad) {
 
         let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
@@ -236,7 +236,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-
+        this.editMode = true;
         if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
@@ -354,7 +354,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim()) {
+      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim() &&
+        this.datos[0].valorNum != undefined && this.datos[0].valorNum.trim()) {
         return false;
       } else {
         return true;
@@ -430,7 +431,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     this.sigaServices.post(url, del).subscribe(
       data => {
         this.selectedDatos = [];
-        this.search.emit(false);
+        this.search.emit(this.historico);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -444,8 +445,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
         this.selectAll = false;
         this.editMode = false;
         this.nuevo = false;
@@ -521,7 +520,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
       { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec" },
       { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo" },
-      { field: "tipoSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad" }
+      { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad" }
 
     ];
 
