@@ -113,9 +113,14 @@ export class TablaBusquedaAreasComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
+
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
+           if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }

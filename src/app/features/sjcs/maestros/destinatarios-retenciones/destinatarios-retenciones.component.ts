@@ -84,7 +84,7 @@ export class DestinatariosRetencionesComponent implements OnInit {
         this.datos.forEach(element => {
           element.editable = false;
           element.overlayVisible = false;
-          element.orden = +element.orden;
+        //  element.orden = +element.orden;
         });
         this.buscar = true;
         this.progressSpinner = false;
