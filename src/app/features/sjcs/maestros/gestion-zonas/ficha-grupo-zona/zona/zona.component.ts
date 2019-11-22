@@ -230,6 +230,9 @@ export class ZonaComponent implements OnInit {
   newZone() {
     this.nuevo = true;
     this.seleccion = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
