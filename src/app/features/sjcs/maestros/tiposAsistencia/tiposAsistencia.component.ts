@@ -663,18 +663,18 @@ export class TiposAsistenciaComponent implements OnInit {
       dato.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       dato.seleccionados = "";
       // this.updateTiposActuacion.push(dato);
-      if (dato.visibleMovilBoolean != findDato.visibleMovilBoolean) {
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
-        if (findUpdate == undefined) {
-          this.updateTiposAsistencia.push(dato);
-        }
+
+      if (dato.visibleMovilBoolean == false) {
+        dato.visiblemovil = "0";
       }
+      else {
+        dato.visiblemovil = "1";
+      }
+      let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+      if (findUpdate == undefined) {
+        this.updateTiposAsistencia.push(dato);
+      }
+
     }
 
   }

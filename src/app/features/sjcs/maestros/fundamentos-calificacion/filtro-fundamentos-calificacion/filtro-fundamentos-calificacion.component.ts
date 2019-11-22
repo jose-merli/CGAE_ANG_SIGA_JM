@@ -1,11 +1,13 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, HostListener } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { FundamentosCalificacionItem } from '../../../../../models/sjcs/FundamentosCalificacionItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { CommonsService } from '../../../../../_services/commons.service';
-
+export enum KEY_CODE {
+  ENTER = 13
+}
 @Component({
   selector: 'app-filtro-fundamentos-calificacion',
   templateUrl: './filtro-fundamentos-calificacion.component.html',
@@ -67,6 +69,7 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
   search() {
 
     this.filtroAux = this.persistenceService.getFiltrosAux()
+
     this.isOpen.emit(false)
 
 
@@ -108,5 +111,17 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+
+
+
+      this.guardaBusca();
+
+    }
   }
 }
