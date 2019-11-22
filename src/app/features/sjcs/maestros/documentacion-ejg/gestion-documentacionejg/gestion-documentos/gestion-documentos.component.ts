@@ -63,13 +63,8 @@ export class GestionDocumentosComponent implements OnInit {
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
 
-
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
-    }
-    if (!this.modoEdicion) {
-      this.datos = new DocumentacionEjgItem();
-      this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
     this.validateHistorical();
   }

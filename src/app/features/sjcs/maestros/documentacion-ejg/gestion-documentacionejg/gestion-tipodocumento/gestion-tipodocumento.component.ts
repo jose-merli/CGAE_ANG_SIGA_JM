@@ -15,7 +15,7 @@ export class GestionTipodocumentoComponent implements OnInit {
   body: DocumentacionEjgItem = new DocumentacionEjgItem();
   bodyInicial;
   progressSpinner: boolean = false;
-  @Input() modoEdicion: boolean = false;
+  modoEdicion: boolean = false;
   permisos;
   msgs;
   nuevo;
@@ -47,9 +47,9 @@ export class GestionTipodocumentoComponent implements OnInit {
     //   this.modoEdicion = true;
     // }
 
-    // if (this.persistenceService.getHistorico()) {
-    //   this.modoEdicion = false;
-    // }
+    if (this.persistenceService.getHistorico()) {
+      this.modoEdicion = false;
+    }
 
   }
 
@@ -72,9 +72,8 @@ export class GestionTipodocumentoComponent implements OnInit {
   }
 
   rest() {
-    if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    } else {
+    if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    else {
       this.body = new DocumentacionEjgItem();
     }
   }
@@ -102,6 +101,7 @@ export class GestionTipodocumentoComponent implements OnInit {
 
         if (this.nuevo) {
           this.nuevo = false;
+          this.modoEdicion = true;
           let tipodocs = JSON.parse(data.body);
           // this.areasItem = JSON.parse(data.body);
           this.body.idTipoDocumento = tipodocs.id;

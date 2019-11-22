@@ -278,19 +278,15 @@ export class TiposActuacionComponent implements OnInit {
           it.descripciontipoactuacion = it.descripciontipoactuacion.trim();
           return it;
         })
-        this.callSaveService(url);
-
-      } else {
-        err => {
-          let message = JSON.parse(err.error).error.message;
-          if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description)
-              + message);
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
+        let findDato;
+        this.body.tiposActuacionItem.forEach(element => {
+          findDato = this.datosInicial.find(item => item.descripciontipoactuacion === element.descripciontipoactuacion);
+        });
+        if (findDato != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
           this.progressSpinner = false;
-          this.updateTiposActuacion = [];
+        } else {
+          this.callSaveService(url);
         }
       }
     }
@@ -356,6 +352,7 @@ export class TiposActuacionComponent implements OnInit {
         if (this.nuevo)
           this.nuevo = true;
         this.updateTiposActuacion = [];
+        this.selectedDatos = [];
       },
       () => {
         this.selectedDatos = [];
