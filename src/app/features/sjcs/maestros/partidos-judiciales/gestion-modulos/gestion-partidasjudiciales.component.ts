@@ -130,7 +130,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     if (this.selectAll === true) {
       if (this.nuevo) this.datos.shift();
       this.nuevo = false;
-      this.selectedDatos = this.datos.filter(dato => dato.idinstitucion == this.institucionActual);
+      this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
@@ -348,7 +348,6 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     if (this.selectedDatos[0] == undefined) {
       this.selectedDatos = []
     }
-    if (this.institucionActual != event.data.idinstitucion) this.selectedDatos.pop();
   }
   disabledSave() {
     if (this.permisos) {
