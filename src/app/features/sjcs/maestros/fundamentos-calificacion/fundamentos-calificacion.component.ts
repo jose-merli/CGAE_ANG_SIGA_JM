@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { FiltroFundamentosCalificacionComponent } from './filtro-fundamentos-calificacion/filtro-fundamentos-calificacion.component';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -8,7 +8,9 @@ import { TranslateService } from '../../../../commons/translate';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TablaFundamentosCalificacionComponent } from './tabla-fundamentos-calificacion/tabla-fundamentos-calificacion.component';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
-
+export enum KEY_CODE {
+  ENTER = 13
+}
 @Component({
   selector: 'app-fundamentos-calificacion',
   templateUrl: './fundamentos-calificacion.component.html',
