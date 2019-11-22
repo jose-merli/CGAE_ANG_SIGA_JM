@@ -52,7 +52,7 @@ export class TablaModulosComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private  confirmationService:  ConfirmationService
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -120,7 +120,7 @@ export class TablaModulosComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: "Cancelar",
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
