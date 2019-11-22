@@ -130,7 +130,6 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     if (this.selectAll === true) {
       if (this.nuevo) this.datos.shift();
       this.nuevo = false;
-      this.selectMultiple = false;
       this.selectedDatos = this.datos.filter(dato => dato.idinstitucion == this.institucionActual);
       this.numSelected = this.datos.length;
     } else {
@@ -162,6 +161,9 @@ export class TablaPartidasJudicialesComponent implements OnInit {
         this.searchPartidas.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.selectedDatos = [];
+        this.selectAll = false;
+        this.selectMultiple = false;
       },
       err => {
 
@@ -322,13 +324,10 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       this.nuevo = false;
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
-        this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";
       } else {
         // this.pressNew = false;
-        this.selectAll = false;
-        this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "multiple";
       }
