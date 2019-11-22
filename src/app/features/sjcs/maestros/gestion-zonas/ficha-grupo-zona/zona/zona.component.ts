@@ -175,6 +175,7 @@ export class ZonaComponent implements OnInit {
 
     if (this.nuevo) {
       url = "fichaZonas_createZone";
+      this.body = this.datos[0];
       this.body.descripcionsubzona = this.body.descripcionsubzona.trim();
 
       this.validateNewZone(url);
@@ -230,6 +231,9 @@ export class ZonaComponent implements OnInit {
   newZone() {
     this.nuevo = true;
     this.seleccion = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -313,8 +317,8 @@ export class ZonaComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona != null
-        && this.datos[0].descripcionsubzona.trim() && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
+      if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona.trim()
+        && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
         return false;
       } else {
         return true;
@@ -322,7 +326,15 @@ export class ZonaComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updateZonas != undefined && this.updateZonas.length > 0)) {
-        return false;
+        let val = true;
+        this.updateZonas.forEach(it => {
+          if ((it.descripcionsubzona == undefined || !it.descripcionsubzona.trim()) || (it.partidosJudiciales == undefined || it.partidosJudiciales.length == 0))
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }

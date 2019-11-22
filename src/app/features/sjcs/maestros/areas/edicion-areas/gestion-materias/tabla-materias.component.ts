@@ -230,7 +230,8 @@ export class TablaMateriasComponent implements OnInit {
       this.body.areasItems = this.updateAreas;
       this.body.areasItems = this.body.areasItems.map(it => {
         it.nombreMateria = it.nombreMateria.trim();
-        it.contenido = it.contenido.trim();
+        if (it.contenido != null)
+          it.contenido = it.contenido.trim();
         return it;
       })
       this.callSaveService(url);
