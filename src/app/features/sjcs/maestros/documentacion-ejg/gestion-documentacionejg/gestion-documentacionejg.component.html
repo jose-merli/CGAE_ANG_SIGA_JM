@@ -6,7 +6,7 @@
       <i class="fa fa-angle-right"></i>{{'menu.facturacionSJCS.mantenimientoDocumentacionEJG' | translate}}</p>
   </div>
   <div>
-    <app-gestion-tipodocumento [modoEdicion]="modoEdicion" [documentacionEjgItem]="dato" (modoEdicionSend)="modoEdicionSend($event)"></app-gestion-tipodocumento>
+    <app-gestion-tipodocumento [documentacionEjgItem]="dato" (modoEdicionSend)="modoEdicionSend($event)"></app-gestion-tipodocumento>
     <app-gestion-documentos [idTipoDoc]="idTipoDoc" [modoEdicion]="modoEdicion" [datos]="documentos" (searchHistoricalSend)="searchDocumentos($event)"></app-gestion-documentos>
   </div>
 </div>
