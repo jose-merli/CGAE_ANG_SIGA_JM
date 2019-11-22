@@ -381,7 +381,7 @@ export class TablaProcedimientosComponent implements OnInit {
     this.sigaServices.post(url, del).subscribe(
       data => {
         this.selectedDatos = [];
-        this.search.emit(false);
+        this.search.emit(this.historico);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
