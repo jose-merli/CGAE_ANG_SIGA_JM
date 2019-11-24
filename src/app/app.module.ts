@@ -345,7 +345,6 @@ import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/b
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 
 
 
@@ -465,7 +464,6 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
 		SolicitudesTurnosGuardiasComponent,
-		TurnosComponent,
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
 		GuardiasIncompatibilidadesComponent,
