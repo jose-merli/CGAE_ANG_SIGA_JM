@@ -68,8 +68,8 @@
                 <div class="form-group col-lg-6 col-md-6">
                   <label>{{ "administracion.parametrosGenerales.literal.hasta" | translate }}
                   </label>
-                  <app-fecha [(value)]="modulosItem.fechahastavigor" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"
-                    [disabled]="modulosItem.historico"></app-fecha>
+                  <app-fecha [(value)]="modulosItem.fechahastavigor" [minDate]="modulosItem.fechadesdevigor" (valueChangeInput)="fillFechaHastaCalendar($event)"
+                    (valueChangeSelected)="fillFechaHastaCalendar($event)" [disabled]="modulosItem.historico"></app-fecha>
                 </div>
               </div>
             </div>

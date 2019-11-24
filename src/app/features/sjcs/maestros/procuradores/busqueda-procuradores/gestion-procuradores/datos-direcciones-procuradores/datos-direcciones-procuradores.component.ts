@@ -8,7 +8,7 @@ import { ProcuradoresItem } from '../../../../../../../models/sjcs/ProcuradoresI
 @Component({
 	selector: 'app-datos-direcciones-procuradores',
 	templateUrl: './datos-direcciones-procuradores.component.html',
-	styleUrls: [ './datos-direcciones-procuradores.component.scss' ]
+	styleUrls: ['./datos-direcciones-procuradores.component.scss']
 })
 export class DatosDireccionesProcuradoresComponent implements OnInit {
 	//Resultados de la busqueda
@@ -55,7 +55,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		private sigaServices: SigaServices,
 		private translateService: TranslateService,
 		private commonsServices: CommonsService
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.getComboProvincias();
@@ -88,7 +88,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		}
 	}
 
-	ngAfterViewInit(): void {}
+	ngAfterViewInit(): void { }
 	validateHistorical() {
 		if (this.persistenceService.getDatos() != undefined) {
 			if (
@@ -115,7 +115,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => {}
+			() => { }
 		);
 	}
 
@@ -177,7 +177,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 				(error) => {
 					this.progressSpinner = false;
 				},
-				() => {}
+				() => { }
 			);
 	}
 
@@ -199,6 +199,8 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 			}
 			this.codigoPostalValido = true;
 		} else {
+			this.body.idProvincia = undefined;
+			this.body.idPoblacion = undefined;
 			this.codigoPostalValido = false;
 			this.isDisabledPoblacion = true;
 			this.provinciaSelecionada = '';
@@ -279,16 +281,16 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 	}
 
 	numberOnly(event): boolean {
-    const charCode = (event.which) ? event.which : event.keyCode;
-    if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
-      if (charCode == 188) {
-      }
-      return true;
-    }
-    else {
-      return false;
+		const charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+			if (charCode == 188) {
+			}
+			return true;
+		}
+		else {
+			return false;
 
-    }
-  }
-  
+		}
+	}
+
 }

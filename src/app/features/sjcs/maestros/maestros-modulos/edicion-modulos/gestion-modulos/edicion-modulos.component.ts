@@ -372,6 +372,10 @@ export class EdicionModulosComponent implements OnInit {
 
   fillFechaDesdeCalendar(event) {
     this.modulosItem.fechadesdevigor = event;
+
+    if (this.modulosItem.fechadesdevigor > this.modulosItem.fechahastavigor) {
+      this.modulosItem.fechahastavigor = undefined;
+    }
   }
 
   fillFechaHastaCalendar(event) {
