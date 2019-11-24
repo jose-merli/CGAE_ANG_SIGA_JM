@@ -77,7 +77,7 @@
                             <div *ngIf="dato.editable && col.field == 'tiposguardia'">
                                 <p-multiSelect #multiSelectPJ defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.seleccionadosReal" [options]="comboTiposGuardia"
                                     optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
-                                    [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="openMultiSelect(dato);editarTipoAsistencia(dato);disabledSave()"></p-multiSelect>
+                                    [overlayVisible]="dato.overlayVisible" (onChange)="editarTipoGuardia(dato);disabledSave()"></p-multiSelect>
                             </div>
 
                             <div *ngIf="dato.editable && col.field == 'tipoasistencia'">
