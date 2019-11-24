@@ -577,7 +577,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
 
 
-  editarTipoAsistencia(dato) {
+  editarTipoGuardia(dato) {
 
     let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
     if (findDato != undefined) {
@@ -589,7 +589,14 @@ export class TiposAsistenciaComponent implements OnInit {
       dato.seleccionados = "";
       // this.updateTiposActuacion.push(dato);
       if (dato.seleccionadosReal != findDato.seleccionadosReal) {
-
+        dato.tiposguardia = "";
+        dato.idtiposguardia.split(",").forEach(element => {
+          let guardia = this.comboTiposGuardia.find(it => {
+            return it.value == element.trim()
+          })
+          dato.tiposguardia += guardia.label + ", ";
+        });
+        dato.tiposguardia = dato.tiposguardia.substring(0, dato.tiposguardia.length - 2);
         let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
@@ -963,10 +970,5 @@ export class TiposAsistenciaComponent implements OnInit {
     this.msgs = [];
   }
 
-  openMultiSelect(dato) {
-    dato.onPanelShow;
-    // dato.overlayVisible = true;
-
-  }
 
 }
