@@ -592,12 +592,29 @@ export class TiposAsistenciaComponent implements OnInit {
         dato.tiposguardia = "";
         dato.idtiposguardia.split(",").forEach(element => {
           let guardia = this.comboTiposGuardia.find(it => {
-            return it.value == element.trim()
+            return it.value == element.trim();
           })
-          dato.tiposguardia += guardia.label + ", ";
+          dato.tiposguardia += guardia.label.trim() + ",";
         });
-        dato.tiposguardia = dato.tiposguardia.substring(0, dato.tiposguardia.length - 2);
+        dato.tiposguardia = dato.tiposguardia.substring(0, dato.tiposguardia.length - 1);
         let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+        if (findUpdate == undefined) {
+          this.updateTiposAsistencia.push(dato);
+        }
+      }
+    }
+  }
+
+  editarTipoAsistencia(dato) {
+    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+
+    dato.tipoasistencia = dato.tipoasistencia.trim();
+    if (findDato != undefined) {
+
+      if (dato.tipoasistencia != findDato.tipoasistencia) {
+
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
