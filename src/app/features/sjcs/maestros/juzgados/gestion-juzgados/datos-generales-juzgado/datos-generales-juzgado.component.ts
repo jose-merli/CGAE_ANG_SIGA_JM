@@ -297,7 +297,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   disabledSave() {
     if (!this.historico && ((this.body.nombre != null && this.body.nombre != undefined && this.body.nombre.trim() != "") &&
       (this.body.idProvincia != undefined && this.body.idProvincia != "") &&
-      (this.body.idPoblacion != null && this.body.idPoblacion != "") && this.emailValido && this.tlf1Valido
+      (this.body.idPoblacion != null && this.body.idPoblacion != "") && this.emailValido && this.tlf1Valido && !this.isDisabledPoblacion
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
@@ -326,6 +326,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
       }
       this.codigoPostalValido = true;
     } else {
+      this.body.idProvincia = undefined;
       this.codigoPostalValido = false;
       this.isDisabledPoblacion = true;
       this.provinciaSelecionada = "";
