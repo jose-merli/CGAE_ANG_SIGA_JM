@@ -93,7 +93,7 @@ export class GrupoZonaComponent implements OnInit {
     } else {
       url = "fichaZonas_updateGroupZone";
       this.body.descripcionzona = this.body.descripcionzona.trim();
-
+      this.body.idzona = this.idZona;
       this.callSaveService(url);
     }
 
@@ -151,7 +151,7 @@ export class GrupoZonaComponent implements OnInit {
   disabledSave() {
 
     if (this.nuevo) {
-      if (this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != "") {
+      if ((this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != "") && (JSON.stringify(this.bodyInicial) != JSON.stringify(this.body))) {
         return false;
       } else {
         return true;
