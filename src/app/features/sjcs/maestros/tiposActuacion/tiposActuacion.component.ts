@@ -278,16 +278,7 @@ export class TiposActuacionComponent implements OnInit {
           it.descripciontipoactuacion = it.descripciontipoactuacion.trim();
           return it;
         })
-        let findDato;
-        this.body.tiposActuacionItem.forEach(element => {
-          findDato = this.datosInicial.find(item => item.descripciontipoactuacion === element.descripciontipoactuacion);
-        });
-        if (findDato != undefined) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
-          this.progressSpinner = false;
-        } else {
-          this.callSaveService(url);
-        }
+        this.callSaveService(url);
       }
     }
 

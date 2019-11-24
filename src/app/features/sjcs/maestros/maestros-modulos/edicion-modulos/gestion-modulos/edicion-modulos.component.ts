@@ -156,6 +156,13 @@ export class EdicionModulosComponent implements OnInit {
     this.getProcedimientos(evento.value);
   }
 
+  onChangeProcedimientos(evento) {
+    this.modulosItem.procedimientosReal = [];
+    this.modulosItem.procedimientos = "";
+    this.getProcedimientos(evento.value);
+  }
+
+
   getProcedimientos(id) {
 
     this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + id).subscribe(
@@ -387,7 +394,7 @@ export class EdicionModulosComponent implements OnInit {
 
     if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
-      this.modulosItem.idjurisdiccion != undefined) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {
+      this.modulosItem.idjurisdiccion != undefined && this.modulosItem.procedimientosReal != undefined && this.modulosItem.procedimientosReal.length > 0) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {
       if (this.modulosItem.nombre.trim() != "") {
         return false;
       } else { return true; }
