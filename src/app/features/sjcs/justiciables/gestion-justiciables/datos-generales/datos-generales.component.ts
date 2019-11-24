@@ -73,6 +73,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Input() fromJusticiable;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
+  @Input() checkedViewRepresentante;
 
   menorEdadJusticiable: boolean = false;
 
@@ -227,6 +228,26 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   validateCampos(url) {
 
+    if (this.body.nombre != null && this.body.nombre != undefined) {
+      this.body.nombre = this.body.nombre.trim();
+    }
+
+    if (this.body.apellido1 != null && this.body.apellido1 != undefined) {
+      this.body.apellido1 = this.body.apellido1.trim();
+    }
+
+    if (this.body.apellido2 != null && this.body.apellido2 != undefined) {
+      this.body.apellido2 = this.body.apellido2.trim();
+    }
+
+    if (this.body.codigopostal != null && this.body.codigopostal != undefined) {
+      this.body.codigopostal = this.body.codigopostal.trim();
+    }
+
+    if (this.body.nif != null && this.body.nif != undefined) {
+      this.body.nif = this.body.nif.trim();
+    }
+
     if (this.body.direccion != null && this.body.direccion != undefined) {
       this.body.direccion = this.body.direccion.trim();
     }
@@ -300,7 +321,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.getTelefonosJusticiable();
         }
 
-        if (this.modoRepresentante) {
+        if (this.modoRepresentante && !this.checkedViewRepresentante) {
           this.persistenceService.setBody(this.body);
           this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
         } else {
@@ -788,6 +809,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.parseFechas();
 
       if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      this.faxValido = true;
+      this.emailValido = true;
 
       if (this.body.idpaisdir1 != "191") {
         this.poblacionExtranjera = true;
@@ -820,6 +843,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     dato.preferenteSms = "0";
     dato.count = this.count;
     dato.tlfValido = true;
+    dato.numeroTelefono = undefined;
+    dato.nombreTelefono = undefined;
 
     this.datos.push(dato);
 
@@ -934,7 +959,8 @@ para poder filtrar el dato con o sin estos caracteres*/
         arrayTelefonos.forEach(element => {
 
           if (valido) {
-            if (element.tlfValido) {
+            if (element.tlfValido && element.numeroTelefono != undefined && element.numeroTelefono.trim() != ""
+              && element.nombreTelefono != undefined && element.nombreTelefono.trim() != "") {
               valido = true;
             } else {
               valido = false;
@@ -947,6 +973,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
         if (valido) {
           return false;
+        } else {
+          return true;
         }
       }
 

@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <p (click)="onHideAsuntos()" class="title-module"> Asuntos
+    <p (click)="onHideAsuntos()" class="title-module"> {{ 'justiciaGratuita.justiciables.literal.asuntos' | translate }}
       <i *ngIf="showAsuntos" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showAsuntos" class="fa fa-angle-down float-right"></i>
     </p>
@@ -70,12 +70,12 @@
       <div class="form-row">
         <div class="form-row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
-            <label>Año Asunto Desde</label>
+            <label>{{ 'gratuita.personaJG.literal.anioAsuntoDesde' | translate }}</label>
             <input type="text" name="anioDesde" value="" class="box" class="form-control" [(ngModel)]='filtros.anioDesde' maxLength="4"
               pInputText>
           </div>
           <div class="form-group col-lg-6 col-md-6">
-            <label>Hasta</label>
+            <label>{{ 'gratuita.personaJG.literal.hasta' | translate }}</label>
             <input type="text" name="anioHasta" value="" class="box" class="form-control" [(ngModel)]='filtros.anioHasta' maxLength="4"
               pInputText>
           </div>

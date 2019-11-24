@@ -84,10 +84,10 @@ export class TablaJusticiablesComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nif", header: "Identificador" },
-      { field: "nombre", header: "Apellidos, Nombre" },
-      { field: "fechaModificacion", header: "Fecha Modificación" },
-      { field: "asuntos", header: "Asuntos" },
+      { field: "nif", header: "censo.fichaCliente.literal.identificacion" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "fechaModificacion", header: "censo.datosDireccion.literal.fechaModificacion" },
+      { field: "asuntos", header: "justiciaGratuita.justiciables.literal.asuntos" },
     ];
 
     this.rowsPerPage = [

@@ -287,7 +287,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   disassociate() {
     //En el back se el idrepresentante se pone a null y esa es la forma de disasociar al representante
 
-    if (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA) {
+    if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
       this.progressSpinner = true;
       this.sigaServices.post("gestionJusticiables_disassociateRepresentante", this.body).subscribe(
         n => {
