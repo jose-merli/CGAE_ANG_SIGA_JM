@@ -142,6 +142,8 @@ export class GestionDocumentosComponent implements OnInit {
           this.nuevo = false;
         }
 
+        this.editMode = false;
+
         this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
         this.searchHistoricalSend.emit(false);
 
