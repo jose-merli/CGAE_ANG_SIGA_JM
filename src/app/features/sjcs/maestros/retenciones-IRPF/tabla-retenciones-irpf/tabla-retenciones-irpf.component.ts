@@ -202,6 +202,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   changeSociedad(dato) {
 
+    let sociedad = this.comboSociedades.find(item => item.value === dato.tipoSociedad);
+    dato.descripcionSociedad = sociedad.label;
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
     if (findDato != undefined) {
       if (dato.tipoSociedad != findDato.tipoSociedad) {
@@ -213,7 +215,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
         }
       }
     }
-
   }
 
 
@@ -519,10 +520,10 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec" },
-      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo" },
-      { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad" }
+      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion", width: "30%" },
+      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec", width: "15%" },
+      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo", width: "15%" },
+      { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad", width: "40%" }
 
     ];
 

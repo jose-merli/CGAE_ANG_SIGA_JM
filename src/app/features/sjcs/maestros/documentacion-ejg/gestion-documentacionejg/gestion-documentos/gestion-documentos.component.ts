@@ -189,10 +189,10 @@ export class GestionDocumentosComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        if (this.historico == false) {
-          this.searchHistoricalSend.emit(false);
+        if (this.historico) {
+          this.searchHistoricalSend.emit(true);
         } else {
-          this.searchHistorical();
+          this.searchHistoricalSend.emit(false);
         }
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -211,8 +211,15 @@ export class GestionDocumentosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.selectMultiple = false;
-        this.progressSpinner = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+          this.progressSpinner = false;
+        } else {
+          this.selectMultiple = false;
+          this.progressSpinner = false;
+        }
+
       }
     );
   }
@@ -259,7 +266,7 @@ export class GestionDocumentosComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
+        this.searchHistoricalSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.selectMultiple = false;
