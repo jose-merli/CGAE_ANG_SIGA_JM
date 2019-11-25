@@ -316,28 +316,38 @@ export class ZonaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.nuevo) {
-      if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona.trim()
-        && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
-        return false;
-      } else {
-        return true;
+    let guardar = true;
+    this.datos.forEach(element => {
+      if (element.partidosJudiciales.length == 0) {
+        guardar = false;
       }
-
-    } else {
-      if (!this.historico && (this.updateZonas != undefined && this.updateZonas.length > 0)) {
-        let val = true;
-        this.updateZonas.forEach(it => {
-          if ((it.descripcionsubzona == undefined || !it.descripcionsubzona.trim()) || (it.partidosJudiciales == undefined || it.partidosJudiciales.length == 0))
-            val = false;
-        });
-        if (val)
+    });
+    if (guardar) {
+      if (this.nuevo) {
+        if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona.trim()
+          && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
           return false;
-        else
+        } else {
           return true;
+        }
+
       } else {
-        return true;
+        if (!this.historico && (this.updateZonas != undefined && this.updateZonas.length > 0)) {
+          let val = true;
+          this.updateZonas.forEach(it => {
+            if ((it.descripcionsubzona == undefined || !it.descripcionsubzona.trim()) || (it.partidosJudiciales == undefined || it.partidosJudiciales.length == 0))
+              val = false;
+          });
+          if (val)
+            return false;
+          else
+            return true;
+        } else {
+          return true;
+        }
       }
+    } else {
+      return true;
     }
   }
 
@@ -389,9 +399,7 @@ export class ZonaComponent implements OnInit {
   }
 
   editPartidosJudiciales(dato) {
-
     if (!this.nuevo) {
-
       if (dato.partidosJudiciales.length == 0) {
         let findUpdate = this.updateZonas.findIndex(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
 
