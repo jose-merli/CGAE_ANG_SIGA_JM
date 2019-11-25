@@ -25,7 +25,7 @@ export class TablaPartidasComponent implements OnInit {
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
-
+  buscadores = [];
   updatePartidasPres = [];
 
   body;
@@ -299,6 +299,7 @@ export class TablaPartidasComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   // rest() {
@@ -514,6 +515,7 @@ export class TablaPartidasComponent implements OnInit {
       { field: "importepartidaReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

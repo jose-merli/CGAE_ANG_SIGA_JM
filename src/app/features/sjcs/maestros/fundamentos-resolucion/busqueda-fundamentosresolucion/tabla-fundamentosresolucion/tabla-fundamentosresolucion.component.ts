@@ -16,7 +16,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
+  buscadores = []
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -172,7 +172,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
       { field: "descripcionResolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
       {
         label: 10,

@@ -1109,6 +1109,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       if (!this.modoEdicionEvento) {
         url = "fichaEventos_saveEventCalendar";
+        this.newEvent.descripcionOld = this.initEvent.descripcion;
         this.callSaveEvent(url);
       } else {
         url = "fichaEventos_updateEventCalendar";
@@ -1245,10 +1246,17 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
           if (url == "fichaEventos_updateEventCalendar") {
             this.progressSpinner = false;
+
+            if(this.selectedTipoLaboral){
+              this.newEvent.fechaInicioOld = this.newEvent.start;
+            }
+            this.initEvent = JSON.parse(JSON.stringify(this.newEvent));
+
           } else {
             this.modoEdicionEvento = true;
             this.createEvent = true;
             sessionStorage.setItem("evento", JSON.stringify(this.newEvent));
+
             this.curso = JSON.parse(sessionStorage.getItem("courseCurrent"));
             if (
               JSON.parse(
@@ -1570,13 +1578,21 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.newEvent.end = event;
     } else {
       this.newEvent.end = fecha;
+      this.fechaFi.calendar.inputfieldViewChild.nativeElement.value = this.fechaIni.calendar.inputfieldViewChild.nativeElement.value;
+      this.fechaFi.calendar.inputFieldValue = this.fechaIni.calendar.inputFieldValue;
+      this.fechaFi.calendar.value = this.fechaIni.calendar.value; 
     }
+
   }
 
   fillEnd(event) {
 
     if (event != null) {
       this.newEvent.end = event;
+    }else{
+       this.fechaFi.calendar.inputfieldViewChild.nativeElement.value = this.fechaIni.calendar.inputfieldViewChild.nativeElement.value;
+       this.fechaFi.calendar.inputFieldValue = this.fechaIni.calendar.inputFieldValue;
+       this.fechaFi.calendar.value = this.fechaIni.calendar.value; 
     }
 
     this.validatorDates(event);

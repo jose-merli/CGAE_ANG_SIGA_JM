@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges, ViewChildren } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PretensionObject } from '../../../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../../../models/sjcs/PretensionItem';
-import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
+import { ConfirmationService, Paginator } from '../../../../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-tabla-procedimientos',
@@ -17,7 +17,7 @@ export class TablaProcedimientosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  page: number = 0;
   comboJurisdiccion;
   datosInicial = [];
   editMode: boolean = false;
@@ -41,7 +41,7 @@ export class TablaProcedimientosComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
-
+  buscadores = []
   //Resultados de la busqueda
   @Input() datos;
 
@@ -297,6 +297,7 @@ export class TablaProcedimientosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   newPretension() {
@@ -470,6 +471,7 @@ export class TablaProcedimientosComponent implements OnInit {
       { field: "descripcionJurisdiccion", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""))
 
     this.rowsPerPage = [
       {

@@ -44,7 +44,7 @@ export class GestionCostesfijosComponent implements OnInit {
   nuevo: boolean = false;
   datosInicial = [];
   updateCosteFijo = [];
-
+  buscadores = [];
   idTipoAsistencia;
   selectedBefore;
   selectionMode: string = "single";
@@ -161,7 +161,13 @@ export class GestionCostesfijosComponent implements OnInit {
 
           this.getTipoActuacion();
           this.progressSpinner = false;
+          if (this.table) {
 
+            this.table.sortOrder = 0;
+            this.table.sortField = '';
+            this.table.reset();
+            this.buscadores = this.buscadores.map(it => it = "");
+          }
         },
         err => {
           console.log(err);
@@ -300,6 +306,11 @@ export class GestionCostesfijosComponent implements OnInit {
         this.searchCostesFijos();
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        this.table.sortOrder = 0;
+        this.table.sortField = '';
+        this.table.reset();
+        this.buscadores = this.buscadores.map(it => it = "");
         this.progressSpinner = false;
       },
       err => {
@@ -315,6 +326,7 @@ export class GestionCostesfijosComponent implements OnInit {
         this.selectedDatos = [];
         this.updateCosteFijo = [];
         this.progressSpinner = false;
+
       }
     );
 
@@ -581,6 +593,11 @@ export class GestionCostesfijosComponent implements OnInit {
     this.updateCosteFijo = [];
     this.nuevo = false;
     this.editMode = false;
+
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   showMessage(severity, summary, msg) {
@@ -601,7 +618,7 @@ export class GestionCostesfijosComponent implements OnInit {
       { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

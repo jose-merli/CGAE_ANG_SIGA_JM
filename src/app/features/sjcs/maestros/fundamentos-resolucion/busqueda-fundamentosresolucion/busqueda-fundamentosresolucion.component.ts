@@ -11,7 +11,7 @@ import { TablaFundamentosresolucionComponent } from './tabla-fundamentosresoluci
 @Component({
 	selector: 'app-busqueda-fundamentosresolucion',
 	templateUrl: './busqueda-fundamentosresolucion.component.html',
-	styleUrls: [ './busqueda-fundamentosresolucion.component.scss' ]
+	styleUrls: ['./busqueda-fundamentosresolucion.component.scss']
 })
 export class BusquedaFundamentosresolucionComponent implements OnInit {
 	buscar: boolean = false;
@@ -30,7 +30,7 @@ export class BusquedaFundamentosresolucionComponent implements OnInit {
 		private persistenceService: PersistenceService,
 		private translateService: TranslateService,
 		private router: Router
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.commonsService
@@ -46,7 +46,7 @@ export class BusquedaFundamentosresolucionComponent implements OnInit {
 						'descError',
 						this.translateService.instant('generico.error.permiso.denegado')
 					);
-					this.router.navigate([ '/errorAcceso' ]);
+					this.router.navigate(['/errorAcceso']);
 				}
 			})
 			.catch((error) => console.error(error));
@@ -71,10 +71,17 @@ export class BusquedaFundamentosresolucionComponent implements OnInit {
 				(n) => {
 					this.datos = JSON.parse(n.body).fundamentoResolucionItems;
 					this.buscar = true;
-					this.progressSpinner = false;
 					if (this.tabla != null && this.tabla != undefined) {
 						this.tabla.historico = event;
 					}
+					if (this.tabla && this.tabla.table) {
+						this.tabla.table.sortOrder = 0;
+						this.tabla.table.sortField = '';
+						this.tabla.table.reset();
+						this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+					}
+					this.progressSpinner = false;
+
 				},
 				(err) => {
 					this.progressSpinner = false;

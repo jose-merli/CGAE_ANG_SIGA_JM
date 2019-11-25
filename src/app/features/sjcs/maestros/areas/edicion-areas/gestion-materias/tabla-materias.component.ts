@@ -45,7 +45,7 @@ export class TablaMateriasComponent implements OnInit {
   // selectedBefore;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
-
+  buscadores = [];
   //Resultados de la busqueda
   @Input() idArea;
   //Resultados de la busqueda
@@ -271,6 +271,7 @@ export class TablaMateriasComponent implements OnInit {
         this.getMaterias();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
       },
       err => {
         this.progressSpinner = false;
@@ -282,8 +283,13 @@ export class TablaMateriasComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.table.sortOrder = 0;
+        this.table.sortField = '';
+        this.table.reset();
         this.selectedDatos = [];
         this.updateAreas = [];
+        this.rest();
+
         this.progressSpinner = false;
       }
     );
@@ -524,6 +530,7 @@ export class TablaMateriasComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "")
   }
 
   showMessage(severity, summary, msg) {
@@ -542,6 +549,8 @@ export class TablaMateriasComponent implements OnInit {
       { field: "contenido", header: "maestros.areasmaterias.literal.contenido" },
       { field: "jurisdicciones", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
     ];
+
+    this.cols.forEach(it => this.buscadores.push(""))
 
     this.rowsPerPage = [
       {
