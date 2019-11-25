@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { AcreditacionesItem } from '../../../../../../models/sjcs/AcreditacionesItem';
@@ -12,7 +12,8 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 @Component({
   selector: 'app-tabla-acreditaciones',
   templateUrl: './tabla-acreditaciones.component.html',
-  styleUrls: ['./tabla-acreditaciones.component.scss']
+  styleUrls: ['./tabla-acreditaciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TablaAcreditacionesComponent implements OnInit {
 
