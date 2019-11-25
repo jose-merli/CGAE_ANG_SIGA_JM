@@ -69,10 +69,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div *ngIf="col.field == 'idAcreditacion'">
-                <p-dropdown *ngIf="!dato.acreditacionNueva" disabled class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                  [options]="comboAcreditaciones" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
-                <p-dropdown *ngIf="dato.acreditacionNueva" class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                  [options]="comboAcreditacionesNew" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                <p-dropdown appendTo="body" *ngIf="!dato.acreditacionNueva" disabled class="select-form" [(ngModel)]="dato.idAcreditacion"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="comboAcreditaciones" [filter]="true"
+                  [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                <p-dropdown appendTo="body" *ngIf="dato.acreditacionNueva" class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [options]="comboAcreditacionesNew" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
 
               </div>
 

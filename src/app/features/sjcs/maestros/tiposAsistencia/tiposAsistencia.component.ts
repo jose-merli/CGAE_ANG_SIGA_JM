@@ -818,7 +818,7 @@ export class TiposAsistenciaComponent implements OnInit {
     this.progressSpinner = true;
     this.body = new TiposAsistenciaObject();
     this.body.tiposAsistenciasItem = this.selectedDatos;
-    this.historico = false;
+    this.historico = true;
 
     this.sigaServices.post("gestionTiposAsistencia_activateTipoAsitencia", this.body).subscribe(
       data => {
@@ -837,12 +837,17 @@ export class TiposAsistenciaComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        } else {
+          this.progressSpinner = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
+
       }
     );
   }
@@ -876,12 +881,12 @@ export class TiposAsistenciaComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "tipoasistencia", header: "censo.usuario.nombre" },
-      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
-      { field: "tiposguardia", header: "maestros.tiposasistencia.tipoGuardia" },
-      { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil" },
-      { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto" }
+      { field: "tipoasistencia", header: "censo.usuario.nombre", width: "20%" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "13%" },
+      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo", width: "13%" },
+      { field: "tiposguardia", header: "maestros.tiposasistencia.tipoGuardia", width: "30%" },
+      { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil", width: "10%" },
+      { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto", width: "10%" }
     ];
 
     this.rowsPerPage = [
