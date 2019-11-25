@@ -487,6 +487,9 @@ export class ZonaComponent implements OnInit {
     this.selectedDatos = [];
     this.updateZonas = [];
     this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
     this.buscador = this.buscador.map(it => it = "");
   }
 
