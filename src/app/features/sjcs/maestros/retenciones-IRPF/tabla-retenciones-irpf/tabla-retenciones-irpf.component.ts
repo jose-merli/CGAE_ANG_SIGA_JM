@@ -216,42 +216,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   }
 
-  callSaveService(url) {
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-
-        if (this.nuevo) {
-          this.nuevo = false;
-        }
-
-        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.search.emit(false);
-        this.getComboSociedades();
-        this.datos.forEach(element => {
-          element.retencionReal = + element.retencion;
-          element.retencion = element.retencion.replace(".", ",");
-        });
-
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        this.editMode = true;
-        if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.selectedDatos = [];
-        this.updatePartidasPres = [];
-        this.progressSpinner = false;
-      }
-    );
-
-  }
 
   save() {
     this.progressSpinner = true;
@@ -305,6 +269,44 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
 
   }
+
+  callSaveService(url) {
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        if (this.nuevo) {
+          this.nuevo = false;
+        }
+
+        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        this.search.emit(false);
+        this.getComboSociedades();
+        this.datos.forEach(element => {
+          element.retencionReal = + element.retencion;
+          element.retencion = element.retencion.replace(".", ",");
+        });
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.editMode = true;
+        if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.selectedDatos = [];
+        this.updatePartidasPres = [];
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));

@@ -393,7 +393,6 @@ export class ZonaComponent implements OnInit {
     if (!this.nuevo) {
 
       if (dato.partidosJudiciales.length == 0) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.seleccionarPartidoJudicial"));
         let findUpdate = this.updateZonas.findIndex(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
 
         if (findUpdate != undefined) {
