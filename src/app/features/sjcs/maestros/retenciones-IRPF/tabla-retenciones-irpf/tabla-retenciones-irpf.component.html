@@ -14,10 +14,11 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="
                 tabla.filter($event.target.value, col.field, 'contains')
               " />
           </th>

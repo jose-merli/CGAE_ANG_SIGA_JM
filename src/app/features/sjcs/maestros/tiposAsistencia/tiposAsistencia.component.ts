@@ -34,7 +34,7 @@ export class TiposAsistenciaComponent implements OnInit {
   datos = [];
   disableAll: boolean = false;
   historico: boolean = false;
-
+  buscadores = [];
   comboTiposGuardia;
   comboAsistencias;
   comboActuacion;
@@ -227,6 +227,13 @@ export class TiposAsistenciaComponent implements OnInit {
             }
           });
           this.editElementDisabled();
+          if (this.table != undefined) {
+            this.table.sortOrder = 0;
+            this.table.sortField = '';
+            this.table.reset();
+            this.buscadores = this.buscadores.map(it => it = "");
+          }
+
           this.progressSpinner = false;
 
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -867,6 +874,8 @@ export class TiposAsistenciaComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
   showMessage(severity, summary, msg) {
@@ -888,6 +897,7 @@ export class TiposAsistenciaComponent implements OnInit {
       { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil", width: "10%" },
       { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto", width: "10%" }
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

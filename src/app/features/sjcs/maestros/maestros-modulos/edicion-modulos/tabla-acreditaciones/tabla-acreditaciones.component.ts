@@ -29,7 +29,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   seleccion: boolean = false;
   cols;
   rowsPerPage;
-
+  buscadores = [];
   datos: any[];
   listaTabla: AcreditacionesItem[] = [];
   idAcreditacion;
@@ -527,7 +527,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
-
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   showMessage(severity, summary, msg) {

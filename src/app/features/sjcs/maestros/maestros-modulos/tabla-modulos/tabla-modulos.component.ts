@@ -22,7 +22,7 @@ export class TablaModulosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -201,6 +201,7 @@ export class TablaModulosComponent implements OnInit {
       { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "12%" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

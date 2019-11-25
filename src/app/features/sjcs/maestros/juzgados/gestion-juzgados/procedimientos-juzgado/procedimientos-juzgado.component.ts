@@ -39,7 +39,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   procItems = [];
   prItems = [];
   permisoEscritura;
-
+  buscadores = [];
   procedimientos = [];
   procedimientosElegir = [];
 
@@ -117,7 +117,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       this.procedimientos = [];
     }
     this.selectionMode = "multiple";
-
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   setItalic(dato) {

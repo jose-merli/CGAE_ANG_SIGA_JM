@@ -27,7 +27,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
   historico: boolean = false;
 
   message;
-
+  buscadores = [];
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -220,6 +220,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
       { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviaturaDocumento", width: "18%" },
       { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos", width: "32%" },
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

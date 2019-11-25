@@ -28,6 +28,7 @@ export class GestionDocumentosComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   message;
+  buscadores = [];
   filtros;
   nuevo: boolean = true;
   progressSpinner: boolean = false;
@@ -557,6 +558,8 @@ export class GestionDocumentosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
 }

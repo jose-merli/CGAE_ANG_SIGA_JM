@@ -25,7 +25,7 @@ export class TiposActuacionComponent implements OnInit {
   cols;
   rowsPerPage;
   esComa: boolean = false;
-
+  buscadores = [];
   updateTiposActuacion = [];
   editMode: boolean = false;
   seleccion: boolean = false;
@@ -197,6 +197,12 @@ export class TiposActuacionComponent implements OnInit {
             }
           });
           this.editElementDisabled();
+          if (this.table != undefined) {
+            this.table.sortOrder = 0;
+            this.table.sortField = '';
+            this.table.reset();
+            this.buscadores = this.buscadores.map(it => it = "");
+          }
           this.progressSpinner = false;
 
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -652,6 +658,8 @@ export class TiposActuacionComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
   showMessage(severity, summary, msg) {

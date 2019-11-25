@@ -85,10 +85,15 @@ export class DocumentacionEJGComponent implements OnInit, AfterViewInit {
       n => {
         this.datos = JSON.parse(n.body).documentacionejgItems;
         this.buscar = true;
-        this.progressSpinner = false;
+
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
+          this.tabla.table.sortOrder = 0;
+          this.tabla.table.sortField = '';
+          this.tabla.table.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;

@@ -25,7 +25,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   selectedBefore;
 
   updatePartidasPres = [];
-
+  buscadores = [];
   body;
 
   selectedItem: number = 10;
@@ -322,6 +322,9 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
+
   }
 
   newRetencion() {
@@ -526,7 +529,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad", width: "40%" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,
