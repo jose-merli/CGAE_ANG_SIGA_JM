@@ -437,7 +437,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.codSubTarifa != findDato.codSubTarifa) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.codSubTarifa === dato.codSubTarifa);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -454,7 +454,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.porcentaje != findDato.porcentaje) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.porcentaje === dato.porcentaje);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -470,7 +470,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.nigProcedimiento != findDato.nigProcedimiento) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.nig_numprocedimiento === dato.nig_numprocedimiento);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
