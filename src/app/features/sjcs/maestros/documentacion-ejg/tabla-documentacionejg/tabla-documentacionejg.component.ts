@@ -215,10 +215,10 @@ export class TablaDocumentacionejgComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
-      { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento" },
-      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
-      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos" },
+      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviatura", width: "18%" },
+      { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento", width: "32%" },
+      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviatura", width: "18%" },
+      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos", width: "32%" },
     ];
 
     this.rowsPerPage = [

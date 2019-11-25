@@ -190,11 +190,11 @@ export class TablaModulosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "codigo", header: "general.boton.code" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin" },
-      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "codigo", header: "general.boton.code", width: "12%" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "42%" },
+      { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio", width: "12%" },
+      { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "12%" },
+      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "12%" }
 
     ];
 
