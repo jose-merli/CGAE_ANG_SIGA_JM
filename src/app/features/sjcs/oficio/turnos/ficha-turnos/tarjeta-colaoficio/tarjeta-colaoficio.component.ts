@@ -419,12 +419,9 @@ export class TarjetaColaOficio implements OnInit {
 
   delete(selectedDatos) {
     this.body = new TurnosObject();
-    for (let i in this.selectedDatos) {
-      this.selectedDatos[i].jurisdicciones = "";
-    }
-    this.body.areasItems = this.selectedDatos;
+    this.body.turnosItem = this.selectedDatos;
 
-    this.sigaServices.post("fichaAreas_deleteMaterias", this.body).subscribe(
+    this.sigaServices.post("turnos_eliminateColaOficio", this.body).subscribe(
       data => {
 
         this.nuevo = false;
@@ -515,42 +512,54 @@ export class TarjetaColaOficio implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (!this.disableAll) {
-      this.selectMultiple = false;
-      if (this.selectAll) {
-        this.selectedDatos = this.datos;
-        this.numSelected = this.datos.length;
-        this.selectionMode = "multiple";
+    if (this.selectAll) {
+      this.selectMultiple = true;
+
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechabajapersona != undefined && dato.fechabajapersona != null);
+        this.selectMultiple = true;
+        this.selectionMode = "single";
       } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
+        this.selectedDatos = this.datos;
+        this.selectMultiple = false;
         this.selectionMode = "single";
       }
+
+      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+        this.selectMultiple = true;
+        this.numSelected = this.selectedDatos.length;
+      }
+      this.numSelected = this.datos.length;
+      this.selectionMode = "multiple";
     } else {
-      this.selectionMode = undefined;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      if (this.historico)
+        this.selectMultiple = true;
+      this.selectionMode = "multiple";
     }
   }
-
+  editElementDisabled() {
+    this.datos.forEach(element => {
+      element.editable = false
+      element.overlayVisible = false;
+    });
+  }
   isSelectMultiple() {
-    if (!this.disableAll) {
-      this.selectAll = false;
-      this.selectMultiple = !this.selectMultiple;
+    this.editElementDisabled();
+    this.selectMultiple = !this.selectMultiple;
 
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
+    if (!this.selectMultiple) {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectionMode = "single";
 
-      } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "multiple";
-
-      }
     } else {
-      this.selectionMode = undefined;
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectionMode = "multiple";
     }
-    // this.volver();
   }
 
   actualizaSeleccionados(selectedDatos) {

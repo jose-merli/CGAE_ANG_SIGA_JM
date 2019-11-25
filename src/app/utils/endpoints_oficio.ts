@@ -20,5 +20,6 @@ export let endpoints_oficio: any = {
     combossjcs_comboRequisitosGuardias: "oficio/combossjcs/comboRequisitosGuardias",
     turnos_tarjetaGuardarPesos: "oficio/turnos/tarjetaGuardarPesos",
     turnos_updateConfiguracion: "oficio/turnos/updateConfiguracion",
-    turnos_busquedaColaOficio: "oficio/turnos/busquedaColaOficio"
+    turnos_busquedaColaOficio: "oficio/turnos/busquedaColaOficio",
+    turnos_eliminateColaOficio: "oficio/turnos/eliminateColaOficio"
 }
