@@ -137,7 +137,11 @@ export class TablaModulosComponent implements OnInit {
     this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchModulos.emit(false);
+        if (this.historico) {
+          this.searchModulos.emit(true);
+        } else {
+          this.searchModulos.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

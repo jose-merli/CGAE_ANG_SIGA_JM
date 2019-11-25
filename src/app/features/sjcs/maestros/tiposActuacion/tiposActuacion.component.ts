@@ -602,7 +602,7 @@ export class TiposActuacionComponent implements OnInit {
     this.progressSpinner = true;
     this.body = new TiposActuacionObject();
     this.body.tiposActuacionItem = this.selectedDatos;
-    this.historico = false;
+    this.historico = true;
 
     this.sigaServices.post("gestionTiposActuacion_activateTipoActuacion", this.body).subscribe(
       data => {
@@ -621,12 +621,18 @@ export class TiposActuacionComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.progressSpinner = false;
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        } else {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
       }
     );
   }
