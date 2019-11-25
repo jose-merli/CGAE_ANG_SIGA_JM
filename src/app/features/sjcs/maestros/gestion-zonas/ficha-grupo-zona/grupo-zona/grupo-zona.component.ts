@@ -164,6 +164,7 @@ export class GrupoZonaComponent implements OnInit {
         } else {
           return true;
         }
+      return true;
     }
   }
 }
