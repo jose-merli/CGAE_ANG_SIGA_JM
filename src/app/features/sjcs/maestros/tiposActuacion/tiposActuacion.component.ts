@@ -278,7 +278,16 @@ export class TiposActuacionComponent implements OnInit {
           it.descripciontipoactuacion = it.descripciontipoactuacion.trim();
           return it;
         })
-        this.callSaveService(url);
+        let findDato;
+        this.body.tiposActuacionItem.forEach(element => {
+          findDato = this.datosInicial.find(item => item.descripciontipoactuacion === element.descripciontipoactuacion && item.idtipoactuacion != element.idtipoactuacion);
+        });
+        if (findDato != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+          this.progressSpinner = false;
+        } else {
+          this.callSaveService(url);
+        }
       }
     }
 
@@ -450,7 +459,14 @@ export class TiposActuacionComponent implements OnInit {
       dato.seleccionados = "";
       // this.updateTiposActuacion.push(dato);
       if (dato.seleccionadosReal != findDato.seleccionadosReal) {
-
+        dato.descripciontipoasistencia = "";
+        dato.idtipoasistencia.split(",").forEach(element => {
+          let asistencia = this.comboTiposActuacion.find(it => {
+            return it.value == element.trim()
+          })
+          dato.descripciontipoasistencia += asistencia.label + ", ";
+        });
+        dato.descripciontipoasistencia = dato.descripciontipoasistencia.substring(0, dato.descripciontipoasistencia.length - 2);
         let findUpdate = this.updateTiposActuacion.find(item => item.idtipoactuacion === dato.idtipoactuacion);
         this.permitirGuardar = true
         if (findUpdate == undefined) {
