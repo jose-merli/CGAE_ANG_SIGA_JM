@@ -602,7 +602,7 @@ export class TiposActuacionComponent implements OnInit {
     this.progressSpinner = true;
     this.body = new TiposActuacionObject();
     this.body.tiposActuacionItem = this.selectedDatos;
-    this.historico = false;
+    this.historico = true;
 
     this.sigaServices.post("gestionTiposActuacion_activateTipoActuacion", this.body).subscribe(
       data => {
@@ -621,12 +621,18 @@ export class TiposActuacionComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.progressSpinner = false;
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        } else {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
       }
     );
   }
@@ -660,10 +666,10 @@ export class TiposActuacionComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripciontipoactuacion", header: "censo.usuario.nombre" },
-      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
-      { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia" },
+      { field: "descripciontipoactuacion", header: "censo.usuario.nombre", width: "20%" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" },
+      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo", width: "10%" },
+      { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia", width: "60%" },
     ];
 
     this.rowsPerPage = [

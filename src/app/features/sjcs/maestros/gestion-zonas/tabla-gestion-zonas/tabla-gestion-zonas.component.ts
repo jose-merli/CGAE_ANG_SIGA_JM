@@ -139,7 +139,7 @@ export class TablaGestionZonasComponent implements OnInit {
         this.historico = false;
         this.persistenceService.setHistorico(this.historico);
         this.selectedDatos = [];
-        this.searchZonasSend.emit(false);
+        this.searchZonasSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

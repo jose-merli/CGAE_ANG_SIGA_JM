@@ -222,7 +222,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			.subscribe(
 				(data) => {
 					this.selectedDatos = [];
-					this.searchHistoricalSend.emit(false);
+					this.searchHistoricalSend.emit(true);
 					this.showMessage(
 						'success',
 						this.translateService.instant('general.message.correct'),

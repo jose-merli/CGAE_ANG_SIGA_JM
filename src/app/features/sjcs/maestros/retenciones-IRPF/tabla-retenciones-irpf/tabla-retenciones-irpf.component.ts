@@ -202,6 +202,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   changeSociedad(dato) {
 
+    let sociedad = this.comboSociedades.find(item => item.value === dato.tipoSociedad);
+    dato.descripcionSociedad = sociedad.label;
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
     if (findDato != undefined) {
       if (dato.tipoSociedad != findDato.tipoSociedad) {
@@ -213,45 +215,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
         }
       }
     }
-
   }
 
-  callSaveService(url) {
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-
-        if (this.nuevo) {
-          this.nuevo = false;
-        }
-
-        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.search.emit(false);
-        this.getComboSociedades();
-        this.datos.forEach(element => {
-          element.retencionReal = + element.retencion;
-          element.retencion = element.retencion.replace(".", ",");
-        });
-
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        this.editMode = true;
-        if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.selectedDatos = [];
-        this.updatePartidasPres = [];
-        this.progressSpinner = false;
-      }
-    );
-
-  }
 
   save() {
     this.progressSpinner = true;
@@ -305,6 +270,44 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
 
   }
+
+  callSaveService(url) {
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        if (this.nuevo) {
+          this.nuevo = false;
+        }
+
+        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+        this.search.emit(false);
+        this.getComboSociedades();
+        this.datos.forEach(element => {
+          element.retencionReal = + element.retencion;
+          element.retencion = element.retencion.replace(".", ",");
+        });
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.editMode = true;
+        if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.selectedDatos = [];
+        this.updatePartidasPres = [];
+        this.progressSpinner = false;
+      }
+    );
+
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -517,10 +520,10 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec" },
-      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo" },
-      { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad" }
+      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion", width: "30%" },
+      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec", width: "15%" },
+      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo", width: "15%" },
+      { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad", width: "40%" }
 
     ];
 

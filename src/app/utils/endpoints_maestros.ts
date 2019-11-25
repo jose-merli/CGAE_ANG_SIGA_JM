@@ -22,6 +22,7 @@ export let endpoints_maestros: any = {
     fichaAreas_updateMaterias: "maestros/areasMaterias/updateMaterias",
     fichaAreas_createMaterias: "maestros/areasMaterias/createMaterias",
     fichaAreas_deleteMaterias: "maestros/areasMaterias/deleteMaterias",
+    areasMaterias_activateMaterias: "maestros/areasMaterias/activateMaterias",
 
     busquedaJuzgados_searchCourt: "maestros/busquedaJuzgados/searchCourt",
     busquedaJuzgados_provinces: "maestros/busquedaJuzgados/provinces",
