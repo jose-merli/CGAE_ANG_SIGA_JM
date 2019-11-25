@@ -234,21 +234,30 @@ export class TablaMateriasComponent implements OnInit {
           it.contenido = it.contenido.trim();
         return it;
       })
-      let findDato;
-      let prueba = this.body.areasItems;
-      this.body.areasItems.forEach(element => {
-        findDato = this.datosInicial.find(item => item.nombreMateria === element.nombreMateria);
-      });
-      if (findDato != undefined) {
+      if (this.validateUpdate()) {
+        this.callSaveService(url);
+      } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
         this.progressSpinner = false;
-      } else {
-        this.callSaveService(url);
       }
     }
 
   }
+  validateUpdate() {
+    let check = true;
 
+    this.updateAreas.forEach(dato => {
+
+      let findDatos = this.datos.filter(item => item.nombreMateria === dato.nombreMateria);
+
+      if (findDatos != undefined && findDatos.length > 1) {
+        check = false;
+      }
+
+    });
+
+    return check;
+  }
   callSaveService(url) {
 
     this.sigaServices.post(url, this.body).subscribe(
