@@ -74,6 +74,9 @@
     box-shadow: none;
     color: $secondary-color;
   }
+  .ui-multiselect-header .ui-multiselect-filter-container {
+    width: calc(100% - 38px) !important;
+}
 
   button {
     color: $secondary-color;
