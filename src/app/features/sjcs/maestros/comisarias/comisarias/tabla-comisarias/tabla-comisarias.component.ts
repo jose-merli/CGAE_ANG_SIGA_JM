@@ -203,11 +203,11 @@ export class TablaComisariasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "codigoExt", header: "general.codeext" },
-      { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
-      { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
-      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "40%" },
+      { field: "codigoExt", header: "general.codeext", width: "15%" },
+      { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
+      { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion", width: "15%" },
+      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia", width: "15%" }
 
     ];
 

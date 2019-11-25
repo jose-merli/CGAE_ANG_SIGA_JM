@@ -666,10 +666,10 @@ export class TiposActuacionComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripciontipoactuacion", header: "censo.usuario.nombre" },
-      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
-      { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia" },
+      { field: "descripciontipoactuacion", header: "censo.usuario.nombre", width: "20%" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" },
+      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo", width: "10%" },
+      { field: "descripciontipoasistencia", header: "menu.sjcs.tiposAsistencia", width: "60%" },
     ];
 
     this.rowsPerPage = [
