@@ -1424,3 +1424,6 @@ p-footer .main-button{
 .ui-table .ui-table-tbody > tr > td{
   text-align: left !important;
 }
+.ui-multiselect-header .ui-multiselect-filter-container {
+  width: calc(100% - 38px) !important;
+}

@@ -66,9 +66,9 @@ export class TablaPartidasComponent implements OnInit {
 
   ngOnInit() {
     this.selectedDatos = [];
-    this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.getCols();
   }
 
   ngOnChanges(changes: SimpleChanges) {
