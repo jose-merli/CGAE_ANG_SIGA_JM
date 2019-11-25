@@ -31,7 +31,7 @@ export class TablaProcuradoresComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-
+  buscadores = [];
   message;
 
   initDatos;
@@ -212,6 +212,7 @@ export class TablaProcuradoresComponent implements OnInit {
       { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

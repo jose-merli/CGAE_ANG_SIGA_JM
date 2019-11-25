@@ -41,6 +41,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
   selectionMode: string = "single";
   //Resultados de la busqueda
   @Input() datos;
+  buscadores = [];
 
   @Input() permisos;
   //Combo partidos judiciales
@@ -195,6 +196,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
 
@@ -208,7 +210,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.cols = [
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" }
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

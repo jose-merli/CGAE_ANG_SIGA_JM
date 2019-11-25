@@ -17,7 +17,7 @@ export class TablaComisariasComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -211,6 +211,7 @@ export class TablaComisariasComponent implements OnInit {
 
     ];
 
+    this.cols.forEach(element => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

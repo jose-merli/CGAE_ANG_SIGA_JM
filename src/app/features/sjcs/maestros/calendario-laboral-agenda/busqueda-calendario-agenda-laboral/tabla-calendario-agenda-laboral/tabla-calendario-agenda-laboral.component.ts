@@ -26,7 +26,7 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
   historico: boolean = false;
   institucionActual;
   message;
-
+  buscadores = []
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -175,6 +175,8 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fiestaLocalPartido", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.fiestaLocalPartidoJudicial" }
     ];
+
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

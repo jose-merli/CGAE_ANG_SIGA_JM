@@ -84,10 +84,17 @@ export class DestinatariosRetencionesComponent implements OnInit {
         this.datos.forEach(element => {
           element.editable = false;
           element.overlayVisible = false;
-        //  element.orden = +element.orden;
+          //  element.orden = +element.orden;
         });
         this.buscar = true;
+        if (this.tablapartida && this.tablapartida.tabla) {
+          this.tablapartida.tabla.sortOrder = 0;
+          this.tablapartida.tabla.sortField = '';
+          this.tablapartida.tabla.reset();
+          this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
+        }
         this.progressSpinner = false;
+
       },
       err => {
         this.progressSpinner = false;

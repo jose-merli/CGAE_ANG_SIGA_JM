@@ -14,68 +14,68 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns;let i =index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
-                  tabla.filter($event.target.value, col.field, 'contains')
-                " />
+            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase=" col.field
+              " pInputText type="text " (input)=" tabla.filter($event.target.value, col.field, 'contains') " />
           </th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+      <ng-template pTemplate="body " let-dato let-columns="columns " let-rowIndex="rowIndex ">
+        <tr [pSelectableRow]="dato " [pSelectableRowIndex]="rowIndex ">
 
-          <td class="text-center" *ngFor="let col of columns">
+          <td class="text-center " *ngFor="let col of columns ">
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field == 'importepartidaReal'">
+            <span *ngIf="!dato.editable && !setItalic(dato) && col.field=='importepartidaReal' ">
               {{dato.importepartida | numberPipe}} €
             </span>
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartidaReal'">
+            <span *ngIf="!dato.editable && !setItalic(dato) && col.field !='importepartidaReal' ">
               {{ dato[col.field]}}
             </span>
 
-            <div *ngIf="!dato.editable && setItalic(dato) && col.field == 'importepartidaReal'">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato.importepartida}} €</span>
+            <div *ngIf="!dato.editable && setItalic(dato) && col.field=='importepartidaReal' ">
+              <span [ngStyle]="{ 'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'} ">{{dato.importepartida}} €</span>
             </div>
 
-            <div *ngIf="!dato.editable && setItalic(dato) && col.field != 'importepartidaReal'">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+            <div *ngIf="!dato.editable && setItalic(dato) && col.field !='importepartidaReal' ">
+              <span [ngStyle]="{ 'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'} ">{{dato[col.field]}}</span>
             </div>
 
-            <span *ngIf="!dato.editable && !setItalic(dato) && col.field != 'importepartidaReal'">
+            <span *ngIf="!dato.editable && !setItalic(dato) && col.field !='importepartidaReal' ">
             </span>
 
-            <div *ngIf="dato.editable && col.field == 'importepartidaReal'">
-              <app-precio [(value)]="dato.importepartida" [dato]="dato" [maxLength]="8" [nuevo]="nuevo" [id]="id" [disabled]="historico"
-                (valueChangeInput)="changeImporte(dato)"></app-precio>
+            <div *ngIf="dato.editable && col.field=='importepartidaReal' ">
+              <app-precio [(value)]="dato.importepartida " [dato]="dato " [maxLength]="8 " [nuevo]="nuevo " [id]="id
+              " [disabled]="historico " (valueChangeInput)="changeImporte(dato) "></app-precio>
             </div>
-            <div *ngIf="dato.editable && col.field == 'nombrepartida'">
-              <input class="form-control paddingInput" [(ngModel)]="dato.nombrepartida" name="nombrepartida" type="text" maxLength="58"
-                on-focusout="changeNombrePartida(dato)" [(disabled)]="!permisos" (onBlur)="changeNombrePartida(dato)" (input)="changeNombrePartida(dato)"
-              />
+            <div *ngIf="dato.editable && col.field=='nombrepartida' ">
+              <input class="form-control paddingInput " [(ngModel)]="dato.nombrepartida " name="nombrepartida " type="text
+              " maxLength="58 " on-focusout="changeNombrePartida(dato) " [(disabled)]="!permisos " (onBlur)="changeNombrePartida(dato)
+              " (input)="changeNombrePartida(dato) " />
             </div>
-            <div *ngIf="dato.editable && col.field == 'descripcion'">
-              <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion" type="text" maxLength="98" on-focusout="changeDescripcion(dato)"
-                (onBlur)="changeDescripcion(dato)" [(disabled)]="!permisos" (input)="changeDescripcion(dato)" />
+            <div *ngIf="dato.editable && col.field=='descripcion' ">
+              <input class="form-control paddingInput " [(ngModel)]="dato.descripcion " name="descripcion " type="text
+              " maxLength="98 " on-focusout="changeDescripcion(dato) " (onBlur)="changeDescripcion(dato) " [(disabled)]="!permisos "
+                (input)="changeDescripcion(dato) " />
             </div>
           </td>
 
         </tr>
       </ng-template>
-      <ng-template pTemplate="emptymessage" let-columns>
+      <ng-template pTemplate="emptymessage " let-columns>
         <tr>
-          <td [attr.colspan]="columns.length">
+          <td [attr.colspan]="columns.length ">
             {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="paginatorleft">
-        <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}
+      <ng-template pTemplate="paginatorleft ">
+        <div class="mostrar d-flex text-right justify-content-end ">
+          <label class="pr-3 registros-totales ">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados " *ngIf="selectedDatos && selectedDatos.length> 0">Seleccionados: {{selectedDatos.length}}
           </label>
           <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0
           </label>

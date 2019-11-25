@@ -27,7 +27,7 @@ export class ZonaComponent implements OnInit {
   rowsPerPage;
   fechaEvento;
   datos = [];
-
+  buscador = [];
   historico: boolean = false;
 
   comboPJ;
@@ -480,6 +480,7 @@ export class ZonaComponent implements OnInit {
     this.selectedDatos = [];
     this.updateZonas = [];
     this.nuevo = false;
+    this.buscador = this.buscador.map(it => it = "");
   }
 
   showMessage(severity, summary, msg) {
@@ -497,7 +498,7 @@ export class ZonaComponent implements OnInit {
       { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
       { field: "jurisdiccion", header: "menu.justiciaGratuita.maestros.partidosJudiciales" }
     ];
-
+    this.cols.forEach(it => this.buscador.push(""))
     this.rowsPerPage = [
       {
         label: 10,

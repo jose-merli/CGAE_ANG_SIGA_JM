@@ -30,7 +30,7 @@ export class TablaDestinatariosComponent implements OnInit {
   updateDestinatariosRet = [];
 
   body;
-
+  buscadores = []
   selectedItem: number = 10;
   selectAll;
   selectedDatos: any[] = [];
@@ -300,6 +300,8 @@ export class TablaDestinatariosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
   // rest() {
@@ -472,7 +474,7 @@ export class TablaDestinatariosComponent implements OnInit {
       { field: "cuentacontable", header: "censo.consultaDatosGenerales.literal.cuentaContable" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
       {
         label: 10,

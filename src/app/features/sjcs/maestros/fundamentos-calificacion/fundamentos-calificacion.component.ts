@@ -70,11 +70,12 @@ export class FundamentosCalificacionComponent implements OnInit {
 
         this.datos = JSON.parse(n.body).fundamentosCalificacionesItems;
         this.buscar = true;
-        this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
         }
         this.resetSelect();
+        this.progressSpinner = false;
+
       },
       err => {
         this.progressSpinner = false;
@@ -89,6 +90,14 @@ export class FundamentosCalificacionComponent implements OnInit {
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;
       this.tabla.selectAll = false;
+
+      if (this.tabla && this.tabla.table) {
+
+        this.tabla.tabla.sortOrder = 0;
+        this.tabla.tabla.sortField = '';
+        this.tabla.tabla.reset();
+        this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+      }
     }
   }
 

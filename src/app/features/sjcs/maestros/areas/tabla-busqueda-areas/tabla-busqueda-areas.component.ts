@@ -21,7 +21,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -116,10 +116,10 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-           if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -171,7 +171,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
       { field: "nombreMateria", header: "menu.justiciaGratuita.maestros.Materia" },
       { field: "jurisdicciones", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

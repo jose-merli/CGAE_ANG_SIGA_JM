@@ -27,13 +27,13 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 	historico: boolean;
 	@Output() searchHistoricalSend = new EventEmitter<boolean>();
 	permisoEscritura: boolean = false;
-
+	buscadores = [];
 	message;
 
 	initDatos;
 	nuevo: boolean = false;
 	progressSpinner: boolean = false;
-
+	@ViewChild("table") tabla;
 	constructor(
 		private persistenceService: PersistenceService,
 		private sigaService: SigaServices,
@@ -85,6 +85,8 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 				header: 'justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen'
 			}
 		];
+
+		this.cols.forEach(it => this.buscadores.push(""))
 
 		this.rowsPerPage = [
 			{
