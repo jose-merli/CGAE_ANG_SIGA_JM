@@ -818,7 +818,7 @@ export class TiposAsistenciaComponent implements OnInit {
     this.progressSpinner = true;
     this.body = new TiposAsistenciaObject();
     this.body.tiposAsistenciasItem = this.selectedDatos;
-    this.historico = false;
+    this.historico = true;
 
     this.sigaServices.post("gestionTiposAsistencia_activateTipoAsitencia", this.body).subscribe(
       data => {
@@ -837,12 +837,17 @@ export class TiposAsistenciaComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        } else {
+          this.progressSpinner = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
+
       }
     );
   }

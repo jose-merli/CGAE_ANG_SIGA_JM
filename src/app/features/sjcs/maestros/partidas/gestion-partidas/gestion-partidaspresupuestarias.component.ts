@@ -417,7 +417,11 @@ export class TablaPartidasComponent implements OnInit {
     this.sigaServices.post("gestionPartidasPres_eliminatePartidasPres", PartidasPresDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchPartidas.emit(false);
+        if (this.historico) {
+          this.searchPartidas.emit(true);
+        } else {
+          this.searchPartidas.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -430,12 +434,18 @@ export class TablaPartidasComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (!this.historico) {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        } else {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        }
+
       }
     );
   }

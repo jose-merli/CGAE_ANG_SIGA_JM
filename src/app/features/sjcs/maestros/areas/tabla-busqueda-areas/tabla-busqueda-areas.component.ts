@@ -109,17 +109,57 @@ export class TablaBusquedaAreasComponent implements OnInit {
     this.sigaServices.post("fichaAreas_deleteAreas", AreasDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchAreasSend.emit(false);
+        if (this.historico) {
+          this.searchAreasSend.emit(true);
+        } else {
+          this.searchAreasSend.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
 
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-           if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectAll = false;
+      }
+    );
+  }
+
+
+  activate(selectedDatos) {
+    let AreasActivate = new AreasObject();
+    AreasActivate.areasItems = selectedDatos
+    this.sigaServices.post("areasMaterias_activateMaterias", AreasActivate).subscribe(
+      data => {
+        this.selectedDatos = [];
+        if (this.historico) {
+          this.searchAreasSend.emit(true);
+        } else {
+          this.searchAreasSend.emit(false);
+        }
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
