@@ -204,6 +204,8 @@ export class TablaProcedimientosComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
     if (findDato != undefined) {
       if (dato.idJurisdiccion != findDato.idJurisdiccion) {
+        let valueCombo = this.comboJurisdiccion.find(item => item.value === dato.idJurisdiccion);
+        dato.descripcionJurisdiccion = valueCombo.label;
         let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);

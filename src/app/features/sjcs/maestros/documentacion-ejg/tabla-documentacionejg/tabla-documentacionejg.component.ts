@@ -215,9 +215,9 @@ export class TablaDocumentacionejgComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
+      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviaturaTipoDocumento" },
       { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento" },
-      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
+      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviaturaDocumento" },
       { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos" },
     ];
 

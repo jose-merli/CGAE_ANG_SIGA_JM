@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { AcreditacionesItem } from '../../../../../../models/sjcs/AcreditacionesItem';
@@ -12,7 +12,8 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 @Component({
   selector: 'app-tabla-acreditaciones',
   templateUrl: './tabla-acreditaciones.component.html',
-  styleUrls: ['./tabla-acreditaciones.component.scss']
+  styleUrls: ['./tabla-acreditaciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TablaAcreditacionesComponent implements OnInit {
 
@@ -437,7 +438,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.codSubTarifa != findDato.codSubTarifa) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.codSubTarifa === dato.codSubTarifa);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -454,7 +455,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.porcentaje != findDato.porcentaje) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.porcentaje === dato.porcentaje);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -470,7 +471,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.nigProcedimiento != findDato.nigProcedimiento) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.nig_numprocedimiento === dato.nig_numprocedimiento);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
