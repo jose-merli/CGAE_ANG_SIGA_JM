@@ -264,7 +264,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboModulos").subscribe(
       data => {
         this.modulos = data.combooItems;
-        this.modulos.unshift({ label: '', value: '' });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
         this.modulos.map((e) => {

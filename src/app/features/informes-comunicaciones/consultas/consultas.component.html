@@ -32,20 +32,20 @@
 
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
-          <p-dropdown [options]="objetivos" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
+          <p-dropdown [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
             class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
-          <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
-            [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
+          <p-dropdown [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
+            [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
           <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
           <p-radioButton name="groupname" value="N" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton> -->
-          <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]='bodySearch.generica'
-            [options]="comboGenerica" [showClear]="true" [filter]="true" filterBy="label"></p-dropdown>
+          <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+            class="select-form" [(ngModel)]='bodySearch.generica' [options]="comboGenerica"></p-dropdown>
         </div>
 
 
@@ -143,15 +143,18 @@
         <label class="mr-2">{{dato.campo}} </label>
       </div>
       <div class="form-group col-lg-3 col-md-3">
-        <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
+        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+          *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
           class="select-form"></p-dropdown>
-        <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+          *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
       </div>
       <div class="form-group col-lg-6 col-md-6">
         <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
         <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy"
           icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
+        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+          *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
           optionLabel="DESCRIPCION"></p-dropdown>
       </div>
     </div>

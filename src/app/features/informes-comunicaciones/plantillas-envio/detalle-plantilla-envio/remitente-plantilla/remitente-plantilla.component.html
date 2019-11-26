@@ -80,8 +80,8 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'censo.datosDireccion.literal.pais2' | translate}}</label>
-              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="direccion.idPais"
-                [filter]="true" filterMatchMode="contains" [options]="comboPais">
+              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="direccion.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais">
               </p-dropdown>
             </div>
 
@@ -93,7 +93,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'censo.datosDireccion.literal.provincia' | translate}}</label>
               <!-- (onChange)="onChangeProvincia()" -->
-              <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [filter]="true" filterMatchMode="contains" [options]="comboProvincia">
               </p-dropdown>
 
@@ -106,8 +106,8 @@
             <!-- *ngIf="!poblacionExtranjera" -->
             <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>{{'censo.consultaDirecciones.literal.poblacion' | translate}}</label>
-              <p-dropdown [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="direccion.idPoblacion"
-                [filter]="true" filterMatchMode="contains" [options]="comboPoblacion">
+              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="direccion.idPoblacion" [filter]="true" filterMatchMode="contains" [options]="comboPoblacion">
               </p-dropdown>
             </div>
             <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">

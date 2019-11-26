@@ -1346,6 +1346,7 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
       n => {
         this.generalEstadoCivil = n.combooItems;
+        this.arregloTildesCombo(this.generalEstadoCivil);
       },
       err => {
         console.log(err);
@@ -1355,6 +1356,8 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("etiquetas_lenguaje").subscribe(
       n => {
         this.generalIdiomas = n.combooItems;
+        this.arregloTildesCombo(this.generalIdiomas);
+
       },
       err => {
         console.log(err);
@@ -1364,6 +1367,8 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("busquedaColegiados_situacion").subscribe(
       n => {
         this.comboSituacion = n.combooItems;
+        this.arregloTildesCombo(this.comboSituacion);
+
       },
       err => {
         console.log(err);
@@ -3035,6 +3040,8 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("fichaDatosColegiales_tipoSeguro").subscribe(
       n => {
         this.comboTipoSeguro = n.combooItems;
+        this.arregloTildesCombo(this.comboTipoSeguro);
+
       },
       err => {
         console.log(err);
@@ -5438,6 +5445,7 @@ export class FichaColegialComponent implements OnInit {
       .subscribe(
         n => {
           this.resultsTopics = n.combooItems;
+          this.arregloTildesCombo(this.resultsTopics);
 
           this.resultsTopics.forEach(e => {
             if (e.color == undefined) {

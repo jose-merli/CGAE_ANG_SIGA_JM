@@ -270,7 +270,6 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   cargarCombos() {
     this.comboSexo = [
-      { value: "", label: null },
       { value: "H", label: "Hombre" },
       { value: "M", label: "Mujer" }
     ];
@@ -278,6 +277,8 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.tiposSolicitud = result.combooItems;
+        this.arregloTildesCombo(this.tiposSolicitud);
+
       },
       error => {
         console.log(error);
@@ -287,6 +288,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_estadoSolicitud").subscribe(
       result => {
         this.estadosSolicitud = result.combooItems;
+        this.arregloTildesCombo(this.estadosSolicitud);
       },
       error => {
         console.log(error);
@@ -296,6 +298,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tratamiento").subscribe(
       result => {
         this.tratamientos = result.combooItems;
+        this.arregloTildesCombo(this.tratamientos);
       },
       error => {
         console.log(error);
@@ -305,6 +308,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_estadoCivil").subscribe(
       result => {
         this.estadoCivil = result.combooItems;
+        this.arregloTildesCombo(this.estadoCivil);
       },
       error => {
         console.log(error);
@@ -314,6 +318,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_pais").subscribe(
       result => {
         this.paises = result.combooItems;
+        this.arregloTildesCombo(this.paises);
 
         if (this.solicitudEditar.pais == undefined) {
           this.paisSelected = "191";
@@ -335,6 +340,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         // 3: {label: "NIF", value: "10"}
         // 4: {label: "Otro", value: "50"}
         // 5: {label: "Pasaporte", value: "30"}
+        this.arregloTildesCombo(this.tipoIdentificacion);
         this.tipoIdentificacion[5].label =
           this.tipoIdentificacion[5].label +
           " / " +
@@ -348,6 +354,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tipoColegiacion").subscribe(
       result => {
         this.tipoColegiacion = result.combooItems;
+        this.arregloTildesCombo(this.tipoColegiacion);
       },
       error => {
         console.log(error);
@@ -359,6 +366,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           this.modalidadDocumentacion = result.combooItems;
+          this.arregloTildesCombo(this.modalidadDocumentacion);
         },
         error => {
           console.log(error);
@@ -368,6 +376,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
         this.provincias = result.combooItems;
+        this.arregloTildesCombo(this.provincias);
       },
       error => {
         console.log(error);
@@ -1752,6 +1761,23 @@ para poder filtrar el dato con o sin estos caracteres*/
     fecha = new Date((arrayDate += "T00:00:00.001Z"));
 
     return fecha;
+  }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
   }
 
   //búsqueda con enter

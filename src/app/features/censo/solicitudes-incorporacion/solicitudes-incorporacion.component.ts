@@ -122,10 +122,30 @@ export class SolicitudesIncorporacionComponent implements OnInit {
       this.body = new SolicitudIncorporacionItem();
     }
   }
+
+  arregloTildesCombo(combo) {
+    combo.map(e => {
+      let accents =
+        "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+      let accentsOut =
+        "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelSinTilde;
+        }
+      }
+    });
+  }
+
+
   cargarCombos() {
     this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.tiposSolicitud = result.combooItems;
+        this.arregloTildesCombo(this.tiposSolicitud);
       },
       error => {
         console.log(error);
@@ -135,6 +155,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_estadoSolicitud").subscribe(
       result => {
         this.estadosSolicitud = result.combooItems;
+        this.arregloTildesCombo(this.estadosSolicitud);
       },
       error => {
         console.log(error);

@@ -53,8 +53,9 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown [filter]="true" filterBy="label" *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato.idConsulta"
-                [options]="consultas" class="select-form" (onChange)="onChangeConsultas($event)" dataKey="label" emptyFilterMessage="{{ resultadosConsultas | translate}}"
+              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" [filter]="true" filterBy="label"
+                *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form"
+                (onChange)="onChangeConsultas($event)" dataKey="label" emptyFilterMessage="{{ resultadosConsultas | translate}}"
                 (input)="buscarConsultas($event)"></p-dropdown>
               <span *ngIf="col.field=='nombre' && dato.asociada">{{dato.nombre}}</span>
               <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato.finalidad}}</span>
@@ -85,7 +86,7 @@
                 name="groupname "></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple " [ngClass]="{ ' seleccion-multiple': selectMultiple} " (click)="isSelectMultiple() ">
-              <i class="pr-2 fa fa-mouse-pointer "></i>{{"general.message.seleccion.multiple " | translate}}</label>
+              <i class="pr-2 fa fa-mouse-pointer "></i>{{"general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
       </p-table>

@@ -2,11 +2,11 @@
 <div class=" busqueda-container ">
   <div class="header-title ">
     <i class="fa fa-square "></i>
-    <p>{{"general.boton.edit " | translate}}
-      <i class="pl-1 fa fa-angle-right "></i>{{"administracion.grupos.literal.perfiles " | translate}} </p>
+    <p>{{"general.boton.edit" | translate}}
+      <i class="pl-1 fa fa-angle-right "></i>{{"administracion.grupos.literal.perfiles" | translate}} </p>
   </div>
   <!--<div class="breadCrumb ">
-    <p>{{"general.boton.edit " | translate}} <i class="fa fa-angle-right "></i> {{ 'administracion.grupos.literal.perfiles' |
+    <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right "></i> {{ 'administracion.grupos.literal.perfiles' |
       translate}}
     </p>
   </div>-->
@@ -21,7 +21,7 @@
       <div *ngIf="showDatosGenerales " class="module vista-avanzada ">
         <div class="form-row ">
           <div class="form-group col-lg-3 col-md-3 ">
-            <label>{{"administracion.grupos.literal.id " | translate}} (*)</label>
+            <label>{{"administracion.grupos.literal.id" | translate}} (*)</label>
             <input *ngIf="!enabledid " disabled type="text " name="id " class="form-control
   " [(ngModel)]='body.idGrupo' [formControl]="this.formGroup.controls[ 'idGrupo'] " pInputText>
             <input *ngIf="enabledid " type="text " name="id " class="form-control

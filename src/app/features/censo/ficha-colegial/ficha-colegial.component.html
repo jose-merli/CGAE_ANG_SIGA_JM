@@ -167,7 +167,8 @@
               <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} (*)
               </label>
               <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="generalBody.idTipoIdentificacion" (onChange)="activacionGuardarGenerales()"></p-dropdown>
+                [(ngModel)]="generalBody.idTipoIdentificacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                [showClear]="true" filterBy="label,labelSinTilde" (onChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
@@ -196,7 +197,7 @@
               -->
               <p-dropdown class="select-form" [(ngModel)]="generalBody.sexo" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboSexo" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
-                [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
             </div>
 
             <!--
@@ -234,7 +235,8 @@
               </label>
               <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalTratamiento"
                 [(ngModel)]="generalBody.idTratamiento" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
-                [showClear]="true" (onChange)="activacionGuardarGenerales()"></p-dropdown>
+                [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
+                (onChange)="activacionGuardarGenerales()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.consultaDatosGenerales.literal.nacido" | translate }}
@@ -247,7 +249,8 @@
               </label>
               <p-dropdown class="select-form" (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="generalBody.idEstadoCivil" [(disabled)]="isLetrado || (tarjetaGenerales == 2)  || disabledAction"
-                [showClear]="true" [options]="generalEstadoCivil"></p-dropdown>
+                [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
+                [options]="generalEstadoCivil"></p-dropdown>
             </div>
 
             <div class="form-check col-lg-6 col-md-6">
@@ -333,7 +336,8 @@
               <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
               </label>
               <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
+                placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                [showClear]="true" filterBy="label,labelSinTilde" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ "censo.consultaDatosGenerales.literal.cuentaContable" | translate }}
@@ -480,7 +484,8 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
               <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
-                [(ngModel)]="colegialesBody.idTiposSeguro" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [(ngModel)]="colegialesBody.idTiposSeguro" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [options]="comboTipoSeguro"></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3 form-group-date">
@@ -557,8 +562,10 @@
               <!--
                 <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
               -->
-              <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)" [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled || isLetrado"
-                [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
+              <p-dropdown class="select-form" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+                filterBy="label,labelSinTilde" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)"
+                [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled || isLetrado" [(ngModel)]="inscritoSeleccionado"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
             </div>
           </div>
         </div>
@@ -593,9 +600,11 @@
             <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
             <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
             <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(ngModel)]="nuevoEstadoColegial.situacion"
-              [options]="comboSituacion" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+              [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+              filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
             <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-              [(ngModel)]="datosColegiales[rowIndex].idEstado" [options]="comboSituacion" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
+              [(ngModel)]="datosColegiales[rowIndex].idEstado" [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
               placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
           </ng-template>
         </p-column>
@@ -606,10 +615,12 @@
             <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
             <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
             <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') && datosColegiales[rowIndex].isMod == true"
-              [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+              [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
               placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
             <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-              [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+              [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
               placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
           </ng-template>
         </p-column>
@@ -833,8 +844,9 @@
     <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCertificados" pageLinks="4"
-          dataKey="idSolicitud" [responsive]="true" selectionMode="multiple" #tableCertificados class="tabla-listado" [value]="datosCertificados"
-          [sortOrder]="1" [paginator]="activarPaginacionCertificados()" paginatorPosition="both" [rows]="selectedItemCertificados">
+          dataKey="idSolicitud" [responsive]="true" selectionMode="multiple" #tableCertificados class="tabla-listado tableCertificados"
+          [value]="datosCertificados" [sortOrder]="1" [paginator]="activarPaginacionCertificados()" paginatorPosition="both"
+          [rows]="selectedItemCertificados">
           <p-column *ngFor="let col of colsCertificados" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
