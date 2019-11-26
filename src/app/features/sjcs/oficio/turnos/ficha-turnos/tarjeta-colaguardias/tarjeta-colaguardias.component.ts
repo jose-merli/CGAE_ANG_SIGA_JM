@@ -15,11 +15,11 @@ import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 @Component({
-  selector: "app-tarjeta-colaoficio",
-  templateUrl: "./tarjeta-colaoficio.component.html",
-  styleUrls: ["./tarjeta-colaoficio.component.scss"]
+  selector: "app-tarjeta-colaguardias",
+  templateUrl: "./tarjeta-colaguardias.component.html",
+  styleUrls: ["./tarjeta-colaguardias.component.scss"]
 })
-export class TarjetaColaOficio implements OnInit {
+export class TarjetaColaGuardias implements OnInit {
 
 
   openFicha: boolean = false;
@@ -44,6 +44,7 @@ export class TarjetaColaOficio implements OnInit {
   progressSpinner: boolean = false;
   msgs;
   body;
+  guardias = [];
   nuevo: boolean = false;
   datosInicial = [];
   updateAreas = [];
@@ -74,7 +75,7 @@ export class TarjetaColaOficio implements OnInit {
       activa: false
     },
     {
-      key: "tablacolaoficio",
+      key: "tablacolaguardias",
       activa: false
     },
   ];
@@ -89,7 +90,21 @@ export class TarjetaColaOficio implements OnInit {
         this.turnosItem.fechaActual = new Date();
         this.body = this.turnosItem;
         this.turnosItem.idturno = this.idTurno;
-        this.getColaOficio();
+        this.sigaServices
+          .getParam(
+            "combossjcs_comboidGuardias",
+            "?idTurno=" + this.idTurno
+          )
+          .subscribe(
+            n => {
+              this.guardias = n.combooItems;
+            },
+            err => {
+              console.log(err);
+
+            }, () => {
+            }
+          );
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -119,6 +134,12 @@ export class TarjetaColaOficio implements OnInit {
       this.disableAll = true;
     }
   }
+
+  cargarTabla(event) {
+    this.turnosItem.idcomboguardias = event.value;
+    this.getMaterias();
+  }
+
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -138,7 +159,7 @@ export class TarjetaColaOficio implements OnInit {
   }
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
-    this.getColaOficio();
+    this.getMaterias();
   }
   setItalic(dato) {
     if (dato.fechabajapersona == null) return false;
@@ -147,22 +168,19 @@ export class TarjetaColaOficio implements OnInit {
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
-    this.getColaOficio();
+    this.getMaterias();
     this.selectAll = false
   }
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
-  getColaOficio() {
+  getMaterias() {
     this.progressSpinner = true;
-    this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
+    this.sigaServices.post("turnos_busquedaColaGuardia", this.turnosItem).subscribe(
       n => {
         // this.datos = n.turnosItem;
         this.datos = JSON.parse(n.body).turnosItem;
-        this.datos.forEach(element => {
-          element.orden = +element.orden;
-        });
         // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
         //   this.turnosItem.historico = true;
         // }
@@ -225,7 +243,7 @@ export class TarjetaColaOficio implements OnInit {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
 
-        this.getColaOficio();
+        this.getMaterias();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -435,7 +453,7 @@ export class TarjetaColaOficio implements OnInit {
 
         this.nuevo = false;
         this.selectedDatos = [];
-        this.getColaOficio();
+        this.getMaterias();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

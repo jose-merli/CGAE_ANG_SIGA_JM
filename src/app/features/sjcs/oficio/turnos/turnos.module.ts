@@ -31,6 +31,7 @@ import { TarjetaColaOficio } from './ficha-turnos/tarjeta-colaoficio/tarjeta-col
 import { TarjetaResumenFijaModule } from '../../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { FechaComponent } from '../../../../commons/fecha/fecha.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
+import { TarjetaColaGuardias } from './ficha-turnos/tarjeta-colaguardias/tarjeta-colaguardias.component';
 
 @NgModule({
   imports: [
@@ -64,7 +65,7 @@ import { FechaModule } from '../../../../commons/fecha/fecha.module';
     ConfiguracionTurnosComponent,
     ConfiguracionColaOficioComponent,
     TarjetaColaOficio,
-
+    TarjetaColaGuardias
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

@@ -50,6 +50,10 @@ export class FichaTurnosComponent implements OnInit {
 				key: 'tablacolaoficio',
 				activa: false
 			},
+			{
+				key: 'tablacolaguardias',
+				activa: false
+			},
 		];
 	}
 

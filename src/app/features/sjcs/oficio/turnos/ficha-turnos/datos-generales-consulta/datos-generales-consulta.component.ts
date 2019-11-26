@@ -31,7 +31,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   showTarjeta: boolean = true;
   esComa: boolean = false;
   textSelected: String = "{label}";
-  permisoEscritura: boolean = true;
+  disableAll: boolean = true;
   jurisdicciones: any[] = [];
   areas: any[] = [];
   tiposturno: any[] = [];
@@ -95,8 +95,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.openFicha = !this.openFicha;
   }
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos()
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true;
     }
     if (this.turnosItem != undefined) {
       this.body = this.turnosItem;

@@ -41,7 +41,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
   requisitosGuardiasDescripcion;
-  permisoEscritura: boolean = true;
+  disableAll: boolean = true;
   movilCheck: boolean = false
 
   visibleMovilValue: boolean = false;
@@ -134,14 +134,14 @@ export class ConfiguracionTurnosComponent implements OnInit {
   ngOnInit() {
 
     if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos()
+      this.disableAll = this.persistenceService.getPermisos()
 
     }
     this.validateHistorical();
 
     if (this.modoEdicion) {
       this.body = this.turnosItem;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
 
       // if (this.body != undefined && this.datos.nombrePoblacion != null) {
       //   this.getComboPoblacion(this.body.nombrePoblacion);
@@ -400,7 +400,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
       this.turnosItem.activarretriccionacredit = 'S';
       this.turnosItem.activarretriccionacreditCheck = true;
 
-      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+      // this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
     }
 
   }

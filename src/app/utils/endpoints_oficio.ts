@@ -21,5 +21,7 @@ export let endpoints_oficio: any = {
     turnos_tarjetaGuardarPesos: "oficio/turnos/tarjetaGuardarPesos",
     turnos_updateConfiguracion: "oficio/turnos/updateConfiguracion",
     turnos_busquedaColaOficio: "oficio/turnos/busquedaColaOficio",
-    turnos_eliminateColaOficio: "oficio/turnos/eliminateColaOficio"
+    turnos_eliminateColaOficio: "oficio/turnos/eliminateColaOficio",
+    turnos_busquedaColaGuardia: "oficio/turnos/busquedaColaGuardia",
+    combossjcs_comboidGuardias: "oficio/combossjcs/comboidGuardias"
 }

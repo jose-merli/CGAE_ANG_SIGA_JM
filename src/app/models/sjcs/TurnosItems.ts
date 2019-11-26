@@ -13,6 +13,7 @@ export class TurnosItems {
   idordenacioncolas: string;
   pesosSeleccionadosTarjeta: string;
   idguardias: string;
+  idcomboguardias: string;
   guardias: string;
   idzubzona: string;
   idsubzona: string;

@@ -46,7 +46,7 @@ export class TurnosComponent implements OnInit {
 
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_maestros.fundamentoResolucion)
+    this.commonsService.checkAcceso(procesos_maestros.areasMaterias)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 

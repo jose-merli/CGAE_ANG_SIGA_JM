@@ -45,6 +45,7 @@ export class TablaTurnosComponent implements OnInit {
   sortO: number = 1;
   message;
   public ascNumberSort = true;
+  permisos: boolean = false;
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -53,7 +54,6 @@ export class TablaTurnosComponent implements OnInit {
   //Resultados de la busqueda
   @Input() datos;
 
-  @Input() permisos;
   //Combo partidos judiciales
   comboPJ;
 
@@ -85,14 +85,11 @@ export class TablaTurnosComponent implements OnInit {
     this.selectedDatos = [];
     this.updatePartidasPres = [];
     this.nuevo = false;
-    // if (this.datos.partidasItem != undefined)
-    //   this.datos.partidasItem.forEach(element => {
-    //     element.importepartida = element.importepartida.replace(",", ".");
-    //     element.importepartidaReal = +element.importepartida;
-    //     if (element.importepartida == ".") {
-    //       element.importepartida = 0;
-    //     }
-    //   });
+    if (this.persistenceService.getPermisos()) {
+      this.permisos = true;
+    } else {
+      this.permisos = false;
+    }
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
   }
 

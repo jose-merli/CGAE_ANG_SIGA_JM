@@ -50,7 +50,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
 
-  permisoEscritura: boolean = true;
+  disableAll: boolean = true;
   movilCheck: boolean = false
 
   visibleMovilValue: boolean = false;
@@ -110,7 +110,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   }
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos()
+      this.disableAll = this.persistenceService.getPermisos()
 
     }
 
