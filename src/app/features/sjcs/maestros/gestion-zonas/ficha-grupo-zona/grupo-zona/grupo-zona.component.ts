@@ -87,10 +87,13 @@ export class GrupoZonaComponent implements OnInit {
 
     if (!this.modoEdicion) {
       url = "fichaZonas_createGroupZone";
+      this.body.descripcionzona = this.body.descripcionzona.trim();
       this.callSaveService(url);
 
     } else {
       url = "fichaZonas_updateGroupZone";
+      this.body.descripcionzona = this.body.descripcionzona.trim();
+      this.body.idzona = this.idZona;
       this.callSaveService(url);
     }
 
@@ -148,22 +151,20 @@ export class GrupoZonaComponent implements OnInit {
   disabledSave() {
 
     if (this.nuevo) {
-      if (this.body.descripcionzona != undefined && this.body.descripcionzona != "") {
+      if ((this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != "") && (JSON.stringify(this.bodyInicial) != JSON.stringify(this.body))) {
         return false;
       } else {
         return true;
       }
     } else {
-      if (this.body.descripcionzona != undefined)
-        this.body.descripcionzona = this.body.descripcionzona.trim();
 
-      if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona != null && this.body.descripcionzona.trim() != ""))
-
-        if ((JSON.stringify(this.body.descripcionzona) != JSON.stringify(this.bodyInicial.descripcionzona))) {
+      if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != ""))
+        if ((JSON.stringify(this.body.descripcionzona.trim()) != JSON.stringify(this.bodyInicial.descripcionzona.trim()))) {
           return false;
         } else {
           return true;
         }
+      return true;
     }
   }
 }

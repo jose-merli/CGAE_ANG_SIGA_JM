@@ -4,7 +4,7 @@
 <div class="card mt-3">
   <div class="card-body p-0">
 
-    <p-table [value]="datos" [columns]="cols" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
+    <p-table [value]="datos" [columns]="cols" [first]="page" [selectionMode]="selectionMode" [(selection)]="selectedDatos" [responsive]="true"
       #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
@@ -14,10 +14,11 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="
                 tabla.filter($event.target.value, col.field, 'contains')
               " />
           </th>
@@ -48,7 +49,7 @@
                 [(disabled)]="!permisos" (onBlur)="changeDescripcion(dato)" (input)="changeDescripcion(dato)" />
             </div>
             <div *ngIf="dato.editable && col.field == 'descripcionJurisdiccion'">
-              <p-dropdown class="select-form" [(ngModel)]='dato.idJurisdiccion' placeholder="Seleccionar" [options]="comboJurisdiccion"
+              <p-dropdown class="select-form" [(ngModel)]='dato.idJurisdiccion' placeholder="Seleccionar" [showClear]="true" [options]="comboJurisdiccion"
                 on-focusout="changeJurisdiccion(dato)" [filter]="true" filterBy="label,labelSinTilde" (onBlur)="changeJurisdiccion(dato)"
                 (input)="changeJurisdiccion(dato)" (onChange)="changeJurisdiccion(dato)"></p-dropdown>
             </div>

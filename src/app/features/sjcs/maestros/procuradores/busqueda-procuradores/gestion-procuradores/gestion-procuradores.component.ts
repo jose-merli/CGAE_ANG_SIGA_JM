@@ -89,7 +89,16 @@ export class GestionProcuradoresComponent implements OnInit {
 
   callSaveService(url) {
     this.body = Object.assign(this.generales.body, this.direcciones.body);
-
+    if (this.generales.body.nombre != undefined)
+      this.generales.body.nombre = this.generales.body.nombre.trim();
+    if (this.generales.body.apellido1 != undefined)
+      this.generales.body.apellido1 = this.generales.body.apellido1.trim();
+    if (this.generales.body.nColegiado != undefined)
+      this.generales.body.nColegiado = this.generales.body.nColegiado.trim();
+    if (this.generales.body.codigoExt != undefined)
+      this.generales.body.codigoExt = this.generales.body.codigoExt.trim();
+    if (this.generales.body.apellido2 != undefined)
+      this.generales.body.apellido2 = this.generales.body.apellido2.trim();
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -130,22 +139,16 @@ export class GestionProcuradoresComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.generales.body.nombre != undefined)
-      this.generales.body.nombre = this.generales.body.nombre.trim();
-    if (this.generales.body.apellido1 != undefined)
-      this.generales.body.apellido1 = this.generales.body.apellido1.trim();
-    if (this.generales.body.nColegiado != undefined)
-      this.generales.body.nColegiado = this.generales.body.nColegiado.trim();
-    if (this.generales.body.codigoExt != undefined)
-      this.generales.body.codigoExt = this.generales.body.codigoExt.trim();
-    if (this.generales.body.apellido2 != undefined)
-      this.generales.body.apellido2 = this.generales.body.apellido2.trim();
 
-    if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.nombre != "" && this.generales.body.apellido1 != undefined &&
-      this.generales.body.apellido1 != null && this.generales.body.apellido1 != "") && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
+
+    if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.apellido1 != undefined &&
+      this.generales.body.apellido1 != null) && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
       this.permisoEscritura && ((JSON.stringify(this.direcciones.body) != JSON.stringify(this.direcciones.bodyInicial))
         || (JSON.stringify(this.generales.body) != JSON.stringify(this.generales.bodyInicial)))) {
-      return false;
+      if (this.generales.body.apellido1.trim() != "" && this.generales.body.nombre.trim() != "") {
+        return false;
+      } else { return true; }
+
     } else {
       return true;
     }

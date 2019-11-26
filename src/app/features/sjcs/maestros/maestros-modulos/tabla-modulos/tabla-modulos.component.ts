@@ -22,7 +22,7 @@ export class TablaModulosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -52,7 +52,7 @@ export class TablaModulosComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private  confirmationService:  ConfirmationService
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -120,7 +120,7 @@ export class TablaModulosComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: "Cancelar",
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -137,7 +137,11 @@ export class TablaModulosComponent implements OnInit {
     this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchModulos.emit(false);
+        if (this.historico) {
+          this.searchModulos.emit(true);
+        } else {
+          this.searchModulos.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -190,13 +194,14 @@ export class TablaModulosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "codigo", header: "general.boton.code" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio" },
-      { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin" },
-      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "codigo", header: "general.boton.code", width: "12%" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "42%" },
+      { field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio", width: "12%" },
+      { field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "12%" },
+      { field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "12%" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

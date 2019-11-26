@@ -47,14 +47,12 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
-import { FechaModule } from './commons/fecha/fecha.module';
 import { HeaderComponent } from './commons/header/header.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
 import { LoginComponent } from './commons/login/login.component';
 import { MenuComponent } from './commons/menu/menu.component';
 import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
-import { PrecioModule } from './commons/precio/precio.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { TrimPipePipe } from './commons/trim-pipe/trim-pipe.pipe';
 import { ValidationModule } from './commons/validation/validation.module';
@@ -306,14 +304,9 @@ import { CommonsService } from './_services/commons.service';
 // prueba
 import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.service';
 import { OldSigaServices } from './_services/oldSiga.service';
-import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
-import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
-import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
-import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
 import { TreeTableComponent } from './commons/tree-table/tree-table.component';
-import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 
 
 
@@ -337,6 +330,15 @@ import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-gener
 registerLocaleData(es);
 
 
+import { TranslateService } from './commons/translate/translation.service';
+import { PersistenceService } from './_services/persistence.service';
+import { FechaModule } from './commons/fecha/fecha.module';
+import { PrecioModule } from './commons/precio/precio.module';
+import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
+import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
+import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
+import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
+import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 
 
 
@@ -458,6 +460,7 @@ registerLocaleData(es);
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
+		TurnosComponent,
 		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
 		GuardiasBajasTemporalesComponent,

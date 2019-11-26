@@ -34,7 +34,7 @@ export class TiposAsistenciaComponent implements OnInit {
   datos = [];
   disableAll: boolean = false;
   historico: boolean = false;
-
+  buscadores = [];
   comboTiposGuardia;
   comboAsistencias;
   comboActuacion;
@@ -227,6 +227,13 @@ export class TiposAsistenciaComponent implements OnInit {
             }
           });
           this.editElementDisabled();
+          if (this.table != undefined) {
+            this.table.sortOrder = 0;
+            this.table.sortField = '';
+            this.table.reset();
+            this.buscadores = this.buscadores.map(it => it = "");
+          }
+
           this.progressSpinner = false;
 
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -297,6 +304,7 @@ export class TiposAsistenciaComponent implements OnInit {
       this.datos[0].idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       let tipoAsistencia = this.datos[0];
       this.body = tipoAsistencia;
+      this.body.tipoasistencia = this.body.tipoasistencia.trim();
       this.callSaveService(url);
 
     } else {
@@ -306,6 +314,11 @@ export class TiposAsistenciaComponent implements OnInit {
         if (this.validateUpdate()) {
           this.body = new TiposAsistenciaObject();
           this.body.tiposAsistenciasItem = this.updateTiposAsistencia;
+
+          this.body.tiposAsistenciasItem = this.body.tiposAsistenciasItem.map(it => {
+            it.tipoasistencia = it.tipoasistencia.trim();
+            return it;
+          })
           this.callSaveService(url);
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionFundamentosResolucion.existeTipoAsistenciaMismaDescripcion"));
@@ -571,7 +584,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
 
 
-  editarTipoAsistencia(dato) {
+  editarTipoGuardia(dato) {
 
     let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
     if (findDato != undefined) {
@@ -583,8 +596,32 @@ export class TiposAsistenciaComponent implements OnInit {
       dato.seleccionados = "";
       // this.updateTiposActuacion.push(dato);
       if (dato.seleccionadosReal != findDato.seleccionadosReal) {
+        dato.tiposguardia = "";
+        dato.idtiposguardia.split(",").forEach(element => {
+          let guardia = this.comboTiposGuardia.find(it => {
+            return it.value == element.trim();
+          })
+          dato.tiposguardia += guardia.label.trim() + ",";
+        });
+        dato.tiposguardia = dato.tiposguardia.substring(0, dato.tiposguardia.length - 1);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+        if (findUpdate == undefined) {
+          this.updateTiposAsistencia.push(dato);
+        }
+      }
+    }
+  }
 
-        let findUpdate = this.updateTiposAsistencia.find(item => item.seleccionadosReal === dato.seleccionadosReal);
+  editarTipoAsistencia(dato) {
+    let findDato = this.datosInicial.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+
+    dato.tipoasistencia = dato.tipoasistencia.trim();
+    if (findDato != undefined) {
+
+      if (dato.tipoasistencia != findDato.tipoasistencia) {
+
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -606,7 +643,7 @@ export class TiposAsistenciaComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.importe != findDato.importe) {
 
-        let findUpdate = this.updateTiposAsistencia.find(item => item.importe === dato.importe);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -628,7 +665,7 @@ export class TiposAsistenciaComponent implements OnInit {
       // this.updateTiposActuacion.push(dato);
       if (dato.importemaximo != findDato.importemaximo) {
 
-        let findUpdate = this.updateTiposAsistencia.find(item => item.importemaximo === dato.importemaximo);
+        let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
         if (findUpdate == undefined) {
           this.updateTiposAsistencia.push(dato);
         }
@@ -657,18 +694,18 @@ export class TiposAsistenciaComponent implements OnInit {
       dato.idtiposguardia = tiposAsistenciaString.substring(1, tiposAsistenciaString.length);
       dato.seleccionados = "";
       // this.updateTiposActuacion.push(dato);
-      if (dato.visibleMovilBoolean != findDato.visibleMovilBoolean) {
-        if (dato.visibleMovilBoolean == false) {
-          dato.visiblemovil = "0";
-        }
-        else {
-          dato.visiblemovil = "1";
-        }
-        let findUpdate = this.updateTiposAsistencia.find(item => item.visiblemovil === dato.visiblemovil);
-        if (findUpdate == undefined) {
-          this.updateTiposAsistencia.push(dato);
-        }
+
+      if (dato.visibleMovilBoolean == false) {
+        dato.visiblemovil = "0";
       }
+      else {
+        dato.visiblemovil = "1";
+      }
+      let findUpdate = this.updateTiposAsistencia.find(item => item.idtipoasistenciacolegio === dato.idtipoasistenciacolegio);
+      if (findUpdate == undefined) {
+        this.updateTiposAsistencia.push(dato);
+      }
+
     }
 
   }
@@ -676,7 +713,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia != "" &&
+      if (this.datos[0].tipoasistencia != undefined && this.datos[0].tipoasistencia.trim() &&
         this.datos[0].importe != undefined && this.datos[0].importe + "" != ""
         && this.datos[0].importemaximo + "" != undefined && this.datos[0].importemaximo != ""
         && this.datos[0].seleccionadosReal != undefined && this.datos[0].seleccionadosReal != "") {
@@ -687,7 +724,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
     } else {
       this.updateTiposAsistencia = this.updateTiposAsistencia.filter(it => {
-        if (it.tipoasistencia != undefined && it.tipoasistencia != "" &&
+        if (it.tipoasistencia != undefined && it.tipoasistencia.trim() &&
           it.importe != undefined && it.importe + "" != ""
           && it.importemaximo != undefined && it.importemaximo + "" != ""
           && it.seleccionadosReal != undefined && it.seleccionadosReal != "")
@@ -788,7 +825,7 @@ export class TiposAsistenciaComponent implements OnInit {
     this.progressSpinner = true;
     this.body = new TiposAsistenciaObject();
     this.body.tiposAsistenciasItem = this.selectedDatos;
-    this.historico = false;
+    this.historico = true;
 
     this.sigaServices.post("gestionTiposAsistencia_activateTipoAsitencia", this.body).subscribe(
       data => {
@@ -807,12 +844,17 @@ export class TiposAsistenciaComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        } else {
+          this.progressSpinner = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
+
       }
     );
   }
@@ -832,6 +874,8 @@ export class TiposAsistenciaComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
   showMessage(severity, summary, msg) {
@@ -846,13 +890,14 @@ export class TiposAsistenciaComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "tipoasistencia", header: "censo.usuario.nombre" },
-      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" },
-      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo" },
-      { field: "tiposguardia", header: "maestros.tiposasistencia.tipoGuardia" },
-      { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil" },
-      { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto" }
+      { field: "tipoasistencia", header: "censo.usuario.nombre", width: "20%" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "13%" },
+      { field: "importemaximoReal", header: "formacion.fichaCurso.tarjetaPrecios.importeMaximo", width: "13%" },
+      { field: "tiposguardia", header: "maestros.tiposasistencia.tipoGuardia", width: "30%" },
+      { field: "visiblemovil", header: "administracion.informes.literal.visibleMovil", width: "10%" },
+      { field: "pordefecto", header: "informesycomunicaciones.modelosdecomunicacion.ficha.porDefecto", width: "10%" }
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {
@@ -957,10 +1002,5 @@ export class TiposAsistenciaComponent implements OnInit {
     this.msgs = [];
   }
 
-  openMultiSelect(dato) {
-    dato.onPanelShow;
-    // dato.overlayVisible = true;
-
-  }
 
 }

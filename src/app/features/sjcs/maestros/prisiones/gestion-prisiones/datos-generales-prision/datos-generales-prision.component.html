@@ -58,7 +58,7 @@
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
-              <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+              <input (keypress)="numberOnly($event)" type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
                 [disabled]="historico || !permisoEscritura" pInputText>
             </div>
 
@@ -123,7 +123,7 @@
               </label>
               <div *ngIf="edicionEmail" class="row">
                 <div class="form-row col-9 mr-4 pr-0">
-                  <input type="text" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
+                  <input type="text" [disabled]="historico || !permisoEscritura" maxlength="50" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
                     style="width: 100%" />
                 </div>
                 <div pTooltip="Verificar e-mail" tooltipPosition="bottom" style="display:inline-block;">

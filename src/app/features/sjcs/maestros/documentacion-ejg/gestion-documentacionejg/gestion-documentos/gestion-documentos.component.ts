@@ -6,6 +6,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { DocumentacionEjgObject } from '../../../../../../models/sjcs/DocumentacionEjgObject';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
+import { DocumentacionEjgItem } from '../../../../../../models/sjcs/DocumentacionEjgItem';
 
 @Component({
   selector: 'app-gestion-documentos',
@@ -27,6 +28,7 @@ export class GestionDocumentosComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   message;
+  buscadores = [];
   filtros;
   nuevo: boolean = true;
   progressSpinner: boolean = false;
@@ -61,7 +63,6 @@ export class GestionDocumentosComponent implements OnInit {
       this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
-
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
@@ -142,6 +143,8 @@ export class GestionDocumentosComponent implements OnInit {
           this.nuevo = false;
         }
 
+        this.editMode = false;
+
         this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
         this.searchHistoricalSend.emit(false);
 
@@ -187,10 +190,10 @@ export class GestionDocumentosComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        if (this.historico == false) {
-          this.searchHistoricalSend.emit(false);
+        if (this.historico) {
+          this.searchHistoricalSend.emit(true);
         } else {
-          this.searchHistorical();
+          this.searchHistoricalSend.emit(false);
         }
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -209,8 +212,15 @@ export class GestionDocumentosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.selectMultiple = false;
-        this.progressSpinner = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+          this.progressSpinner = false;
+        } else {
+          this.selectMultiple = false;
+          this.progressSpinner = false;
+        }
+
       }
     );
   }
@@ -257,7 +267,7 @@ export class GestionDocumentosComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
+        this.searchHistoricalSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.selectMultiple = false;
@@ -417,9 +427,11 @@ export class GestionDocumentosComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
 
+    dato.abreviaturaDoc = dato.abreviaturaDoc.trim();
+
     if (findDato != undefined) {
       if (dato.abreviaturaDoc != findDato.abreviaturaDoc) {
-        let findUpdate = this.updateDocumentos.find(item => item.abreviaturaDoc === dato.abreviaturaDoc);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -434,7 +446,7 @@ export class GestionDocumentosComponent implements OnInit {
 
     if (findDato != undefined) {
       if (dato.codigoExt != findDato.codigoExt) {
-        let findUpdate = this.updateDocumentos.find(item => item.codigoExt === dato.codigoExt);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -448,10 +460,11 @@ export class GestionDocumentosComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
+    dato.descripcionDoc = dato.descripcionDoc.trim();
 
     if (findDato != undefined) {
       if (dato.descripcionDoc != findDato.descripcionDoc) {
-        let findUpdate = this.updateDocumentos.find(item => item.descripcionDoc === dato.descripcionDoc);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -468,10 +481,17 @@ export class GestionDocumentosComponent implements OnInit {
     if (this.datos[0].idDocumento == null || this.datos[0].idDocumento == undefined) {
       this.body = this.datos[0]
       url = "gestionDocumentacionEjg_createDoc";
+      this.body.abreviaturaDoc = this.body.abreviaturaDoc.trim();
+      this.body.descripcionDoc = this.body.descripcionDoc.trim();
       this.callSaveService(url);
     } else {
       this.body = new DocumentacionEjgObject();
       this.body.documentacionejgItems = this.updateDocumentos;
+      this.body.documentacionejgItems = this.body.documentacionejgItems.map(it => {
+        it.abreviaturaDoc = it.abreviaturaDoc.trim();
+        it.descripcionDoc = it.descripcionDoc.trim();
+        return it;
+      })
       url = "gestionDocumentacionEjg_updateDoc";
       this.callSaveService(url);
     }
@@ -479,7 +499,8 @@ export class GestionDocumentosComponent implements OnInit {
   }
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined && this.datos[0].abreviaturaDoc != undefined) {
+      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined
+        && this.datos[0].abreviaturaDoc.trim() && this.datos[0].descripcionDoc.trim()) {
         return false;
       } else {
         return true;
@@ -487,7 +508,16 @@ export class GestionDocumentosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updateDocumentos != undefined && this.updateDocumentos.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updateDocumentos.forEach(it => {
+          if (it.abreviaturaDoc == undefined || it.descripcionDoc == undefined || !it.abreviaturaDoc.trim() ||
+            !it.descripcionDoc.trim())
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }
@@ -516,9 +546,8 @@ export class GestionDocumentosComponent implements OnInit {
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
     }
+    this.datos.abreviaturaDoc = null;
     this.selectAll = false;
     this.selectMultiple = false;
     this.editElementDisabled();
@@ -529,6 +558,8 @@ export class GestionDocumentosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
 }

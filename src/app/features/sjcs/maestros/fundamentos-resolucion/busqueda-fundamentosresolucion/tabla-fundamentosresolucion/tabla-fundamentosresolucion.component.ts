@@ -16,7 +16,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
+  buscadores = []
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -139,7 +139,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
+        this.searchHistoricalSend.emit(true);
         this.selectMultiple = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -172,7 +172,7 @@ export class TablaFundamentosresolucionComponent implements OnInit {
       { field: "descripcionResolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
       {
         label: 10,

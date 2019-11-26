@@ -92,6 +92,12 @@ export class BusquedaAreasComponent implements OnInit {
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;
       this.tabla.selectAll = false;
+      if (this.tabla.tabla) {
+        this.tabla.tabla.sortOrder = 0;
+        this.tabla.tabla.sortField = '';
+        this.tabla.tabla.reset();
+        this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+      }
     }
   }
   // searchZonasSend(event) {

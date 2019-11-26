@@ -62,7 +62,7 @@ export class BusquedaProcedimientosComponent implements OnInit {
   }
 
   search(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    // this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
@@ -75,6 +75,7 @@ export class BusquedaProcedimientosComponent implements OnInit {
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
         }
+
         this.resetSelect();
       },
       err => {
@@ -89,6 +90,11 @@ export class BusquedaProcedimientosComponent implements OnInit {
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;
       this.tabla.selectAll = false;
+      this.tabla.tabla.sortOrder = 0;
+      this.tabla.tabla.sortField = '';
+      this.tabla.tabla.reset();
+      this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+
     }
   }
   showMessage(event) {
