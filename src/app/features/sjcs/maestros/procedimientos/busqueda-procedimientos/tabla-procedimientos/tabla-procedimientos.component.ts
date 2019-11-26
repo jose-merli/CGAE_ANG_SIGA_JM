@@ -155,30 +155,27 @@ export class TablaProcedimientosComponent implements OnInit {
 
   changeDescripcion(dato) {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
-    dato.descripcion = dato.descripcion.trim();
     if (findDato != undefined) {
-      if (dato.descripcion.trim() != "") {
-        if (dato.descripcion != findDato.descripcion) {
+      if (dato.descripcion != findDato.descripcion) {
 
-          let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
-
-          if (findUpdate == undefined) {
-            this.updatePartidasPres.push(dato);
-          }
-        }
-      } else {
         let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
-        if (findUpdate != undefined) {
-          let cambios = [];
-          this.updatePartidasPres.forEach(data => {
-            if (data.idPretension != findUpdate.idPretension) {
-              cambios.push(data);
-            }
-          });
-          if (cambios != undefined) {
-            this.updatePartidasPres = [];
-            this.updatePartidasPres = cambios;
+
+        if (findUpdate == undefined) {
+          this.updatePartidasPres.push(dato);
+        }
+      }
+    } else {
+      let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
+      if (findUpdate != undefined) {
+        let cambios = [];
+        this.updatePartidasPres.forEach(data => {
+          if (data.idPretension != findUpdate.idPretension) {
+            cambios.push(data);
           }
+        });
+        if (cambios != undefined) {
+          this.updatePartidasPres = [];
+          this.updatePartidasPres = cambios;
         }
       }
     }
@@ -204,8 +201,12 @@ export class TablaProcedimientosComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
     if (findDato != undefined) {
       if (dato.idJurisdiccion != findDato.idJurisdiccion) {
-        let valueCombo = this.comboJurisdiccion.find(item => item.value === dato.idJurisdiccion);
-        dato.descripcionJurisdiccion = valueCombo.label;
+        if (dato.idJurisdiccion) {
+          let valueCombo = this.comboJurisdiccion.find(item => item.value === dato.idJurisdiccion);
+          dato.descripcionJurisdiccion = valueCombo.label;
+        } else {
+          dato.descripcionJurisdiccion = "";
+        }
         let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -343,7 +344,7 @@ export class TablaProcedimientosComponent implements OnInit {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
         let val = true;
         this.updatePartidasPres.forEach(it => {
-          if (it.descripcion != undefined && !it.descripcion.trim())
+          if ((it.descripcion == undefined || !it.descripcion.trim()) || !it.idJurisdiccion)
             val = false;
         });
         if (val)
