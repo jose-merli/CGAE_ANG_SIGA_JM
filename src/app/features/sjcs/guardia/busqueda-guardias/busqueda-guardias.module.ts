@@ -3,7 +3,7 @@ import { BuscadorGuardiaComponent } from './buscador-guardia/buscador-guardia.co
 import { FiltrosGuardiaComponent } from './buscador-guardia/filtros-guardia/filtros-guardia.component';
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, TreeTable, TreeTableModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, TreeTable, TreeTableModule, PickList, PickListModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { TableModule, RowToggler } from 'primeng/table';
@@ -48,6 +48,7 @@ import { DatosConfColaComponent } from './buscador-guardia/gestion-guardia/datos
     PrecioModule,
     TarjetaResumenFijaModule,
     TablaDinamicaModule,
+    PickListModule,
 
   ],
   declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent],
