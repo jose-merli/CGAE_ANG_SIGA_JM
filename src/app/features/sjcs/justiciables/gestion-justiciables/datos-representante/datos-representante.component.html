@@ -81,7 +81,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" maxlength="20" pInputText (click)="compruebaDNI()"
+              <input [(ngModel)]="generalBody.nif" type="text" class="form-control" maxlength="20" pInputText (click)="compruebaDNIInput()"
                 [disabled]="!permisoEscritura" />
             </div>
             <div class="form-group col-lg-3 col-md-3 main-button pt-3">

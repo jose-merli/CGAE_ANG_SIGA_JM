@@ -21,10 +21,6 @@ export class GestionJusticiablesComponent implements OnInit {
 
   fichasPosibles;
   modoEdicion: boolean;
-  idProcedimiento;
-  messageShow: string;
-  acreditacionesItem;
-  modulosItem;
   body: JusticiableItem;
   justiciableBusquedaItem: JusticiableBusquedaItem;
   representanteBusquedaItem: JusticiableBusquedaItem;
@@ -38,12 +34,9 @@ export class GestionJusticiablesComponent implements OnInit {
   modoRepresentante: boolean = false;
   checkedViewRepresentante: boolean = false;
 
-  bodySend;
-  idRepresentantejg;
   permisoEscritura;
 
-  constructor(private location: Location,
-    private router: Router,
+  constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -239,7 +232,7 @@ export class GestionJusticiablesComponent implements OnInit {
         this.progressSpinner = false;
 
         if (justiciable != undefined && (justiciable.idpersona == null || justiciable.idpersona == undefined)) {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), "No existe registrado ese NIF en el sistema");
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.noExisteNifSistema"));
         } else {
 
           if (justiciable != undefined && this.body != undefined && justiciable.idpersona != this.body.idpersona) {
@@ -268,10 +261,6 @@ export class GestionJusticiablesComponent implements OnInit {
       summary: summary,
       detail: msg
     });
-  }
-
-  modoEdicionSend(event) {
-    this.modoEdicion = event.modoEdicion;
   }
 
   backTo() {

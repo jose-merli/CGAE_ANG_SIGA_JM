@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { DataTable } from 'primeng/primeng';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -28,7 +28,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  historico: boolean = false;
 
   permisoEscritura: boolean = true;
   datos = [];
@@ -44,13 +43,9 @@ export class AsuntosComponent implements OnInit, OnChanges {
   @Input() modoEdicion;
   @Input() fromJusticiable;
 
-
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService,
-    private translateService: TranslateService,
-    private router: Router) { }
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -112,7 +107,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     if (this.fromJusticiable) {
       fieldRol = "rol";
       headerRol = "administracion.usuarios.literal.rol";
-      widthRol = "10%";
+      widthRol = "5%";
     } else {
       fieldRol = "interesado";
       headerRol = "justiciaGratuita.justiciables.literal.interesados";
@@ -121,10 +116,10 @@ export class AsuntosComponent implements OnInit, OnChanges {
     }
 
     this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "10%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
-      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
+      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
       { field: fieldRol, header: headerRol, width: widthRol },
       { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
 
@@ -170,49 +165,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll) {
-
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
-      } else {
-        this.selectedDatos = this.datos;
-      }
-
-      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-        this.selectMultiple = true;
-        this.numSelected = this.selectedDatos.length;
-      }
-
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-    }
-
-  }
-
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectAll = false;
-
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
-
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
   }
 
   showMessage(severity, summary, msg) {

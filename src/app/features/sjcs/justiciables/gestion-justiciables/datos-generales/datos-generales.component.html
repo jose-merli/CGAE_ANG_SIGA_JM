@@ -66,7 +66,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" [maxLength]="100" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.nif" type="text" class="form-control" [maxLength]="20" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
                 pInputText/>
             </div>
             <div class="form-group col-lg-3 col-md-3">
@@ -103,7 +103,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.justiciables.literal.nacionalidad' | translate }}
               </label>
-              <p-dropdown class="select-form" [(ngModel)]="body.idpais" [options]="comboPais" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown class="select-form" [(ngModel)]="body.idpais" [options]="comboNacionalidad" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [filter]="true" filterBy="label,labelSinTilde" showClear="true" [disabled]="!permisoEscritura"></p-dropdown>
             </div>
           </div>
@@ -175,8 +175,18 @@
         <!-- info direcciones -->
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-1 input-ayuda">
-              <label style="font-weight: bold;">{{ 'envios.definir.literal.datosdestino' | translate }}</label>
+            <div class="form-group col-lg-12 col-md-3 input-ayuda row">
+              <div class="col-3">
+                <label style="font-weight: bold;">{{ 'envios.definir.literal.datosdestino' | translate }}</label>
+              </div>
+              <div *ngIf="!nuevo" class="col-9 row">
+                <div class="col-2 pr-0">
+                  <p-checkbox [(ngModel)]="body.checkNoInformadaDireccion" binary="true" (onChange)="onChangeDireccionNoInformada($event)"></p-checkbox>
+                </div>
+                <div class="col-8 pl-0">
+                  <label>{{ 'gratuita.personaJG.literal.noInformada' | translate }}</label>
+                </div>
+              </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.justiciables.literal.tipoVia' | translate }}</label>
@@ -230,7 +240,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"censo.ws.literal.codigopostal" | translate}} (*)
+                {{"censo.ws.literal.codigopostal" | translate}}
               </label>
               <input *ngIf="!poblacionExtranjera" type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigopostal" (ngModelChange)="onChangeCodigoPostal()"
                 [disabled]="!permisoEscritura" pInputText>
@@ -302,7 +312,7 @@
                               pInputText>
                           </div>
                           <div class="col-lg-2 col-md-2">
-                            <p-checkbox (onChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck" binary="true" [disabled]="!permisoEscritura"></p-checkbox>
+                            <p-checkbox (ngModelChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck" binary="true" [disabled]="!permisoEscritura"></p-checkbox>
                           </div>
                         </div>
                         <div *ngIf="col.field == 'tipo'">
@@ -373,6 +383,8 @@
 
             </div>
             <div class="text-right form-group main-button col-lg-12 col-md-12 ">
+              <button class="botontabla" (click)="restData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-undo" iconPos="left"
+                label="{{ 'general.boton.restablecer' | translate}}"></button>
               <button class="botontabla" (click)="newData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-plus" iconPos="left"
                 label="{{ 'general.boton.new' | translate}}"></button>
             </div>

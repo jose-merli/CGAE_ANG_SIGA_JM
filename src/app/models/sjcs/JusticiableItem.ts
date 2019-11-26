@@ -69,5 +69,8 @@ export class JusticiableItem {
   representante: number;
   parentesco: string;
   tipojusticiable: string;
+
+  checkNoInformadaDireccion: boolean;
+  datosAsuntos: any[];
   constructor() { }
 }

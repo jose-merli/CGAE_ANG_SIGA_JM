@@ -219,9 +219,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   callServiceConfirmationCreateRepresentante() {
+    let message = this.translateService.instant("justiciaGratuita.justiciables.message.crearNuevoRepresentante");
 
     this.confirmationService.confirm({
-      message: "No existe registrado ese NIF en el sistema, ¿desea crear un nuevo representante con el NIF introducido?",
+      message: message,
       icon: "fa fa-search ",
       accept: () => {
         this.showTarjeta = false;
@@ -250,7 +251,16 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       let idTipoIdentificacion = this.commonsService.compruebaDNI(this.generalBody.idtipoidentificacion, this.generalBody.nif);
       this.generalBody.idtipoidentificacion = idTipoIdentificacion;
     }
+  }
 
+  compruebaDNIInput() {
+
+    if (this.generalBody.nif != undefined && this.generalBody.nif != "" && this.generalBody.nif != null) {
+      let idTipoIdentificacion = this.commonsService.compruebaDNI(this.generalBody.idtipoidentificacion, this.generalBody.nif);
+      this.generalBody.idtipoidentificacion = idTipoIdentificacion;
+    } else {
+      this.generalBody = new JusticiableItem();
+    }
   }
 
   associate() {
@@ -260,7 +270,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       if (this.generalBody.nif != undefined && this.generalBody.nif != "" &&
         this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
 
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El representante no puede ser el propio justiciable");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
 
       } else {
 
@@ -303,7 +313,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
           this.translateService.instant("general.message.error.realiza.accion")
         });
     } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El justiciable es menor. Es obligatorio introducir su representante legal. Si no dispone del dato no introduzca fecha de nacimiento hasta que disponga de esa información");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
 
     }
 

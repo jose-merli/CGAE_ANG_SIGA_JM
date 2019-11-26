@@ -19,17 +19,11 @@ export class TablaJusticiablesComponent implements OnInit {
   msgs;
 
   selectedItem: number = 10;
-  selectAll;
   selectedDatos = [];
   numSelected = 0;
-  selectMultiple: boolean = false;
-  seleccion: boolean = false;
   historico: boolean = false;
-  institucionActual;
-  message;
 
   initDatos;
-  nuevo: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
 
@@ -76,18 +70,13 @@ export class TablaJusticiablesComponent implements OnInit {
 
   }
 
-  setItalic(dato) {
-    if (dato.fechaBaja == null) return false;
-    else return true;
-  }
-
   getCols() {
 
     this.cols = [
-      { field: "nif", header: "censo.fichaCliente.literal.identificacion" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "fechaModificacion", header: "censo.datosDireccion.literal.fechaModificacion" },
-      { field: "asuntos", header: "justiciaGratuita.justiciables.literal.asuntos" },
+      { field: "nif", header: "censo.fichaCliente.literal.identificacion", width: "10%" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
+      { field: "fechaModificacion", header: "censo.datosDireccion.literal.fechaModificacion", width: "10%" },
+      { field: "asuntos", header: "justiciaGratuita.justiciables.literal.asuntos", width: "30%" },
     ];
 
     this.rowsPerPage = [
@@ -116,46 +105,8 @@ export class TablaJusticiablesComponent implements OnInit {
     this.table.reset();
   }
 
-  onChangeSelectAll() {
-    // if (this.selectAll) {
-
-    //   if (this.historico) {
-    //     this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null) || dato.title == 'Fiesta Autonómica');
-    //   } else {
-    //     this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica');
-    //   }
-
-    //   if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-    //     this.selectMultiple = true;
-    //     this.numSelected = this.selectedDatos.length;
-    //   }
-
-    // } else {
-    //   this.selectedDatos = [];
-    //   this.numSelected = 0;
-    //   this.selectMultiple = false;
-    // }
-
-  }
-
-  // isSelectMultiple() {
-  //   if (this.permisoEscritura) {
-
-  //     this.selectMultiple = !this.selectMultiple;
-  //     if (!this.selectMultiple) {
-  //       this.selectedDatos = [];
-  //       this.numSelected = 0;
-  //     } else {
-  //       this.selectAll = false;
-  //       this.selectedDatos = [];
-  //       this.numSelected = 0;
-  //     }
-  //   }
-  // }
-
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
-    this.seleccion = false;
   }
 
   showMessage(severity, summary, msg) {

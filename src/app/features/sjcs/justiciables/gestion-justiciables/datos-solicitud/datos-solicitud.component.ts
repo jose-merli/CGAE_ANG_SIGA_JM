@@ -171,7 +171,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
     if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
       if (this.body.autorizaavisotelematico == "1") {
         this.body.autorizaavisotelematico = undefined;
-        this.showMessage("info", this.translateService.instant("general.message.informacion"), "Es necesario tener un correo electronico para poder recibir notificaciones");
+        this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("usticiaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
       }
     }
   }
@@ -179,7 +179,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   save() {
     if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
       if (this.body.autorizaavisotelematico == "1") {
-        this.showMessage("info", this.translateService.instant("general.message.informacion"), "Es necesario tener un correo electronico para poder recibir notificaciones");
+        this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("usticiaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
       } else {
         this.callServiceSave();
       }

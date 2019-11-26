@@ -38,6 +38,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   comboRegimenConyugal;
   comboMinusvalia;
   comboPais;
+  comboNacionalidad;
   comboProvincia;
   poblacionBuscada;
   comboPoblacion;
@@ -64,6 +65,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   count: number = 1;
   selectedItem;
   showTarjetaPermiso: boolean = false;
+  mess
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
@@ -106,12 +108,14 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
           } else {
             this.body = new JusticiableItem();
-
           }
 
           if (this.body.idpersona == undefined) {
             this.modoEdicion = false;
             this.body.fechaalta = new Date();
+            this.body.sexo = "N";
+            this.body.regimenConyugal = "I";
+            this.body.idpais = "191";
           } else {
             this.modoEdicion = true;
           }
@@ -199,7 +203,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     } else {
       this.menorEdadJusticiable = true;
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El justiciable es menor. Es obligatorio introducir su representante legal. Si no dispone del dato no introduzca fecha de nacimiento hasta que disponga de esa información");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
     }
 
 
@@ -447,6 +451,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.sigaServices.get("direcciones_comboPais").subscribe(
       n => {
         this.comboPais = n.combooItems;
+        this.comboNacionalidad = n.combooItems;
+
+        this.comboNacionalidad.push({ label: "DESCONOCIDO", value: "D" });
         this.commonsService.arregloTildesCombo(this.comboPais);
         this.progressSpinner = false;
       },
@@ -669,7 +676,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   }
 
   onChangeCodigoPostal() {
-    if (this.body.idpaisdir1 == "191") {
+    if (this.body.idpaisdir1 == "191" || this.body.idpaisdir1 == null || this.body.idpaisdir1 == undefined) {
       if (
         this.commonsService.validateCodigoPostal(this.body.codigopostal) &&
         this.body.codigopostal.length == 5) {
@@ -681,12 +688,15 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.body.idpoblacion = "";
           this.comboPoblacion = [];
           this.isDisabledProvincia = true;
+          this.isDisabledPoblacion = false;
         }
         this.codigoPostalValido = true;
       } else {
         this.codigoPostalValido = false;
         this.isDisabledPoblacion = true;
         this.provinciaSelecionada = "";
+        this.body.idpoblacion = undefined;
+        this.body.idprovincia = undefined;
       }
     }
   }
@@ -814,7 +824,6 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       if (this.body.idpaisdir1 != "191") {
         this.poblacionExtranjera = true;
-        this.body.idprovincia = undefined;
       } else {
         this.poblacionExtranjera = false;
       }
@@ -858,9 +867,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (checkedFind != undefined) {
 
       let icon = "fa fa-edit";
+      let message = this.translateService.instant("justiciaGratuita.justiciables.message.cambiarTelefonoPreferente");
 
       this.confirmationService.confirm({
-        message: "¿Desea cambiar el teléfono marcado como preferente?",
+        message: message,
         icon: icon,
         accept: () => {
 
@@ -945,7 +955,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.nif != undefined && this.body.nif.trim() != "" &&
       this.body.nombre != undefined && this.body.nombre.trim() != "" &&
       this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
-      this.body.codigopostal != undefined && this.body.codigopostal.trim() != "" &&
       this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" &&
       this.faxValido && this.emailValido
     ) {
@@ -1012,6 +1021,16 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.edicionEmail)
       this.edicionEmail = false;
     else this.edicionEmail = true;
+  }
+
+  onChangeDireccionNoInformada(event) {
+    this.body.checkNoInformadaDireccion = event;
+  }
+
+  restData() {
+    if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    this.faxValido = true;
+    this.emailValido = true;
   }
 
 }
