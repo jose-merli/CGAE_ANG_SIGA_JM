@@ -28,6 +28,10 @@ import { TablaDinamicaModule } from '../../../../commons/tabla-dinamica/tabla-di
 import { DatosCalendariosGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-calendarios-guardias/datos-calendarios-guardias.component';
 import { DatosBaremosComponent } from './buscador-guardia/gestion-guardia/datos-baremos/datos-baremos.component';
 import { DatosConfColaComponent } from './buscador-guardia/gestion-guardia/datos-conf-cola/datos-conf-cola.component';
+import { DatosColaGuardiaComponent } from './buscador-guardia/gestion-guardia/datos-cola-guardia/datos-cola-guardia.component';
+import { DatosInscripcionesComponent } from './buscador-guardia/gestion-guardia/datos-inscripciones/datos-inscripciones.component';
+import { DatosIncompatibilidadesComponent } from './buscador-guardia/gestion-guardia/datos-incompatibilidades/datos-incompatibilidades.component';
+import { CalendariosComponent } from './buscador-guardia/gestion-guardia/calendarios/calendarios.component';
 
 @NgModule({
   imports: [
@@ -51,7 +55,7 @@ import { DatosConfColaComponent } from './buscador-guardia/gestion-guardia/datos
     PickListModule,
 
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosInscripcionesComponent, DatosIncompatibilidadesComponent, CalendariosComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,

@@ -24,7 +24,7 @@ export class TablaGuardiasComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-
+  buscadores = []
   message;
 
   initDatos;
@@ -57,17 +57,16 @@ export class TablaGuardiasComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
+
   }
 
   isSelectMultiple() {
-    this.selectAll = false;
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {
-        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       }
@@ -96,7 +95,7 @@ export class TablaGuardiasComponent implements OnInit {
       { field: "letradosIns", header: "dato.jgr.guardia.guardias.letradosInscritos" },
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
       {
         label: 10,
@@ -167,7 +166,7 @@ export class TablaGuardiasComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data);
+      this.persistenceService.setDatos(evento.data.idGuardia);
       this.router.navigate(["/gestionGuardias"]);
     } else {
 

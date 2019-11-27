@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { Location } from '@angular/common';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class GestionGuardiaComponent implements OnInit {
   modoEdicion: boolean;
   permisoEscritura: boolean = false;
   historico: boolean = false;
-
+  progressSpinner: boolean = false;
+  datosRedy = new EventEmitter<any>();
   titulo = "justiciaGratuita.oficio.turnos.inforesumen";
   infoResumen = [
     {
@@ -39,26 +41,34 @@ export class GestionGuardiaComponent implements OnInit {
     }
   ]
   constructor(private persistenceService: PersistenceService,
-    private location: Location) { }
+    private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
     if (this.persistenceService.getDatos() != undefined) {
-      this.datos = this.persistenceService.getDatos();
-      if (this.datos.fechabaja != null) {
-        this.historico = true;
-        this.persistenceService.setHistorico(true);
-      } else this.persistenceService.setHistorico(false);
-
+      this.search();
       this.modoEdicion = true;
     } else {
-      this.datos = new GuardiaItem();
       this.modoEdicion = false;
     }
     if (this.persistenceService.getPermisos())
-      this.permisoEscritura = true;
+      this.permisoEscritura = this.persistenceService.getPermisos();
 
   }
+
+  search() {
+    this.sigaServices.getParam("busquedaGuardias_getGuardia", "?idGuardia=" + this.persistenceService.getDatos()).subscribe(
+      n => {
+
+        this.sigaServices.notifysendDatosRedy(n);
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      })
+  }
+
 
 
   backTo() {

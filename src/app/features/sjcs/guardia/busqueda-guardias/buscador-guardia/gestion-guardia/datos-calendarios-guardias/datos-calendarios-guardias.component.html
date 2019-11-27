@@ -54,7 +54,7 @@
             <label>
               {{ "dato.jgr.guardia.guardias.duracion" | translate }} (*)
             </label>
-            <input type="text" class="form-control" pInputText>
+            <input type="text" [(ngModel)]="body.diasGuardia" class="form-control" pInputText>
             <!-- <input [(ngModel)]="body.duracion" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
               pInputText> -->
           </div>
@@ -64,7 +64,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasGuardia" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
             <!-- <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
               filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
               [disabled]="!permisoEscritura || historico" [showClear]="true">
@@ -76,7 +76,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.periodo" | translate}}
             </label>
-            <input type="text" class="form-control" pInputText>
+            <input type="text" [(ngModel)]="body.diasPeriodo" class="form-control" pInputText>
 
           </div>
 
@@ -85,7 +85,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasTurno" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
 
 
           </div>
@@ -95,7 +95,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.diasSeparacionGuardias" | translate}} (*)
             </label>
-            <input type="text" class="form-control" pInputText>
+            <input type="text" [(ngModel)]="body.diasSeparacionGuardias" class="form-control" pInputText>
 
           </div>
 
@@ -183,11 +183,17 @@
               <div class="col-2">
                 <p-checkbox binary="true"></p-checkbox>
               </div>
-
-
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div *ngIf="openFicha" class="card-footer ">
+    <div class="text-right main-button ">
+      <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+        label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+    </div>
+  </div>
+</div>

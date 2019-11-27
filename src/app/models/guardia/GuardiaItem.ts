@@ -1,31 +1,41 @@
 export class GuardiaItem {
 
-    idGuardia: string;
-    idTurno: string;
-    turno: string;
-    nombre: string;
-    area: string;
-    materia: string;
-    grupoZona: string;
-    zona: string;
-    obligatoriedad: string;
-    duracion: string;
-    partidoJudicial: string;
-    grupoFacturacion: string;
-    jurisdiccion: string;
-    partidaPresupuestaria: string;
-    tipoTurno: string;
-    tipoGuardia: string;
-    diasFe: string;
-    diasLab: string;
-    tipoDia: string;
-    descripcionFact: string;
-    descripcionPago: string;
-    letradosGuardia: string;
-    letradosIns: string;
-    historico: string;
-    fechabaja: string;
-    validaJustificacion: string;
+    idGuardia;
+    idTurno;
+    idOrdenacionColas;
+    idPersonaUltimo;
+    turno;
+    nombre;
+    descripcion;
+    descripcionPago;
+    descripcionFacturacion;
+    area;
+    materia;
+    grupoZona;
+    zona;
+    obligatoriedad;
+    duracion;
+    validaJustificacion;
+    partidaJudicial;
+    jurisdiccion;
+    grupoFacturacion;
+    partidaPresupuestaria;
+    tipoTurno;
+    tipoGuardia;
+    tipoDia;
+    tipoDiasGuardia;
+    tipoDiasPeriodo;
+    letradosGuardia;
+    letradosIns;
+    seleccionLab;
+    seleccionFes;
+    diasPeriodo;
+    diasGuardia;
+    diasSeparacionGuardias;
+    envioCentralita;
+    porGrupos;
+    fechabaja;
+    historico: boolean;
     constructor() { }
 
 }

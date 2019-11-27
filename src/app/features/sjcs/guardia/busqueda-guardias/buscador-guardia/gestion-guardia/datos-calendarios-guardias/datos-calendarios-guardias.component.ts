@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { datos_combos } from '../../../../../../../utils/datos_combos';
+import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
+import { PersistenceService } from '../../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-datos-calendarios-guardias',
@@ -9,66 +11,62 @@ import { datos_combos } from '../../../../../../../utils/datos_combos';
 })
 export class DatosCalendariosGuardiasComponent implements OnInit {
 
-  openFicha = false;
-  modoEdicion = false
+  openFicha: boolean = false;
   selectLaborables = false;
   selectFestividades = false;
-
+  body: GuardiaItem = new GuardiaItem();
   infoDiasLab = "";
   infoDiasFes = "";
-
+  historico = false;
   laborables;
   festividades;
+  bodyInicial;
+
+
+  @Input() modoEdicion: boolean = false;
+  @Input() permisoEscritura: boolean = false;
+
   comboUnidad = datos_combos.comboUnidadesTiempo;
 
-  constructor(private sigaServices: SigaServices) { }
+  constructor(private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
     if (this.modoEdicion)
       this.openFicha = true;
-    this.search();
-
-
 
     this.festividades = this.creaSemana();
     this.laborables = this.creaSemana();
-
-  }
-
-  search() {
-    this.sigaServices.getParam(
-      "busquedaGuardias_getGuardia",
-      "?idGuardia=" + '1003').subscribe(
-        n => {
-          if (n != null && n.diasFes != null && n.diasFes.length > 0)
-            Array.from(n.diasFes).forEach(element => {
-              this.festividades.forEach(it => {
-                if (it.label == element)
-                  it.value = true;
-              });
+    this.sigaServices.datosRedy$.subscribe(
+      n => {
+        this.body = n;
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        if (n.seleccionFes && n.seleccionFes.length > 0)
+          Array.from(n.seleccionFes).forEach(element => {
+            this.festividades.forEach(it => {
+              if (it.label == element)
+                it.value = true;
             });
-          if (n != null && n.diasLab != null && n.diasLab.length > 0)
-            Array.from(n.diasLab).forEach(element => {
-              this.laborables.forEach(it => {
-                if (it.label == element)
-                  it.value = true;
-              })
-            });
-          this.changeFestividades();
-          this.changeLaborables();
-        },
-        err => {
-          console.log(err);
-        })
+          });
+        if (n.seleccionLab && n.seleccionLab.length > 0)
+          Array.from(n.seleccionLab).forEach(element => {
+            this.laborables.forEach(it => {
+              if (it.label == element)
+                it.value = true;
+            })
+          });
+        this.changeFestividades();
+        this.changeLaborables();
+      });
+    if (this.persistenceService.getHistorico())
+      this.historico = this.persistenceService.getHistorico();
   }
-
 
   onChangeSeleccLaborables() {
     if (!this.selectLaborables)
       this.laborables.map(it => {
         it.value = false
         this.infoDiasLab = ""
-
         return it;
       });
     else
@@ -158,7 +156,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.modoEdicion)
+      this.openFicha = !this.openFicha;
   }
 
   creaSemana() {
@@ -171,5 +170,21 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     });
     return semana;
   }
+  save() { }
 
+  rest() {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial))
+    this.changeFestividades();
+    this.changeLaborables();
+  }
+
+  disabledSave() {
+    if (!this.historico && (this.body.diasSeparacionGuardias && this.body.diasSeparacionGuardias.trim())
+      && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+
+
+
+    }
+
+  }
 }

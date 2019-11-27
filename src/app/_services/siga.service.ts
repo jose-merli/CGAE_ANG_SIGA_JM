@@ -744,6 +744,8 @@ export class SigaServices {
   private habilitarDocs = new Subject<any>();
   private desHabilitarDocs = new Subject<any>();
   private sendFechaBaja = new Subject<any>();
+  private sendDatosRedy = new Subject<any>();
+
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
@@ -753,6 +755,7 @@ export class SigaServices {
   habilitarDocs$ = this.habilitarDocs.asObservable();
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
   sendFechaBaja$ = this.sendFechaBaja.asObservable();
+  datosRedy$ = this.sendDatosRedy.asObservable();
 
 
   constructor(
@@ -1020,6 +1023,10 @@ export class SigaServices {
 
   notifysendFechaBaja(fecha) {
     this.sendFechaBaja.next(fecha);
+  }
+
+  notifysendDatosRedy(datos) {
+    this.sendDatosRedy.next(datos);
   }
 
   postSendContentAndParameter(

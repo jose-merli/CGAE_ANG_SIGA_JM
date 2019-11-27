@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-11 col-md-10 cabeza">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+            <label class="mr-auto title-ficha">{{'justiciaGratuita.guardia.gestion.configuracionCola' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between sub">
             <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
@@ -40,27 +40,23 @@
     </div>
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque col-6">
+        <div class="bloque col-6 ">
 
-          <div class="form-row">
+          <div class="form-row justify-content-between">
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.guardia.gestion.configuracionCola" | translate }}</label>
             </div>
 
             <!-- Por Grupos -->
-            <div class="form-group col-12 row p-0 m-1">
-              <div class="col-6 p-0">
-                <label>
-                  <strong>{{"justiciaGratuita.guardia.gestion.porGrupos" | translate}} (*)</strong>
-                </label>
-              </div>
-              <div class="col-3 p-0">
-                <p-checkbox [(ngModel)]="checkGrupos" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
-              </div>
+            <div class="form-group col-12 row p-4 m-1">
+              <label>
+                <strong>{{"justiciaGratuita.guardia.gestion.porGrupos" | translate}} </strong>
+              </label>
+              <p-checkbox [(ngModel)]="checkGrupos" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
             </div>
 
             <!-- Letrados Guardia -->
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-12 col-md-12 p-4">
               <label>
                 {{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}}
               </label>
@@ -69,15 +65,11 @@
 
 
             <!-- Rotar Componentes automaticamente -->
-            <div class="form-group col-12 row p-0 m-1">
-              <div class="col-9 p-0">
-                <label>
-                  <strong>{{"justiciaGratuita.guardia.gestion.sincCentralGuardias" | translate}} (*)</strong>
-                </label>
-              </div>
-              <div class="col-3 p-0">
-                <p-checkbox [(ngModel)]="checkComponentes" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
-              </div>
+            <div class="form-group col-12 row p-4 m-1">
+              <label>
+                <strong>{{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}} (*)</strong>
+              </label>
+              <p-checkbox [(ngModel)]="checkComponentes" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
             </div>
           </div>
         </div>
@@ -86,30 +78,29 @@
 
         <div class="bloque col-6">
           <div class="form-row p-4">
-            <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
-              targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" filterBy="label"
-              dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}"
-              (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
-              targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}"
-              [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }"
-              [disabled]="soloLectura">
-              <ng-template let-item pTemplate="item">
-                <div>{{ item.por_filas}} {{ item.orden}}</div>
-              </ng-template>
-            </p-pickList>
+            <div class="col-12 ">
+              <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
+                targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" filterBy="label"
+                dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}"
+                (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
+                targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}"
+                [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }"
+                [disabled]="soloLectura">
+                <ng-template let-item pTemplate="item">
+                  <div>{{ item.por_filas}} {{ item.orden}}</div>
+                </ng-template>
+              </p-pickList>
+            </div>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class="card-footer ">
-        <div class="text-right main-button ">
-          <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
-            label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        </div>
+    </div>
+    <div *ngIf="openFicha" class="card-footer ">
+      <div class="text-right main-button ">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
-
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-  </div>
+</div>

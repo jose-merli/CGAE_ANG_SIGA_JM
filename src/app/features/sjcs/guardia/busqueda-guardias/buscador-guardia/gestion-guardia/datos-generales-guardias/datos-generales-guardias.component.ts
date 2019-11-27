@@ -11,40 +11,54 @@ import { CommonsService } from '../../../../../../../_services/commons.service';
 })
 export class DatosGeneralesGuardiasComponent implements OnInit {
 
-  @Input() datos = [];
+  body: GuardiaItem = new GuardiaItem()
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
-  body: GuardiaItem = new GuardiaItem();
   openFicha: boolean = true;
   historico: boolean = false;
   isDisabledGuardia: boolean = true;
-
+  datos;
   cols;
   comboTipoGuardia = [];
   comboGuardia = [];
   comboTurno = [];
-  buscaGuardia: GuardiaItem = new GuardiaItem();
-
+  bodyInicial;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService) { }
 
   ngOnInit() {
     this.getCols();
-    this.getData();
     this.historico = this.persistenceService.getHistorico()
     this.getComboTipoGuardia();
     this.getComboTurno();
+
+    if (this.persistenceService.getDatos())
+      this.sigaService.datosRedy$.subscribe(
+        data => {
+          this.body = data
+          this.bodyInicial = data
+          if (data.idGuardia) {
+            this.getComboGuardia()
+          }
+        });
+
   }
 
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
 
+
   disabledSave() {
-    return false;
+    if (!this.historico && (this.body.nombre && this.body.nombre.trim())
+      && (this.body.descripcion && this.body.descripcion.trim())
+      && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+      return false;
+    } else return true;
+
   }
 
   getCols() {
@@ -60,32 +74,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu" },
       ];
   }
-  getData() {
-    if (!this.modoEdicion)
-      this.datos = [
-        {
-          turno: "Turno 1",
-          guardia: "Guardia 1"
-        },
-        {
-          turno: "Turno 2",
-          guardia: "Guardia 2"
-        },
-      ]
-    else
-      this.datos = [
-        {
-          vinculacion: "Principal",
-          turno: "Turno 1",
-          guardia: "Guardia1"
-        },
-        {
-          vinculacion: "Vinculada",
-          turno: "Turno 2",
-          guardia: "Guardia 2"
-        },
-      ]
-  }
+
 
   getComboTipoGuardia() {
     this.sigaService.get("busquedaGuardia_tiposGuardia").subscribe(
@@ -116,8 +105,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     this.comboTipoGuardia = [];
 
     if (this.body.idTurno != undefined && this.body.idTurno != "") {
-      this.isDisabledGuardia = false;
-      this.buscaGuardia.idTurno = this.body.idTurno;
       this.getComboGuardia();
     } else {
       this.isDisabledGuardia = true;
@@ -129,7 +116,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     this.sigaService.getParam(
       "busquedaGuardia_guardia", "?idTurno=" + this.body.idTurno).subscribe(
         data => {
-
+          this.isDisabledGuardia = false;
           this.comboGuardia = data.combooItems
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
@@ -140,9 +127,12 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
   }
 
+  rest() {
+    this.body = this.bodyInicial
+
+  }
   save() {
-    this.modoEdicion = !this.modoEdicion;
-    this.getData();
+    this.modoEdicion = true;
     this.getCols();
   }
 }

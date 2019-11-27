@@ -49,7 +49,7 @@
           <label>
             {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
           </label>
-          <input [(ngModel)]="body.nombre" maxlength="30" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+          <input [(ngModel)]="body.nombre" maxlength="30" maxlength="18" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
             [maxLength]="200" pInputText>
         </div>
 
@@ -58,8 +58,8 @@
           <label>
             {{"general.description" | translate}} (*)
           </label>
-          <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-            pInputText>
+          <input [(ngModel)]="body.descripcion" maxlength="150" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+            [maxLength]="200" pInputText>
         </div>
 
         <!-- Tipo Guardia -->
@@ -67,7 +67,7 @@
           <label>
             {{"dato.jgr.guardia.guardias.tipoGuardia" | translate}} (*)
           </label>
-          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoGuardia'
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.tipoGuardia'
             (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTipoGuardia"
             [disabled]="historico || !permisoEscritura" disabled="true" [showClear]="true">
           </p-dropdown>
@@ -82,7 +82,7 @@
             </label>
           </div>
           <div class="col-3 p-0">
-            <p-checkbox [(ngModel)]="movilCheck" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
+            <p-checkbox [(ngModel)]="body.envioCentralita" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
           </div>
         </div>
 
@@ -92,8 +92,8 @@
             <label>
               {{"general.description" | translate}} {{"menu.facturacion" | translate}}
             </label>
-            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control" pInputTextarea [(ngModel)]="body.descripcionFact"
-              autoResize="autoResize" maxlength="3999"></textarea>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="body.descripcionFacturacion" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
 
           <!-- Descripcion Pago -->
@@ -101,8 +101,8 @@
             <label>
               {{"general.description" | translate}} {{"justiciaGratuita.guardia.gestion.pago" | translate}}
             </label>
-            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control" pInputTextarea [(ngModel)]="body.descripcionPago"
-              autoResize="autoResize" maxlength="3999"></textarea>
+            <textarea name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="body.descripcionPago" autoResize="autoResize" maxlength="3999"></textarea>
           </div>
         </div>
 
@@ -213,8 +213,4 @@
       </div>
     </div>
   </div>
-</div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
 </div>

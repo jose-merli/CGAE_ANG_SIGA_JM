@@ -3,6 +3,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../../_services/commons.service';
+import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 
 @Component({
   selector: 'app-datos-conf-cola',
@@ -16,31 +17,43 @@ export class DatosConfColaComponent implements OnInit {
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+
+  pesosSeleccionadosTarjeta
   body;
+  bodyInicial;
   pesosExistentes: any[];
   pesosExistentesInicial: any[];
   pesosSeleccionados: any[];
   pesosSeleccionadosInicial: any[];
   checkGrupos: boolean;
   checkComponentes: boolean;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   historico: boolean = false;
+
   isDisabledGuardia: boolean = true;
   constructor(private persistenceService: PersistenceService,
-    private sigaService: SigaServices,
     private commonServices: CommonsService,
     private sigaServices: SigaServices) { }
 
   ngOnInit() {
     this.historico = this.persistenceService.getHistorico()
+    this.sigaServices.datosRedy$.subscribe(
+      data => {
+        this.body = data;
+        this.bodyInicial = data
+
+        this.getPerfilesSeleccionados();
+
+      })
   }
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.modoEdicion)
+      this.openFicha = !this.openFicha;
   }
 
   disabledSave() {
-    return false;
+
   }
 
 
@@ -48,6 +61,8 @@ export class DatosConfColaComponent implements OnInit {
   rest() {
     this.pesosExistentes = JSON.parse(JSON.stringify(this.pesosExistentesInicial));
     this.pesosSeleccionados = JSON.parse(JSON.stringify(this.pesosSeleccionadosInicial));
+    this.body = this.bodyInicial
+
     this.arreglaOrden();
   }
   arreglaOrden() {
@@ -91,6 +106,8 @@ export class DatosConfColaComponent implements OnInit {
       });
     }
   }
+
+
   cambioSeleccionados(event) {
     event.items.forEach(element => {
       let find = this.pesosExistentes.findIndex(x => x.por_filas == event.items[0].por_filas);
@@ -118,54 +135,59 @@ export class DatosConfColaComponent implements OnInit {
   }
 
   getPerfilesSeleccionados() {
-    this.sigaServices
-      .post("combossjcs_ordenCola", this.turnosItem)
-      .subscribe(
-        n => {
-          // coger etiquetas de una persona juridica
-          this.pesosExistentes = JSON.parse(n["body"]).colaOrden;
-          this.pesosExistentes.forEach(element => {
-            if (element.por_filas == "ALFABETICOAPELLIDOS") {
-              element.por_filas = "Apellidos y nombre"
-            }
-            if (element.por_filas == "ANTIGUEDADCOLA") {
-              element.por_filas = "Antigüedad en la cola"
-            }
-            if (element.por_filas == "NUMEROCOLEGIADO") {
-              element.por_filas = "Nº Colegiado"
-            }
-            if (element.por_filas == "FECHANACIMIENTO") {
-              element.por_filas = "Edad Colegiado"
-            }
-            if (element.orden == "asc") {
-              element.orden = "ascendente"
-            }
-            if (element.orden == "desc") {
-              element.orden = "descendente"
-            }
-          });
-
-          this.pesosExistentesInicial = JSON.parse(
-            JSON.stringify(this.pesosExistentes)
-          );
-
-          //por cada perfil seleccionado lo eliminamos de la lista de existentes
-          // if (this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial) {
-          //   this.perfilesSeleccionados.forEach(element => {
-          //     let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados, element);
-          //     if (x > -1) {
-          //       this.perfilesNoSeleccionados.splice(x, 1);
-          //     }
-          //   });
-          //   this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
-          // }
-        },
-        err => {
-          console.log(err);
-        }, () => {
-          this.getPerfilesExtistentes();
-        }
+    if (!this.modoEdicion) {
+      this.pesosExistentes = [];
+      let a = { numero: "4", por_filas: "Antigüedad en la cola", orden: "ascendente" };
+      let b = { numero: "0", por_filas: "Apellidos y nombre", orden: "ascendente" };
+      let c = { numero: "0", por_filas: "Nº Colegiado", orden: "ascendente" };
+      let d = { numero: "0", por_filas: "Edad Colegiado", orden: "ascendente" };
+      this.pesosExistentes.push(a);
+      this.pesosExistentes.push(b);
+      this.pesosExistentes.push(c);
+      this.pesosExistentes.push(d);
+      this.getPerfilesExtistentes();
+      this.pesosExistentesInicial = JSON.parse(
+        JSON.stringify(this.pesosExistentes)
       );
+    } else {
+      this.sigaServices
+        .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
+        .subscribe(
+          n => {
+            // coger etiquetas de una persona juridica
+            this.pesosExistentes = n.colaOrden;
+            this.pesosExistentes.forEach(element => {
+              if (element.por_filas == "ALFABETICOAPELLIDOS") {
+                element.por_filas = "Apellidos y nombre"
+              }
+              if (element.por_filas == "ANTIGUEDADCOLA") {
+                element.por_filas = "Antigüedad en la cola"
+              }
+              if (element.por_filas == "NUMEROCOLEGIADO") {
+                element.por_filas = "Nº Colegiado"
+              }
+              if (element.por_filas == "FECHANACIMIENTO") {
+                element.por_filas = "Edad Colegiado"
+              }
+              if (element.orden == "asc") {
+                element.orden = "ascendente"
+              }
+              if (element.orden == "desc") {
+                element.orden = "descendente"
+              }
+            });
+
+            // this.pesosExistentesInicial = JSON.parse(
+            //   JSON.stringify(this.pesosExistentes)
+            // );
+          },
+          err => {
+            console.log(err);
+          }, () => {
+            this.getPerfilesExtistentes();
+          }
+        );
+    }
   }
   getPerfilesExtistentes() {
 

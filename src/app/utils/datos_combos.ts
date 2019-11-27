@@ -2,19 +2,19 @@ export const datos_combos: any = {
     comboUnidadesTiempo: [
         {
             label: "Días Naturales",
-            value: "1"
+            value: "D"
         },
         {
             label: "Semanas Naturales",
-            value: "2"
+            value: "S"
         },
         {
             label: "Quincenas Naturales",
-            value: "3"
+            value: "Q"
         },
         {
             label: "MesesNaturales",
-            value: "4"
+            value: "M"
         },
     ],
 

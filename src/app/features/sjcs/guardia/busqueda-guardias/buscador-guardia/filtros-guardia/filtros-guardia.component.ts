@@ -207,7 +207,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
   }
   onChangeSubZona() {
-    this.filtros.partidoJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+    this.filtros.partidaJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
   }
 
 
