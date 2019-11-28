@@ -70,7 +70,6 @@ export class JusticiableItem {
   parentesco: string;
   tipojusticiable: string;
 
-  checkNoInformadaDireccion: boolean;
   datosAsuntos: any[];
   constructor() { }
 }

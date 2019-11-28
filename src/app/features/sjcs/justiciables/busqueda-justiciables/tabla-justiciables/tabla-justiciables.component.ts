@@ -27,11 +27,14 @@ export class TablaJusticiablesComponent implements OnInit {
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
 
+  buscadores = [];
+  first = 0;
+
   //Resultados de la busqueda
   @Input() datos;
   @Input() modoRepresentante;
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table") tabla: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
 
@@ -49,6 +52,12 @@ export class TablaJusticiablesComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
+    if (this.persistenceService.getPaginacion() != undefined) {
+      let paginacion = this.persistenceService.getPaginacion();
+      this.first = paginacion.paginacion;
+      this.selectedItem = paginacion.selectedItem;
+    }
+
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
@@ -56,6 +65,13 @@ export class TablaJusticiablesComponent implements OnInit {
 
 
   openTab(evento) {
+
+    let paginacion = {
+      paginacion: this.tabla.first,
+      selectedItem: this.selectedItem
+    };
+
+    this.persistenceService.setPaginacion(paginacion);
 
     if (!this.modoRepresentante) {
       this.persistenceService.clearDatos();
@@ -78,6 +94,10 @@ export class TablaJusticiablesComponent implements OnInit {
       { field: "fechaModificacion", header: "censo.datosDireccion.literal.fechaModificacion", width: "10%" },
       { field: "asuntos", header: "justiciaGratuita.justiciables.literal.asuntos", width: "30%" },
     ];
+
+    this.cols.forEach(element => {
+      this.buscadores.push("");
+    });
 
     this.rowsPerPage = [
       {
@@ -102,7 +122,7 @@ export class TablaJusticiablesComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
+    this.tabla.reset();
   }
 
   actualizaSeleccionados(selectedDatos) {

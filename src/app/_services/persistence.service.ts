@@ -6,6 +6,7 @@ export class PersistenceService {
 
     private filtrosName: string = "filtros";
     private filtrosAuxName: string = "filtroAux";
+    private paginacionName: string = "paginacion";
     private datosName: string = "datos";
     private bodyName: string = "body";
     private bodyAuxName: string = "bodyAux";
@@ -39,6 +40,19 @@ export class PersistenceService {
 
     clearFiltrosAux() {
         sessionStorage.removeItem(this.filtrosAuxName);
+    }
+
+    setPaginacion(data: any) {
+        sessionStorage.setItem(this.paginacionName, JSON.stringify(data));
+    }
+
+    getPaginacion() {
+        let data = sessionStorage.getItem(this.paginacionName);
+        return JSON.parse(data);
+    }
+
+    clearPaginacion() {
+        sessionStorage.removeItem(this.paginacionName);
     }
 
     setDatos(data: any) {
@@ -129,7 +143,7 @@ export class PersistenceService {
         this.clearFichasPosibles();
         this.clearBody();
         this.clearBodyAux();
-
+        this.clearPaginacion();
     }
 
 }

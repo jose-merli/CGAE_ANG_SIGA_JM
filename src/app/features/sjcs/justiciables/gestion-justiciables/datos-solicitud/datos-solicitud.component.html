@@ -50,18 +50,18 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "gratuita.personaJG.literal.autorizaavisotel" | translate }}</label>
           <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.autorizaavisotelematico"
-            [options]="comboAutorizaAvisotel" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeAutorizaAvisoTelematico()"
-            [disabled]="!permisoEscritura"></p-dropdown>
+            [options]="comboAutorizaAvisotel" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"
+            [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "gratuita.personaJG.literal.solicitajg" | translate }}</label>
           <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.asistidosolicitajg"
-            [options]="comboSolicitajg" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+            [options]="comboSolicitajg" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "gratuita.personaJG.literal.autorizaeejg" | translate }} </label>
           <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.asistidoautorizaeejg"
-            [options]="comboAutorizaEjg" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+            [options]="comboAutorizaEjg" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura" [showClear]="true"></p-dropdown>
         </div>
       </div>
     </div>

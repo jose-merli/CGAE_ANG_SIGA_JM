@@ -12,13 +12,13 @@
       <div class="form-row">
 
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
-          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText pInputText>
+          <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
+          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.apellidos' pInputText pInputText>
         </div>
 
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
-          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.apellidos' pInputText pInputText>
+          <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
+          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText pInputText>
         </div>
 
         <div class="row col-lg-3 col-md-3">
@@ -53,7 +53,7 @@
         <div class="row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'censo.ws.literal.codigopostal' | translate }}</label>
-            <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxLength="10"
+            <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxlength="10"
               pInputText>
           </div>
         </div>
@@ -71,13 +71,13 @@
         <div class="form-row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'gratuita.personaJG.literal.anioAsuntoDesde' | translate }}</label>
-            <input type="text" name="anioDesde" value="" class="box" class="form-control" [(ngModel)]='filtros.anioDesde' maxLength="4"
-              pInputText>
+            <input type="number" name="anioDesde" class="box" class="form-control" [(ngModel)]='filtros.anioDesde' max="9999" min="1900"
+              pInputText (input)='editarCompleto($event,filtros.anioDesde)'>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ 'gratuita.personaJG.literal.hasta' | translate }}</label>
-            <input type="text" name="anioHasta" value="" class="box" class="form-control" [(ngModel)]='filtros.anioHasta' maxLength="4"
-              pInputText>
+            <input type="number" name="anioHasta" class="box" class="form-control" [(ngModel)]='filtros.anioHasta' max="9999" min="1900"
+              pInputText (input)='editarCompleto($event,filtros.anioHasta)'>
           </div>
         </div>
         <div class="form-row col-lg-3 col-md-3">

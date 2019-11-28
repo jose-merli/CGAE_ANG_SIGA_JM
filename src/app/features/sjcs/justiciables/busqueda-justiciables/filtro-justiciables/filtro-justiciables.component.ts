@@ -47,6 +47,7 @@ export class FiltroJusticiablesComponent implements OnInit {
       if (this.persistenceService.getFiltrosAux() != undefined) {
         this.filtros = this.persistenceService.getFiltrosAux();
         this.isOpen.emit(false)
+        this.configuracionFiltros();
 
       } else {
         this.filtros = new JusticiableBusquedaItem();
@@ -56,10 +57,27 @@ export class FiltroJusticiablesComponent implements OnInit {
       if (this.persistenceService.getFiltros() != undefined) {
         this.filtros = this.persistenceService.getFiltros();
         this.isOpen.emit(false)
+        this.configuracionFiltros();
 
       } else {
         this.filtros = new JusticiableBusquedaItem();
       }
+    }
+
+  }
+
+  configuracionFiltros() {
+
+    if ((this.filtros.idProvincia != undefined && this.filtros.idProvincia != null) ||
+      (this.filtros.idPoblacion != undefined && this.filtros.idPoblacion != null) ||
+      (this.filtros.codigoPostal != undefined && this.filtros.codigoPostal != null)) {
+      this.showDatosDirecciones = true;
+    }
+
+    if ((this.filtros.anioDesde != undefined && this.filtros.anioDesde != null) ||
+      (this.filtros.anioHasta != undefined && this.filtros.anioHasta != null) ||
+      (this.filtros.idRol != undefined && this.filtros.idRol != null)) {
+      this.showAsuntos = true;
     }
 
   }
@@ -179,8 +197,8 @@ export class FiltroJusticiablesComponent implements OnInit {
       (this.filtros.apellidos == null || this.filtros.apellidos.trim() == "" || this.filtros.apellidos.length < 3) &&
       (this.filtros.codigoPostal == null || this.filtros.codigoPostal.trim() == "" || this.filtros.codigoPostal.length < 3) &&
       (this.filtros.nif == null || this.filtros.nif.trim() == "" || this.filtros.nif.length < 3) &&
-      (this.filtros.anioDesde == null || this.filtros.anioDesde.trim() == "" || this.filtros.anioDesde.length < 3) &&
-      (this.filtros.anioHasta == null || this.filtros.anioHasta.trim() == "" || this.filtros.anioHasta.length < 3) &&
+      (this.filtros.anioDesde == null || this.filtros.anioDesde == undefined) &&
+      (this.filtros.anioHasta == null || this.filtros.anioDesde == undefined) &&
       (this.filtros.idProvincia == null || this.filtros.idProvincia == "") &&
       (this.filtros.idPoblacion == null || this.filtros.idPoblacion == "") &&
       (this.filtros.idRol == null || this.filtros.idRol == "")) {
@@ -200,15 +218,18 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.filtros.nif = this.filtros.nif.trim();
       }
 
-      if (this.filtros.anioDesde != undefined && this.filtros.anioDesde != null) {
-        this.filtros.anioDesde = this.filtros.anioDesde.trim();
-      }
-
-      if (this.filtros.anioHasta != undefined && this.filtros.anioHasta != null) {
-        this.filtros.anioHasta = this.filtros.anioHasta.trim();
-      }
-
       return true;
+    }
+  }
+
+  editarCompleto(event, dato) {
+    let NUMBER_REGEX = /^\d{1,4}$/;
+    if (NUMBER_REGEX.test(dato)) {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 9999)) {
+        event.currentTarget.value = event.currentTarget.value.substring(0, 4);
+      }
+    } else {
+      event.currentTarget.value = event.currentTarget.value.substring(0, 4);
     }
   }
 

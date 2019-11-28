@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
+import { Checkbox } from '../../../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-datos-generales',
@@ -48,7 +49,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   codigoPostalValido;
-  poblacionExtranjera;
+  poblacionExtranjera: boolean = true;
   justiciableBusquedaItem: JusticiableBusquedaItem;
   cols;
   datos: JusticiableTelefonoItem[] = [];
@@ -65,7 +66,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   count: number = 1;
   selectedItem;
   showTarjetaPermiso: boolean = false;
-  mess
+  selectedDatos = [];
+
+  @ViewChild("provincia") checkbox: Checkbox;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
@@ -110,6 +113,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.body = new JusticiableItem();
           }
 
+          //Obligatorio pais españa
+          this.body.idpaisdir1 = "191";
+
           if (this.body.idpersona == undefined) {
             this.modoEdicion = false;
             this.body.fechaalta = new Date();
@@ -118,7 +124,16 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.body.idpais = "191";
           } else {
             this.modoEdicion = true;
+
+            if (this.body.idpaisdir1 == "191") {
+              this.poblacionExtranjera = false;
+            } else {
+              this.poblacionExtranjera = true;
+            }
+
           }
+
+
 
           this.progressSpinner = false;
 
@@ -150,11 +165,23 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     }
 
+    //Obligatorio pais españa
+    this.body.idpaisdir1 = "191";
+
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
       this.body.fechaalta = new Date();
+      this.body.sexo = "N";
+      this.body.regimenConyugal = "I";
+      this.body.idpais = "191";
     } else {
       this.modoEdicion = true;
+
+      if (this.body.idpaisdir1 == "191") {
+        this.poblacionExtranjera = false;
+      } else {
+        this.poblacionExtranjera = true;
+      }
     }
 
     if (this.body.nif != undefined && this.body.nif != null && this.body.nif != "") {
@@ -318,12 +345,16 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (!this.modoRepresentante) {
             this.newJusticiable.emit(this.body);
           }
+        } else {
+          this.getTelefonosJusticiable();
         }
 
         if (this.nuevoTelefono) {
           this.nuevoTelefono = false;
-          this.getTelefonosJusticiable();
+
         }
+
+        this.selectedDatos = [];
 
         if (this.modoRepresentante && !this.checkedViewRepresentante) {
           this.persistenceService.setBody(this.body);
@@ -379,6 +410,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   getDatosContacto() {
     this.datos = [];
+    this.count = 1;
+
 
     let rowCorreoElectronico = new JusticiableTelefonoItem();
     rowCorreoElectronico.tipo = "Correo-Electrónico";
@@ -712,7 +745,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       //Si se selecciona españa
     } else {
       this.poblacionExtranjera = false;
-      this.isDisabledPoblacion = false;
+      this.isDisabledPoblacion = true;
       this.isDisabledProvincia = true;
 
       if (this.body.codigopostal != undefined && this.body.codigopostal != null) {
@@ -732,33 +765,34 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     if (event) {
       this.isDisabledPoblacion = true;
 
-      if (this.body.idpaisdir1 == "191") {
+      if (this.body.idpais == "191") {
         this.isDisabledProvincia = false;
       }
       //this.body.otraProvincia = "1";
       if (
-        this.body.codigopostal != null &&
-        this.checkOtraProvincia == true &&
-        ((this.body.idpoblacion == null &&
+        (this.body.idpoblacion == null &&
           this.body.idpoblacion == undefined) ||
-          this.body.idpoblacion == "")
-      ) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("censo.datosDirecciones.mensaje.seleccionar.poblacion"));
+        this.body.idpoblacion == "") {
+        this.showMessage("error", "Error", this.translateService.instant("censo.datosDirecciones.mensaje.seleccionar.poblacion"));
         this.isDisabledPoblacion = false;
         this.isDisabledProvincia = true;
-
+        this.checkbox.checked = false;
       }
     } else {
 
       if (
-        this.body.idpaisdir1 == "191" &&
-        this.body.idprovincia2 != "1"
+        this.body.idpais == "191" &&
+        !this.checkOtraProvincia
       ) {
         this.isDisabledPoblacion = false;
       }
+
+      //this.body.idPoblacion = "";
+
+      //this.provinciaSelecionada = "";
       this.isDisabledProvincia = true;
       this.onChangeCodigoPostal();
-      this.body.idprovincia2 = "0";
+      this.checkOtraProvincia = false;
     }
   }
 
@@ -812,9 +846,13 @@ para poder filtrar el dato con o sin estos caracteres*/
   rest() {
 
     this.nuevoTelefono = false;
+    this.selectedDatos = [];
 
     if (this.modoEdicion) {
       if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+      if (this.body.idpoblacion != undefined) {
+        this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
+      }
 
       this.parseFechas();
 
@@ -831,14 +869,16 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.body = new JusticiableItem();
     }
+
   }
 
   fillFechaNacimiento(event) {
-    this.body.fechanacimiento = event;
-    this.calculateAge();
-  }
-
-  fillFechaAlta(event) {
+    if (event != null && event != undefined) {
+      this.body.fechanacimiento = event;
+      this.calculateAge();
+    } else {
+      this.body.edad = undefined;
+    }
 
   }
 
@@ -1023,14 +1063,41 @@ para poder filtrar el dato con o sin estos caracteres*/
     else this.edicionEmail = true;
   }
 
-  onChangeDireccionNoInformada(event) {
-    this.body.checkNoInformadaDireccion = event;
-  }
-
   restData() {
     if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     this.faxValido = true;
     this.emailValido = true;
+    this.selectedDatos = [];
   }
 
+  deleteData(selectedDatos) {
+
+    selectedDatos.forEach(element => {
+
+      if (!element.nuevo) {
+        let pos = this.datos.findIndex(
+          x => x.idTelefono == element.idTelefono);
+
+        if (pos != -1) {
+          this.datos.splice(pos, 1);
+        }
+      } else {
+        let pos = this.datos.findIndex(
+          x => x.count == element.count);
+
+        if (pos != -1) {
+          this.datos.splice(pos, 1);
+        }
+      }
+
+    });
+
+    this.selectedDatos = [];
+  }
+
+  onRowSelect(dato) {
+    if (dato.data.count == 1 || dato.data.count == 2) {
+      this.selectedDatos.pop();
+    }
+  }
 }

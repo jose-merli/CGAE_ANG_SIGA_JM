@@ -66,7 +66,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" [maxLength]="20" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
                 pInputText/>
             </div>
             <div class="form-group col-lg-3 col-md-3">
@@ -84,20 +84,20 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura"
                 pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.apellido1" name="apellido1" type="text" class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.apellido1" name="apellido1" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura"
                 pInputText />
             </div>
 
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
               </label>
-              <input [(ngModel)]="body.apellido2" name="apellido2" type="text" class="form-control" [maxLength]="100" [disabled]="!permisoEscritura"
+              <input [(ngModel)]="body.apellido2" name="apellido2" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura"
                 pInputText />
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -175,17 +175,9 @@
         <!-- info direcciones -->
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
-            <div class="form-group col-lg-12 col-md-3 input-ayuda row">
+            <div class="form-group col-lg-12 col-md-3 input-ayuda">
               <div class="col-3">
                 <label style="font-weight: bold;">{{ 'envios.definir.literal.datosdestino' | translate }}</label>
-              </div>
-              <div *ngIf="!nuevo" class="col-9 row">
-                <div class="col-2 pr-0">
-                  <p-checkbox [(ngModel)]="body.checkNoInformadaDireccion" binary="true" (onChange)="onChangeDireccionNoInformada($event)"></p-checkbox>
-                </div>
-                <div class="col-8 pl-0">
-                  <label>{{ 'gratuita.personaJG.literal.noInformada' | translate }}</label>
-                </div>
               </div>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -198,35 +190,32 @@
               <label>
                 {{"censo.consultaDirecciones.literal.direccion" | translate}}
               </label>
-              <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="100" [disabled]="!permisoEscritura" pInputText>
+              <input [(ngModel)]="body.direccion" type="text" class="form-control" [maxLength]="95" [disabled]="!permisoEscritura" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.busquedaAsistencias.literal.numero" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="10" [(ngModel)]="body.numerodir" [disabled]="!permisoEscritura"
+              <input type="number" class="form-control" min="0" max="99999999" [(ngModel)]="body.numerodir" [disabled]="!permisoEscritura"
                 pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.busquedaAsistencias.literal.escalera" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="10" [(ngModel)]="body.escaleradir" [disabled]="!permisoEscritura"
-                pInputText>
+              <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.escaleradir" [disabled]="!permisoEscritura" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.personaJG.literal.pisodir" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="10" [(ngModel)]="body.pisodir" [disabled]="!permisoEscritura"
-                pInputText>
+              <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.pisodir" [disabled]="!permisoEscritura" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"gratuita.personaJG.literal.puertadir" | translate}}
               </label>
-              <input [disabled]="" type="text" class="form-control" [maxLength]="10" [(ngModel)]="body.puertadir" [disabled]="!permisoEscritura"
-                pInputText>
+              <input type="text" class="form-control" [maxLength]="8" [(ngModel)]="body.puertadir" [disabled]="!permisoEscritura" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>
@@ -234,7 +223,7 @@
               </label>
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idpaisdir1"
                 [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboPais" (onChange)="onChangePais()"
-                [disabled]="!permisoEscritura">
+                disabled>
               </p-dropdown>
             </div>
 
@@ -252,7 +241,7 @@
               <label>
                 {{"censo.datosDireccion.literal.provincia" | translate}}
               </label>
-              <!--  -->
+
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='body.idprovincia'
                 [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
                 [options]="comboProvincia" [disabled]="isDisabledProvincia || poblacionExtranjera || !permisoEscritura">
@@ -262,7 +251,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'gratuita.personaJG.literal.otraProvincia' | translate }}</label>
               <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia binary="true" (onChange)="onChangeOtherProvincia($event)"
-                [disabled]="!permisoEscritura"></p-checkbox>
+                [disabled]="!permisoEscritura || poblacionExtranjera"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -271,9 +260,15 @@
               </label>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idpoblacion'
                 [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [disabled]="isDisabledPoblacion || !permisoEscritura">
+                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [disabled]="isDisabledPoblacion || !permisoEscritura || poblacionExtranjera">
               </p-dropdown>
             </div>
+
+            <!-- <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}}</label>
+              <input [(ngModel)]="body.idpoblacion" type="text" class="form-control" [maxLength]="99" pInputText>
+            </div> -->
+
           </div>
         </div>
 
@@ -285,7 +280,8 @@
             </div>
             <div class="col-lg-12 col-md-12">
               <!-- tabla -->
-              <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado" [paginator]="false" [rows]="selectedItem">
+              <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado" [paginator]="false" [rows]="selectedItem"
+                selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" (onRowSelect)="onRowSelect($event)">
                 <ng-template pTemplate="colgroup" let-columns>
                   <colgroup>
                     <col *ngFor="let col of columns" [style.width]="col.width">
@@ -310,6 +306,9 @@
                           <div class="col-lg-10 col-md-10 pr-0">
                             <input class="form-control" [(ngModel)]="dato[col.field]" (input)="changeTelefono(dato)" maxlength="20" [disabled]="!permisoEscritura"
                               pInputText>
+                            <div *ngIf="!dato.tlfValido">
+                              <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                            </div>
                           </div>
                           <div class="col-lg-2 col-md-2">
                             <p-checkbox (ngModelChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck" binary="true" [disabled]="!permisoEscritura"></p-checkbox>
@@ -317,10 +316,6 @@
                         </div>
                         <div *ngIf="col.field == 'tipo'">
                           <input class="form-control" [(ngModel)]="dato.nombreTelefono" [disabled]="!permisoEscritura" maxlength="100" pInputText>
-                        </div>
-
-                        <div *ngIf="!dato.tlfValido && col.field == 'numeroTelefono'">
-                          <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
                         </div>
                       </div>
 
@@ -337,9 +332,9 @@
                           <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" maxlength="100"
                             [disabled]="!permisoEscritura" />
                           <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn" [disabled]="!permisoEscritura"></button>
-                        </div>
-                        <div *ngIf="!emailValido">
-                          <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                          <div *ngIf="!emailValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                          </div>
                         </div>
                         <div *ngIf="!edicionEmail" class="ui-inputgroup">
                           <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
@@ -352,14 +347,13 @@
 
                         <div class="col-lg-10 col-md-10 pr-0">
                           <input class="form-control" [(ngModel)]="dato[col.field]" (input)="changeTelefono(dato)" maxlength="20" pInputText [disabled]="!permisoEscritura">
+                          <div *ngIf="!dato.tlfValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                          </div>
                         </div>
                         <div class="col-lg-2 col-md-2">
                           <p-checkbox (onChange)="onChangePreferente(dato)" [(ngModel)]="dato.preferenteSmsCheck" binary="true" [disabled]="!permisoEscritura"></p-checkbox>
                         </div>
-                        <div *ngIf="!dato.tlfValido">
-                          <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
-                        </div>
-
                       </div>
 
                       <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo == 'Telefono'">
@@ -382,9 +376,11 @@
               </p-table>
 
             </div>
-            <div class="text-right form-group main-button col-lg-12 col-md-12 ">
+            <div class="text-right form-group main-button col-lg-12 col-md-12 pt-2">
               <button class="botontabla" (click)="restData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-undo" iconPos="left"
                 label="{{ 'general.boton.restablecer' | translate}}"></button>
+              <button [disabled]="!permisoEscritura || selectedDatos.length == 0" (click)="deleteData(selectedDatos)" pButton type="button"
+                icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
               <button class="botontabla" (click)="newData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-plus" iconPos="left"
                 label="{{ 'general.boton.new' | translate}}"></button>
             </div>

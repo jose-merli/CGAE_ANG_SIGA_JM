@@ -4,8 +4,8 @@
   <div class="card-body p-0">
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+      [first]="first" class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab(selectedDatos)"
+      (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -13,12 +13,11 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
-                table.filter($event.target.value, col.field, 'contains')
-              " />
+                table.filter($event.target.value, col.field, 'contains')" [(ngModel)]="buscadores[i]" />
           </th>
         </tr>
       </ng-template>

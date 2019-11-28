@@ -115,8 +115,20 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       n => {
 
         this.datos = JSON.parse(n.body).justiciableBusquedaItems;
+        let error = JSON.parse(n.body).error;
         this.buscar = true;
         this.progressSpinner = false;
+
+        if (this.tabla != undefined) {
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
 
       },
       err => {
@@ -125,12 +137,12 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       });
   }
 
-  showMessage(event) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
 

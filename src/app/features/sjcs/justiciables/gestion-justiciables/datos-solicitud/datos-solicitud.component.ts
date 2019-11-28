@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
@@ -41,7 +41,8 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private router: Router) { }
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
 
@@ -67,6 +68,11 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
           if (this.body.idpersona == undefined) {
             this.modoEdicion = false;
+            this.selectedAutorizaavisotel = undefined;
+            this.selectedAsistidosolicitajg = undefined;
+            this.selectedAsistidoautorizaeejg = undefined;
+            this.showTarjeta = false;
+
           } else {
             this.modoEdicion = true;
           }
@@ -97,7 +103,10 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
-
+      this.selectedAutorizaavisotel = undefined;
+      this.selectedAsistidosolicitajg = undefined;
+      this.selectedAsistidoautorizaeejg = undefined;
+      this.showTarjeta = false;
     } else {
       this.modoEdicion = true;
     }
@@ -167,19 +176,12 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
     this.commonsService.arregloTildesCombo(this.comboSolicitajg);
   }
 
-  onChangeAutorizaAvisoTelematico() {
-    if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
-      if (this.body.autorizaavisotelematico == "1") {
-        this.body.autorizaavisotelematico = undefined;
-        this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("usticiaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
-      }
-    }
-  }
-
   save() {
     if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
       if (this.body.autorizaavisotelematico == "1") {
-        this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("usticiaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+        this.body.autorizaavisotelematico = undefined;
+        this.changeDetectorRef.detectChanges();
+        this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
       } else {
         this.callServiceSave();
       }
