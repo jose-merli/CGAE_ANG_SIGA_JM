@@ -42,15 +42,15 @@
               <label>
                 {{ "administracion.parametrosGenerales.literal.abreviatura" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.abreviaturaTipoDoc" [disabled]="!modoEdicion || historico" type="text" class="form-control" [maxLength]="60"
+              <input [(ngModel)]="body.abreviaturaTipoDoc" [disabled]="!permisos || historico" type="text" class="form-control" [maxLength]="60"
                 pInputText>
             </div>
 
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{ "administracion.parametrosGenerales.literal.descripcion" | translate }} (*)
               </label>
-              <input [(ngModel)]="body.descripcionTipoDoc" [disabled]="!modoEdicion || historico" type="text" class="form-control" [maxLength]="300"
+              <input [(ngModel)]="body.descripcionTipoDoc" [disabled]="!permisos || historico" type="text" class="form-control" [maxLength]="300"
                 pInputText>
             </div>
 
@@ -58,7 +58,7 @@
               <label>
                 {{"justiciaGratuita.maestros.fundamentosResolucion.codigoExterno" | translate}}
               </label>
-              <input [(ngModel)]="body.codigoExt" [disabled]="!modoEdicion || historico" type="text" class="form-control" [maxLength]="20"
+              <input [(ngModel)]="body.codigoExt" [disabled]="!permisos || historico" type="text" class="form-control" [maxLength]="20"
                 pInputText>
             </div>
           </div>
@@ -68,8 +68,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico || !modoEdicion" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave() || !modoEdicion" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="rest()" pButton [disabled]="historico || !permisos" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="disabledSave() || !permisos" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

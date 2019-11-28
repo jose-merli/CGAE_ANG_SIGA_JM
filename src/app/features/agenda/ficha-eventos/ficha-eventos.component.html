@@ -134,13 +134,14 @@
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}(*)</label>
-              <input type="text" class="form-control" pInputText name="descripcion" [(ngModel)]="newEvent.descripcion" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || historico">
+              <input type="text" class="form-control" maxlength="195" pInputText name="descripcion" [(ngModel)]="newEvent.descripcion"
+                [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || historico">
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12">
               <label>{{'agenda.fichaEventos.datosGenerales.recursos' | translate}}</label>
-              <input type="text" class="form-control" pInputText name="recursos" [(ngModel)]="newEvent.recursos" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || historico">
+              <input type="text" class="form-control" maxlength="195" pInputText name="recursos" [(ngModel)]="newEvent.recursos" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || historico">
             </div>
           </div>
         </div>

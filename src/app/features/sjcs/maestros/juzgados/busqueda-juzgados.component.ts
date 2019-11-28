@@ -79,10 +79,15 @@ export class BusquedaJuzgadosComponent implements OnInit {
 
         this.datos = JSON.parse(n.body).juzgadoItems;
         this.buscar = true;
-        this.progressSpinner = false;
+
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
+          this.tabla.table.sortOrder = 0;
+          this.tabla.table.sortField = '';
+          this.tabla.table.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        this.progressSpinner = false;
         this.resetSelect();
       },
       err => {

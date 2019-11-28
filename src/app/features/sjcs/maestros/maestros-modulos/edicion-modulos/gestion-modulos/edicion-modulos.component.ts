@@ -156,6 +156,13 @@ export class EdicionModulosComponent implements OnInit {
     this.getProcedimientos(evento.value);
   }
 
+  onChangeProcedimientos(evento) {
+    this.modulosItem.procedimientosReal = [];
+    this.modulosItem.procedimientos = "";
+    this.getProcedimientos(evento.value);
+  }
+
+
   getProcedimientos(id) {
 
     this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + id).subscribe(
@@ -311,6 +318,12 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.modulosItem.nombre != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
+    if (this.modulosItem.importe != undefined) this.modulosItem.importe = this.modulosItem.importe.trim();
+    if (this.modulosItem.codigo != undefined) this.modulosItem.codigo = this.modulosItem.codigo.trim();
+    if (this.modulosItem.codigoext != undefined) this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
+    if (this.modulosItem.observaciones != undefined) this.modulosItem.observaciones = this.modulosItem.observaciones.trim();
+
     this.modulosItem.importe = this.modulosItem.importe.replace(",", ".");
     this.sigaServices.post(url, this.modulosItem).subscribe(
       data => {
@@ -366,6 +379,10 @@ export class EdicionModulosComponent implements OnInit {
 
   fillFechaDesdeCalendar(event) {
     this.modulosItem.fechadesdevigor = event;
+
+    if (this.modulosItem.fechadesdevigor > this.modulosItem.fechahastavigor) {
+      this.modulosItem.fechahastavigor = undefined;
+    }
   }
 
   fillFechaHastaCalendar(event) {
@@ -373,15 +390,14 @@ export class EdicionModulosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.modulosItem.nombre != undefined) this.modulosItem.nombre = this.modulosItem.nombre.trim();
-    if (this.modulosItem.importe != undefined) this.modulosItem.importe = this.modulosItem.importe.trim();
-    if (this.modulosItem.codigo != undefined) this.modulosItem.codigo = this.modulosItem.codigo.trim();
-    if (this.modulosItem.codigoext != undefined) this.modulosItem.codigoext = this.modulosItem.codigoext.trim();
 
-    if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined && this.modulosItem.nombre != "" &&
+
+    if ((this.modulosItem.nombre != undefined && this.modulosItem.importe != undefined &&
       this.modulosItem.importe != "" && this.modulosItem.fechadesdevigor != undefined && this.modulosItem.idjurisdiccion != "" &&
-      this.modulosItem.idjurisdiccion != undefined) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {
-      return false;
+      this.modulosItem.idjurisdiccion != undefined && this.modulosItem.procedimientosReal != undefined && this.modulosItem.procedimientosReal.length > 0) && (JSON.stringify(this.modulosItem) != JSON.stringify(this.bodyInicial))) {
+      if (this.modulosItem.nombre.trim() != "") {
+        return false;
+      } else { return true; }
     } else {
       return true;
     }

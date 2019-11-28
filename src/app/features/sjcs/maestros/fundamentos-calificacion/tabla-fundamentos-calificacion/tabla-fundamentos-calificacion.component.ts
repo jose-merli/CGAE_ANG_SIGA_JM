@@ -27,13 +27,13 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 	historico: boolean;
 	@Output() searchHistoricalSend = new EventEmitter<boolean>();
 	permisoEscritura: boolean = false;
-
+	buscadores = [];
 	message;
 
 	initDatos;
 	nuevo: boolean = false;
 	progressSpinner: boolean = false;
-
+	@ViewChild("table") tabla;
 	constructor(
 		private persistenceService: PersistenceService,
 		private sigaService: SigaServices,
@@ -78,13 +78,15 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 
 	getCols() {
 		this.cols = [
-			{ field: 'codigo', header: 'general.codeext' },
-			{ field: 'descripcionFundamento', header: 'administracion.parametrosGenerales.literal.descripcion' },
+			{ field: 'codigo', header: 'general.codeext', width: "20%" },
+			{ field: 'descripcionFundamento', header: 'administracion.parametrosGenerales.literal.descripcion', width: "60%" },
 			{
 				field: 'descripcionDictamen',
-				header: 'justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen'
+				header: 'justiciaGratuita.maestros.fundamentosCalificacion.datosGenerales.dictamen', width: "20%"
 			}
 		];
+
+		this.cols.forEach(it => this.buscadores.push(""))
 
 		this.rowsPerPage = [
 			{
@@ -222,7 +224,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			.subscribe(
 				(data) => {
 					this.selectedDatos = [];
-					this.searchHistoricalSend.emit(false);
+					this.searchHistoricalSend.emit(true);
 					this.showMessage(
 						'success',
 						this.translateService.instant('general.message.correct'),

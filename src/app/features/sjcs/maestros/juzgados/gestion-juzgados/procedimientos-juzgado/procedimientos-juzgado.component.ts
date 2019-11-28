@@ -39,7 +39,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   procItems = [];
   prItems = [];
   permisoEscritura;
-
+  buscadores = [];
   procedimientos = [];
   procedimientosElegir = [];
 
@@ -58,7 +58,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
     this.validateHistorical();
     this.getCols();
-    this.getProcJuged();
+    if (this.modoEdicion) {
+      this.getProcJuged();
+    }
+
     // this.getProcess();
 
   }
@@ -114,7 +117,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       this.procedimientos = [];
     }
     this.selectionMode = "multiple";
-
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   setItalic(dato) {
@@ -237,6 +243,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       this.selectMultiple = true;
       this.selectedDatos = this.procedimientos;
       this.numSelected = this.procedimientos.length;
@@ -250,6 +258,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   isSelectMultiple() {
 
     if (!this.historico && this.permisoEscritura) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       // if (this.selectedDatos != undefined && this.selectedDatos.length == 0) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
