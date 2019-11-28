@@ -51,9 +51,14 @@ export class FichaTurnosComponent implements OnInit {
 				activa: false
 			},
 			{
+				key: 'tarjetaguardias',
+				activa: false
+			},
+			{
 				key: 'tablacolaguardias',
 				activa: false
 			},
+
 		];
 	}
 

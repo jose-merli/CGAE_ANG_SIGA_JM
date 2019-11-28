@@ -76,14 +76,12 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       if (this.turnosItem.idturno != undefined) {
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        this.getCombos();
-
-
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
           this.modoEdicion = true;
         }
+        this.getCombos();
       }
     } else {
       this.partidoJudicial = "";
@@ -348,13 +346,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       }, () => {
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        if (this.turnosItem.idturno == undefined) {
-          this.modoEdicion = false;
-        } else {
-          this.modoEdicion = true;
-        }
+        this.actualizarFichaResumen();
       }
     );
+  }
+
+  obtenerPartidos() {
+    return this.partidoJudicial;
   }
 
   onChangeArea() {

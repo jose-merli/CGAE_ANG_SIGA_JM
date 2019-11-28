@@ -155,6 +155,7 @@ export class TarjetaColaOficio implements OnInit {
     return fichaPosible.activa;
   }
   getColaOficio() {
+    this.turnosItem.historico = this.historico;
     this.progressSpinner = true;
     this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
       n => {
@@ -174,9 +175,9 @@ export class TarjetaColaOficio implements OnInit {
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         this.progressSpinner = false;
         if (this.datos != undefined && this.datos.length > 0) {
-          this.primerLetrado = this.datos[0].idpersona;
+          this.primerLetrado = this.datos[0].numerocolegiado;
           this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombrepersona;
-          this.ultimoLetrado = this.datos[this.datos.length - 1].idpersona;
+          this.ultimoLetrado = this.datos[this.datos.length - 1].numerocolegiado;
           this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombrepersona;
         }
       }

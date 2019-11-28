@@ -30,16 +30,19 @@
     </div>
 
     <div *ngIf="esFichaActiva('configuracioncolaoficio') && openFicha" class="card-body card-body-ficha">
-      <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
-        targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" filterBy="label"
-        dragdrop="true" dragdropScope="pesosSeleccionados" sourceFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
-        (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
-        targetFilterPlaceholder="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [showSourceControls]="false"
-        [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }" [disabled]="historico || !disableAll">
-        <ng-template let-item pTemplate="item">
-          <div>{{ item.por_filas}} {{ item.orden}}</div>
-        </ng-template>
-      </p-pickList>
+      <div class="form-row">
+        <div class="form-group picklistcolaoficio col-lg-6 col-md-6">
+          <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"
+            targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" dragdrop="true"
+            dragdropScope="pesosSeleccionados" (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)"
+            (onMoveToTarget)="cambioSeleccionados($event)" [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }"
+            [targetStyle]="{ height: '200px' }" [disabled]="historico || !disableAll">
+            <ng-template let-item pTemplate="item">
+              <div>{{ item.por_filas}} {{ item.orden}}</div>
+            </ng-template>
+          </p-pickList>
+        </div>
+      </div>
       <br>
     </div>
 

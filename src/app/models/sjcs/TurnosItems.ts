@@ -57,6 +57,7 @@ export class TurnosItems {
   saltos: string;
   compensaciones: string;
   fechabajapersona: Date;
+  fechabajaguardia: Date;
   fechaActual: Date;
   constructor() { }
 }

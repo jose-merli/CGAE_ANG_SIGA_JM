@@ -51,7 +51,7 @@
               <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.datosturno" | translate }}</label>
             </div>
 
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }} (*)
               </label>
@@ -87,7 +87,7 @@
               </p-dropdown>
             </div>
 
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{ "general.codeext" | translate }}
               </label>
@@ -97,7 +97,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}
+                {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="!disableAll || historico" [(ngModel)]='turnosItem.idtipoturno' [filter]="true"
                 filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="tiposturno" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -165,17 +165,19 @@
               </p-dropdown>
             </div>
 
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-6 col-md-6">
               <label>
                 {{ "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate }}
               </label>
-              <input [placeholder]="partidoJudicial" [(ngModel)]='turnosItem.idpartido' disabled="true" [disabled]="!disableAll || historico"
-                type="text" class="form-control" [maxLength]="200" pInputText>
+              <div [pTooltip]="obtenerPartidos()" tooltipPosition="top">
+                <input [placeholder]="partidoJudicial" [(ngModel)]='turnosItem.idpartido' disabled="true" [disabled]="!disableAll || historico"
+                  type="text" class="form-control" [maxLength]="200" pInputText>
+              </div>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
-                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}
+                {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="!disableAll || historico" [(ngModel)]='turnosItem.idjurisdiccion' [filter]="true"
                 filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}"

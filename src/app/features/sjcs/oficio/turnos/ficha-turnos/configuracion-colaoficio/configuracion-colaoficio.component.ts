@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Message } from "primeng/components/common/api";
@@ -15,7 +15,8 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 @Component({
   selector: "app-configuracion-colaoficio",
   templateUrl: "./configuracion-colaoficio.component.html",
-  styleUrls: ["./configuracion-colaoficio.component.scss"]
+  styleUrls: ["./configuracion-colaoficio.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class ConfiguracionColaOficioComponent implements OnInit {
 
@@ -198,9 +199,9 @@ export class ConfiguracionColaOficioComponent implements OnInit {
               }
             });
 
-            // this.pesosExistentesInicial = JSON.parse(
-            //   JSON.stringify(this.pesosExistentes)
-            // );
+            this.pesosExistentesInicial = JSON.parse(
+              JSON.stringify(this.pesosExistentes)
+            );
           },
           err => {
             console.log(err);
@@ -357,8 +358,8 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       .subscribe(
         n => {
           this.showSuccess(this.translateService.instant("justiciaGratuita.oficio.turnos.guardadopesos"));
-          this.pesosSeleccionadosInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
-          this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
+
+          // this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
           this.progressSpinner = false;
 
         },
@@ -413,7 +414,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
             this.pesosSeleccionadosTarjeta += element.por_filas + " " + element.orden + ","
           });
           this.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta.substring(0, this.pesosSeleccionadosTarjeta.length - 1);
-          // this.turnosItem.pesosSeleccionadosTarjeta = this.pesosSeleccionadosTarjeta;
+          this.pesosSeleccionadosInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
         }
       );
   }
@@ -447,10 +448,69 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       }
     });
   }
+
+  restablecerPicklist() {
+    let pesosFiltrados = Object.assign([], this.pesosSeleccionadosInicial);
+    this.pesosSeleccionados = [];
+    this.pesosExistentes = [];
+    pesosFiltrados.forEach(element => {
+      if (element.numero > 0) {
+        this.pesosSeleccionados.push(element);
+      }
+      if (element.numero > 0) {
+        this.pesosExistentes.splice(this.pesosExistentes.indexOf(element), 1);
+        //this.pesosExistentes.splice(element, 1);
+      }
+    });
+    this.pesosExistentesInicial.forEach(element => {
+      let e = { numero: element.numero, por_filas: element.por_filas, orden: element.orden };
+      this.pesosExistentes.push(e)
+    });
+    this.pesosExistentes.forEach(element => {
+      if (element.por_filas == "ALFABETICOAPELLIDOS") {
+        element.por_filas = "Apellidos y nombre"
+      }
+      if (element.por_filas == "ANTIGUEDADCOLA") {
+        element.por_filas = "Antigüedad en la cola"
+      }
+      if (element.por_filas == "NUMEROCOLEGIADO") {
+        element.por_filas = "Nº Colegiado"
+      }
+      if (element.por_filas == "FECHANACIMIENTO") {
+        element.por_filas = "Edad Colegiado"
+      }
+      if (element.orden == "asc") {
+        element.orden = "ascendente"
+      }
+      if (element.orden == "desc") {
+        element.orden = "descendente"
+      }
+    });
+    this.pesosSeleccionados.forEach(element => {
+      if (element.por_filas == "ALFABETICOAPELLIDOS") {
+        element.por_filas = "Apellidos y nombre"
+      }
+      if (element.por_filas == "ANTIGUEDADCOLA") {
+        element.por_filas = "Antigüedad en la cola"
+      }
+      if (element.por_filas == "NUMEROCOLEGIADO") {
+        element.por_filas = "Nº Colegiado"
+      }
+      if (element.por_filas == "FECHANACIMIENTO") {
+        element.por_filas = "Edad Colegiado"
+      }
+      if (element.orden == "asc") {
+        element.orden = "ascendente"
+      }
+      if (element.orden == "desc") {
+        element.orden = "descendente"
+      }
+    });
+  }
+
   rest() {
-    this.pesosExistentes = JSON.parse(JSON.stringify(this.pesosExistentesInicial));
-    this.pesosSeleccionados = JSON.parse(JSON.stringify(this.pesosSeleccionadosInicial));
-    this.arreglaOrden();
+    this.restablecerPicklist();
+    // this.arreglaOrden();
   }
 
   abrirFicha(key) {
@@ -482,8 +542,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
 
   disabledSave() {
-    if ((JSON.stringify(this.pesosExistentes) != JSON.stringify(this.pesosExistentesInicial) &&
-      (JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)))) {
+    if ((JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial))) {
       return false;
     } else {
       return true;

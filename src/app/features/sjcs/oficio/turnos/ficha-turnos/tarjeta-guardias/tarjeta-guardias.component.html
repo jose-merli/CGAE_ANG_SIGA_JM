@@ -2,7 +2,7 @@
 
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('tablacolaoficio')">
+    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('tarjetaguardias')">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -11,24 +11,11 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'justiciaGratuita.oficio.turnos.coladeoficio'|translate}}</label>
+            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.guardia.guardias'|translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoprimero" | translate }}
-              <span>{{ primerLetrado }}</span>
-            </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.apellidosprimerletrado" | translate }}
-              <span>{{ nombreApellidosPrimerLetrado }}</span>
-            </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
-              <span>{{ ultimoLetrado }}</span>
-            </label>
-            <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
-              <span>{{ apeyNombreUltimo }}</span>
-            </label>
-
-            <i (click)="abrirFicha('tablacolaoficio')" *ngIf="!esFichaActiva('tablacolaoficio')" class="fa fa-angle-up float-right"></i>
-            <i (click)="cerrarFicha('tablacolaoficio')" *ngIf="esFichaActiva('tablacolaoficio')" class="fa fa-angle-down float-right"></i>
+            <i (click)="abrirFicha('tarjetaguardias')" *ngIf="!esFichaActiva('tarjetaguardias')" class="fa fa-angle-up float-right"></i>
+            <i (click)="cerrarFicha('tarjetaguardias')" *ngIf="esFichaActiva('tarjetaguardias')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -36,32 +23,12 @@
         <div class="img-colegiado">
           <i class="fas fa-cog icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{"justiciaGratuita.oficio.turnos.coladeoficio" | translate}}</label>
+        <label class="title-ficha">{{"menu.justiciaGratuita.guardia.guardias" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="esFichaActiva('tablacolaoficio') && openFicha" class="card-body card-body-ficha">
-      <div class="form-row">
-        <div class="form-group col-lg-2 col-md-2">
-          <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }} (*)
-          </label>
-          <app-fecha [(value)]="turnosItem.fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <br>
-          <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
-          </label>
-          <strong>{{ ultimoLetrado }}</strong>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <br>
-          <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
-          </label>
-          <br>
-          <strong>{{ apeyNombreUltimo }}</strong>
-        </div>
-      </div>
+    <div *ngIf="esFichaActiva('tarjetaguardias') && openFicha" class="card-body card-body-ficha">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">

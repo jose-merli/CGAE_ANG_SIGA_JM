@@ -15,11 +15,11 @@ import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 @Component({
-  selector: "app-tarjeta-colaguardias",
-  templateUrl: "./tarjeta-colaguardias.component.html",
-  styleUrls: ["./tarjeta-colaguardias.component.scss"]
+  selector: "app-tarjeta-guardias",
+  templateUrl: "./tarjeta-guardias.component.html",
+  styleUrls: ["./tarjeta-guardias.component.scss"]
 })
-export class TarjetaColaGuardias implements OnInit {
+export class TarjetaGuardias implements OnInit {
 
 
   openFicha: boolean = false;
@@ -44,14 +44,12 @@ export class TarjetaColaGuardias implements OnInit {
   progressSpinner: boolean = false;
   msgs;
   body;
-  guardias = [];
   nuevo: boolean = false;
   datosInicial = [];
   updateAreas = [];
   showTarjeta: boolean = true;
   ultimoLetrado;
   primerLetrado;
-  guardiasNombre;
   nombreApellidosPrimerLetrado;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
@@ -76,7 +74,7 @@ export class TarjetaColaGuardias implements OnInit {
       activa: false
     },
     {
-      key: "tablacolaguardias",
+      key: "tarjetaguardias",
       activa: false
     },
   ];
@@ -91,28 +89,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.turnosItem.fechaActual = new Date();
         this.body = this.turnosItem;
         this.turnosItem.idturno = this.idTurno;
-        this.sigaServices
-          .getParam(
-            "combossjcs_comboidGuardias",
-            "?idTurno=" + this.idTurno
-          )
-          .subscribe(
-            n => {
-              this.guardias = n.combooItems;
-            },
-            err => {
-              console.log(err);
-
-            }, () => {
-              this.guardiasNombre = "";
-              if (this.guardias != undefined) {
-                this.guardias.forEach(element => {
-                  this.guardiasNombre += element.label + ","
-                });
-                this.guardiasNombre = this.guardiasNombre.substring(0, this.guardiasNombre.length - 1);
-              }
-            }
-          );
+        this.getColaOficio();
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -142,12 +119,6 @@ export class TarjetaColaGuardias implements OnInit {
       this.disableAll = true;
     }
   }
-
-  cargarTabla(event) {
-    this.turnosItem.idcomboguardias = event.value;
-    this.getMaterias();
-  }
-
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -167,26 +138,26 @@ export class TarjetaColaGuardias implements OnInit {
   }
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
-    this.getMaterias();
+    this.getColaOficio();
   }
   setItalic(dato) {
-    if (dato.fechabajaguardia == null) return false;
+    if (dato.fechabajapersona == null) return false;
     else return true;
   }
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
-    this.getMaterias();
+    this.getColaOficio();
     this.selectAll = false
   }
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
-  getMaterias() {
+  getColaOficio() {
     this.turnosItem.historico = this.historico;
     this.progressSpinner = true;
-    this.sigaServices.post("turnos_busquedaColaGuardia", this.turnosItem).subscribe(
+    this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
       n => {
         // this.datos = n.turnosItem;
         this.datos = JSON.parse(n.body).turnosItem;
@@ -205,9 +176,9 @@ export class TarjetaColaGuardias implements OnInit {
         this.progressSpinner = false;
         if (this.datos != undefined && this.datos.length > 0) {
           this.primerLetrado = this.datos[0].numerocolegiado;
-          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombreguardia;
+          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombrepersona;
           this.ultimoLetrado = this.datos[this.datos.length - 1].numerocolegiado;
-          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombreguardia;
+          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombrepersona;
         }
       }
     );
@@ -255,7 +226,7 @@ export class TarjetaColaGuardias implements OnInit {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         }
 
-        this.getMaterias();
+        this.getColaOficio();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -459,15 +430,13 @@ export class TarjetaColaGuardias implements OnInit {
   delete(selectedDatos) {
     this.body = new TurnosObject();
     this.body.turnosItem = this.selectedDatos;
-    this.body.turnosItem.forEach(element => {
-      element.idcomboguardias = this.turnosItem.idcomboguardias;
-    });
-    this.sigaServices.post("turnos_eliminateColaGuardia", this.body).subscribe(
+
+    this.sigaServices.post("turnos_eliminateColaOficio", this.body).subscribe(
       data => {
 
         this.nuevo = false;
         this.selectedDatos = [];
-        this.getMaterias();
+        this.getColaOficio();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -520,7 +489,7 @@ export class TarjetaColaGuardias implements OnInit {
     this.cols = [
       { field: "orden", header: "administracion.informes.literal.orden" },
       { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-      { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre" },
       // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
@@ -560,7 +529,7 @@ export class TarjetaColaGuardias implements OnInit {
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
       if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabajaguardia != undefined && dato.fechabajaguardia != null);
+        this.selectedDatos = this.datos.filter(dato => dato.fechabajapersona != undefined && dato.fechabajapersona != null);
       } else {
         this.selectedDatos = this.datos;
       }
@@ -599,7 +568,7 @@ export class TarjetaColaGuardias implements OnInit {
       // this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
     } else {
 
-      if (evento.data.fechabajaguardia == undefined && this.historico) {
+      if (evento.data.fechabajapersona == undefined && this.historico) {
         this.selectedDatos.pop();
       }
 
