@@ -100,7 +100,7 @@ export class FiltrosProcedimientosComponent implements OnInit {
 
 
   checkFilters() {
-    if (this.filtros.descripcion != undefined && this.filtros.descripcion != null) {
+    if (this.filtros.descripcion != undefined) {
       this.filtros.descripcion = this.filtros.descripcion.trim();
     }
     // if (

@@ -27,7 +27,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
   historico: boolean = false;
 
   message;
-
+  buscadores = [];
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -215,11 +215,12 @@ export class TablaDocumentacionejgComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
-      { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento" },
-      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
-      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos" },
+      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviaturaTipoDocumento", width: "18%" },
+      { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento", width: "32%" },
+      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviaturaDocumento", width: "18%" },
+      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos", width: "32%" },
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {
@@ -269,9 +270,14 @@ export class TablaDocumentacionejgComponent implements OnInit {
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      if (this.historico)
-        this.selectMultiple = true;
-      this.selectionMode = "multiple";
+      this.selectAll = false;
+      this.selectMultiple = false;
+      this.selectionMode = "single";
+      // if (this.historico){
+
+      // }
+      //   this.selectMultiple = true;
+      // this.selectionMode = "multiple";
     }
 
   }
@@ -285,6 +291,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";

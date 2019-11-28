@@ -55,10 +55,11 @@
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
                 table.filter($event.target.value, col.field, 'contains')
               " />
             </th>
@@ -69,10 +70,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div *ngIf="col.field == 'idAcreditacion'">
-                <p-dropdown *ngIf="!dato.acreditacionNueva" disabled class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                  [options]="comboAcreditaciones" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
-                <p-dropdown *ngIf="dato.acreditacionNueva" class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                  [options]="comboAcreditacionesNew" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                <p-dropdown appendTo="body" *ngIf="!dato.acreditacionNueva" disabled class="select-form" [(ngModel)]="dato.idAcreditacion"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="comboAcreditaciones" [filter]="true"
+                  [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
+                <p-dropdown appendTo="body" *ngIf="dato.acreditacionNueva" class="select-form" [(ngModel)]="dato.idAcreditacion" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [options]="comboAcreditacionesNew" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"></p-dropdown>
 
               </div>
 
@@ -94,7 +96,7 @@
                   ❌
                 </span>
                 <p-checkbox *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
-                  [disabled]="disableAll" (onChange)="changeNigNumprocedimiento(dato)" [(ngModel)]="dato.nig_numprocedimiento"
+                  [disabled]="disableAll" (onChange)="changeNigNumprocedimiento(dato)" [(ngModel)]="dato.nigProcedimiento"
                   binary="true" name="nig_numprocedimiento"></p-checkbox>
               </div>
 
@@ -105,7 +107,7 @@
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.codigoext" name="codigoext" type="text" on-focusout="changeCodigoExt(dato)"
-                  (input)="changeCodigoExt(dato)" maxLength="3900" />
+                  (input)="changeCodigoExt(dato)" maxLength="20" />
               </div>
 
               <div *ngIf="col.field == 'codSubTarifa'">
@@ -115,7 +117,7 @@
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.acreditacionNueva))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.codSubTarifa" name="codSubTarifa" type="text"
-                  on-focusout="changeCodSubTarifa(dato)" (input)="changeCodSubTarifa(dato)" maxLength="3900" />
+                  on-focusout="changeCodSubTarifa(dato)" (input)="changeCodSubTarifa(dato)" maxLength="10" />
               </div>
             </td>
 

@@ -33,16 +33,6 @@
             <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
           </div>
         </div>
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fas fa-align-left icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.maestros.Materias'|translate}}</label>
-          </div>
-        </div>
       </div>
       <div *ngIf="modoEdicion && !showTarjeta" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
@@ -65,10 +55,11 @@
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
                 table.filter($event.target.value, col.field, 'contains')
               " />
             </th>
@@ -96,7 +87,8 @@
 
                 <input *ngIf="!disableAll && (((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva)))"
                   type="text" class="form-control paddingInput" [(ngModel)]="dato.nombreMateria" name="nombreMateria" type="text"
-                  on-focusout="validateArea($event)" (input)="validateArea($event)" maxLength="60" />
+                  on-focusout="disabledSave($event); editarMateria(dato)" (input)="disabledSave($event); editarMateria(dato)"
+                  maxLength="60" />
               </div>
 
               <div *ngIf="col.field == 'contenido'">
@@ -105,8 +97,8 @@
                 </span>
 
                 <input *ngIf="!disableAll && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.areaNueva))" type="text"
-                  class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="validateArea($event)"
-                  (input)="validateArea($event)" maxLength="3900" />
+                  class="form-control paddingInput" [(ngModel)]="dato.contenido" name="contenido" type="text" on-focusout="disabledSave($event); editarMateria(dato)"
+                  (input)="disabledSave($event); editarMateria(dato)" maxLength="3900" />
               </div>
             </td>
 
@@ -123,9 +115,9 @@
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
               + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0 && selectionMode=='multiple'">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
             </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0 && selectionMode==multiple">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
             </label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
@@ -145,8 +137,7 @@
       <div class="text-right main-button">
         <button [disabled]="disableAll || ((!selectMultiple && !selectAll) || nuevo) || selectedDatos == undefined || !selectedDatos.length > 0"
           (click)="confirmDelete(selectedDatos);" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button [disabled]="disableAll || (updateAreas.length == 0 && !nuevo)" (click)="rest()" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="disableAll" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button pButton [disabled]="disableAll || disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
         <button pButton [disabled]="disableAll || selectMultiple || selectAll || nuevo" (click)="newMateria()" type="button" icon="fa fa-plus"

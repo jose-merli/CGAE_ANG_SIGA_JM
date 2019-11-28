@@ -12,8 +12,8 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate }}</label>
-          <input type="text" name="number" value="" class="box" class="form-control" [(ngModel)]='filtros.anio' pInputText maxLength="4"
-            pInputText>
+          <input type="text" name="number" (keypress)="numberOnly($event)" value="" class="box" class="form-control" [(ngModel)]='filtros.anio'
+            pInputText maxLength="4" pInputText>
         </div>
       </div>
     </div>

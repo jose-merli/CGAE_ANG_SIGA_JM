@@ -22,8 +22,16 @@ import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+
+import { endpoints_oficio } from "../utils/endpoints_oficio";
+
 import { endpoints_componentes } from "../utils/endpoints_components";
+ 
 import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
+ 
+import { endpoints_generales } from "../utils/endpoints_generales";
+
+ 
 
 
 @Injectable()
@@ -718,13 +726,19 @@ export class SigaServices {
     dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
     ...endpoints_componentes,
     dialogo_keys: "dialogoComunicacion/keys",
+
     ...endpoints_facturacionsjcs,
+
+    ...endpoints_generales,
+
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
     dialogo_envioTest: "dialogoComunicacion/envioTest",
     ...endpoints_justiciables,
+    ...endpoints_oficio,
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",
-    ...endpoints_maestros
+    ...endpoints_maestros,
+
   };
 
   private menuToggled = new Subject<any>();

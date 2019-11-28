@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routesSjcs: Routes = [
+
 	{
 		path: 'facturacionesYPagos',
 		loadChildren: './facturacionSJCS/facturacionsjcs.module#FacturacionSJCSModule'
@@ -74,6 +75,7 @@ const routesSjcs: Routes = [
 		path: 'justiciables',
 		loadChildren: './justiciables/justiciables.module#JusticiablesModule'
 	}
+
 ];
 
 @NgModule({

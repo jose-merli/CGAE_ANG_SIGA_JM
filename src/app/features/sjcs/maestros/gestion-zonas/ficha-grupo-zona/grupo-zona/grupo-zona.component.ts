@@ -12,6 +12,7 @@ export class GrupoZonaComponent implements OnInit {
 
   body: ZonasItem = new ZonasItem();
   bodyInicial;
+  nuevo;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   msgs;
@@ -30,8 +31,10 @@ export class GrupoZonaComponent implements OnInit {
 
     if (this.idZona != undefined) {
       this.getGrupoZona();
+      this.nuevo = false;
       this.modoEdicion = true;
     } else {
+      this.nuevo = true;
       this.modoEdicion = false;
     }
 
@@ -84,10 +87,13 @@ export class GrupoZonaComponent implements OnInit {
 
     if (!this.modoEdicion) {
       url = "fichaZonas_createGroupZone";
+      this.body.descripcionzona = this.body.descripcionzona.trim();
       this.callSaveService(url);
 
     } else {
       url = "fichaZonas_updateGroupZone";
+      this.body.descripcionzona = this.body.descripcionzona.trim();
+      this.body.idzona = this.idZona;
       this.callSaveService(url);
     }
 
@@ -143,13 +149,22 @@ export class GrupoZonaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.body.descripcionzona != undefined)
-      this.body.descripcionzona = this.body.descripcionzona.trim();
-    if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona != null && this.body.descripcionzona.trim() != ""))
-      if ((JSON.stringify(this.body.descripcionzona) != JSON.stringify(this.bodyInicial.descripcionzona))) {
+
+    if (this.nuevo) {
+      if ((this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != "") && (JSON.stringify(this.bodyInicial) != JSON.stringify(this.body))) {
         return false;
       } else {
         return true;
       }
+    } else {
+
+      if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != ""))
+        if ((JSON.stringify(this.body.descripcionzona.trim()) != JSON.stringify(this.bodyInicial.descripcionzona.trim()))) {
+          return false;
+        } else {
+          return true;
+        }
+      return true;
+    }
   }
 }

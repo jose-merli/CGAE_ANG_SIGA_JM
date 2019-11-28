@@ -33,7 +33,7 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
         this.historico = this.persistenceService.getHistorico();
       }
       this.isOpen.emit(this.historico)
-
+      this.filtros = this.filtroAux;
     } else {
       this.filtros = new FundamentoResolucionItem();
     }

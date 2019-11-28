@@ -216,6 +216,7 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
   }
 
   callSaveService(url) {
+    if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.visibleMovil == null)
       this.body.visibleMovil = 0
     this.sigaServices.post(url, this.body).subscribe(
@@ -293,8 +294,9 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
+    this.emailValido = true
     this.edicionEmail = true
+    this.avisoMail = false
 
     this.tlf1Valido = true
     this.tlf2Valido = true
@@ -328,7 +330,7 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
   disabledSave() {
 
     if (!this.historico && ((this.body.nombre != null && this.body.nombre != undefined && this.body.nombre.trim() != "") &&
-      (this.body.codigoPostal != undefined && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5)
+      (this.body.codigoPostal != undefined && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length >= 4 && this.body.codigoPostal.trim().length <= 5)
       && this.body.idProvincia != undefined &&
       this.body.idProvincia != "" && this.body.idPoblacion != null && this.body.idPoblacion != "" && !this.avisoMail && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
@@ -365,8 +367,19 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
     this.body.fax1 = this.body.fax1.trim();
     this.faxValido = this.commonsServices.validateFax(this.body.fax1);
   }
+  onChangeDireccion() {
+    this.body.domicilio = this.body.domicilio.trim();
+  }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
-
+    }
+  }
   clear() {
     this.msgs = [];
   }

@@ -366,7 +366,7 @@ label {
       }
   
       i{
-          color: white;
+          color: #888888;
       }   
    
   }
@@ -1420,4 +1420,10 @@ p-footer .main-button{
 .textarea {
   width: 100%;
   height: 100%;
+}
+.ui-table .ui-table-tbody > tr > td{
+  text-align: left !important;
+}
+.ui-multiselect-header .ui-multiselect-filter-container {
+  width: calc(100% - 38px) !important;
 }

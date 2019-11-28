@@ -45,7 +45,7 @@ export class TablaMateriasComponent implements OnInit {
   // selectedBefore;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
-
+  buscadores = [];
   //Resultados de la busqueda
   @Input() idArea;
   //Resultados de la busqueda
@@ -56,7 +56,7 @@ export class TablaMateriasComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private  confirmationService:  ConfirmationService) { }
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getCols();
@@ -212,20 +212,52 @@ export class TablaMateriasComponent implements OnInit {
   save() {
     this.progressSpinner = true;
     let url = "";
+    if (this.datos[0].nombreMateria != undefined) {
+      this.datos[0].nombreMateria = this.datos[0].nombreMateria.trim();
+    }
+    if (this.datos[0].contenido != undefined) {
+      this.datos[0].contenido = this.datos[0].contenido.trim();
+    }
 
     if (this.nuevo) {
       url = "fichaAreas_createMaterias";
+      this.body = this.datos[0];
       this.validatenewMateria(url);
 
     } else {
       url = "fichaAreas_updateMaterias";
       this.body = new AreasObject();
       this.body.areasItems = this.updateAreas;
-      this.callSaveService(url);
+      this.body.areasItems = this.body.areasItems.map(it => {
+        it.nombreMateria = it.nombreMateria.trim();
+        if (it.contenido != null)
+          it.contenido = it.contenido.trim();
+        return it;
+      })
+      if (this.validateUpdate()) {
+        this.callSaveService(url);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
+        this.progressSpinner = false;
+      }
     }
 
   }
+  validateUpdate() {
+    let check = true;
 
+    this.updateAreas.forEach(dato => {
+
+      let findDatos = this.datos.filter(item => item.nombreMateria === dato.nombreMateria);
+
+      if (findDatos != undefined && findDatos.length > 1) {
+        check = false;
+      }
+
+    });
+
+    return check;
+  }
   callSaveService(url) {
 
     this.sigaServices.post(url, this.body).subscribe(
@@ -239,6 +271,7 @@ export class TablaMateriasComponent implements OnInit {
         this.getMaterias();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
       },
       err => {
         this.progressSpinner = false;
@@ -250,8 +283,13 @@ export class TablaMateriasComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        this.table.sortOrder = 0;
+        this.table.sortField = '';
+        this.table.reset();
         this.selectedDatos = [];
         this.updateAreas = [];
+        this.rest();
+
         this.progressSpinner = false;
       }
     );
@@ -300,7 +338,7 @@ export class TablaMateriasComponent implements OnInit {
         this.datos[datoId].nombreMateria = this.selectedDatos[0].nombreMateria;
       } else {
         let dato = this.datos[datoId];
-        this.editarMateria(dato);
+        // this.editarMateria(dato);
       }
 
       // this.seleccion = false;
@@ -331,16 +369,27 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   disabledSave() {
+
+    if (this.selectMultiple || this.selectAll) {
+      return true;
+    }
     if (this.nuevo) {
-      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
+      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria.trim()) {
         return false;
       } else {
         return true;
       }
 
     } else {
-      if ((this.updateAreas != undefined && this.updateAreas.length > 0) || this.selectedDatos.length > 0) {
-        return false;
+
+      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
+        let val = true;
+        this.updateAreas.forEach(it => {
+          if (it.nombreMateria.trim() == "")
+            val = false;
+        });
+        if (val) return false;
+        else return true;
       } else {
         return true;
       }
@@ -374,12 +423,12 @@ export class TablaMateriasComponent implements OnInit {
 
   editarMateria(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idMateria === dato.idMateria && item.idArea === dato.idArea);
+    let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
 
     if (findDato != undefined) {
-      if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
-
-        let findUpdate = this.updateAreas.find(item => item.idMateria === dato.idMateria && item.idArea === dato.idArea);
+      if ((dato.contenido != undefined && findDato.contenido != undefined && dato.contenido != findDato.contenido) ||
+        (dato.nombreMateria != findDato.nombreMateria)) {
+        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
 
         if (findUpdate == undefined) {
           let dato2 = dato;
@@ -388,8 +437,9 @@ export class TablaMateriasComponent implements OnInit {
         }
       }
     }
-
   }
+
+
 
   editJurisdicciones(dato) {
 
@@ -452,7 +502,7 @@ export class TablaMateriasComponent implements OnInit {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
-            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           }
@@ -480,6 +530,7 @@ export class TablaMateriasComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "")
   }
 
   showMessage(severity, summary, msg) {
@@ -498,6 +549,8 @@ export class TablaMateriasComponent implements OnInit {
       { field: "contenido", header: "maestros.areasmaterias.literal.contenido" },
       { field: "jurisdicciones", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
     ];
+
+    this.cols.forEach(it => this.buscadores.push(""))
 
     this.rowsPerPage = [
       {
