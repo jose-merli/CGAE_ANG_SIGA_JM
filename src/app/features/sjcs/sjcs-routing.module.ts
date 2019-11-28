@@ -3,6 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routesSjcs: Routes = [
 	{
+		path: 'facturacionesYPagos',
+		loadChildren: './facturacionSJCS/facturacionsjcs.module#FacturacionSJCSModule'
+	},
+	{
 		path: 'zonasYsubzonas',
 		loadChildren: './maestros/maestros.module#MaestrosModule'
 	},

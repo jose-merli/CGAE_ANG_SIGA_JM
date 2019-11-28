@@ -770,6 +770,10 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
+		path: 'facturacionesYPagos',
+		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+	},
+	{
 		path: 'definirListasGuardias',
 		component: DefinirListasGuardiasComponent,
 		canActivate: [ AuthGuard ]

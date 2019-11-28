@@ -6,7 +6,7 @@ import { InputTextModule, ButtonModule, RadioButtonModule, DropdownModule, Calen
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
 import { FormsModule } from "@angular/forms";
 import { FiltroBusquedaFacturacionComponent } from './filtro-busqueda-facturacion/filtro-busqueda-facturacion.component';
-import { FichaBusquedaFacturacionComponent } from './ficha-busqueda-facturacion/ficha-busqueda-facturacion.component';
+import { TablaBusquedaFacturacionComponent } from './tabla-busqueda-facturacion/tabla-busqueda-facturacion.component';
 
 @NgModule({
   imports: [
@@ -20,7 +20,7 @@ import { FichaBusquedaFacturacionComponent } from './ficha-busqueda-facturacion/
     CalendarModule,
     DataTableModule
   ],
-  declarations: [BusquedaFacturacionComponent, FiltroBusquedaFacturacionComponent, FichaBusquedaFacturacionComponent],
+  declarations: [BusquedaFacturacionComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent],
   exports: [BusquedaFacturacionComponent]
 })
 export class BusquedaFacturacionModule {}

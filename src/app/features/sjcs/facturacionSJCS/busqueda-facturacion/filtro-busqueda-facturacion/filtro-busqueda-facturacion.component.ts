@@ -4,6 +4,10 @@ import { USER_VALIDATIONS } from "../../../../../properties/val-properties";
 import { Calendar } from 'primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { ComboItem } from '../../../../../models/ComboItem';
+import { BusquedaFacturacionItem } from "../../../../../models/sjcs/BusquedaFacturacionItem";
+import { BusquedaFacturacionObject} from "../../../../../models/sjcs/BusquedaFacturacionObject";
 
 @Component({
 	selector: 'app-filtro-busqueda-facturacion',
@@ -12,7 +16,9 @@ import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../
 })
 export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements OnInit {
 	selectedValue: string="facturacion";
-  	showDatosGenerales: boolean = true;  
+	showFiltroBusquedaFacturacion: boolean = true;  
+
+	//FECHAS
 	value: Date;
 	valueChangeSelected = new EventEmitter();
 	valueChangeInput = new EventEmitter();
@@ -21,19 +27,28 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	fechaSelectedFromCalendar: boolean = false;
 	currentLang;
 	yearRange: string;
-	first: boolean = true;
 	minDate: Date;
 	maxDate: Date;
 	disabled: boolean;
 	showTime: boolean;
 	calendar: Calendar;
 
-	constructor(private service: SigaServices) { 
+	//COMBOS
+	estadoFacturas: ComboItem;
+	conceptos: ComboItem;
+	grupoTurnos: ComboItem;
+	partidaPresupuestaria: ComboItem;
+	
+	body: BusquedaFacturacionItem = new BusquedaFacturacionItem();
+	bodySearch: BusquedaFacturacionObject = new BusquedaFacturacionObject();
+
+	constructor(private sigaService: SigaServices, private commonsService: CommonsService) { 
 		super(USER_VALIDATIONS);
 	}
 
 	ngOnInit() {
 		this.getRangeYear();
+		this.comboFactEstados();
 	}
 
 	ngAfterViewInit(): void {
@@ -47,7 +62,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
   	onHideDatosGenerales() {
-    	this.showDatosGenerales = !this.showDatosGenerales;
+    	this.showFiltroBusquedaFacturacion = !this.showFiltroBusquedaFacturacion;
   	}
 
   	borrarFecha() {
@@ -57,8 +72,20 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.calendar.onClearButtonClick("");
 	}
 
+	comboFactEstados(){
+		this.sigaService.get("combo_comboFactEstados").subscribe(
+			data => {
+			  this.estadoFacturas = data.combooItems;
+			  this.commonsService.arregloTildesCombo(this.estadoFacturas);
+			},	  
+			err => {
+			  console.log(err);
+			}
+		);
+	}
+
   	getLenguage() {
-		this.service.get('usuario').subscribe((response) => {
+		this.sigaService.get('usuario').subscribe((response) => {
 			this.currentLang = response.usuarioItem[0].idLenguaje;
 
 			switch (this.currentLang) {
@@ -123,5 +150,17 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 
 	focus(e) {
 		this.valueFocus.emit(e);
+	}
+
+	restablecer(){
+
+	}
+
+	nuevo(){
+
+	}
+
+	buscar(){
+		
 	}
 }
