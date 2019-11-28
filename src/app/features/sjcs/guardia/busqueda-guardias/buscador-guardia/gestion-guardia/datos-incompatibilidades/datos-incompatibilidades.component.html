@@ -1,3 +1,38 @@
-<p>
-  datos-incompatibilidades works!
-</p>
+<div class="card">
+  <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div *ngIf="!openFicha" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class="fas fa-calendar-alt icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 cabeza">
+        <div class="d-flex justify-content-end mb-1">
+          <label class="mr-auto title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
+        </div>
+        <div class="d-flex justify-content-between sub">
+          <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
+            <strong>3 meses</strong>
+          </label>
+          <label>{{'justiciaGratuita.guardia.gestion.tipoDias' | translate}}:
+            <strong> L-S, Fest.- S-D</strong>
+          </label>
+          <label>{{'justiciaGratuita.guardia.gestion.diasSeparacionGuardias' | translate}}:
+            <strong>2</strong>
+          </label>
+          <label>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario' | translate}}:
+            <strong>NO</strong>
+          </label>
+          <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado">
+        <i class="fas fa-calendar-alt icon-ficha"></i>
+      </div>
+      <label class="title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+</div>

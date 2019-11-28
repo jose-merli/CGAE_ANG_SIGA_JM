@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./datos-cola-guardia.component.scss']
 })
 export class DatosColaGuardiaComponent implements OnInit {
-
+  openFicha;
   constructor() { }
 
   ngOnInit() {
   }
 
+  abreCierraFicha() {
+
+  }
 }

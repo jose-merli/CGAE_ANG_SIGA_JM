@@ -120,8 +120,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
       this.infoDiasLab = "L-D";
 
     if (this.infoDiasLab != "")
-      this.infoDiasLab = "Lab. " + this.infoDiasLab + ", "
-
+      this.infoDiasLab = "Lab. " + this.infoDiasLab + ", ";
   }
   changeFestividades() {
     if (this.selectFestividades) {
