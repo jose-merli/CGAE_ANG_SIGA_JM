@@ -24,5 +24,6 @@ export let endpoints_oficio: any = {
     turnos_eliminateColaOficio: "oficio/turnos/eliminateColaOficio",
     turnos_busquedaColaGuardia: "oficio/turnos/busquedaColaGuardia",
     combossjcs_comboidGuardias: "oficio/combossjcs/comboidGuardias",
-    turnos_eliminateColaGuardia: "oficio/turnos/eliminateColaGuardia"
+    turnos_eliminateColaGuardia: "oficio/turnos/eliminateColaGuardia",
+    turnos_busquedaGuardias: "oficio/turnos/busquedaGuardias"
 }

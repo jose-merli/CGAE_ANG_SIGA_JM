@@ -157,13 +157,13 @@ export class TarjetaGuardias implements OnInit {
   getColaOficio() {
     this.turnosItem.historico = this.historico;
     this.progressSpinner = true;
-    this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
+    this.sigaServices.post("turnos_busquedaGuardias", this.turnosItem).subscribe(
       n => {
         // this.datos = n.turnosItem;
         this.datos = JSON.parse(n.body).turnosItem;
-        this.datos.forEach(element => {
-          element.orden = +element.orden;
-        });
+        // this.datos.forEach(element => {
+        //   element.orden = +element.orden;
+        // });
         // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
         //   this.turnosItem.historico = true;
         // }
