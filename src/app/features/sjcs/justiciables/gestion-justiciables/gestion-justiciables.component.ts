@@ -33,7 +33,7 @@ export class GestionJusticiablesComponent implements OnInit {
   fromJusticiable;
   modoRepresentante: boolean = false;
   checkedViewRepresentante: boolean = false;
-
+  nuevoRepresentante: boolean = false;
   permisoEscritura;
 
   constructor(private router: Router,
@@ -122,7 +122,7 @@ export class GestionJusticiablesComponent implements OnInit {
     if (!this.modoRepresentante) {
       this.justiciableBusquedaItem = new JusticiableBusquedaItem();
       this.justiciableBusquedaItem.idpersona = event.idpersona;
-      this.justiciableBusquedaItem.idInstitucion = this.authenticationService.getInstitucionSession();
+      this.justiciableBusquedaItem.idinstitucion = this.authenticationService.getInstitucionSession();
       this.persistenceService.setDatos(this.justiciableBusquedaItem);
       this.body = event;
       this.modoEdicion = true;
@@ -182,7 +182,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
         let justiciableBusquedaItem = JSON.parse(n.body).justiciableBusquedaItems;
 
-        if (justiciableBusquedaItem != undefined && justiciableBusquedaItem != null) {
+        if (justiciableBusquedaItem != undefined && justiciableBusquedaItem != null && justiciableBusquedaItem.length > 0) {
           this.body.numeroAsuntos = justiciableBusquedaItem[0].numeroAsuntos;
           this.body.ultimoAsunto = justiciableBusquedaItem[0].ultimoAsunto;
         }
@@ -199,6 +199,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   newRepresentante(event) {
     this.commnosService.scrollTop();
+    this.nuevoRepresentante = true;
     this.body = new JusticiableItem();
     this.body.nif = event.nif;
     this.nuevo();
@@ -214,7 +215,7 @@ export class GestionJusticiablesComponent implements OnInit {
     this.checkedViewRepresentante = true;
     this.representanteBusquedaItem = new JusticiableBusquedaItem();
     this.representanteBusquedaItem.idpersona = event.idpersona;
-    this.representanteBusquedaItem.idInstitucion = event.idinstitucion;
+    this.representanteBusquedaItem.idinstitucion = event.idinstitucion;
     this.representanteBusquedaItem.nif = event.nif;
     this.search();
 
@@ -265,8 +266,12 @@ export class GestionJusticiablesComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearFiltrosAux();
-    if (this.checkedViewRepresentante) {
+    //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
+    if (this.checkedViewRepresentante || this.nuevoRepresentante) {
       this.checkedViewRepresentante = false;
+      this.nuevoRepresentante = false;
+      this.modoEdicion = true;
+      this.commnosService.scrollTop();
       this.search();
     } else {
       this.router.navigate(["/justiciables"]);

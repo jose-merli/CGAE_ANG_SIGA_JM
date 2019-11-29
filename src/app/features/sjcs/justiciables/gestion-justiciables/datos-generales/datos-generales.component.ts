@@ -58,6 +58,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   edicionEmail: boolean = false;
   emailValido: boolean = true;
   faxValido: boolean = true;
+  cpValido: boolean = true;
   resultadosPoblaciones;
 
   permisoEscritura: boolean = true;
@@ -283,10 +284,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.direccion = this.body.direccion.trim();
     }
 
-    if (this.body.numerodir != null && this.body.numerodir != undefined) {
-      this.body.numerodir = this.body.numerodir.trim();
-    }
-
     if (this.body.escaleradir != null && this.body.escaleradir != undefined) {
       this.body.escaleradir = this.body.escaleradir.trim();
     }
@@ -347,6 +344,16 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           }
         } else {
           this.getTelefonosJusticiable();
+
+          if (this.modoRepresentante) {
+            if (this.persistenceService.getBody() != undefined) {
+              let representante = this.persistenceService.getBody();
+              representante.nif = this.body.nif;
+              this.persistenceService.setBody(representante);
+            }
+
+          }
+
         }
 
         if (this.nuevoTelefono) {
@@ -724,13 +731,19 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.isDisabledPoblacion = false;
         }
         this.codigoPostalValido = true;
+        this.cpValido = true;
       } else {
+        this.cpValido = false;
         this.codigoPostalValido = false;
         this.isDisabledPoblacion = true;
         this.provinciaSelecionada = "";
         this.body.idpoblacion = undefined;
         this.body.idprovincia = undefined;
       }
+    }
+
+    if (this.body.codigopostal == undefined || this.body.codigopostal == "") {
+      this.cpValido = true;
     }
   }
 
@@ -847,6 +860,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     this.nuevoTelefono = false;
     this.selectedDatos = [];
+    this.body.idpaisdir1 = "191";
 
     if (this.modoEdicion) {
       if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -996,8 +1010,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.body.nombre != undefined && this.body.nombre.trim() != "" &&
       this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
       this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" &&
-      this.faxValido && this.emailValido
-    ) {
+      this.faxValido && this.emailValido && this.cpValido) {
 
       if (this.datos.length > 2) {
         let valido = true;
@@ -1028,6 +1041,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
       return false;
+
     } else {
       return true;
     }

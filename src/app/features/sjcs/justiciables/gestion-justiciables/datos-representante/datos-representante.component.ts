@@ -22,6 +22,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   tipoIdentificacion;
   progressSpinner: boolean = false;
   msgs = [];
+  nifRepresentante;
 
   @Input() modoEdicion;
   @Input() showTarjeta;
@@ -34,6 +35,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   idPersona;
   permisoEscritura;
   showTarjetaPermiso: boolean = false;
+  representanteValido: boolean = false;
 
   @Output() newRepresentante = new EventEmitter<JusticiableItem>();
   @Output() viewRepresentante = new EventEmitter<JusticiableItem>();
@@ -67,21 +69,29 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnChanges(changes: SimpleChanges) {
 
-    //Comprobamos si se ha seleccionado de la tabla el justiciable 
-    if (this.persistenceService.getBody() != undefined) {
+    //Comprobamos si se ha seleccionado de la tabla el justiciable y no nos encontramos en la creacion de justiciable/representante
+    if (this.persistenceService.getBody() != undefined && this.body.idpersona != undefined) {
       this.generalBody = this.persistenceService.getBody();
 
-      if (this.persistenceService.getBody().nombreSolo != undefined && this.persistenceService.getBody().nombreSolo != null) {
-        this.generalBody.nombre = this.persistenceService.getBody().nombreSolo;
+      //Si tiene nif lo volvemos a buscar
+      if (this.generalBody.nif != undefined && this.generalBody.nif != "") {
+        this.searchRepresentanteByNif();
+        this.nifRepresentante = this.generalBody.nif;
+        //Si no tiene se mantiene el que guardamos
+      } else {
+        if (this.persistenceService.getBody().nombreSolo != undefined && this.persistenceService.getBody().nombreSolo != null) {
+          this.generalBody.nombre = this.persistenceService.getBody().nombreSolo;
+        }
+
+        if (this.persistenceService.getBody().apellido1 != undefined && this.persistenceService.getBody().apellido1 != null) {
+          this.generalBody.apellidos = this.persistenceService.getBody().apellido1;
+        }
+
+        if (this.persistenceService.getBody().apellido2 != undefined && this.persistenceService.getBody().apellido2 != null) {
+          this.generalBody.apellidos += " " + this.persistenceService.getBody().apellido2;
+        }
       }
 
-      if (this.persistenceService.getBody().apellido1 != undefined && this.persistenceService.getBody().apellido1 != null) {
-        this.generalBody.apellidos = this.persistenceService.getBody().apellido1;
-      }
-
-      if (this.persistenceService.getBody().apellido2 != undefined && this.persistenceService.getBody().apellido2 != null) {
-        this.generalBody.apellidos += " " + this.persistenceService.getBody().apellido2;
-      }
 
 
       this.compruebaDNI();
@@ -139,16 +149,17 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
     this.progressSpinner = true;
     let bodyBusqueda = new JusticiableBusquedaItem();
     bodyBusqueda.idpersona = this.body.idrepresentantejg;
-    bodyBusqueda.idInstitucion = this.body.idinstitucion;
+    bodyBusqueda.idinstitucion = this.body.idinstitucion;
 
     this.sigaServices.post("gestionJusticiables_searchJusticiable", bodyBusqueda).subscribe(
       n => {
 
         this.generalBody = JSON.parse(n.body).justiciable;
+        this.nifRepresentante = this.generalBody.nif;
         this.persistenceService.clearBody();
         this.progressSpinner = false;
         this.navigateToJusticiable = false;
-
+        this.compruebaDNI();
       },
       err => {
         this.progressSpinner = false;
@@ -187,7 +198,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         n => {
 
           this.generalBody = JSON.parse(n.body).justiciable;
+          this.nifRepresentante = this.generalBody.nif;
           this.progressSpinner = false;
+          this.compruebaDNI();
 
           if (this.generalBody.idpersona == null || this.generalBody.idpersona == undefined) {
             this.callServiceConfirmationCreateRepresentante();
@@ -203,7 +216,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   disabledSave() {
-    if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != "") {
+    if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != "" && this.representanteValido) {
       return false;
     } else {
       return true;
@@ -250,6 +263,18 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
     if (this.generalBody.nif != undefined && this.generalBody.nif != "" && this.generalBody.nif != null) {
       let idTipoIdentificacion = this.commonsService.compruebaDNI(this.generalBody.idtipoidentificacion, this.generalBody.nif);
       this.generalBody.idtipoidentificacion = idTipoIdentificacion;
+      this.representanteValido = true;
+
+      if (this.nifRepresentante != undefined) {
+        if (this.generalBody.nif != this.nifRepresentante) {
+          this.representanteValido = false;
+        } else {
+          this.representanteValido = true;
+        }
+      }
+
+    } else {
+      this.representanteValido = false;
     }
   }
 
@@ -258,8 +283,18 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
     if (this.generalBody.nif != undefined && this.generalBody.nif != "" && this.generalBody.nif != null) {
       let idTipoIdentificacion = this.commonsService.compruebaDNI(this.generalBody.idtipoidentificacion, this.generalBody.nif);
       this.generalBody.idtipoidentificacion = idTipoIdentificacion;
+
+      if (this.generalBody.nif != this.nifRepresentante) {
+        this.representanteValido = false;
+
+      } else {
+        this.representanteValido = true;
+
+      }
+
     } else {
-      this.generalBody = new JusticiableItem();
+      this.representanteValido = false;
+
     }
   }
 
@@ -271,7 +306,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
-
+        this.representanteValido = false;
       } else {
 
         this.progressSpinner = true;
@@ -303,6 +338,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         n => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.generalBody = new JusticiableItem();
+          this.nifRepresentante = undefined;
           this.persistenceService.setBody(this.generalBody);
           this.body.idrepresentantejg = undefined;
           this.progressSpinner = false;
@@ -336,6 +372,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       this.searchJusticiable();
     } else {
       this.generalBody = new JusticiableItem();
+      this.nifRepresentante = undefined;
     }
   }
 
@@ -354,5 +391,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnDestroy(): void {
     this.generalBody = new JusticiableItem();
+    this.nifRepresentante = undefined;
   }
 }

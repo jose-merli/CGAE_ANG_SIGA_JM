@@ -73,6 +73,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
       this.idPersona != this.body.idpersona) {
       this.showTarjeta = false;
       this.datos = undefined;
+      this.datosInicio = undefined;
     }
 
     //Se almacena el idpersona del justiciable cargado en la ficha de justiciable
