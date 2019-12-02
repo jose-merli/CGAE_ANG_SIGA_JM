@@ -16,12 +16,19 @@ export let endpoints_EJG: any = {
     // busquedaFundamentosCalificacion_comboDictamen: "maestros/busquedaFundamentosCalificacion/comboDictamen",
     filtrosejg_comboTipoEJG: "ejg/filtros-ejg/comboTipoEJG",
     filtrosejg_comboTipoEJGColegio: "ejg/filtros-ejg/comboTipoEJGColegio",
+    filtrosejg_comboEstadoEJG: "ejg/filtros-ejg/comboEstadoEJG",
     filtrosejg_comboFundamentoCalif: "ejg/filtros-ejg/comboFundamentoCalif",
     filtrosejg_comboResolucion: "ejg/filtros-ejg/comboResolucion",
     filtrosejg_comboFundamentoImpug: "ejg/filtros-ejg/comboFundamentoImpug",
     filtrosejg_comboPreceptivo: "ejg/filtros-ejg/comboPreceptivo",
     filtrosejg_comboRenuncia: "ejg/filtros-ejg/comboRenuncia",
     filtrosejg_comboCreadoDesde: "ejg/filtros-ejg/comboCreadoDesde",
-    filtrosejg_comboFundamentoJurid: "ejg/filtros-ejg/comboFundamentoJurid"
+    filtrosejg_comboFundamentoJurid: "ejg/filtros-ejg/comboFundamentoJurid",
+    filtrosejg_busquedaEJG: "ejg/filtros-ejg/busquedaEJG",
+    filtrosejg_comboImpugnacion: "ejg/filtros-ejg/comboImpugnacion",
+    filtrosejg_comboJuzgados: "ejg/filtros-ejg/comboJuzgados"
+
+
+
 
 }

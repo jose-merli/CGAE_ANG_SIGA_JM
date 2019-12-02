@@ -1,13 +1,15 @@
 export class EJGItem {
 
+    idEJG: string;
     colegio: string;
     annio: string;
     numero: string;
     tipoEJG: string;
-    tipoEJGColegio: boolean;
+    tipoEJGColegio: string;
     creadoDesde: string;
     fechaAperturaDesd: Date;
     fechaAperturaHast: Date;
+    fechaApertura: Date;
     estadoEJG: string;
     fechaEstadoDesd: Date;
     fechaEstadoHast: Date;
@@ -44,7 +46,7 @@ export class EJGItem {
     ponente: String;
     fechaPonenteDesd: Date;
     fechaPonenteHast: Date;
-    numRegRemesa: string; //ojooo lo divido en 3????
+    numRegRemesa: string;
     numRegRemesa1: string;
     numRegRemesa2: string;
     numRegRemesa3: string;
@@ -52,6 +54,7 @@ export class EJGItem {
     nif: String;
     apellidos: String;
     nombre: String;
+    nombreApeSolicitante: String;
     rol: String;
 
     turno: String;
@@ -60,5 +63,6 @@ export class EJGItem {
     apellidosYNombre: String; //lo dejo asi?
     tipoLetrado: String;
 
+    turnoDes: String;
     constructor() { }
 }

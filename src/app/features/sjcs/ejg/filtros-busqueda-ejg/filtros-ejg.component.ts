@@ -16,13 +16,12 @@ export class FiltrosEjgComponent implements OnInit {
 
   historico: boolean = false;
   msgs: any[] = [];
-  editar: boolean = true;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
   body: EJGItem = new EJGItem();
   bodyAux: EJGItem = new EJGItem();
   nuevo: boolean = true; //ojo no poner a pelo
-
+  inst2000: boolean;
   showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = true;
   showDatosDefensa: boolean = true;
@@ -45,28 +44,34 @@ export class FiltrosEjgComponent implements OnInit {
   comboColegio = [];
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
-  comboCreadoDesde = [];
+  comboCreadoDesde = datos_combos.comboCreadoDesde;
   comboEstadoEJG = [];
   comboTurno = [];
   comboGuardia = [];
-  comboTipoLetrado = [];
+  comboTipoLetrado = datos_combos.comboTipoLetrado;
   comboRol = [];
   comboJuzgado = [];
+  institucionActual;
+
   isDisabledFundamentosJurid: boolean = true;
+  isDisabledFundamentosCalif: boolean = true;
+  isDisabledFundamentoImpug: boolean = true;
   @Input() permisos;
-  /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
+  /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService) { }
 
 
   ngOnInit() {
     this.getCombos();
+
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
@@ -86,8 +91,10 @@ export class FiltrosEjgComponent implements OnInit {
       this.body = new EJGItem(); //ponia filtros, yo lo cambie x body. no seguro
       this.bodyAux = new EJGItem(); //SEGURO?
     }
+    this.body.annio = new Date().getFullYear().toString();
   }
   getCombos() {
+
     this.getComboProcedimiento();
     // this.getComboCalidad();
     this.getComboDictamen();
@@ -97,32 +104,55 @@ export class FiltrosEjgComponent implements OnInit {
     this.getComboResolucion();
     this.getComboRenuncia();
     this.getComboImpugnacion();
-    this.getComboFundamentoImpug();
     this.getComboPonente();
-    this.getComboColegio();
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
-    this.getComboCreadoDesde();
+    // this.getComboCreadoDesde();
     this.getComboEstadoEJG();
     this.getComboTurno();
-    this.getComboGuardia();
-    this.getComboTipoLetrado();
+    // this.getComboGuardia();
+    // this.getComboTipoLetrado();
     this.getComboRol();
     this.getComboJuzgado();
+    this.getComboColegio();
+
     // this.getComboFundamentosResoluc();
   }
 
   onChangeResolucion() {
-    // this.body.resolucion = "";
     this.comboFundamentosResolucion = [];
 
     if (this.body.resolucion != undefined && this.body.resolucion != "") {
-      this.isDisabledFundamentosJurid = true;
-    } else {
       this.isDisabledFundamentosJurid = false;
       this.getComboFundamentoJurid();
+    } else {
+      this.isDisabledFundamentosJurid = true;
+      this.body.fundamentoJuridico = "";
     }
   }
+
+  onChangeDictamen() {
+    this.comboFundamentoCalif = [];
+    if (this.body.dictamen != undefined && this.body.dictamen != "") {
+      this.isDisabledFundamentosCalif = false;
+    } else {
+      this.isDisabledFundamentosCalif = true;
+      this.body.fundamentoCalif = "";
+
+    }
+  }
+  onChangeImpugnacion() {
+    this.comboFundamentoImpug = [];
+    if (this.body.impugnacion != undefined && this.body.impugnacion != "") {
+      this.isDisabledFundamentoImpug = false;
+      this.getComboFundamentoImpug();
+    } else {
+      this.isDisabledFundamentoImpug = true;
+      this.body.fundamentoImpuganacion = "";
+
+    }
+  }
+
 
   getComboProcedimiento() {
     //   this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
@@ -140,6 +170,7 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboDictamen = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboDictamen);
+        this.comboDictamen.push({ label: "Indiferente", value: -1 });
       },
       err => {
         console.log(err);
@@ -147,7 +178,15 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboRol() {
-    this.comboRol;
+    this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
+      n => {
+        this.comboRol = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboRol);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // getComboCalidad() {
@@ -178,6 +217,7 @@ export class FiltrosEjgComponent implements OnInit {
   getComboFundamentoCalif() {
     this.sigaServices.get("filtrosejg_comboFundamentoCalif").subscribe(
       n => {
+        // this.isDisabledFundamentosCalif = false;
         this.comboFundamentoCalif = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
       },
@@ -204,11 +244,10 @@ export class FiltrosEjgComponent implements OnInit {
     this.sigaServices
       .getParam(
         "filtrosejg_comboFundamentoJurid",
-        "?resolucion=" + "3"/*"this.body.resolucion*"*/
+        "?resolucion=" + this.body.resolucion
       )
       .subscribe(
         n => {
-          this.isDisabledFundamentosJurid = false;
           this.comboFundamentoJurid = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboFundamentoJurid);
         },
@@ -217,7 +256,17 @@ export class FiltrosEjgComponent implements OnInit {
       );
   }
   getComboImpugnacion() {
-    this.comboImpugnacion;
+    this.sigaServices.get("filtrosejg_comboImpugnacion").subscribe(
+      n => {
+        this.comboImpugnacion = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboImpugnacion);
+        this.comboImpugnacion.push({ label: "Indiferente", value: -1 });
+        this.comboImpugnacion.push({ label: "Sin Resolución", value: -2 });
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboFundamentoImpug() {
     this.sigaServices.get("filtrosejg_comboFundamentoImpug").subscribe(
@@ -234,8 +283,28 @@ export class FiltrosEjgComponent implements OnInit {
     this.comboPonente;
   }
   getComboColegio() {
-    this.comboColegio;
+
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+      this.sigaServices.getParam(
+        "busquedaCol_colegio",
+        "?idInstitucion=" + this.institucionActual).subscribe(
+          n => {
+            this.comboColegio = n.combooItems;
+            this.body.colegio = this.institucionActual;
+            this.commonServices.arregloTildesCombo(this.comboColegio);
+            if (this.institucionActual == '2000') {
+              this.inst2000 = false;
+            } else { this.inst2000 = true; }
+          },
+          err => {
+            console.log(err);
+          }
+        );
+
+    });
   }
+
   getComboTipoEJG() {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(
       n => {
@@ -258,59 +327,66 @@ export class FiltrosEjgComponent implements OnInit {
       }
     );
   }
-  getComboCreadoDesde() {
-    if (this.nuevo) {
-      // LABEL MAL REVISAR
-      this.comboCreadoDesde = [
-        {
-          label: "Manual",
-          value: "M"
-        },
-        {
-          label: "Asistencia",
-          value: "A"
-        },
-        {
-          label: "Designa",
-          value: "D"
-        },
-        {
-          label: "SOJ",
-          value: "O"
-        }
-      ];
-      // this.comboCreadoDesde.push("Manual");
-      // this.comboCreadoDesde.push("Asistencia");
-      // this.comboCreadoDesde.push("Designa");
-      // this.comboCreadoDesde.push("SOJ");
+  // getComboCreadoDesde() {
+  //   if (this.nuevo) {
 
-    } else {
-      this.sigaServices.get("filtrosejg_comboCreadoDesde").subscribe(
-        n => {
-          this.comboCreadoDesde = n.combooItems;
-          this.commonServices.arregloTildesCombo(this.comboCreadoDesde);
+
+  //   } else {
+  //     this.sigaServices.get("filtrosejg_comboCreadoDesde").subscribe(
+  //       n => {
+  //         this.comboCreadoDesde = n.combooItems;
+  //         this.commonServices.arregloTildesCombo(this.comboCreadoDesde);
+  //       },
+  //       err => {
+  //         console.log(err);
+  //       }
+  //     );
+  //   }
+
+  // }
+  getComboEstadoEJG() {
+    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+      n => {
+        this.comboEstadoEJG = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  getComboTurno() {
+    if (this.body.turno != undefined)
+      this.getComboGuardia();
+  }
+  getComboGuardia() {
+    this.sigaServices.getParam(
+      "combo_guardiaPorTurno",
+      "?idTurno=" + this.body.turno
+    )
+      .subscribe(
+        col => {
+          this.comboGuardia = col.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
           console.log(err);
         }
       );
-    }
-
   }
-  getComboEstadoEJG() {
-    this.comboEstadoEJG;
-  }
-  getComboTurno() {
-    this.comboTurno;
-  }
-  getComboGuardia() {
-    this.comboGuardia;
-  }
-  getComboTipoLetrado() {
-    this.comboTipoLetrado;
-  }
+  // getComboTipoLetrado() {
+  //   this.comboTipoLetrado;
+  // }
   getComboJuzgado() {
-    this.comboJuzgado;
+    this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
+      n => {
+        this.comboJuzgado = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboJuzgado);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   fillFechaDesde(event) {
@@ -423,11 +499,47 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   checkFilters() {
-    // quita espacios vacios antes de buscar, METERSELO A TODOS LOS CAMPOS
-    if (this.body.nombre != undefined && this.body.nombre != null) {
+    if (this.body.annio != undefined)
+      this.body.annio = this.body.annio.trim();
+    if (this.body.numero != undefined)
+      this.body.numero = this.body.numero.trim();
+    if (this.body.asunto != undefined)
+      this.body.asunto = this.body.asunto.trim();
+    if (this.body.numAnnioProcedimiento != undefined)
+      this.body.numAnnioProcedimiento = this.body.numAnnioProcedimiento.trim();
+    if (this.body.nig != undefined)
+      this.body.nig = this.body.nig.trim();
+    if (this.body.annioCAJG != undefined)
+      this.body.annioCAJG = this.body.annioCAJG.trim();
+    if (this.body.numCAJG != undefined)
+      this.body.numCAJG = this.body.numCAJG.trim();
+    if (this.body.annioActa != undefined)
+      this.body.annioActa = this.body.annioActa.trim();
+    if (this.body.numActa != undefined)
+      this.body.numActa = this.body.numActa.trim();
+    if (this.body.numRegRemesa1 != undefined)
+      this.body.numRegRemesa1 = this.body.numRegRemesa1.trim();
+    if (this.body.numRegRemesa2 != undefined)
+      this.body.numRegRemesa2 = this.body.numRegRemesa2.trim();
+    if (this.body.numRegRemesa3 != undefined)
+      this.body.numRegRemesa3 = this.body.numRegRemesa3.trim();
+    if (this.body.nif != undefined)
+      this.body.nif = this.body.nif.trim();
+    if (this.body.apellidos != undefined)
+      this.body.apellidos = this.body.apellidos.trim();
+    if (this.body.nombre != undefined)
       this.body.nombre = this.body.nombre.trim();
-    }
+    if (this.body.numColegiado != undefined)
+      this.body.numColegiado = this.body.numColegiado.trim();
+    // if (
+    //   (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
+    //   (this.filtros.apellido1 == null || this.filtros.apellido1 == "" || this.filtros.apellido1.length < 3) &&
+    //   (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.length < 3)) {
+    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    //   return false;
+    // } else {
     return true;
+    // }
   }
   //Busca ejg según los filtros
   isBuscar() {

@@ -27,4 +27,37 @@ export const datos_combos: any = {
             value: "D"
         }
     ],
+    comboCreadoDesde: [
+        {
+            label: "Manual",
+            value: "M"
+        },
+        {
+            label: "Asistencia",
+            value: "A"
+        },
+        {
+            label: "Designa",
+            value: "O"
+        },
+        {
+            label: "SOJ",
+            value: "S"
+        }
+    ],
+    comboTipoLetrado: [
+        {
+            label: "Letrado Tramitador",
+            value: "E"
+        },
+        {
+            label: "Letrado Asistencias",
+            value: "A"
+        },
+        {
+            label: "Letrado Designas",
+            value: "D"
+        },
+
+    ],
 }

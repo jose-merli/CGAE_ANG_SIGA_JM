@@ -24,7 +24,7 @@ export class TablaEjgComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   permisoEscritura: boolean = false;
-
+  buscadores = [];
   message;
   initDatos;
   nuevo: boolean = false;
@@ -118,6 +118,8 @@ export class TablaEjgComponent implements OnInit {
       { field: "movil", header: "censo.datosDireccion.literal.movil" }, //este no esta en el item!! q hago?
       { field: "lopd", header: "censo.busquedaColegial.lopd" }, //este no esta en el item!! q hago?
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
+
     this.rowsPerPage = [
       {
         label: 10,

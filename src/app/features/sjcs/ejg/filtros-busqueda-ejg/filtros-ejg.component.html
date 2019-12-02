@@ -18,13 +18,13 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [options]="comboColegio" [filter]="true"
-              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000" [options]="comboColegio"
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.annio">
+              <input type="text" [(ngModel)]="body.annio" class="form-control" maxLength="4" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
@@ -108,13 +108,21 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.dictamen' placeholder="Seleccionar" [options]="comboDictamen" [filter]="true"
-              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+
+            <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.dictamen' [options]="comboDictamen" [selectedItemsLabel]="textSelected"
+              styleClass="widthAll" (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
+            <!-- <p-multiSelect #multiSelectPJ *ngIf="!(selectMultiple || selectAll) && ((nuevo && dato.zonaNueva == undefined) || (!nuevo && !seleccion) || historico)"
+              [disabled]="nuevo || historico" defaultLabel="Seleccionar al menos un partido judicial" filterBy="label"
+              [(ngModel)]="dato.partidosJudiciales" [options]="comboPJ" optionLabel="label" [selectedItemsLabel]="textSelected"
+              styleClass="widthAll" [panelStyle]="{ width: '100%' }" (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato); openMultiSelect(dato)"></p-multiSelect> -->
+            <!--           
+              <p-multiSelect maxSelectedLabels="1" [defaultLabel]="textFilter" [filter]="true" styleClass="widthAll" [(ngModel)]='modulosItem.procedimientosReal'
+              [options]="procedimientos" [selectedItemsLabel]="textSelected" filterBy="label,labelSinTilde" [disabled]="modulosItem.historico || modulosItem.idjurisdiccion=='' || modulosItem.idjurisdiccion==undefined"></p-multiSelect> -->
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.fundamentos.fundamentosCalificacion" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.fundamentosCalificacion' placeholder="Seleccionar" [options]="comboFundamentoCalif"
-              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown [(disabled)]="isDisabledFundamentosCalif" class="select-form" [(ngModel)]='body.fundamentoCalif' placeholder="Seleccionar"
+              [options]="comboFundamentoCalif" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group row col-lg-3 col-md-3">
             <div class="form-group col-lg-6 col-md-6">
@@ -162,13 +170,13 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'justiciaGratuita.ejg.datosGenerales.Impugnacion'|translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.impugnacion' placeholder="Seleccionar" [options]="comboImpugnacion" [filter]="true"
-              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown (onChange)="onChangeImpugnacion()" class="select-form" [(ngModel)]='body.impugnacion' placeholder="Seleccionar"
+              [options]="comboImpugnacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{'justiciaGratuita.ejg.datosGenerales.fundamentoImpugnacion'|translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.fundamentoImpuganacion' placeholder="Seleccionar" [options]="comboFundamentoImpug"
-              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='body.fundamentoImpuganacion' placeholder="Seleccionar" [(disabled)]="isDisabledFundamentoImpug"
+              [options]="comboFundamentoImpug" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group row col-lg-3 col-md-3">
             <div class="form-group col-lg-6 col-md-6">
@@ -205,7 +213,7 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group row col-lg-6 col-md-6">
+          <div class="form-group col-lg-6 col-md-6">
             <div class="form-group row col-lg-12 col-md-12">
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{'justiciaGratuita.ejg.datosGenerales.calidad'|translate}}</label>
@@ -273,9 +281,8 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"justiciaGratuita.ejg.datosGenerales.Ponente" | translate}}</label>
-            <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" placeholder="Seleccionar" [(ngModel)]='body.ponente'
-              [options]="comboPonente" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" [filter]="true"
-              filterBy="label,labelSinTilde"></p-multiSelect>
+            <p-dropdown class="select-form" [(ngModel)]='body.ponente' placeholder="Seleccionar" [options]="comboPonente" [filter]="true"
+              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">

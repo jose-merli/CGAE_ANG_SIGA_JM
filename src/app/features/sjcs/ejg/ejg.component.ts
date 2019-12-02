@@ -24,6 +24,7 @@ export class EJGComponent implements OnInit {
   buscar: boolean = false;
   datos;
   msgs;
+  institucionActual;
 
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   // la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -42,12 +43,13 @@ export class EJGComponent implements OnInit {
 
   ngOnInit() {
     this.buscar = this.filtros.buscar
-    // ojo "91P", meter lo de los procesos_maestros pal permiso. ese no es!mirar BD
+
     this.commonsService.checkAcceso("946")
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscritura);
+
 
         if (this.permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
@@ -68,14 +70,18 @@ export class EJGComponent implements OnInit {
 
     this.progressSpinner = true;
 
-    this.sigaServices.post("busquedaDocumentacionEjg_searchDocumento", this.filtros.filtroAux).subscribe(
+    this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.filtroAux).subscribe(
       n => {
-        this.datos = JSON.parse(n.body).documentacionejgItems;
+        this.datos = JSON.parse(n.body).ejgItems;
         this.buscar = true;
-        this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
+          this.tabla.table.sortOrder = 0;
+          this.tabla.table.sortField = '';
+          this.tabla.table.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
@@ -96,7 +102,10 @@ export class EJGComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+
 }
+
 
 
 
