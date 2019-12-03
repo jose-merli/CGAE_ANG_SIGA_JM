@@ -25,7 +25,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   selectedBefore;
 
   updatePartidasPres = [];
-
+  buscadores = [];
   body;
 
   selectedItem: number = 10;
@@ -139,11 +139,12 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
-
+    if (dato.descripcion != undefined)
+      dato.descripcion = dato.descripcion.trim();
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -156,10 +157,12 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
 
+    if (dato.claveModelo != undefined)
+      dato.claveModelo = dato.claveModelo.trim();
     if (findDato != undefined) {
       if (dato.claveModelo != findDato.claveModelo) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.claveModelo === dato.claveModelo);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -175,7 +178,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.retencion != findDato.retencion) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.retencion === dato.retencion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -199,16 +202,70 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   changeSociedad(dato) {
 
+    let sociedad = this.comboSociedades.find(item => item.value === dato.tipoSociedad);
+    dato.descripcionSociedad = sociedad.label;
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
-
     if (findDato != undefined) {
-      if (dato.descripcionSociedad != findDato.descripcionSociedad) {
+      if (dato.tipoSociedad != findDato.tipoSociedad) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcionSociedad === dato.descripcionSociedad);
+        let findUpdate = this.updatePartidasPres.find(item => item.idRetencion === dato.idRetencion);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
         }
+      }
+    }
+  }
+
+
+  save() {
+    this.progressSpinner = true;
+    let url = "";
+
+    if (this.nuevo) {
+      url = "busquedaRetencionesIRPF_createRetencionesIRPF";
+      let retencion;
+      retencion = this.datos[0];
+      retencion.retencion = retencion.valorNum;
+
+      // retencion.descripcion = this.comboSociedades[retencion.idRetencion].label
+      if (retencion.retencion != null && retencion.retencion != undefined && retencion.retencion != "") {
+        this.body = retencion;
+        this.body.descripcion = this.body.descripcion.trim();
+        this.body.retencion = this.body.retencion.replace(",", ".");
+        if (this.body.retencion == ".") {
+          this.body.retencion = 0;
+        }
+
+        this.callSaveService(url);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.retencionNula"));
+        this.progressSpinner = false;
+
+      }
+    } else {
+      url = "busquedaRetencionesIRPF_updateRetencionesIRPF";
+      this.editMode = false;
+      if (this.validateUpdate()) {
+        this.body = new RetencionIrpfItem();
+        this.body.retencionItems = this.updatePartidasPres;
+        this.body.retencionItems = this.body.retencionItems.map(it => {
+          it.descripcion = it.descripcion.trim();
+          return it;
+        })
+        this.body.retencionItems.forEach(element => {
+          element.retencion = element.retencion.replace(",", ".");
+          element.retencionReal = +element.retencion;
+          if (element.retencion == ".") {
+            element.retencion = 0;
+          }
+        });
+
+        this.callSaveService(url);
+      } else {
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.existeRetencionMismoNombre"));
+        this.progressSpinner = false;
       }
     }
 
@@ -234,7 +291,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-
+        this.editMode = true;
         if (err != undefined && err.error != null && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
@@ -251,53 +308,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   }
 
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (this.nuevo) {
-      url = "busquedaRetencionesIRPF_createRetencionesIRPF";
-      let retencion;
-      retencion = this.datos[0];
-      retencion.retencion = retencion.valorNum;
-
-      // retencion.descripcion = this.comboSociedades[retencion.idRetencion].label
-      if (retencion.retencion != null && retencion.retencion != undefined && retencion.retencion != "") {
-        this.body = retencion;
-        this.body.retencion = this.body.retencion.replace(",", ".");
-        if (this.body.retencion == ".") {
-          this.body.retencion = 0;
-        }
-
-        this.callSaveService(url);
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.retencionNula"));
-        this.progressSpinner = false;
-
-      }
-    } else {
-      url = "busquedaRetencionesIRPF_updateRetencionesIRPF";
-      this.editMode = false;
-      if (this.validateUpdate()) {
-        this.body = new RetencionIrpfItem();
-        this.body.retencionItems = this.updatePartidasPres;
-        this.body.retencionItems.forEach(element => {
-          element.retencion = element.retencion.replace(",", ".");
-          element.retencionReal = +element.retencion;
-          if (element.retencion == ".") {
-            element.retencion = 0;
-          }
-        });
-
-        this.callSaveService(url);
-      } else {
-
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.documentacionIRPF.existeRetencionMismoNombre"));
-        this.progressSpinner = false;
-      }
-    }
-
-  }
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -312,6 +322,9 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
+
   }
 
   newRetencion() {
@@ -347,7 +360,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined) {
+      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim() &&
+        this.datos[0].valorNum != undefined && this.datos[0].valorNum.trim()) {
         return false;
       } else {
         return true;
@@ -355,7 +369,15 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if (!it.descripcion.trim() || !it.retencion)
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }
@@ -415,7 +437,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     this.sigaServices.post(url, del).subscribe(
       data => {
         this.selectedDatos = [];
-        this.search.emit(false);
+        this.search.emit(this.historico);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -429,8 +451,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
         this.selectAll = false;
         this.editMode = false;
         this.nuevo = false;
@@ -503,13 +523,13 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec" },
-      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo" },
-      { field: "tipoSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad" }
+      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion", width: "30%" },
+      { field: "retencionReal", header: "FactSJCS.mantRetencionesJ.literal.tramoLec", width: "15%" },
+      { field: "claveModelo", header: "dato.jgr.maestros.documentacionIRPF.claveModelo", width: "15%" },
+      { field: "descripcionSociedad", header: "dato.jgr.maestros.documentacionIRPF.tipoSociedad", width: "40%" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

@@ -258,7 +258,7 @@
               </label>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idpoblacion'
                 [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [disabled]="isDisabledPoblacion || !permisoEscritura">
+                [emptyFilterMessage]="resultadosPoblaciones" [disabled]="isDisabledPoblacion || !permisoEscritura">
               </p-dropdown>
             </div>
 

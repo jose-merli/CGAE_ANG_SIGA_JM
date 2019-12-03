@@ -76,7 +76,8 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
   }
 
   callSaveService(url) {
-
+    if (this.body.codigoExt != undefined) this.body.codigoExt = this.body.codigoExt.trim();
+    if (this.body.descripcionFundamento != undefined) this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
@@ -131,10 +132,11 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.body.codigoExt != undefined) this.body.codigoExt = this.body.codigoExt.trim();
-    if (this.body.descripcionFundamento != undefined) this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
+
     if (!this.historico && (this.body.descripcionFundamento && this.body.idTipoResolucion) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
-      return false;
+      if (this.body.descripcionFundamento.trim() != "") {
+        return false;
+      } else { return true; }
     } else {
       return true;
     }

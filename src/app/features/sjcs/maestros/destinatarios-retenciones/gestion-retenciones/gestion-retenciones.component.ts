@@ -30,7 +30,7 @@ export class TablaDestinatariosComponent implements OnInit {
   updateDestinatariosRet = [];
 
   body;
-
+  buscadores = []
   selectedItem: number = 10;
   selectAll;
   selectedDatos: any[] = [];
@@ -179,7 +179,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.cuentacontable != findDato.cuentacontable) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.cuentacontable === dato.cuentacontable);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -192,11 +192,12 @@ export class TablaDestinatariosComponent implements OnInit {
   changeNombre(dato) {
 
     let findDato = this.datosInicial.find(item => item.iddestinatario === dato.iddestinatario);
+    dato.nombre = dato.nombre.trim();
 
     if (findDato != undefined) {
       if (dato.nombre != findDato.nombre) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.nombre === dato.nombre);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -212,7 +213,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.orden != findDato.orden) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.orden === dato.orden);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -264,6 +265,7 @@ export class TablaDestinatariosComponent implements OnInit {
       url = "gestionDestinatariosRetenc_createDestinatarioRetenc";
       let destinatariosRetenc = this.datos[0];
       this.body = destinatariosRetenc;
+      this.body.nombre = this.body.nombre.trim();
       this.callSaveService(url);
 
     } else {
@@ -272,6 +274,10 @@ export class TablaDestinatariosComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new DestinatariosRetencObject();
         this.body.destinatariosItem = this.updateDestinatariosRet;
+        this.body.destinatariosItem = this.body.destinatariosItem.map(it => {
+          it.nombre = it.nombre.trim();
+          return it;
+        })
         this.callSaveService(url);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de las partidas presupuestrias ya se encuentran registrados");
@@ -294,6 +300,8 @@ export class TablaDestinatariosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
   // rest() {
@@ -334,17 +342,19 @@ export class TablaDestinatariosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombre != undefined && this.datos[0].orden != undefined && this.datos[0].cuentacontable != undefined) {
+      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim()) {
         return false;
       } else {
         return true;
       }
 
     } else {
-      if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos
-        && (this.datos[0].nombre != undefined && this.datos[0].nombre != ""
-          && this.datos[0].orden != undefined && this.datos[0].orden != ""
-          && this.datos[0].cuentacontable != undefined && this.datos[0].cuentacontable != "")) {
+      this.updateDestinatariosRet = this.updateDestinatariosRet.filter(it => {
+        if (it.nombre != undefined && it.nombre.trim() != "")
+          return true;
+        else false;
+      })
+      if (!this.historico && (this.updateDestinatariosRet != undefined && this.updateDestinatariosRet.length > 0) && this.permisos) {
         return false;
       } else {
         return true;
@@ -377,7 +387,11 @@ export class TablaDestinatariosComponent implements OnInit {
     this.sigaServices.post("gestionDestinatariosRetenc_eliminateDestinatariosRetenc", DestinatariosRetencDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchPartidas.emit(false);
+        if (this.historico) {
+          this.searchPartidas.emit(true);
+        } else {
+          this.searchPartidas.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -390,12 +404,18 @@ export class TablaDestinatariosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+          this.progressSpinner = false;
+        } else {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
       }
     );
   }
@@ -464,7 +484,7 @@ export class TablaDestinatariosComponent implements OnInit {
       { field: "cuentacontable", header: "censo.consultaDatosGenerales.literal.cuentaContable" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
       {
         label: 10,

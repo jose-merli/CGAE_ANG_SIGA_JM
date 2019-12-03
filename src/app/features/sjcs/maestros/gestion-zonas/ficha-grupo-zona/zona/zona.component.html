@@ -36,10 +36,11 @@
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscador[i]" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
                 table.filter($event.target.value, col.field, 'contains')
               " />
             </th>
@@ -74,7 +75,8 @@
 
                 <input *ngIf="!historico && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.zonaNueva))" type="text"
                   class="form-control paddingInput" [(ngModel)]="dato.descripcionsubzona" name="descripcionsubzona" type="text"
-                  on-focusout="validateZone($event)" (onBlur)="validateZone($event)" maxLength="60" />
+                  on-focusout="validateZone($event)" (onBlur)="validateZone($event)" (ngModelChange)="validateZoneChange($event)"
+                  maxLength="60" />
               </div>
             </td>
 

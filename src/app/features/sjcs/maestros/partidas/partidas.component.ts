@@ -95,6 +95,12 @@ export class PartidasComponent implements OnInit, AfterViewInit {
       n => {
         this.datos = JSON.parse(n.body).partidasItem;
         this.buscar = true;
+        if (this.tablapartida && this.tablapartida.tabla) {
+          this.tablapartida.tabla.sortOrder = 0;
+          this.tablapartida.tabla.sortField = '';
+          this.tablapartida.tabla.reset();
+          this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
+        }
         this.progressSpinner = false;
 
         this.datos.forEach(element => {
@@ -103,6 +109,7 @@ export class PartidasComponent implements OnInit, AfterViewInit {
           if (element.importepartida[0] == ',')
             element.importepartida = "0".concat(element.importepartida)
         });
+
       },
       err => {
         this.progressSpinner = false;

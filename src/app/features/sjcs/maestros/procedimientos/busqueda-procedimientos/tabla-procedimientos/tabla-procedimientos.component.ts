@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges, ViewChildren } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PretensionObject } from '../../../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../../../models/sjcs/PretensionItem';
-import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
+import { ConfirmationService, Paginator } from '../../../../../../../../node_modules/primeng/primeng';
 
 @Component({
   selector: 'app-tabla-procedimientos',
@@ -17,7 +17,7 @@ export class TablaProcedimientosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  page: number = 0;
   comboJurisdiccion;
   datosInicial = [];
   editMode: boolean = false;
@@ -41,7 +41,7 @@ export class TablaProcedimientosComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
-
+  buscadores = []
   //Resultados de la busqueda
   @Input() datos;
 
@@ -155,30 +155,27 @@ export class TablaProcedimientosComponent implements OnInit {
 
   changeDescripcion(dato) {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
-
     if (findDato != undefined) {
-      if (dato.descripcion.trim() != "") {
-        if (dato.descripcion != findDato.descripcion) {
+      if (dato.descripcion != findDato.descripcion) {
 
-          let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
 
-          if (findUpdate == undefined) {
-            this.updatePartidasPres.push(dato);
-          }
+        if (findUpdate == undefined) {
+          this.updatePartidasPres.push(dato);
         }
-      } else {
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
-        if (findUpdate != undefined) {
-          let cambios = [];
-          this.updatePartidasPres.forEach(data => {
-            if (data.idPretension != findUpdate.idPretension) {
-              cambios.push(data);
-            }
-          });
-          if (cambios != undefined) {
-            this.updatePartidasPres = [];
-            this.updatePartidasPres = cambios;
+      }
+    } else {
+      let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
+      if (findUpdate != undefined) {
+        let cambios = [];
+        this.updatePartidasPres.forEach(data => {
+          if (data.idPretension != findUpdate.idPretension) {
+            cambios.push(data);
           }
+        });
+        if (cambios != undefined) {
+          this.updatePartidasPres = [];
+          this.updatePartidasPres = cambios;
         }
       }
     }
@@ -190,7 +187,7 @@ export class TablaProcedimientosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.codigoExt != findDato.codigoExt) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.codigoExt === dato.codigoExt);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -204,7 +201,13 @@ export class TablaProcedimientosComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
     if (findDato != undefined) {
       if (dato.idJurisdiccion != findDato.idJurisdiccion) {
-        let findUpdate = this.updatePartidasPres.find(item => item.idJurisdiccion === dato.idJurisdiccion);
+        if (dato.idJurisdiccion) {
+          let valueCombo = this.comboJurisdiccion.find(item => item.value === dato.idJurisdiccion);
+          dato.descripcionJurisdiccion = valueCombo.label;
+        } else {
+          dato.descripcionJurisdiccion = "";
+        }
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
         }
@@ -225,6 +228,10 @@ export class TablaProcedimientosComponent implements OnInit {
         this.search.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.selectedDatos = [];
+        this.updatePartidasPres = [];
+        this.nuevo = false;
+        this.editMode = false;
       },
       err => {
 
@@ -254,8 +261,9 @@ export class TablaProcedimientosComponent implements OnInit {
       let pretension: PretensionItem;
       pretension = this.datos[0];
       pretension.descripcionJurisdiccion = this.comboJurisdiccion[pretension.idJurisdiccion].label
-      this.body = pretension;
 
+      this.body = pretension;
+      this.body.descripcion = this.body.descripcion.trim();
       this.callSaveService(url);
 
     } else {
@@ -263,6 +271,10 @@ export class TablaProcedimientosComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new PretensionObject();
         this.body.pretensionItems = this.updatePartidasPres;
+        this.body.pretensionItems = this.body.pretensionItems.map(it => {
+          it.descripcion = it.descripcion.trim();
+          return it;
+        })
         this.callSaveService(url);
       } else {
 
@@ -286,6 +298,7 @@ export class TablaProcedimientosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   newPretension() {
@@ -320,7 +333,8 @@ export class TablaProcedimientosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined && this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion != "") {
+      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim() &&
+        this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion.trim() != "") {
         return false;
       } else {
         return true;
@@ -328,7 +342,15 @@ export class TablaProcedimientosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if ((it.descripcion == undefined || !it.descripcion.trim()) || !it.idJurisdiccion)
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }
@@ -363,7 +385,7 @@ export class TablaProcedimientosComponent implements OnInit {
     this.sigaServices.post(url, del).subscribe(
       data => {
         this.selectedDatos = [];
-        this.search.emit(false);
+        this.search.emit(this.historico);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -450,6 +472,7 @@ export class TablaProcedimientosComponent implements OnInit {
       { field: "descripcionJurisdiccion", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""))
 
     this.rowsPerPage = [
       {

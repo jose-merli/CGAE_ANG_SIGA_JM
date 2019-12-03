@@ -40,8 +40,8 @@ export class TablaGestionZonasComponent implements OnInit {
   @Input() comboPJ;
 
   @Output() searchZonasSend = new EventEmitter<boolean>();
-
-  @ViewChild("table") table: DataTable;
+  buscadores = []
+  @ViewChild("table") table;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -139,7 +139,7 @@ export class TablaGestionZonasComponent implements OnInit {
         this.historico = false;
         this.persistenceService.setHistorico(this.historico);
         this.selectedDatos = [];
-        this.searchZonasSend.emit(false);
+        this.searchZonasSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -177,7 +177,7 @@ export class TablaGestionZonasComponent implements OnInit {
       { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
       { field: "descripcionpartido", header: "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" }
     ];
-
+    this.cols.forEach(element => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

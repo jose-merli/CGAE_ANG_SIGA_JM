@@ -75,6 +75,7 @@
     color: $secondary-color;
   }
 
+
   button {
     color: $secondary-color;
     background: white;
@@ -86,7 +87,9 @@
     color: $secondary-color;
   }
 }
-
+.ui-multiselect-header .ui-multiselect-filter-container {
+  width: calc(100% - 38px) !important;
+}
 .showCookies {
   animation-name: showCookies;
   animation-duration: 1.2s;

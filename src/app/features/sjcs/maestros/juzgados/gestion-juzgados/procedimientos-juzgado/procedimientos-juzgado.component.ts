@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { DataTable } from 'primeng/primeng';
+import { DataTable, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { ProcedimientoObject } from '../../../../../../models/sjcs/ProcedimientoObject';
+import { exists } from 'fs';
+import { element } from '../../../../../../../../node_modules/protractor';
+
 
 @Component({
   selector: 'app-procedimientos-juzgado',
@@ -22,24 +25,29 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
+  selectedProcedimiento;
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
   numSelected = 0;
+  errorRep: boolean = false;
   selectMultiple: boolean = false;
   historico: boolean = false;
   openFicha: boolean = false;
+  nuevo: boolean = false;
   selectionMode = "multiple";
-
+  procItems = [];
+  prItems = [];
   permisoEscritura;
-
+  buscadores = [];
   procedimientos = [];
+  procedimientosElegir = [];
 
   initSelectedDatos;
   progressSpinner: boolean = false;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService
+  ) { }
 
   ngOnInit() {
 
@@ -50,31 +58,34 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
     this.validateHistorical();
     this.getCols();
-    this.getProcess();
-
-  }
-
-  ngAfterViewInit(): void {
     if (this.modoEdicion) {
       this.getProcJuged();
     }
+
+    // this.getProcess();
+
   }
 
-  getProcess() {
-    if (this.modoEdicion) {
-      this.progressSpinner = true;
-    }
+  // ngAfterViewInit(): void {
+  //   if (this.modoEdicion) {
+  //     this.getProcJuged();
+  //   }
+  // }
 
+  getProcess() {
     this.sigaServices.get("gestionJuzgados_searchProcess").subscribe(
       n => {
-        this.procedimientos = n.procedimientosItems;
-        this.progressSpinner = false;
-
+        // this.procedimientosElegir = n.procedimientosItems;
+        n.procedimientosItems.forEach(element => {
+          // console.log(this.procedimientos.indexOf(element));
+          // if (this.procedimientos.indexOf(element) == -1) {
+          this.procedimientosElegir.push({ label: element.nombre, value: element.idProcedimiento });
+          // }
+        });
+        this.procItems = n.procedimientosItems;
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
-
       }
     );
   }
@@ -84,10 +95,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
     this.sigaServices
       .getParam("gestionJuzgados_searchProcCourt", "?idJuzgado=" + this.datos.idJuzgado).subscribe(
         n => {
-          this.selectedDatos = n.procedimientosItems;
-          this.initSelectedDatos = JSON.parse(JSON.stringify((this.selectedDatos)));
+          this.procedimientos = n.procedimientosItems;
+          this.initSelectedDatos = JSON.parse(JSON.stringify((this.procedimientos)));
 
-          if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
+          if (this.procedimientos != undefined && this.procedimientos.length > 0) {
             this.selectMultiple = true;
           }
 
@@ -99,12 +110,17 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   }
 
   rest() {
+    this.nuevo = false;
     if (this.initSelectedDatos != undefined) {
-      this.selectedDatos = JSON.parse(JSON.stringify(this.initSelectedDatos));
+      this.procedimientos = JSON.parse(JSON.stringify(this.initSelectedDatos));
     } else {
-      this.selectedDatos = [];
+      this.procedimientos = [];
     }
-
+    this.selectionMode = "multiple";
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   setItalic(dato) {
@@ -113,39 +129,66 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   }
 
   disableGuardar() {
-    if ((JSON.stringify(this.selectedDatos) != JSON.stringify(this.initSelectedDatos)) && this.initSelectedDatos != undefined) {
+    // if ((JSON.stringify(this.selectedDatos) != JSON.stringify(this.initSelectedDatos)) && this.initSelectedDatos != undefined && !this.nuevo) {
+    if (this.nuevo && this.selectedProcedimiento != null && !this.errorRep) {
       return false;
     } else {
       return true;
     }
   }
+  searchProc() {
+    this.errorRep = false;
+    this.prItems = this.procItems.filter(it => this.selectedProcedimiento == it.idProcedimiento)
+    this.procedimientos.forEach(element => {
+      if (element.idProcedimiento == this.prItems[0].idProcedimiento) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.maestros.modulos.moduloAsociado"));
+        this.errorRep = true;
 
+        this.procedimientos[0].editable = true;
+        this.disableGuardar();
+        this.selectionMode = "multiple";
+        // this.selectedProcedimiento = [];
+      }
+    })
+    if (this.prItems[0] != null && !this.errorRep)
+      this.procedimientos[0] = this.prItems[0];
+  }
   save() {
     this.progressSpinner = true;
     let procedimientoDTO = new ProcedimientoObject();
-    procedimientoDTO.procedimientosItems = this.selectedDatos;
-    procedimientoDTO.idJuzgado = this.datos.idJuzgado
 
-    this.sigaServices.post("gestionJuzgados_associateProcess", procedimientoDTO).subscribe(
-      data => {
-        this.initSelectedDatos = JSON.parse(JSON.stringify((this.selectedDatos)));
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
+    // if (this.procedimientos[0] != null && this.procedimientos[0] != undefined && this.nuevo)
+    //   this.selectedDatos.push(this.procedimientos[0]);
 
-        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    procedimientoDTO.procedimientosItems = this.procedimientos;
+    procedimientoDTO.idJuzgado = this.datos.idJuzgado;
+
+    if (!this.errorRep) {
+      this.sigaServices.post("gestionJuzgados_associateProcess", procedimientoDTO).subscribe(
+        data => {
+          this.initSelectedDatos = JSON.parse(JSON.stringify((this.procedimientos)));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+          this.nuevo = false;
+          this.errorRep = false;
+        },
+        err => {
+
+          if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
+      );
+    }
+    this.selectedProcedimiento = null;
+    this.selectedDatos = []
+    this.selectionMode = "multiple";
   }
 
   validateHistorical() {
@@ -200,6 +243,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       this.selectMultiple = true;
       this.selectedDatos = this.procedimientos;
       this.numSelected = this.procedimientos.length;
@@ -213,17 +258,19 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   isSelectMultiple() {
 
     if (!this.historico && this.permisoEscritura) {
-      if (this.selectedDatos != undefined && this.selectedDatos.length == 0) {
-        this.selectMultiple = !this.selectMultiple;
-        if (!this.selectMultiple) {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-        } else {
-          this.selectAll = false;
-          this.selectedDatos = [];
-          this.numSelected = 0;
-        }
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
+      // if (this.selectedDatos != undefined && this.selectedDatos.length == 0) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
       }
+      // }
     }
   }
 
@@ -268,5 +315,67 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
     }
   }
+  newProcedimiento() {
+    this.getProcess();
 
+    this.selectedDatos = [];
+
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.nuevo = true;
+    this.modoEdicion = false;
+    this.selectionMode = "single";
+    this.selectMultiple = false;
+    // if (this.datosInicial != undefined && this.datosInicial != null) {
+    //   this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    // } else {
+    //   this.datos = [];
+    // }
+    let nuevoProcedimiento = {
+      codigo: undefined,
+      nombre: undefined,
+      importe: undefined,
+      jurisdiccion: undefined,
+      editable: true
+    };
+    if (this.procedimientos.length == 0) {
+      this.procedimientos.push(nuevoProcedimiento);
+    } else {
+      this.procedimientos = [nuevoProcedimiento, ...this.procedimientos];
+    }
+
+  }
+  confirmDelete() {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.delete()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+  delete() {
+    let procedimientoDelete = new ProcedimientoObject();
+    procedimientoDelete.procedimientosItems = this.selectedDatos;
+    this.procedimientos = this.procedimientos.filter(it => this.selectedDatos.indexOf(it) == -1);
+    this.nuevo = false;
+    this.save();
+
+  }
 }

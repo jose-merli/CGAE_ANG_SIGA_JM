@@ -119,5 +119,4 @@ export class FiltrosModulosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-
 }

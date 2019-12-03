@@ -21,7 +21,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -44,7 +44,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
 
   @Output() searchAreasSend = new EventEmitter<boolean>();
 
-  @ViewChild("tabla") tabla;
+  @ViewChild("table") tabla;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -109,13 +109,58 @@ export class TablaBusquedaAreasComponent implements OnInit {
     this.sigaServices.post("fichaAreas_deleteAreas", AreasDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchAreasSend.emit(false);
+        if (this.historico) {
+          this.searchAreasSend.emit(true);
+        } else {
+          this.searchAreasSend.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
+
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectAll = false;
+      }
+    );
+  }
+
+
+  activate(selectedDatos) {
+    let AreasActivate = new AreasObject();
+    AreasActivate.areasItems = selectedDatos
+    this.sigaServices.post("areasMaterias_activateMaterias", AreasActivate).subscribe(
+      data => {
+        this.selectedDatos = [];
+        if (this.historico) {
+          this.searchAreasSend.emit(true);
+        } else {
+          this.searchAreasSend.emit(false);
+        }
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -166,7 +211,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
       { field: "nombreMateria", header: "menu.justiciaGratuita.maestros.Materia" },
       { field: "jurisdicciones", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

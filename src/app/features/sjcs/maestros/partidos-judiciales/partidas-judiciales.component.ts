@@ -31,7 +31,7 @@ export class PartidosJudicialesComponent implements OnInit, AfterViewInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltrosPartidasJudiciales) filtros;
-  // @ViewChild(TablaPartidasComponent) tablapartida;
+  @ViewChild(TablaPartidasComponent) tablapartida;
   //comboPartidosJudiciales
   msgs;
   permisoEscritura: any;
@@ -84,6 +84,14 @@ export class PartidosJudicialesComponent implements OnInit, AfterViewInit {
         this.datos = JSON.parse(n.body).partidasJudicialesItem;
         this.buscar = true;
         this.progressSpinner = false;
+
+        if (this.tablapartida && this.tablapartida.tabla) {
+          this.tablapartida.tabla.sortOrder = 0;
+          this.tablapartida.tabla.sortField = '';
+          this.tablapartida.tabla.reset();
+          this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
+        }
+
       },
       err => {
         this.progressSpinner = false;
