@@ -78,11 +78,24 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
           } else {
             this.modoEdicion = true;
+            this.tratamientoDescripcionesTarjeta();
           }
 
           this.getCombos();
 
           this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+            let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
+            let asistidosolicitajg = this.body.asistidosolicitajg;
+            let autorizaavisotelematico = this.body.autorizaavisotelematico;
+            this.body = data;
+            this.body.asistidoautorizaeejg = asistidoautorizaeejg;
+            this.body.asistidosolicitajg = asistidosolicitajg;
+            this.body.autorizaavisotelematico = autorizaavisotelematico;
+            this.modoEdicion = true;
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          });
+
+          this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
             let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
             let asistidosolicitajg = this.body.asistidosolicitajg;
             let autorizaavisotelematico = this.body.autorizaavisotelematico;
@@ -128,24 +141,30 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
     if (this.body.autorizaavisotelematico != undefined && this.body.autorizaavisotelematico != null) {
       if (this.body.autorizaavisotelematico == "0") {
         this.selectedAutorizaavisotel = "NO";
-      } else {
+      } else if (this.body.autorizaavisotelematico == "1") {
         this.selectedAutorizaavisotel = "SI";
+      } else {
+        this.selectedAutorizaavisotel = undefined;
       }
     }
 
     if (this.body.asistidosolicitajg != undefined && this.body.asistidosolicitajg != null) {
       if (this.body.asistidosolicitajg == "0") {
         this.selectedAsistidosolicitajg = "NO";
-      } else {
+      } else if (this.body.asistidosolicitajg == "1") {
         this.selectedAsistidosolicitajg = "SI";
+      } else {
+        this.selectedAsistidosolicitajg = undefined;
       }
     }
 
     if (this.body.asistidoautorizaeejg != undefined && this.body.asistidoautorizaeejg != null) {
       if (this.body.asistidoautorizaeejg == "0") {
         this.selectedAsistidoautorizaeejg = "NO";
-      } else {
+      } else if (this.body.asistidoautorizaeejg == "1") {
         this.selectedAsistidoautorizaeejg = "SI";
+      } else {
+        this.selectedAsistidoautorizaeejg = undefined;
       }
     }
   }
@@ -202,10 +221,19 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
         this.changeDetectorRef.detectChanges();
         this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
       } else {
-        this.callConfirmationUpdate();
+        if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+          this.callConfirmationUpdate();
+        } else {
+          this.callServiceSave();
+        }
+
       }
     } else {
-      this.callConfirmationUpdate();
+      if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+        this.callConfirmationUpdate();
+      } else {
+        this.callServiceSave();
+      }
     }
   }
   }
@@ -223,6 +251,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
         this.bodyInicial.asistidosolicitajg = this.body.asistidosolicitajg;
         this.tratamientoDescripcionesTarjeta();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.sigaServices.notifyGuardarDatosSolicitudJusticiable(this.body);
         this.progressSpinner = false;
       },
       err => {
@@ -246,7 +275,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdSolicitud",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
       icon: "fa fa-search ",
       accept: () => {
         this.callServiceSave();

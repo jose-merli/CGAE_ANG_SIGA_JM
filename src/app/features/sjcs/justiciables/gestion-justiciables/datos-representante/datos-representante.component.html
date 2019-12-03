@@ -43,14 +43,14 @@
 
             </div>
             <div class="col-3">
-              <label *ngIf="!checkedViewRepresentante">
+              <label *ngIf="!navigateToJusticiable">
                 <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
                 <a (click)="navigateToRepresentante();$event.stopPropagation();">
                   <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
                   </span>
                 </a>
               </label>
-              <label *ngIf="checkedViewRepresentante">
+              <label *ngIf="navigateToJusticiable">
                 <i class="fas fa-external-link-alt mr-2"></i>
                 <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
                 </span>
@@ -115,7 +115,7 @@
           [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
         <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
           [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="callConfirmationAssociate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+        <button pButton (click)="associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
           [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>

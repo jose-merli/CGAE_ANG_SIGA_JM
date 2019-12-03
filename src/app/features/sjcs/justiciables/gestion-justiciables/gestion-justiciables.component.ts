@@ -26,6 +26,7 @@ export class GestionJusticiablesComponent implements OnInit {
   representanteBusquedaItem: JusticiableBusquedaItem;
   progressSpinner: boolean = false;
   msgs = [];
+  navigateToJusticiable: boolean = false;
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
@@ -97,17 +98,20 @@ export class GestionJusticiablesComponent implements OnInit {
           }
 
           //Indicar que se han guardado los datos generales de un Representante y hay que mostrar de nuevo al justiciable que tiene asociado el representante creado
-          this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+          this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
 
             this.progressSpinner = true;
             this.commnosService.scrollTop();
             this.persistenceService.setBody(data);
-            this.justiciableBusquedaItem = this.persistenceService.getDatos();
-            this.checkedViewRepresentante = false;
             this.modoRepresentante = false;
             this.modoEdicion = true;
             this.progressSpinner = false;
-            this.search();
+
+            if (!this.navigateToJusticiable) {
+              this.checkedViewRepresentante = false;
+              this.justiciableBusquedaItem = this.persistenceService.getDatos();
+              this.search();
+            }
 
           });
 
@@ -228,6 +232,7 @@ export class GestionJusticiablesComponent implements OnInit {
     this.representanteBusquedaItem.idpersona = event.idpersona;
     this.representanteBusquedaItem.idinstitucion = event.idinstitucion;
     this.representanteBusquedaItem.nif = event.nif;
+    this.navigateToJusticiable = true;
     this.search();
 
   }
@@ -278,11 +283,12 @@ export class GestionJusticiablesComponent implements OnInit {
   backTo() {
     this.persistenceService.clearFiltrosAux();
     //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
-    if (this.checkedViewRepresentante || this.nuevoRepresentante) {
+    if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {
       this.checkedViewRepresentante = false;
       this.nuevoRepresentante = false;
       this.modoEdicion = true;
       this.commnosService.scrollTop();
+      this.navigateToJusticiable = false;
       this.search();
     } else {
       this.router.navigate(["/justiciables"]);

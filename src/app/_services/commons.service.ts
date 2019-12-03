@@ -232,23 +232,22 @@ export class CommonsService {
 
   compruebaDNI(idtipoidentificacion, nif) {
 
-    if (idtipoidentificacion != "50") {
-      if (this.isValidDNI(nif)) {
-        idtipoidentificacion = "10";
-        return idtipoidentificacion;
-      } else if (this.isValidPassport(nif)) {
-        idtipoidentificacion = "30";
-        return idtipoidentificacion;
-      } else if (this.isValidNIE(nif)) {
-        idtipoidentificacion = "40";
-        return idtipoidentificacion;
-      } else if (this.isValidCIF(nif)) {
-        idtipoidentificacion = "20";
-        return idtipoidentificacion;
-      } else {
-        idtipoidentificacion = "30";
-        return idtipoidentificacion;
-      }
+    if (this.isValidDNI(nif)) {
+      idtipoidentificacion = "10";
+      return idtipoidentificacion;
+    } else if (this.isValidPassport(nif)) {
+      idtipoidentificacion = "30";
+      return idtipoidentificacion;
+    } else if (this.isValidNIE(nif)) {
+      idtipoidentificacion = "40";
+      return idtipoidentificacion;
+    } else if (this.isValidCIF(nif)) {
+      idtipoidentificacion = "20";
+      return idtipoidentificacion;
+    } else {
+      idtipoidentificacion = "30";
+      return idtipoidentificacion;
     }
+
   }
 }
