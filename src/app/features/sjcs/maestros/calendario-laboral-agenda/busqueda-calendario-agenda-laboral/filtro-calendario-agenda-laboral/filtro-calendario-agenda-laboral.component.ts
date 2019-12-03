@@ -31,7 +31,7 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
   ngOnInit() {
 
     if (this.persistenceService.getFiltros() != undefined) {
-      this.filtroAux = this.persistenceService.getFiltros();
+      this.filtros = this.persistenceService.getFiltros();
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
@@ -58,7 +58,16 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
 
   }
 
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
+    }
+  }
   nuevo() {
     this.persistenceService.clearDatos();
     sessionStorage.setItem("calendarioLaboralAgenda", "true");

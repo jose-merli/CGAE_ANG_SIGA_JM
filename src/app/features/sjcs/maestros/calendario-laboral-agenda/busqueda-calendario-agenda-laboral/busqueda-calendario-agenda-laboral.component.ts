@@ -76,6 +76,12 @@ export class BusquedaCalendarioAgendaLaboralComponent implements OnInit {
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
         }
+        if (this.tabla && this.tabla.table) {
+          this.tabla.table.sortOrder = 0;
+          this.tabla.table.sortField = '';
+          this.tabla.table.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
       },
       err => {
         this.progressSpinner = false;

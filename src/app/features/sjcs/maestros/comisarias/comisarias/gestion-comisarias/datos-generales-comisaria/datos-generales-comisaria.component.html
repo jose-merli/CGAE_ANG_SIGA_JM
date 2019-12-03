@@ -49,15 +49,15 @@
               <label>
                 {{"censo.consultaDirecciones.literal.direccion" | translate}}
               </label>
-              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
-                pInputText>
+              <input [(ngModel)]="body.domicilio" [disabled]="!permisoEscritura || historico" type="text" (input)="onChangeDireccion()"
+                class="form-control" [maxLength]="100" pInputText>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}} (*)
               </label>
-              <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+              <input (keypress)="numberOnly($event)" type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
                 [disabled]="historico || !permisoEscritura" pInputText>
             </div>
 
@@ -122,7 +122,7 @@
               </label>
               <div *ngIf="edicionEmail" class="row">
                 <div class="col-lg-9 col-md-8 mr-4 pr-0">
-                  <input type="text" [disabled]="historico || !permisoEscritura" maxlength="15" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
+                  <input type="text" [disabled]="historico || !permisoEscritura" maxlength="50" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
                     style="width: 100%" />
                 </div>
                 <div pTooltip="Verificar e-mail" tooltipPosition="bottom" style="display:inline-block;">
