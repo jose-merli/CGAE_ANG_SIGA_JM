@@ -294,27 +294,33 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       }
 
     } else {
-      this.representanteValido = false;
+      this.representanteValido = true;
     }
   }
 
   compruebaDNIInput() {
 
-    if (this.generalBody.nif != undefined && this.generalBody.nif != "" && this.generalBody.nif != null) {
+    if (this.generalBody.nif != undefined && this.generalBody.nif.trim() != "" && this.generalBody.nif != null) {
       let idTipoIdentificacion = this.commonsService.compruebaDNI(this.generalBody.idtipoidentificacion, this.generalBody.nif);
       this.generalBody.idtipoidentificacion = idTipoIdentificacion;
 
       if (this.generalBody.nif != this.nifRepresentante) {
         this.representanteValido = false;
+        this.generalBody.nombre = undefined;
+        this.generalBody.apellidos = undefined;
 
       } else {
         this.representanteValido = true;
-
       }
 
     } else {
-      this.representanteValido = false;
+      this.generalBody.idtipoidentificacion = undefined;
+      if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona != "") {
+        this.representanteValido = true;
+      } else {
+        this.representanteValido = false;
 
+      }
     }
   }
 

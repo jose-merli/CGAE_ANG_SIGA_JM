@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
@@ -67,14 +67,22 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   personaRepetida: boolean = false;
 
   count: number = 1;
-  selectedItem;
   showTarjetaPermiso: boolean = false;
   selectedDatos = [];
+  rowsPerPage: any = [];
+
+  selectedItem: number = 10;
+  selectAll: boolean = false;
+  numSelected = 0;
+  selectMultiple: boolean = false;
+
+  selectionMode = "";
 
   @ViewChild("provincia") checkbox: Checkbox;
   @ViewChild("cdGeneralesUpdate") cdGeneralesUpdate: Dialog;
   @ViewChild("cdGeneralesSave") cdGeneralesSave: Dialog;
   @ViewChild("cdPreferenteSms") cdPreferenteSms: Dialog;
+  @ViewChild("table") tabla;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
@@ -98,7 +106,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     private commonsService: CommonsService,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
-    private router: Router) { }
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
 
@@ -369,11 +378,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         if (JSON.parse(data.body).error.message != "C") {
 
           //Si la persona es sobreescrita
-          if (this.personaRepetida) {
-            this.modoEdicion = true;
-            this.personaRepetida = false;
-            this.searchJusticiableOverwritten.emit(this.body);
-          }
+          // if (this.personaRepetida) {
+          //   this.modoEdicion = true;
+          //   this.personaRepetida = false;
+          //   this.searchJusticiableOverwritten.emit(this.body);
+          // }
 
           if (!this.modoEdicion) {
             this.modoEdicion = true;
@@ -423,19 +432,19 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
         } else {
           this.callConfirmationSave(JSON.parse(data.body).id);
-          this.personaRepetida = true;
+          // this.personaRepetida = true;
         }
 
       },
       err => {
 
         if (JSON.parse(err.error).error.description != "") {
-           if (JSON.parse(err.error).error.code == "600") {
-             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
-           }else{
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-           }
-          
+          if (JSON.parse(err.error).error.code == "600") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -453,16 +462,26 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdGeneralesSave",
-      message: "Ya existe un justiciable registrado con esa misma identificación ¿Desea sobreescribir completamente el que ya existe? Si pulsa No, se creará un nuevo justiciable.",
+      message: "Ya existe un justiciable registrado con esa misma identificación ¿Desea crear un nuevo justiciable?",
       icon: "fa fa-search ",
       accept: () => {
-        this.progressSpinner = true;
+        // this.progressSpinner = true;
         // this.modoEdicion = true;
-        let url = "gestionJusticiables_updateJusticiable";
-        this.body.idpersona = id;
-        this.body.validacionRepeticion = false;
-        this.callSaveService(url);
+        // let url = "gestionJusticiables_updateJusticiable";
+        // this.body.idpersona = id;
+        // this.body.validacionRepeticion = false;
+        // this.callSaveService(url);
+        // this.confirmationSave = false;
+
+
         this.confirmationSave = false;
+        this.progressSpinner = true;
+        let url = "gestionJusticiables_createJusticiable";
+        //Ya estavalidada la repeticion y puede crear al justiciable
+        this.body.validacionRepeticion = true;
+        this.callSaveService(url);
+        this.cdGeneralesSave.hide();
+
       },
       reject: () => {
 
@@ -535,6 +554,25 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       { field: 'tipo', header: "censo.busquedaClientesAvanzada.literal.tipoCliente" },
       { field: 'numeroTelefono', header: "administracion.parametrosGenerales.literal.valor" }
     ]
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 
   getDatosContacto() {
@@ -938,22 +976,22 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     if (this.body.nif != undefined && this.body.nif.trim() != "" && this.body.nif != null) {
       //if (this.body.idtipoidentificacion != "50") {
-        if (this.commonsService.isValidDNI(this.body.nif)) {
-          this.body.idtipoidentificacion = "10";
-          return true;
-        } else if (this.commonsService.isValidPassport(this.body.nif)) {
-          this.body.idtipoidentificacion = "30";
-          return true;
-        } else if (this.commonsService.isValidNIE(this.body.nif)) {
-          this.body.idtipoidentificacion = "40";
-          return true;
-        } else if (this.commonsService.isValidCIF(this.body.nif)) {
-          this.body.idtipoidentificacion = "20";
-          return true;
-        } else {
-          this.body.idtipoidentificacion = "30";
-          return true;
-        }
+      if (this.commonsService.isValidDNI(this.body.nif)) {
+        this.body.idtipoidentificacion = "10";
+        return true;
+      } else if (this.commonsService.isValidPassport(this.body.nif)) {
+        this.body.idtipoidentificacion = "30";
+        return true;
+      } else if (this.commonsService.isValidNIE(this.body.nif)) {
+        this.body.idtipoidentificacion = "40";
+        return true;
+      } else if (this.commonsService.isValidCIF(this.body.nif)) {
+        this.body.idtipoidentificacion = "20";
+        return true;
+      } else {
+        this.body.idtipoidentificacion = "30";
+        return true;
+      }
       //}
     } else {
       this.body.idtipoidentificacion = undefined;
@@ -1234,9 +1272,19 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onRowSelect(dato) {
-    if (dato.data.count == 1 || dato.data.count == 2) {
-      this.selectedDatos.pop();
+
+    if (!this.selectMultiple && !this.selectAll) {
+      if (this.selectionMode == "single") {
+        this.selectedDatos = undefined;
+      } else {
+        this.selectedDatos.pop();
+      }
+    } else {
+      if (dato.data.count == 1 || dato.data.count == 2) {
+        this.selectedDatos.pop();
+      }
     }
+
   }
 
   editarCompleto(event, dato) {
@@ -1254,5 +1302,66 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
     }
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tabla.reset();
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll) {
+      this.selectionMode = "multiple";
+      let arrays = JSON.parse(JSON.stringify(this.datos));
+      arrays.shift();
+      arrays.shift();
+      this.selectedDatos = JSON.parse(JSON.stringify(arrays));
+      this.selectMultiple = true;
+
+    } else {
+      this.selectionMode = "";
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = false;
+    }
+
+  }
+
+  isSelectMultiple() {
+    if (this.permisoEscritura) {
+      this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "";
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.selectionMode = "multiple";
+        this.numSelected = 0;
+      }
+    }
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
+  disabledDelete() {
+    if (!this.selectMultiple && !this.selectAll) {
+      return true;
+
+    } else {
+
+      if ((this.selectionMode == "" && !this.selectedDatos) ||
+        ((this.selectionMode == "multiple" && this.selectedDatos.length == 0))) {
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
   }
 }

@@ -233,6 +233,23 @@ export class FiltroJusticiablesComponent implements OnInit {
     }
   }
 
+  editarCodigoPostal(event, dato) {
+    let NUMBER_REGEX = /^\d{1,5}$/;
+    if (NUMBER_REGEX.test(dato)) {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
+        this.filtros.codigoPostal = event.currentTarget.value.slice(0, 5);
+      }
+    } else {
+
+      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
+        this.filtros.codigoPostal = event.currentTarget.value.slice(0, 5);
+      } else {
+        event.currentTarget.value = "";
+      }
+
+    }
+  }
+
   clearFilters() {
     this.filtros = new JusticiableBusquedaItem();
   }
