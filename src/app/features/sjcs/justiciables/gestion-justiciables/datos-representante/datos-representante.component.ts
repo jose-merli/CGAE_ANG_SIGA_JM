@@ -29,9 +29,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   @Input() showTarjeta;
   @Input() body: JusticiableItem;
   @Input() checkedViewRepresentante;
+  @Input() navigateToJusticiable: boolean = false;;
 
   searchRepresentanteGeneral: boolean = false;
-  navigateToJusticiable: boolean = false;
+  // navigateToJusticiable: boolean = false;
   esMenorEdad: boolean = false;
   idPersona;
   permisoEscritura;
@@ -83,7 +84,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   ngOnChanges(changes: SimpleChanges) {
 
     //Comprobamos si se ha seleccionado de la tabla el justiciable y no nos encontramos en la creacion de justiciable/representante
-    if (this.persistenceService.getBody() != undefined && this.body != undefined && this.body.idpersona != undefined) {
+    if (!this.navigateToJusticiable && this.persistenceService.getBody() != undefined && this.body != undefined && this.body.idpersona != undefined) {
       this.generalBody = this.persistenceService.getBody();
 
       //Si tiene nif lo volvemos a buscar
@@ -125,7 +126,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       } else if (this.idPersona != undefined && this.idPersona != null && this.idPersona == this.body.idpersona) {
         this.showTarjeta = false;
         this.generalBody = new JusticiableItem();
-        this.navigateToJusticiable = false;
 
       }
 
@@ -145,6 +145,12 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
     }
 
     this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+      this.body = data;
+      this.modoEdicion = true;
+
+    })
+
+    this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
       this.body = data;
       this.modoEdicion = true;
 
@@ -171,7 +177,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         this.nifRepresentante = this.generalBody.nif;
         this.persistenceService.clearBody();
         this.progressSpinner = false;
-        this.navigateToJusticiable = false;
+        // this.navigateToJusticiable = false;
         this.compruebaDNI();
       },
       err => {
@@ -314,18 +320,22 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
   associate() {
 
-    if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona.trim() != "") {
+    if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+      this.callConfirmationAssociate();
+    } else {
+      if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona.trim() != "") {
 
-      if (this.generalBody.nif != undefined && this.generalBody.nif != "" &&
-        this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
+        if (this.generalBody.nif != undefined && this.generalBody.nif != "" &&
+          this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
 
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
-        this.representanteValido = false;
-      } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
+          this.representanteValido = false;
+        } else {
 
-        this.body.idrepresentantejg = this.generalBody.idpersona;
-        this.callServiceAssociate();
+          this.body.idrepresentantejg = this.generalBody.idpersona;
+          this.callServiceAssociate();
 
+        }
       }
     }
 
@@ -351,27 +361,35 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   disassociate() {
     //En el back se el idrepresentante se pone a null y esa es la forma de disasociar al representante
 
-    if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
-      this.progressSpinner = true;
-      this.sigaServices.post("gestionJusticiables_disassociateRepresentante", this.body).subscribe(
-        n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.generalBody = new JusticiableItem();
-          this.nifRepresentante = undefined;
-          this.persistenceService.setBody(this.generalBody);
-          this.body.idrepresentantejg = undefined;
-          this.progressSpinner = false;
-
-        },
-        err => {
-          this.progressSpinner = false;
-          this.translateService.instant("general.message.error.realiza.accion")
-        });
+    if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+      this.callConfirmationDisassociate();
     } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+      if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
+        this.callServiceDisassociate();
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
 
+      }
     }
 
+  }
+
+  callServiceDisassociate() {
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionJusticiables_disassociateRepresentante", this.body).subscribe(
+      n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.generalBody = new JusticiableItem();
+        this.nifRepresentante = undefined;
+        this.persistenceService.setBody(this.generalBody);
+        this.body.idrepresentantejg = undefined;
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.translateService.instant("general.message.error.realiza.accion")
+      });
   }
 
   callConfirmationAssociate() {
@@ -379,10 +397,24 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
     this.confirmationAssociate = true;
     this.confirmationService.confirm({
       key: "cdRepresentanteAssociate",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
       icon: "fa fa-search ",
       accept: () => {
-        this.associate();
+
+        if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona.trim() != "") {
+
+          if (this.generalBody.nif != undefined && this.generalBody.nif != "" &&
+            this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
+
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
+            this.representanteValido = false;
+          } else {
+
+            this.body.idrepresentantejg = this.generalBody.idpersona;
+            this.callServiceAssociate();
+
+          }
+        }
       },
       reject: () => { }
     });
@@ -429,10 +461,15 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
     this.confirmationService.confirm({
       key: "cdRepresentanteDisassociate",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
       icon: "fa fa-search ",
       accept: () => {
-        this.disassociate();
+        if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
+          this.callServiceDisassociate();
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+
+        }
       },
       reject: () => { }
     });
@@ -475,7 +512,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
     if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona != "") {
       this.commonsService.scrollTop();
       this.idPersona = this.generalBody.idpersona;
-      this.navigateToJusticiable = true;
       this.viewRepresentante.emit(this.generalBody);
     }
 

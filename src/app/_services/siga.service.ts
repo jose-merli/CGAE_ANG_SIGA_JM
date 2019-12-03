@@ -745,6 +745,12 @@ export class SigaServices {
   private guardarDatosGeneralesJusticiable = new Subject<any>();
   guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
 
+  private guardarDatosGeneralesRepresentante = new Subject<any>();
+  guardarDatosGeneralesRepresentante$ = this.guardarDatosGeneralesRepresentante.asObservable();
+
+  private guardarDatosSolicitudJusticiable = new Subject<any>();
+  guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
+
   private createJusticiable = new Subject<any>();
   createJusticiable$ = this.createJusticiable.asObservable();
 
@@ -1011,14 +1017,21 @@ export class SigaServices {
     this.desHabilitarDocs.next();
   }
 
+  notifyGuardarDatosGeneralesRepresentante(data) {
+    this.guardarDatosGeneralesRepresentante.next(data);
+  }
+
   notifyGuardarDatosGeneralesJusticiable(data) {
     this.guardarDatosGeneralesJusticiable.next(data);
+  }
+
+  notifyGuardarDatosSolicitudJusticiable(data) {
+    this.guardarDatosSolicitudJusticiable.next(data);
   }
 
   notifyCreateJusticiable(data) {
     this.createJusticiable.next(data);
   }
-
 
   notifysendFechaBaja(fecha) {
     this.sendFechaBaja.next(fecha);

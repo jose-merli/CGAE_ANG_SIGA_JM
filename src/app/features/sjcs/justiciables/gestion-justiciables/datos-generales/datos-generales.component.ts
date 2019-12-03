@@ -147,6 +147,13 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
 
         }
+
+        this.sigaServices.guardarDatosSolicitudJusticiable$.subscribe((data) => {
+          this.body.autorizaavisotelematico = data.autorizaavisotelematico;
+          this.body.asistidoautorizaeejg = data.asistidoautorizaeejg;
+          this.body.asistidosolicitajg = data.asistidosolicitajg;
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        });
       }
       ).catch(error => console.error(error));
 
@@ -174,9 +181,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
       this.body.fechaalta = new Date();
-      this.body.sexo = "N";
-      this.body.regimenConyugal = "I";
-      this.body.idpais = "191";
     } else {
       this.modoEdicion = true;
 
@@ -250,15 +254,35 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       if (!this.menorEdadJusticiable) {
         url = "gestionJusticiables_updateJusticiable";
-        this.callConfirmationUpdate();
+        //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
+        if (this.bodyInicial.autorizaavisotelematico == "1") {
+          if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+            this.progressSpinner = false;
+          } else {
+
+            if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+              this.callConfirmationUpdate();
+
+            } else {
+              let url = "gestionJusticiables_updateJusticiable";
+              this.validateCampos(url);
+            }
+          }
+        } else {
+          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+            this.callConfirmationUpdate();
+
+          } else {
+            let url = "gestionJusticiables_updateJusticiable";
+            this.validateCampos(url);
+          }
+        }
 
       } else {
         this.progressSpinner = false;
-
       }
-
     }
-
   }
 
   validateCampos(url) {
@@ -310,9 +334,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     if (this.body.fax != null && this.body.fax != undefined) {
       this.body.fax = this.body.fax.trim();
     }
-
     this.callSaveService(url);
-
   }
 
   callSaveService(url) {
@@ -385,7 +407,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
           if (this.modoRepresentante && !this.checkedViewRepresentante) {
             this.persistenceService.setBody(this.body);
-            this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
+            this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
+          } else if (this.modoRepresentante && this.checkedViewRepresentante) {
+            this.sigaServices.notifyGuardarDatosGeneralesRepresentante(this.body);
           } else {
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -424,7 +448,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdGeneralesSave",
-      message: "Ya existe un justiciable registrado con esa misma identificación ¿Desea sobrescribir completamente el que ya existe?",
+      message: "Ya existe un justiciable registrado con esa misma identificación ¿Desea sobreescribir completamente el que ya existe? Si pulsa No, se creará un nuevo justiciable.",
       icon: "fa fa-search ",
       accept: () => {
         this.progressSpinner = true;
@@ -447,7 +471,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdGeneralesUpdate",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
       icon: "fa fa-search ",
       accept: () => {
         this.progressSpinner = true;
@@ -1118,8 +1142,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         arrayTelefonos.forEach(element => {
 
           if (valido) {
-            if (element.tlfValido && element.numeroTelefono != undefined && element.numeroTelefono.trim() != ""
-              && element.nombreTelefono != undefined && element.nombreTelefono.trim() != "") {
+            if (element.tlfValido && element.numeroTelefono != undefined && element.numeroTelefono.trim() != "") {
               valido = true;
             } else {
               valido = false;
@@ -1127,7 +1150,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             return true;
           }
-
         });
 
         if (valido) {
