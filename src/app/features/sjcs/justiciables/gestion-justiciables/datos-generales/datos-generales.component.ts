@@ -381,7 +381,12 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       err => {
 
         if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+           if (JSON.parse(err.error).error.code == "600") {
+             this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(err.error).error.description);
+           }else{
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+           }
+          
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -707,7 +712,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
       } else {
         this.comboPoblacion = [];
-        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
+        this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
       }
     } else {
       this.comboPoblacion = [];
@@ -812,7 +817,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   compruebaDNI() {
 
     if (this.body.nif != undefined && this.body.nif.trim() != "" && this.body.nif != null) {
-      if (this.body.idtipoidentificacion != "50") {
+      //if (this.body.idtipoidentificacion != "50") {
         if (this.commonsService.isValidDNI(this.body.nif)) {
           this.body.idtipoidentificacion = "10";
           return true;
@@ -829,7 +834,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.body.idtipoidentificacion = "30";
           return true;
         }
-      }
+      //}
     } else {
       this.body.idtipoidentificacion = undefined;
     }
