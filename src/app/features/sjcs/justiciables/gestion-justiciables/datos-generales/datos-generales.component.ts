@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
-import { Checkbox } from '../../../../../../../node_modules/primeng/primeng';
+import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
+import { Dialog } from 'primeng/primeng';
 
 @Component({
   selector: 'app-datos-generales',
@@ -63,6 +64,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   permisoEscritura: boolean = true;
   nuevoTelefono: boolean = false;
+  personaRepetida: boolean = false;
 
   count: number = 1;
   selectedItem;
@@ -70,16 +72,23 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   selectedDatos = [];
 
   @ViewChild("provincia") checkbox: Checkbox;
+  @ViewChild("cdGeneralesUpdate") cdGeneralesUpdate: Dialog;
+  @ViewChild("cdGeneralesSave") cdGeneralesSave: Dialog;
+  @ViewChild("cdPreferenteSms") cdPreferenteSms: Dialog;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
   @Output() newJusticiable = new EventEmitter<any>();
+  @Output() searchJusticiableOverwritten = new EventEmitter<any>();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
+
+  confirmationSave: boolean = false;
+  confirmationUpdate: boolean = false;
 
   menorEdadJusticiable: boolean = false;
 
@@ -126,22 +135,20 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           } else {
             this.modoEdicion = true;
 
-            if (this.body.idpaisdir1 == "191") {
-              this.poblacionExtranjera = false;
+            if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
+              this.body.idprovincia != "") {
+              this.isDisabledPoblacion = false;
             } else {
-              this.poblacionExtranjera = true;
+              this.isDisabledPoblacion = true;
             }
 
           }
-
-
 
           this.progressSpinner = false;
 
         }
       }
       ).catch(error => console.error(error));
-
 
     this.getCombos();
     this.getColsDatosContacto();
@@ -154,16 +161,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     if (this.body != undefined) {
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
       this.getDatosContacto();
-
       this.parseFechas();
-
-
     } else {
       this.body = new JusticiableItem();
       this.progressSpinner = false;
-
     }
 
     //Obligatorio pais españa
@@ -178,17 +180,17 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     } else {
       this.modoEdicion = true;
 
-      if (this.body.idpaisdir1 == "191") {
-        this.poblacionExtranjera = false;
+      if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
+        this.body.idprovincia != "") {
+        this.isDisabledPoblacion = false;
       } else {
-        this.poblacionExtranjera = true;
+        this.isDisabledPoblacion = true;
       }
     }
 
     if (this.body.nif != undefined && this.body.nif != null && this.body.nif != "") {
       this.compruebaDNI();
     }
-
 
   }
 
@@ -224,6 +226,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   save() {
     this.progressSpinner = true;
     let url = "";
+    this.body.validacionRepeticion = false;
 
     if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
       || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
@@ -233,7 +236,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.menorEdadJusticiable = true;
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
     }
-
 
     if (!this.modoEdicion) {
       //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
@@ -248,7 +250,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       if (!this.menorEdadJusticiable) {
         url = "gestionJusticiables_updateJusticiable";
-        this.validateCampos(url);
+        this.callConfirmationUpdate();
+
       } else {
         this.progressSpinner = false;
 
@@ -324,6 +327,12 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       for (let index = 0; index < arrayTelefonos.length; index++) {
         arrayTelefonos[index].numeroTelefono = arrayTelefonos[index].numeroTelefono.trim();
+
+        if (arrayTelefonos[index].preferenteSmsCheck) {
+          arrayTelefonos[index].preferenteSms = "1";
+        } else {
+          arrayTelefonos[index].preferenteSms = "0";
+        }
       }
 
       this.body.telefonos = arrayTelefonos;
@@ -332,51 +341,67 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.body.tipojusticiable = SigaConstants.SCS_JUSTICIABLE;
     this.sigaServices.post(url, this.body).subscribe(
       data => {
+        this.progressSpinner = false;
 
-        if (!this.modoEdicion) {
-          this.modoEdicion = true;
-          let idJusticiable = JSON.parse(data.body).id;
-          this.body.idpersona = idJusticiable;
-          this.body.idinstitucion = this.authenticationService.getInstitucionSession();
+        //Si se manda un mensaje igual a C significa que el nif del justiciable introducido esta repetido 
+        if (JSON.parse(data.body).error.message != "C") {
 
-          if (!this.modoRepresentante) {
-            this.newJusticiable.emit(this.body);
+          //Si la persona es sobreescrita
+          if (this.personaRepetida) {
+            this.modoEdicion = true;
+            this.personaRepetida = false;
+            this.searchJusticiableOverwritten.emit(this.body);
           }
-        } else {
-          this.getTelefonosJusticiable();
 
-          if (this.modoRepresentante) {
-            if (this.persistenceService.getBody() != undefined) {
-              let representante = this.persistenceService.getBody();
-              representante.nif = this.body.nif;
-              this.persistenceService.setBody(representante);
+          if (!this.modoEdicion) {
+            this.modoEdicion = true;
+            let idJusticiable = JSON.parse(data.body).id;
+            this.body.idpersona = idJusticiable;
+            this.body.idinstitucion = this.authenticationService.getInstitucionSession();
+
+            if (!this.modoRepresentante) {
+              this.newJusticiable.emit(this.body);
+            }
+          } else {
+            this.getTelefonosJusticiable();
+
+            if (this.modoRepresentante) {
+              if (this.persistenceService.getBody() != undefined) {
+                let representante = this.persistenceService.getBody();
+                representante.nif = this.body.nif;
+                this.persistenceService.setBody(representante);
+              }
+
             }
 
           }
 
-        }
+          if (this.nuevoTelefono) {
+            this.nuevoTelefono = false;
 
-        if (this.nuevoTelefono) {
-          this.nuevoTelefono = false;
+          }
 
-        }
+          this.selectedDatos = [];
 
-        this.selectedDatos = [];
+          if (this.modoRepresentante && !this.checkedViewRepresentante) {
+            this.persistenceService.setBody(this.body);
+            this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
+          } else {
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+            this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
+          }
 
-        if (this.modoRepresentante && !this.checkedViewRepresentante) {
-          this.persistenceService.setBody(this.body);
-          this.sigaServices.notifyGuardarDatosGeneralesJusticiable(this.body);
+          if (!this.menorEdadJusticiable) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          }
+
         } else {
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+          this.callConfirmationSave(JSON.parse(data.body).id);
+          this.personaRepetida = true;
         }
 
-        if (!this.menorEdadJusticiable) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-        }
-
-        this.progressSpinner = false;
       },
       err => {
 
@@ -396,6 +421,74 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       }
     );
+  }
+
+  callConfirmationSave(id) {
+    this.progressSpinner = false;
+    this.confirmationSave = true;
+
+    this.confirmationService.confirm({
+      key: "cdGeneralesSave",
+      message: "Ya existe un justiciable registrado con esa misma identificación ¿Desea sobrescribir completamente el que ya existe?",
+      icon: "fa fa-search ",
+      accept: () => {
+        this.progressSpinner = true;
+        // this.modoEdicion = true;
+        let url = "gestionJusticiables_updateJusticiable";
+        this.body.idpersona = id;
+        this.body.validacionRepeticion = false;
+        this.callSaveService(url);
+        this.confirmationSave = false;
+      },
+      reject: () => {
+
+      }
+    });
+  }
+
+  callConfirmationUpdate() {
+    this.progressSpinner = false;
+    this.confirmationUpdate = true;
+
+    this.confirmationService.confirm({
+      key: "cdGeneralesUpdate",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      icon: "fa fa-search ",
+      accept: () => {
+        this.progressSpinner = true;
+        this.confirmationUpdate = false;
+        let url = "gestionJusticiables_updateJusticiable";
+        this.validateCampos(url);
+      },
+      reject: () => { }
+    });
+  }
+
+  reject() {
+
+    if (this.confirmationUpdate) {
+      this.confirmationUpdate = false;
+      this.progressSpinner = true;
+      this.modoEdicion = false;
+      let url = "gestionJusticiables_createJusticiable";
+      this.body.asuntos = undefined;
+      this.body.datosAsuntos = [];
+      this.body.numeroAsuntos = undefined;
+      this.body.ultimoAsunto = undefined;
+      //Ya estavalidada la repeticion y puede crear al justiciable
+      this.body.validacionRepeticion = true;
+      this.validateCampos(url);
+      this.cdGeneralesUpdate.hide();
+    } else if (this.confirmationSave) {
+      this.confirmationSave = false;
+
+      this.progressSpinner = true;
+      let url = "gestionJusticiables_createJusticiable";
+      //Ya estavalidada la repeticion y puede crear al justiciable
+      this.body.validacionRepeticion = true;
+      this.callSaveService(url);
+      this.cdGeneralesSave.hide();
+    }
   }
 
   getTelefonosJusticiable() {
@@ -763,7 +856,13 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       //Si se selecciona españa
     } else {
       this.poblacionExtranjera = false;
-      this.isDisabledPoblacion = true;
+
+      if (this.body.idprovincia != undefined && this.body.idprovincia != null && this.body.idprovincia != "") {
+        this.isDisabledPoblacion = false;
+      } else {
+        this.isDisabledPoblacion = true;
+      }
+
       this.isDisabledProvincia = true;
 
       if (this.body.codigopostal != undefined && this.body.codigopostal != null) {
@@ -786,7 +885,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       if (this.body.idpais == "191") {
         this.isDisabledProvincia = false;
       }
-      //this.body.otraProvincia = "1";
+
       if (
         (this.body.idpoblacion == null &&
           this.body.idpoblacion == undefined) ||
@@ -805,9 +904,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.isDisabledPoblacion = false;
       }
 
-      //this.body.idPoblacion = "";
-
-      //this.provinciaSelecionada = "";
       this.isDisabledProvincia = true;
       this.onChangeCodigoPostal();
       this.checkOtraProvincia = false;
@@ -929,6 +1025,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       let message = this.translateService.instant("justiciaGratuita.justiciables.message.cambiarTelefonoPreferente");
 
       this.confirmationService.confirm({
+        key: "cdPreferenteSms",
         message: message,
         icon: icon,
         accept: () => {
@@ -1117,6 +1214,23 @@ para poder filtrar el dato con o sin estos caracteres*/
   onRowSelect(dato) {
     if (dato.data.count == 1 || dato.data.count == 2) {
       this.selectedDatos.pop();
+    }
+  }
+
+  editarCompleto(event, dato) {
+    let NUMBER_REGEX = /^\d{1,5}$/;
+    if (NUMBER_REGEX.test(dato)) {
+      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
+        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
+      }
+    } else {
+
+      if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
+        this.body.codigopostal = event.currentTarget.value.slice(0, 5);
+      } else {
+        event.currentTarget.value = "";
+      }
+
     }
   }
 }

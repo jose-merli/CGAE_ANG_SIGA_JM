@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, Output, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
@@ -9,6 +9,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
+import { Dialog } from 'primeng/primeng';
 
 @Component({
   selector: 'app-datos-representante',
@@ -36,12 +37,24 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   permisoEscritura;
   showTarjetaPermiso: boolean = false;
   representanteValido: boolean = false;
+  confirmationAssociate: boolean = false;
+  confirmationDisassociate: boolean = false;
+  confirmationCreateRepresentante: boolean = false;
+
+  @ViewChild("cdCreateRepresentante") cdCreateRepresentante: Dialog;
+  @ViewChild("cdRepresentanteAssociate") cdRepresentanteAssociate: Dialog;
+  @ViewChild("cdRepresentanteDisassociate") cdRepresentanteDisassociate: Dialog;
 
   @Output() newRepresentante = new EventEmitter<JusticiableItem>();
   @Output() viewRepresentante = new EventEmitter<JusticiableItem>();
+  @Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
 
-  constructor(private router: Router, private sigaServices: SigaServices, private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService, private translateService: TranslateService, private commonsService: CommonsService) { }
+  constructor(private router: Router,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -70,7 +83,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   ngOnChanges(changes: SimpleChanges) {
 
     //Comprobamos si se ha seleccionado de la tabla el justiciable y no nos encontramos en la creacion de justiciable/representante
-    if (this.persistenceService.getBody() != undefined && this.body.idpersona != undefined) {
+    if (this.persistenceService.getBody() != undefined && this.body != undefined && this.body.idpersona != undefined) {
       this.generalBody = this.persistenceService.getBody();
 
       //Si tiene nif lo volvemos a buscar
@@ -233,8 +246,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
   callServiceConfirmationCreateRepresentante() {
     let message = this.translateService.instant("justiciaGratuita.justiciables.message.crearNuevoRepresentante");
-
+    this.confirmationCreateRepresentante = true;
     this.confirmationService.confirm({
+      key: "cdCreateRepresentante",
       message: message,
       icon: "fa fa-search ",
       accept: () => {
@@ -309,24 +323,29 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         this.representanteValido = false;
       } else {
 
-        this.progressSpinner = true;
         this.body.idrepresentantejg = this.generalBody.idpersona;
-
-        this.sigaServices.post("gestionJusticiables_associateRepresentante", this.body).subscribe(
-          n => {
-
-            this.progressSpinner = false;
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.persistenceService.setBody(this.generalBody);
-          },
-          err => {
-            this.progressSpinner = false;
-            this.translateService.instant("general.message.error.realiza.accion")
-          });
+        this.callServiceAssociate();
 
       }
     }
 
+  }
+
+  callServiceAssociate() {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionJusticiables_associateRepresentante", this.body).subscribe(
+      n => {
+
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        this.persistenceService.setBody(this.generalBody);
+      },
+      err => {
+        this.progressSpinner = false;
+        this.translateService.instant("general.message.error.realiza.accion")
+      });
   }
 
   disassociate() {
@@ -353,6 +372,102 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
     }
 
+  }
+
+  callConfirmationAssociate() {
+    this.progressSpinner = false;
+    this.confirmationAssociate = true;
+    this.confirmationService.confirm({
+      key: "cdRepresentanteAssociate",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      icon: "fa fa-search ",
+      accept: () => {
+        this.associate();
+      },
+      reject: () => { }
+    });
+  }
+
+  reject() {
+    this.cdCreateRepresentante.hide();
+  }
+
+  rejectAssociate() {
+    this.cdRepresentanteAssociate.hide();
+    this.progressSpinner = true;
+    this.body.idrepresentantejg = this.generalBody.idpersona;
+    this.body.validacionRepeticion = true;
+    this.body.asociarRepresentante = true;
+    let url = "gestionJusticiables_createJusticiable";
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        let idJusticiable = JSON.parse(data.body).id;
+        this.body.idpersona = idJusticiable;
+
+        this.createJusticiableByUpdateRepresentante.emit(this.body);
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  callConfirmationDisassociate() {
+    this.progressSpinner = false;
+    this.confirmationDisassociate = true;
+
+    this.confirmationService.confirm({
+      key: "cdRepresentanteDisassociate",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      icon: "fa fa-search ",
+      accept: () => {
+        this.disassociate();
+      },
+      reject: () => { }
+    });
+  }
+
+  rejectDisassociate() {
+    this.cdRepresentanteDisassociate.hide();
+    this.progressSpinner = true;
+    this.body.idrepresentantejg = undefined;
+    this.body.validacionRepeticion = true;
+    this.body.asociarRepresentante = true;
+    this.persistenceService.clearBody();
+    let url = "gestionJusticiables_createJusticiable";
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        let idJusticiable = JSON.parse(data.body).id;
+        this.body.idpersona = idJusticiable;
+
+        this.createJusticiableByUpdateRepresentante.emit(this.body);
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   navigateToRepresentante() {

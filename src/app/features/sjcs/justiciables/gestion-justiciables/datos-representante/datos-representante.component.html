@@ -111,11 +111,11 @@
       <div class="text-right main-button">
         <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
           [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="disassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
+        <button pButton (click)="callConfirmationDisassociate()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'censo.tipoCuenta.cargo.desasociar' | translate }}"
           [disabled]="!permisoEscritura ||  disabledDisassociate()"></button>
         <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
           [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="associate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+        <button pButton (click)="callConfirmationAssociate()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
           [disabled]="!permisoEscritura || disabledSave()"></button>
       </div>
     </div>
@@ -125,3 +125,24 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdCreateRepresentante" #cdCreateRepresentante>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdCreateRepresentante.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdRepresentanteAssociate" #cdRepresentanteAssociate>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteAssociate.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rejectAssociate()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdRepresentanteDisassociate" #cdRepresentanteDisassociate>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdRepresentanteDisassociate.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rejectDisassociate()"></button>
+  </p-footer>
+</p-confirmDialog>

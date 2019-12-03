@@ -71,5 +71,7 @@ export class JusticiableItem {
   tipojusticiable: string;
 
   datosAsuntos: any[];
+  validacionRepeticion: boolean;
+  asociarRepresentante: boolean;
   constructor() { }
 }
