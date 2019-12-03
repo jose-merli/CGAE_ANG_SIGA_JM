@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
@@ -8,6 +8,9 @@ import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Router } from '@angular/router';
+import { ConfirmationService } from '../../../../../../../node_modules/primeng/api';
+import { Dialog } from '../../../../../../../node_modules/primeng/dialog';
+import { EventoItem } from '../../../../../models/EventoItem';
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -31,17 +34,17 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   permisoEscritura;
   showTarjetaPermiso: boolean = false;
 
+  @ViewChild("cdSolicitud") cdSolicitud: Dialog;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
-
+  @Output() createJusticiableByUpdateSolicitud = new EventEmitter<any>();
   @Input() showTarjeta;
   @Input() body: JusticiableItem;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private router: Router,
+    private confirmationService: ConfirmationService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
@@ -80,9 +83,15 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
           this.getCombos();
 
           this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
+            let asistidoautorizaeejg = this.body.asistidoautorizaeejg;
+            let asistidosolicitajg = this.body.asistidosolicitajg;
+            let autorizaavisotelematico = this.body.autorizaavisotelematico;
             this.body = data;
+            this.body.asistidoautorizaeejg = asistidoautorizaeejg;
+            this.body.asistidosolicitajg = asistidosolicitajg;
+            this.body.autorizaavisotelematico = autorizaavisotelematico;
             this.modoEdicion = true;
-
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           });
         }
       }
@@ -111,6 +120,8 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
       this.modoEdicion = true;
     }
   }
+
+
 
   tratamientoDescripcionesTarjeta() {
 
@@ -177,16 +188,15 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   }
 
   save() {
-    if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+    if (!(this.bodyInicial.correoelectronico != undefined && this.bodyInicial.correoelectronico != "")) {
       if (this.body.autorizaavisotelematico == "1") {
-        this.body.autorizaavisotelematico = undefined;
         this.changeDetectorRef.detectChanges();
         this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
       } else {
-        this.callServiceSave();
+        this.callConfirmationUpdate();
       }
     } else {
-      this.callServiceSave();
+      this.callConfirmationUpdate();
     }
   }
 
@@ -198,7 +208,9 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.bodyInicial.autorizaavisotelematico = this.body.autorizaavisotelematico;
+        this.bodyInicial.asistidoautorizaeejg = this.body.asistidoautorizaeejg;
+        this.bodyInicial.asistidosolicitajg = this.body.asistidosolicitajg;
         this.tratamientoDescripcionesTarjeta();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -217,6 +229,53 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
       }
     );
 
+  }
+
+  callConfirmationUpdate() {
+    this.progressSpinner = false;
+
+    this.confirmationService.confirm({
+      key: "cdSolicitud",
+      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado?",
+      icon: "fa fa-search ",
+      accept: () => {
+        this.callServiceSave();
+      },
+      reject: () => {
+
+      }
+    });
+  }
+
+  reject() {
+    this.cdSolicitud.hide();
+    this.progressSpinner = false;
+    //Ya estavalidada la repeticion y puede crear al justiciable
+    this.body.validacionRepeticion = true;
+    this.body.asociarRepresentante = true;
+    let url = "gestionJusticiables_createJusticiable";
+    this.sigaServices.post(url, this.body).subscribe(
+      data => {
+
+        let idJusticiable = JSON.parse(data.body).id;
+        this.body.idpersona = idJusticiable;
+
+        this.createJusticiableByUpdateSolicitud.emit(this.body);
+
+      },
+      err => {
+
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   clear() {

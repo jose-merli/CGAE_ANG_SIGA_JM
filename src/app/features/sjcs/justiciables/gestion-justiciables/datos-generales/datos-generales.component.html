@@ -1,5 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<app-dialog></app-dialog>
+
+
 
 <div *ngIf="showTarjetaPermiso" class="ficha-container">
   <div class="card">
@@ -182,7 +183,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.justiciables.literal.tipoVia' | translate }}</label>
-              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idtipodir"
+              <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idtipovia"
                 [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboTipoVia" [disabled]="!permisoEscritura">
               </p-dropdown>
             </div>
@@ -196,8 +197,7 @@
               <label>
                 {{"gratuita.busquedaAsistencias.literal.numero" | translate}}
               </label>
-              <input type="number" class="form-control" min="0" max="99999999" [(ngModel)]="body.numerodir" [disabled]="!permisoEscritura"
-                pInputText>
+              <input type="text" class="form-control" maxLength="5" [(ngModel)]="body.numerodir" [disabled]="!permisoEscritura" pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>
@@ -231,10 +231,8 @@
               <label>
                 {{"censo.ws.literal.codigopostal" | translate}}
               </label>
-              <input *ngIf="!poblacionExtranjera" type="text" class="form-control" maxLength="5" [(ngModel)]="body.codigopostal" (ngModelChange)="onChangeCodigoPostal()"
-                [disabled]="!permisoEscritura" pInputText>
-              <input *ngIf="poblacionExtranjera" [(ngModel)]="body.codigopostal" type="text" class="form-control" [maxLength]="5" [disabled]="!permisoEscritura"
-                pInputText>
+              <input type="text" class="form-control" maxlength="5" [(ngModel)]="body.codigopostal" (ngModelChange)="onChangeCodigoPostal()"
+                [disabled]="!permisoEscritura" (input)='editarCompleto($event,body.codigopostal)' pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -260,7 +258,7 @@
               </label>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idpoblacion'
                 [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [disabled]="isDisabledPoblacion || !permisoEscritura || poblacionExtranjera">
+                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [disabled]="isDisabledPoblacion || !permisoEscritura">
               </p-dropdown>
             </div>
 
@@ -332,9 +330,9 @@
                           <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" maxlength="100"
                             [disabled]="!permisoEscritura" />
                           <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn" [disabled]="!permisoEscritura"></button>
-                          <div *ngIf="!emailValido">
-                            <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
-                          </div>
+                        </div>
+                        <div *ngIf="!emailValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
                         </div>
                         <div *ngIf="!edicionEmail" class="ui-inputgroup">
                           <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
@@ -406,3 +404,25 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdGeneralesSave" #cdGeneralesSave>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesSave.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdGeneralesUpdate" #cdGeneralesUpdate>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesUpdate.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdPreferenteSms" #cdPreferenteSms>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdPreferenteSms.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cdPreferenteSms.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

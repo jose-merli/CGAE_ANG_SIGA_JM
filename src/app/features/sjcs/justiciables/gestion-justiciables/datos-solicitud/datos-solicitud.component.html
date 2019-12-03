@@ -1,5 +1,12 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdSolicitud" #cdSolicitud>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdSolicitud.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
 <div *ngIf="showTarjetaPermiso" class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">

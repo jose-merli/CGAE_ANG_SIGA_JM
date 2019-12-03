@@ -34,6 +34,8 @@ export class GestionJusticiablesComponent implements OnInit {
   modoRepresentante: boolean = false;
   checkedViewRepresentante: boolean = false;
   nuevoRepresentante: boolean = false;
+  justiciableOverwritten: boolean = false;
+  justiciableCreateByUpdate: boolean = false;
   permisoEscritura;
 
   constructor(private router: Router,
@@ -153,15 +155,24 @@ export class GestionJusticiablesComponent implements OnInit {
 
         this.body = JSON.parse(n.body).justiciable;
 
-        if (!this.modoRepresentante) {
+        if (!this.modoRepresentante && !this.justiciableOverwritten && !this.justiciableCreateByUpdate) {
           this.body.numeroAsuntos = this.justiciableBusquedaItem.numeroAsuntos;
           this.body.ultimoAsunto = this.justiciableBusquedaItem.ultimoAsunto;
+        } else if (this.justiciableOverwritten) {
+          this.justiciableOverwritten = false;
+          this.modoEdicion = true;
+          this.getAsuntos();
+        } if (this.justiciableCreateByUpdate) {
+          this.justiciableCreateByUpdate = false;
+          this.modoEdicion = true;
+          //Al crearse uno nuevo desde justiciables no se le asocia ningun asunto por eso se resetean los valores
+          this.body.numeroAsuntos = "0";
+          this.body.ultimoAsunto = undefined;
         } else {
           this.body.numeroAsuntos = undefined;
           this.body.ultimoAsunto = undefined;
           this.getAsuntos();
         }
-
 
         this.progressSpinner = false;
 
@@ -277,5 +288,29 @@ export class GestionJusticiablesComponent implements OnInit {
       this.router.navigate(["/justiciables"]);
     }
 
+  }
+
+  searchJusticiableOverwritten(justiciable) {
+    this.justiciableOverwritten = true;
+    let justiciableBusqueda = new JusticiableBusquedaItem();
+    justiciableBusqueda.idpersona = justiciable.idpersona;
+    justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
+    this.callServiceSearch(justiciableBusqueda);
+  }
+
+  createJusticiableByUpdateSolicitud(justiciable) {
+    this.justiciableCreateByUpdate = true;
+    let justiciableBusqueda = new JusticiableBusquedaItem();
+    justiciableBusqueda.idpersona = justiciable.idpersona;
+    justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
+    this.callServiceSearch(justiciableBusqueda);
+  }
+
+  createJusticiableByUpdateRepresentante(justiciable) {
+    this.justiciableCreateByUpdate = true;
+    let justiciableBusqueda = new JusticiableBusquedaItem();
+    justiciableBusqueda.idpersona = justiciable.idpersona;
+    justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
+    this.callServiceSearch(justiciableBusqueda);
   }
 }
