@@ -108,7 +108,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
-
+ 
         if (this.permisoEscritura == undefined) {
           this.progressSpinner = false;
           this.showTarjetaPermiso = false;
@@ -224,6 +224,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
 
   save() {
+
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     this.progressSpinner = true;
     let url = "";
     this.body.validacionRepeticion = false;
@@ -258,7 +263,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       }
 
     }
-
+    }
   }
 
   validateCampos(url) {
@@ -958,7 +963,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   rest() {
-
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     this.nuevoTelefono = false;
     this.selectedDatos = [];
     this.body.idpaisdir1 = "191";
@@ -984,7 +992,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.body = new JusticiableItem();
     }
-
+  }
   }
 
   fillFechaNacimiento(event) {
@@ -998,7 +1006,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   newData() {
-
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     this.nuevoTelefono = true;
 
     let dato = new JusticiableTelefonoItem();
@@ -1013,6 +1024,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.datos.push(dato);
 
     this.count += 1;
+  }
   }
 
   onChangePreferente(dato) {
@@ -1180,14 +1192,22 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restData() {
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     this.faxValido = true;
     this.emailValido = true;
     this.selectedDatos = [];
   }
+  }
 
   deleteData(selectedDatos) {
-
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     selectedDatos.forEach(element => {
 
       if (!element.nuevo) {
@@ -1209,6 +1229,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
 
     this.selectedDatos = [];
+  }
   }
 
   onRowSelect(dato) {

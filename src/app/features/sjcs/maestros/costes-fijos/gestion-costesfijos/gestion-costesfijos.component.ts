@@ -19,7 +19,7 @@ export class GestionCostesfijosComponent implements OnInit {
   textSelected: String = "{label}";
 
   selectedItem: number = 10;
-  selectAll: boolean = false;;
+  selectAll: boolean = false;
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;

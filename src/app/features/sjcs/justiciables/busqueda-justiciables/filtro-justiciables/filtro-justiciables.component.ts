@@ -180,7 +180,10 @@ export class FiltroJusticiablesComponent implements OnInit {
 
 
   nuevo() {
-
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     if (this.modoRepresentante) {
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
     } else {
@@ -188,7 +191,7 @@ export class FiltroJusticiablesComponent implements OnInit {
       this.persistenceService.clearBody();
       this.router.navigate(["/gestionJusticiables"]);
     }
-
+  }
   }
 
   checkFilters() {

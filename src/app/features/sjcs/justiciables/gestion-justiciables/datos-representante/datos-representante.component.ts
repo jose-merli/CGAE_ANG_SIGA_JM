@@ -196,12 +196,20 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   search() {
+        if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     this.persistenceService.clearBody();
     this.router.navigate(["/justiciables"], { queryParams: { rp: "1" } });
+    }
   }
 
   searchRepresentanteByNif() {
-
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     if (this.generalBody.nif.trim() != undefined && this.generalBody.nif.trim() != "") {
       this.progressSpinner = true;
       let bodyBusqueda = new JusticiableBusquedaItem();
@@ -225,7 +233,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
           console.log(err);
         });
     }
-
+  }
   }
 
   disabledSave() {
@@ -375,6 +383,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   callConfirmationAssociate() {
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     this.progressSpinner = false;
     this.confirmationAssociate = true;
     this.confirmationService.confirm({
@@ -386,6 +398,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       },
       reject: () => { }
     });
+  }
   }
 
   reject() {
@@ -424,6 +437,10 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   callConfirmationDisassociate() {
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     this.progressSpinner = false;
     this.confirmationDisassociate = true;
 
@@ -436,6 +453,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       },
       reject: () => { }
     });
+  }
   }
 
   rejectDisassociate() {
@@ -482,13 +500,17 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   rest() {
-
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     if (this.body.idrepresentantejg != undefined) {
       this.searchJusticiable();
     } else {
       this.generalBody = new JusticiableItem();
       this.nifRepresentante = undefined;
     }
+  }
   }
 
   showMessage(severity, summary, msg) {

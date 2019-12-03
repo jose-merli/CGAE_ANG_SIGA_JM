@@ -151,7 +151,12 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   }
 
   rest() {
+        if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    }
   }
 
   getCombos() {
@@ -188,6 +193,10 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   }
 
   save() {
+    if (!this.permisoEscritura){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
+    }else
+    {
     if (!(this.bodyInicial.correoelectronico != undefined && this.bodyInicial.correoelectronico != "")) {
       if (this.body.autorizaavisotelematico == "1") {
         this.changeDetectorRef.detectChanges();
@@ -198,6 +207,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
     } else {
       this.callConfirmationUpdate();
     }
+  }
   }
 
   callServiceSave() {
