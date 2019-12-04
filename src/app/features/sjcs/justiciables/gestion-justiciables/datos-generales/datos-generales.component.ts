@@ -138,9 +138,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.body.idpersona == undefined) {
             this.modoEdicion = false;
             this.body.fechaalta = new Date();
-            this.body.sexo = "N";
-            this.body.regimenConyugal = "I";
-            this.body.idpais = "191";
+
           } else {
             this.modoEdicion = true;
 
