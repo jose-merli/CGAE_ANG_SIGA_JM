@@ -225,7 +225,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   searchRepresentanteByNif() {
-    if (!this.permisoEscritura) {
+    if (this.permisoEscritura != undefined && !this.permisoEscritura) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
       if (this.generalBody.nif.trim() != undefined && this.generalBody.nif.trim() != "") {
