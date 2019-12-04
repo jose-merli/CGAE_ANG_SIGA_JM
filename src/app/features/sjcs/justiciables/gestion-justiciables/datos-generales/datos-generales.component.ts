@@ -523,6 +523,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.ultimoAsunto = undefined;
       //Ya estavalidada la repeticion y puede crear al justiciable
       this.body.validacionRepeticion = true;
+      this.body.asociarRepresentante = true;
       this.validateCampos(url);
       this.cdGeneralesUpdate.hide();
     } else if (this.confirmationSave) {
@@ -530,8 +531,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       this.progressSpinner = true;
       let url = "gestionJusticiables_createJusticiable";
-      //Ya estavalidada la repeticion y puede crear al justiciable
+      //Ya esta validada la repeticion y puede crear al justiciable
       this.body.validacionRepeticion = true;
+      this.body.asociarRepresentante = true;
       this.callSaveService(url);
       this.cdGeneralesSave.hide();
     }
@@ -896,7 +898,12 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.codigoPostalValido = true;
         this.cpValido = true;
       } else {
-        this.cpValido = false;
+        if (this.body.codigopostal != null && this.body.codigopostal != undefined && this.body.codigopostal != "") {
+          this.cpValido = false;
+        } else {
+          this.cpValido = true;
+        }
+
         this.codigoPostalValido = false;
         this.isDisabledPoblacion = true;
         this.provinciaSelecionada = "";
@@ -1307,13 +1314,17 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (NUMBER_REGEX.test(dato)) {
       if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
         this.body.codigopostal = event.currentTarget.value.slice(0, 5);
+        this.cpValido = true;
       }
     } else {
 
       if (dato != null && dato != undefined && (dato < 0 || dato > 99999)) {
         this.body.codigopostal = event.currentTarget.value.slice(0, 5);
+        this.cpValido = true;
       } else {
+        this.body.codigopostal = "";
         event.currentTarget.value = "";
+        this.cpValido = true;
       }
 
     }

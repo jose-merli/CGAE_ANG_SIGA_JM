@@ -242,15 +242,15 @@
 
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='body.idprovincia'
                 [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                [options]="comboProvincia" [disabled]="isDisabledProvincia || poblacionExtranjera || !permisoEscritura">
+                [options]="comboProvincia" [disabled]="isDisabledProvincia || !permisoEscritura">
               </p-dropdown>
             </div>
 
-            <div class="form-group col-lg-6 col-md-6">
+            <!-- <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'gratuita.personaJG.literal.otraProvincia' | translate }}</label>
               <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia binary="true" (onChange)="onChangeOtherProvincia($event)"
-                [disabled]="!permisoEscritura || poblacionExtranjera"></p-checkbox>
-            </div>
+                [disabled]="!permisoEscritura"></p-checkbox>
+            </div> -->
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
@@ -258,7 +258,7 @@
               </label>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idpoblacion'
                 [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPoblacion" (input)="buscarPoblacion($event)"
-                emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [disabled]="isDisabledPoblacion || !permisoEscritura">
+                [emptyFilterMessage]="resultadosPoblaciones" [disabled]="isDisabledPoblacion || !permisoEscritura">
               </p-dropdown>
             </div>
 

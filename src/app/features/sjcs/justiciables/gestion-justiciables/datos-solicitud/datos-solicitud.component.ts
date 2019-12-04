@@ -292,6 +292,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
         let idJusticiable = JSON.parse(data.body).id;
         this.body.idpersona = idJusticiable;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
         this.createJusticiableByUpdateSolicitud.emit(this.body);
 
