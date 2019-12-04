@@ -1,3 +1,5 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -15,57 +17,33 @@
         <div class="form-row">
           <div class="form-group col-lg-3 col-md-3">   
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idEstado' [options]="estadoFacturas" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idEstado' [options]="estadoFacturas" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>  
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
-            <p-calendar class="arreglo-fecha" [(ngModel)]="body.fechaDesde" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="yearRange"
-              [locale]="es" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true"
-              #calendar [minDate]="minDate" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="utc" (onBlur)="blur($event)"
-              (onFocus)="focus($event)">
-
-              <p-footer>
-                <div class="main-button d-flex col-lg-12">
-                  <button [disabled]="disabledToday" (click)="fechaHoy()" pButton type="button" label="{{'general.boton.hoy'| translate }}"
-                    class="mr-auto"></button>
-                  <button [disabled]="disabledDelete" (click)="borrarFecha()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
-                </div>
-              </p-footer>
-            </p-calendar>
+            <app-fecha [utc]="false" [(value)]="filtros.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
           </div>  
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta' | translate}}</label>
-            <p-calendar class="arreglo-fecha" [(ngModel)]="body.fechaHasta" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="yearRange"
-              [locale]="es" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true"
-              #calendar [minDate]="minDate" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="utc" (onBlur)="blur($event)"
-              (onFocus)="focus($event)">
-
-              <p-footer>
-                <div class="main-button d-flex col-lg-12">
-                  <button [disabled]="disabledToday" (click)="fechaHoy()" pButton type="button" label="{{'general.boton.hoy'| translate }}"
-                    class="mr-auto"></button>
-                  <button [disabled]="disabledDelete" (click)="borrarFecha()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
-                </div>
-              </p-footer>
-            </p-calendar>  
+            <app-fecha [utc]="false" [(value)]="filtros.fechaHasta" [minDate]="filtros.fechaDesde" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
           </div>  
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idConcepto' [options]="conceptos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>    
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idConcepto' [options]="conceptos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>    
           </div>  
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6 col-md-6">   
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}}</label>
-            <input type="text" name="nombre" class="form-control" [(ngModel)]='body.nombre' pInputText />
+            <input type="text"  maxlength="50"  name="nombre" class="form-control" [(ngModel)]='filtros.nombre' pInputText />
           </div>  
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idGrupo' [options]="grupoTurnos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>      
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idFacturacion' [options]="grupoTurnos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>      
           </div>  
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idPartida' [options]="partidaPresupuestaria" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>     
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idPartidaPresupuestaria' [options]="partidaPresupuestaria" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>     
           </div>  
         </div>
       </div>
@@ -74,7 +52,7 @@
       <div class="text-right main-button">
           <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
           <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
-          <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+          <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
       </div>
     </div>
   </div>

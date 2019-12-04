@@ -22,6 +22,8 @@ import { TranslatePipe } from '../../commons/translate';
 import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
 import { JusticiablesModule } from './justiciables/justiciables.module';
 import { OficioModule } from './oficio/oficio.module';
+import { FacturacionSJCSModule } from './facturacionSJCS/facturacionsjcs.module';
+    
 
 @NgModule({
   declarations: [],
@@ -31,7 +33,7 @@ import { OficioModule } from './oficio/oficio.module';
     OficioModule,
     JusticiablesModule,
     routingSjcs,
-
+    FacturacionSJCSModule
   ],
   providers: []
 })

@@ -723,18 +723,15 @@ export class SigaServices {
     dialogo_tipoEnvios: "dialogoComunicacion/tipoEnvios",
     dialogo_enviar: "dialogoComunicacion/enviar",
     dialogo_descargar: "dialogoComunicacion/descargar",
+    ...endpoints_facturacionsjcs,
     dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
     ...endpoints_componentes,
     dialogo_keys: "dialogoComunicacion/keys",
-
-    ...endpoints_facturacionsjcs,
-
     ...endpoints_generales,
-
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
+      ...endpoints_justiciables,
     dialogo_envioTest: "dialogoComunicacion/envioTest",
-    ...endpoints_justiciables,
     ...endpoints_oficio,
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",
     ...endpoints_maestros,

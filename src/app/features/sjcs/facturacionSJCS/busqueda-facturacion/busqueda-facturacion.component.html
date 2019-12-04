@@ -1,2 +1,11 @@
-<app-filtro-busqueda-facturacion></app-filtro-busqueda-facturacion>
-<app-tabla-busqueda-facturacion></app-tabla-busqueda-facturacion>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+    <app-filtro-busqueda-facturacion (buscarFacturacion)="buscarFacturaciones($event)" [permisos]="permisoEscritura"></app-filtro-busqueda-facturacion>
+    <app-tabla-busqueda-facturacion *ngIf="buscar" [datos]="datos"></app-tabla-busqueda-facturacion>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>
