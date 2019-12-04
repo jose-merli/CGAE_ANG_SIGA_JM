@@ -32,6 +32,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   @Input() navigateToJusticiable: boolean = false;;
 
   searchRepresentanteGeneral: boolean = false;
+  showEnlaceRepresentante: boolean = false;
   // navigateToJusticiable: boolean = false;
   esMenorEdad: boolean = false;
   idPersona;
@@ -73,8 +74,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
           this.showTarjetaPermiso = true;
           this.getTiposIdentificacion();
           this.persistenceService.clearFiltrosAux();
-
         }
+
+        this.validateShowEnlaceepresentante();
       }
       ).catch(error => console.error(error));
 
@@ -144,19 +146,31 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
       }
     }
 
+    this.validateShowEnlaceepresentante();
+
     this.sigaServices.guardarDatosGeneralesJusticiable$.subscribe((data) => {
       this.body = data;
       this.modoEdicion = true;
-
-    })
+      this.validateShowEnlaceepresentante();
+    });
 
     this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
       this.body = data;
       this.modoEdicion = true;
-
-    })
+      this.validateShowEnlaceepresentante();
+    });
 
   }
+
+  validateShowEnlaceepresentante() {
+    if (this.body != undefined && this.body.idrepresentantejg != undefined && this.body.idrepresentantejg != null &&
+      this.body.idrepresentantejg != "") {
+      this.showEnlaceRepresentante = true;
+    } else {
+      this.showEnlaceRepresentante = false;
+    }
+  }
+
 
   onHideTarjeta() {
     if (this.modoEdicion && !this.checkedViewRepresentante) {
@@ -361,7 +375,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+        this.showEnlaceRepresentante = true;
         this.persistenceService.setBody(this.generalBody);
       },
       err => {
@@ -395,7 +409,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
         this.nifRepresentante = undefined;
         this.persistenceService.setBody(this.generalBody);
         this.body.idrepresentantejg = undefined;
+        this.showEnlaceRepresentante = false;
         this.progressSpinner = false;
+        this.showEnlaceRepresentante = false;
 
       },
       err => {
@@ -452,9 +468,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
         let idJusticiable = JSON.parse(data.body).id;
         this.body.idpersona = idJusticiable;
-
-        this.createJusticiableByUpdateRepresentante.emit(this.body);
         this.progressSpinner = false;
+        this.createJusticiableByUpdateRepresentante.emit(this.body);
       },
       err => {
 

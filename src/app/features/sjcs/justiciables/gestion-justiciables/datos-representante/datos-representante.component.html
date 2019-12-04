@@ -9,7 +9,7 @@
         </div>
         <label class="title-ficha">{{ 'justiciaGratuita.justiciables.rol.representante' | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
-          <label class="mr-3">
+          <label *ngIf="showEnlaceRepresentante" class="mr-3">
             <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
             <a (click)="navigateToRepresentante();$event.stopPropagation();">
               <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'justiciaGratuita.justiciables.fichaJusticiable' | translate }}
@@ -42,7 +42,8 @@
               </label>
 
             </div>
-            <div class="col-3">
+            <div *ngIf="!showEnlaceRepresentante" class="col-3"></div>
+            <div *ngIf="showEnlaceRepresentante" class="col-3">
               <label *ngIf="!navigateToJusticiable">
                 <i (click)="navigateToRepresentante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
                 <a (click)="navigateToRepresentante();$event.stopPropagation();">
