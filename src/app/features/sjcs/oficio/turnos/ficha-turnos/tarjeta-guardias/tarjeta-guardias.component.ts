@@ -12,6 +12,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
+import { GuardiaObject } from '../../../../../../models/sjcs/GuardiaObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 @Component({
@@ -41,6 +42,9 @@ export class TarjetaGuardias implements OnInit {
   comboJurisdicciones: any[] = [];
   bodyInicial: TurnosItems;
   apeyNombreUltimo;
+  mostrarDatos: boolean = false;
+  mostrarNumero: boolean = false;
+  mostrarVacio: boolean = false;
   progressSpinner: boolean = false;
   msgs;
   body;
@@ -48,12 +52,14 @@ export class TarjetaGuardias implements OnInit {
   datosInicial = [];
   updateAreas = [];
   showTarjeta: boolean = true;
-  ultimoLetrado;
-  primerLetrado;
-  nombreApellidosPrimerLetrado;
+  nombreGuardia;
+  numeroGuardias;
+  duracionGuardias;
+  nletradosGuardias;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
   pesosSeleccionadosTarjeta2;
+  updateCombo;
   //Resultados de la busqueda
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
@@ -93,6 +99,12 @@ export class TarjetaGuardias implements OnInit {
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
+          if (this.persistenceService.getDatos() != undefined) {
+            this.turnosItem = this.persistenceService.getDatos();
+          }
+          if (this.turnosItem.fechabaja != undefined) {
+            this.disableAll = true;
+          }
           this.modoEdicion = true;
         }
       }
@@ -109,14 +121,11 @@ export class TarjetaGuardias implements OnInit {
       // this.getMaterias();
     } else {
       this.modoEdicion = false;
+      this.mostrarVacio = true;
+      this.numeroGuardias = 0;
     }
-
-    // let datos = this.persistenceService.getDatos();
-    // if (datos != null && datos != undefined && datos.fechabaja != undefined) {
-    //   this.disableAll = true;
-    // }
     if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true;
+      this.disableAll = true
     }
   }
   transformaFecha(fecha) {
@@ -141,7 +150,7 @@ export class TarjetaGuardias implements OnInit {
     this.getColaOficio();
   }
   setItalic(dato) {
-    if (dato.fechabajapersona == null) return false;
+    if (dato.fechabaja == null) return false;
     else return true;
   }
   searchHistorical() {
@@ -157,29 +166,35 @@ export class TarjetaGuardias implements OnInit {
   getColaOficio() {
     this.turnosItem.historico = this.historico;
     this.progressSpinner = true;
+    this.mostrarDatos = false;
+    this.mostrarNumero = false;
     this.sigaServices.post("turnos_busquedaGuardias", this.turnosItem).subscribe(
       n => {
-        // this.datos = n.turnosItem;
-        this.datos = JSON.parse(n.body).turnosItem;
+        this.datos = JSON.parse(n.body).guardiaItems;
         // this.datos.forEach(element => {
         //   element.orden = +element.orden;
         // });
-        // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-        //   this.turnosItem.historico = true;
-        // }
       },
       err => {
         console.log(err);
         this.progressSpinner = false;
       }, () => {
+        if (this.datos != undefined && this.datos.length > 1) {
+          this.mostrarNumero = true;
+          this.numeroGuardias = this.datos.length;
+        }
+        else if (this.datos != undefined && this.datos.length == 1) {
+          this.mostrarDatos = true;
+          this.nombreGuardia = this.datos[0].nombre;
+          this.duracionGuardias = this.datos[0].duracion;
+          this.nletradosGuardias = this.datos[0].letradosGuardia;
+        }
+        if (this.datos != undefined && this.datos.length == 0) {
+          this.mostrarVacio = true;
+          this.numeroGuardias = this.datos.length;
+        }
         this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         this.progressSpinner = false;
-        if (this.datos != undefined && this.datos.length > 0) {
-          this.primerLetrado = this.datos[0].numerocolegiado;
-          this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombrepersona;
-          this.ultimoLetrado = this.datos[this.datos.length - 1].numerocolegiado;
-          this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombrepersona;
-        }
       }
     );
   }
@@ -428,10 +443,10 @@ export class TarjetaGuardias implements OnInit {
   }
 
   delete(selectedDatos) {
-    this.body = new TurnosObject();
-    this.body.turnosItem = this.selectedDatos;
+    this.body = new GuardiaObject();
+    this.body.guardiaItems = this.selectedDatos;
 
-    this.sigaServices.post("turnos_eliminateColaOficio", this.body).subscribe(
+    this.sigaServices.post("turnos_eliminateGuardia", this.body).subscribe(
       data => {
 
         this.nuevo = false;
@@ -440,7 +455,7 @@ export class TarjetaGuardias implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
-      err => {//areasmaterias.materias.ficha.materiaEnUso
+      err => {
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
@@ -454,6 +469,10 @@ export class TarjetaGuardias implements OnInit {
         this.progressSpinner = false;
       },
       () => {
+        let send = {
+          buscar: true,
+        }
+        this.sigaServices.notifyupdateCombo(send);
         this.progressSpinner = false;
         this.selectAll = false;
       }
@@ -487,13 +506,12 @@ export class TarjetaGuardias implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "orden", header: "administracion.informes.literal.orden" },
-      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre" },
-      // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
-      { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
-      { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
+      { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
+      { field: "duracion", header: "dato.jgr.guardia.guardias.duracion" },
+      { field: "letradosGuardia", header: "dato.jgr.guardia.guardias.letradosGuardia" },
+      { field: "validaJustificacion", header: "dato.jgr.guardia.guardias.validaJustificacion" },
+      { field: "letradosIns", header: "dato.jgr.guardia.guardias.letradosInscritos" }
     ];
 
     this.rowsPerPage = [
@@ -529,7 +547,7 @@ export class TarjetaGuardias implements OnInit {
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
       if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabajapersona != undefined && dato.fechabajapersona != null);
+        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
       } else {
         this.selectedDatos = this.datos;
       }
@@ -568,7 +586,7 @@ export class TarjetaGuardias implements OnInit {
       // this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
     } else {
 
-      if (evento.data.fechabajapersona == undefined && this.historico) {
+      if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
 

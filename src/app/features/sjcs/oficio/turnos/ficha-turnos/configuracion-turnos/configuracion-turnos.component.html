@@ -49,44 +49,44 @@
               <label>
                 {{"justiciaGratuita.oficio.turnos.requisitosguardias" | translate}} (*)
               </label>
-              <p-dropdown class="select-form" [disabled]="!disableAll || historico" [(ngModel)]='turnosItem.idguardias' [filter]="true"
-                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="guardias" (onChange)="onChangeRequisitosGuardias()"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              <p-dropdown class="select-form" [disabled]="disableAll" [(ngModel)]='turnosItem.idguardias' [filter]="true" filterBy="label,labelSinTilde"
+                filterMatchMode="contains" [options]="guardias" (onChange)="onChangeRequisitosGuardias()" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [showClear]="true">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox [disabled]="!disableAll || historico" [(ngModel)]="turnosItem.validarjustificacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}"
+              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.validarjustificacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacion' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-4 col-md-4">
               <br>
-              <p-checkbox [disabled]="!disableAll || historico" [(ngModel)]="turnosItem.validarinscripcionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}"
+              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.validarinscripcionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.requeridavalidacionIns' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [disabled]="!disableAll || historico" [(ngModel)]="turnosItem.letradoasistenciasCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}"
+              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.letradoasistenciasCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadirasistencialetrado' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [disabled]="!disableAll || historico" [(ngModel)]="turnosItem.letradoactuacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
+              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.letradoactuacionesCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.anadiractuacionletrado' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [disabled]="!disableAll || historico" [(ngModel)]="turnosItem.activarretriccionacreditCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}"
+              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.activarretriccionacreditCheck" binary="true" label="{{'justiciaGratuita.oficio.turnos.activarrestriccion' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
             <div class="form-group col-lg-3 col-md-3">
               <br>
-              <p-checkbox [disabled]="!disableAll || historico" [(ngModel)]="turnosItem.visibleMovilCheck" binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}"
+              <p-checkbox [disabled]="disableAll" [(ngModel)]="turnosItem.visibleMovilCheck" binary="true" label="{{'administracion.informes.literal.visibleMovil' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
 
@@ -99,8 +99,8 @@
 
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico || !disableAll" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="confirmGuardar()" pButton [disabled]="disabledSave() || !disableAll" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="rest()" pButton [disabled]="disableAll" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="confirmGuardar()" pButton [disabled]="disabledSave() || disableAll" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

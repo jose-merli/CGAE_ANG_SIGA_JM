@@ -26,7 +26,9 @@
             <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
               <span>{{ apeyNombreUltimo }}</span>
             </label>
-
+            <label>{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
+              <span>{{ nInscritos }}</span>
+            </label>
             <i (click)="abrirFicha('tablacolaoficio')" *ngIf="!esFichaActiva('tablacolaoficio')" class="fa fa-angle-up float-right"></i>
             <i (click)="cerrarFicha('tablacolaoficio')" *ngIf="esFichaActiva('tablacolaoficio')" class="fa fa-angle-down float-right"></i>
           </div>
@@ -136,23 +138,22 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
+        <!-- <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
           type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
         <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
-          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-
+          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button> -->
+        <!-- 
         <button *ngIf="!historico" [disabled]="disableAll || (!selectMultiple || !selectAll) && selectedDatos.length == 0" (click)="delete(selectedDatos); selectAll = false; seleccionMultiple = false; selectedDatos =[]"
           pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
 
         <button *ngIf="historico" pButton [disabled]="disableAll || selectedDatos.length == 0 || selectedDatos == undefined" (click)="delete(selectedDatos);selectAll = false; seleccionMultiple = false; selectedDatos =[]"
-          type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+          type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button> -->
 
-        <!-- <button [disabled]="disableAll" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
-        <button pButton [disabled]="disableAll || disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="disableAll || (!selectMultiple || !selectAll) && (selectedDatos.length == 0 || selectedDatos.length > 1)"
+          (click)="marcarUltimo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-        <button pButton [disabled]="disableAll || selectMultiple || selectAll || historico" (click)="newMateria()" type="button"
+        <button pButton [disabled]="disableAll || selectMultiple || selectAll || turnosItem.historico" (click)="newMateria()" type="button"
           icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>

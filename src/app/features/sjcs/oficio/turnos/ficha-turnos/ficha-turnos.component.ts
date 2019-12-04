@@ -16,7 +16,9 @@ export class FichaTurnosComponent implements OnInit {
 	filtrosConsulta;
 	idTurno: string;
 	turnosItem;
+	turnosItem2;
 	modoEdicion: boolean;
+	updateCombo: boolean;
 	idProcedimiento;
 	pesosSeleccionadosTarjeta: string;
 	datos: TurnosItems = new TurnosItems();
@@ -74,12 +76,15 @@ export class FichaTurnosComponent implements OnInit {
 		this.sigaServices.post("turnos_busquedaFichaTurnos", filtros).subscribe(
 			n => {
 				this.turnosItem = JSON.parse(n.body).turnosItem[0];
+				this.turnosItem2 = this.turnosItem;
 				if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
 					this.turnosItem.historico = true;
 				}
 			},
 			err => {
 				console.log(err);
+			}, () => {
+				this.persistenceService.setDatos(this.turnosItem2);
 			}
 		);
 	}
@@ -87,8 +92,8 @@ export class FichaTurnosComponent implements OnInit {
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
 		this.idTurno = event.idTurno
-		// this.pesosSeleccionadosTarjeta = event.pesosSeleccionadosTarjeta;
 	}
+
 	backTo() {
 		this.location.back();
 	}

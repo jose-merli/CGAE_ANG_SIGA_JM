@@ -11,6 +11,7 @@ import { PartidasPresupuestarias } from '../../maestros/partidas/partidasPresupu
 import { TablaPartidasComponent } from '../../maestros/partidas/gestion-partidas/gestion-partidaspresupuestarias.component';
 import { FiltrosTurnos } from './filtros-turnos/filtros-turnos.component';
 import { TablaTurnosComponent } from './gestion-turnos/gestion-turnos.component';
+import { procesos_oficio } from '../../../../permisos/procesos_oficio';
 
 @Component({
   selector: 'app-turnos',
@@ -46,7 +47,7 @@ export class TurnosComponent implements OnInit {
 
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_maestros.areasMaterias)
+    this.commonsService.checkAcceso(procesos_oficio.turnos)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 

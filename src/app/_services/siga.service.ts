@@ -736,6 +736,8 @@ export class SigaServices {
   private menuToggled = new Subject<any>();
   private iframeRemove = new Subject<any>();
   private consultasRefresh = new Subject<any>();
+  private updateCombo = new Subject<any>();
+  private newIdOrdenacion = new Subject<any>();
   private deshabilitarEditar = new Subject<any>();
   private perfilesRefresh = new Subject<any>();
   private modelosRefresh = new Subject<any>();
@@ -745,6 +747,8 @@ export class SigaServices {
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
+  updateCombo$ = this.updateCombo.asObservable();
+  newIdOrdenacion$ = this.newIdOrdenacion.asObservable();
   deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
   perfilesRefresh$ = this.perfilesRefresh.asObservable();
   modelosRefresh$ = this.modelosRefresh.asObservable();
@@ -994,6 +998,14 @@ export class SigaServices {
 
   notifyRefreshConsulta() {
     this.consultasRefresh.next();
+  }
+
+  notifyupdateCombo(send) {
+    this.updateCombo.next(send);
+  }
+
+  notifynewIdOrdenacion(send) {
+    this.newIdOrdenacion.next(send);
   }
 
   notifyRefreshModelos() {

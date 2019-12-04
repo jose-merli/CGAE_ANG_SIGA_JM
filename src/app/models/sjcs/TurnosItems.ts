@@ -9,6 +9,7 @@ export class TurnosItems {
   idmateria: string;
   materia: string;
   idzona: string;
+  idpersonaUltimo: string;
   zona: string;
   idordenacioncolas: string;
   pesosSeleccionadosTarjeta: string;

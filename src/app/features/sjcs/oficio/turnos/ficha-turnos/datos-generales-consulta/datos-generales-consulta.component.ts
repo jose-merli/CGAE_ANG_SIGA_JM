@@ -24,17 +24,19 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   bodyInicial;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
+  nuevo: boolean = false;
   msgs;
-  // jurisdicciones;
+  historico;
   procedimientos;
   textFilter;
   showTarjeta: boolean = true;
   esComa: boolean = false;
   textSelected: String = "{label}";
-  disableAll: boolean = true;
+  disableAll: boolean = false;
   jurisdicciones: any[] = [];
   areas: any[] = [];
   tiposturno: any[] = [];
+  turnosItem2;
   zonas: any[] = [];
   subzonas: any[] = [];
   materias: any[] = [];
@@ -79,6 +81,9 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
+          if (this.turnosItem.fechabaja != undefined) {
+            this.disableAll = true;
+          }
           this.modoEdicion = true;
         }
         this.getCombos();
@@ -96,6 +101,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
+
     if (this.turnosItem != undefined) {
       this.body = this.turnosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
@@ -671,6 +677,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.progressSpinner = true;
     let url = "";
     if (!this.modoEdicion) {
+      this.nuevo = true;
+      this.persistenceService.setDatos(null);
       url = "turnos_createnewTurno";
       this.callSaveService(url);
     } else {
@@ -682,7 +690,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   callSaveService(url) {
     this.sigaServices.post(url, this.turnosItem).subscribe(
       data => {
-        this.esComa = false;
+
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           let turnos = JSON.parse(data.body);
@@ -690,10 +698,25 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           this.turnosItem.idturno = turnos.id;
           let send = {
             modoEdicion: this.modoEdicion,
-            idTurno: this.turnosItem.idturno
+            idTurno: this.turnosItem.idturno,
           }
-          this.modoEdicionSend.emit(send);
+          this.sigaServices.post("turnos_busquedaFichaTurnos", this.turnosItem).subscribe(
+            n => {
+              this.turnosItem2 = JSON.parse(n.body).turnosItem[0];
+              // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+              // 	this.turnosItem.historico = true;
+              // }
+            },
+            err => {
+              console.log(err);
+            }, () => {
+              this.persistenceService.setDatos(this.turnosItem2);
+              this.modoEdicionSend.emit(send);
+            }
+          );
+
         }
+
         for (let i = 0; i < this.tiposturno.length; i++) {
           if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
             this.tipoturnoDescripcion = this.tiposturno[i].label
@@ -730,10 +753,14 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           }
         }
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-        this.persistenceService.setDatos(this.turnosItem);
         this.actualizarFichaResumen();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
+        if (this.nuevo) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.oficio.turnos.mensajeguardarDatos"));
+          this.progressSpinner = false;
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        }
       },
       err => {
 
@@ -748,9 +775,14 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         this.progressSpinner = false;
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
-
       }
     );
+
+  }
+
+  guardarDatos() {
+
+
 
   }
 

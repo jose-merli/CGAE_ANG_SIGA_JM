@@ -41,7 +41,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
   requisitosGuardiasDescripcion;
-  disableAll: boolean = true;
+  disableAll: boolean = false;
   movilCheck: boolean = false
 
   visibleMovilValue: boolean = false;
@@ -78,6 +78,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
     private translateService: TranslateService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+
     if (this.turnosItem != undefined) {
       if (this.idTurno != undefined) {
         this.body = this.turnosItem;
@@ -86,13 +87,19 @@ export class ConfiguracionTurnosComponent implements OnInit {
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
+          if (this.persistenceService.getDatos() != undefined) {
+            this.turnosItem = this.persistenceService.getDatos();
+          }
+          if (this.turnosItem.fechabaja != undefined) {
+            this.disableAll = true;
+          }
           this.modoEdicion = true;
         }
       }
     } else {
       this.turnosItem = new TurnosItems();
     }
-    this.arreglaChecks();
+
 
     this.sigaServices.get("combossjcs_comboRequisitosGuardias").subscribe(
       n => {
@@ -127,34 +134,27 @@ export class ConfiguracionTurnosComponent implements OnInit {
           this.turnosItem.idguardias = "0";
           this.requisitosGuardiasDescripcion = this.guardias[0].label
         }
+        this.rest();
       }
     );
+    this.arreglaChecks();
   }
 
   ngOnInit() {
 
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.disableAll = this.persistenceService.getPermisos()
-
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true
     }
-    this.validateHistorical();
 
     if (this.modoEdicion) {
       this.body = this.turnosItem;
       this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
 
-      // if (this.body != undefined && this.datos.nombrePoblacion != null) {
-      //   this.getComboPoblacion(this.body.nombrePoblacion);
-      // } else {
-      //   this.progressSpinner = false;
-      // }
-
     } else {
-      this.nuevoChecks();
       this.body = new TurnosItems();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.edicionEmail = true;
-
+      this.nuevoChecks();
     }
   }
 
@@ -180,6 +180,8 @@ export class ConfiguracionTurnosComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
+
+
   confirmGuardar() {
     let mess = this.translateService.instant(
       "justiciaGratuita.oficio.turnos.confirmguardarturnos"
@@ -400,13 +402,13 @@ export class ConfiguracionTurnosComponent implements OnInit {
       this.turnosItem.activarretriccionacredit = 'S';
       this.turnosItem.activarretriccionacreditCheck = true;
 
-      // this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
+      this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
     }
 
   }
 
   arreglaChecks() {
-    // idjurisdiccion complemento permitiraniadirletrado
+
     if (this.turnosItem.visiblemovil == '1') {
       this.turnosItem.visibleMovilCheck = true;
       this.visibleMovilTexto = "SI";
@@ -453,7 +455,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.turnosItem.idguardias != null && this.turnosItem.idguardias != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
+    if ((this.turnosItem.idguardias != null && this.turnosItem.idguardias != "") && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
       return true;

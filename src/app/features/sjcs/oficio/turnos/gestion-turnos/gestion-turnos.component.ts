@@ -343,10 +343,10 @@ export class TablaTurnosComponent implements OnInit {
     this.persistenceService.setHistorico(this.historico);
     this.searchPartidas.emit(this.historico);
     this.selectAll = false
-    if (this.historico) {
-      this.selectMultiple = true;
-      this.selectionMode = "multiple";
-    }
+    // if (this.historico) {
+    //   this.selectMultiple = true;
+    //   this.selectionMode = "multiple";
+    // }
   }
 
 

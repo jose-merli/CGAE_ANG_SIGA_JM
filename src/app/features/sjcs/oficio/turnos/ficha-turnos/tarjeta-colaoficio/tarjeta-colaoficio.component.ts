@@ -41,9 +41,12 @@ export class TarjetaColaOficio implements OnInit {
   comboJurisdicciones: any[] = [];
   bodyInicial: TurnosItems;
   apeyNombreUltimo;
+  nInscritos;
   progressSpinner: boolean = false;
   msgs;
   body;
+  updateTurnosItem: boolean = false;
+  turnosItem2;
   nuevo: boolean = false;
   datosInicial = [];
   updateAreas = [];
@@ -84,16 +87,28 @@ export class TarjetaColaOficio implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
+    this.sigaServices.newIdOrdenacion$.subscribe(
+      fecha => {
+        this.updateTurnosItem = fecha;
+        this.actualizarTurnosItems();
+      });
     if (this.turnosItem != undefined) {
       if (this.idTurno != undefined) {
-        this.turnosItem.fechaActual = new Date();
         this.body = this.turnosItem;
+        this.turnosItem.fechaActual = new Date();
         this.turnosItem.idturno = this.idTurno;
-        this.getColaOficio();
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
+          if (this.persistenceService.getDatos() != undefined) {
+            this.turnosItem = this.persistenceService.getDatos();
+          }
+          if (this.turnosItem.fechabaja != undefined) {
+            this.disableAll = true;
+          }
+          this.turnosItem.fechaActual = new Date();
           this.modoEdicion = true;
+          this.getColaOficio();
         }
       }
     } else {
@@ -116,7 +131,7 @@ export class TarjetaColaOficio implements OnInit {
     //   this.disableAll = true;
     // }
     if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true;
+      this.disableAll = true
     }
   }
   transformaFecha(fecha) {
@@ -136,6 +151,18 @@ export class TarjetaColaOficio implements OnInit {
 
     return fecha;
   }
+
+  actualizarTurnosItems() {
+    if (this.updateTurnosItem) {
+      if (this.persistenceService.getDatos() != undefined) {
+        this.turnosItem2 = this.persistenceService.getDatos();
+        this.turnosItem.idordenacioncolas = this.turnosItem2.idordenacioncolas;
+      }
+      this.getColaOficio();
+    }
+
+  }
+
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
     this.getColaOficio();
@@ -153,6 +180,52 @@ export class TarjetaColaOficio implements OnInit {
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
+  }
+  marcarUltimo(selectedDatos) {
+    this.body = new TurnosObject();
+    this.body.turnosItem = this.selectedDatos;
+
+    this.sigaServices.post("turnos_updateUltimo", this.selectedDatos[0]).subscribe(
+      data => {
+
+        this.nuevo = false;
+        this.selectedDatos = [];
+        // this.getColaOficio();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {//areasmaterias.materias.ficha.materiaEnUso
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
+            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.sigaServices.post("turnos_busquedaFichaTurnos", this.turnosItem).subscribe(
+          n => {
+            this.turnosItem2 = JSON.parse(n.body).turnosItem[0];
+            // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+            // 	this.turnosItem.historico = true;
+            // }
+          },
+          err => {
+            console.log(err);
+          }, () => {
+            this.turnosItem.idpersonaUltimo = this.turnosItem2.idpersonaUltimo;
+            this.getColaOficio();
+          }
+        );
+        this.progressSpinner = false;
+        this.selectAll = false;
+      }
+    );
   }
   getColaOficio() {
     this.turnosItem.historico = this.historico;
@@ -179,6 +252,7 @@ export class TarjetaColaOficio implements OnInit {
           this.nombreApellidosPrimerLetrado = this.datos[0].alfabeticoapellidos + "," + this.datos[0].nombrepersona;
           this.ultimoLetrado = this.datos[this.datos.length - 1].numerocolegiado;
           this.apeyNombreUltimo = this.datos[this.datos.length - 1].alfabeticoapellidos + "," + this.datos[this.datos.length - 1].nombrepersona;
+          this.nInscritos = this.datos.length;
         }
       }
     );

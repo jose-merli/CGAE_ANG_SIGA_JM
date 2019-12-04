@@ -25,7 +25,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() idTurno;
   @Input() turnosItem: TurnosItems;
-
+  turnosItem2;
   openFicha: boolean = false;
   msgs = [];
   historico: boolean = false;
@@ -51,7 +51,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
 
-  disableAll: boolean = true;
+  disableAll: boolean = false;
   movilCheck: boolean = false
 
   visibleMovilValue: boolean = false;
@@ -98,6 +98,12 @@ export class ConfiguracionColaOficioComponent implements OnInit {
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
+          if (this.persistenceService.getDatos() != undefined) {
+            this.turnosItem = this.persistenceService.getDatos();
+          }
+          if (this.turnosItem.fechabaja != undefined) {
+            this.disableAll = true;
+          }
           this.modoEdicion = true;
           this.getPerfilesSeleccionados();
         }
@@ -110,12 +116,9 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
   }
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.disableAll = this.persistenceService.getPermisos()
-
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true;
     }
-
-    this.validateHistorical();
 
     if (this.modoEdicion) {
       this.body = this.turnosItem;
@@ -173,7 +176,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       );
     } else {
       this.sigaServices
-        .post("combossjcs_ordenCola", this.turnosItem)
+        .post("combossjcs_ordenCola", this.turnosItem.idordenacioncolas)
         .subscribe(
           n => {
             // coger etiquetas de una persona juridica
@@ -358,10 +361,26 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       .subscribe(
         n => {
           this.showSuccess(this.translateService.instant("justiciaGratuita.oficio.turnos.guardadopesos"));
-
-          // this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
+          this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
           this.progressSpinner = false;
 
+          this.sigaServices.post("turnos_busquedaFichaTurnos", this.turnosItem).subscribe(
+            n => {
+              this.turnosItem2 = JSON.parse(n.body).turnosItem[0];
+              // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+              // 	this.turnosItem.historico = true;
+              // }
+            },
+            err => {
+              console.log(err);
+            }, () => {
+              this.persistenceService.setDatos(this.turnosItem2);
+              let send = {
+                buscar: true,
+              }
+              this.sigaServices.notifynewIdOrdenacion(send);
+            }
+          );
         },
         err => {
           this.showFail(this.translateService.instant("justiciaGratuita.oficio.turnos.errorguardadopesos"));
@@ -370,6 +389,8 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
         },
         () => {
+
+          this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
           this.pesosSeleccionadosTarjeta = "";
           this.progressSpinner = false;
           this.pesosExistentes.forEach(element => {
@@ -510,7 +531,6 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
   rest() {
     this.restablecerPicklist();
-    // this.arreglaOrden();
   }
 
   abrirFicha(key) {

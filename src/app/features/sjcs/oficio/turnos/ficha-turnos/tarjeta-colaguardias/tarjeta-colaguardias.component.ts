@@ -56,10 +56,12 @@ export class TarjetaColaGuardias implements OnInit {
   overlayVisible: boolean = false;
   selectionMode: string = "single";
   pesosSeleccionadosTarjeta2;
-  //Resultados de la busqueda
+  turnosItem2;
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
+  updateCombo: boolean = false;
+  updateTurnosItem: boolean = false;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;
@@ -86,7 +88,25 @@ export class TarjetaColaGuardias implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
+
+    this.sigaServices.updateCombo$.subscribe(
+      fecha => {
+        this.updateCombo = fecha;
+        this.actualizarComboGuardias();
+      });
+
+    this.sigaServices.newIdOrdenacion$.subscribe(
+      fecha => {
+        this.updateTurnosItem = fecha;
+        this.actualizarTurnosItems();
+      });
     if (this.turnosItem != undefined) {
+      if (this.turnosItem.fechabaja != undefined) {
+        this.disableAll = true;
+      }
+      if (this.persistenceService.getDatos() != undefined) {
+        this.turnosItem = this.persistenceService.getDatos();
+      }
       if (this.idTurno != undefined) {
         this.turnosItem.fechaActual = new Date();
         this.body = this.turnosItem;
@@ -129,23 +149,67 @@ export class TarjetaColaGuardias implements OnInit {
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
-      // this.getMaterias();
+      this.actualizarComboGuardias();
     } else {
       this.modoEdicion = false;
     }
-
-    // let datos = this.persistenceService.getDatos();
-    // if (datos != null && datos != undefined && datos.fechabaja != undefined) {
-    //   this.disableAll = true;
-    // }
     if (this.persistenceService.getPermisos() != true) {
-      this.disableAll = true;
+      this.disableAll = true
+    }
+  }
+
+  actualizarTurnosItems() {
+    if (this.updateTurnosItem) {
+      if (this.persistenceService.getDatos() != undefined) {
+        this.turnosItem2 = this.persistenceService.getDatos();
+        this.turnosItem.idordenacioncolas = this.turnosItem2.idordenacioncolas;
+      }
+    }
+
+  }
+
+  actualizarComboGuardias() {
+    if (this.updateCombo) {
+      this.sigaServices
+        .getParam(
+          "combossjcs_comboidGuardias",
+          "?idTurno=" + this.idTurno
+        )
+        .subscribe(
+          n => {
+            this.guardias = n.combooItems;
+          },
+          err => {
+            console.log(err);
+
+          }, () => {
+            this.guardiasNombre = "";
+            if (this.guardias != undefined) {
+              this.guardias.forEach(element => {
+                this.guardiasNombre += element.label + ","
+              });
+              this.guardiasNombre = this.guardiasNombre.substring(0, this.guardiasNombre.length - 1);
+            }
+          }
+        );
     }
   }
 
   cargarTabla(event) {
     this.turnosItem.idcomboguardias = event.value;
-    this.getMaterias();
+    if (this.turnosItem.idcomboguardias != undefined) {
+      this.getMaterias();
+    } else {
+      this.datos = [];
+      this.primerLetrado = "";
+      this.nombreApellidosPrimerLetrado = "";
+      this.ultimoLetrado = "";
+      this.apeyNombreUltimo = "";
+      this.table.sortOrder = 0;
+      this.table.sortField = '';
+      this.table.reset();
+    }
+
   }
 
   transformaFecha(fecha) {

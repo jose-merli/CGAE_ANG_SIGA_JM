@@ -36,7 +36,7 @@
             targetHeader="{{ 'justiciaGratuita.oficio.turnos.pesosseleccionados' | translate }}" [responsive]="true" dragdrop="true"
             dragdropScope="pesosSeleccionados" (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)"
             (onMoveToTarget)="cambioSeleccionados($event)" [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }"
-            [targetStyle]="{ height: '200px' }" [disabled]="historico || !disableAll">
+            [targetStyle]="{ height: '200px' }" [disabled]="disableAll">
             <ng-template let-item pTemplate="item">
               <div>{{ item.por_filas}} {{ item.orden}}</div>
             </ng-template>
@@ -48,7 +48,7 @@
 
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico || !disableAll" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="rest()" pButton [disabled]="disableAll" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="guardar()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
