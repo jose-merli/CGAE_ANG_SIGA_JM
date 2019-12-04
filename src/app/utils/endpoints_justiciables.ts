@@ -14,6 +14,7 @@ export let endpoints_justiciables: any = {
     gestionJusticiables_createDatosSolicitudJusticiable: "justiciables/gestionJusticiables/createDatosSolicitudJusticiable",
     gestionJusticiables_searchAsuntosJusticiable: "justiciables/gestionJusticiables/searchAsuntosJusticiable",
     gestionJusticiables_getJusticiableByNif: "justiciables/gestionJusticiables/getJusticiableByNif",
+    gestionJusticiables_getJusticiableByIdPersona: "justiciables/gestionJusticiables/getJusticiableByIdPersona",
     gestionJusticiables_associateRepresentante: "justiciables/gestionJusticiables/associateRepresentante",
     gestionJusticiables_disassociateRepresentante: "justiciables/gestionJusticiables/disassociateRepresentante"
 
