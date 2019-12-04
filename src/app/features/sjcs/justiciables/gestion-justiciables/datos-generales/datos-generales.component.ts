@@ -117,7 +117,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
- 
+
         if (this.permisoEscritura == undefined) {
           this.progressSpinner = false;
           this.showTarjetaPermiso = false;
@@ -138,9 +138,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.body.idpersona == undefined) {
             this.modoEdicion = false;
             this.body.fechaalta = new Date();
-            this.body.sexo = "N";
-            this.body.regimenConyugal = "I";
-            this.body.idpais = "191";
           } else {
             this.modoEdicion = true;
 
@@ -238,43 +235,51 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   save() {
 
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    this.progressSpinner = true;
-    let url = "";
-    this.body.validacionRepeticion = false;
-
-    if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
-      || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
-      this.menorEdadJusticiable = false;
-
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      this.menorEdadJusticiable = true;
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
-    }
+      this.progressSpinner = true;
+      let url = "";
+      this.body.validacionRepeticion = false;
 
-    if (!this.modoEdicion) {
-      //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
-      if (this.menorEdadJusticiable) {
-        this.body.fechanacimiento = undefined;
-        this.body.edad = undefined;
+      if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
+        || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
+        this.menorEdadJusticiable = false;
+
+      } else {
+        this.menorEdadJusticiable = true;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
       }
 
-      url = "gestionJusticiables_createJusticiable";
-      this.validateCampos(url);
-    } else {
+      if (!this.modoEdicion) {
+        //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
+        if (this.menorEdadJusticiable) {
+          this.body.fechanacimiento = undefined;
+          this.body.edad = undefined;
+        }
 
-      if (!this.menorEdadJusticiable) {
-        url = "gestionJusticiables_updateJusticiable";
-        //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
-        if (this.bodyInicial.autorizaavisotelematico == "1") {
-          if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
-            this.progressSpinner = false;
+        url = "gestionJusticiables_createJusticiable";
+        this.validateCampos(url);
+      } else {
+
+        if (!this.menorEdadJusticiable) {
+          url = "gestionJusticiables_updateJusticiable";
+          //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
+          if (this.bodyInicial.autorizaavisotelematico == "1") {
+            if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+              this.progressSpinner = false;
+            } else {
+
+              if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+                this.callConfirmationUpdate();
+
+              } else {
+                let url = "gestionJusticiables_updateJusticiable";
+                this.validateCampos(url);
+              }
+            }
           } else {
-
             if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
               this.callConfirmationUpdate();
 
@@ -283,20 +288,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
               this.validateCampos(url);
             }
           }
+
         } else {
-          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
-            this.callConfirmationUpdate();
-
-          } else {
-            let url = "gestionJusticiables_updateJusticiable";
-            this.validateCampos(url);
-          }
+          this.progressSpinner = false;
         }
-
-      } else {
-        this.progressSpinner = false;
       }
-    }
 
     }
   }
@@ -469,7 +465,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdGeneralesSave",
-      message: "Ya existe un justiciable registrado con esa misma identificación ¿Desea crear un nuevo justiciable?",
+      message: this.translateService.instant("gratuita.personaJG.mensaje.existeJusticiable.pregunta.crearNuevo"),
       icon: "fa fa-search ",
       accept: () => {
         // this.progressSpinner = true;
@@ -502,7 +498,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdGeneralesUpdate",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
+      message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
       icon: "fa fa-search ",
       accept: () => {
         this.progressSpinner = true;
@@ -1027,36 +1023,35 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   rest() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    this.nuevoTelefono = false;
-    this.selectedDatos = [];
-    this.body.idpaisdir1 = "191";
-
-    if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-      if (this.body.idpoblacion != undefined) {
-        this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-      }
-
-      this.parseFechas();
-
-      if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.faxValido = true;
-      this.emailValido = true;
-
-      if (this.body.idpaisdir1 != "191") {
-        this.poblacionExtranjera = true;
-      } else {
-        this.poblacionExtranjera = false;
-      }
-
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      this.body = new JusticiableItem();
+      this.nuevoTelefono = false;
+      this.selectedDatos = [];
+      this.body.idpaisdir1 = "191";
+
+      if (this.modoEdicion) {
+        if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+        if (this.body.idpoblacion != undefined) {
+          this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
+        }
+
+        this.parseFechas();
+
+        if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+        this.faxValido = true;
+        this.emailValido = true;
+
+        if (this.body.idpaisdir1 != "191") {
+          this.poblacionExtranjera = true;
+        } else {
+          this.poblacionExtranjera = false;
+        }
+
+      } else {
+        this.body = new JusticiableItem();
+      }
     }
-  }
   }
 
   fillFechaNacimiento(event) {
@@ -1070,25 +1065,24 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   newData() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    this.nuevoTelefono = true;
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      this.nuevoTelefono = true;
 
-    let dato = new JusticiableTelefonoItem();
-    dato.nuevo = true;
-    dato.preferenteSmsCheck = false;
-    dato.preferenteSms = "0";
-    dato.count = this.count;
-    dato.tlfValido = true;
-    dato.numeroTelefono = undefined;
-    dato.nombreTelefono = undefined;
+      let dato = new JusticiableTelefonoItem();
+      dato.nuevo = true;
+      dato.preferenteSmsCheck = false;
+      dato.preferenteSms = "0";
+      dato.count = this.count;
+      dato.tlfValido = true;
+      dato.numeroTelefono = undefined;
+      dato.nombreTelefono = undefined;
 
-    this.datos.push(dato);
+      this.datos.push(dato);
 
-    this.count += 1;
-  }
+      this.count += 1;
+    }
   }
 
   onChangePreferente(dato) {
@@ -1254,44 +1248,42 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restData() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    this.faxValido = true;
-    this.emailValido = true;
-    this.selectedDatos = [];
-  }
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      this.faxValido = true;
+      this.emailValido = true;
+      this.selectedDatos = [];
+    }
   }
 
   deleteData(selectedDatos) {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    selectedDatos.forEach(element => {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      selectedDatos.forEach(element => {
 
-      if (!element.nuevo) {
-        let pos = this.datos.findIndex(
-          x => x.idTelefono == element.idTelefono);
+        if (!element.nuevo) {
+          let pos = this.datos.findIndex(
+            x => x.idTelefono == element.idTelefono);
 
-        if (pos != -1) {
-          this.datos.splice(pos, 1);
+          if (pos != -1) {
+            this.datos.splice(pos, 1);
+          }
+        } else {
+          let pos = this.datos.findIndex(
+            x => x.count == element.count);
+
+          if (pos != -1) {
+            this.datos.splice(pos, 1);
+          }
         }
-      } else {
-        let pos = this.datos.findIndex(
-          x => x.count == element.count);
 
-        if (pos != -1) {
-          this.datos.splice(pos, 1);
-        }
-      }
+      });
 
-    });
-
-    this.selectedDatos = [];
-  }
+      this.selectedDatos = [];
+    }
   }
 
   onRowSelect(dato) {

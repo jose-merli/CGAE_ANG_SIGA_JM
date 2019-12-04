@@ -202,44 +202,42 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   search() {
-        if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    this.persistenceService.clearBody();
-    this.router.navigate(["/justiciables"], { queryParams: { rp: "1" } });
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      this.persistenceService.clearBody();
+      this.router.navigate(["/justiciables"], { queryParams: { rp: "1" } });
     }
   }
 
   searchRepresentanteByNif() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    if (this.generalBody.nif.trim() != undefined && this.generalBody.nif.trim() != "") {
-      this.progressSpinner = true;
-      let bodyBusqueda = new JusticiableBusquedaItem();
-      bodyBusqueda.nif = this.generalBody.nif;
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      if (this.generalBody.nif.trim() != undefined && this.generalBody.nif.trim() != "") {
+        this.progressSpinner = true;
+        let bodyBusqueda = new JusticiableBusquedaItem();
+        bodyBusqueda.nif = this.generalBody.nif;
 
-      this.sigaServices.post("gestionJusticiables_getJusticiableByNif", bodyBusqueda).subscribe(
-        n => {
+        this.sigaServices.post("gestionJusticiables_getJusticiableByNif", bodyBusqueda).subscribe(
+          n => {
 
-          this.generalBody = JSON.parse(n.body).justiciable;
-          this.nifRepresentante = this.generalBody.nif;
-          this.progressSpinner = false;
-          this.compruebaDNI();
+            this.generalBody = JSON.parse(n.body).justiciable;
+            this.nifRepresentante = this.generalBody.nif;
+            this.progressSpinner = false;
+            this.compruebaDNI();
 
-          if (this.generalBody.idpersona == null || this.generalBody.idpersona == undefined) {
-            this.callServiceConfirmationCreateRepresentante();
-          }
+            if (this.generalBody.idpersona == null || this.generalBody.idpersona == undefined) {
+              this.callServiceConfirmationCreateRepresentante();
+            }
 
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-        });
+          },
+          err => {
+            this.progressSpinner = false;
+            console.log(err);
+          });
+      }
     }
-  }
   }
 
   disabledSave() {
@@ -407,36 +405,35 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   callConfirmationAssociate() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    this.progressSpinner = false;
-    this.confirmationAssociate = true;
-    this.confirmationService.confirm({
-      key: "cdRepresentanteAssociate",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
-      icon: "fa fa-search ",
-      accept: () => {
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      this.progressSpinner = false;
+      this.confirmationAssociate = true;
+      this.confirmationService.confirm({
+        key: "cdRepresentanteAssociate",
+        message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
+        icon: "fa fa-search ",
+        accept: () => {
 
-        if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona.trim() != "") {
+          if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null && this.generalBody.idpersona.trim() != "") {
 
-          if (this.generalBody.nif != undefined && this.generalBody.nif != "" &&
-            this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
+            if (this.generalBody.nif != undefined && this.generalBody.nif != "" &&
+              this.generalBody.nif != null && this.body != undefined && this.generalBody.nif == this.body.nif) {
 
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
-            this.representanteValido = false;
-          } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable"));
+              this.representanteValido = false;
+            } else {
 
-            this.body.idrepresentantejg = this.generalBody.idpersona;
-            this.callServiceAssociate();
+              this.body.idrepresentantejg = this.generalBody.idpersona;
+              this.callServiceAssociate();
 
+            }
           }
-        }
-      },
-      reject: () => { }
-    });
-  }
+        },
+        reject: () => { }
+      });
+    }
   }
 
   reject() {
@@ -475,28 +472,27 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   callConfirmationDisassociate() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    this.progressSpinner = false;
-    this.confirmationDisassociate = true;
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      this.progressSpinner = false;
+      this.confirmationDisassociate = true;
 
-    this.confirmationService.confirm({
-      key: "cdRepresentanteDisassociate",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
-      icon: "fa fa-search ",
-      accept: () => {
-        if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
-          this.callServiceDisassociate();
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+      this.confirmationService.confirm({
+        key: "cdRepresentanteDisassociate",
+        message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
+        icon: "fa fa-search ",
+        accept: () => {
+          if (this.body.edad == undefined || (this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)) {
+            this.callServiceDisassociate();
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
 
-        }
-      },
-      reject: () => { }
-    });
-  }
+          }
+        },
+        reject: () => { }
+      });
+    }
   }
 
   rejectDisassociate() {
@@ -542,17 +538,16 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
   }
 
   rest() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    if (this.body.idrepresentantejg != undefined) {
-      this.searchJusticiable();
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     } else {
-      this.generalBody = new JusticiableItem();
-      this.nifRepresentante = undefined;
+      if (this.body.idrepresentantejg != undefined) {
+        this.searchJusticiable();
+      } else {
+        this.generalBody = new JusticiableItem();
+        this.nifRepresentante = undefined;
+      }
     }
-  }
   }
 
   showMessage(severity, summary, msg) {

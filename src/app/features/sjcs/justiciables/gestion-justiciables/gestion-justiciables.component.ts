@@ -259,7 +259,7 @@ export class GestionJusticiablesComponent implements OnInit {
             this.getAsuntos();
 
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), "Es la misma persona");
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("gratuita.personaJG.literal.esMismaPersona"));
           }
         }
 

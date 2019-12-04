@@ -1,16 +1,12 @@
 
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { AreasItem } from '../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
-import { PersistenceService } from '../../../../../_services/persistence.service';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
-import { Router } from '@angular/router';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/api';
 import { Dialog } from '../../../../../../../node_modules/primeng/dialog';
-import { EventoItem } from '../../../../../models/EventoItem';
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -170,11 +166,10 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   }
 
   rest() {
-        if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     }
   }
 
@@ -187,7 +182,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   getComboAutorizaAvisotel() {
     this.comboAutorizaAvisotel = [
       { label: "No", value: "0" },
-      { label: "Sí", value: "1" }
+      { label: "Si", value: "1" }
     ];
 
     this.commonsService.arregloTildesCombo(this.comboAutorizaAvisotel);
@@ -196,7 +191,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   getComboAutorizaEjg() {
     this.comboAutorizaEjg = [
       { label: "No", value: "0" },
-      { label: "Sí", value: "1" }
+      { label: "Si", value: "1" }
     ];
 
     this.commonsService.arregloTildesCombo(this.comboAutorizaEjg);
@@ -205,37 +200,36 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
   getComboSolicitajg() {
     this.comboSolicitajg = [
       { label: "No", value: "0" },
-      { label: "Sí", value: "1" }
+      { label: "Si", value: "1" }
     ];
 
     this.commonsService.arregloTildesCombo(this.comboSolicitajg);
   }
 
   save() {
-    if (!this.permisoEscritura){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No tiene permisos para realizar esta acción");
-    }else
-    {
-    if (!(this.bodyInicial.correoelectronico != undefined && this.bodyInicial.correoelectronico != "")) {
-      if (this.body.autorizaavisotelematico == "1") {
-        this.changeDetectorRef.detectChanges();
-        this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+    if (!this.permisoEscritura) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+      if (!(this.bodyInicial.correoelectronico != undefined && this.bodyInicial.correoelectronico != "")) {
+        if (this.body.autorizaavisotelematico == "1") {
+          this.changeDetectorRef.detectChanges();
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+        } else {
+          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+            this.callConfirmationUpdate();
+          } else {
+            this.callServiceSave();
+          }
+
+        }
       } else {
         if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
           this.callConfirmationUpdate();
         } else {
           this.callServiceSave();
         }
-
-      }
-    } else {
-      if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
-        this.callConfirmationUpdate();
-      } else {
-        this.callServiceSave();
       }
     }
-  }
   }
 
   callServiceSave() {
@@ -275,7 +269,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
     this.confirmationService.confirm({
       key: "cdSolicitud",
-      message: "¿Desea actualizar el registro del justiciable para todos los asuntos en los que está asociado? Si pulsa No, se creará un nuevo justiciable.",
+      message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
       icon: "fa fa-search ",
       accept: () => {
         this.callServiceSave();

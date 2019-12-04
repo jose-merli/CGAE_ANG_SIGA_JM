@@ -432,21 +432,24 @@
 </div>
 
 
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdGeneralesSave" #cdGeneralesSave>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesSave"
+  #cdGeneralesSave>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesSave.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cdGeneralesSave.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdGeneralesUpdate" #cdGeneralesUpdate>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdGeneralesUpdate"
+  #cdGeneralesUpdate>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdGeneralesUpdate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="cdPreferenteSms" #cdPreferenteSms>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdPreferenteSms"
+  #cdPreferenteSms>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cdPreferenteSms.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cdPreferenteSms.reject()"></button>
