@@ -91,7 +91,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
       //Si tiene nif lo volvemos a buscar
       if (this.generalBody.nif != undefined && this.generalBody.nif != "") {
-        this.searchRepresentanteByNif();
+        this.searchRepresentanteByIdPersona();
         this.nifRepresentante = this.generalBody.nif;
         //Si no tiene se mantiene el que guardamos
       } else {
@@ -107,8 +107,6 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
           this.generalBody.apellidos += " " + this.persistenceService.getBody().apellido2;
         }
       }
-
-
 
       this.compruebaDNI();
       this.showTarjeta = true;
@@ -251,6 +249,29 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
             console.log(err);
           });
       }
+    }
+  }
+
+  searchRepresentanteByIdPersona() {
+
+    if (this.generalBody.idpersona.trim() != undefined && this.generalBody.idpersona.trim() != "") {
+      this.progressSpinner = true;
+      let bodyBusqueda = new JusticiableBusquedaItem();
+      bodyBusqueda.idpersona = this.generalBody.idpersona;
+
+      this.sigaServices.post("gestionJusticiables_getJusticiableByIdPersona", bodyBusqueda).subscribe(
+        n => {
+
+          this.generalBody = JSON.parse(n.body).justiciable;
+          this.nifRepresentante = this.generalBody.nif;
+          this.progressSpinner = false;
+          this.compruebaDNI();
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        });
+
     }
   }
 
