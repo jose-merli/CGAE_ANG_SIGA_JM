@@ -1,23 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
 import { FiltroJusticiablesComponent } from './filtro-justiciables/filtro-justiciables.component';
 import { TablaJusticiablesComponent } from './tabla-justiciables/tabla-justiciables.component';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { TranslateService } from '../../../../commons/translate';
-import { Router } from '../../../../../../node_modules/@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
+import { JusticiableBusquedaItem } from '../../../../models/sjcs/JusticiableBusquedaItem';
+import { Location } from '@angular/common';
+import { procesos_justiciables } from '../../../../permisos/procesos_justiciables';
 
 @Component({
   selector: 'app-busqueda-justiciables',
   templateUrl: './busqueda-justiciables.component.html',
   styleUrls: ['./busqueda-justiciables.component.scss']
 })
-export class BusquedaJusticiablesComponent implements OnInit {
+export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    throw new Error("Method not implemented.");
+  }
 
   buscar: boolean = false;
-  historico: boolean = false;
-
   datos;
 
   progressSpinner: boolean = false;
@@ -25,17 +29,15 @@ export class BusquedaJusticiablesComponent implements OnInit {
   @ViewChild(FiltroJusticiablesComponent) filtros;
   @ViewChild(TablaJusticiablesComponent) tabla;
 
-  //comboPartidosJudiciales
-  comboPJ;
   msgs;
 
   fichasPosibles = [
     {
-      key: "generales",
+      origen: "justiciables",
       activa: true
     },
     {
-      key: "direccion",
+      key: "generales",
       activa: true
     },
     {
@@ -54,15 +56,28 @@ export class BusquedaJusticiablesComponent implements OnInit {
   ];
 
   permisoEscritura;
+  modoRepresentante: boolean = false;
+  searchJusticiable: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
+    private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
+    private activatedRoute: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
 
+    this.activatedRoute.queryParams.subscribe(params => {
+
+      if (params.rp == "1") {
+        this.modoRepresentante = true;
+      } else if (params.rp == "2") {
+        this.searchJusticiable = true;
+      }
+
+    });
+
     this.persistenceService.setFichasPosibles(this.fichasPosibles);
 
-    this.commonsService.checkAcceso(procesos_maestros.justiciables)
+    this.commonsService.checkAcceso(procesos_justiciables.justiciables)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -79,6 +94,7 @@ export class BusquedaJusticiablesComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+
   }
 
 
@@ -88,20 +104,32 @@ export class BusquedaJusticiablesComponent implements OnInit {
 
 
   search(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
-    this.filtros.filtroAux.historico = event;
-    this.persistenceService.setHistorico(event);
+
+    if (!this.modoRepresentante) {
+      this.filtros.filtros = this.persistenceService.getFiltros()
+    }
+
     this.progressSpinner = true;
 
-    this.sigaServices.post("calendarioLaboralAgenda_searchFestivos", this.filtros.filtroAux).subscribe(
+    this.sigaServices.post("busquedaJusticiables_searchJusticiables", this.filtros.filtros).subscribe(
       n => {
 
-        this.datos = JSON.parse(n.body).eventos;
+        this.datos = JSON.parse(n.body).justiciableBusquedaItems;
+        let error = JSON.parse(n.body).error;
         this.buscar = true;
         this.progressSpinner = false;
-        if (this.tabla != null && this.tabla != undefined) {
-          this.tabla.historico = event;
+
+        if (this.tabla != undefined) {
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+
       },
       err => {
         this.progressSpinner = false;
@@ -109,17 +137,22 @@ export class BusquedaJusticiablesComponent implements OnInit {
       });
   }
 
-  showMessage(event) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
 
   clear() {
     this.msgs = [];
+  }
+
+  backTo() {
+    this.location.back();
+
   }
 
 }

@@ -39,6 +39,7 @@ import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { CommonsService } from '../../../_services/commons.service';
 
 
 @Component({
@@ -267,15 +268,14 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private commonsService: CommonsService
   ) {
-
-    window.scrollTo(0, 0);
-
   }
 
   ngOnInit() {
 
+    this.commonsService.scrollTop();
     sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
