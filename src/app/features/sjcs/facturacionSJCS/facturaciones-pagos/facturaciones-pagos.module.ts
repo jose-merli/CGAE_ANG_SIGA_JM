@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { BusquedaFacturacionComponent } from "./busqueda-facturacion.component";
+import { FacturacionesYPagosComponent } from "./facturaciones-pagos.component";
 import { InputTextModule, ButtonModule, RadioButtonModule, DropdownModule, GrowlModule, CalendarModule, DataTableModule, CheckboxModule, ConfirmDialogModule } from "primeng/primeng";
 import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { PipeTranslationModule } from "../../../../commons/translate/pipe-translation.module";
@@ -28,7 +28,7 @@ import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.mo
     TableModule,
     FechaModule
   ],
-  declarations: [BusquedaFacturacionComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent],
-  exports: [BusquedaFacturacionComponent]
+  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent],
+  exports: [FacturacionesYPagosComponent]
 })
-export class BusquedaFacturacionModule {}
+export class FacturacionesYPagosModule {}

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../_guards/auth.guards';
-import { BusquedaFacturacionComponent } from './busqueda-facturacion/busqueda-facturacion.component';
+import { FacturacionesYPagosComponent } from './facturaciones-pagos/facturaciones-pagos.component';
 
 const routesFacturacionsjcs: Routes = [
   {
     path: "facturacionesYPagos",
-    component: BusquedaFacturacionComponent,
+    component: FacturacionesYPagosComponent,
     canActivate: [AuthGuard]
   }
 ];

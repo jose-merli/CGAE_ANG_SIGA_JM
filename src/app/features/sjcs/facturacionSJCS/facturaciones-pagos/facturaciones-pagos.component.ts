@@ -12,12 +12,12 @@ import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
 
 
 @Component({
-  selector: 'app-busqueda-facturacion',
-  templateUrl: './busqueda-facturacion.component.html',
-  styleUrls: ['./busqueda-facturacion.component.scss']
+  selector: 'app-facturaciones-pagos',
+  templateUrl: './facturaciones-pagos.component.html',
+  styleUrls: ['./facturaciones-pagos.component.scss']
 })
 
-export class BusquedaFacturacionComponent implements OnInit {
+export class FacturacionesYPagosComponent implements OnInit {
 	permisoEscritura: any;
 	buscar: boolean = false;
 	datos;
