@@ -12,25 +12,25 @@
       <div class="form-row">
 
         <div class="form-group col-lg-3 col-md-3">
-          <label>Nombre</label>
-          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText pInputText>
+          <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
+          <input type="text" class="box" class="form-control" [maxlength]="200" [(ngModel)]='filtros.apellidos' pInputText pInputText>
         </div>
 
         <div class="form-group col-lg-3 col-md-3">
-          <label>Apellidos</label>
-          <input type="text" class="box" class="form-control" [(ngModel)]='filtros.apellidos' pInputText pInputText>
+          <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}</label>
+          <input type="text" class="box" class="form-control" [maxLength]="100" [(ngModel)]='filtros.nombre' pInputText pInputText>
         </div>
 
         <div class="row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
-            <label>Nº Identificación</label>
-            <input type="text" class="box" class="form-control" [(ngModel)]='filtros.nif' pInputText pInputText>
+            <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}</label>
+            <input type="text" class="box" class="form-control" [maxLength]="20" [(ngModel)]='filtros.nif' pInputText pInputText>
           </div>
         </div>
       </div>
     </div>
 
-    <p (click)="onHideDatosDirecciones()" class="title-module"> Direcciones
+    <p (click)="onHideDatosDirecciones()" class="title-module"> {{ 'envios.definir.literal.datosdestino' | translate }}
       <i *ngIf="showDatosDirecciones" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showDatosDirecciones" class="fa fa-angle-down float-right"></i>
     </p>
@@ -52,15 +52,18 @@
         </div>
         <div class="row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
-            <label>Código Postal</label>
-            <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxLength="10"
+            <label>{{ 'censo.ws.literal.codigopostal' | translate }}</label>
+            <input type="text" class="form-control" maxlength="5" [(ngModel)]="filtros.codigoPostal" [disabled]="!permisoEscritura" (input)='editarCodigoPostal($event,filtros.codigoPostal)'
               pInputText>
+
+            <!-- <input type="text" name="codigoExt" value="" class="box" class="form-control" [(ngModel)]='filtros.codigoPostal' maxlength="10"
+              pInputText> -->
           </div>
         </div>
       </div>
     </div>
 
-    <p (click)="onHideAsuntos()" class="title-module"> Asuntos
+    <p (click)="onHideAsuntos()" class="title-module"> {{ 'justiciaGratuita.justiciables.literal.asuntos' | translate }}
       <i *ngIf="showAsuntos" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showAsuntos" class="fa fa-angle-down float-right"></i>
     </p>
@@ -70,20 +73,19 @@
       <div class="form-row">
         <div class="form-row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
-            <label>Año Asunto Desde</label>
-            <input type="text" name="anioDesde" value="" class="box" class="form-control" [(ngModel)]='filtros.anioDesde' maxLength="4"
-              pInputText>
+            <label>{{ 'gratuita.personaJG.literal.anioAsuntoDesde' | translate }}</label>
+            <input type="number" name="anioDesde" class="box" class="form-control" [(ngModel)]='filtros.anioDesde' max="9999" min="1900"
+              pInputText (input)='editarCompleto($event,filtros.anioDesde)'>
           </div>
-          a
           <div class="form-group col-lg-6 col-md-6">
-            <label>Hasta</label>
-            <input type="text" name="anioHasta" value="" class="box" class="form-control" [(ngModel)]='filtros.anioHasta' maxLength="4"
-              pInputText>
+            <label>{{ 'gratuita.personaJG.literal.hasta' | translate }}</label>
+            <input type="number" name="anioHasta" class="box" class="form-control" [(ngModel)]='filtros.anioHasta' max="9999" min="1900"
+              pInputText (input)='editarCompleto($event,filtros.anioHasta)'>
           </div>
         </div>
         <div class="form-row col-lg-3 col-md-3">
           <div class="form-group col-lg-6 col-md-6">
-            <label>Rol</label>
+            <label>{{ 'administracion.usuarios.literal.rol' | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='filtros.idRol' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboRoles"
               [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
