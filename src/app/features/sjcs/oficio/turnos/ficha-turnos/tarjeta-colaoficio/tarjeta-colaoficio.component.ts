@@ -14,6 +14,7 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-tarjeta-colaoficio",
   templateUrl: "./tarjeta-colaoficio.component.html",
@@ -50,6 +51,7 @@ export class TarjetaColaOficio implements OnInit {
   nuevo: boolean = false;
   datosInicial = [];
   updateAreas = [];
+  permisosTarjeta: boolean = false;
   showTarjeta: boolean = true;
   ultimoLetrado;
   primerLetrado;
@@ -83,7 +85,7 @@ export class TarjetaColaOficio implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -118,6 +120,15 @@ export class TarjetaColaOficio implements OnInit {
   }
 
   ngOnInit() {
+    this.commonsService.checkAcceso(procesos_oficio.colaDeOficio)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
@@ -134,6 +145,32 @@ export class TarjetaColaOficio implements OnInit {
       this.disableAll = true
     }
   }
+
+  confirmUltimo(selectedDatos) {
+    let mess = this.translateService.instant(
+      "messages.deleteConfirmation"
+    );
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.marcarUltimo(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);

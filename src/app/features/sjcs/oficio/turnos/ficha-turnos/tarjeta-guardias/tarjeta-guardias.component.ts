@@ -15,6 +15,7 @@ import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { GuardiaObject } from '../../../../../../models/sjcs/GuardiaObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-tarjeta-guardias",
   templateUrl: "./tarjeta-guardias.component.html",
@@ -47,6 +48,7 @@ export class TarjetaGuardias implements OnInit {
   mostrarVacio: boolean = false;
   progressSpinner: boolean = false;
   msgs;
+  permisosTarjeta: boolean = false;
   body;
   nuevo: boolean = false;
   datosInicial = [];
@@ -86,7 +88,7 @@ export class TarjetaGuardias implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -115,6 +117,18 @@ export class TarjetaGuardias implements OnInit {
   }
 
   ngOnInit() {
+    if (this.persistenceService.getPermisos() != true) {
+      this.disableAll = true;
+    }
+    this.commonsService.checkAcceso(procesos_oficio.tarjetaGuardia)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;

@@ -12,6 +12,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-configuracion-colaoficio",
   templateUrl: "./configuracion-colaoficio.component.html",
@@ -50,7 +51,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
-
+  permisosTarjeta: boolean = false;
   disableAll: boolean = false;
   movilCheck: boolean = false
 
@@ -86,10 +87,11 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   ];
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
+    private translateService: TranslateService, private commonsService: CommonsService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
 
   ngOnChanges(changes: SimpleChanges) {
+
     if (this.turnosItem != undefined) {
       if (this.idTurno != undefined) {
         this.turnosItem.idturno = this.idTurno;
@@ -119,6 +121,16 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
+    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
+
 
     if (this.modoEdicion) {
       this.body = this.turnosItem;

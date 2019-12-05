@@ -12,6 +12,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-datos-generales-consulta",
   templateUrl: "./datos-generales-consulta.component.html",
@@ -37,6 +38,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   areas: any[] = [];
   tiposturno: any[] = [];
   turnosItem2;
+  permisosTarjeta: boolean = false;
+  permisosTarjetaResumen: boolean = false;
   zonas: any[] = [];
   subzonas: any[] = [];
   materias: any[] = [];
@@ -71,7 +74,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.turnosItem != undefined) {
@@ -98,6 +102,25 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.openFicha = !this.openFicha;
   }
   ngOnInit() {
+    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
+      .then(respuesta => {
+        this.permisosTarjetaResumen = respuesta;
+        if (this.permisosTarjetaResumen != true) {
+          this.permisosTarjetaResumen = false;
+        } else {
+          this.permisosTarjetaResumen = true;
+        }
+      }).catch(error => console.error(error));
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }

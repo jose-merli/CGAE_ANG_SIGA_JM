@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="ficha-container">
-  <div class="card">
+  <div *ngIf="permisosTarjeta" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('tablacolaoficio')">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -151,7 +151,7 @@
           type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button> -->
 
         <button [disabled]="disableAll || (!selectMultiple || !selectAll) && (selectedDatos.length == 0 || selectedDatos.length > 1)"
-          (click)="marcarUltimo()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          (click)="confirmUltimo(selectedDatos)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
 
         <button pButton [disabled]="disableAll || selectMultiple || selectAll || turnosItem.historico" (click)="newMateria()" type="button"
           icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
@@ -160,14 +160,12 @@
     </div>
   </div>
 </div>
-
-<!-- <p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
   <p-footer>
     <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
     <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
   </p-footer>
-</p-confirmDialog> -->
-
+</p-confirmDialog>
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

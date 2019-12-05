@@ -11,6 +11,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-configuracion-turnos",
   templateUrl: "./configuracion-turnos.component.html",
@@ -29,7 +30,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   historico: boolean = false;
 
   provinciaSelecionada: string;
-
+  permisosTarjeta: boolean = false;
   body: TurnosItems;
   bodyInicial: TurnosItems;
   idPrision;
@@ -75,7 +76,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   ];
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
+    private translateService: TranslateService, private commonsService: CommonsService, private commonsServices: CommonsService, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -141,7 +142,15 @@ export class ConfiguracionTurnosComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
     }

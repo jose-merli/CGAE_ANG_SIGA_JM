@@ -14,6 +14,7 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
+import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-tarjeta-colaguardias",
   templateUrl: "./tarjeta-colaguardias.component.html",
@@ -51,6 +52,7 @@ export class TarjetaColaGuardias implements OnInit {
   showTarjeta: boolean = true;
   ultimoLetrado;
   primerLetrado;
+  permisosTarjeta: boolean = false;
   guardiasNombre;
   nombreApellidosPrimerLetrado;
   overlayVisible: boolean = false;
@@ -84,7 +86,7 @@ export class TarjetaColaGuardias implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -146,6 +148,15 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   ngOnInit() {
+    this.commonsService.checkAcceso(procesos_oficio.colaDeGuardia)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
     this.getCols();
     if (this.idTurno != undefined) {
       this.modoEdicion = true;
