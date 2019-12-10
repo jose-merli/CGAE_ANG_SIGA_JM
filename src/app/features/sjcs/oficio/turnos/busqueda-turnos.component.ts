@@ -86,6 +86,12 @@ export class TurnosComponent implements OnInit {
         });
         this.buscar = true;
         this.progressSpinner = false;
+        if (this.tablapartida != undefined) {
+          this.tablapartida.tabla.sortOrder = 0;
+          this.tablapartida.tabla.sortField = '';
+          this.tablapartida.tabla.reset();
+          this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
+        }
       },
       err => {
         this.progressSpinner = false;

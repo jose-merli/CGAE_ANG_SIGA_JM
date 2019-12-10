@@ -53,7 +53,6 @@ import { DialogoModule } from '../../../commons/dialog/dialogo.module';
     PrecioModule,
     FechaModule,
     FileUploadModule,
-    DialogoModule,
     ConfirmDialogModule
 
   ],

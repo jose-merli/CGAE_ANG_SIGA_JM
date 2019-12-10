@@ -30,8 +30,7 @@ import { OficioModule } from './oficio/oficio.module';
     MaestrosModule,
     OficioModule,
     JusticiablesModule,
-    routingSjcs,
-
+    routingSjcs
   ],
   providers: []
 })

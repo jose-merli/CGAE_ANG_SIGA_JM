@@ -14,8 +14,10 @@
             <label class="mr-auto title-ficha">{{'justiciaGratuita.oficio.turnos.coladeguardias'|translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{ "menu.justiciaGratuita.guardia.guardias" | translate }}
+            <label *ngIf="existenGuardias">{{ "menu.justiciaGratuita.guardia.guardias" | translate }}
               <span>{{ guardiasNombre }}</span>
+            </label>
+            <label *ngIf="!existenGuardias">{{ "justiciaGratuita.oficio.turnos.noexistenguardias" | translate }}
             </label>
             <i (click)="abrirFicha('tablacolaguardias')" *ngIf="!esFichaActiva('tablacolaguardias')" class="fa fa-angle-up float-right"></i>
             <i (click)="cerrarFicha('tablacolaguardias')" *ngIf="esFichaActiva('tablacolaguardias')" class="fa fa-angle-down float-right"></i>
@@ -122,38 +124,15 @@
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox [disabled]="disableAll" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
-            </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
           </div>
         </ng-template>
       </p-table>
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <!-- <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
-          type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-
-        <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
-          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-
-        <button *ngIf="!historico" [disabled]="disableAll || historico || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
-          (click)="delete(selectedDatos); selectAll = false; seleccionMultiple = false; selectedDatos =[]" pButton type="button"
-          icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button> -->
-
-        <!-- <button *ngIf="historico" pButton [disabled]="disableAll || historico || selectedDatos.length == 0 || selectedDatos == undefined"
-          (click)="delete(selectedDatos);selectAll = false; seleccionMultiple = false; selectedDatos =[]" type="button" icon="fa fa-check"
-          iconPos="left" label="{{'general.boton.activar' | translate}}"></button> -->
-
-        <!-- <button [disabled]="disableAll" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
-        <!-- <button pButton [disabled]="disableAll || historico || disabledSave()" (click)="save()" type="button" icon="far fa-save"
-          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
 
         <button pButton [disabled]="disableAll || selectMultiple || selectAll || historico" type="button" icon="fa fa-plus" iconPos="left"
-          label="{{ 'general.boton.new' | translate}}"></button>
+          label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
 
       </div>
     </div>

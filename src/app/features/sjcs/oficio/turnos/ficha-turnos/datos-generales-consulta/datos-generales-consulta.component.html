@@ -56,7 +56,7 @@
               <label>
                 {{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }} (*)
               </label>
-              <input [(ngModel)]="turnosItem.abreviatura" [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="200"
+              <input [(ngModel)]="turnosItem.abreviatura" [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="30"
                 pInputText>
             </div>
 
@@ -92,7 +92,7 @@
               <label>
                 {{ "general.codeext" | translate }}
               </label>
-              <input [(ngModel)]="turnosItem.codigoext" [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="200"
+              <input [(ngModel)]="turnosItem.codigoext" [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="10"
                 pInputText>
             </div>
 
@@ -198,7 +198,7 @@
                 {{"general.boton.description" | translate}}
               </label>
               <textarea name="observaciones" [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
-                [(ngModel)]="turnosItem.descripcion" maxLength="3900"></textarea>
+                [(ngModel)]="turnosItem.descripcion" maxLength="4000"></textarea>
             </div>
 
             <div class="form-group col-lg-12 col-md-12">
@@ -206,7 +206,7 @@
                 {{"justiciaGratuita.oficio.turnos.requisitosacceso" | translate}}
               </label>
               <textarea name="observaciones" [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
-                [(ngModel)]="turnosItem.requisitos" maxLength="3900"></textarea>
+                [(ngModel)]="turnosItem.requisitos" maxLength="1024"></textarea>
             </div>
 
           </div>

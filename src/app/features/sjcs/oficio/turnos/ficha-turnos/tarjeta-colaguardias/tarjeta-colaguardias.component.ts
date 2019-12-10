@@ -54,6 +54,7 @@ export class TarjetaColaGuardias implements OnInit {
   primerLetrado;
   permisosTarjeta: boolean = false;
   guardiasNombre;
+  existenGuardias: boolean = false;
   nombreApellidosPrimerLetrado;
   overlayVisible: boolean = false;
   selectionMode: string = "single";
@@ -127,11 +128,18 @@ export class TarjetaColaGuardias implements OnInit {
 
             }, () => {
               this.guardiasNombre = "";
-              if (this.guardias != undefined) {
+              if (this.guardias != undefined && this.guardias.length > 0) {
+                this.existenGuardias = true;
                 this.guardias.forEach(element => {
                   this.guardiasNombre += element.label + ","
                 });
                 this.guardiasNombre = this.guardiasNombre.substring(0, this.guardiasNombre.length - 1);
+                if (this.guardias != undefined && this.guardias.length > 0) {
+                  this.turnosItem.idcomboguardias = this.guardias[0].value;
+                  this.getMaterias();
+                }
+              } else {
+                this.existenGuardias = false;
               }
             }
           );
@@ -208,6 +216,7 @@ export class TarjetaColaGuardias implements OnInit {
 
   cargarTabla(event) {
     this.turnosItem.idcomboguardias = event.value;
+
     if (this.turnosItem.idcomboguardias != undefined) {
       this.getMaterias();
     } else {

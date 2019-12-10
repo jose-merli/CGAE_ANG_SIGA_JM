@@ -775,7 +775,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             this.partidaPresupuestaria = this.partidas[i].label
           }
         }
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         this.actualizarFichaResumen();
         if (this.nuevo) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.oficio.turnos.mensajeguardarDatos"));

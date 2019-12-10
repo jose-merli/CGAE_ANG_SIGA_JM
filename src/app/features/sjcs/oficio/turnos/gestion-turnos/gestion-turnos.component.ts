@@ -5,7 +5,7 @@ import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { findIndex } from 'rxjs/operators';
-import { MultiSelect, SortEvent } from 'primeng/primeng';
+import { MultiSelect, SortEvent, DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
@@ -29,7 +29,7 @@ export class TablaTurnosComponent implements OnInit {
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
-
+  buscadores = [];
   updatePartidasPres = [];
 
   body;
@@ -50,7 +50,7 @@ export class TablaTurnosComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
-
+  first = 0;
   //Resultados de la busqueda
   @Input() datos;
 
@@ -59,7 +59,7 @@ export class TablaTurnosComponent implements OnInit {
 
   @Output() searchPartidas = new EventEmitter<boolean>();
 
-  @ViewChild("tabla") tabla;
+  @ViewChild("table") tabla: DataTable;
   rows: any;
   sort: (compareFn?: (a: any, b: any) => number) => any[];
 
@@ -75,6 +75,11 @@ export class TablaTurnosComponent implements OnInit {
     this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    if (this.persistenceService.getPaginacion() != undefined) {
+      let paginacion = this.persistenceService.getPaginacion();
+      this.first = paginacion.paginacion;
+      this.selectedItem = paginacion.selectedItem;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -448,6 +453,9 @@ export class TablaTurnosComponent implements OnInit {
       { field: "nletrados", header: "justiciaGratuita.oficio.turnos.nletrados" },
 
     ];
+    this.cols.forEach(element => {
+      this.buscadores.push("");
+    });
 
     this.rowsPerPage = [
       {
@@ -470,6 +478,13 @@ export class TablaTurnosComponent implements OnInit {
   }
 
   openTab(evento) {
+
+    let paginacion = {
+      paginacion: this.tabla.first,
+      selectedItem: this.selectedItem
+    };
+
+    this.persistenceService.setPaginacion(paginacion);
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.persistenceService.setDatos(evento.data);

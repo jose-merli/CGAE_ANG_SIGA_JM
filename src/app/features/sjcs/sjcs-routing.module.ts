@@ -70,13 +70,17 @@ const routesSjcs: Routes = [
 	{
 		path: 'justiciables',
 		loadChildren: './justiciables/justiciables.module#JusticiablesModule'
+	},
+	{
+		path: 'turnos',
+		loadChildren: './turnos/turnos.module#GestionTurnosModule'
 	}
 
 ];
 
 @NgModule({
-	imports: [ RouterModule.forChild(routesSjcs) ],
-	exports: [ RouterModule ]
+	imports: [RouterModule.forChild(routesSjcs)],
+	exports: [RouterModule]
 })
-export class SjcsRoutingModule {}
+export class SjcsRoutingModule { }
 export const routingSjcs = RouterModule.forChild(routesSjcs);

@@ -574,7 +574,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
 
   disabledSave() {
-    if ((JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial))) {
+    if ((JSON.stringify(this.pesosSeleccionados) != JSON.stringify(this.pesosSeleccionadosInicial)) && this.pesosSeleccionados.length > 0) {
       return false;
     } else {
       return true;

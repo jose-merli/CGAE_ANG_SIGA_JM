@@ -65,7 +65,7 @@
         </div>
       </div>
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaSeleccionados()" (onRowUnselect)="actualizaSeleccionados()"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -138,29 +138,17 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <!-- <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
-          type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+        <button [disabled]="disableAll || !selectMultiple || selectedDatos.length == 0 || selectedDatos.length > 1" (click)="confirmUltimo(selectedDatos)"
+          pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
 
-        <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[];selectAll=false; selectMultiple = false" pButton
-          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button> -->
-        <!-- 
-        <button *ngIf="!historico" [disabled]="disableAll || (!selectMultiple || !selectAll) && selectedDatos.length == 0" (click)="delete(selectedDatos); selectAll = false; seleccionMultiple = false; selectedDatos =[]"
-          pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-
-        <button *ngIf="historico" pButton [disabled]="disableAll || selectedDatos.length == 0 || selectedDatos == undefined" (click)="delete(selectedDatos);selectAll = false; seleccionMultiple = false; selectedDatos =[]"
-          type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button> -->
-
-        <button [disabled]="disableAll || (!selectMultiple || !selectAll) && (selectedDatos.length == 0 || selectedDatos.length > 1)"
-          (click)="confirmUltimo(selectedDatos)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
-
-        <button pButton [disabled]="disableAll || selectMultiple || selectAll || turnosItem.historico" (click)="newMateria()" type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button pButton [disabled]="disableAll || selectMultiple || selectAll || turnosItem.historico" type="button" icon="fa fa-plus"
+          iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
 
       </div>
     </div>
   </div>
 </div>
-<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425" key="confirmDialogColaOficio"  #cd>
   <p-footer>
     <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
     <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>

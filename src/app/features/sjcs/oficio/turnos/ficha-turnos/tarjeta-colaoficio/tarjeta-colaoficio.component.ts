@@ -148,10 +148,11 @@ export class TarjetaColaOficio implements OnInit {
 
   confirmUltimo(selectedDatos) {
     let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
+      "justiciaGratuita.oficio.turnos.messageultletrado"
     );
     let icon = "fa fa-edit";
     this.confirmationService.confirm({
+      key: "confirmDialogColaOficio",
       message: mess,
       icon: icon,
       accept: () => {
@@ -222,7 +223,7 @@ export class TarjetaColaOficio implements OnInit {
     this.body = new TurnosObject();
     this.body.turnosItem = this.selectedDatos;
 
-    this.sigaServices.post("turnos_updateUltimo", this.selectedDatos[0]).subscribe(
+    this.sigaServices.post("turnos_updateUltimo", this.body.turnosItem[0]).subscribe(
       data => {
 
         this.nuevo = false;
