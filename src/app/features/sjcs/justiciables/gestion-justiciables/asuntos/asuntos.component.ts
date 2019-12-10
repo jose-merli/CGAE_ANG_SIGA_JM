@@ -1,16 +1,26 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
-import { DataTable } from '../../../../../../../node_modules/primeng/primeng';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnChanges, SimpleChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { DataTable } from 'primeng/primeng';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 
 @Component({
   selector: 'app-asuntos',
   templateUrl: './asuntos.component.html',
-  styleUrls: ['./asuntos.component.scss']
+  styleUrls: ['./asuntos.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class AsuntosComponent implements OnInit {
+export class AsuntosComponent implements OnInit, OnChanges {
 
   rowsPerPage: any = [];
-  cols;
+  cols = [];
   msgs;
+  progressSpinner: boolean = false;
 
   selectedItem: number = 10;
   selectAll;
@@ -18,33 +28,101 @@ export class AsuntosComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  historico: boolean = false;
 
   permisoEscritura: boolean = true;
-  datos;
+  datos = [];
+  datosInicio: boolean = false;
+
+  idPersona;
+  showTarjetaPermiso: boolean = true;
+
 
   @ViewChild("table") table: DataTable;
   @Input() showTarjeta;
+  @Input() body: JusticiableItem = new JusticiableItem();
+  @Input() modoEdicion;
+  @Input() fromJusticiable;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
-    this.getCols();
+
+    this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
+      .then(respuesta => {
+
+        this.permisoEscritura = respuesta;
+
+        if (this.permisoEscritura == undefined) {
+          this.showTarjetaPermiso = false;
+        } else {
+          this.showTarjetaPermiso = true;
+          this.getCols();
+
+        }
+      }
+      ).catch(error => console.error(error));
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+
+    //Se comprueba si es el justiciable que cargado al principio, si no es la misma se vuelve a restablecer los valores 
+    if (this.idPersona != undefined && this.idPersona != null &&
+      this.idPersona != this.body.idpersona) {
+      this.showTarjeta = false;
+      this.datos = undefined;
+      this.datosInicio = undefined;
+    }
+
+    //Se almacena el idpersona del justiciable cargado en la ficha de justiciable
+    if (this.body != undefined && this.body.idpersona == undefined) {
+      this.showTarjeta = false;
+    } else if (this.body == undefined) {
+      this.showTarjeta = false;
+      this.body = new JusticiableItem();
+    } else {
+      this.idPersona = this.body.idpersona;
+    }
+
   }
 
   onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
+    if (this.modoEdicion) {
+      this.showTarjeta = !this.showTarjeta;
+
+      if (!this.datosInicio) {
+        this.datosInicio = true;
+        this.search();
+      }
+    }
   }
 
   getCols() {
 
+    let headerRol = "";
+    let fieldRol = "";
+    let widthRol = "";
+
+    if (this.fromJusticiable) {
+      fieldRol = "rol";
+      headerRol = "administracion.usuarios.literal.rol";
+      widthRol = "5%";
+    } else {
+      fieldRol = "interesado";
+      headerRol = "justiciaGratuita.justiciables.literal.interesados";
+      widthRol = "20%";
+
+    }
+
     this.cols = [
-      { field: "identificador", header: "Identificador" },
-      { field: "fecha", header: "Fecha" },
-      { field: "turno", header: "Turno/Guardia" },
-      { field: "colegiado", header: "Colegiado" },
-      { field: "rol", header: "Rol" },
-      { field: "datosInteres", header: "Datos Interés" }
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
+      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
+      { field: fieldRol, header: headerRol, width: widthRol },
+      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
 
     ];
 
@@ -68,53 +146,26 @@ export class AsuntosComponent implements OnInit {
     ];
   }
 
+  search() {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
+      n => {
+
+        this.datos = JSON.parse(n.body).asuntosJusticiableItems;
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      });
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
-  }
-
-  onChangeSelectAll() {
-    if (this.selectAll) {
-
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
-      } else {
-        this.selectedDatos = this.datos;
-      }
-
-      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-        this.selectMultiple = true;
-        this.numSelected = this.selectedDatos.length;
-      }
-
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectMultiple = false;
-    }
-
-  }
-
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectAll = false;
-
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
-
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
   }
 
   showMessage(severity, summary, msg) {
@@ -128,5 +179,9 @@ export class AsuntosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  openTab() {
+
   }
 }

@@ -167,9 +167,9 @@ export class TablaFundamentosresolucionComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "codigoExt", header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno" },
-      { field: "descripcionFundamento", header: "enviosMasivos.literal.descripcion" },
-      { field: "descripcionResolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
+      { field: "codigoExt", header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno",  width: "20%" },
+      { field: "descripcionFundamento", header: "enviosMasivos.literal.descripcion",  width: "60%" },
+      { field: "descripcionResolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion",  width: "20%" }
 
     ];
     this.cols.forEach(it => this.buscadores.push(""))

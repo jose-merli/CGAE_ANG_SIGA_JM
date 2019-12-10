@@ -26,7 +26,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
   msgs;
   @Input() institucionActual;
   selectedItem: number = 10;
-  selectAll;
+  selectAll: boolean = false;
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;

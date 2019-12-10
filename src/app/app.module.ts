@@ -36,7 +36,6 @@ import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
-import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
@@ -341,12 +340,14 @@ import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
 import { PrecioModule } from './commons/precio/precio.module';
+import { DialogoModule } from './commons/dialog/dialogo.module';
 import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
+
 
 
 
@@ -362,7 +363,6 @@ import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asunt
 		LoginDevelopComponent,
 		HeaderComponent,
 		HomeComponent,
-		ConfirmDialogComponent,
 		// Censo
 		AuditoriaComponent,
 		AccesoFichaPersonaComponent,
@@ -688,6 +688,7 @@ import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asunt
 		PipeTranslationModule,
 		PipeNumberModule,
 		FechaModule,
+		DialogoModule,
 		PrecioModule,
 		KeyFilterModule,
 		StepsModule,
