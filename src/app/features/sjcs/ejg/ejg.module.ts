@@ -21,6 +21,7 @@ import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
 import { EJGComponent } from './ejg.component';
+import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 
 // import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
 // import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
@@ -48,6 +49,7 @@ import { EJGComponent } from './ejg.component';
     MultiSelectModule,
     FechaModule,
     ConfirmDialogModule,
+    BusquedaColegiadoExpressModule,
     // FichaGrupoZonaModule
 
   ],

@@ -24,11 +24,11 @@
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
-              <input type="text" [(ngModel)]="body.annio" class="form-control" maxLength="4" pInputText>
+              <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.numero">
+              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numero">
             </div>
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -48,16 +48,16 @@
           </div>
           <div class="form-group row col-lg-3 col-md-3">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+              <label>{{ "gratuita.busquedaEJG.literal.fechaAperturaDesde" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaAperturaDesd" [maxDate]="getFechaHastaCalendar(body.fechaAperturaDesd)" (valueChangeSelected)="fillFechaAperturaDesd($event)"
-                (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaAperturaDesd" [maxDate]="getFechaHastaCalendar(body.fechaAperturaDesd, body.fechaAperturaHast)"
+                (valueChangeSelected)="fillFechaAperturaDesd($event)" (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+              <label>{{ "gratuita.busquedaEJG.literal.fechaAperturaHasta" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaAperturaHast" [minDate]="getFechaDesdeCalendar(body.fechaAperturaHast)" (valueChangeSelected)="fillFechaAperturaHast($event)"
-                (valueChangeInput)="fillFechaAperturaHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaAperturaHast" [minDate]="getFechaDesdeCalendar(body.fechaAperturaDesd, body.fechaAperturaHast)"
+                (valueChangeSelected)="fillFechaAperturaHast($event)" (valueChangeInput)="fillFechaAperturaHast($event)"></app-fecha>
             </div>
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -69,28 +69,28 @@
             <div id="divPeq1" class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaEstadoDesd" [maxDate]="getFechaHastaCalendar(body.fechaEstadoDesd)" (valueChangeSelected)="fillFechaEstadoDesd($event)"
-                (valueChangeInput)="fillFechaEstadoDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaEstadoDesd" [maxDate]="getFechaHastaCalendar(body.fechaEstadoDesd, body.fechaEstadoHast)"
+                (valueChangeSelected)="fillFechaEstadoDesd($event)" (valueChangeInput)="fillFechaEstadoDesd($event)"></app-fecha>
             </div>
             <div id="divPeq2" class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaEstadoHast" [minDate]="getFechaDesdeCalendar(body.fechaEstadoHast)" (valueChangeSelected)="fillFechaEstadoHast($event)"
-                (valueChangeInput)="fillFechaEstadoHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaEstadoHast" [minDate]="getFechaDesdeCalendar(body.fechaEstadoDesd, body.fechaEstadoHast)"
+                (valueChangeSelected)="fillFechaEstadoHast($event)" (valueChangeInput)="fillFechaEstadoHast($event)"></app-fecha>
             </div>
           </div>
           <div id="divCont" class="form-group row col-lg-3 col-md-3">
             <div id="divPeq1" class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaLimiteDesd" [maxDate]="getFechaHastaCalendar(body.fechaLimiteDesd)" (valueChangeSelected)="fillFechaLimiteDesd($event)"
-                (valueChangeInput)="fillFechaLimiteDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaLimiteDesd" [maxDate]="getFechaHastaCalendar(body.fechaLimiteDesd, body.fechaLimiteHast)"
+                (valueChangeSelected)="fillFechaLimiteDesd($event)" (valueChangeInput)="fillFechaLimiteDesd($event)"></app-fecha>
             </div>
             <div id="divPeq2" class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaLimiteHast" [minDate]="getFechaDesdeCalendar(body.fechaLimiteHast)" (valueChangeSelected)="fillFechaLimiteHast($event)"
-                (valueChangeInput)="fillFechaLimiteHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaLimiteHast" [minDate]="getFechaDesdeCalendar(body.fechaLimiteDesd, body.fechaLimiteHast)"
+                (valueChangeSelected)="fillFechaLimiteHast($event)" (valueChangeInput)="fillFechaLimiteHast($event)"></app-fecha>
             </div>
           </div>
         </div>
@@ -128,14 +128,14 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaDictamenDesd" [maxDate]="getFechaHastaCalendar(body.fechaDictamenDesd)" (valueChangeSelected)="fillFechaDictamenDesd($event)"
-                (valueChangeInput)="fillFechaDictamenDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaDictamenDesd" [maxDate]="getFechaHastaCalendar(body.fechaDictamenDesd, body.fechaDictamenHast)"
+                (valueChangeSelected)="fillFechaDictamenDesd($event)" (valueChangeInput)="fillFechaDictamenDesd($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaDictamenHast" [minDate]="getFechaDesdeCalendar(body.fechaDictamenHast)" (valueChangeSelected)="fillFechaDictamenHast($event)"
-                (valueChangeInput)="fillFechaDictamenHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaDictamenHast" [minDate]="getFechaDesdeCalendar(body.fechaDictamenDesd, body.fechaDictamenHast)"
+                (valueChangeSelected)="fillFechaDictamenHast($event)" (valueChangeInput)="fillFechaDictamenHast($event)"></app-fecha>
             </div>
           </div>
         </div>
@@ -153,16 +153,16 @@
           </div>
           <div class="form-group row col-lg-3 col-md-3">
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+              <label>{{ "busquedaSanciones.fechaResolucionDesde.literal" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaResolucionDesd" [maxDate]="getFechaHastaCalendar(body.fechaResolucionHast)" (valueChangeSelected)="fillFechaResolucionDesd($event)"
-                (valueChangeInput)="fillFechaResolucionDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaResolucionDesd" [maxDate]="getFechaHastaCalendar(body.fechaResolucionDesd, body.fechaResolucionHast)"
+                (valueChangeSelected)="fillFechaResolucionDesd($event)" (valueChangeInput)="fillFechaResolucionDesd($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+              <label>{{ "busquedaSanciones.fechaResolucionHasta.literal" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaResolucionHast" [minDate]="getFechaDesdeCalendar(body.fechaResolucionHast)" (valueChangeSelected)="fillFechaResolucionHast($event)"
-                (valueChangeInput)="fillFechaResolucionHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaResolucionHast" [minDate]="getFechaDesdeCalendar(body.fechaResolucionDesd, body.fechaResolucionHast)"
+                (valueChangeSelected)="fillFechaResolucionHast($event)" (valueChangeInput)="fillFechaResolucionHast($event)"></app-fecha>
             </div>
           </div>
         </div>
@@ -182,14 +182,14 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaImpugnacionDesd" [maxDate]="getFechaHastaCalendar(body.fechaImpugnacionDesd)" (valueChangeSelected)="fillFechaImpugnacionDesd($event)"
-                (valueChangeInput)="fillFechaImpugnacionDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaImpugnacionDesd" [maxDate]="getFechaHastaCalendar(body.fechaImpugnacionDesd, body.fechaImpugnacionHast)"
+                (valueChangeSelected)="fillFechaImpugnacionDesd($event)" (valueChangeInput)="fillFechaImpugnacionDesd($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaImpugnacionHast" [minDate]="getFechaDesdeCalendar(body.fechaImpugnacionHast)" (valueChangeSelected)="fillFechaImpugnacionHast($event)"
-                (valueChangeInput)="fillFechaImpugnacionHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaImpugnacionHast" [minDate]="getFechaDesdeCalendar(body.fechaImpugnacionDesd, body.fechaImpugnacionHast)"
+                (valueChangeSelected)="fillFechaImpugnacionHast($event)" (valueChangeInput)="fillFechaImpugnacionHast($event)"></app-fecha>
             </div>
           </div>
         </div>
@@ -209,12 +209,12 @@
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{"enviosMasivos.literal.asunto" | translate}}</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.asunto">
+            <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.asunto">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-lg-6 col-md-6">
-            <div class="form-group row col-lg-12 col-md-12">
+            <div class="row">
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{'justiciaGratuita.ejg.datosGenerales.calidad'|translate}}</label>
                 <p-dropdown class="select-form" [(ngModel)]='body.calidad' placeholder="Seleccionar" [options]="comboCalidad" [filter]="true"
@@ -232,7 +232,7 @@
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{'justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento'|translate}}</label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.numAnnioProcedimiento">
+                <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numAnnioProcedimiento">
               </div>
             </div>
           </div>
@@ -241,11 +241,9 @@
             <p-dropdown class="select-form" [(ngModel)]='body.procedimiento' placeholder="Seleccionar" [options]="comboProcedimiento"
               [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-        </div>
-        <div class="form-row">
           <div class="form-group col-lg-6 col-md-6">
-            <label>NIG</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.NIG">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
+            <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.NIG">
           </div>
         </div>
       </div>
@@ -262,21 +260,21 @@
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.annioCAJG">
+              <input type="text" class="form-control" maxLength="4" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.annioCAJG">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.numCAJG' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.numCAJG">
+              <input type="text" class="form-control" maxLength="20" pInputText [(ngModel)]="body.numCAJG">
             </div>
           </div>
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.AnnioActa' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.annioActa">
+              <input type="text" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText [(ngModel)]="body.annioActa">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.numActa' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.numActa">
+              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numActa">
             </div>
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -288,30 +286,32 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaPonenteDesd" [maxDate]="getFechaHastaCalendar(body.fechaPonenteDesd)" (valueChangeSelected)="fillFechaPonenteDesd($event)"
-                (valueChangeInput)="fillFechaPonenteDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaPonenteDesd" [maxDate]="getFechaHastaCalendar(body.fechaPonenteDesd, body.fechaPonenteHast)"
+                (valueChangeSelected)="fillFechaPonenteDesd($event)" (valueChangeInput)="fillFechaPonenteDesd($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaPonenteHast" [minDate]="getFechaDesdeCalendar(body.fechaPonenteHast)" (valueChangeSelected)="fillFechaPonenteHast($event)"
-                (valueChangeInput)="fillFechaPonenteHast($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaPonenteHast" [minDate]="getFechaDesdeCalendar(body.fechaPonenteDesd, body.fechaPonenteHast)"
+                (valueChangeSelected)="fillFechaPonenteHast($event)" (valueChangeInput)="fillFechaPonenteHast($event)"></app-fecha>
             </div>
           </div>
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.numRegistroRemesa' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.numRegRemesa1">
+              <input type="text" class="form-control" maxLength="8" pInputText [(ngModel)]="body.numRegRemesa1">
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.numRegRemesa2">
+              <label>{{" "}}</label>
+              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numRegRemesa2">
             </div>
           </div>
 
           <div class="form-group col-lg-3 row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.numRegRemesa3">
+              <label>{{' '}}</label>
+              <input type="text" class="form-control" maxLength="8" pInputText [(ngModel)]="body.numRegRemesa3">
             </div>
           </div>
         </div>
@@ -326,16 +326,16 @@
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]='body.nif' pInputText>
+              <input type="text" class="form-control" maxLength="20" [(ngModel)]='body.nif' pInputText>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]='body.apellidos' pInputText>
+              <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellidos' pInputText>
 
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-              <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
+              <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="body.nombre">
 
             </div>
             <div class="form-group col-lg-3 col-md-3">
@@ -358,113 +358,60 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "dato.jgr.guardia.guardias.turno" | translate }}</label>
-              <p-dropdown class="select-form" [(ngModel)]='body.turno' placeholder="Seleccionar" [options]="comboTurno" [filter]="true"
-                filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.turno' placeholder="Seleccionar" [options]="comboTurno"
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
-              <p-dropdown class="select-form" [(ngModel)]='body.guardia' placeholder="Seleccionar" [options]="comboGuardia" [filter]="true"
-                filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-dropdown class="select-form" [(ngModel)]='body.guardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
-            <div class="form-group col-lg-3 col-md-3">
+            <!-- <div class="form-group col-lg-3 col-md-3">
               <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
               <input type="text" class="form-control" [(ngModel)]='body.numColegiado' pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
               <input type="text" class="form-control" [(ngModel)]='body.apellidosYNombre' pInputText>
-            </div>
-            <div class="form-group row col-lg-3 col-md-3">
-              <div class="text-right main-button">
-                <div class="form-group col-lg-3 col-md-3">
-                  <button (click)="isLimpiarPorHacer()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                  <button (click)="isBuscarPorHacer()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-                </div>
-              </div>
+            </div> -->
+            <div class="form-group col-lg-12 col-md-12 row">
               <div class="form-group col-lg-6 col-md-6">
-                <label>{{'justiciaGratuita.ejg.datosGenerales.TipoLetrado'|translate}}</label>
-                <p-dropdown class="select-form" [(ngModel)]='body.tipoLetrado' placeholder="Seleccionar" [options]="comboTipoLetrado" [filter]="true"
-                  filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                <app-busqueda-colegiado-express (idPersona)="getPersona($idPersona)"></app-busqueda-colegiado-express>
               </div>
+              <!-- <div class="form-group row col-lg-3 col-md-3"> -->
+              <!-- <div class="form-group col-lg-6 col-md-6">
+                      <div class="text-right main-button">
+                      <div class="row" style="margin-top: 16px;">
+                        <div class="form-group col-lg-6 col-md-6">
+                          <button (click)="clearFiltersTramitador()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                          <button (click)="isBuscarPorHacer()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  -->
+              <!-- <div class="form-group col-lg-6 col-md-6"> -->
+              <div class="form-group col-lg-3 col-md-3">
+                <label>{{'justiciaGratuita.ejg.datosGenerales.TipoLetrado'|translate}}</label>
+                <p-dropdown class="select-form" [(ngModel)]='body.tipoLetrado' placeholder="Seleccionar" (onChange)="onChangeTipoLetrado()"
+                  [options]="comboTipoLetrado" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              </div>
+              <!-- </div> -->
+              <!-- </div> -->
             </div>
           </div>
         </div>
         <div class="card-footer">
           <div class="text-right main-button">
             <button (click)="isNuevo()" pButton type="button"  icon="fa fa-plus-square"  iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
-            <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
+            <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
             <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
           </div>
         </div>
       </div>
     </div>
     <!--FIN CARD-->
-
-    <div *ngIf="buscar == true" class="card mt-3">
-      <div class="card-body p-0">
-        <!-- <p-dataTable styleClass="inheritTable" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarColegiado(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="4" dataKey="idPersona" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains">
-
-          <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
-            <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
-          </ng-template>
-
-          <ng-template *ngIf="col.field == 'noAparecerRedAbogacia2'" let-dato="rowData" pTemplate="body">
-            <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">No</label>
-            <label *ngIf="dato.noAparecerRedAbogacia2 == '1'">Si</label>
-          </ng-template>
-
-          <ng-template *ngIf="col.field == 'estadoColegial'" let-dato="rowData" pTemplate="body">
-            <label *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato.estadoColegial}}</label>
-            <label *ngIf="dato.comunitario == '1'">{{dato.estadoColegial}} (Inscrito)</label>
-          </ng-template>
-
-          <ng-template *ngIf="col.field == 'situacionResidente'" let-dato="rowData" pTemplate="body">
-            <label *ngIf="dato.situacionResidente == undefined || dato.situacionResidente == null || dato.situacionResidente == '0'">No</label>
-            <label *ngIf="dato.situacionResidente == '1'">Si</label>
-          </ng-template>
-        </p-column>
-
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
-              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
-            </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-
-          </div>
-        </ng-template>
-      </p-dataTable> -->
-
-      </div>
-
-      <div *ngIf="buscar == true" class="card-footer">
-        <div class="text-right main-button ">
-          <!-- <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button> -->
-          <!--<button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
-                    disabled></button>-->
-          <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
-          <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button"
-            icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
-
-        </div>
-      </div>
-
-    </div>
     <!-- FIN DE PRINCIPAL
   <app-dialog></app-dialog> -->
   </div>

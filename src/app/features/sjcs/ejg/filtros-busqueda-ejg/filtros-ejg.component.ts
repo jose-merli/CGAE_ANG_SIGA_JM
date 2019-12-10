@@ -13,7 +13,7 @@ import { datos_combos } from '../../../../utils/datos_combos';
   styleUrls: ['./filtros-ejg.component.scss']
 })
 export class FiltrosEjgComponent implements OnInit {
-
+  progressSpinner: boolean = false;
   historico: boolean = false;
   msgs: any[] = [];
   textFilter: string = "Seleccionar";
@@ -29,7 +29,7 @@ export class FiltrosEjgComponent implements OnInit {
   showSolicitante: boolean = true;
   showTramitador: boolean = true;
   //inicializar los combos
-  comboProcedimeinto = [];
+  comboProcedimiento = [];
   comboCalidad = datos_combos.comboCalidad;
   comboPerceptivo = [];
   comboRenuncia = [];
@@ -56,10 +56,13 @@ export class FiltrosEjgComponent implements OnInit {
   isDisabledFundamentosJurid: boolean = true;
   isDisabledFundamentosCalif: boolean = true;
   isDisabledFundamentoImpug: boolean = true;
+  isDisabledGuardia: boolean = true;
+  tipoLetrado;
   @Input() permisos;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
-    por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
+  por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
+
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
@@ -88,11 +91,12 @@ export class FiltrosEjgComponent implements OnInit {
       this.busqueda.emit(this.historico)
 
     } else {
-      this.body = new EJGItem(); //ponia filtros, yo lo cambie x body. no seguro
-      this.bodyAux = new EJGItem(); //SEGURO?
+      this.body = new EJGItem();
+      this.bodyAux = new EJGItem();
     }
     this.body.annio = new Date().getFullYear().toString();
   }
+
   getCombos() {
 
     this.getComboProcedimiento();
@@ -100,7 +104,6 @@ export class FiltrosEjgComponent implements OnInit {
     this.getComboDictamen();
     this.getComboPerceptivo();
     this.getComboRenuncia();
-    this.getComboFundamentoCalif();
     this.getComboResolucion();
     this.getComboRenuncia();
     this.getComboImpugnacion();
@@ -131,10 +134,20 @@ export class FiltrosEjgComponent implements OnInit {
     }
   }
 
+  onChangeTipoLetrado() {
+    this.comboTurno = [];
+    this.tipoLetrado = 0;
+    // if (this.body.tipoLetrado != undefined) {
+    this.getComboTurno();
+    // }
+  }
+
   onChangeDictamen() {
     this.comboFundamentoCalif = [];
     if (this.body.dictamen != undefined && this.body.dictamen != "") {
       this.isDisabledFundamentosCalif = false;
+      this.getComboFundamentoCalif();
+
     } else {
       this.isDisabledFundamentosCalif = true;
       this.body.fundamentoCalif = "";
@@ -149,28 +162,39 @@ export class FiltrosEjgComponent implements OnInit {
     } else {
       this.isDisabledFundamentoImpug = true;
       this.body.fundamentoImpuganacion = "";
-
+    }
+  }
+  onChangeTurnos() {
+    this.comboGuardia = [];
+    if (this.body.turno != undefined && this.body.turno != "") {
+      this.isDisabledGuardia = false;
+      this.getComboGuardia();
+    } else {
+      this.isDisabledGuardia = true;
+      this.body.guardia = "";
     }
   }
 
-
   getComboProcedimiento() {
-    //   this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
-    //     n => {
-    //       this.comboProcedimeinto = n.combooItems;
-    //       this.commonServices.arregloTildesCombo(this.comboProcedimeinto);
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   );
+    this.sigaServices
+      .get("busquedaProcedimientos_procedimientos")
+      .subscribe(
+        n => {
+          this.comboProcedimiento = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboProcedimiento);
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
         this.comboDictamen = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboDictamen);
-        this.comboDictamen.push({ label: "Indiferente", value: -1 });
+        this.comboDictamen.push({ label: "Indiferente", value: "-1" });
       },
       err => {
         console.log(err);
@@ -215,7 +239,10 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboFundamentoCalif() {
-    this.sigaServices.get("filtrosejg_comboFundamentoCalif").subscribe(
+    this.sigaServices.getParam(
+      "filtrosejg_comboFundamentoCalif",
+      "?list_dictamen=" + this.body.dictamen
+    ).subscribe(
       n => {
         // this.isDisabledFundamentosCalif = false;
         this.comboFundamentoCalif = n.combooItems;
@@ -237,9 +264,9 @@ export class FiltrosEjgComponent implements OnInit {
       }
     );
   }
-  getComboFundamentosResoluc() {
+  // getComboFundamentosResoluc() {
 
-  }
+  // }
   getComboFundamentoJurid() {
     this.sigaServices
       .getParam(
@@ -280,7 +307,15 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboPonente() {
-    this.comboPonente;
+    this.sigaServices.get("filtrosejg_comboPonente").subscribe(
+      n => {
+        this.comboPonente = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboPonente);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   getComboColegio() {
 
@@ -327,23 +362,7 @@ export class FiltrosEjgComponent implements OnInit {
       }
     );
   }
-  // getComboCreadoDesde() {
-  //   if (this.nuevo) {
 
-
-  //   } else {
-  //     this.sigaServices.get("filtrosejg_comboCreadoDesde").subscribe(
-  //       n => {
-  //         this.comboCreadoDesde = n.combooItems;
-  //         this.commonServices.arregloTildesCombo(this.comboCreadoDesde);
-  //       },
-  //       err => {
-  //         console.log(err);
-  //       }
-  //     );
-  //   }
-
-  // }
   getComboEstadoEJG() {
     this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
       n => {
@@ -356,8 +375,20 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboTurno() {
-    if (this.body.turno != undefined)
-      this.getComboGuardia();
+    if (this.body.tipoLetrado == "E") {
+      this.tipoLetrado = "2";
+    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
+    this.sigaServices.getParam("filtrosejg_comboTurno",
+      "?idTurno=" + this.tipoLetrado).subscribe(
+        n => {
+          this.comboTurno = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboTurno);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+
   }
   getComboGuardia() {
     this.sigaServices.getParam(
@@ -374,9 +405,7 @@ export class FiltrosEjgComponent implements OnInit {
         }
       );
   }
-  // getComboTipoLetrado() {
-  //   this.comboTipoLetrado;
-  // }
+
   getComboJuzgado() {
     this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
       n => {
@@ -389,10 +418,10 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
 
-  fillFechaDesde(event) {
+  fillFechaDictamenDesd(event) {
     this.body.fechaDictamenDesd = event;
   }
-  fillFechaHasta(event) {
+  fillFechaDictamenHast(event) {
     this.body.fechaDictamenHast = event;
   }
   fillFechaResolucionDesd(event) {
@@ -433,47 +462,38 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   // Control de fechas
-  getFechaHastaCalendar(fechaInput) {
-    let fechaReturn: Date;
+  getFechaHastaCalendar(fechaInputDesde, fechainputHasta) {
     if (
-      fechaInput != undefined &&
-      fechaInput != undefined
+      fechaInputDesde != undefined &&
+      fechainputHasta != undefined
     ) {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
-      let fechaDesde = new Date(fechaInput).getTime();
-      let fechaHasta = new Date(fechaInput).getTime();
+      let fechaDesde = fechaInputDesde.getTime();
+      let fechaHasta = fechainputHasta.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) fechaReturn = undefined;
-      else fechaReturn = new Date(fechaInput);
+      if (msRangoFechas < 0) fechainputHasta = undefined;
     }
-
-    return fechaReturn;
+    return fechainputHasta;
   }
 
-  getFechaDesdeCalendar(fechaInput) {
-    let fechaReturn: Date;
-
+  getFechaDesdeCalendar(fechaInputesde, fechaInputHasta) {
     if (
-      fechaInput != undefined &&
-      fechaInput != null
+      fechaInputesde != undefined &&
+      fechaInputHasta != undefined
     ) {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
-      let fechaDesde = new Date(fechaInput).getTime();
-      let fechaHasta = new Date(fechaInput).getTime();
+      let fechaDesde = fechaInputesde.getTime();
+      let fechaHasta = fechaInputHasta.getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
-      if (msRangoFechas < 0) fechaReturn = undefined;
-      else fechaReturn = new Date(fechaInput);
-      // this.body.fechaDesde.setDate(this.body.fechaDesde.getDate() + 1);
-      // this.body.fechaDesde = new Date(this.body.fechaDesde.toString());
+      if (msRangoFechas < 0) fechaInputesde = undefined;
     }
-
-    return fechaReturn;
+    return fechaInputesde;
   }
 
   onHideDatosIdentificacion() {
@@ -531,19 +551,31 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.nombre = this.body.nombre.trim();
     if (this.body.numColegiado != undefined)
       this.body.numColegiado = this.body.numColegiado.trim();
-    // if (
-    //   (this.filtros.nombre == null || this.filtros.nombre == "" || this.filtros.nombre.length < 3) &&
-    //   (this.filtros.apellido1 == null || this.filtros.apellido1 == "" || this.filtros.apellido1.length < 3) &&
-    //   (this.filtros.codigoExt == null || this.filtros.codigoExt == "" || this.filtros.codigoExt.length < 3)) {
-    //   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    //   return false;
-    // } else {
-    return true;
-    // }
+    if (
+      (this.body.annio == null || this.body.annio.trim() == "" || this.body.annio.trim().length < 3) &&
+      (this.body.numero == null || this.body.numero.trim() == "" || this.body.numero.trim().length < 3) &&
+      (this.body.numAnnioProcedimiento == null || this.body.numAnnioProcedimiento.trim() == "" || this.body.numAnnioProcedimiento.trim().length < 3) &&
+      (this.body.nig == null || this.body.nig.trim() == "" || this.body.nig.trim().length < 3) &&
+      (this.body.annioCAJG == null || this.body.annioCAJG.trim() == "" || this.body.annioCAJG.trim().length < 3) &&
+      (this.body.numCAJG == null || this.body.numCAJG.trim() == "" || this.body.numCAJG.trim().length < 3) &&
+      (this.body.annioActa == null || this.body.annioActa.trim() == "" || this.body.annioActa.trim().length < 3) &&
+      (this.body.numActa == null || this.body.numActa.trim() == "" || this.body.numActa.trim().length < 3) &&
+      (this.body.numRegRemesa1 == null || this.body.numRegRemesa1.trim() == "" || this.body.numRegRemesa1.trim().length < 3) &&
+      (this.body.numRegRemesa2 == null || this.body.numRegRemesa2.trim() == "" || this.body.numRegRemesa2.trim().length < 3) &&
+      (this.body.numRegRemesa3 == null || this.body.numRegRemesa3.trim() == "" || this.body.numRegRemesa3.trim().length < 3) &&
+      (this.body.nif == null || this.body.nif.trim() == "" || this.body.nif.trim().length < 3) &&
+      (this.body.apellidos == null || this.body.apellidos.trim() == "" || this.body.apellidos.trim().length < 3) &&
+      (this.body.nombre == null || this.body.nombre.trim() == "" || this.body.nombre.trim().length < 3) &&
+      (this.body.numColegiado == null || this.body.numColegiado.trim() == "" || this.body.numColegiado.trim().length < 3) &&
+      (this.body.asunto == null || this.body.asunto.trim() == "" || this.body.asunto.trim().length < 3)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
+    } else {
+      return true;
+    }
   }
   //Busca ejg según los filtros
   isBuscar() {
-
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.body);
       this.persistenceService.setFiltrosAux(this.body);
@@ -551,8 +583,43 @@ export class FiltrosEjgComponent implements OnInit {
       this.busqueda.emit(false)
     }
   }
-
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+  clearFiltersTramitador() {
+    this.body.turno = "";
+    this.body.guardia = "";
+    this.body.numColegiado = "";
+    this.body.apellidosYNombre = "";
+    this.body.tipoLetrado = "";
+  }
+  clearFilters() {
+    this.body = new EJGItem();
+    this.persistenceService.clearFiltros();
+  }
   isNuevo() {
 
+  }
+  clear() {
+    this.msgs = [];
+  }
+  getPersona(idPersona) {
+    if (idPersona != undefined && idPersona != "")
+      this.body.numColegiado = idPersona;
+  }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
   }
 }

@@ -7,7 +7,7 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
 import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
-
+import * as moment from "moment";
 
 @Component({
   selector: 'app-ejg',
@@ -67,9 +67,20 @@ export class EJGComponent implements OnInit {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
-
+    this.transformDate(this.filtros.filtroAux.fechaAperturaDesd);
+    this.transformDate(this.filtros.filtroAux.fechaAperturaHast);
+    this.transformDate(this.filtros.filtroAux.fechaEstadoDesd);
+    this.transformDate(this.filtros.filtroAux.fechaEstadoHast);
+    this.transformDate(this.filtros.filtroAux.fechaLimiteDesd);
+    this.transformDate(this.filtros.filtroAux.fechaLimiteHast);
+    this.transformDate(this.filtros.filtroAux.fechaDictamenDesd);
+    this.transformDate(this.filtros.filtroAux.fechaDictamenHast);
+    this.transformDate(this.filtros.filtroAux.fechaImpugnacionDesd);
+    this.transformDate(this.filtros.filtroAux.fechaImpugnacionHast);
+    this.transformDate(this.filtros.filtroAux.fechaPonenteDesd);
+    this.transformDate(this.filtros.filtroAux.fechaPonenteHast);
     this.progressSpinner = true;
-
+    // this.filtros.filtroAux.dictamen.split(",");
     this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.filtroAux).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
@@ -103,7 +114,10 @@ export class EJGComponent implements OnInit {
     this.msgs = [];
   }
 
-
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha).toLocaleDateString();
+  }
 }
 
 

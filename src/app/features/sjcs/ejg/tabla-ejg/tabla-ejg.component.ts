@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { EJGItem } from '../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-tabla-ejg',
@@ -57,26 +58,34 @@ export class TablaEjgComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
   }
-  confirmDelete() {
-    let mess = this.translateService.instant('messages.deleteConfirmation');
-    let icon = 'fa fa-edit';
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete();
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: 'info',
-            summary: 'Cancel',
-            detail: this.translateService.instant('general.message.accion.cancelada')
-          }
-        ];
-      }
-    });
+  ngOnChanges() {
+    // this.datos.forEach((value: EJGItem) => {
+    //   if (value.fechaApertura != undefined) {
+    //     value.fechaApertura = this.transformaFecha((value.fechaApertura);
+    //   }
+    // });
+
   }
+  // confirmDelete() {
+  //   let mess = this.translateService.instant('messages.deleteConfirmation');
+  //   let icon = 'fa fa-edit';
+  //   this.confirmationService.confirm({
+  //     message: mess,
+  //     icon: icon,
+  //     accept: () => {
+  //       this.delete();
+  //     },
+  //     reject: () => {
+  //       this.msgs = [
+  //         {
+  //           severity: 'info',
+  //           summary: 'Cancel',
+  //           detail: this.translateService.instant('general.message.accion.cancelada')
+  //         }
+  //       ];
+  //     }
+  //   });
+  // }
   openTab(evento) {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -104,19 +113,15 @@ export class TablaEjgComponent implements OnInit {
 
   }
   getCols() {
-    // LITERALES DE CABECERAS OK
     this.cols = [
-      { field: "colegio", header: "censo.busquedaClientesAvanzada.literal.colegio" },
-      { field: "numero", header: "censo.consultaDatosColegiacion.literal.numIden" }, //es este??
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "numColegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado" },
-      { field: "estadoEJG", header: "censo.fichaCliente.situacion.cabecera" }, //es este??
-      { field: "residencia", header: "censo.busquedaClientes.noResidente" }, //este no esta en el item!! q hago?
-      { field: "fechaNac", header: "censo.consultaDatosColegiacion.literal.fechaNac" }, //este no esta en el item!! q hago?
-      { field: "email", header: "censo.datosDireccion.literal.correo" }, //este no esta en el item!! q hago?
-      { field: "telefono", header: "censo.ws.literal.telefono" }, //este no esta en el item!! q hago?
-      { field: "movil", header: "censo.datosDireccion.literal.movil" }, //este no esta en el item!! q hago?
-      { field: "lopd", header: "censo.busquedaColegial.lopd" }, //este no esta en el item!! q hago?
+      { field: "turno", header: "censo.busquedaClientesAvanzada.literal.colegio", width: "20%" },
+      { field: "turnoDes", header: "dato.jgr.guardia.guardias.turno", width: "12%" },
+      { field: "annio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "5%" },
+      { field: "apellidosYNombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
+      { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "8%" },
+      { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
+      { field: "nombreApeSolicitante", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
+
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 
@@ -195,6 +200,7 @@ export class TablaEjgComponent implements OnInit {
       }
     }
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -205,5 +211,17 @@ export class TablaEjgComponent implements OnInit {
   }
   clear() {
     this.msgs = [];
+  }
+  comunicar() {
+
+  }
+  changeEstado() {
+
+  }
+  downloadEEJ() {
+
+  }
+  addRemesa() {
+
   }
 }

@@ -7,62 +7,65 @@ export class EJGItem {
     tipoEJG: string;
     tipoEJGColegio: string;
     creadoDesde: string;
-    fechaAperturaDesd: Date;
-    fechaAperturaHast: Date;
+    fechaAperturaDesd: String;
+    fechaAperturaHast: String;
     fechaApertura: Date;
     estadoEJG: string;
-    fechaEstadoDesd: Date;
-    fechaEstadoHast: Date;
-    fechaLimiteDesd: Date;
-    fechaLimiteHast: Date;
+    fechaEstadoDesd: String;
+    fechaEstadoHast: String;
+    fechaLimiteDesd: String;
+    fechaLimiteHast: String;
 
 
     dictamen: string;
     fundamentoCalif: string;
-    fechaDictamenDesd: Date;
-    fechaDictamenHast: Date;
+    fechaDictamenDesd: String;
+    fechaDictamenHast: String;
     resolucion: string;
     fundamentoJuridico: string;
-    fechaResolucionDesd: Date;
-    fechaResolucionHast: Date;
+    fechaResolucionDesd: String;
+    fechaResolucionHast: String;
     impugnacion: string;
     fundamentoImpuganacion: string;
-    fechaImpugnacionDesd: Date;
-    fechaImpugnacionHast: Date;
+    fechaImpugnacionDesd: String;
+    fechaImpugnacionHast: String;
 
-    juzgado: String;
-    asunto: String;
-    calidad: String;
-    perceptivo: String;
-    renuncia: String;
-    numAnnioProcedimiento: String;
-    procedimiento: String;
-    nig: String;
+    juzgado: string;
+    asunto: string;
+    calidad: string;
+    perceptivo: string;
+    renuncia: string;
+    numAnnioProcedimiento: string;
+    procedimiento: string;
+    nig: string;
 
-    annioCAJG: String;
-    numCAJG: String;
-    annioActa: String;
-    numActa: String;
-    ponente: String;
-    fechaPonenteDesd: Date;
-    fechaPonenteHast: Date;
+    annioCAJG: string;
+    numCAJG: string;
+    annioActa: string;
+    numActa: string;
+    ponente: string;
+    fechaPonenteDesd: String;
+    fechaPonenteHast: String;
     numRegRemesa: string;
     numRegRemesa1: string;
     numRegRemesa2: string;
     numRegRemesa3: string;
 
-    nif: String;
-    apellidos: String;
-    nombre: String;
-    nombreApeSolicitante: String;
-    rol: String;
+    nif: string;
+    apellidos: string;
+    nombre: string;
+    nombreApeSolicitante: string;
+    rol: string;
 
-    turno: String;
-    guardia: String;
-    numColegiado: String;
-    apellidosYNombre: String; //lo dejo asi?
-    tipoLetrado: String;
+    turno: string;
+    guardia: string;
+    numColegiado: string;
+    apellidosYNombre: string; //lo dejo asi?
+    tipoLetrado: string;
 
-    turnoDes: String;
+    turnoDes: string;
+    // correoelectronico: string;
+    // fechanacimiento: Date;
+    // idInstitucion: String;
     constructor() { }
 }

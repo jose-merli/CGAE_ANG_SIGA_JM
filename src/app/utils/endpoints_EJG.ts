@@ -26,7 +26,9 @@ export let endpoints_EJG: any = {
     filtrosejg_comboFundamentoJurid: "ejg/filtros-ejg/comboFundamentoJurid",
     filtrosejg_busquedaEJG: "ejg/filtros-ejg/busquedaEJG",
     filtrosejg_comboImpugnacion: "ejg/filtros-ejg/comboImpugnacion",
-    filtrosejg_comboJuzgados: "ejg/filtros-ejg/comboJuzgados"
+    filtrosejg_comboJuzgados: "ejg/filtros-ejg/comboJuzgados",
+    filtrosejg_comboPonente: "ejg/filtros-ejg/comboPonente",
+    filtrosejg_comboTurno: "ejg/filtros-ejg/comboTurnosTipo"
 
 
 
