@@ -61,7 +61,7 @@ import { CalendarModule } from "primeng/calendar";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "primeng/tooltip";
 import { ChipsModule } from "primeng/chips";
-//import { EditorModule } from "primeng/editor";
+// import { EditorModule } from "primeng/editor";
 import { PickListModule } from "primeng/picklist";
 import { FileUploadModule } from "primeng/fileupload";
 import { KeyFilterModule } from 'primeng/keyfilter';
@@ -346,6 +346,7 @@ import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procurador
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
+import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 
 
 
@@ -695,9 +696,11 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		GeneralSJCSModule,
 		SelectButtonModule,
 		ColorPickerModule,
+		// BusquedaAsuntosModule,
 		EditorModule,
 
-		SjcsModule
+		SjcsModule,
+		BusquedaAsuntosModule
 	],
 
 	exports: [],
