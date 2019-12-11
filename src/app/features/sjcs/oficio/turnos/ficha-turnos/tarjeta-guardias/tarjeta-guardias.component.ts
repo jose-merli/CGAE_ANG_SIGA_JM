@@ -48,7 +48,7 @@ export class TarjetaGuardias implements OnInit {
   mostrarVacio: boolean = false;
   progressSpinner: boolean = false;
   msgs;
-  permisosTarjeta: boolean = false;
+  permisosTarjeta: boolean = true;
   body;
   nuevo: boolean = false;
   datosInicial = [];

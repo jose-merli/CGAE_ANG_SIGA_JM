@@ -51,7 +51,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones;
   codigoPostalValido: boolean = true;
-  permisosTarjeta: boolean = false;
+  permisosTarjeta: boolean = true;
   disableAll: boolean = false;
   movilCheck: boolean = false
 

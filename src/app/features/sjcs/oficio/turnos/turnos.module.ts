@@ -33,10 +33,13 @@ import { FechaComponent } from '../../../../commons/fecha/fecha.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { TarjetaColaGuardias } from './ficha-turnos/tarjeta-colaguardias/tarjeta-colaguardias.component';
 import { TarjetaGuardias } from './ficha-turnos/tarjeta-guardias/tarjeta-guardias.component';
+import { routingOficio } from '../oficio-routing.module';
+import { TarjetaInscripciones } from './ficha-turnos/tarjeta-inscripciones/tarjeta-inscripciones.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    routingOficio,
     DataTableModule,
     PaginatorModule,
     InputTextModule,
@@ -67,7 +70,8 @@ import { TarjetaGuardias } from './ficha-turnos/tarjeta-guardias/tarjeta-guardia
     ConfiguracionColaOficioComponent,
     TarjetaColaOficio,
     TarjetaColaGuardias,
-    TarjetaGuardias
+    TarjetaGuardias,
+    TarjetaInscripciones
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

@@ -30,7 +30,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   historico: boolean = false;
 
   provinciaSelecionada: string;
-  permisosTarjeta: boolean = false;
+  permisosTarjeta: boolean = true;
   body: TurnosItems;
   bodyInicial: TurnosItems;
   idPrision;
@@ -248,7 +248,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
     this.guardarChecks();
     url = "turnos_updateConfiguracion";
     this.callSaveService(url);
-
+    this.showMessage("info", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.oficio.turnos.messageconfigturnos"));
   }
 
   callSaveService(url) {

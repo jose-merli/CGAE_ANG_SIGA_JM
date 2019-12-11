@@ -52,7 +52,7 @@ export class TarjetaColaGuardias implements OnInit {
   showTarjeta: boolean = true;
   ultimoLetrado;
   primerLetrado;
-  permisosTarjeta: boolean = false;
+  permisosTarjeta: boolean = true;
   guardiasNombre;
   existenGuardias: boolean = false;
   nombreApellidosPrimerLetrado;
@@ -129,11 +129,17 @@ export class TarjetaColaGuardias implements OnInit {
             }, () => {
               this.guardiasNombre = "";
               if (this.guardias != undefined && this.guardias.length > 0) {
-                this.existenGuardias = true;
-                this.guardias.forEach(element => {
-                  this.guardiasNombre += element.label + ","
-                });
-                this.guardiasNombre = this.guardiasNombre.substring(0, this.guardiasNombre.length - 1);
+                if (this.guardias.length > 5) {
+                  this.existenGuardias = true;
+                  this.guardiasNombre += this.guardias[0].label + "," + this.guardias[1].label + ","
+                    + this.guardias[2].label + "," + this.guardias[3].label + "," + this.guardias[4].label + "..."
+                } else {
+                  this.existenGuardias = true;
+                  this.guardias.forEach(element => {
+                    this.guardiasNombre += element.label + ","
+                  });
+                  this.guardiasNombre = this.guardiasNombre.substring(0, this.guardiasNombre.length - 1);
+                }
                 if (this.guardias != undefined && this.guardias.length > 0) {
                   this.turnosItem.idcomboguardias = this.guardias[0].value;
                   this.getMaterias();

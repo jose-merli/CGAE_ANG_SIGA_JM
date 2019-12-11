@@ -38,8 +38,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   areas: any[] = [];
   tiposturno: any[] = [];
   turnosItem2;
-  permisosTarjeta: boolean = false;
-  permisosTarjetaResumen: boolean = false;
+  permisosTarjeta: boolean = true;
+  permisosTarjetaResumen: boolean = true;
   zonas: any[] = [];
   subzonas: any[] = [];
   materias: any[] = [];
@@ -81,7 +81,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     if (this.turnosItem != undefined) {
       if (this.turnosItem.idturno != undefined) {
         this.body = this.turnosItem;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -312,7 +311,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
               () => {
                 // this.partidoJudicial = this.turnosItem.zona + "," + this.turnosItem.subzona;
                 this.body = this.turnosItem;
-                this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
               }
             );
         }
@@ -822,10 +820,16 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.turnosItem.nombre != undefined) this.turnosItem.nombre = this.turnosItem.nombre.trim();
-    if (this.turnosItem.abreviatura != undefined) this.turnosItem.abreviatura = this.turnosItem.abreviatura.trim();
-
-    if (this.turnosItem.idpartidapresupuestaria != null && this.turnosItem.idpartidapresupuestaria != "" && this.turnosItem.idzona != null && this.turnosItem.idzona != "" && this.turnosItem.idsubzona != null && this.turnosItem.idsubzona != "" &&
+    if (this.turnosItem.codigoext != undefined) {
+      this.turnosItem.codigoext = this.turnosItem.codigoext.trim();
+    }
+    if (this.turnosItem.nombre != undefined) {
+      this.turnosItem.nombre = this.turnosItem.nombre.trim();
+    }
+    if (this.turnosItem.abreviatura != undefined) {
+      this.turnosItem.abreviatura = this.turnosItem.abreviatura.trim();
+    }
+    if (this.turnosItem.nombre != undefined && this.turnosItem.nombre != "" && this.turnosItem.abreviatura != undefined && this.turnosItem.abreviatura != "" && this.turnosItem.idpartidapresupuestaria != null && this.turnosItem.idpartidapresupuestaria != "" && this.turnosItem.idzona != null && this.turnosItem.idzona != "" && this.turnosItem.idsubzona != null && this.turnosItem.idsubzona != "" &&
       this.turnosItem.idjurisdiccion != null && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idgrupofacturacion != null && this.turnosItem.idmateria != null && this.turnosItem.idmateria != "" &&
       this.turnosItem.idarea != null && this.turnosItem.idarea != "" && this.turnosItem.idtipoturno != null && this.turnosItem.idtipoturno != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))
     ) {

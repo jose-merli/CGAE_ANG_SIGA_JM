@@ -11,6 +11,7 @@ export class TurnosItems {
   idzona: string;
   idpersonaUltimo: string;
   zona: string;
+  codigoext: string;
   idordenacioncolas: string;
   pesosSeleccionadosTarjeta: string;
   idguardias: string;

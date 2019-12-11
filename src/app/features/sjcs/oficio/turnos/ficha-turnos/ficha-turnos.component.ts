@@ -16,6 +16,7 @@ export class FichaTurnosComponent implements OnInit {
 	filtrosConsulta;
 	idTurno: string;
 	turnosItem;
+	progressSpinner: boolean = false;
 	turnosItem2;
 	modoEdicion: boolean;
 	updateCombo: boolean;
@@ -60,13 +61,17 @@ export class FichaTurnosComponent implements OnInit {
 				key: 'tablacolaguardias',
 				activa: false
 			},
+			{
+				key: 'tarjetainscripciones',
+				activa: true
+			},
 
 		];
 	}
 
 	searchTurnos() {
 		// this.filtros.filtros.historico = event;
-		// this.progressSpinner = true;
+		this.progressSpinner = true;
 		let filtros: TurnosItems = new TurnosItems;
 		filtros.idturno = this.idTurno;
 		filtros.historico = false;
@@ -85,6 +90,7 @@ export class FichaTurnosComponent implements OnInit {
 				console.log(err);
 			}, () => {
 				this.persistenceService.setDatos(this.turnosItem2);
+				this.progressSpinner = false;
 			}
 		);
 	}
