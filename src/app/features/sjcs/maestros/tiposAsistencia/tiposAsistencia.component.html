@@ -150,7 +150,7 @@
                             <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                                 name="groupname"></p-checkbox>
                         </div>
-                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple && permisoEscritura}" (click)="isSelectMultiple()">
                             <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
                     </div>
                 </ng-template>
@@ -161,16 +161,16 @@
                 <button [disabled]="historico || !permisoEscritura" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
                     label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-                <button [disabled]="nuevo || editMode || !permisoEscritura" *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]"
-                    pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+                <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button"
+                    icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
-                <button [disabled]="nuevo || !permisoEscritura" *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton
-                    type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+                <button [disabled]="nuevo" *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo"
+                    iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
                 <button *ngIf="!historico" [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || editMode || !permisoEscritura || nuevo"
                     (click)="confirmDelete()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
 
-                <button *ngIf="historico" pButton [disabled]="(!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
+                <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0))"
                     (click)="activate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
 
                 <button pButton [disabled]="disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>

@@ -77,7 +77,7 @@
                   [panelStyle]="{ width: '100%' }" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato)"></p-multiSelect> -->
 
                 <p-multiSelect #multiSelect defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal" [options]="comboJurisdicciones"
-                  optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
+                  optionLabel="label" [disabled]="disableAll" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
                   [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato); openMultiSelect(dato)"></p-multiSelect>
               </div>
 

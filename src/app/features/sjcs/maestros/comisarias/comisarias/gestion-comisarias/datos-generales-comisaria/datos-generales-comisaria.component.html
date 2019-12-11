@@ -88,7 +88,7 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 1
               </label>
-              <input type="text" class="form-control" maxLength="9" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
+              <input type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
                 pInputText>
               <div *ngIf="!tlf1Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
@@ -99,7 +99,7 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 2
               </label>
-              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="9" [(ngModel)]="body.telefono2"
+              <input type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.telefono2"
                 (input)="changeTelefono2()" pInputText>
               <div *ngIf="!tlf2Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
@@ -121,7 +121,7 @@
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
               <div *ngIf="edicionEmail" class="row">
-                <div class="col-lg-9 col-md-8 mr-4 pr-0">
+                <div class="col-lg-10 mr-1 pr-0">
                   <input type="text" [disabled]="historico || !permisoEscritura" maxlength="50" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
                     style="width: 100%" />
                 </div>
@@ -133,7 +133,7 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
               </div>
               <div *ngIf="!edicionEmail" class="row">
-                <div class="col-6 mr-4 pr-0">
+                <div class="col-10 mr-1 pr-0">
                   <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
                 </div>
                 <div>

@@ -100,12 +100,12 @@ export class TablaDocumentacionejgComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      if (this.historico) {
-        this.persistenceService.setHistorico(!this.historico);
-      }
-      else {
-        this.persistenceService.setHistorico(this.historico);
-      }
+      // if (this.historico) {
+      this.persistenceService.setHistorico(this.historico);
+      // }
+      // else {
+      //   this.persistenceService.setHistorico(this.historico);
+      // }
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestiondocumentacionejg"]);
     } else {

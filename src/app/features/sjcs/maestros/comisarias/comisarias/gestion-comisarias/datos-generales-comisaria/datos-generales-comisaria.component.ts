@@ -47,7 +47,7 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
   progressSpinner: boolean = false;
 
   avisoMail: boolean = false
-  emailValido: boolean = false;
+  emailValido: boolean = true;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
   faxValido: boolean = true;
@@ -77,16 +77,9 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
       if (this.body.codigoPostal == null) {
         this.body.codigoPostal = "";
       }
-      if (this.bodyInicial.email != null && this.bodyInicial.email != undefined)
-        this.emailValido = true
+
       if (this.datos.visibleMovil == "1")
         this.movilCheck = true
-
-      if (this.body.email != undefined && this.body.email != "") {
-        this.edicionEmail = false;
-      } else {
-        this.edicionEmail = true;
-      }
 
       if (this.body != undefined && this.datos.nombrePoblacion != null) {
         this.getComboPoblacion(this.body.nombrePoblacion);
@@ -94,13 +87,11 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
         this.progressSpinner = false;
       }
 
-
+      this.changeEmail();
 
     } else {
       this.body = new ComisariaItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.edicionEmail = true;
-
     }
   }
 
@@ -294,9 +285,7 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = true
-    this.edicionEmail = true
-    this.avisoMail = false
+    this.changeEmail();
 
     this.tlf1Valido = true
     this.tlf2Valido = true
@@ -346,10 +335,15 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
       this.avisoMail = false
     }
     else {
-      this.emailValido = false
-      this.avisoMail = false
-      if (this.body.email != null && this.body.email != "")
+
+      if (this.body.email != null && this.body.email != "" && this.body.email != undefined) {
         this.avisoMail = true
+        this.emailValido = false
+      } else {
+        this.emailValido = true
+        this.avisoMail = false
+      }
+
     }
   }
 

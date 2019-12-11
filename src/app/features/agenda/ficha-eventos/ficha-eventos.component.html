@@ -98,20 +98,33 @@
             </div>
           </div>
           <div class="row mb-3">
-            <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
+            <div *ngIf="modoEdicionEventoByAgenda && !calendarioLaboralAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
               <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [showTime]="true" [disabledToday]="disabledToday"
                 [disabled]="tipoAccesoLectura || historico ||  isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStart($event)"
                 [utc]="false">
               </app-fecha>
             </div>
-            <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
+            <div *ngIf="calendarioLaboralAgenda" class="col-lg-6 col-md-6">
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
+              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [showTime]="false" [disabledToday]="disabledToday"
+                [disabled]="tipoAccesoLectura || historico ||  isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStart($event)"
+                [utc]="false">
+              </app-fecha>
+            </div>
+            <div *ngIf="!modoEdicionEventoByAgenda && !calendarioLaboralAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
               <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEventInput($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
                 [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="fillStartEvent($event)" [disabledToday]="disabledToday" [utc]="false"></app-fecha>
             </div>
-            <div class="col-lg-6 col-md-6">
+            <div *ngIf="calendarioLaboralAgenda" class="col-lg-6 col-md-6">
+              <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}}</label>
+              <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEndInput($event)" [showTime]="false" [minDate]="invalidDateMin"
+                [maxDate]="invalidDateMax" disabled (valueChangeSelected)="fillEnd($event)" [disabledToday]="true" [disabledDelete]="true"
+                [utc]="false"></app-fecha>
+            </div>
+            <div *ngIf="!calendarioLaboralAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
               <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEndInput($event)" [showTime]="true" [minDate]="invalidDateMin"
                 [maxDate]="invalidDateMax" [disabled]="tipoAccesoLectura || historico || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillEnd($event)"

@@ -122,7 +122,7 @@
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
               <div *ngIf="edicionEmail" class="row">
-                <div class="form-row col-9 mr-4 pr-0">
+                <div class="form-row col-10 mr-1 pr-0">
                   <input type="text" [disabled]="historico || !permisoEscritura" maxlength="50" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
                     style="width: 100%" />
                 </div>
@@ -134,7 +134,7 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
               </div>
               <div *ngIf="!edicionEmail" class="row">
-                <div class="col-3 mr-4 pr-0">
+                <div class="col-9 mr-4 pr-0">
                   <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
                 </div>
                 <div>

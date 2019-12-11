@@ -45,7 +45,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   progressSpinner: boolean = false;
   avisoMail: boolean = false
 
-  emailValido: boolean = false;
+  emailValido: boolean = true;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
   faxValido: boolean = true;
@@ -67,16 +67,12 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
     this.validateHistorical();
 
+
     if (this.modoEdicion) {
       this.body = this.datos;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       if (this.datos.visibleMovil == "1")
         this.movilCheck = true
-      if (this.body.email != undefined && this.body.email != "") {
-        this.edicionEmail = false;
-      } else {
-        this.edicionEmail = true;
-      }
 
       if (this.body != undefined && this.datos.nombrePoblacion != null) {
         this.getComboPoblacion(this.body.nombrePoblacion);
@@ -84,12 +80,14 @@ export class DatosGeneralesPrisionComponent implements OnInit {
         this.progressSpinner = false;
       }
 
+      this.changeEmail();
     } else {
       this.body = new PrisionItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.edicionEmail = true;
 
     }
+
+
   }
 
 
@@ -299,9 +297,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
-    this.edicionEmail = true
-    this.avisoMail = false
+    this.changeEmail();
     this.tlf1Valido = true
     this.tlf2Valido = true
     this.faxValido = true
@@ -338,11 +334,15 @@ export class DatosGeneralesPrisionComponent implements OnInit {
       this.avisoMail = false
     }
     else {
-      this.emailValido = false
-      this.avisoMail = false
 
-      if (this.body.email != null && this.body.email != "")
+      if (this.body.email != null && this.body.email != "" && this.body.email != undefined) {
         this.avisoMail = true
+        this.emailValido = false
+      } else {
+        this.emailValido = true
+        this.avisoMail = false
+      }
+
     }
   }
 

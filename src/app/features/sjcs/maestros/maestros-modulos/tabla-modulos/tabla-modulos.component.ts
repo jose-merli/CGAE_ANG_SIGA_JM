@@ -133,7 +133,7 @@ export class TablaModulosComponent implements OnInit {
 
   delete(selectedDatos) {
     let ModulosDelete = new ModulosObject();
-    ModulosDelete.modulosItem = this.selectedDatos
+    ModulosDelete.modulosItem = selectedDatos
     this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
       data => {
         this.selectedDatos = [];

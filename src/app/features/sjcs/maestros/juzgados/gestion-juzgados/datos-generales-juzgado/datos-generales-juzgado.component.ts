@@ -42,6 +42,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
+  edicionEmail: boolean = false;
   emailValido: boolean = true;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
@@ -276,6 +277,11 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     }
   }
 
+  editEmail() {
+    if (this.edicionEmail)
+      this.edicionEmail = false;
+    else this.edicionEmail = true;
+  }
 
   fillFechaCodigoEjis(event) {
     this.body.fechaCodigoEjis = event;

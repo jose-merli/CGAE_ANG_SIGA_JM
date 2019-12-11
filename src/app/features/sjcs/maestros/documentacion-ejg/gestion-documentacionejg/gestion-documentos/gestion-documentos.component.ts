@@ -58,7 +58,7 @@ export class GestionDocumentosComponent implements OnInit {
   ngOnInit() {
     this.getCols();
     // this.datos = this.persistenceService.getDatos();
-
+    this.historico = false;
     if (this.datos != null && this.datos != undefined) {
       this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
@@ -110,7 +110,7 @@ export class GestionDocumentosComponent implements OnInit {
 
   searchHistorical() {
     this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
+
     if (this.historico && this.permisos) {
 
       this.editElementDisabled();

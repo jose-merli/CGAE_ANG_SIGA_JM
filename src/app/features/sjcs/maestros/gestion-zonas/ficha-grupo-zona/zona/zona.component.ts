@@ -43,6 +43,8 @@ export class ZonaComponent implements OnInit {
   overlayVisible: boolean = false;
   selectionMode: string = "single";
 
+  permisoEscritura: boolean = true;
+
   //Resultados de la busqueda
   @Input() idZona;
   //Resultados de la busqueda
@@ -56,6 +58,11 @@ export class ZonaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
+
     this.getCols();
     this.getComboPartidosJudiciales();
 
@@ -555,20 +562,22 @@ export class ZonaComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.nuevo) {
-      this.selectMultiple = !this.selectMultiple;
+    if (this.permisoEscritura) {
+      if (!this.nuevo) {
+        this.selectMultiple = !this.selectMultiple;
 
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
+        if (!this.selectMultiple) {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectionMode = "single";
 
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "multiple";
+        } else {
+          this.selectAll = false;
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectionMode = "multiple";
 
+        }
       }
     }
 

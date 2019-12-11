@@ -56,7 +56,7 @@ export class GestionDocumentacionejgComponent implements OnInit {
       });
     this.dato = this.persistenceService.getDatos();
     if (this.dato != undefined || this.dato != null) {
-      this.searchDocumentos(this.persistenceService.getHistorico());
+      this.searchDocumentos(this.historico);
       this.modoEdicion = true;
       if (this.dato.fechabaja != null) {
         this.modoEdicion = true;
@@ -75,7 +75,7 @@ export class GestionDocumentacionejgComponent implements OnInit {
     this.idTipoDoc = this.filtros.idTipoDocumento;
     this.filtros.historico = this.persistenceService.getHistorico();
 
-    this.persistenceService.setHistorico(event);
+    // this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
     this.sigaServices.post("busquedaDocumentacionEjg_searchDocumentos", this.filtros).subscribe(
       n => {

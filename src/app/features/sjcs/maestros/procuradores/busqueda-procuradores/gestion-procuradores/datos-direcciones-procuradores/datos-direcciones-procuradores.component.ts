@@ -42,7 +42,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 	validDir = true;
 
 	avisoMail: boolean = false;
-	emailValido: boolean = false;
+	emailValido: boolean = true;
 	tlf1Valido: boolean = true;
 	tlf2Valido: boolean = true;
 	faxValido: boolean = true;
@@ -64,16 +64,10 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 
 		if (this.modoEdicion) {
 			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-			if (this.bodyInicial.email != null && this.bodyInicial.email != undefined) this.emailValido = true;
+			// if (this.bodyInicial.email != null && this.bodyInicial.email != undefined) this.emailValido = true;
 
 			if (this.bodyInicial.idProvincia != null && this.bodyInicial.idProvincia != undefined)
 				this.isDisabledPoblacion = false;
-
-			if (this.body.email != undefined && this.body.email != '') {
-				this.edicionEmail = false;
-			} else {
-				this.edicionEmail = true;
-			}
 
 			if (this.body != undefined && this.body.nombrePoblacion != null) {
 				this.getComboPoblacion(this.body.nombrePoblacion);
@@ -81,10 +75,13 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 			} else {
 				this.progressSpinner = false;
 			}
+
+			this.validateEmail();
+
 		} else {
 			this.body = new ProcuradoresItem();
 			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-			this.edicionEmail = true;
+
 		}
 	}
 
@@ -129,6 +126,25 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 			this.isDisabledPoblacion = true;
 		}
 		this.disabledSave();
+	}
+
+	validateEmail() {
+		if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
+			this.emailValido = true;
+			this.avisoMail = false;
+		} else {
+
+			if (this.body.email != null && this.body.email != '' && this.body.email != undefined) {
+				this.emailValido = false;
+				this.avisoMail = true;
+			} else {
+				this.emailValido = true;
+				this.avisoMail = false;
+			}
+
+			// this.avisoMail = false;
+			// if (this.body.email != null && this.body.email != '') this.avisoMail = true;
+		}
 	}
 
 	onChangePoblacion() {
@@ -230,14 +246,23 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		this.openFicha = !this.openFicha;
 	}
 
+
 	changeEmail() {
 		if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
 			this.emailValido = true;
 			this.avisoMail = false;
 		} else {
-			this.emailValido = false;
-			this.avisoMail = false;
-			if (this.body.email != null && this.body.email != '') this.avisoMail = true;
+
+			if (this.body.email != null && this.body.email != '' && this.body.email != undefined) {
+				this.emailValido = false;
+				this.avisoMail = true;
+			} else {
+				this.emailValido = true;
+				this.avisoMail = false;
+			}
+
+			// this.avisoMail = false;
+			// if (this.body.email != null && this.body.email != '') this.avisoMail = true;
 		}
 		this.disabledSave();
 	}

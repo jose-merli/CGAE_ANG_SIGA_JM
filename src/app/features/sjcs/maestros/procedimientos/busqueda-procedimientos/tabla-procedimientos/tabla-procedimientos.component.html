@@ -80,7 +80,7 @@
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname" [disabled]="!permisos"></p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple && permisos}" (click)="isSelectMultiple()">
             <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>

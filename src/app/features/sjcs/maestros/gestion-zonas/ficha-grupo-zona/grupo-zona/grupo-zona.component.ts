@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ZonasItem } from '../../../../../../models/sjcs/ZonasItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-grupo-zona',
@@ -18,16 +19,21 @@ export class GrupoZonaComponent implements OnInit {
   msgs;
 
   historico: boolean = false;
+  permisoEscritura: boolean = true;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   //Resultados de la busqueda
   @Input() idZona;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
 
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
 
     if (this.idZona != undefined) {
       this.getGrupoZona();
