@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { MenubarModule } from 'primeng/menubar';
 
-import { GestionTurnosModule } from '../oficio/turnos/turnos.module';
 import { routingOficio } from './oficio-routing.module';
+import { GestionTurnosModule } from './turnos/turnos.module';
 
 @NgModule({
         declarations: [],
@@ -12,7 +12,8 @@ import { routingOficio } from './oficio-routing.module';
                 CommonModule,
                 MenubarModule,
                 routingOficio,
-                GestionTurnosModule],
+                GestionTurnosModule
+        ],
 
         providers: []
 })
