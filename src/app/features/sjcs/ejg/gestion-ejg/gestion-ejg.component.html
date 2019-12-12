@@ -1,0 +1,16 @@
+<div class="ficha-comunicacion-container">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{'menu.justiciaGratuita' | translate}}
+            <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
+    </div>
+    <div>
+        <app-tarjeta-resumen-fija [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="icono"></app-tarjeta-resumen-fija>
+    </div>
+    <div>
+        <app-datos-generales-ejg></app-datos-generales-ejg>
+    </div>
+</div>
+<div class="mt-3 text-right main-button">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>

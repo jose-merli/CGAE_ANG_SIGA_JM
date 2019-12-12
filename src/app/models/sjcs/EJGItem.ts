@@ -18,6 +18,7 @@ export class EJGItem {
 
 
     dictamen: string;
+    dictamenSing: string;
     fundamentoCalif: string;
     fechaDictamenDesd: String;
     fechaDictamenHast: String;
@@ -62,6 +63,7 @@ export class EJGItem {
     numColegiado: string;
     apellidosYNombre: string; //lo dejo asi?
     tipoLetrado: string;
+    idPersona: string;
 
     turnoDes: string;
     // correoelectronico: string;

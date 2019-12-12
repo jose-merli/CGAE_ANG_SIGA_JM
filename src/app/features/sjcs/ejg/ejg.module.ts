@@ -22,6 +22,9 @@ import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.componen
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
 import { EJGComponent } from './ejg.component';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { GestionEjgComponent } from './gestion-ejg/gestion-ejg.component';
+import { DatosGeneralesEjgComponent } from './gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
 
 // import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
 // import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
@@ -50,15 +53,16 @@ import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegi
     FechaModule,
     ConfirmDialogModule,
     BusquedaColegiadoExpressModule,
+    TarjetaResumenFijaModule,
     // FichaGrupoZonaModule
 
   ],
   declarations: [
     FiltrosEjgComponent,
     TablaEjgComponent,
-    EJGComponent
-
-
+    EJGComponent,
+    GestionEjgComponent,
+    DatosGeneralesEjgComponent
   ],
   providers: [
     ImagePipe,

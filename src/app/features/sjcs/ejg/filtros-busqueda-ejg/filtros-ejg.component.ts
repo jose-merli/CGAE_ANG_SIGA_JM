@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TranslateService } from '../../../../commons/translate';
@@ -6,6 +6,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
+import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -20,7 +21,7 @@ export class FiltrosEjgComponent implements OnInit {
   textSelected: String = "{0} etiquetas seleccionadas";
   body: EJGItem = new EJGItem();
   bodyAux: EJGItem = new EJGItem();
-  nuevo: boolean = true; //ojo no poner a pelo
+  nuevo: boolean = true;
   inst2000: boolean;
   showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = true;
@@ -603,14 +604,18 @@ export class FiltrosEjgComponent implements OnInit {
     this.persistenceService.clearFiltros();
   }
   isNuevo() {
-
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
   clear() {
     this.msgs = [];
   }
+  // onChangeColegiado() {
+  //   this.body.idPersona = "";
+  // }
   getPersona(idPersona) {
-    if (idPersona != undefined && idPersona != "")
-      this.body.numColegiado = idPersona;
+    // if (idPersona != undefined && idPersona != "")
+    this.body.idPersona = idPersona;
   }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -620,6 +625,13 @@ export class FiltrosEjgComponent implements OnInit {
     else {
       return false;
 
+    }
+  }
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
     }
   }
 }

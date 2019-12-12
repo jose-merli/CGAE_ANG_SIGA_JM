@@ -1,0 +1,122 @@
+import { Component, OnInit, SimpleChanges, Input, HostListener } from '@angular/core';
+import { SigaServices } from '../../../../_services/siga.service';
+import { PersistenceService } from '../../../../_services/persistence.service';
+import { EJGItem } from '../../../../models/sjcs/EJGItem';
+import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
+import { Location } from '@angular/common'
+@Component({
+  selector: 'app-gestion-ejg',
+  templateUrl: './gestion-ejg.component.html',
+  styleUrls: ['./gestion-ejg.component.scss']
+})
+export class GestionEjgComponent implements OnInit {
+  // @Input() modoEdicion;
+  // @Output() modoEdicionSend = new EventEmitter<any>();
+  openFicha: boolean = true;
+  showTarjeta: boolean = true;
+  progressSpinner: boolean = false;
+  permisos;
+  nuevo;
+  titulo = "Hola";
+  icono = "clipboard";
+  msgs;
+  body: EJGItem = new EJGItem();
+  ejgObject: any;
+  datos;
+  idEJG;
+  filtros;
+  filtrosAux;
+
+  constructor(private sigaServices: SigaServices,
+    private route: ActivatedRoute,
+    private location: Location,
+    private persistenceService: PersistenceService) { }
+
+  ngOnInit() {
+    // this.getFichasPosibles();
+    this.route.queryParams
+      .subscribe(params => {
+        this.idEJG = params.idEJG
+        console.log(params);
+      });
+    this.body = this.persistenceService.getDatos();
+    if (this.body != undefined || this.body != null) {
+      this.datosEJG();
+      //  this.modoEdicion = true;
+      //  if (this.dato.fechabaja != null) {
+      //    this.modoEdicion = true;
+      //    this.persistenceService.setPermisos(false);
+      //  }
+    } else {
+      //  hemos pulsado nuevo
+      this.body = new EJGItem();
+      //  this.buscar = false;
+      //  this.modoEdicion = false;
+    }
+  }
+  datosEJG() {
+    this.body = this.persistenceService.getDatos();
+    this.idEJG = this.body.idEJG;
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_datosEJG", this.body).subscribe(
+      n => {
+        this.ejgObject = JSON.parse(n.body).ejgItems;
+        this.datos = [
+          {
+            label: "Año/Numero EJG",
+            value: this.ejgObject[0].numAnnioProcedimiento
+          },
+          {
+            label: "Apellidos, Nombre Solicitante",
+            value: this.ejgObject[0].nombreApeSolicitante
+          },
+
+          {
+            label: "Estado EJG",
+            value: this.ejgObject[0].estadoEJG
+          },
+          {
+            label: "Apellidos, Nombre Designado",
+            value: this.ejgObject[0].apellidosYNombre
+          },
+          {
+            label: "Dictamen",
+            value: this.ejgObject[0].dictamenSing
+          },
+          {
+            label: "Resolución CAJG",
+            value: this.ejgObject[0].resolucion
+          },
+          {
+            label: "Impugnación",
+            value: this.ejgObject[0].impugnacion
+          },
+        ];
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  clear() {
+    this.msgs = [];
+  }
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+  abreCierraFicha() {
+    this.openFicha = !this.openFicha;
+  }
+  onHideTarjeta() {
+    this.showTarjeta = !this.showTarjeta;
+  }
+  backTo() {
+    this.location.back();
+  }
+}
