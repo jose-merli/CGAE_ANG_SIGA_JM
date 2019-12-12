@@ -369,7 +369,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       idturno: this.turnosItem.idturno,
     };
     this.sigaServices
-      .post("turnos_tarjetaGuardarPesos", objPerfiles)
+      .post("turnos_tarjetaGuardarPesos2", objPerfiles)
       .subscribe(
         n => {
           this.showSuccess(this.translateService.instant("justiciaGratuita.oficio.turnos.guardadopesos"));
