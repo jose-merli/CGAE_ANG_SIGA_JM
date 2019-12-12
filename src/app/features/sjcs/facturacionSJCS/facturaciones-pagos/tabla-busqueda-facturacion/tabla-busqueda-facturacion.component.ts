@@ -18,7 +18,6 @@ import { checkAndUpdateElementInline } from '@angular/core/src/view/element';
 export class TablaBusquedaFacturacionComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
-  colsPartidoJudicial;
   msgs;
   buscadores = [];
   selectedItem: number = 10;
@@ -57,7 +56,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   seleccionaFila(evento) {
     if (!this.selectMultiple) {
-      this.persistenceService.setDatos(this.selectedDatos[0]);
+      this.persistenceService.setDatos(evento.data);
+      this.router.navigate(["/fichaFacturacion"]);
     } 
   }
 

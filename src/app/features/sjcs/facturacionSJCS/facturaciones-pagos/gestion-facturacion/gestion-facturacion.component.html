@@ -1,0 +1,15 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="datos-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' | translate}}</p>
+  </div>
+  <app-datos-facturacion></app-datos-facturacion>
+</div>
+
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

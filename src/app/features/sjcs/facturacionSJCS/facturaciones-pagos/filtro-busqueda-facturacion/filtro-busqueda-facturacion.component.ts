@@ -84,6 +84,12 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		  }
 	}
 
+	nuevo() {
+		this.persistenceService.setFiltros(this.filtros);
+		this.persistenceService.clearDatos();
+		this.router.navigate(["/fichaFacturacion"]);
+	}
+
 	ngAfterViewInit(): void {
 		this.getLenguage();
 	}

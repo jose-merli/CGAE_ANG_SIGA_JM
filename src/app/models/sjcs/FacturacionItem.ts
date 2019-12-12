@@ -14,6 +14,8 @@ export class FacturacionItem {
 	importePagado: String;
 	idPartidaPresupuestaria: String;
 	importePendiente: string;
-
+	prevision: string;
+	visible: string;
+	
   	constructor() {}
 }  
