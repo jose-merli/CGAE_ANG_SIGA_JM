@@ -5,6 +5,7 @@ import { FundamentoResolucionObject } from '../../../../../../models/sjcs/Fundam
 import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-fundamentosresolucion',
@@ -35,7 +36,8 @@ export class TablaFundamentosresolucionComponent implements OnInit {
 
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private router: Router, private confirmationService: ConfirmationService) { }
+    private translateService: TranslateService, private router: Router, private confirmationService: ConfirmationService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -48,6 +50,20 @@ export class TablaFundamentosresolucionComponent implements OnInit {
     }
 
     this.getCols();
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if(!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)){
+				this.msgs = this.commonsService.checkPermisoAccion();
+      }else{
+        this.confirmDelete();
+      }
+    }
   }
 
   confirmDelete() {
@@ -130,6 +146,20 @@ export class TablaFundamentosresolucionComponent implements OnInit {
 
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if(!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)){
+				this.msgs = this.commonsService.checkPermisoAccion();
+      }else{
+        this.activate();
+      }
+    }
+  }
+
   activate() {
 
     let fundamentosActivate = new FundamentoResolucionObject();
@@ -167,9 +197,9 @@ export class TablaFundamentosresolucionComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "codigoExt", header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno",  width: "20%" },
-      { field: "descripcionFundamento", header: "enviosMasivos.literal.descripcion",  width: "60%" },
-      { field: "descripcionResolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion",  width: "20%" }
+      { field: "codigoExt", header: "justiciaGratuita.maestros.fundamentosResolucion.codigoExterno", width: "20%" },
+      { field: "descripcionFundamento", header: "enviosMasivos.literal.descripcion", width: "60%" },
+      { field: "descripcionResolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion", width: "20%" }
 
     ];
     this.cols.forEach(it => this.buscadores.push(""))

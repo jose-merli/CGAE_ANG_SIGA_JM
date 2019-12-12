@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
 	selector: 'app-tabla-fundamentos-calificacion',
@@ -40,7 +41,8 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 		private translateService: TranslateService,
 		private router: Router,
 		private changeDetectorRef: ChangeDetectorRef,
-		private confirmationService: ConfirmationService
+		private confirmationService: ConfirmationService,
+		private commonsService: CommonsService
 	) { }
 
 	ngOnInit() {
@@ -51,6 +53,21 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 		this.historico = this.persistenceService.getHistorico();
 		this.initDatos = JSON.parse(JSON.stringify(this.datos));
 	}
+
+	checkPermisosDelete() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) || !this.permisoEscritura) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.confirmDelete();
+			}
+		}
+	}
+
 	confirmDelete() {
 		let mess = this.translateService.instant('messages.deleteConfirmation');
 		let icon = 'fa fa-edit';
@@ -71,6 +88,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			}
 		});
 	}
+
 	setItalic(dato) {
 		if (dato.fechabaja == null) return false;
 		else return true;
@@ -160,11 +178,13 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			}
 		}
 	}
+
 	onChangeRowsPerPages(event) {
 		this.selectedItem = event.value;
 		this.changeDetectorRef.detectChanges();
 		this.table.reset();
 	}
+
 	openTab(evento) {
 		if (this.persistenceService.getPermisos() != undefined) {
 			this.permisoEscritura = this.persistenceService.getPermisos();
@@ -216,6 +236,20 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 		);
 	}
 
+	checkPermisosActivate() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) || !this.permisoEscritura) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.activate();
+			}
+		}
+	}
+
 	activate() {
 		let fundamentoCalificacionActivate = new FundamentosCalificacionObject();
 		fundamentoCalificacionActivate.fundamentosCalificacionesItems = this.selectedDatos;
@@ -262,6 +296,7 @@ export class TablaFundamentosCalificacionComponent implements OnInit {
 			detail: msg
 		});
 	}
+
 	clear() {
 		this.msgs = [];
 	}

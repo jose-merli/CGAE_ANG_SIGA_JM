@@ -72,6 +72,20 @@ export class GestionProcuradoresComponent implements OnInit {
     this.datos.idProcurador = event.idProcurador;
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -153,6 +167,16 @@ export class GestionProcuradoresComponent implements OnInit {
 
     } else {
       return true;
+    }
+  }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
     }
   }
 

@@ -3,6 +3,7 @@ import { DocumentacionEjgItem } from '../../../../../../models/sjcs/Documentacio
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-gestion-tipodocumento',
@@ -16,6 +17,7 @@ export class GestionTipodocumentoComponent implements OnInit {
   bodyInicial;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
+  historico: boolean = false;
   permisos;
   msgs;
   nuevo;
@@ -28,7 +30,8 @@ export class GestionTipodocumentoComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -46,6 +49,8 @@ export class GestionTipodocumentoComponent implements OnInit {
     // } else {
     //   this.modoEdicion = true;
     // }
+
+    this.historico = this.persistenceService.getHistorico();
 
     if (this.persistenceService.getHistorico()) {
       this.modoEdicion = false;
@@ -68,7 +73,14 @@ export class GestionTipodocumentoComponent implements OnInit {
     // }
   }
 
-  ngAfterViewInit() {
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
   }
 
   rest() {
@@ -77,6 +89,21 @@ export class GestionTipodocumentoComponent implements OnInit {
       this.body = new DocumentacionEjgItem();
     }
   }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
 
   save() {
     this.progressSpinner = true;

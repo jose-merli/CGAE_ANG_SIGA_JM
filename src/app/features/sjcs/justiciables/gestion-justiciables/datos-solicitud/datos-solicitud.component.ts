@@ -20,7 +20,7 @@ import { Dialog } from '../../../../../../../node_modules/primeng/dialog';
 @Component({
 	selector: 'app-datos-solicitud',
 	templateUrl: './datos-solicitud.component.html',
-	styleUrls: [ './datos-solicitud.component.scss' ]
+	styleUrls: ['./datos-solicitud.component.scss']
 })
 export class DatosSolicitudComponent implements OnInit, OnChanges {
 	bodyInicial;
@@ -51,7 +51,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 		private commonsService: CommonsService,
 		private confirmationService: ConfirmationService,
 		private changeDetectorRef: ChangeDetectorRef
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.commonsService
@@ -165,6 +165,16 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 		}
 	}
 
+	checkPermisosRest() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			this.rest();
+		}
+	}
+
 	rest() {
 		if (!this.permisoEscritura) {
 			this.showMessage(
@@ -184,21 +194,31 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	}
 
 	getComboAutorizaAvisotel() {
-		this.comboAutorizaAvisotel = [ { label: 'No', value: '0' }, { label: 'Si', value: '1' } ];
+		this.comboAutorizaAvisotel = [{ label: 'No', value: '0' }, { label: 'Si', value: '1' }];
 
 		this.commonsService.arregloTildesCombo(this.comboAutorizaAvisotel);
 	}
 
 	getComboAutorizaEjg() {
-		this.comboAutorizaEjg = [ { label: 'No', value: '0' }, { label: 'Si', value: '1' } ];
+		this.comboAutorizaEjg = [{ label: 'No', value: '0' }, { label: 'Si', value: '1' }];
 
 		this.commonsService.arregloTildesCombo(this.comboAutorizaEjg);
 	}
 
 	getComboSolicitajg() {
-		this.comboSolicitajg = [ { label: 'No', value: '0' }, { label: 'Si', value: '1' } ];
+		this.comboSolicitajg = [{ label: 'No', value: '0' }, { label: 'Si', value: '1' }];
 
 		this.commonsService.arregloTildesCombo(this.comboSolicitajg);
+	}
+
+	checkPermisosSave() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			this.save();
+		}
 	}
 
 	save() {
@@ -286,7 +306,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 			accept: () => {
 				this.callServiceSave();
 			},
-			reject: () => {}
+			reject: () => { }
 		});
 	}
 

@@ -7,6 +7,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { TableModule } from 'primeng/table';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class TablaBusquedaAreasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
 
   ) { }
 
@@ -77,6 +79,23 @@ export class TablaBusquedaAreasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisos || (!this.selectMultiple || !this.selectAll) && selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+
+    }
+  }
+
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -138,8 +157,23 @@ export class TablaBusquedaAreasComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisos || selectedDatos.length == 0 || selectedDatos == undefined) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate(selectedDatos);
+      }
+    }
+  }
 
   activate(selectedDatos) {
+
     let AreasActivate = new AreasObject();
     AreasActivate.areasItems = selectedDatos
     this.sigaServices.post("areasMaterias_activateMaterias", AreasActivate).subscribe(
@@ -175,21 +209,22 @@ export class TablaBusquedaAreasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    this.selectMultiple = false;
+    if (this.permisos) {
+      this.selectMultiple = false;
 
-    if (this.selectAll === true) {
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-      } else {
+      if (this.selectAll === true) {
         this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+        if (this.historico) {
+          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        } else {
+          this.selectedDatos = this.datos;
+        }
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
       }
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
     }
-
   }
 
   searchAreas() {

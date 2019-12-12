@@ -18,6 +18,7 @@ import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SortEvent } from '../../../../../../../node_modules/primeng/api';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
 	selector: 'app-tabla-modulos',
@@ -60,7 +61,8 @@ export class TablaModulosComponent implements OnInit {
 		private router: Router,
 		private sigaServices: SigaServices,
 		private persistenceService: PersistenceService,
-		private confirmationService: ConfirmationService
+		private confirmationService: ConfirmationService,
+		private commonsService: CommonsService
 	) { }
 
 	ngOnInit() {
@@ -113,6 +115,20 @@ export class TablaModulosComponent implements OnInit {
 
 	}
 
+	checkPermisosDelete(selectedDatos) {
+		let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (!this.permisos || (!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.confirmDelete(selectedDatos);
+			}
+		}
+	}
+
 	confirmDelete(selectedDatos) {
 		let mess = this.translateService.instant(
 			"messages.deleteConfirmation"
@@ -138,6 +154,19 @@ export class TablaModulosComponent implements OnInit {
 		});
 	}
 
+	checkPermisosActivate(selectedDatos) {
+		let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (!this.permisos || selectedDatos.length == 0 || selectedDatos == undefined) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.delete(selectedDatos);
+			}
+		}
+	}
 
 	delete(selectedDatos) {
 		let ModulosDelete = new ModulosObject();

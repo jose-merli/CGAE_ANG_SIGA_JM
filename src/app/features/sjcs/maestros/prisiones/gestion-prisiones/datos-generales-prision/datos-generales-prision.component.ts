@@ -55,7 +55,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   @ViewChild("mailto") mailto;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
+    private translateService: TranslateService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -115,7 +115,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboProvincias);
+        this.commonsService.arregloTildesCombo(this.comboProvincias);
         this.progressSpinner = false;
 
       },
@@ -175,7 +175,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
           this.progressSpinner = false;
-          this.commonsServices.arregloTildesCombo(this.comboPoblacion);
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
 
         },
         error => {
@@ -217,6 +217,20 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     );
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -231,6 +245,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     }
 
   }
+
   trimeando() {
     this.body.nombre = this.body.nombre.trim()
     if (this.body.domicilio != null && this.body.domicilio != undefined)
@@ -295,6 +310,16 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.changeEmail();
@@ -312,7 +337,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
   openOutlook(dato) {
     let correo = dato.email;
-    this.commonsServices.openOutlook(correo);
+    this.commonsService.openOutlook(correo);
   }
 
   abreCierraFicha() {
@@ -329,7 +354,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   changeEmail() {
-    if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
+    if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
       this.emailValido = true
       this.avisoMail = false
     }
@@ -358,18 +383,18 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   changeTelefono1() {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+    this.tlf1Valido = this.commonsService.validateTelefono(this.body.telefono1);
   }
 
   changeTelefono2() {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+    this.tlf2Valido = this.commonsService.validateTelefono(this.body.telefono2);
   }
   changeFax() {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
+    this.faxValido = this.commonsService.validateFax(this.body.fax);
   }
 
   changeMovil() {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
+    this.mvlValido = this.commonsService.validateMovil(this.body.movil);
   }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;

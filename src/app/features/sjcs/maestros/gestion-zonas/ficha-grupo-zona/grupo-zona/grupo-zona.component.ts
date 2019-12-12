@@ -3,6 +3,7 @@ import { ZonasItem } from '../../../../../../models/sjcs/ZonasItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-grupo-zona',
@@ -27,7 +28,7 @@ export class GrupoZonaComponent implements OnInit {
   @Input() idZona;
 
   constructor(private sigaServices: SigaServices, private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -70,6 +71,16 @@ export class GrupoZonaComponent implements OnInit {
       );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.bodyInicial != undefined)
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -84,6 +95,20 @@ export class GrupoZonaComponent implements OnInit {
         this.historico = false;
       }
 
+    }
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
     }
   }
 

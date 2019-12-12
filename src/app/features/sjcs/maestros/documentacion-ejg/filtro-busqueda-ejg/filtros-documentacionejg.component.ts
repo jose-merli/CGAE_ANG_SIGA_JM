@@ -7,6 +7,7 @@ import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-c
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtros-documentacionejg',
@@ -33,7 +34,8 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -49,6 +51,16 @@ export class FiltrosdocumentacionejgComponent implements OnInit {
 
     } else {
       this.filtros = new DocumentacionEjgItem();
+    }
+  }
+
+  checkPermisosNewDoc() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newDoc();
     }
   }
 

@@ -41,9 +41,10 @@
     </div>
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="areasItem.historico" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="disabledSave() || areasItem.historico" (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="areasItem.historico" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="disabledSave() || areasItem.historico" (click)="checkPermisosSave()" pButton type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
