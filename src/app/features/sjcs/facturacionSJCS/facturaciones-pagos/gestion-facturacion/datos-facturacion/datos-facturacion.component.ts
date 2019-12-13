@@ -85,7 +85,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
       this.bodyAux=new FacturacionItem();
     } else {
       if(undefined!=this.idEstadoFacturacion){
-        if(this.idEstadoFacturacion=='10' || this.idEstadoFacturacion=='50'){
+        if(this.idEstadoFacturacion=='10'){
           this.cerrada=false;
         }else{
           this.cerrada=true;
@@ -199,30 +199,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 			}
 		);
   }
-
-  change(newValue) {
-		//evento que cambia el value de la fecha
-		if (!this.showTime) {
-			this.fechaSelectedFromCalendar = true;
-			this.value = new Date(newValue);
-			let year = this.value.getFullYear();
-			if (year >= year - 80 && year <= year + 20) {
-				if (this.minDate) {
-					if (this.value >= this.minDate) {
-						this.valueChangeSelected.emit(this.value);
-					} else {
-						this.borrarFecha();
-					}
-				} else {
-					this.valueChangeSelected.emit(this.value);
-				}
-			} else {
-				this.borrarFecha();
-			}
-		} else {
-			this.valueChangeSelected.emit(this.value);
-		}
-  }
   
   borrarFecha() {
 		this.value = null;
@@ -230,73 +206,10 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 		this.fechaSelectedFromCalendar = true;
 		this.calendar.onClearButtonClick("");
 	}
-
-  getLenguage() {
-		this.sigaService.get('usuario').subscribe((response) => {
-			this.currentLang = response.usuarioItem[0].idLenguaje;
-
-			switch (this.currentLang) {
-				case '1':
-					this.es = esCalendar;
-					break;
-				case '2':
-					this.es = catCalendar;
-					break;
-				case '3':
-					this.es = euCalendar;
-					break;
-				case '4':
-					this.es = glCalendar;
-					break;
-				default:
-					this.es = esCalendar;
-					break;
-			}
-		});
-  }
-    
-  ngAfterViewInit(): void {
-		this.getLenguage();
-	}
-
-	getRangeYear() {
-		let today = new Date();
-		let year = today.getFullYear();
-		this.yearRange = year - 80 + ':' + (year + 20);
-  }
-  
-  onHideDatosGenerales() {
-    this.showFichaFacturacion = !this.showFichaFacturacion;
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-  fillFechaDesde(event) {
-		this.body.fechaDesde = event;
-    if(this.body.fechaHasta < this.body.fechaDesde){
-      this.body.fechaHasta = undefined;
-    }
-    this.minDate=this.body.fechaDesde;
-	}
-
-	fillFechaHasta(event) {
-    this.body.fechaHasta = event;
-  }
-  
+ 
   save(){
     let url = "";
-    if (!this.cerrada && JSON.stringify(this.body) != JSON.stringify(this.bodyAux)){
+    if ((!this.cerrada && JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) || (this.checkRegularizar!=this.checkRegularizarInicial) || (this.checkVisible!=this.checkVisibleInicial)){
       if(undefined==this.body.regularizacion){
         this.body.regularizacion="0";
       }
@@ -360,9 +273,49 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     );
   }
 
+  ejecutar(){
+    if(this.modoEdicion || this.idEstadoFacturacion=='20'){
+    this.callEjecutarService();
+    }
+  }
+
+  callEjecutarService(){
+    this.progressSpinner=true;
+    this.sigaService.post("facturacionsjcs_ejecutarfacturacion", this.body.idFacturacion).subscribe(
+      data => {
+        this.idEstadoFacturacion='50';
+        this.modoEdicion=false;
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  disabledEjecutar(){
+    if(this.modoEdicion || this.idEstadoFacturacion=='20'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   disabledSave() {
     if(this.modoEdicion==true){
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) {
+
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined !=this.body.fechaHasta)) {
         return false;
       } else { 
         return true; 
@@ -441,10 +394,98 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     if (dato.fechabaja == null) return false;
     else return true;
   }
+
   getCols() {
     this.cols = [
       { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
       { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" }
     ];
+  }
+  
+  getLenguage() {
+		this.sigaService.get('usuario').subscribe((response) => {
+			this.currentLang = response.usuarioItem[0].idLenguaje;
+
+			switch (this.currentLang) {
+				case '1':
+					this.es = esCalendar;
+					break;
+				case '2':
+					this.es = catCalendar;
+					break;
+				case '3':
+					this.es = euCalendar;
+					break;
+				case '4':
+					this.es = glCalendar;
+					break;
+				default:
+					this.es = esCalendar;
+					break;
+			}
+		});
+  }
+    
+  ngAfterViewInit(): void {
+		this.getLenguage();
+	}
+
+	getRangeYear() {
+		let today = new Date();
+		let year = today.getFullYear();
+		this.yearRange = year - 80 + ':' + (year + 20);
+  }
+  
+  onHideDatosGenerales() {
+    this.showFichaFacturacion = !this.showFichaFacturacion;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  fillFechaDesde(event) {
+		this.body.fechaDesde = event;
+    if(this.body.fechaHasta < this.body.fechaDesde){
+      this.body.fechaHasta = undefined;
+    }
+    this.minDate=this.body.fechaDesde;
+	}
+
+	fillFechaHasta(event) {
+    this.body.fechaHasta = event;
+  }
+
+  change(newValue) {
+		//evento que cambia el value de la fecha
+		if (!this.showTime) {
+			this.fechaSelectedFromCalendar = true;
+			this.value = new Date(newValue);
+			let year = this.value.getFullYear();
+			if (year >= year - 80 && year <= year + 20) {
+				if (this.minDate) {
+					if (this.value >= this.minDate) {
+						this.valueChangeSelected.emit(this.value);
+					} else {
+						this.borrarFecha();
+					}
+				} else {
+					this.valueChangeSelected.emit(this.value);
+				}
+			} else {
+				this.borrarFecha();
+			}
+		} else {
+			this.valueChangeSelected.emit(this.value);
+		}
   }
 }

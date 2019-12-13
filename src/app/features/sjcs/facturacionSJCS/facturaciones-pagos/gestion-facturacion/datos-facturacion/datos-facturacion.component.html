@@ -94,7 +94,7 @@
   <div class="card-footer">
     <div class="text-right main-button">
       <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
-      <button pButton type="button" label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
+      <button (click)="ejecutar()" [disabled]='disabledEjecutar()' pButton type="button" label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
       <button pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"></button>
       <button pButton type="button" label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}"></button>
       <button (click)="restablecer()" [disabled]="disabledRestablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
