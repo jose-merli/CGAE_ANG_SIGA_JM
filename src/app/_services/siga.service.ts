@@ -718,6 +718,7 @@ export class SigaServices {
     dialogo_modelosComunicacion: "dialogoComunicacion/modelosSearch",
     dialogo_plantillasEnvio: "dialogoComunicacion/plantillasEnvio",
     dialogo_tipoEnvios: "dialogoComunicacion/tipoEnvios",
+    ...endpoints_guardia,
     dialogo_enviar: "dialogoComunicacion/enviar",
     dialogo_descargar: "dialogoComunicacion/descargar",
     dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
@@ -726,7 +727,6 @@ export class SigaServices {
     ...endpoints_generales,
     dialogo_obtenerCamposDinamicos:
       "dialogoComunicacion/obtenerCamposDinamicos",
-    ...endpoints_guardia,
     dialogo_envioTest: "dialogoComunicacion/envioTest",
     ...endpoints_justiciables,
     ...endpoints_oficio,

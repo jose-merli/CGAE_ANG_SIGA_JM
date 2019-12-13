@@ -64,7 +64,8 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasGuardia" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" [(ngModel)]="body.tipoDiasGuardia"
+              autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
             <!-- <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
               filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
               [disabled]="!permisoEscritura || historico" [showClear]="true">
@@ -85,9 +86,8 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasTurno" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
-
-
+            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasPeriodo" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [showClear]="true" autoDisplayFirst="true" [options]="comboUnidad"></p-dropdown>
           </div>
 
           <!-- DIAS DE SEPARACION ENTRE GUARDIAS -->
@@ -196,4 +196,9 @@
       <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
     </div>
   </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

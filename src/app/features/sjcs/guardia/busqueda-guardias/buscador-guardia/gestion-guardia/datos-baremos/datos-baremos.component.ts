@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { TreeNode } from '../../../../../../../utils/treenode';
+import { SigaServices } from '../../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-datos-baremos',
@@ -12,6 +14,7 @@ export class DatosBaremosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
+  modoEdicion: boolean = false;
   selectedFile
   selectedItem: number = 10;
   selectAll;
@@ -22,23 +25,22 @@ export class DatosBaremosComponent implements OnInit {
   historico: boolean = false;
   message;
   permisos: boolean = false;
-  datos = [];
-  initDatos;
+  datos = "";
   nuevo: boolean = false;
   progressSpinner: boolean = false;
-
   //Resultados de la busqueda
 
 
-  @ViewChild("table") tabla;
 
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    this.getCols();
 
+    if (this.modoEdicion) this.getBaremos()
   }
 
   setItalic(dato) {
@@ -46,65 +48,21 @@ export class DatosBaremosComponent implements OnInit {
     else return true;
   }
 
-  getCols() {
+  getBaremos() {
+    this.sigaServices.post(
+      "busquedaGuardias_getBaremos", this.persistenceService.getDatos()).subscribe(
+        data => {
+          JSON.parse(data.body).combooItems.forEach(it => {
+            this.datos += (it.label + ": " + it.value + "€ , ");
+          });
+          this.datos = this.datos.substring(0, this.datos.length - 2);
 
-    // this.cols = [
-    //   { field: "fsdf", header: "justiciaGratuita.guardia.gestion.numDias" },
-    //   { field: "sdf", header: "justiciaGratuita.guardia.gestion.tipoBaremo" },
-    //   { field: "sdf", header: "justiciaGratuita.guardia.gestion.diasAplicar" },
-    //   { field: "sdf", header: "justiciaGratuita.guardia.gestion.minimo" },
-    //   { field: "sdfsf", header: "justiciaGratuita.guardia.gestion.disp" },
-    //   { field: "sdfs", header: "justiciaGratuita.guardia.gestion.numPartir" },
-    //   { field: "sdfsd", header: "justiciaGratuita.guardia.gestion.maximo" },
-    //   { field: "sdf", header: "justiciaGratuita.guardia.gestion.porDia" },
-
-    // ];
-    this.cols = [
-      { field: 'name', header: 'name' },
-      { field: 'size', header: 'size' },
-      { field: 'type', header: 'type' }
-    ];
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
+        },
+        err => {
+          console.log(err);
+        },
+    )
   }
 
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
-  }
 
-  isSelectMultiple() {
-    if (this.permisos) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        // this.pressNew = false;
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-    // this.volver();
-  }
 }

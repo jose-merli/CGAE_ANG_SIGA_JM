@@ -1,8 +1,9 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, ViewChild } from '@angular/core';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { Location } from '@angular/common';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { DatosIncompatibilidadesComponent } from './datos-incompatibilidades/datos-incompatibilidades.component';
 
 
 @Component({
@@ -14,32 +15,16 @@ export class GestionGuardiaComponent implements OnInit {
 
 
 
-  datos: GuardiaItem = new GuardiaItem();
-
+  @Input() datos;
   modoEdicion: boolean;
   permisoEscritura: boolean = false;
   historico: boolean = false;
   progressSpinner: boolean = false;
   datosRedy = new EventEmitter<any>();
   titulo = "justiciaGratuita.oficio.turnos.inforesumen";
-  infoResumen = [
-    {
-      label: "Tarjeta",
-      value: "Resumen"
-    },
-    {
-      label: "Estado",
-      value: "Fijada"
-    },
-    {
-      label: "Día de la semana",
-      value: "Jueves"
-    },
-    {
-      label: "Pantalla",
-      value: "Gestión de Búsqueda guardias"
-    }
-  ]
+  infoResumen = [];
+
+
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices) { }
 
@@ -54,13 +39,17 @@ export class GestionGuardiaComponent implements OnInit {
     if (this.persistenceService.getPermisos())
       this.permisoEscritura = this.persistenceService.getPermisos();
 
+
   }
 
   search() {
-    this.sigaServices.getParam("busquedaGuardias_getGuardia", "?idGuardia=" + this.persistenceService.getDatos()).subscribe(
+    this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {
-
+        this.datos = JSON.parse(n.body);
         this.sigaServices.notifysendDatosRedy(n);
+        this.getDatosResumen();
+
         this.progressSpinner = false;
       },
       err => {
@@ -79,5 +68,31 @@ export class GestionGuardiaComponent implements OnInit {
     this.modoEdicion = event.modoEdicion;
     this.datos.idGuardia = event.idGuardia;
   }
+
+  getDatosResumen() {
+    this.sigaServices.post("busquedaGuardias_resumenGuardia", this.datos).subscribe(
+      r => {
+        this.infoResumen = [
+          {
+            label: "Turno",
+            value: JSON.parse(r.body).turno
+          },
+          {
+            label: "Guardia",
+            value: JSON.parse(r.body).nombre
+          },
+          {
+            label: "Tipo de guardia",
+            value: JSON.parse(r.body).idTipoGuardia
+          },
+          {
+            label: "Número de inscritos",
+            value: JSON.parse(r.body).letradosGuardia
+          }
+        ]
+      });
+
+  }
+
 
 }

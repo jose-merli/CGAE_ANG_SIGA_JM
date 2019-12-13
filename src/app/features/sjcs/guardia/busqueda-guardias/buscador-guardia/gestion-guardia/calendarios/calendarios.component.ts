@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SigaServices } from '../../../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-calendarios',
@@ -7,13 +9,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalendariosComponent implements OnInit {
 
+
+  modoEdicion: boolean = false;
   openFicha;
-  constructor() { }
+  datos = {
+    fechaDesde: "",
+    fechaHasta: "",
+    generado: ""
+  };
+  constructor(private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if (this.modoEdicion) this.getDatosCalendario();
   }
 
-  abreCierraFicha() {
 
+  getDatosCalendario() {
+    this.sigaServices.post(
+      "busquedaGuardias_getCalendario", this.persistenceService.getDatos()).subscribe(
+        data => {
+          if (data.body)
+            this.datos = JSON.parse(data.body);
+        },
+        err => {
+          console.log(err);
+        }
+      )
   }
+
 }

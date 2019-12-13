@@ -5,6 +5,7 @@ import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { GuardiaObject } from '../../../../../../models/guardia/GuardiaObject';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 
 @Component({
   selector: 'app-tabla-guardias',
@@ -86,7 +87,7 @@ export class TablaGuardiasComponent implements OnInit {
     this.cols = [
       { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "tipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
+      { field: "idTipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
       { field: "obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
       { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
       { field: "duracion", header: "dato.jgr.guardia.guardias.duracion" },
@@ -166,7 +167,10 @@ export class TablaGuardiasComponent implements OnInit {
 
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data.idGuardia);
+      this.datos = new GuardiaItem();
+      this.datos.idGuardia = evento.data.idGuardia;
+      this.datos.idTurno = evento.data.idTurno;
+      this.persistenceService.setDatos(this.datos);
       this.router.navigate(["/gestionGuardias"]);
     } else {
 

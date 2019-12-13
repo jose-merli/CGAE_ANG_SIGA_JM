@@ -18,4 +18,28 @@ export const datos_combos: any = {
         },
     ],
 
+    pesos_existentes: [
+        {
+            numero: "5",
+            por_filas: "Antigüedad en la cola",
+            orden: "ascendente"
+        },
+        {
+            numero: "0",
+            por_filas: "Apellidos y nombre",
+            orden: "ascendente"
+        },
+        {
+            numero: "0",
+            por_filas: "Nº Colegiado",
+            orden: "ascendente"
+        },
+        {
+            numero: "0",
+            por_filas: "Edad Colegiado",
+            orden: "ascendente"
+        },
+
+
+    ],
 }

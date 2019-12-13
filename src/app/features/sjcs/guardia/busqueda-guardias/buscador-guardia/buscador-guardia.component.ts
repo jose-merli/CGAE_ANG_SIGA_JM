@@ -84,7 +84,7 @@ export class BuscadorGuardiaComponent implements OnInit {
   }
 
   resetSelect() {
-    if (this.tabla != undefined) {
+    if (this.tabla) {
       this.tabla.selectedDatos = [];
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;

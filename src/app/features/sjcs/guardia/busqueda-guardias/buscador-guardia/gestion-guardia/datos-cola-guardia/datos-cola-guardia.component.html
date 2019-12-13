@@ -1,3 +1,5 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
 <div class="card">
   <div class="card-header header-ficha" (click)="abreCierraFicha()">
     <div *ngIf="!openFicha" class="form-row">
@@ -8,7 +10,7 @@
       </div>
       <div class="col-lg-11 col-md-10 cabeza">
         <div class="d-flex justify-content-end mb-1">
-          <label class="mr-auto title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
+          <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.turnos.coladeguardias' | translate }}</label>
         </div>
         <div class="d-flex justify-content-between sub">
           <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
@@ -31,8 +33,48 @@
       <div class="img-colegiado">
         <i class="fas fa-calendar-alt icon-ficha"></i>
       </div>
-      <label class="title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
+      <label class="title-ficha">{{ 'justiciaGratuita.oficio.turnos.coladeguardias' | translate }}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
+
+
+  <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <div class="row">
+
+      <div class="form-row">
+
+        <div class="form-group col-lg-12 col-md-12">
+          <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.coladeguardias" | translate }}</label>
+        </div>
+        <div class="col-3 form-group">
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
+            filterMatchMode="contains" [disabled]="historico || !permisoEscritura" [showClear]="true">
+          </p-dropdown>
+        </div>
+        <div class="col-3 form-group">
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <app-fecha [(value)]="fecha"></app-fecha>
+        </div>
+        <div class="col-12">
+          <app-tabla-dinamica [cols]="cols"></app-tabla-dinamica>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="openFicha" class="card-footer ">
+    <div class="text-right main-button ">
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="disabledSave()" (click)="save()" type="button" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo-alt" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

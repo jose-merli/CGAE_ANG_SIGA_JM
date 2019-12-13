@@ -1,8 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SigaServices } from '../../../../../../../_services/siga.service';
-import { datos_combos } from '../../../../../../../utils/datos_combos';
+import { Component, Input, OnInit } from '@angular/core';
+import { TranslateService } from '../../../../../../../commons/translate';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
+import { datos_combos } from '../../../../../../../utils/datos_combos';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../../_services/siga.service';
+import { element } from '../../../../../../../../../node_modules/protractor';
 
 @Component({
   selector: 'app-datos-calendarios-guardias',
@@ -21,43 +23,55 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   laborables;
   festividades;
   bodyInicial;
-
-
+  progressSpinner: boolean = false;
+  msgs = [];
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean = false;
 
   comboUnidad = datos_combos.comboUnidadesTiempo;
 
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private translateService: TranslateService
+  ) { }
 
   ngOnInit() {
-    if (this.modoEdicion)
-      this.openFicha = true;
 
     this.festividades = this.creaSemana();
     this.laborables = this.creaSemana();
-    this.sigaServices.datosRedy$.subscribe(
-      n => {
-        this.body = n;
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        if (n.seleccionFes && n.seleccionFes.length > 0)
-          Array.from(n.seleccionFes).forEach(element => {
-            this.festividades.forEach(it => {
-              if (it.label == element)
-                it.value = true;
+    if (this.modoEdicion)
+      this.sigaServices.datosRedy$.subscribe(
+        n => {
+          n = JSON.parse(n.body)
+
+          this.body.diasSeparacionGuardias = n.diasSeparacionGuardias;
+          this.body.tipoDiasPeriodo = n.tipoDiasPeriodo;
+          this.body.tipoDiasGuardia = n.tipoDiasGuardia;
+          this.body.diasPeriodo = n.diasPeriodo;
+          this.body.diasGuardia = n.diasGuardia;
+          this.body.idGuardia = n.idGuardia;
+          this.body.seleccionFestivos = n.seleccionFestivos;
+          this.body.seleccionLaborables = n.seleccionLaborables;
+          if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
+            this.body.seleccionFestivos.split("").forEach(element => {
+              this.festividades.forEach(it => {
+                if (it.label == element)
+                  it.value = true;
+              })
             });
-          });
-        if (n.seleccionLab && n.seleccionLab.length > 0)
-          Array.from(n.seleccionLab).forEach(element => {
-            this.laborables.forEach(it => {
-              if (it.label == element)
-                it.value = true;
-            })
-          });
-        this.changeFestividades();
-        this.changeLaborables();
-      });
+          if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
+            this.body.seleccionLaborables.split("").forEach(element => {
+              this.laborables.forEach(it => {
+                if (it.label == element)
+                  it.value = true;
+              })
+            });
+
+          this.changeFestividades();
+          this.changeLaborables();
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+        });
     if (this.persistenceService.getHistorico())
       this.historico = this.persistenceService.getHistorico();
   }
@@ -107,6 +121,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
           this.selectLaborables = false;
       })
     }
+
     this.infoDiasLab = "";
     this.laborables.forEach(it => {
       if (it.value)
@@ -169,8 +184,61 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     });
     return semana;
   }
-  save() { }
+  save() {
+    this.body.seleccionFestivos = "";
+    this.body.seleccionLaborables = "";
+    this.festividades.forEach(element => {
+      if (element.value)
+        this.body.seleccionFestivos += element.label;
+    })
+    this.laborables.forEach(element => {
+      if (element.value)
+        this.body.seleccionLaborables += element.label;
+    });
+    this.callSaveService();
+  }
 
+  callSaveService() {
+    this.progressSpinner = true
+    this.sigaServices.post("busquedaGuardias_updateGuardia", this.body).subscribe(
+      data => {
+
+        if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
+          this.body.seleccionFestivos.split("").forEach(element => {
+            this.festividades.forEach(it => {
+              if (it.label == element)
+                it.value = true;
+            })
+          });
+        if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
+          this.body.seleccionLaborables.split("").forEach(element => {
+            this.laborables.forEach(it => {
+              if (it.label == element)
+                it.value = true;
+            })
+          });
+
+        this.changeFestividades();
+        this.changeLaborables();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial))
     this.changeFestividades();
@@ -185,5 +253,17 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
     }
 
+  }
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

@@ -345,7 +345,7 @@ export class FiltrosGuardiaComponent implements OnInit {
       (this.filtros.partidaPresupuestaria == null || this.filtros.partidaPresupuestaria == undefined) &&
       (this.filtros.tipoTurno == null || this.filtros.tipoTurno == undefined) &&
       (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.tipoGuardia == null || this.filtros.tipoGuardia == undefined) &&
+      (this.filtros.idTipoGuardia == null || this.filtros.idTipoGuardia == undefined) &&
       (this.filtros.nombre == null || this.filtros.nombre == undefined || this.filtros.nombre.trim() == "" || this.filtros.nombre.trim().length < 3)) {
 
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));

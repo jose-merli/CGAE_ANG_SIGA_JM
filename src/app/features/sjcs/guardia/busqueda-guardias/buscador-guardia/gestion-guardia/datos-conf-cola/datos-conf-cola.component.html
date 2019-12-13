@@ -14,17 +14,10 @@
             <label class="mr-auto title-ficha">{{'justiciaGratuita.guardia.gestion.configuracionCola' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between sub">
-            <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
-              <strong>3 meses</strong>
-            </label>
-            <label>{{'justiciaGratuita.guardia.gestion.tipoDias' | translate}}:
-              <strong> L-S, Fest.- S-D</strong>
-            </label>
-            <label>{{'justiciaGratuita.guardia.gestion.diasSeparacionGuardias' | translate}}:
-              <strong>2</strong>
-            </label>
-            <label>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario' | translate}}:
-              <strong>NO</strong>
+            <strong> {{ordenacion}}</strong>
+            <label>{{'dato.jgr.guardia.guardias.letradosGuardia' | translate}}:
+              <strong>{{numeroletradosguardia}}</strong>
+
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
@@ -52,24 +45,29 @@
               <label>
                 <strong>{{"justiciaGratuita.guardia.gestion.porGrupos" | translate}} </strong>
               </label>
-              <p-checkbox [(ngModel)]="checkGrupos" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+              <p-checkbox [(ngModel)]="body.porGrupos" binary="true" [(ngModel)]="body.porGrupos" [disabled]="historico || !permisoEscritura"
+                (onChange)="cambiaGrupo()"></p-checkbox>
             </div>
 
             <!-- Letrados Guardia -->
             <div class="form-group col-lg-12 col-md-12 p-4">
-              <label>
-                {{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}}
+              <label *ngIf="!body.porGrupos">
+                {{"dato.jgr.guardia.guardias.letradosGuardia" | translate}}
               </label>
-              <input [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200" pInputText>
+              <label *ngIf="body.porGrupos">
+                {{"dato.jgr.guardia.guardias.minimoLetradosGrupo" | translate}}
+              </label>
+              <input [disabled]="!permisoEscritura || historico" [(ngModel)]="body.letradosGuardia" (keypress)="numberOnly($event)" type="text"
+                class="form-control" [maxLength]="200" pInputText>
             </div>
 
 
             <!-- Rotar Componentes automaticamente -->
             <div class="form-group col-12 row p-4 m-1">
               <label>
-                <strong>{{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}} (*)</strong>
+                <strong>{{"justiciaGratuita.guardia.gestion.rotarComponentesAuto" | translate}}</strong>
               </label>
-              <p-checkbox [(ngModel)]="checkComponentes" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+              <p-checkbox [(ngModel)]="body.rotarComponentes" binary="true" [disabled]="historico || !permisoEscritura || !body.porGrupos"></p-checkbox>
             </div>
           </div>
         </div>
@@ -85,7 +83,7 @@
                 (onTargetReorder)="moverSeleccionados($event)" (onMoveToSource)="cambioExistentes($event)" (onMoveToTarget)="cambioSeleccionados($event)"
                 targetFilterPlaceholder="{{ 'informesYcomunicaciones.modelosComunicaciones.perfiles.buscarPerfil' | translate }}"
                 [showSourceControls]="false" [showTargetControls]="true" [sourceStyle]="{ height: '200px' }" [targetStyle]="{ height: '200px' }"
-                [disabled]="soloLectura">
+                [disabled]="historico || !permisoEscritura">
                 <ng-template let-item pTemplate="item">
                   <div>{{ item.por_filas}} {{ item.orden}}</div>
                 </ng-template>
@@ -103,4 +101,9 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

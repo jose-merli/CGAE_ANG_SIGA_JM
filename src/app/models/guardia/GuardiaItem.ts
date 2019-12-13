@@ -2,8 +2,13 @@ export class GuardiaItem {
 
     idGuardia;
     idTurno;
+    idGuardiaPrincipal;
+    idTurnoPrincipal;
+    idGuardiaVinculada;
+    idTurnoVinculada;
     idOrdenacionColas;
     idPersonaUltimo;
+    idTipoGuardia
     turno;
     nombre;
     descripcion;
@@ -21,20 +26,21 @@ export class GuardiaItem {
     grupoFacturacion;
     partidaPresupuestaria;
     tipoTurno;
-    tipoGuardia;
     tipoDia;
     tipoDiasGuardia;
     tipoDiasPeriodo;
     letradosGuardia;
     letradosIns;
-    seleccionLab;
-    seleccionFes;
+    seleccionLaborables;
+    seleccionFestivos;
     diasPeriodo;
     diasGuardia;
     diasSeparacionGuardias;
     envioCentralita;
     porGrupos;
     fechabaja;
+    filtros;
+    rotarComponentes;
     historico: boolean;
     constructor() { }
 

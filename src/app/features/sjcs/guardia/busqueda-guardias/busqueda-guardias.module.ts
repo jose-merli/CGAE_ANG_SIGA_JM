@@ -3,7 +3,7 @@ import { BuscadorGuardiaComponent } from './buscador-guardia/buscador-guardia.co
 import { FiltrosGuardiaComponent } from './buscador-guardia/filtros-guardia/filtros-guardia.component';
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, TreeTable, TreeTableModule, PickList, PickListModule } from 'primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, CheckboxModule, DropdownModule, ButtonModule, GrowlModule, ConfirmationService, MenubarModule, TreeTable, TreeTableModule, PickList, PickListModule, ConfirmDialogModule } from 'primeng/primeng';
 import { FormsModule } from '@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { TableModule, RowToggler } from 'primeng/table';
@@ -32,6 +32,7 @@ import { DatosColaGuardiaComponent } from './buscador-guardia/gestion-guardia/da
 import { DatosInscripcionesComponent } from './buscador-guardia/gestion-guardia/datos-inscripciones/datos-inscripciones.component';
 import { DatosIncompatibilidadesComponent } from './buscador-guardia/gestion-guardia/datos-incompatibilidades/datos-incompatibilidades.component';
 import { CalendariosComponent } from './buscador-guardia/gestion-guardia/calendarios/calendarios.component';
+import { FechaModule } from '../../../../commons/fecha/fecha.module';
 
 @NgModule({
   imports: [
@@ -53,6 +54,10 @@ import { CalendariosComponent } from './buscador-guardia/gestion-guardia/calenda
     TarjetaResumenFijaModule,
     TablaDinamicaModule,
     PickListModule,
+    TablaDinamicaModule,
+    ConfirmDialogModule,
+    FechaModule,
+
 
   ],
   declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosInscripcionesComponent, DatosIncompatibilidadesComponent, CalendariosComponent],

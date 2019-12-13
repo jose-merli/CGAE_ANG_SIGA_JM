@@ -26,7 +26,7 @@
             <label>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario' | translate}}:
               <strong>NO</strong>
             </label>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
           </div>
         </div>
       </div>
@@ -43,13 +43,24 @@
         <div class="form-group col-lg-12 col-md-12">
           <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate }}</label>
         </div>
-
+        <!-- TURNO -->
+        <div class="form-group col-12">
+          <label>
+            {{"dato.jgr.guardia.guardias.turno" | translate}} (*)
+          </label>
+          <div class="p-0 col-6 form-group">
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTurno' [filter]="true"
+              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [disabled]="historico || !permisoEscritura || modoEdicion"
+              [showClear]="true">
+            </p-dropdown>
+          </div>
+        </div>
         <!-- Nombre -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
             {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
           </label>
-          <input [(ngModel)]="body.nombre" maxlength="30" maxlength="18" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
+          <input [(ngModel)]="body.nombre" maxlength="25" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
             [maxLength]="200" pInputText>
         </div>
 
@@ -58,18 +69,18 @@
           <label>
             {{"general.description" | translate}} (*)
           </label>
-          <input [(ngModel)]="body.descripcion" maxlength="150" [disabled]="!permisoEscritura || historico" type="text" class="form-control"
-            [maxLength]="200" pInputText>
+          <input [(ngModel)]="body.descripcion" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="300"
+            pInputText>
         </div>
 
         <!-- Tipo Guardia -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
-            {{"dato.jgr.guardia.guardias.tipoGuardia" | translate}} (*)
+            {{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}
           </label>
-          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.tipoGuardia'
-            (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTipoGuardia"
-            [disabled]="historico || !permisoEscritura" disabled="true" [showClear]="true">
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTipoGuardia'
+            [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTipoGuardia" [disabled]="historico || !permisoEscritura"
+            [showClear]="true">
           </p-dropdown>
         </div>
 
@@ -82,7 +93,7 @@
             </label>
           </div>
           <div class="col-3 p-0">
-            <p-checkbox [(ngModel)]="body.envioCentralita" id="checkMovil" binary="true" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura"></p-checkbox>
+            <p-checkbox [(ngModel)]="body.envioCentralita" id="checkMovil" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
           </div>
         </div>
 
@@ -113,14 +124,14 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.vincularCon" | translate}}
             </label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idTurno' (onChange)="onChangeTurno()"
-              [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [disabled]="historico || !permisoEscritura"
-              disabled="true" [showClear]="true">
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangeTurno()" [filter]="true"
+              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboTurno" [(ngModel)]='body.idTurnoPrincipal'
+              [disabled]="historico || !permisoEscritura" disabled="true" [showClear]="true">
             </p-dropdown>
           </div>
           <div class="col-6" style="margin-top: 20px">
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idGuardia' [filter]="true"
-              filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia"
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idGuardiaPrincipal'
+              [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia"
               disabled="true" [showClear]="true"></p-dropdown>
           </div>
 
@@ -205,12 +216,16 @@
       </div>
     </div>
 
-    <div *ngIf="openFicha" class="card-footer ">
-      <div class="text-right main-button ">
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
         <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>
