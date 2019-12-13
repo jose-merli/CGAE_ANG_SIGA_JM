@@ -28,5 +28,9 @@ export let endpoints_oficio: any = {
     turnos_eliminateColaGuardia: "oficio/turnos/eliminateColaGuardia",
     turnos_busquedaGuardias: "oficio/turnos/busquedaGuardias",
     turnos_eliminateGuardia: "oficio/turnos/eliminateGuardia",
-    turnos_updateUltimo: "oficio/turnos/updateUltimo"
+    turnos_updateUltimo: "oficio/turnos/updateUltimo",
+    //FIN DE TURNOS
+
+    inscripciones_comboTurnos: "oficio/inscripciones/comboTurnos"
+
 }

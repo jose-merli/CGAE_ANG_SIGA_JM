@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../_guards/auth.guards';
 import { TurnosComponent } from './turnos/busqueda-turnos.component';
 import { FichaTurnosComponent } from './turnos/ficha-turnos/ficha-turnos.component';
+import { InscripcionesComponent } from './inscripciones/busqueda-inscripciones.component';
 
 
 const routesOficio: Routes = [
@@ -14,6 +15,11 @@ const routesOficio: Routes = [
   {
     path: "gestionTurnos",
     component: FichaTurnosComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "inscripciones",
+    component: InscripcionesComponent,
     canActivate: [AuthGuard]
   },
 ];

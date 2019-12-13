@@ -5,6 +5,7 @@ import { MenubarModule } from 'primeng/menubar';
 
 import { routingOficio } from './oficio-routing.module';
 import { GestionTurnosModule } from './turnos/turnos.module';
+import { GestionInscripcionesModule } from './inscripciones/inscripciones.module';
 
 @NgModule({
         declarations: [],
@@ -12,7 +13,8 @@ import { GestionTurnosModule } from './turnos/turnos.module';
                 CommonModule,
                 MenubarModule,
                 routingOficio,
-                GestionTurnosModule
+                GestionTurnosModule,
+                GestionInscripcionesModule
         ],
 
         providers: []
