@@ -58,8 +58,7 @@
                 {{"censo.datosDireccion.literal.provincia" | translate}}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                disabled="true" [showClear]="true">
+                [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" disabled [showClear]="true">
               </p-dropdown>
             </div>
 

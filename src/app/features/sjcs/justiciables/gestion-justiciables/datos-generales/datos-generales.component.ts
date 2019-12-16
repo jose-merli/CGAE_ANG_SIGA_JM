@@ -706,6 +706,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       { label: "Separación de bienes", value: "S" }
     ];
 
+    this.commonsService.arregloTildesCombo(this.comboRegimenConyugal);
+
+
   }
 
   getComboTipoPersona() {
@@ -715,6 +718,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.comboTipoPersona = [
       { label: "Física", value: "F" },
       { label: "Jurídica", value: "J" }
+
     ];
 
     this.commonsService.arregloTildesCombo(this.comboTipoPersona);
@@ -860,8 +864,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion)
-
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
         },
         error => {
           this.progressSpinner = false;

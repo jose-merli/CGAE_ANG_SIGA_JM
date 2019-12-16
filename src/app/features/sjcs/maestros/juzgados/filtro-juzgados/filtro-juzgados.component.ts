@@ -108,6 +108,7 @@ export class FiltroJuzgadosComponent implements OnInit {
         n => {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
         },
         error => { },
         () => { }

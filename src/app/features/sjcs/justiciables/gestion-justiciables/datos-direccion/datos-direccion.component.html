@@ -39,7 +39,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'censo.datosDireccion.literal.tipo.direccion' | translate }} (*)</label>
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idTipodir"
-                [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="historyDisable"
+                [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [options]="comboPais" [disabled]="historyDisable"
                 (onChange)="onChangePais()">
               </p-dropdown>
             </div>
@@ -84,7 +84,7 @@
                 {{"censo.datosDireccion.literal.pais2" | translate}}
               </label>
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idPais" [showClear]="true"
-                [filter]="true" filterMatchMode="contains" [options]="comboPais">
+                [filter]="true" filterBy="label,labelSinTilde" [options]="comboPais">
               </p-dropdown>
             </div>
 
@@ -103,8 +103,7 @@
               </label>
               <!--  -->
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='provinciaSelecionada'
-                [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                [options]="comboProvincia">
+                [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" [options]="comboProvincia">
               </p-dropdown>
             </div>
 

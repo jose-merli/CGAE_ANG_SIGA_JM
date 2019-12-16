@@ -25,10 +25,6 @@ export class FiltrosProcuradoresComponent implements OnInit {
   resultadosPoblaciones: any;
 
   @Input() permisoEscritura;
-  @ViewChild("prueba") prueba;
-
-  comboProvincias = [];
-  comboPoblacion = [];
 
   @Output() isOpen = new EventEmitter<boolean>();
 

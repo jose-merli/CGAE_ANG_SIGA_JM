@@ -58,7 +58,7 @@
               <!-- EL DIV DE LOS NUEVOS -->
               <div *ngIf="dato.editable && col.field == 'nombre'">
                 <p-dropdown class="select-form" [(ngModel)]='selectedProcedimiento' [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  [options]="procedimientosElegir" [filter]="true" (onChange)="searchProc()" filterMatchMode="contains" filterBy="label,labelSinTilde"></p-dropdown>
+                  [options]="procedimientosElegir" [filter]="true" (onChange)="searchProc()" filterBy="label,labelSinTilde"></p-dropdown>
               </div>
               <div *ngIf="!setItalic(dato) && col.field != 'importe'">
                 <span>{{dato[col.field]}}</span>

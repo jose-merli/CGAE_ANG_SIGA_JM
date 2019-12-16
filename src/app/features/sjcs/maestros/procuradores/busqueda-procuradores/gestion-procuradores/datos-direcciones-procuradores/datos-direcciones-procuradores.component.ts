@@ -54,7 +54,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		private persistenceService: PersistenceService,
 		private sigaServices: SigaServices,
 		private translateService: TranslateService,
-		private commonsServices: CommonsService
+		private commonsService: CommonsService
 	) { }
 
 	ngOnInit() {
@@ -105,7 +105,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		this.sigaServices.get('busquedaComisarias_provinces').subscribe(
 			(n) => {
 				this.comboProvincias = n.combooItems;
-				this.commonsServices.arregloTildesCombo(this.comboProvincias);
+				this.commonsService.arregloTildesCombo(this.comboProvincias);
 				this.progressSpinner = false;
 			},
 			(err) => {
@@ -129,7 +129,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 	}
 
 	validateEmail() {
-		if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
+		if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
 			this.emailValido = true;
 			this.avisoMail = false;
 		} else {
@@ -188,6 +188,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 				(n) => {
 					this.isDisabledPoblacion = false;
 					this.comboPoblacion = n.combooItems;
+					this.commonsService.arregloTildesCombo(this.comboPoblacion);
 					this.progressSpinner = false;
 				},
 				(error) => {
@@ -239,7 +240,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 
 	openOutlook(dato) {
 		let correo = dato.email;
-		this.commonsServices.openOutlook(correo);
+		this.commonsService.openOutlook(correo);
 	}
 
 	abreCierraFicha() {
@@ -248,7 +249,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 
 
 	changeEmail() {
-		if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
+		if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
 			this.emailValido = true;
 			this.avisoMail = false;
 		} else {
@@ -268,17 +269,17 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 	}
 
 	changeTelefono1() {
-		this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+		this.tlf1Valido = this.commonsService.validateTelefono(this.body.telefono1);
 		this.disabledSave();
 	}
 
 	changeTelefono2() {
-		this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+		this.tlf2Valido = this.commonsService.validateTelefono(this.body.telefono2);
 		this.disabledSave();
 	}
 
 	changeFax() {
-		this.faxValido = this.commonsServices.validateFax(this.body.fax1);
+		this.faxValido = this.commonsService.validateFax(this.body.fax1);
 		this.disabledSave();
 	}
 

@@ -174,6 +174,8 @@ export class DatosGeneralesComisariaComponent implements OnInit, AfterViewInit {
         n => {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
+
           this.progressSpinner = false;
 
         },
