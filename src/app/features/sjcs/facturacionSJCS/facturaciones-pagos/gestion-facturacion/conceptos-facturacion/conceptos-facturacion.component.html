@@ -1,0 +1,26 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">         
+    <p class="title-module">
+      <i class="fas fa-cog icon-ficha"></i>
+      <label>{{'facturacionSJCS.facturacionesYPagos.datosFacturacion' | translate}} </label>
+      <i (click)="onHideDatosGenerales()" *ngIf="showFichaFacturacion" class="fa fa-angle-up float-right"></i>
+      <i (click)="onHideDatosGenerales()" *ngIf="!showFichaFacturacion" class="fa fa-angle-down float-right"></i>
+    </p>
+    <div *ngIf="showFichaFacturacion" class="module vista-avanzada">
+      <div class="form-row">
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer" *ngIf="showFiltroBusquedaFacturacion">
+    <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+
+    </div>
+  </div>
+</div>
+    

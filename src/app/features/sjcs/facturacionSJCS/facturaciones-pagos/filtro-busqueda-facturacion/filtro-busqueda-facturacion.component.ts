@@ -7,11 +7,9 @@ import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturacionItem } from "../../../../../models/sjcs/FacturacionItem";
-import { FacturacionDTO } from '../../../../../models/sjcs/FacturacionDTO';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
-import * as moment from 'moment';
 
 @Component({
 	selector: 'app-filtro-busqueda-facturacion',
@@ -68,13 +66,13 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.comboGrupoTurnos();
 		this.comboFactConceptos();
 
-		if (this.persistenceService.getPermisos() != undefined) {
+		if (undefined!=this.persistenceService.getPermisos()) {
 			this.permisos = this.persistenceService.getPermisos();
 		}
 	  
-		if (this.persistenceService.getFiltros() != undefined) {
+		if (undefined!=this.persistenceService.getFiltros()) {
 			this.filtros = this.persistenceService.getFiltros();
-			if (this.persistenceService.getHistorico() != undefined) {
+			if (undefined!=this.persistenceService.getHistorico()) {
 			  this.buscarFacturacion.emit(this.persistenceService.getHistorico());
 			}else {
 			  this.isBuscar();
@@ -235,17 +233,11 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	checkFilters() {
-		if ((this.filtros.idEstado != undefined && this.filtros.idEstado != null) ||
-		(this.filtros.fechaDesde != undefined && this.filtros.fechaDesde != null) ||
-		(this.filtros.fechaHasta != undefined && this.filtros.fechaHasta != null) ||
-		(this.filtros.idConcepto != undefined && this.filtros.idConcepto != null) ||
-		(this.filtros.idFacturacion != undefined && this.filtros.idFacturacion != null) ||
-		(this.filtros.idPartidaPresupuestaria != undefined && this.filtros.idPartidaPresupuestaria != null) ||
-		(this.filtros.nombre != undefined && this.filtros.nombre != null)) {
+		if ((undefined!=this.filtros.idEstado) || (undefined!=this.filtros.fechaDesde) || (undefined!=this.filtros.fechaHasta) ||
+		(undefined!=this.filtros.idConcepto) ||	(undefined!=this.filtros.idFacturacion) || (undefined!=this.filtros.idPartidaPresupuestaria) ||
+		(undefined!=this.filtros.nombre && this.filtros.nombre.trim()!="")) {
 
-			if((this.filtros.fechaDesde != undefined && this.filtros.fechaDesde != null) &&
-			(this.filtros.fechaHasta != undefined && this.filtros.fechaHasta != null)){
-				
+			if((undefined!=this.filtros.fechaDesde) && (undefined!=this.filtros.fechaHasta)){				
 				if(this.filtros.fechaDesde <= this.filtros.fechaHasta){
 					return true;
 				}else{

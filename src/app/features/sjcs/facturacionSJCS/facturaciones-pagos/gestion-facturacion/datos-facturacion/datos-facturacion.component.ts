@@ -209,7 +209,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
  
   save(){
     let url = "";
-    if ((!this.cerrada && JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) || (this.checkRegularizar!=this.checkRegularizarInicial) || (this.checkVisible!=this.checkVisibleInicial)){
+    if ((!this.cerrada && JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && this.body.nombre.trim()!="") || (this.checkRegularizar!=this.checkRegularizarInicial) || (this.checkVisible!=this.checkVisibleInicial)){
       if(undefined==this.body.regularizacion){
         this.body.regularizacion="0";
       }
@@ -357,7 +357,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
         this.historicoEstados();
         this.idEstadoFacturacion='50';
-        this.cerrada=false;
+        this.cerrada=true;
       },
       err => {
         if (JSON.parse(err.error).error.description != "") {
