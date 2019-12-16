@@ -13,28 +13,28 @@
         <div class="form-group col-lg-6 col-md-6">   
           <div>
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}} (*)</label>
-            <input type="text" maxlength="100" name="nombre" class="form-control" [(disabled)]='cerrada' [(ngModel)]='body.nombre' pInputText />
+            <input type="text" maxlength="100" name="nombre" class="form-control" [(disabled)]='cerrada || !permisos' [(ngModel)]='body.nombre' pInputText />
           </div>
           <div style="margin-top: 1em; margin-bottom: 1em;">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"  [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='cerrada'></p-dropdown>    
+            <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"  [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>    
           </div>
           <div style="display: flex;">
             <div class="form-group col-lg-6 col-md-6" style="margin-left: -1em;">
               <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}} (*)</label>
-              <app-fecha [utc]="false" [(value)]="body.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)" [(disabled)]='cerrada'></app-fecha>
+              <app-fecha [utc]="false" [(value)]="body.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)" [(disabled)]='cerrada || !permisos'></app-fecha>
             </div>  
             <div class="form-group col-lg-6 col-md-6" style="margin-left: 2em;">
               <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta' | translate}} (*)</label>
-              <app-fecha [utc]="false" [(value)]="body.fechaHasta" [minDate]="minDate" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)" [(disabled)]='cerrada'></app-fecha>
+              <app-fecha [utc]="false" [(value)]="body.fechaHasta" [minDate]="minDate" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)" [(disabled)]='cerrada || !permisos'></app-fecha>
             </div> 
           </div>
           <div style="display: flex;">
             <div class="form-group col-lg-6 col-md-6">
-              <p-checkbox [(ngModel)]='checkRegularizar' binary="true" label="{{'facturacionSJCS.facturacionesYPagos.regularizarFacturado' | translate}}" [(disabled)]='cerrada'></p-checkbox>
+              <p-checkbox [(ngModel)]='checkRegularizar' binary="true" label="{{'facturacionSJCS.facturacionesYPagos.regularizarFacturado' | translate}}" [(disabled)]='cerrada || !permisos'></p-checkbox>
             </div> 
             <div class="form-group col-lg-6 col-md-6">
-              <p-checkbox [(ngModel)]='checkVisible' binary="true" label="{{'facturacionSJCS.facturacionesYPagos.visible' | translate}}" [(disabled)]='cerrada'></p-checkbox>
+              <p-checkbox [(ngModel)]='checkVisible' binary="true" label="{{'facturacionSJCS.facturacionesYPagos.visible' | translate}}" [(disabled)]='cerrada || !permisos'></p-checkbox>
             </div>
           </div>
         </div>
@@ -93,12 +93,12 @@
     </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
-      <button (click)="ejecutar()" [disabled]='disabledEjecutar()' pButton type="button" label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
-      <button pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"></button>
-      <button pButton type="button" label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}"></button>
-      <button (click)="restablecer()" [disabled]="disabledRestablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
-      <button [disabled]="disabledSave()" (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      <button (click)="simular()" [disabled]="disabledSimular()  || !permisos" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
+      <button (click)="ejecutar()" [disabled]='disabledEjecutar() || !permisos' pButton type="button" label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
+      <button [disabled]="true" pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"></button>
+      <button (click)="reabrir()" pButton type="button" [disabled]='disabledReabrir() || !permisos' label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}"></button>
+      <button (click)="restablecer()" [disabled]="disabledRestablecer() || !permisos" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+      <button (click)="save()" [disabled]="disabledSave() || !permisos" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>
 </div>

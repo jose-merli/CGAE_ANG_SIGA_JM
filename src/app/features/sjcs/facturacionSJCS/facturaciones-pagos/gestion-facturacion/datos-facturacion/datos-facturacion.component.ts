@@ -246,6 +246,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     this.sigaService.post(url, this.body).subscribe(
       data => {
         if (!this.modoEdicion) {
+          this.idFacturacion=this.body.idFacturacion;
           this.modoEdicion = true;
         }
         
@@ -257,6 +258,11 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
+        this.historicoEstados();
+        this.idEstadoFacturacion='10';
+
+        this.cerrada=false;
       },
       err => {
 
@@ -274,8 +280,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   ejecutar(){
-    if(this.modoEdicion || this.idEstadoFacturacion=='20'){
-    this.callEjecutarService();
+    if((this.modoEdicion==true && this.idEstadoFacturacion=='10') || (this.modoEdicion==true && this.idEstadoFacturacion=='20')){
+      this.callEjecutarService();
     }
   }
 
@@ -283,11 +289,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     this.progressSpinner=true;
     this.sigaService.post("facturacionsjcs_ejecutarfacturacion", this.body.idFacturacion).subscribe(
       data => {
-        this.idEstadoFacturacion='50';
-        this.modoEdicion=false;
-
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+
+        this.historicoEstados();
+        this.idEstadoFacturacion='50';
+        this.cerrada=true;
       },
       err => {
 
@@ -304,8 +311,85 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     );
   }
 
+  reabrir(){
+    if(this.modoEdicion==true && this.idEstadoFacturacion=='20'){
+      this.callReabrirService();
+    }
+  }
+
+  callReabrirService(){
+    this.progressSpinner=true;
+    this.sigaService.post("facturacionsjcs_reabrirfacturacion", this.body.idFacturacion).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+
+        this.historicoEstados();
+        this.idEstadoFacturacion='10';
+        this.cerrada=false;
+      },
+      err => {
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  simular(){
+    if(this.modoEdicion==true && this.idEstadoFacturacion=='10'){
+      this.callSimularService();
+    }
+  }
+
+  callSimularService(){
+    this.progressSpinner=true;
+    this.sigaService.post("facturacionsjcs_simularfacturacion", this.body.idFacturacion).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+
+        this.historicoEstados();
+        this.idEstadoFacturacion='50';
+        this.cerrada=false;
+      },
+      err => {
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+  disabledSimular(){
+    if(this.modoEdicion==true && this.idEstadoFacturacion=='10'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  disabledReabrir(){
+    if(this.modoEdicion==true && this.idEstadoFacturacion=='20'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   disabledEjecutar(){
-    if(this.modoEdicion || this.idEstadoFacturacion=='20'){
+    if((this.modoEdicion==true && this.idEstadoFacturacion=='10') || (this.modoEdicion==true && this.idEstadoFacturacion=='20')){
       return false;
     }else{
       return true;
@@ -315,7 +399,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   disabledSave() {
     if(this.modoEdicion==true){
 
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined !=this.body.fechaHasta)) {
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined !=this.body.fechaHasta) && (this.idEstadoFacturacion=='10' || this.idEstadoFacturacion=='50')) {
         return false;
       } else { 
         return true; 
@@ -331,7 +415,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
   disabledRestablecer() {
     if(this.modoEdicion==true){
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) {
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (this.idEstadoFacturacion=='10' || this.idEstadoFacturacion=='50')) {
         return false;
       } else { 
         return true; 
@@ -351,6 +435,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
       this.checkRegularizar=false;
       this.checkVisible=false;
       this.estadosFacturacion=[];
+      this.cerrada=false;
     }else{
       this.body=JSON.parse(JSON.stringify(this.bodyAux));
 
@@ -384,8 +469,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
             this.checkVisible=false;
           }
         }
-
-        this.disabledSave();
       }
     }
 	}

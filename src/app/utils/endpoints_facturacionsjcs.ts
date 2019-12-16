@@ -9,5 +9,7 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_historicofacturacion: "facturacionsjcs/historicofacturacion",
     facturacionsjcs_saveFacturacion: "facturacionsjcs/saveFacturacion",
     facturacionsjcs_updateFacturacion: "facturacionsjcs/updateFacturacion",
-    facturacionsjcs_ejecutarfacturacion: "facturacionsjcs/ejecutarfacturacion"
+    facturacionsjcs_ejecutarfacturacion: "facturacionsjcs/ejecutarfacturacion",
+    facturacionsjcs_reabrirfacturacion: "facturacionsjcs/reabrirfacturacion",
+    facturacionsjcs_simularfacturacion: "facturacionsjcs/simularfacturacion"
 }
