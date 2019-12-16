@@ -46,16 +46,19 @@ export class FiltrosTurnos implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.filtros.historico = this.persistenceService.getHistorico();
-      // this.isBuscar();
-    }
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.isBuscar();
+      if (this.persistenceService.getHistorico() != undefined) {
+        this.busqueda.emit(this.persistenceService.getHistorico());
+      }
+      else {
+        this.isBuscar();
+      }
+    }else{
+      this.filtros = new TurnosItems;
     }
 
     this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(

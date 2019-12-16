@@ -49,6 +49,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   partidasJudiciales: any[] = [];
   isDisabledMateria: boolean = false;
   comboPJ
+  datos2;
   tipoturnoDescripcion;
   jurisdiccionDescripcion;
   partidaPresupuestaria;
@@ -64,7 +65,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       activa: false
     },
   ];
-  @Output() datos;
+  @Output() datosSend = new EventEmitter<any>();
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
@@ -110,16 +111,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           this.permisosTarjeta = true;
         }
       }).catch(error => console.error(error));
-
-    this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
-      .then(respuesta => {
-        this.permisosTarjetaResumen = respuesta;
-        if (this.permisosTarjetaResumen != true) {
-          this.permisosTarjetaResumen = false;
-        } else {
-          this.permisosTarjetaResumen = true;
-        }
-      }).catch(error => console.error(error));
+      
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
@@ -424,13 +416,12 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.partidasJudiciales[i].partidosJudiciales = [];
       this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
         let findPartido = this.comboPJ.find(x => x.value === partido);
-
-        this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
+        this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales.split(";").join("; ");
       });
       if (this.modoEdicion) {
 
 
-        this.datos = [
+        this.datos2 = [
           {
             label: "Nombre",
             value: this.turnosItem.nombre
@@ -468,6 +459,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             value: this.partidoJudicial
           },
         ]
+        this.datosSend.emit(this.datos2);
       }
     }
   }
@@ -475,7 +467,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     if (this.modoEdicion) {
 
 
-      this.datos = [
+      this.datos2 = [
         {
           label: "Nombre",
           value: this.turnosItem.nombre
@@ -513,6 +505,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           value: this.partidoJudicial
         },
       ]
+      this.datosSend.emit(this.datos2);
     }
   }
   partidoJudiciales() {

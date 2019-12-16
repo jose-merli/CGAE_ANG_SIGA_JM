@@ -92,6 +92,9 @@ export class TurnosComponent implements OnInit {
           this.tablapartida.tabla.reset();
           this.tablapartida.buscadores = this.tablapartida.buscadores.map(it => it = "");
         }
+        if (this.tablapartida != null && this.tablapartida != undefined) {
+          this.tablapartida.historico = event;
+        }
       },
       err => {
         this.progressSpinner = false;

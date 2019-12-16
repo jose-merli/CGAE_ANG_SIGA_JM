@@ -4,6 +4,8 @@ import { Location } from '@angular/common';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 
 @Component({
 	selector: 'app-ficha-turnos',
@@ -22,11 +24,21 @@ export class FichaTurnosComponent implements OnInit {
 	updateCombo: boolean;
 	idProcedimiento;
 	pesosSeleccionadosTarjeta: string;
-	datos: TurnosItems = new TurnosItems();
+	datos;
 	messageShow: string;
-	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService) { }
+	permisosTarjetaResumen: boolean = true;
+	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
 	ngOnInit() {
+		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
+		.then(respuesta => {
+		  this.permisosTarjetaResumen = respuesta;
+		  if (this.permisosTarjetaResumen != true) {
+			this.permisosTarjetaResumen = false;
+		  } else {
+			this.permisosTarjetaResumen = true;
+		  }
+		}).catch(error => console.error(error));
 		this.route.queryParams
 			.subscribe(params => {
 				this.idTurno = params.idturno
@@ -98,6 +110,10 @@ export class FichaTurnosComponent implements OnInit {
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
 		this.idTurno = event.idTurno
+	}
+
+	datosSend(event){
+		this.datos = event;
 	}
 
 	backTo() {

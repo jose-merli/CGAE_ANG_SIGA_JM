@@ -73,6 +73,7 @@ export class TablaTurnosComponent implements OnInit {
   ngOnInit() {
     this.selectedDatos = [];
     this.getCols();
+    this.historico = this.persistenceService.getHistorico();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -414,22 +415,7 @@ export class TablaTurnosComponent implements OnInit {
 
   searchPartida() {
     this.historico = !this.historico;
-    if (this.historico) {
-
-      this.editElementDisabled();
-      this.editMode = false;
-      this.nuevo = false;
-      this.selectMultiple = true;
-
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
-      this.selectionMode = "multiple";
-    }
-    else {
-      this.selectMultiple = false;
-      this.selectionMode = "single";
-    }
+    this.persistenceService.setHistorico(this.historico)
     this.searchPartidas.emit(this.historico);
     this.selectAll = false;
   }
@@ -515,7 +501,7 @@ export class TablaTurnosComponent implements OnInit {
 
 
   isSelectMultiple() {
-    if (this.permisos && !this.historico) {
+    if (this.permisos) {
       if (this.nuevo) this.datos.shift();
       this.editElementDisabled();
       this.editMode = false;
