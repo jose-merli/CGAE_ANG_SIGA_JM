@@ -5,7 +5,7 @@
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fa fa-address-card-o icon-ficha"></i>
+            <i class="far fa-address-card icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
@@ -34,7 +34,7 @@
       </div>
       <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
-          <i class="fa fa-address-card-o icon-ficha"></i>
+          <i class="far fa-address-card icon-ficha"></i>
         </div>
         <label class="title-ficha">Datos Generales</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -191,7 +191,7 @@
             <div class="form-group col-lg-12 col-md-12">
               <label style="text-align:center; font-weight: bold;">{{ 'justiciaGratuita.oficio.turnos.datosadicionales' | translate }}</label>
             </div>
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group col-lg-16 col-md-16">
               <label>
                 {{"general.boton.description" | translate}}
               </label>
@@ -199,7 +199,7 @@
                 [(ngModel)]="turnosItem.descripcion" maxLength="4000"></textarea>
             </div>
 
-            <div class="form-group col-lg-12 col-md-12">
+            <div class="form-group datosgeneralesajuste col-lg-16 col-md-16">
               <label>
                 {{"justiciaGratuita.oficio.turnos.requisitosacceso" | translate}}
               </label>

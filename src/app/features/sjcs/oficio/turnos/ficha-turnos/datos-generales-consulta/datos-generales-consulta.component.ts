@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges,ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -16,7 +16,8 @@ import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 @Component({
   selector: "app-datos-generales-consulta",
   templateUrl: "./datos-generales-consulta.component.html",
-  styleUrls: ["./datos-generales-consulta.component.scss"]
+  styleUrls: ["./datos-generales-consulta.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesTurnosComponent implements OnInit {
   // datos;

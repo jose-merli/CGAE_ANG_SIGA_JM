@@ -7,7 +7,7 @@
       <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.consultas.ficha.fichaConsulta" | translate }}
     </p>
   </div>
-  <app-tarjeta-resumen-fija *ngIf="permisosTarjetaResumen" chincheta="true" icono="cog" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+  <app-tarjeta-resumen-fija *ngIf="permisosTarjetaResumen" chincheta="true" icono="far fa-file-alt" titulo="justiciaGratuita.oficio.turnos.inforesumen"
   [datos]="datos"></app-tarjeta-resumen-fija>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-datos-generales-consulta [turnosItem]="turnosItem" (datosSend)="datosSend($event)" (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'"></app-datos-generales-consulta>
