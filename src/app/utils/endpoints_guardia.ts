@@ -16,11 +16,13 @@ export let endpoints_guardia: any = {
     busquedaGuardias_activateGuardias: "guardia/busquedaGuardia/activateGuardias",
     busquedaGuardias_getGuardia: "guardia/busquedaGuardia/detalleGuardia",
     busquedaGuardias_updateGuardia: "guardia/busquedaGuardia/updateGuardia",
+    busquedaGuardias_updateUltimo: "guardia/busquedaGuardia/ultimo",
     busquedaGuardias_createGuardia: "guardia/busquedaGuardia/createGuardia",
     busquedaGuardias_resumenGuardia: "guardia/busquedaGuardia/resumenGuardia",
     busquedaGuardias_resumenConfCola: "guardia/busquedaGuardia/resumenConfiguracionCola",
     busquedaGuardias_tarjetaIncompatibilidades: "guardia/busquedaGuardia/tarjetaIncompatibilidades",
     busquedaGuardias_getBaremos: "guardia/busquedaGuardia/getBaremos",
     busquedaGuardias_getCalendario: "guardia/busquedaGuardia/getCalendario",
+    busquedaGuardias_getColaGuardia: "guardia/busquedaGuardia/getColaGuardia",
 
 }

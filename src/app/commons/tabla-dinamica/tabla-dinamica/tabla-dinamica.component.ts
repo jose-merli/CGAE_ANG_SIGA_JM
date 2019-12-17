@@ -34,6 +34,10 @@ export class TablaDinamicaComponent implements OnInit {
 
   }
 
+  edit(evento) {
+    if (!evento.data.editable) { }
+
+  }
 
   sube(selected) {
     let index = this.datos.indexOf(selected);
@@ -68,5 +72,7 @@ export class TablaDinamicaComponent implements OnInit {
       }
     ];
   }
+  onChangeRowsPerPages(event) {
 
+  }
 }

@@ -85,11 +85,11 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   getDatosIncompatibilidades() {
     this.sigaServices.post(
-      "busquedaGuardias_tarjetaIncompatibilidades", this.persistenceService.getDatos()).subscribe(
+      "busquedaGuardias_tarjetaIncompatibilidades", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
           this.datos = JSON.parse(data.body).guardiaItems;
 
-          this.onChangeRowsPerPages({ value: 10 })
+          this.onChangeRowsPerPages({ value: 10 });
           this.progressSpinner = false;
 
         },

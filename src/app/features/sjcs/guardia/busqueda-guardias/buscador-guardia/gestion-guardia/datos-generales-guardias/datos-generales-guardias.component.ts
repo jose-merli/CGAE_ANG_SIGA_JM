@@ -44,18 +44,18 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     this.getComboTurno();
 
     if (this.persistenceService.getDatos()) {
-      this.progressSpinner = true;
+      // this.progressSpinner = true;
       this.sigaService.datosRedy$.subscribe(
         data => {
-          data = JSON.parse(data.body)
-          this.body.idGuardia = data.idGuardia
-          this.body.descripcionFacturacion = data.descripcionFacturacion
-          this.body.descripcion = data.descripcion
-          this.body.descripcionPago = data.descripcionPago
-          this.body.idTipoGuardia = data.idTipoGuardia
-          this.body.idTurno = data.idTurno
-          this.body.nombre = data.nombre
-          this.body.envioCentralita = data.envioCentralita
+          data = JSON.parse(data.body);
+          this.body.idGuardia = data.idGuardia;
+          this.body.descripcionFacturacion = data.descripcionFacturacion;
+          this.body.descripcion = data.descripcion;
+          this.body.descripcionPago = data.descripcionPago;
+          this.body.idTipoGuardia = data.idTipoGuardia;
+          this.body.idTurno = data.idTurno;
+          this.body.nombre = data.nombre;
+          this.body.envioCentralita = data.envioCentralita;
 
           //Informamos de la guardia de la que hereda si existe.
           if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
@@ -147,7 +147,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   getComboGuardia() {
-
     this.sigaService.getParam(
       "busquedaGuardia_guardia", "?idTurno=" + this.body.idTurnoPrincipal).subscribe(
         data => {

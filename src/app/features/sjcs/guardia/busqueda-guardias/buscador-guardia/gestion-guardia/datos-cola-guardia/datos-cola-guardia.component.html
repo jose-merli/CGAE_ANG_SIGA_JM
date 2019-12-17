@@ -48,17 +48,16 @@
           <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.coladeguardias" | translate }}</label>
         </div>
         <div class="col-3 form-group">
-          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
-            filterMatchMode="contains" [disabled]="historico || !permisoEscritura" [showClear]="true">
-          </p-dropdown>
+          <label>{{"justiciaGratuita.oficio.turnos.seleccionarguardia" | translate}}</label>
+          <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
         </div>
         <div class="col-3 form-group">
-          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <app-fecha [(value)]="fecha"></app-fecha>
+          <label>{{"justiciaGratuita.oficio.turnos.mostr arinscripciones" | translate}}</label>
+          <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
+            [disabled]="permisoEscritura || historico"></app-fecha>
         </div>
         <div class="col-12">
-          <app-tabla-dinamica [cols]="cols"></app-tabla-dinamica>
+          <app-tabla-dinamica [cols]="cols" [datos]="datos"></app-tabla-dinamica>
         </div>
 
       </div>
@@ -66,12 +65,14 @@
   </div>
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
-      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="disabledSave()" (click)="save()" type="button" label="{{ 'general.boton.guardar' | translate}}"></button>
-      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo-alt" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" (click)="double()" type="button" icon="fa fa-reply-all" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura || disabledSave()" (click)="zuletzt()" type="button" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-undo-alt" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" (click)="save()" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>

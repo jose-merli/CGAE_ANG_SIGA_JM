@@ -11,6 +11,9 @@ export class GuardiaItem {
     idTipoGuardia
     turno;
     nombre;
+    nombreApe;
+    apellido1;
+    apellido2;
     descripcion;
     descripcionPago;
     descripcionFacturacion;

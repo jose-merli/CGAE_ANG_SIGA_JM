@@ -48,8 +48,10 @@ export class DatosConfColaComponent implements OnInit {
 
   ngOnInit() {
     this.historico = this.persistenceService.getHistorico();
-    this.idGuardia = this.persistenceService.getDatos().idGuardia
-    this.idTurno = this.persistenceService.getDatos().idTurno
+    if (this.persistenceService.getDatos()) {
+      this.idGuardia = this.persistenceService.getDatos().idGuardia;
+      this.idTurno = this.persistenceService.getDatos().idTurno;
+    }
     if (this.modoEdicion) this.getResumen();
 
     this.sigaServices.datosRedy$.subscribe(
