@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, Input, Output } from '@angular/core';
 import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
 import { ComboItem } from '../../../../../../models/ComboItem';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../../utils/calendar';
@@ -29,15 +29,20 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 	maxDate: Date;
 	showTime: boolean;
 	calendar: Calendar;
-  first: boolean = true;
-  cerrada: boolean = false;
-  idFacturacion;
-  idEstadoFacturacion;
+  
+  @Input() cerrada;
+  @Input() idFacturacion;
+  @Input() idEstadoFacturacion;
+  @Input() modoEdicion;
+  @Input() permisos;
+
+  @Output() changeCerrada = new EventEmitter<boolean>();
+  @Output() changeModoEdicion = new EventEmitter<boolean>();
+  @Output() changeEstadoFacturacion = new EventEmitter<String>();
+  @Output() changeIdFacturacion = new EventEmitter<String>();
 
   showFichaFacturacion: boolean = true;
   progressSpinner: boolean = false;
-  modoEdicion: boolean = false;
-  permisos: boolean = false;
   checkRegularizar:boolean = false;
   checkVisible:boolean = false;
   checkRegularizarInicial:boolean = false;
@@ -56,43 +61,20 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
   constructor(private sigaService: SigaServices,
     private translateService: TranslateService,
-		private persistenceService: PersistenceService,
     private commonsService: CommonsService) { 
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
     this.progressSpinner = true;
-    this.getRangeYear();
-
-		if (undefined != this.persistenceService.getPermisos()) {
-			this.permisos = this.persistenceService.getPermisos();
-		}
-    
-    if (null !=this.persistenceService.getDatos()) {
-      this.bodyAux = this.persistenceService.getDatos();
-      this.idFacturacion=this.bodyAux.idFacturacion;
-      this.idEstadoFacturacion=this.bodyAux.idEstado;
-    }
+    this.getRangeYear();   
 
     this.comboPartidasPresupuestarias();
 
     if (undefined == this.idFacturacion) {
-      this.modoEdicion = false;
-      this.cerrada=false;
-      this.progressSpinner = true;
       this.body=new FacturacionItem();
       this.bodyAux=new FacturacionItem();
     } else {
-      if(undefined!=this.idEstadoFacturacion){
-        if(this.idEstadoFacturacion=='10'){
-          this.cerrada=false;
-        }else{
-          this.cerrada=true;
-        }
-      }
-
-      this.modoEdicion = true;
       this.cargaDatos();
     }
 
@@ -214,13 +196,13 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.body.regularizacion="0";
       }
 
-      if(this.checkRegularizar==true){
+      if(this.checkRegularizar){
         this.body.regularizacion="1";
       }else{
         this.body.regularizacion="0";
       }
 
-      if(this.checkVisible==true){
+      if(this.checkVisible){
         this.body.visible="1";
       }else{
         this.body.visible="0";
@@ -246,8 +228,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     this.sigaService.post(url, this.body).subscribe(
       data => {
         if (!this.modoEdicion) {
-          this.idFacturacion=this.body.idFacturacion;
-          this.modoEdicion = true;
+          this.body.idFacturacion=JSON.parse(data.body).id;
+
+          this.changeModoEdicion.emit(true);
         }
         
         this.checkRegularizarInicial=this.checkRegularizar;
@@ -260,16 +243,17 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.progressSpinner = false;
 
         this.historicoEstados();
-        this.idEstadoFacturacion='10';
-
-        this.cerrada=false;
+        this.changeIdFacturacion.emit(this.body.idFacturacion);
+        this.changeEstadoFacturacion.emit("10");
+        this.changeCerrada.emit(false);
       },
       err => {
-
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        if(undefined!=err){
+          if (JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
         }
         this.progressSpinner = false;
       },
@@ -280,7 +264,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   ejecutar(){
-    if((this.modoEdicion==true && this.idEstadoFacturacion=='10') || (this.modoEdicion==true && this.idEstadoFacturacion=='20')){
+    if((this.modoEdicion && this.idEstadoFacturacion=="10") || (this.modoEdicion && this.idEstadoFacturacion=="20")){
       this.callEjecutarService();
     }
   }
@@ -293,16 +277,17 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.progressSpinner = false;
 
         this.historicoEstados();
-        this.idEstadoFacturacion='50';
-        this.cerrada=true;
+        this.changeEstadoFacturacion.emit("50");
+        this.changeCerrada.emit(true);
       },
       err => {
-
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
+        if(undefined != err){
+          if (JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+      }
         this.progressSpinner = false;
       },
       () => {
@@ -312,7 +297,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   reabrir(){
-    if(this.modoEdicion==true && this.idEstadoFacturacion=='20'){
+    if(this.modoEdicion && this.idEstadoFacturacion=="20"){
       this.callReabrirService();
     }
   }
@@ -325,14 +310,16 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.progressSpinner = false;
 
         this.historicoEstados();
-        this.idEstadoFacturacion='10';
-        this.cerrada=false;
+        this.changeEstadoFacturacion.emit("10");
+        this.changeCerrada.emit(false);
       },
       err => {
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        if(undefined!=err){
+          if (JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
         }
         this.progressSpinner = false;
       },
@@ -343,7 +330,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   simular(){
-    if(this.modoEdicion==true && this.idEstadoFacturacion=='10'){
+    if(this.modoEdicion && this.idEstadoFacturacion=="10"){
       this.callSimularService();
     }
   }
@@ -356,14 +343,16 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.progressSpinner = false;
 
         this.historicoEstados();
-        this.idEstadoFacturacion='50';
-        this.cerrada=true;
+        this.changeEstadoFacturacion.emit("50");
+        this.changeCerrada.emit(true);
       },
       err => {
-        if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        if(undefined!=err){
+          if (JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
         }
         this.progressSpinner = false;
       },
@@ -373,7 +362,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     );
   }
   disabledSimular(){
-    if(this.modoEdicion==true && this.idEstadoFacturacion=='10'){
+    if(this.modoEdicion && this.idEstadoFacturacion=="10"){
       return false;
     }else{
       return true;
@@ -381,7 +370,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledReabrir(){
-    if(this.modoEdicion==true && this.idEstadoFacturacion=='20'){
+    if(this.modoEdicion && this.idEstadoFacturacion=="20"){
       return false;
     }else{
       return true;
@@ -389,7 +378,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledEjecutar(){
-    if((this.modoEdicion==true && this.idEstadoFacturacion=='10') || (this.modoEdicion==true && this.idEstadoFacturacion=='20')){
+    if((this.modoEdicion && this.idEstadoFacturacion=="10") || (this.modoEdicion && this.idEstadoFacturacion=="20")){
       return false;
     }else{
       return true;
@@ -397,9 +386,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledSave() {
-    if(this.modoEdicion==true){
+    if(this.modoEdicion){
 
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined !=this.body.fechaHasta) && (this.idEstadoFacturacion=='10' || this.idEstadoFacturacion=='50')) {
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined !=this.body.fechaHasta) && (this.idEstadoFacturacion=="10" || this.idEstadoFacturacion=="50")) {
         return false;
       } else { 
         return true; 
@@ -414,8 +403,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledRestablecer() {
-    if(this.modoEdicion==true){
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (this.idEstadoFacturacion=='10' || this.idEstadoFacturacion=='50')) {
+    if(this.modoEdicion){
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (this.idEstadoFacturacion=="10" || this.idEstadoFacturacion=="50")) {
         return false;
       } else { 
         return true; 
@@ -430,12 +419,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   restablecer(){
-    if(this.modoEdicion==false){
+    if(this.modoEdicion){
       this.body = new FacturacionItem();
       this.checkRegularizar=false;
       this.checkVisible=false;
       this.estadosFacturacion=[];
-      this.cerrada=false;
+      this.changeCerrada.emit(false);
     }else{
       this.body=JSON.parse(JSON.stringify(this.bodyAux));
 
