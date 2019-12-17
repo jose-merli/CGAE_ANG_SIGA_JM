@@ -7,29 +7,29 @@ export class EJGItem {
     tipoEJG: string;
     tipoEJGColegio: string;
     creadoDesde: string;
-    fechaAperturaDesd: String;
-    fechaAperturaHast: String;
+    fechaAperturaDesd: Date;
+    fechaAperturaHast: Date;
     fechaApertura: Date;
     estadoEJG: string;
-    fechaEstadoDesd: String;
-    fechaEstadoHast: String;
-    fechaLimiteDesd: String;
-    fechaLimiteHast: String;
+    fechaEstadoDesd: Date;
+    fechaEstadoHast: Date;
+    fechaLimiteDesd: Date;
+    fechaLimiteHast: Date;
 
 
     dictamen: string;
     dictamenSing: string;
     fundamentoCalif: string;
-    fechaDictamenDesd: String;
-    fechaDictamenHast: String;
+    fechaDictamenDesd: Date;
+    fechaDictamenHast: Date;
     resolucion: string;
     fundamentoJuridico: string;
-    fechaResolucionDesd: String;
-    fechaResolucionHast: String;
+    fechaResolucionDesd: Date;
+    fechaResolucionHast: Date;
     impugnacion: string;
     fundamentoImpuganacion: string;
-    fechaImpugnacionDesd: String;
-    fechaImpugnacionHast: String;
+    fechaImpugnacionDesd: Date;
+    fechaImpugnacionHast: Date;
 
     juzgado: string;
     asunto: string;
@@ -45,8 +45,8 @@ export class EJGItem {
     annioActa: string;
     numActa: string;
     ponente: string;
-    fechaPonenteDesd: String;
-    fechaPonenteHast: String;
+    fechaPonenteDesd: Date;
+    fechaPonenteHast: Date;
     numRegRemesa: string;
     numRegRemesa1: string;
     numRegRemesa2: string;
@@ -61,11 +61,15 @@ export class EJGItem {
     turno: string;
     guardia: string;
     numColegiado: string;
-    apellidosYNombre: string; //lo dejo asi?
+    apellidosYNombre: string;
     tipoLetrado: string;
     idPersona: string;
-
+    prestacion: string;
     turnoDes: string;
+    anioexpediente: string;
+    numeroexpediente: string;
+    fechapresentacion: Date;
+    fechalimitepresentacion: Date;
     // correoelectronico: string;
     // fechanacimiento: Date;
     // idInstitucion: String;

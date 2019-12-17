@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges, Input, HostListener } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, HostListener, Output } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
@@ -11,7 +11,10 @@ import { Location } from '@angular/common'
 })
 export class GestionEjgComponent implements OnInit {
   // @Input() modoEdicion;
+  @Output() modoEdicion;
+  // @Output() body;
   // @Output() modoEdicionSend = new EventEmitter<any>();
+  // modoEdicion: boolean;
   openFicha: boolean = true;
   showTarjeta: boolean = true;
   progressSpinner: boolean = false;
@@ -42,7 +45,7 @@ export class GestionEjgComponent implements OnInit {
     this.body = this.persistenceService.getDatos();
     if (this.body != undefined || this.body != null) {
       this.datosEJG();
-      //  this.modoEdicion = true;
+      this.modoEdicion = true;
       //  if (this.dato.fechabaja != null) {
       //    this.modoEdicion = true;
       //    this.persistenceService.setPermisos(false);
@@ -51,7 +54,7 @@ export class GestionEjgComponent implements OnInit {
       //  hemos pulsado nuevo
       this.body = new EJGItem();
       //  this.buscar = false;
-      //  this.modoEdicion = false;
+      this.modoEdicion = false;
     }
   }
   datosEJG() {
@@ -101,6 +104,10 @@ export class GestionEjgComponent implements OnInit {
   }
   clear() {
     this.msgs = [];
+  }
+  modoEdicionSend(event) {
+    this.modoEdicion = event.modoEdicion;
+    this.idEJG = event.idEJG
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];

@@ -20,7 +20,6 @@ export class FiltrosEjgComponent implements OnInit {
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
   body: EJGItem = new EJGItem();
-  bodyAux: EJGItem = new EJGItem();
   nuevo: boolean = true;
   inst2000: boolean;
   showdatosIdentificacion: boolean = true;
@@ -53,6 +52,8 @@ export class FiltrosEjgComponent implements OnInit {
   comboRol = [];
   comboJuzgado = [];
   institucionActual;
+  maxDate;
+  minDate;
 
   isDisabledFundamentosJurid: boolean = true;
   isDisabledFundamentosCalif: boolean = true;
@@ -74,6 +75,7 @@ export class FiltrosEjgComponent implements OnInit {
 
 
   ngOnInit() {
+
     this.getCombos();
 
     if (this.persistenceService.getPermisos() != undefined) {
@@ -82,10 +84,24 @@ export class FiltrosEjgComponent implements OnInit {
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
-
-      if (this.persistenceService.getFiltrosAux() != undefined) {
-        this.bodyAux = this.persistenceService.getFiltrosAux(); //SEGURO??
-      }
+      // let prueba = this.persistenceService.getFiltrosAux();
+      // if (this.body.fechaAperturaDesd != undefined)
+      //   this.body.fechaAperturaDesd = new Date(this.body.fechaAperturaDesd);
+      // if (this.body.fechaAperturaHast != undefined)
+      //   this.body.fechaAperturaHast = new Date(this.body.fechaAperturaHast);
+      // this.filtros.bodyAux.fechaAperturaDesd = this.transformDate(this.filtros.bodyAux.fechaAperturaDesd);
+      this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
+      this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
+      this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
+      this.body.fechaEstadoHast = this.transformDate(this.body.fechaEstadoHast);
+      this.body.fechaLimiteDesd = this.transformDate(this.body.fechaLimiteDesd);
+      this.body.fechaLimiteHast = this.transformDate(this.body.fechaLimiteHast);
+      this.body.fechaDictamenDesd = this.transformDate(this.body.fechaDictamenDesd);
+      this.body.fechaDictamenHast = this.transformDate(this.body.fechaDictamenHast);
+      this.body.fechaImpugnacionDesd = this.transformDate(this.body.fechaImpugnacionDesd);
+      this.body.fechaImpugnacionHast = this.transformDate(this.body.fechaImpugnacionHast);
+      this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
+      this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
@@ -93,7 +109,6 @@ export class FiltrosEjgComponent implements OnInit {
 
     } else {
       this.body = new EJGItem();
-      this.bodyAux = new EJGItem();
     }
     this.body.annio = new Date().getFullYear().toString();
   }
@@ -447,6 +462,7 @@ export class FiltrosEjgComponent implements OnInit {
     this.body.fechaAperturaDesd = event;
   }
   fillFechaAperturaHast(event) {
+
     this.body.fechaAperturaHast = event;
   }
   fillFechaEstadoDesd(event) {
@@ -471,8 +487,8 @@ export class FiltrosEjgComponent implements OnInit {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
-      let fechaDesde = fechaInputDesde.getTime();
-      let fechaHasta = fechainputHasta.getTime();
+      let fechaDesde = new Date(fechaInputDesde).getTime();
+      let fechaHasta = new Date(fechainputHasta).getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
       if (msRangoFechas < 0) fechainputHasta = undefined;
@@ -488,8 +504,8 @@ export class FiltrosEjgComponent implements OnInit {
       let one_day = 1000 * 60 * 60 * 24;
 
       // convertir fechas en milisegundos
-      let fechaDesde = fechaInputesde.getTime();
-      let fechaHasta = fechaInputHasta.getTime();
+      let fechaDesde = new Date(fechaInputesde).getTime();
+      let fechaHasta = new Date(fechaInputHasta).getTime();
       let msRangoFechas = fechaHasta - fechaDesde;
 
       if (msRangoFechas < 0) fechaInputesde = undefined;
@@ -579,8 +595,7 @@ export class FiltrosEjgComponent implements OnInit {
   isBuscar() {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.body);
-      this.persistenceService.setFiltrosAux(this.body);
-      this.bodyAux = this.persistenceService.getFiltrosAux()
+      // this.persistenceService.setFiltrosAux(this.body);
       this.busqueda.emit(false)
     }
   }
@@ -633,5 +648,11 @@ export class FiltrosEjgComponent implements OnInit {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
     }
+  }
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 }

@@ -8,6 +8,8 @@ import { Router } from '../../../../../node_modules/@angular/router';
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
 import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
 import * as moment from "moment";
+import { DatePipe } from '../../../../../node_modules/@angular/common';
+import { EJGItem } from '../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-ejg',
@@ -39,7 +41,8 @@ export class EJGComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.buscar = this.filtros.buscar
@@ -64,24 +67,27 @@ export class EJGComponent implements OnInit {
   }
 
   searchEJGs(event) {
-    this.filtros.filtroAux = this.persistenceService.getFiltrosAux();
-    this.filtros.filtroAux.historico = event;
-    this.persistenceService.setHistorico(event);
-    this.transformDate(this.filtros.filtroAux.fechaAperturaDesd);
-    this.transformDate(this.filtros.filtroAux.fechaAperturaHast);
-    this.transformDate(this.filtros.filtroAux.fechaEstadoDesd);
-    this.transformDate(this.filtros.filtroAux.fechaEstadoHast);
-    this.transformDate(this.filtros.filtroAux.fechaLimiteDesd);
-    this.transformDate(this.filtros.filtroAux.fechaLimiteHast);
-    this.transformDate(this.filtros.filtroAux.fechaDictamenDesd);
-    this.transformDate(this.filtros.filtroAux.fechaDictamenHast);
-    this.transformDate(this.filtros.filtroAux.fechaImpugnacionDesd);
-    this.transformDate(this.filtros.filtroAux.fechaImpugnacionHast);
-    this.transformDate(this.filtros.filtroAux.fechaPonenteDesd);
-    this.transformDate(this.filtros.filtroAux.fechaPonenteHast);
+    // this.filtros.body = this.persistenceService.getFiltros();
+    // this.bodyAux2 = JSON.parse(JSON.stringify(this.filtros.bodyAux));
+
+    // this.filtros.bodyAux.historico = event;
+    // this.persistenceService.setHistorico(event);
+
+    // this.filtros.bodyAux.fechaAperturaDesd = this.transformDate(this.filtros.bodyAux.fechaAperturaDesd);
+    // this.filtros.bodyAux.fechaAperturaHast = this.transformDate(this.filtros.bodyAux.fechaAperturaHast);
+    // this.filtros.bodyAux.fechaEstadoDesd = this.transformDate(this.filtros.bodyAux.fechaEstadoDesd);
+    // this.filtros.bodyAux.fechaEstadoHast = this.transformDate(this.filtros.bodyAux.fechaEstadoHast);
+    // this.filtros.bodyAux.fechaLimiteDesd = this.transformDate(this.filtros.bodyAux.fechaLimiteDesd);
+    // this.filtros.bodyAux.fechaLimiteHast = this.transformDate(this.filtros.bodyAux.fechaLimiteHast);
+    // this.filtros.bodyAux.fechaDictamenDesd = this.transformDate(this.filtros.bodyAux.fechaDictamenDesd);
+    // this.filtros.bodyAux.fechaDictamenHast = this.transformDate(this.filtros.bodyAux.fechaDictamenHast);
+    // this.filtros.bodyAux.fechaImpugnacionDesd = this.transformDate(this.filtros.bodyAux.fechaImpugnacionDesd);
+    // this.filtros.bodyAux.fechaImpugnacionHast = this.transformDate(this.filtros.bodyAux.fechaImpugnacionHast);
+    // this.filtros.bodyAux.fechaPonenteDesd = this.transformDate(this.filtros.bodyAux.fechaPonenteDesd);
+    // this.filtros.bodyAux.fechaPonenteHast = this.transformDate(this.filtros.bodyAux.fechaPonenteHast);
     this.progressSpinner = true;
-    // this.filtros.filtroAux.dictamen.split(",");
-    this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.filtroAux).subscribe(
+    // this.filtros.bodyAux.dictamen.split(",");
+    this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         this.buscar = true;
@@ -116,7 +122,9 @@ export class EJGComponent implements OnInit {
 
   transformDate(fecha) {
     if (fecha != undefined)
-      fecha = new Date(fecha).toLocaleDateString();
+      fecha = new Date(fecha);
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 }
 

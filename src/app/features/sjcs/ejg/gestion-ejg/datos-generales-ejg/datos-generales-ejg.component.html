@@ -2,7 +2,7 @@
 <div class="busqueda-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row">
+      <div *ngIf="!openFicha" class="form-row" id="cabeza">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="far fa-address-book icon-ficha"></i>
@@ -12,6 +12,25 @@
           <div class="d-flex justify-content-end mb-1">
             <label class="mr-auto title-ficha">{{ 'general.message.datos.generales' | translate }}</label>
           </div>
+          <div class="form-row">
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}: </b>{{body.fechaApertura}}</label>
+            </div>
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>{{ "justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento" | translate }}: </b>{{body.numAnnioProcedimiento}}</label>
+            </div>
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}: </b>{{tipoEJGDesc}}</label>
+            </div>
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}: </b>{{body.estadoEJG}}</label>
+            </div>
+          </div>
+
           <div class="d-flex justify-content-between">
             <br>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -30,56 +49,79 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-12 col-md-12">
-          <label> {{ "censo.busquedaClientes.literal.datosIdentificacion" | translate}} </label>
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{ "censo.busquedaClientes.literal.datosIdentificacion" | translate}} </label>
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaApertura" (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechaApertura" (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaApertura($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
-              <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
-              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numero">
+            <div class="form-row col-lg-3 col-md-3 pr-0">
+              <div class="form-group col-lg-3 col-md-3">
+                <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
+                <input type="text" [(ngModel)]="body.annio" [disabled]="true" class="form-control" (keypress)="numberOnly($event)" maxLength="4"
+                  pInputText>
+              </div>
+              <div class="form-group col-lg-9 col-md-9 pr-0">
+                <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
+                <input type="text" class="form-control" (keypress)="numberOnly($event)" maxLength="10" pInputText [(ngModel)]="body.numero">
+              </div>
             </div>
           </div>
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> Otros Datos del EJG </label>
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaPresentacion" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechapresentacion" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }}
               </label>
-              <app-fecha [(value)]="body.fechaLimitePresntacion" (valueChangeSelected)="fillFechaLimPresentacion($event)" (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
+              <app-fecha [(value)]="body.fechalimitepresentacion" (valueChangeSelected)="fillFechaLimPresentacion($event)" (valueChangeInput)="fillFechaLimPresentacion($event)"></app-fecha>
             </div>
-            <!-- OJO -->
             <div class="form-group col-lg-3 col-md-3">
-              <label>justiciaGratuita.ejg.datosGenerales.EstadoEJG</label>
-              <!-- <p-dropdown class="select-form" [(ngModel)]='body.prestaciones' placeholder="Seleccionar" [options]="comboPrestaciones" [filter]="true"
-                  filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown> -->
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:</label>
+              <br>
+              <label>{{body.estadoEJG}}</label>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}</label>
-              <p-dropdown class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar" [options]="comboTipoEJG" [filter]="true"
-                filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-dropdown *ngIf="nuevo" class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar" [options]="comboTipoEJG"
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <!-- <br *ngIf="!nuevo">
+              <label *ngIf="!nuevo">{{body.tipoEJG}}</label> -->
+              <input type="text" *ngIf="!nuevo" [(ngModel)]="tipoEJGDesc" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
+                pInputText>
+
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}</label>
               <p-dropdown class="select-form" [(ngModel)]='body.tipoEJGColegio' placeholder="Seleccionar" [options]="comboTipoEJGColegio"
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
-            <!-- OJO -->
-            <div class="form-group col-lg-3 col-md-3">
+            <div class="form-group col-lg-6 col-md-6">
               <label>Prestaciones</label>
-              <p-dropdown class="select-form" [(ngModel)]='body.prestaciones' placeholder="Seleccionar" [options]="comboPrestaciones" [filter]="true"
-                filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+              <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion' [options]="comboPrestaciones"
+                [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
+            </div>
+          </div>
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">Datos del Expediente de Insostenbilidad </label>
+          <div class="form-row">
+            <div class="form-row col-lg-3 col-md-3 pr-0">
+
+              <div class="form-group col-lg-3 col-md-3">
+                <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
+                <input type="text" [(ngModel)]="body.anioexpediente" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
+                  maxLength="4" pInputText>
+              </div>
+              <div class="form-group col-lg-9 col-md-9 pr-0">
+                <label>Número de Expediente</label>
+                <input type="text" [(ngModel)]="body.numeroexpediente" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
+                  maxLength="10" pInputText>
+              </div>
             </div>
           </div>
         </div>
@@ -88,9 +130,15 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
-        <!-- <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+        <button (click)="asociarDes()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="Asociar Designacion"></button>
+        <button (click)="createDes()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
+        <button (click)="addExpSostenibilidad()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left"
+          label="Añadir Expediente de Sostenibilidad"></button>
+        <button (click)="comunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+        <button (click)="save()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="rest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
       </div>
     </div>
   </div>

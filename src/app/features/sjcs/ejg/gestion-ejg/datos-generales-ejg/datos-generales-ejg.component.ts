@@ -17,13 +17,17 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   permisoEscritura: boolean = true;
   openFicha: boolean = true;
+  textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
   body: EJGItem;
   bodyInicial: EJGItem;
   msgs = [];
+  nuevo;
+  textSelected;
+  tipoEJGDesc;
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
-  comboPrestaciones = []; //vacio
+  comboPrestaciones = [];
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private translateService: TranslateService, private commonsServices: CommonsService) { }
@@ -31,12 +35,25 @@ export class DatosGeneralesEjgComponent implements OnInit {
   ngOnInit() {
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
+    this.getComboPrestaciones();
     if (this.persistenceService.getPermisos() != undefined)
-      this.permisoEscritura = this.persistenceService.getPermisos()
+      // this.permisoEscritura = this.persistenceService.getPermisos()
+      // De momento todo disabled, funcionalidades FAC. Cuando esté todo cambiar Permisos. 
+      this.permisoEscritura = false;
     if (this.modoEdicion) {
-      this.body = this.datos;
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      if (this.persistenceService.getDatos()) {
+        this.nuevo = false;
+        this.body = this.persistenceService.getDatos();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        if (this.body.fechalimitepresentacion != undefined)
+          this.body.fechalimitepresentacion = new Date(this.body.fechalimitepresentacion);
+        if (this.body.fechapresentacion != undefined)
+          this.body.fechapresentacion = new Date(this.body.fechapresentacion);
+        if (this.body.fechaApertura != undefined)
+          this.body.fechaApertura = new Date(this.body.fechaApertura);
+      }
     } else {
+      this.nuevo = true;
       this.body = new EJGItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
@@ -46,6 +63,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(
       n => {
         this.comboTipoEJG = n.combooItems;
+        this.tipoEJGDesc = n.combooItems[0].label;
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
@@ -64,15 +82,28 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     );
   }
+  getComboPrestaciones() {
+    this.sigaServices.get("filtrosejg_comboPrestaciones").subscribe(
+      n => {
+        this.comboPrestaciones = n.combooItems;
+        this.commonsServices.arregloTildesCombo(this.comboPrestaciones);
+        this.body.prestacion = n.combooItems.map(it => it.value.toString());
+        // this.textSelected = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
   fillFechaApertura(event) {
     this.body.fechaApertura = event;
   }
   fillFechaPresentacion(event) {
-    //  this.body.fechaPresentacion = event;
+    this.body.fechapresentacion = event;
   }
   fillFechaLimPresentacion(event) {
-    // this.body.fechaPresentacion = event;
+    this.body.fechalimitepresentacion = event;
   }
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
@@ -84,6 +115,19 @@ export class DatosGeneralesEjgComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+  disabledSave() {
+
+  }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
+
+    }
   }
   clear() {
     this.msgs = [];
