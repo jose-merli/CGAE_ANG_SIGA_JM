@@ -6,10 +6,13 @@
         <div class="card-body">
             <div class="form-row">
                 <div class="col-12">
-                    <p-radioButton value="ejg" name="tarj" label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="des" name="tarj" [disabled]="esSociedad" label="{{'menu.justiciaGratuita.designas' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="asi" name="tarj" label="{{'menu.justiciaGratuita.asistencia' | translate}}" [(ngModel)]='radioTarjeta'></p-radioButton>
+                    <p-radioButton value="ejg" name="tarj" (click)="changeFilters()" label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}"
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters()" [disabled]="esSociedad" label="{{'menu.justiciaGratuita.designas' | translate}}"
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                    <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta' (click)="changeFilters()"></p-radioButton>
+                    <p-radioButton value="asi" name="tarj" (click)="changeFilters()" label="{{'menu.justiciaGratuita.asistencia' | translate}}"
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
                 </div>
             </div>
             <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
@@ -23,29 +26,37 @@
                         <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}} / {{"gratuita.busquedaAsistencias.literal.numero"
                             | translate}}</label>
                         <div>
-                            <input type="text" class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.anio' pInputText> /
-                            <input type="text" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.numero' pInputText>
+                            <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="4" class="form-group col-lg-5 col-md-5"
+                                [(ngModel)]='filtros.anio' pInputText> /
+                            <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="9" class="form-group col-lg-6 col-md-6"
+                                [(ngModel)]='filtros.numero' pInputText>
                         </div>
 
                     </div>
                     <div class="form-group col-lg-6 col-md-6">
                         <label>{{"gratuita.busquedaEJG.literal.fechaAperturaDesde" | translate}} / {{"gratuita.busquedaEJG.literal.fechaAperturaHasta"
                             | translate}}</label>
-                        <div>
-                            <app-fecha class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.fechaAperturaDesde'></app-fecha> /
-                            <app-fecha class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.fechaAperturaHasta'></app-fecha>
+                        <div class="row">
+                            <div class="col-lg-5 col-md-5">
+                                <app-fecha [(value)]='filtros.fechaAperturaDesde' (valueChangeSelected)="fillFechaAperturaDesde($event)" (valueChangeInput)="fillFechaAperturaDesde($event)"></app-fecha>
+                            </div> /
+                            <div class="col-lg-6 col-md-6">
+                                <app-fecha [minDate]="filtros.fechaAperturaDesde" [(value)]='filtros.fechaAperturaHasta' (valueChangeSelected)="fillFechaAperturaHasta($event)"
+                                    (valueChangeInput)="fillFechaAperturaHasta($event)"></app-fecha>
+                            </div>
                         </div>
-
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'dato.jgr.guardia.guardias.turno' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno"
-                            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno' (onChange)="filtros.idGuardia = undefined; getComboguardiaPorTurno($event)"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno" [filter]="true"
+                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia' placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [options]="comboguardiaPorTurno" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia' [disabled]="comboguardiaPorTurno.length == 0 || radioTarjeta == 'des'"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboguardiaPorTurno" [filter]="true"
+                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                 </div>
             </div>
@@ -57,7 +68,7 @@
             </p>
 
             <div *ngIf="showDatosColegiales" class="module vista-avanzada">
-                <app-busqueda-colegiado-express></app-busqueda-colegiado-express>
+                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)"></app-busqueda-colegiado-express>
             </div>
 
 
@@ -72,15 +83,15 @@
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-                        <input type="text" name="correo" class="form-control" [(ngModel)]='filtros.nif' pInputText>
+                        <input type="text" maxlength="20" name="nif" class="form-control" [(ngModel)]='filtros.nif' pInputText>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
-                        <input type="text" name="correo" class="form-control" [(ngModel)]='filtros.apellidos' pInputText>
+                        <input type="text" maxlength="100" name="apellidos" class="form-control" [(ngModel)]='filtros.apellidos' pInputText>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-                        <input type="text" name="correo" class="form-control" [(ngModel)]='filtros.nombre' pInputText>
+                        <input type="text" maxlength="100" name="nombre" class="form-control" [(ngModel)]='filtros.nombre' pInputText>
                     </div>
                 </div>
             </div>
@@ -106,14 +117,14 @@
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoEjgColegio' [filter]="true" filterMatchMode="contains" [options]="comboTipoEjgColegio"
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoEjColegio' [filter]="true" filterMatchMode="contains" [options]="comboTipoEjgColegio"
                             (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
                             [showClear]="true">
                         </p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoEjg' placeholder="{{'general.boton.seleccionar' | translate}}"
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoPorEjg' placeholder="{{'general.boton.seleccionar' | translate}}"
                             [options]="comboEstadoEjg" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                 </div>
@@ -129,25 +140,20 @@
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"gratuita.busquedaDesignas.literal.tipoDesigna" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoDesignacion' placeholder="{{'general.boton.seleccionar' | translate}}"
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoDesigna' placeholder="{{'general.boton.seleccionar' | translate}}"
                             [options]="TipoDesignacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"gratuita.busquedaDesignas.literal.estadoDesigna" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoDesignacion' [filter]="true" filterMatchMode="contains" [options]="comboEstadoDesignacion"
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoDesigna' [filter]="true" filterMatchMode="contains" [options]="comboEstadoDesignacion"
                             (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
                             [showClear]="true">
                         </p-dropdown>
                     </div>
-                    <div class="form-group col-lg-6 col-md-6">
-                        <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}} / {{"gratuita.busquedaDesignas.literal.numProcedimiento"
-                            | translate}}</label>
-                        <div>
-                            <input type="text" class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.anioProcedimiento' pInputText> /
-                            <input type="text" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.numProcedimiento' pInputText>
-                        </div>
-
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
+                        <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento' pInputText>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"justiciaGratuita.ejg.datosGenerales.Juzgado" | translate}}</label>
@@ -156,7 +162,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>NIG</label>
-                        <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='filtros.nig' pInputText (input)="onChangeCodigoPostal($event)">
+                        <input maxlength="50" type="text" class="form-control" [maxLength]="5" [(ngModel)]='filtros.nig' pInputText>
                     </div>
                 </div>
             </div>
@@ -188,16 +194,12 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"menu.justiciaGratuita.tipoAsistencia" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoAsistencia' placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [options]="comboProvincias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                            [options]="comboTiposAsitencia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-6 col-md-6">
-                        <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}} / {{"gratuita.busquedaDesignas.literal.numProcedimiento"
-                            | translate}}</label>
-                        <div>
-                            <input type="text" class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.anioRegistro' pInputText> /
-                            <input type="text" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.numProcedimientoRegistro' pInputText>
-                        </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
+                        <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento' pInputText>
 
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -207,18 +209,18 @@
                     </div>
 
 
-                    <div class="form-group col-lg-6 col-md-6">
-                        <label>{{"gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate}} / {{"gratuita.mantActuacion.literal.nasunto"
-                            | translate}}</label>
-                        <div>
-                            <input type="text" class="form-group col-lg-5 col-md-5" [(ngModel)]='filtros.nDiligencia' pInputText> /
-                            <input type="text" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.nAsunto' pInputText>
-                        </div>
-
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate}}</label>
+                        <!-- / {{"gratuita.mantActuacion.literal.nasunto"
+                        | translate}} -->
+                        <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxlength="20" [(ngModel)]='filtros.numeroDiligencia'
+                            pInputText>
+                        <!-- / <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.asunto'
+                                pInputText> -->
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='filtros.idCentroDetencion' placeholder="{{'general.boton.seleccionar' | translate}}"
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.comisaria' placeholder="{{'general.boton.seleccionar' | translate}}"
                             [options]="comboComisaria" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                 </div>

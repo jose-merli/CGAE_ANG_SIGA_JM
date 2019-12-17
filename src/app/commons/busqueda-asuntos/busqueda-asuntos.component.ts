@@ -27,6 +27,8 @@ import { CommonsService } from '../../_services/commons.service';
 import { Location } from '@angular/common'
 
 import { PersistenceService } from '../../_services/persistence.service';
+import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
+import { TablaBusquedaAsuntosComponent } from "./tabla-busqueda-asuntos/tabla-busqueda-asuntos.component";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -46,7 +48,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   msgs: any[];
   formBusqueda: FormGroup;
   numSelected: number = 0;
-  datos: any[];
+  body: any[];
   sortO: number = 1;
   selectedItem: number = 10;
   cols: any = [];
@@ -58,6 +60,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   es: any = esCalendar;
   permisoEscritura: any;
+  @ViewChild(FiltrosBusquedaAsuntosComponent) filtros;
+  @ViewChild(TablaBusquedaAsuntosComponent) tabla;
 
   //Diálogo de comunicación
   constructor(
@@ -122,30 +126,110 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
 
   search(event) {
-    // this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
-    // this.filtros.filtroAux.historico = event;
-    // this.persistenceService.setHistorico(event);
-    // this.progressSpinner = true;
-    // this.sigaServices.post("busquedaProcuradores_searchProcuradoresComp", this.filtros.filtroAux).subscribe(
-    //   n => {
+    this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+    this.filtros.filtroAux.historico = event;
+    this.persistenceService.setHistorico(event);
+    this.progressSpinner = true;
+    this.selectAll = false;
+    this.buscar = true;
+    this.selectMultiple = false;
 
-    //     this.datos = JSON.parse(n.body).procuradorItems;
-    //     this.datos = this.datos.map(it => {
-    //       it.nColegiado = +it.nColegiado;
-    //       return it;
-    //     })
-    //     this.buscar = true;
-    //     this.progressSpinner = false;
-    //     if (this.tabla != null && this.tabla != undefined) {
-    //       this.tabla.historico = event;
-    //     }
-    //     this.resetSelect();
-    //   },
-    //   err => {
-    //     this.progressSpinner = false;
-    //     console.log(err);
-    //   }
-    // );
+    this.selectedDatos = "";
+    this.progressSpinner = true;
+    this.buscar = true;
+    if (this.filtros.radioTarjeta == 'ejg') {
+      this.sigaServices
+        .postPaginado(
+          "gestionJusticiables_busquedaClaveAsuntosEJG",
+          "?numPagina=1",
+          this.filtros.filtroAux
+        )
+        .subscribe(
+          data => {
+            this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            this.buscar = true;
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+
+    if (this.filtros.radioTarjeta == 'des') {
+      this.sigaServices
+        .postPaginado(
+          "gestionJusticiables_busquedaClaveAsuntosDesignaciones",
+          "?numPagina=1",
+          this.filtros.filtroAux
+        )
+        .subscribe(
+          data => {
+            this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            this.buscar = true;
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+
+    if (this.filtros.radioTarjeta == 'soj') {
+      this.sigaServices
+        .postPaginado(
+          "gestionJusticiables_busquedaClaveAsuntosSOJ",
+          "?numPagina=1",
+          this.filtros.filtroAux
+        )
+        .subscribe(
+          data => {
+            this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            this.buscar = true;
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+
+    if (this.filtros.radioTarjeta == 'asi') {
+      this.sigaServices
+        .postPaginado(
+          "gestionJusticiables_busquedaClaveAsuntosAsistencias",
+          "?numPagina=1",
+          this.filtros.filtroAux
+        )
+        .subscribe(
+          data => {
+            this.body = JSON.parse(data.body).asuntosJusticiableItems;
+            this.buscar = true;
+            this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+
+
   }
 
   showMessage(event) {

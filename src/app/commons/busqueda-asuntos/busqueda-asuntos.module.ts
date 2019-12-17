@@ -33,6 +33,7 @@ import { routing } from '../../app.routing';
 import { BrowserAnimationsModule } from '../../../../node_modules/@angular/platform-browser/animations/src/module';
 import { BrowserModule } from '../../../../node_modules/@angular/platform-browser/src/browser';
 import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filtros-busqueda-asuntos.component";
+import { TablaBusquedaAsuntosComponent } from './tabla-busqueda-asuntos/tabla-busqueda-asuntos.component';
 
 @NgModule({
   imports: [
@@ -77,7 +78,7 @@ import { FiltrosBusquedaAsuntosComponent } from "./filtros-busqueda-asuntos/filt
     EditorModule
 
   ],
-  declarations: [BusquedaAsuntosComponent, FiltrosBusquedaAsuntosComponent],
+  declarations: [BusquedaAsuntosComponent, FiltrosBusquedaAsuntosComponent, TablaBusquedaAsuntosComponent],
   exports: [BusquedaAsuntosComponent],
 
   providers: [

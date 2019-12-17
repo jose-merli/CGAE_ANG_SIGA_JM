@@ -5,7 +5,9 @@ import {
   OnInit,
   ViewChild,
   ViewEncapsulation,
-  Input
+  Input,
+  Output,
+  EventEmitter
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
@@ -25,6 +27,7 @@ import { SigaServices } from "../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { AsistenciasItem } from "../../../models/sjcs/AsistenciasItem";
+import { PersistenceService } from "../../../_services/persistence.service";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -71,9 +74,8 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   comboComisaria: any[];
   comboJuzgado: any[];
   comboTurno: any[];
-  comboguardiaPorTurno: any[];
+  comboguardiaPorTurno: any[] = [];
   textSelected: String = "{0} etiquetas seleccionadas";
-  body: any;
   colegiadoSearch: any;
   subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
 
@@ -87,22 +89,21 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   selectedTipoDireccion: any;
   resultadosPoblaciones: any;
   historico: boolean;
-
-  fechaIncorporacionHastaSelect: Date;
-  fechaIncorporacionDesdeSelect: Date;
-  fechaNacimientoHastaSelect: Date;
-  fechaNacimientoDesdeSelect: Date;
-
+  customError: string;
   //Diálogo de comunicación
-  bodyComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
+  filtrosComunicacion: DialogoComunicacionesItem = new DialogoComunicacionesItem();
   first: number = 0;
   clasesComunicaciones: any = [];
   currentRoute: String;
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  comboTiposAsitencia: any[];
 
   @Input() permisoEscritura;
+  @Input() idPersona;
+
+  @Output() isOpen = new EventEmitter<boolean>();
 
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
@@ -112,13 +113,15 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   showSOJ: boolean = true;
   showAsistencias: boolean = true;
   comboEstadoDesignacion: { label: string; value: string; }[];
+  filtroAux: any;
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private persistenceService: PersistenceService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -138,9 +141,26 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.currentRoute = this.router.url;
     this.progressSpinner = true;
     this.getCombos();
-
+    let fecha;
+    fecha = new Date();
+    this.filtros.anio = fecha.getFullYear();
   }
 
+  changeFilters() {
+    let filtrosNuevos = new AsistenciasItem;
+    filtrosNuevos.anio = this.filtros.anio;
+    filtrosNuevos.numero = this.filtros.numero;
+    filtrosNuevos.fechadesde = this.filtros.fechadesde;
+    filtrosNuevos.fechahasta = this.filtros.fechahasta;
+    filtrosNuevos.idTurno = this.filtros.idTurno;
+    filtrosNuevos.idGuardia = undefined;
+    filtrosNuevos.nif = this.filtros.nif;
+    filtrosNuevos.apellidos = this.filtros.apellidos;
+    filtrosNuevos.nombre = this.filtros.nombre;
+
+    this.filtros = new AsistenciasItem;
+    this.filtros = filtrosNuevos;
+  }
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
@@ -177,7 +197,13 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     else return true;
   }
 
-  onChangeRowsPerPages(event) {
+  fillFechaAperturaDesde(event) {
+    this.filtros.fechaAperturaDesde = event;
+  }
+  fillFechaAperturaHasta(event) {
+    this.filtros.fechaAperturaHasta = event;
+  }
+  oSnChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
@@ -206,14 +232,6 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     }
   }
 
-  isValidCodigoPostal(): boolean {
-    return (
-      this.body.codigoPostal &&
-      typeof this.body.codigoPostal === "string" &&
-      /^(?:0[1-9]\d{3}|[1-4]\d{4}|5[0-2]\d{3})$/.test(this.body.codigoPostal)
-    );
-  }
-
   arregloTildesCombo(combo) {
     if (combo != undefined)
       combo.map(e => {
@@ -231,37 +249,19 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         }
       });
   }
-  // getCombos() {
-  //   this.getComboEstadoDesignacion();
-  //   this.comboTipoEjg = this.getCombo("combo_comboTipoEjg");
-  //   this.comboTipoEjgColegio = this.getCombo("combo_comboTipoEjgColegio");
-  //   this.arregloTildesCombo(this.comboTipoEjgColegio);
-  //   this.comboEstadoEjg = this.getCombo("combo_comboEstadoEjg");
-  //   this.arregloTildesCombo(this.comboEstadoEjg);
-  //   this.TipoDesignacion = this.getCombo("combo_TipoDesignacion");
-  //   this.arregloTildesCombo(this.TipoDesignacion);
-  //   this.comboTipoSOJ = this.getCombo("combo_comboTipoSOJ");
-  //   this.arregloTildesCombo(this.comboTipoSOJ);
-  //   this.comboComisaria = this.getCombo("combo_comboComisaria");
-  //   this.arregloTildesCombo(this.comboComisaria);
-  //   this.comboJuzgado = this.getCombo("combo_comboJuzgado");
-  //   this.arregloTildesCombo(this.comboJuzgado);
-  //   this.comboTurno = this.getCombo("combo_turnos");
-  //   this.arregloTildesCombo(this.comboTurno);
-  //   this.comboguardiaPorTurno = this.getCombo("combo_guardiaPorTurno");
-  //   this.arregloTildesCombo(this.comboguardiaPorTurno);
-  // }
+
   getCombos() {
     this.getComboEstadoDesignacion();
     this.getComboTipoEjg();
     this.getComboTipoEjgColegio();
     this.getComboEstadoEjg();
-    //this.comboguardiaPorTurno("combo_TipoDesignacion"); falla
+    this.getComboTipoDesignacion();
     this.getComboTipoSOJ();
     this.getComboComisaria();
     this.getComboJuzgado();
+    this.getComboTiposAsistencia();
     this.getComboTurno();
-    // this.getComboguardiaPorTurno(); este depende de turno
+    //  este depende de turno
     this.progressSpinner = false;
 
   }
@@ -287,6 +287,27 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.arregloTildesCombo(this.comboTipoEjg);
       }
     );
+  }
+
+  getComboTiposAsistencia() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("gestionTiposAsistencia_ComboTiposAsistencia").subscribe(
+      n => {
+
+        this.comboTiposAsitencia = n.combooItems;
+        this.arregloTildesCombo(this.comboTiposAsitencia);
+
+      },
+      err => {
+        console.log(err);
+      }
+      , () => {
+        this.progressSpinner = false;
+      }
+
+    );
+
   }
   getComboTipoEjgColegio() {
     this.sigaServices.get("combo_comboTipoEjgColegio").subscribe(
@@ -315,6 +336,8 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     );
   }
   getComboTipoDesignacion() {
+    // this.sigaServices.getParam("combo_TipoDesignacion", "?idTurno=" + evento.value).subscribe(
+
     this.sigaServices.get("combo_TipoDesignacion").subscribe(
       n => {
         this.TipoDesignacion = n.combooItems;
@@ -379,81 +402,98 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
       }
     );
   }
-  getComboguardiaPorTurno() {
-    this.sigaServices.get("combo_guardiaPorTurno").subscribe(
-      n => {
-        this.comboguardiaPorTurno = n.combooItems;
-      },
-      err => {
-        console.log(err);
+  getComboguardiaPorTurno(evento) {
+    this.filtros.idTurno = evento.value;
+    if (evento.value != undefined)
+      this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + evento.value).subscribe(
+        n => {
+          this.comboguardiaPorTurno = n.combooItems;
+        },
+        err => {
+          console.log(err);
 
-      }, () => {
-        this.arregloTildesCombo(this.comboguardiaPorTurno);
-      }
-    );
+        }, () => {
+          this.arregloTildesCombo(this.comboguardiaPorTurno);
+        }
+      );
   }
 
+  getIdPersona(evento) {
+    this.idPersona = evento;
+  }
 
-  //Busca asuntos según los filtros
-  isBuscar() {
-    if (this.checkFilters()) {
-      this.selectAll = false;
-      this.historico = false;
-      this.buscar = true;
-      this.selectMultiple = false;
-
-      this.selectedDatos = "";
-      this.getColsResults();
-      this.filtrosTrim();
-      this.progressSpinner = true;
-      this.buscar = true;
-
-      this.body.fechaIncorporacion = [];
-      this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
-      this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
-
-      this.body.fechaNacimientoRango = [];
-      this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
-      this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
-
-      // if (
-      //   this.fechaNacimientoSelect != undefined ||
-      //   this.fechaNacimientoSelect != null
-      // ) {
-      //   this.body.fechaNacimiento = this.fechaNacimientoSelect;
-      // } else {
-      //   this.body.fechaNacimiento = undefined;
-      // }
-
-      this.body.colegio = [];
-      this.colegiosSeleccionados.forEach(element => {
-        this.body.colegio.push(element.value);
-      });
-
-      this.sigaServices
-        .postPaginado(
-          "busquedaAsuntos_searchColegiado",
-          "?numPagina=1",
-          this.body
-        )
-        .subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.colegiadoSearch = JSON.parse(data["body"]);
-            this.datos = this.colegiadoSearch.colegiadoItem;
-            this.convertirStringADate(this.datos);
-            this.table.paginator = true;
-            this.body.fechaIncorporacion = [];
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-          }
-        );
+  comprobarCamposCompuestos() {
+    let continuar = true;
+    if ((this.filtros.anio == undefined || this.filtros.anio == "") && (this.filtros.numero != undefined && this.filtros.undefined != "")) {
+      continuar = false;
+      this.customError = "scs.busquedaasuntos.error.campoanio";
     }
+    if ((this.filtros.anio != undefined && this.filtros.anio != "") && (this.filtros.numero == undefined || this.filtros.numero == "")) {
+      continuar = false;
+      this.customError = "scs.busquedaasuntos.error.camponumero";
+    }
+
+    // if (this.filtros.anioProcedimiento == undefined && this.filtros.numProcedimiento != undefined) {
+    //   continuar = false;
+    //   this.customError = "scs.busquedaasuntos.error.campoanio";
+    // }
+    // if (this.filtros.anioProcedimiento != undefined && this.filtros.numProcedimiento == undefined) {
+    //   continuar = false;
+    //   this.customError = "scs.busquedaasuntos.error.camponumero";
+    // }
+
+    // if (this.filtros.numeroDiligencia == undefined && this.filtros.asunto != undefined) {
+    //   continuar = false;
+    //   this.customError = "scs.busquedaasuntos.error.campondiligencia";
+    // }
+    // if (this.filtros.numeroDiligencia != undefined && this.filtros.asunto == undefined) {
+    //   continuar = false;
+    //   this.customError = "scs.busquedaasuntos.error.camponasunto";
+    // }
+    if (this.filtros.fechaAperturaDesde == undefined && this.filtros.fechaAperturaHasta != undefined) {
+      continuar = false;
+      this.customError = "scs.busquedaasuntos.error.campofaperturadesde";
+    }
+    if (this.filtros.fechaAperturaDesde != undefined && this.filtros.fechaAperturaHasta == undefined) {
+      continuar = false;
+      this.customError = "scs.busquedaasuntos.error.campofaperturahasta";
+    }
+
+    // if (this.filtros.anioRegistro == undefined && this.filtros.numProcedimientoRegistro != undefined) {
+    //   continuar = false;
+    //   this.customError = "scs.busquedaasuntos.error.campoanio";
+    // }
+    // if (this.filtros.anioRegistro != undefined && this.filtros.numProcedimientoRegistro == undefined) {
+    //   continuar = false;
+    //   this.customError = "scs.busquedaasuntos.error.camponumero";
+    // }
+
+    return continuar;
+  }
+
+  isBuscar() {
+    if (this.comprobarCamposCompuestos()) {
+      this.filtrosTrim();
+      this.filtros.radioTarjeta = this.radioTarjeta;
+      if (this.idPersona != undefined && this.idPersona != "")
+        this.filtros.idPersonaColegiado = this.idPersona;
+      this.persistenceService.setFiltros(this.filtros);
+      this.persistenceService.setFiltrosAux(this.filtros);
+      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.isOpen.emit(false)
+
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(this.customError));
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   convertirStringADate(datos) {
@@ -473,11 +513,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isLimpiar() {
-    this.body = undefined;
-    this.fechaIncorporacionDesdeSelect = undefined;
-    this.fechaIncorporacionHastaSelect = undefined;
-    this.fechaNacimientoDesdeSelect = undefined;
-    this.fechaNacimientoHastaSelect = undefined;
+    this.filtros = new AsistenciasItem();
 
     if (!this.deshabilitarCombCol) {
       this.colegiosSeleccionados = [];
@@ -486,86 +522,70 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   //Elimina los espacios en blancos finales e iniciales de los inputs de los filtros
   filtrosTrim() {
-    if (this.body.nif != null) {
-      this.body.nif = this.body.nif.trim();
+    if (this.filtros.nif != null) {
+      this.filtros.nif = this.filtros.nif.trim();
+    }
+    if (this.filtros.apellidos != null) {
+      this.filtros.apellidos = this.filtros.apellidos.trim();
+    }
+    if (this.filtros.nombre != null) {
+      this.filtros.nombre = this.filtros.nombre.trim();
+    }
+    if (this.filtros.anioRegistro != null) {
+      this.filtros.anioRegistro = this.filtros.anioRegistro.trim();
+    }
+    if (this.filtros.numero != null) {
+      this.filtros.numero = this.filtros.numero.trim();
+    }
+    if (this.filtros.idInstitucion != null) {
+      this.filtros.idInstitucion = this.filtros.idInstitucion.trim();
+    }
+    if (this.filtros.idTurno != null) {
+      this.filtros.idTurno = this.filtros.idTurno.trim();
+    }
+    if (this.filtros.idGuardia != null) {
+      this.filtros.idGuardia = this.filtros.idGuardia.trim();
+    }
+    if (this.filtros.nig != null) {
+      this.filtros.nig = this.filtros.nig.trim();
+    }
+    if (this.filtros.idTipoEjg != null) {
+      this.filtros.idTipoEjg = this.filtros.idTipoEjg.trim();
+    }
+    if (this.filtros.idTipoEjColegio != null) {
+      this.filtros.idTipoEjColegio = this.filtros.idTipoEjColegio.trim();
+    }
+    if (this.filtros.idEstadoPorEjg != null) {
+      this.filtros.idEstadoPorEjg = this.filtros.idEstadoPorEjg.trim();
+    }
+    if (this.filtros.idTipoDesignacion != null) {
+      this.filtros.idTipoDesignacion = this.filtros.idTipoDesignacion.trim();
+    }
+    if (this.filtros.anioProcedimiento != null) {
+      this.filtros.anioProcedimiento = this.filtros.anioProcedimiento.trim();
+    }
+    if (this.filtros.numProcedimiento != null) {
+      this.filtros.numProcedimiento = this.filtros.numProcedimiento.trim();
+    }
+    if (this.filtros.numProcedimientoRegistro != null) {
+      this.filtros.numProcedimientoRegistro = this.filtros.numProcedimientoRegistro.trim();
+    }
+    if (this.filtros.idJuzgado != null) {
+      this.filtros.idJuzgado = this.filtros.idJuzgado.trim();
+    }
+    if (this.filtros.numeroDiligencia != null) {
+      this.filtros.numeroDiligencia = this.filtros.numeroDiligencia.trim();
+    }
+    if (this.filtros.asunto != null) {
+      this.filtros.asunto = this.filtros.asunto.trim();
+    }
+    if (this.filtros.comisaria != null) {
+      this.filtros.comisaria = this.filtros.comisaria.trim();
     }
 
-    if (this.body.apellidos != null) {
-      this.body.apellidos = this.body.apellidos.trim();
-    }
-
-    if (this.body.nombre != null) {
-      this.body.nombre = this.body.nombre.trim();
-    }
-
-    if (this.body.numColegiado != null) {
-      this.body.numColegiado = this.body.numColegiado.trim();
-    }
-
-    if (this.body.codigoPostal != null) {
-      this.body.codigoPostal = this.body.codigoPostal.trim();
-    }
-
-    if (this.body.correo != null) {
-      this.body.correo = this.body.correo.trim();
-    }
-
-    if (this.body.movil != null) {
-      this.body.movil = this.body.movil.trim();
-    }
-
-    if (this.body.telefono != null) {
-      this.body.telefono = this.body.telefono.trim();
-    }
   }
 
   getColsResults() {
-    this.cols = [
-      {
-        field: "colegioResultado",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
-      {
-        field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
-      },
-      {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
-      },
-      {
-        field: "numberColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
-      },
-      {
-        field: "estadoColegial",
-        header: "censo.fichaCliente.situacion.cabecera"
-      },
-      {
-        field: "situacionResidente",
-        header: "censo.busquedaClientes.noResidente"
-      },
-      {
-        field: "fechaNacimientoDate",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac"
-      },
-      {
-        field: "correo",
-        header: "censo.datosDireccion.literal.correo"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
-      },
-      {
-        field: "noAparecerRedAbogacia2",
-        header: "censo.busquedaColegial.lopd"
-      }
-    ];
 
     this.rowsPerPage = [
       {
@@ -591,75 +611,6 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     this.msgs = [];
   }
 
-  checkFilters() {
-    if (
-      (this.body.nombre == null ||
-        this.body.nombre == null ||
-        this.body.nombre.trim().length < 3) &&
-      (this.body.apellidos == null ||
-        this.body.apellidos == null ||
-        this.body.apellidos.trim().length < 3) &&
-      (this.body.numColegiado == null ||
-        this.body.numColegiado == null) &&
-      (this.body.codigoPostal == null ||
-        this.body.codigoPostal == null ||
-        this.body.codigoPostal.trim().length < 3) &&
-      (this.body.nif == null ||
-        this.body.nif == null ||
-        this.body.nif.trim().length < 3) &&
-      (this.body.correo == null ||
-        this.body.correo == null ||
-        this.body.correo.trim().length < 3) &&
-      (this.body.movil == null ||
-        this.body.movil == null ||
-        this.body.movil.trim().length < 3) &&
-      (this.body.telefono == null ||
-        this.body.telefono == null ||
-        this.body.telefono.trim().length < 3) &&
-      (this.body.idgrupo == undefined ||
-        this.body.idgrupo == null ||
-        this.body.idgrupo.length < 1) &&
-      (this.fechaIncorporacionDesdeSelect == undefined ||
-        this.fechaIncorporacionDesdeSelect == null) &&
-      (this.fechaIncorporacionHastaSelect == undefined ||
-        this.fechaIncorporacionHastaSelect == null) &&
-      (this.body.situacion == undefined || this.body.situacion == null) &&
-      (this.body.residencia == undefined || this.body.residencia == null) &&
-      (this.body.inscrito == undefined || this.body.inscrito == null) &&
-      (this.body.sexo == undefined || this.body.sexo == null) &&
-      (this.body.idEstadoCivil == undefined ||
-        this.body.idEstadoCivil == null) &&
-      (this.fechaNacimientoDesdeSelect == undefined ||
-        this.fechaNacimientoDesdeSelect == null) &&
-      (this.fechaNacimientoHastaSelect == undefined ||
-        this.fechaNacimientoHastaSelect == null) &&
-      (this.body.tipoCV == undefined || this.body.tipoCV == null) &&
-      (this.body.subtipoCV == undefined ||
-        this.body.subtipoCV == null ||
-        this.body.subtipoCV.length < 1) &&
-      (this.body.tipoDireccion == undefined || this.body.tipoDireccion == null)
-    ) {
-      this.showSearchIncorrect();
-      this.progressSpinner = false;
-      return false;
-    } else {
-      // quita espacios vacios antes de buscar
-      if (this.body.nombre != undefined) {
-        this.body.nombre = this.body.nombre.trim();
-      }
-      if (this.body.apellidos != undefined) {
-        this.body.apellidos = this.body.apellidos.trim();
-      }
-      if (this.body.numColegiado != undefined) {
-        this.body.numColegiado = this.body.numColegiado.trim();
-      }
-      if (this.body.nif != undefined) {
-        this.body.nif = this.body.nif.trim();
-      }
-      return true;
-    }
-  }
-
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({
@@ -672,7 +623,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   isDisabledCombos() {
-    if (this.body.tipoCV != "" && this.body.tipoCV != null) {
+    if (this.filtros.tipoCV != "" && this.filtros.tipoCV != null) {
       return false;
     } else {
       return true;
@@ -691,7 +642,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de CENSO es 3
     sessionStorage.setItem("idModulo", '3');
-    sessionStorage.setItem("filtrosBusquedaAsuntosFichaColegial", JSON.stringify(this.body));
+    sessionStorage.setItem("filtrosBusquedaAsuntosFichaColegial", JSON.stringify(this.filtros));
 
     this.getDatosComunicar();
   }
@@ -701,7 +652,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
-        this.keys = JSON.parse(data["body"]);
+        this.keys = JSON.parse(data["filtros"]);
       },
       err => {
         console.log(err);
@@ -718,13 +669,13 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
       .subscribe(
         data => {
           this.idClaseComunicacion = JSON.parse(
-            data["body"]
+            data["filtros"]
           ).clasesComunicaciones[0].idClaseComunicacion;
           this.sigaServices
             .post("dialogo_keys", this.idClaseComunicacion)
             .subscribe(
               data => {
-                this.keys = JSON.parse(data["body"]).keysItem;
+                this.keys = JSON.parse(data["filtros"]).keysItem;
                 this.selectedDatos.forEach(element => {
                   let keysValues = [];
                   this.keys.forEach(key => {
@@ -768,21 +719,5 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     });
   }
 
-  fillFechaIncorporacionDesde(event) {
-    this.fechaIncorporacionDesdeSelect = event;
-  }
-
-  fillFechaIncorporacionHasta(event) {
-    this.fechaIncorporacionHastaSelect = event;
-
-  }
-
-  fillFechaNacimientoDesde(event) {
-    this.fechaNacimientoDesdeSelect = event;
-  }
-
-  fillFechaNacimientoHasta(event) {
-    this.fechaNacimientoHastaSelect = event;
-  }
 
 }

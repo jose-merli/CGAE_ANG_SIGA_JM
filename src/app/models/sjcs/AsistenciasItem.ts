@@ -1,28 +1,31 @@
 
 export class AsistenciasItem {
+    [x: string]: any;
 
     anioRegistro: string;
     nombre: string;
     apellidos: string;
     numero: string;
     idInstitucion: string;
-    fechadesde: Date;
-    fechahasta: Date;
+    fechaAperturaDesde: Date;
+    fechaAperturaHasta: Date;
     idTurno: string;
     idGuardia: string;
     nif: string;
+    idPersonaColegiado: string;
     nig: string;
     idTipoEjg: string;
-    idTipoEjgColegio: string;
-    idEstadoEjg: string;
-    idTipoDesignacion: string;
+    idTipoEjColegio: string;
+    idEstadoPorEjg: string;
+    idEstadoDesigna: string;
+    idTipoDesigna: string;
     anioProcedimiento: string;
     numProcedimiento: string;
     numProcedimientoRegistro: string;
     idJuzgado: string;
-    nDiligencia: string;
-    nAsunto: string;
-    idCentroDetencion: string;
+    numeroDiligencia: string;
+    asunto: string;
+    comisaria: string;
 
     constructor() { }
 }

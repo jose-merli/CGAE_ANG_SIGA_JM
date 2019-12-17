@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { DataTable } from '../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../translate';
 import { Router } from '../../../../../node_modules/@angular/router';
@@ -6,6 +6,8 @@ import { SigaServices } from '../../../_services/siga.service';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { ProcuradoresItem } from '../../../models/sjcs/ProcuradoresItem';
 import { ProcuradoresObject } from '../../../models/sjcs/ProcuradoresObject';
+import { JusticiableItem } from '../../../models/sjcs/JusticiableItem';
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-busqueda-asuntos',
@@ -13,9 +15,11 @@ import { ProcuradoresObject } from '../../../models/sjcs/ProcuradoresObject';
   styleUrls: ['./tabla-busqueda-asuntos.component.scss']
 })
 export class TablaBusquedaAsuntosComponent implements OnInit {
+
   rowsPerPage: any = [];
-  cols;
+  cols = [];
   msgs;
+  progressSpinner: boolean = false;
 
   selectedItem: number = 10;
   selectAll;
@@ -23,52 +27,62 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  historico: boolean = false;
 
-  message;
+  permisoEscritura: boolean = true;
+  datos = [];
+  datosInicio: boolean = false;
 
-  initDatos;
-  nuevo: boolean = false;
-  progressSpinner: boolean = false;
-  permisoEscritura: boolean = false;
-  @Input() datos;
+  idPersona;
+  showTarjetaPermiso: boolean = true;
+
 
   @ViewChild("table") table: DataTable;
+  @Input() showTarjeta;
+  @Input() body;
+  @Input() modoEdicion;
+  @Input() fromJusticiable;
 
-  @Output() searchHistoricalSend = new EventEmitter<boolean>();
-
-  constructor(private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private router: Router,
+  constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
+    private commonsService: CommonsService,
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
 
+    // this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
+    //   .then(respuesta => {
+
+    //     this.permisoEscritura = respuesta;
+
+    //     if (this.permisoEscritura == undefined) {
+    //       this.showTarjetaPermiso = false;
+    //     } else {
+    //       this.showTarjetaPermiso = true;
     this.getCols();
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.historico = this.persistenceService.getHistorico();
-    }
+    //     }
+    //   }
+    //   ).catch(error => console.error(error));
+
   }
 
-  actualizaSeleccionados(selectedDatos) {
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.body != undefined) {
+      this.datos = this.body;
+    } else {
+      this.datos = [];
+    }
   }
 
   getCols() {
+
     this.cols = [
-      { field: "nifCif", header: "administracion.usuarios.literal.NIFCIF" },
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "nombreApe", header: "gratuita.mantenimientoTablasMaestra.literal.apellidos" },
-      { field: "idInstitucion", header: "censo.busquedaClientesAvanzada.literal.colegio" },
-      { field: "nColegiado", header: "censo.resultadoDuplicados.numeroColegiado" },
-      { field: "estadoColegial", header: "menu.justiciaGratuita.componentes.estadoColegial" },
-      { field: "residencia", header: "censo.busquedaClientes.noResidente" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
+      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
+      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "20%" },
+      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
 
     ];
 
@@ -92,13 +106,28 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
     ];
   }
 
+  search(event) {
+    this.persistenceService.setBody(JSON.stringify(event));
+    // this.progressSpinner = true;
+
+    // this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
+    //   n => {
+
+    //     this.datos = JSON.parse(n.body).asuntosJusticiableItems;
+    //     this.progressSpinner = false;
+
+    //   },
+    //   err => {
+    //     this.progressSpinner = false;
+    //     console.log(err);
+    //   });
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
-  openTab() { }
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -111,5 +140,9 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  openTab() {
+
   }
 }
