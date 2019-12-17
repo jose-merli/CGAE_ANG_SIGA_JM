@@ -5,6 +5,7 @@ import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { EventoObject } from '../../../../../../models/EventoObject';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-calendario-agenda-laboral',
@@ -44,7 +45,8 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -107,6 +109,20 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
     }
   }
 
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
+  }
+
   delete() {
 
     let eventoDelete = new EventoObject();
@@ -133,6 +149,20 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
   }
 
   activate() {

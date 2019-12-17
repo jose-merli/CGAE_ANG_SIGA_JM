@@ -7,15 +7,19 @@ import "rxjs/add/operator/map";
 import { HttpBackend, HttpClient } from "@angular/common/http";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
 import { SigaServices } from "./siga.service";
+import { TranslateService } from '../commons/translate/translation.service';
 
 @Injectable()
 export class CommonsService {
+
+  DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
     private httpbackend: HttpClient,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) {
     this.httpbackend = new HttpClient(handler);
   }
@@ -174,6 +178,97 @@ export class CommonsService {
       window.open(href, "_blank");
     }
 
+  }
+
+  scrollTop() {
+
+    let top = document.getElementById('mainContainer');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  isValidPassport(dni: String): boolean {
+    return (
+      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
+    );
+  }
+
+  isValidNIE(nie: String): boolean {
+    return (
+      nie &&
+      typeof nie === "string" &&
+      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
+    );
+  }
+
+  isValidCIF(cif: String): boolean {
+    return (
+      cif &&
+      typeof cif === "string" &&
+      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
+    );
+  }
+
+  isValidDNI(dni: String): boolean {
+    return (
+      dni &&
+      typeof dni === "string" &&
+      /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
+      dni.substr(8, 9).toUpperCase() ===
+      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    let msgs = [];
+    msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+
+    return msgs;
+  }
+
+  compruebaDNI(idtipoidentificacion, nif) {
+
+    if (this.isValidDNI(nif)) {
+      idtipoidentificacion = "10";
+      return idtipoidentificacion;
+    } else if (this.isValidPassport(nif)) {
+      idtipoidentificacion = "30";
+      return idtipoidentificacion;
+    } else if (this.isValidNIE(nif)) {
+      idtipoidentificacion = "40";
+      return idtipoidentificacion;
+    } else if (this.isValidCIF(nif)) {
+      idtipoidentificacion = "20";
+      return idtipoidentificacion;
+    } else {
+      idtipoidentificacion = "30";
+      return idtipoidentificacion;
+    }
+
+  }
+
+  checkPermisos(permiso: boolean, historico: boolean) {
+    if (!permiso) {
+      return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+
+      if (historico != undefined && historico) {
+        return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      } else {
+        return undefined;
+      }
+
+    }
+  }
+
+  checkPermisoAccion() {
+    return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
   }
 
 }

@@ -107,6 +107,20 @@ export class TiposAsistenciaComponent implements OnInit {
     this.id = this.datos.findIndex(item => item.idTipoAsistencia === seleccionados[0].idTipoAsistencia);
   }
 
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisoEscritura || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -131,6 +145,7 @@ export class TiposAsistenciaComponent implements OnInit {
       }
     });
   }
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
@@ -141,7 +156,6 @@ export class TiposAsistenciaComponent implements OnInit {
 
     }
   }
-
 
   getComboTiposAsistencia() {
     this.progressSpinner = true;
@@ -182,6 +196,7 @@ export class TiposAsistenciaComponent implements OnInit {
     );
 
   }
+
   searchTiposAsistencias() {
     this.sigaServices
       .getParam("gestionTiposAsistencia_busquedaTiposAsistencia", "?historico=" + this.historico)
@@ -267,6 +282,13 @@ export class TiposAsistenciaComponent implements OnInit {
       element.importemaximo = "0"
   }
 
+  checkPermisosSearchHistorical() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchHistorical();
+    }
+  }
 
   searchHistorical() {
     this.historico = !this.historico;
@@ -288,6 +310,20 @@ export class TiposAsistenciaComponent implements OnInit {
     }
     this.searchTiposAsistencias();
     this.selectAll = false;
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
   }
 
   save() {
@@ -397,6 +433,20 @@ export class TiposAsistenciaComponent implements OnInit {
       }
     );
 
+  }
+
+  checkPermisosNewTipoAsistencia() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisoEscritura) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newTipoAsistencia();
+      }
+    }
   }
 
   newTipoAsistencia() {
@@ -581,8 +631,6 @@ export class TiposAsistenciaComponent implements OnInit {
       });
     }
   }
-
-
 
   editarTipoGuardia(dato) {
 
@@ -821,6 +869,20 @@ export class TiposAsistenciaComponent implements OnInit {
 
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0))) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
+
   activate() {
     this.progressSpinner = true;
     this.body = new TiposAsistenciaObject();
@@ -859,6 +921,15 @@ export class TiposAsistenciaComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
 
   rest() {
     if (this.datosInicial != undefined) {

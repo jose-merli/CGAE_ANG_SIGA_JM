@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-juzgados',
@@ -45,7 +46,8 @@ export class TablaJuzgadosComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -77,7 +79,6 @@ export class TablaJuzgadosComponent implements OnInit {
 
   openTab(evento) {
 
-
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
 
@@ -89,6 +90,20 @@ export class TablaJuzgadosComponent implements OnInit {
     } else {
       if (this.institucionActual != evento.data.idInstitucion) this.selectedDatos.pop();
       else if (evento.data.fechabaja == undefined && this.historico) this.selectedDatos.pop();
+    }
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
     }
   }
 
@@ -145,6 +160,19 @@ export class TablaJuzgadosComponent implements OnInit {
     });
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
 
   activate() {
     let judgedActivate = new JuzgadoObject();

@@ -8,6 +8,7 @@ import { findIndex } from 'rxjs/operators';
 import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -61,7 +62,8 @@ export class TablaPartidasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -229,6 +231,19 @@ export class TablaPartidasComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -285,6 +300,17 @@ export class TablaPartidasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -309,6 +335,20 @@ export class TablaPartidasComponent implements OnInit {
   //     this.partidasItem = new PartidasItem();
   //   }
   // }
+
+  checkPermisosNewPartidaPresupuestaria() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newPartidaPresupuestaria();
+      }
+    }
+  }
 
   newPartidaPresupuestaria() {
     this.nuevo = true;
@@ -339,6 +379,20 @@ export class TablaPartidasComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+  }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+    }
   }
 
   confirmDelete(selectedDatos) {
@@ -411,6 +465,19 @@ export class TablaPartidasComponent implements OnInit {
     return check;
   }
 
+  checkPermisosActivate(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple || !this.selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete(selectedDatos);
+      }
+    }
+  }
 
   delete(selectedDatos) {
     let PartidasPresDelete = new PartidasObject();
@@ -476,6 +543,14 @@ export class TablaPartidasComponent implements OnInit {
       if (this.historico)
         this.selectMultiple = true;
       this.selectionMode = "multiple";
+    }
+  }
+
+  checkPermisosSearchPartida() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchPartida();
     }
   }
 

@@ -7,12 +7,33 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { CookieService } from 'ngx-cookie-service';
+<<<<<<< HEAD
 import { ConfirmationService } from "primeng/api";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
 import { ChipsModule } from "primeng/chips";
+=======
+// prueba
+import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.service';
+import { AuthenticationService } from './_services/authentication.service';
+import { JwtInterceptor } from './_interceptor/jwt.interceptor';
+
+
+// Componentes comunes
+import { routing } from './app.routing';
+import { environment } from '../environments/environment';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './commons/header/header.component';
+import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
+import { MenuComponent } from './commons/menu/menu.component';
+import { HomeComponent } from './features/home/home.component';
+import { LoginComponent } from './commons/login/login.component';
+import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
+import { ImagePipe } from './commons/image-pipe/image.pipe';
+import { Message } from 'primeng/components/common/api';
+>>>>>>> Fase3
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DataTableModule } from "primeng/datatable";
@@ -29,8 +50,17 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 import { ListboxModule } from "primeng/listbox";
 import { MenubarModule } from 'primeng/menubar';
 import { MultiSelectModule } from "primeng/multiselect";
+<<<<<<< HEAD
 import { PanelMenuModule } from 'primeng/panelmenu';
 //import { EditorModule } from "primeng/editor";
+=======
+import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { CalendarModule } from "primeng/calendar";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { TooltipModule } from "primeng/tooltip";
+import { ChipsModule } from "primeng/chips";
+// import { EditorModule } from "primeng/editor";
+>>>>>>> Fase3
 import { PickListModule } from "primeng/picklist";
 import { ColorPickerModule, SelectButtonModule } from 'primeng/primeng';
 import { ProgressSpinnerModule } from "primeng/progressspinner";
@@ -334,11 +364,14 @@ import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
 import { PrecioModule } from './commons/precio/precio.module';
+import { DialogoModule } from './commons/dialog/dialogo.module';
 import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
+import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
+
 
 
 
@@ -354,7 +387,6 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		LoginDevelopComponent,
 		HeaderComponent,
 		HomeComponent,
-		ConfirmDialogComponent,
 		// Censo
 		AuditoriaComponent,
 		AccesoFichaPersonaComponent,
@@ -681,6 +713,7 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		PipeTranslationModule,
 		PipeNumberModule,
 		FechaModule,
+		DialogoModule,
 		PrecioModule,
 		KeyFilterModule,
 		StepsModule,
@@ -688,9 +721,11 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		GeneralSJCSModule,
 		SelectButtonModule,
 		ColorPickerModule,
+		// BusquedaAsuntosModule,
 		EditorModule,
 
-		SjcsModule
+		SjcsModule,
+		BusquedaAsuntosModule
 	],
 
 	exports: [],

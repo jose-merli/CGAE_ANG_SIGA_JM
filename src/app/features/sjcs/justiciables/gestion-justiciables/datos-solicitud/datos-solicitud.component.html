@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div class="ficha-container">
+<div *ngIf="showTarjetaPermiso" class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="!showTarjeta" class="form-row">
@@ -10,22 +10,29 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ 'censo.nuevaSolicitud.headerSolicitud' | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between">
-            <label>{{ "gratuita.personaJG.literal.autorizaavisotel" | translate }}
-              <!-- <span>{{ generalBody.nif }}</span> -->
-            </label>
-            <label>{{ "gratuita.personaJG.literal.solicitajg" | translate }}
-              <!-- <span>{{ generalBody.soloNombre }} {{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span> -->
-            </label>
+          <div class="row">
+            <div class="col-3">
+              <label>{{ 'justiciaGratuita.justiciables.literal.notificacionElectronica' | translate }}
+                <span>{{ selectedAutorizaavisotel }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ 'justiciaGratuita.justiciables.literal.justiciaGratuita' | translate }}
+                <span>{{ selectedAsistidosolicitajg }}</span>
+              </label>
+            </div>
+            <div class="col-3">
+              <label>{{ 'justiciaGratuita.justiciables.literal.datosAgenciaTributaria' | translate }}
+                <span>{{ selectedAsistidoautorizaeejg }}</span>
+              </label>
+            </div>
 
-            <label>{{ "gratuita.personaJG.literal.autorizaeejg" | translate }}
-              <!-- <span>{{ generalBody.fechaNacimiento }}</span> -->
-
-            </label>
-            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+            <div class="col-3">
+              <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -42,23 +49,29 @@
       <div class="row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "gratuita.personaJG.literal.autorizaavisotel" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboAutorizaAvisotel" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+          <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.autorizaavisotelematico"
+            [options]="comboAutorizaAvisotel" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"
+            [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "gratuita.personaJG.literal.solicitajg" | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboSolicitajg" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+          <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.asistidosolicitajg"
+            [options]="comboSolicitajg" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ "gratuita.personaJG.literal.autorizaeejg" | translate }} </label>
-          <p-dropdown class="select-form" [(ngModel)]="generalBody" [options]="comboAutorizaEjg" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+          <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.asistidoautorizaeejg"
+            [options]="comboAutorizaEjg" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura" [showClear]="true"></p-dropdown>
         </div>
       </div>
     </div>
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
+          [disabled]="!permisoEscritura"></button>
+        <button (click)="checkPermisosSave()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+          [disabled]="!permisoEscritura"></button>
       </div>
     </div>
   </div>
@@ -67,3 +80,11 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" icon="fa fa-question-circle" width="425" key="cdSolicitud"
+  #cdSolicitud>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cdSolicitud.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
+  </p-footer>
+</p-confirmDialog>

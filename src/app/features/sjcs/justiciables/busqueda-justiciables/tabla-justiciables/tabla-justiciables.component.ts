@@ -19,24 +19,22 @@ export class TablaJusticiablesComponent implements OnInit {
   msgs;
 
   selectedItem: number = 10;
-  selectAll;
   selectedDatos = [];
   numSelected = 0;
-  selectMultiple: boolean = false;
-  seleccion: boolean = false;
   historico: boolean = false;
-  institucionActual;
-  message;
 
   initDatos;
-  nuevo: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
 
+  buscadores = [];
+  first = 0;
+
   //Resultados de la busqueda
   @Input() datos;
+  @Input() modoRepresentante;
 
-  @ViewChild("table") table: DataTable;
+  @ViewChild("table") tabla: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
 
@@ -54,121 +52,52 @@ export class TablaJusticiablesComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
+    if (this.persistenceService.getPaginacion() != undefined) {
+      let paginacion = this.persistenceService.getPaginacion();
+      this.first = paginacion.paginacion;
+      this.selectedItem = paginacion.selectedItem;
+    }
+
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.historico = this.persistenceService.getHistorico();
-    }
-
   }
 
-  searchHistorical() {
-
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
-    }
-
-  }
 
   openTab(evento) {
 
+    let paginacion = {
+      paginacion: this.tabla.first,
+      selectedItem: this.selectedItem
+    };
 
-    // if (!this.selectAll && !this.selectMultiple) {
-    //   this.progressSpinner = true;
-    //   this.persistenceService.setDatos(evento.data);
-    //   sessionStorage.setItem("calendarioLaboralAgenda", "true");
-    //   this.router.navigate(["/fichaEventos"]);
-    // } else {
+    this.persistenceService.setPaginacion(paginacion);
 
-    //   if (evento.data.fechaBaja == undefined && this.historico) {
-    //     this.selectedDatos.pop();
-    //   } else if (this.institucionActual == "2000") {
-    //     if (evento.data.title == 'Fiesta Autonómica') {
-    //       this.selectedDatos.pop();
-    //     }
-    //   } else {
-    //     if (evento.data.title == 'Fiesta Autonómica' || evento.data.title == 'Fiesta Nacional') {
-    //       this.selectedDatos.pop();
-    //     }
-    //   }
+    if (!this.modoRepresentante) {
+      this.persistenceService.clearDatos();
+      this.persistenceService.setDatos(evento);
+      this.persistenceService.clearBody();
+      this.router.navigate(["/gestionJusticiables"]);
+    } else {
+      this.persistenceService.clearBody();
+      this.persistenceService.setBody(evento);
+      this.router.navigate(["/gestionJusticiables"]);
+    }
 
-    // }
-  }
-
-  delete() {
-
-    let justiciablesDelete = new JusticiableBusquedaObject();
-    justiciablesDelete.justiciableBusquedaItems = this.selectedDatos;
-    this.sigaServices.post("calendarioLaboralAgenda_deleteFestivos", justiciablesDelete).subscribe(
-
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  activate() {
-    let justiciablesActivate = new JusticiableBusquedaObject();
-    justiciablesActivate.justiciableBusquedaItems = this.selectedDatos;
-    this.sigaServices.post("calendarioLaboralAgenda_activateFestivos", justiciablesActivate).subscribe(
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-
-
-  setItalic(dato) {
-    if (dato.fechaBaja == null) return false;
-    else return true;
   }
 
   getCols() {
 
     this.cols = [
-      { field: "nif", header: "Identificador" },
-      { field: "nombre", header: "Apellidos, Nombre" },
-      { field: "fechaModificacion", header: "Fecha Modificación" },
-      { field: "asuntos", header: "Asuntos" },
+      { field: "nif", header: "censo.fichaCliente.literal.identificacion", width: "10%" },
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
+      { field: "fechaModificacion", header: "censo.datosDireccion.literal.fechaModificacion", width: "10%" },
+      { field: "asuntos", header: "justiciaGratuita.justiciables.literal.asuntos", width: "30%" },
     ];
+
+    this.cols.forEach(element => {
+      this.buscadores.push("");
+    });
 
     this.rowsPerPage = [
       {
@@ -193,49 +122,11 @@ export class TablaJusticiablesComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();
-  }
-
-  onChangeSelectAll() {
-    // if (this.selectAll) {
-
-    //   if (this.historico) {
-    //     this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null) || dato.title == 'Fiesta Autonómica');
-    //   } else {
-    //     this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica');
-    //   }
-
-    //   if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-    //     this.selectMultiple = true;
-    //     this.numSelected = this.selectedDatos.length;
-    //   }
-
-    // } else {
-    //   this.selectedDatos = [];
-    //   this.numSelected = 0;
-    //   this.selectMultiple = false;
-    // }
-
-  }
-
-  isSelectMultiple() {
-    if (this.permisoEscritura) {
-
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
+    this.tabla.reset();
   }
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
-    this.seleccion = false;
   }
 
   showMessage(severity, summary, msg) {

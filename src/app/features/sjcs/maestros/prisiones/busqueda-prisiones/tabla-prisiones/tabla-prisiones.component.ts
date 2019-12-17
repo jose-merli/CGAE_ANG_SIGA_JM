@@ -5,6 +5,7 @@ import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PrisionObject } from '../../../../../../models/sjcs/PrisionObject';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-prisiones',
@@ -44,7 +45,8 @@ export class TablaPrisionesComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -71,6 +73,20 @@ export class TablaPrisionesComponent implements OnInit {
       this.selectMultiple = false;
     }
 
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
   }
 
   confirmDelete() {
@@ -140,6 +156,20 @@ export class TablaPrisionesComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
   }
 
   activate() {

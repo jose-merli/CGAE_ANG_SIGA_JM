@@ -3,6 +3,7 @@ import { FundamentosCalificacionItem } from '../../../../../../models/sjcs/Funda
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-generales-fundamentos-calificacion',
@@ -30,7 +31,7 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private commonsService: CommonsService) { }
   comboDictamen = [];
   idFundamento;
 
@@ -75,6 +76,20 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
         this.historico = true;
       } else {
         this.historico = false;
+      }
+    }
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
       }
     }
   }
@@ -134,6 +149,16 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
       }
     );
 
+  }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
   }
 
   rest() {

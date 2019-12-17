@@ -97,6 +97,7 @@ export class FiltrosRetencionesIrpfComponent implements OnInit {
 
     }
   }
+
   checkFilters() {
     // if (
     //   (this.filtros.descripcion == null || this.filtros.descripcion.trim() == "" || this.filtros.descripcion.length < 3) &&

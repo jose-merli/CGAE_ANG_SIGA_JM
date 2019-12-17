@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, HostListener, Output, EventEmitter } from '@angular/core';
 // import { TablaBusquedaModulosComponent } from '../tabla-busqueda-modulos/tabla-busqueda-modulos.component';
-import { MaestrosModulosComponent } from '../busqueda-modulosybasesdecompensacion.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtros-modulos',
@@ -32,7 +32,8 @@ export class FiltrosModulosComponent implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
     if (this.persistenceService.getHistorico() != undefined) {
@@ -44,6 +45,16 @@ export class FiltrosModulosComponent implements OnInit {
       this.isBuscar();
     }
 
+  }
+
+  checkPermisosNewModulo() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newModulo();
+    }
   }
 
   newModulo() {
