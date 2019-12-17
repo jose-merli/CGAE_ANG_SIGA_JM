@@ -19,12 +19,12 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="200"
+          <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.nombre' pInputText maxLength="100"
             pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'general.boton.code' | translate}}</label>
-          <input type="text" name="codigo" value="" class="box" class="form-control" [(ngModel)]='filtros.codigo' pInputText maxLength="200"
+          <input type="text" name="codigo" value="" class="box" class="form-control" [(ngModel)]='filtros.codigo' pInputText maxLength="20"
             pInputText>
         </div>
       </div>
@@ -35,7 +35,8 @@
     <div class="text-right main-button">
       <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <button (click)="newModulo()" [disabled]="!permisos" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button (click)="checkPermisosNewModulo()" [disabled]="!permisos" pButton type="button" icon="fa fa-plus" iconPos="left"
+        label="{{ 'general.boton.new' | translate}}"></button>
       <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
     </div>
   </div>

@@ -35,7 +35,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   comboRoles = [];
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonServices: CommonsService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -86,7 +86,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
       n => {
         this.comboRoles = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboRoles);
+        this.commonsService.arregloTildesCombo(this.comboRoles);
       },
       err => {
         console.log(err);
@@ -98,7 +98,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.sigaServices.get("busquedaJuzgados_provinces").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboProvincias);
+        this.commonsService.arregloTildesCombo(this.comboProvincias);
       },
       err => {
         console.log(err);
@@ -144,6 +144,8 @@ export class FiltroJusticiablesComponent implements OnInit {
         n => {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
+
         },
         error => { },
         () => { }
@@ -178,18 +180,23 @@ export class FiltroJusticiablesComponent implements OnInit {
 
   }
 
+  checkPermisosNuevo() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.nuevo();
+    }
+  }
 
   nuevo() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    if (this.modoRepresentante) {
+      this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
     } else {
-      if (this.modoRepresentante) {
-        this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
-      } else {
-        this.persistenceService.clearDatos();
-        this.persistenceService.clearBody();
-        this.router.navigate(["/gestionJusticiables"]);
-      }
+      this.persistenceService.clearDatos();
+      this.persistenceService.clearBody();
+      this.router.navigate(["/gestionJusticiables"]);
     }
   }
 

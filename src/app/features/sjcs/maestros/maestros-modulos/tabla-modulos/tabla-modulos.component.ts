@@ -18,13 +18,15 @@ import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SortEvent } from '../../../../../../../node_modules/primeng/api';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
 	selector: 'app-tabla-modulos',
 	templateUrl: './tabla-modulos.component.html',
-	styleUrls: [ './tabla-modulos.component.scss' ]
+	styleUrls: ['./tabla-modulos.component.scss']
 })
 export class TablaModulosComponent implements OnInit {
+
 	rowsPerPage: any = [];
 	cols;
 	colsPartidoJudicial;
@@ -52,20 +54,20 @@ export class TablaModulosComponent implements OnInit {
 
 	@Output() searchModulos = new EventEmitter<boolean>();
 
-	@ViewChild('tabla') tabla;
+	@ViewChild("tabla") tabla;
 
-	constructor(
-		private translateService: TranslateService,
+	constructor(private translateService: TranslateService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private router: Router,
 		private sigaServices: SigaServices,
 		private persistenceService: PersistenceService,
-		private confirmationService: ConfirmationService
-	) {}
+		private confirmationService: ConfirmationService,
+		private commonsService: CommonsService
+	) { }
 
 	ngOnInit() {
 		this.getCols();
-		this.initDatos = JSON.parse(JSON.stringify(this.datos));
+		this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 		if (this.persistenceService.getPermisos()) {
 			this.permisos = true;
 		} else {
@@ -74,7 +76,7 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		this.datos.forEach((element) => {
+		this.datos.forEach(element => {
 			element.importe = +element.importe;
 		});
 	}
@@ -85,13 +87,18 @@ export class TablaModulosComponent implements OnInit {
 			let value2 = data2[event.field];
 			let result = null;
 
-			if (value1 == null && value2 != null) result = -1;
-			else if (value1 != null && value2 == null) result = 1;
-			else if (value1 == null && value2 == null) result = 0;
-			else if (typeof value1 === 'string' && typeof value2 === 'string') result = value1.localeCompare(value2);
-			else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+			if (value1 == null && value2 != null)
+				result = -1;
+			else if (value1 != null && value2 == null)
+				result = 1;
+			else if (value1 == null && value2 == null)
+				result = 0;
+			else if (typeof value1 === 'string' && typeof value2 === 'string')
+				result = value1.localeCompare(value2);
+			else
+				result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
 
-			return event.order * result;
+			return (event.order * result);
 		});
 	}
 
@@ -99,68 +106,87 @@ export class TablaModulosComponent implements OnInit {
 		if (!this.selectAll && !this.selectMultiple) {
 			this.persistenceService.setHistorico(this.historico);
 			this.persistenceService.setDatos(this.selectedDatos[0]);
-			this.router.navigate([ '/gestionModulos' ], {
-				queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento }
-			});
+			this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento } });
 		} else {
 			if (evento.data.fechabaja == undefined && this.historico == true) {
 				this.selectedDatos.pop();
 			}
 		}
+
+	}
+
+	checkPermisosDelete(selectedDatos) {
+		let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (!this.permisos || (!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.confirmDelete(selectedDatos);
+			}
+		}
 	}
 
 	confirmDelete(selectedDatos) {
-		let mess = this.translateService.instant('messages.deleteConfirmation');
-		let icon = 'fa fa-edit';
+		let mess = this.translateService.instant(
+			"messages.deleteConfirmation"
+		);
+		let icon = "fa fa-edit";
 		this.confirmationService.confirm({
 			message: mess,
 			icon: icon,
 			accept: () => {
-				this.delete(selectedDatos);
+				this.delete(selectedDatos)
 			},
 			reject: () => {
 				this.msgs = [
 					{
-						severity: 'info',
-						summary: 'Cancelar',
-						detail: this.translateService.instant('general.message.accion.cancelada')
+						severity: "info",
+						summary: "Cancelar",
+						detail: this.translateService.instant(
+							"general.message.accion.cancelada"
+						)
 					}
 				];
 			}
 		});
 	}
 
+	checkPermisosActivate(selectedDatos) {
+		let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (!this.permisos || selectedDatos.length == 0 || selectedDatos == undefined) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.delete(selectedDatos);
+			}
+		}
+	}
+
 	delete(selectedDatos) {
 		let ModulosDelete = new ModulosObject();
-		ModulosDelete.modulosItem = selectedDatos;
-		this.sigaServices.post('modulosybasesdecompensacion_deleteModulos', ModulosDelete).subscribe(
-			(data) => {
+		ModulosDelete.modulosItem = selectedDatos
+		this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
+			data => {
 				this.selectedDatos = [];
 				if (this.historico) {
 					this.searchModulos.emit(true);
 				} else {
 					this.searchModulos.emit(false);
 				}
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
+				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
 			},
-			(err) => {
-				if (err != undefined && JSON.parse(err.error).error.description != '') {
-					this.showMessage(
-						'error',
-						this.translateService.instant('general.message.incorrect'),
-						this.translateService.instant(JSON.parse(err.error).error.description)
-					);
+			err => {
+				if (err != undefined && JSON.parse(err.error).error.description != "") {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
 				} else {
-					this.showMessage(
-						'error',
-						this.translateService.instant('general.message.incorrect'),
-						this.translateService.instant('general.message.error.realiza.accion')
-					);
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
 				}
 				this.progressSpinner = false;
 			},
@@ -179,9 +205,7 @@ export class TablaModulosComponent implements OnInit {
 				this.selectedDatos = this.datos;
 				this.numSelected = this.datos.length;
 				if (this.historico) {
-					this.selectedDatos = this.datos.filter(
-						(dato) => dato.fechabaja != undefined && dato.fechabaja != null
-					);
+					this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
 				} else {
 					this.selectedDatos = this.datos;
 				}
@@ -189,12 +213,14 @@ export class TablaModulosComponent implements OnInit {
 				this.selectedDatos = [];
 				this.numSelected = 0;
 			}
+
 		}
 	}
 
 	searchModulo() {
 		this.historico = !this.historico;
 		this.searchModulos.emit(this.historico);
+
 	}
 
 	setItalic(dato) {
@@ -203,14 +229,16 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	getCols() {
+
 		this.cols = [
-			{ field: 'codigo', header: 'general.boton.code', width: '12%' },
-			{ field: 'nombre', header: 'administracion.parametrosGenerales.literal.nombre', width: '42%' },
-			{ field: 'fechadesdevigor', header: 'facturacion.seriesFacturacion.literal.fInicio', width: '12%' },
-			{ field: 'fechahastavigor', header: 'censo.consultaDatos.literal.fechaFin', width: '12%' },
-			{ field: 'importe', header: 'formacion.fichaCurso.tarjetaPrecios.importe', width: '12%' }
+			{ field: "codigo", header: "general.boton.code", width: "12%" },
+			{ field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "42%" },
+			{ field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio", width: "12%" },
+			{ field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "12%" },
+			{ field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "12%" }
+
 		];
-		this.cols.forEach((it) => this.buscadores.push(''));
+		this.cols.forEach(it => this.buscadores.push(""));
 
 		this.rowsPerPage = [
 			{
@@ -255,6 +283,7 @@ export class TablaModulosComponent implements OnInit {
 		// this.volver();
 	}
 
+
 	actualizaSeleccionados(selectedDatos) {
 		this.numSelected = selectedDatos.length;
 		this.seleccion = false;
@@ -272,4 +301,6 @@ export class TablaModulosComponent implements OnInit {
 	clear() {
 		this.msgs = [];
 	}
+
+
 }

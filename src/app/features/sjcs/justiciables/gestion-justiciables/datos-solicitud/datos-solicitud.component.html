@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1">
+          <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha">{{ 'censo.nuevaSolicitud.headerSolicitud' | translate }}</label>
           </div>
           <div class="row">
@@ -68,9 +68,9 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
+        <button (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
           [disabled]="!permisoEscritura"></button>
-        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+        <button (click)="checkPermisosSave()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
           [disabled]="!permisoEscritura"></button>
       </div>
     </div>

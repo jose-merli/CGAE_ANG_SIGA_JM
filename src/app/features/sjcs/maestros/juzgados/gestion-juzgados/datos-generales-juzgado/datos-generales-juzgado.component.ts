@@ -42,6 +42,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
+  edicionEmail: boolean = false;
   emailValido: boolean = true;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
@@ -49,7 +50,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
   mvlValido: boolean = true;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
+    private translateService: TranslateService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -146,7 +147,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     this.sigaServices.get("busquedaJuzgados_provinces").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboProvincias);
+        this.commonsService.arregloTildesCombo(this.comboProvincias);
       },
       err => {
         console.log(err);
@@ -195,6 +196,8 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
         n => {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
+
           this.progressSpinner = false;
 
         },
@@ -203,6 +206,20 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
         },
         () => { }
       );
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
   }
 
   save() {
@@ -261,6 +278,16 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
 
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.emailValido = true;
@@ -276,6 +303,11 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
     }
   }
 
+  editEmail() {
+    if (this.edicionEmail)
+      this.edicionEmail = false;
+    else this.edicionEmail = true;
+  }
 
   fillFechaCodigoEjis(event) {
     this.body.fechaCodigoEjis = event;
@@ -351,33 +383,36 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
       return false;
     }
   }
+
   changeNombre(dato) {
     this.body.nombre = dato.nombre.trim();
   }
+
   changeEmail() {
     this.body.email = this.body.email.trim();
-    this.emailValido = this.commonsServices.validateEmail(this.body.email);
+    this.emailValido = this.commonsService.validateEmail(this.body.email);
   }
 
   changeTelefono1() {
     // if (this.body.telefono1.length > 8) {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+    this.tlf1Valido = this.commonsService.validateTelefono(this.body.telefono1);
     // }
   }
+
   changeTelefono2() {
     // if (this.body.telefono2.length > 8) {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+    this.tlf2Valido = this.commonsService.validateTelefono(this.body.telefono2);
     // }
   }
   changeFax() {
     // if (this.body.fax.length > 8) {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
+    this.faxValido = this.commonsService.validateFax(this.body.fax);
     // }
   }
 
   changeMovil() {
     // if (this.body.movil.length > 8) {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
+    this.mvlValido = this.commonsService.validateMovil(this.body.movil);
     // }
   }
 
@@ -392,7 +427,6 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
       return false;
     }
   }
-
 
   clear() {
     this.msgs = [];

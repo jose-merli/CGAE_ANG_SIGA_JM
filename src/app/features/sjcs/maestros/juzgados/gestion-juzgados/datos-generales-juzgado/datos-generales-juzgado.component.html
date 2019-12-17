@@ -68,8 +68,7 @@
               </label>
               <!--  -->
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                disabled [showClear]="true">
+                [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" disabled [showClear]="true">
               </p-dropdown>
             </div>
 
@@ -140,10 +139,25 @@
               <label>
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
-              <input type="text" class="form-control" maxLength="200" [(ngModel)]="body.email" (input)="changeEmail()" [disabled]="historico || !permisoEscritura"
-                pInputText>
+              <div *ngIf="edicionEmail" class="row">
+                <div class="form-row col-10 mr-1 pr-0">
+                  <input type="text" [disabled]="!permisoEscritura" maxlength="50" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
+                    style="width: 100%" />
+                </div>
+                <div class="col-1 pl-0" pTooltip="Verificar e-mail" tooltipPosition="bottom" style="display:inline-block;">
+                  <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn button-edit" [disabled]="!emailValido"></button>
+                </div>
+              </div>
               <div *ngIf="!emailValido">
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+              </div>
+              <div *ngIf="!edicionEmail" class="row">
+                <div class="col-9 mr-2 pr-0">
+                  <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
+                </div>
+                <div class="col-1">
+                  <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit"></button>
+                </div>
               </div>
             </div>
             <div class="form-group col-lg-3 col-md-3">
@@ -214,9 +228,10 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -137,22 +137,24 @@
     <div class="card-footer" *ngIf="modoEdicion && openFicha">
       <div class="text-right main-button">
 
-        <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="searchHistorical(); selectedDatos = []" pButton type="button"
-          icon="fa fa-undo" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-        <button [disabled]="nuevo" *ngIf="historico" (click)="searchHistorical(); selectedDatos = []" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="checkPermisosSearchHistorical(); selectedDatos = []" pButton
+          type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+        <button [disabled]="nuevo" *ngIf="historico" (click)="checkPermisosSearchHistorical(); selectedDatos = []" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-        <button [disabled]="historico || !permisos" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="historico || !permisos" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
 
         <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0 || selectedDatos[0].idDocumento == undefined"
-          (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
 
         <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
-          (click)="deleteDoc()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+          (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
 
-        <button pButton [disabled]="disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
 
-        <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="newDocumento()"
+        <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="checkPermisosNewDocumento()"
           type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>

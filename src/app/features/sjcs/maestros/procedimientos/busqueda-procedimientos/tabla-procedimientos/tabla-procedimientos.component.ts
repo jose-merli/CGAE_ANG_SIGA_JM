@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { PretensionObject } from '../../../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../../../models/sjcs/PretensionItem';
 import { ConfirmationService, Paginator } from '../../../../../../../../node_modules/primeng/primeng';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-procedimientos',
@@ -57,7 +58,8 @@ export class TablaProcedimientosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -78,6 +80,20 @@ export class TablaProcedimientosComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisos || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
   }
 
   confirmDelete() {
@@ -251,6 +267,19 @@ export class TablaProcedimientosComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -284,6 +313,18 @@ export class TablaProcedimientosComponent implements OnInit {
     }
 
   }
+
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -299,6 +340,20 @@ export class TablaProcedimientosComponent implements OnInit {
     this.tabla.sortField = '';
     this.tabla.reset();
     this.buscadores = this.buscadores.map(it => it = "");
+  }
+
+  checkPermisosNewPretension() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newPretension();
+      }
+    }
   }
 
   newPretension() {
@@ -375,6 +430,19 @@ export class TablaProcedimientosComponent implements OnInit {
     return check;
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
+  }
 
   delete() {
     let del = new PretensionObject();
@@ -433,6 +501,14 @@ export class TablaProcedimientosComponent implements OnInit {
       if (this.historico)
         this.selectMultiple = true;
       this.selectionMode = "multiple";
+    }
+  }
+
+  checkPermisosIsHistorico() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.isHistorico();
     }
   }
 

@@ -6,6 +6,7 @@ import { ZonasItem } from '../../../../../models/sjcs/ZonasItem';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '@angular/router';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtro-gestion-zonas',
@@ -30,7 +31,8 @@ export class FiltroGestionZonasComponent implements OnInit {
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() isOpen = new EventEmitter<boolean>();
 
-  constructor(private router: Router, private translateService: TranslateService, private persistenceService: PersistenceService) { }
+  constructor(private router: Router, private translateService: TranslateService,
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -61,6 +63,17 @@ export class FiltroGestionZonasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosNewZoneGroup() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newZoneGroup();
+    }
+  }
+
 
   newZoneGroup() {
     this.router.navigate(["/fichaGrupoZonas"]);

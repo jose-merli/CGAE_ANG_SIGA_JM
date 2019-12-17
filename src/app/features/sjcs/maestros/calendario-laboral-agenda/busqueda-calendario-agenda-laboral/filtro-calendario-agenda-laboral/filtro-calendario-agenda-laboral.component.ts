@@ -26,7 +26,7 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
   @Output() isOpen = new EventEmitter<boolean>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonServices: CommonsService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -68,6 +68,17 @@ export class FiltroCalendarioAgendaLaboralComponent implements OnInit {
 
     }
   }
+
+  checkPermisosNuevo() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.nuevo();
+    }
+  }
+
   nuevo() {
     this.persistenceService.clearDatos();
     sessionStorage.setItem("calendarioLaboralAgenda", "true");
