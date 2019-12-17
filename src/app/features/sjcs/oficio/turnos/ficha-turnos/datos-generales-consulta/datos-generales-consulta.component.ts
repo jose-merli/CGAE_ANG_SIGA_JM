@@ -90,8 +90,9 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             this.disableAll = true;
           }
           this.modoEdicion = true;
+          this.getCombos();
         }
-        this.getCombos();
+        
       }
     } else {
       this.partidoJudicial = "";
@@ -689,6 +690,15 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.turnosItem.codigoext != undefined) {
+      this.turnosItem.codigoext = this.turnosItem.codigoext.trim();
+    }
+    if (this.turnosItem.nombre != undefined) {
+      this.turnosItem.nombre = this.turnosItem.nombre.trim();
+    }
+    if (this.turnosItem.abreviatura != undefined) {
+      this.turnosItem.abreviatura = this.turnosItem.abreviatura.trim();
+    }
     this.sigaServices.post(url, this.turnosItem).subscribe(
       data => {
 
@@ -798,17 +808,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       detail: msg
     });
   }
-
+  
   disabledSave() {
-    if (this.turnosItem.codigoext != undefined) {
-      this.turnosItem.codigoext = this.turnosItem.codigoext.trim();
-    }
-    if (this.turnosItem.nombre != undefined) {
-      this.turnosItem.nombre = this.turnosItem.nombre.trim();
-    }
-    if (this.turnosItem.abreviatura != undefined) {
-      this.turnosItem.abreviatura = this.turnosItem.abreviatura.trim();
-    }
     if (this.turnosItem.nombre != undefined && this.turnosItem.nombre != "" && this.turnosItem.abreviatura != undefined && this.turnosItem.abreviatura != "" && this.turnosItem.idpartidapresupuestaria != null && this.turnosItem.idpartidapresupuestaria != "" && this.turnosItem.idzona != null && this.turnosItem.idzona != "" && this.turnosItem.idsubzona != null && this.turnosItem.idsubzona != "" &&
       this.turnosItem.idjurisdiccion != null && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idgrupofacturacion != null && this.turnosItem.idmateria != null && this.turnosItem.idmateria != "" &&
       this.turnosItem.idarea != null && this.turnosItem.idarea != "" && this.turnosItem.idtipoturno != null && this.turnosItem.idtipoturno != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))
