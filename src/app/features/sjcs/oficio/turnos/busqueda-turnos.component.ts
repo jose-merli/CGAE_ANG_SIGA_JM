@@ -47,6 +47,7 @@ export class TurnosComponent implements OnInit {
 
 
   ngOnInit() {
+    this.buscar = this.filtros.buscar;
     this.commonsService.checkAcceso(procesos_oficio.turnos)
       .then(respuesta => {
         this.permisoEscritura = respuesta;

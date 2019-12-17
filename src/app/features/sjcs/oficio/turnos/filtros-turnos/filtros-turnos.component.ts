@@ -49,8 +49,16 @@ export class FiltrosTurnos implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    if (this.persistenceService.getHistorico() != undefined) {
-      this.busqueda.emit(this.persistenceService.getHistorico());
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      if (this.persistenceService.getHistorico() != undefined) {
+        this.busqueda.emit(this.persistenceService.getHistorico());
+      }
+      else {
+        this.isBuscar();
+      }
+    } else {
+      this.filtros = new TurnosItems();
     }
 
 
@@ -222,7 +230,7 @@ export class FiltrosTurnos implements OnInit {
 
   onChangeZona() {
 
-    this.filtros.idsubzona = "";
+    this.filtros.idzubzona = "";
     this.subzonas = [];
 
     if (this.filtros.idzona != undefined && this.filtros.idzona != "") {
