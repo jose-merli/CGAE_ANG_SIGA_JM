@@ -49,13 +49,11 @@ export class FiltrosTurnos implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-      if (this.persistenceService.getHistorico() != undefined) {
-        this.busqueda.emit(this.persistenceService.getHistorico());
-      }
-      else {
-        this.isBuscar();
-      }
-    
+    if (this.persistenceService.getHistorico() != undefined) {
+      this.busqueda.emit(this.persistenceService.getHistorico());
+    }
+
+
 
     this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
       n => {
@@ -290,7 +288,7 @@ export class FiltrosTurnos implements OnInit {
       this.partidasJudiciales[i].partidosJudiciales = [];
       this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
         this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
-      
+
       });
     }
   }

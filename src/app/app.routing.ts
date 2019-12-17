@@ -207,7 +207,7 @@ import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicac
 import { MaestrosModulosComponent } from "./features/sjcs/maestros/maestros-modulos/busqueda-modulosybasesdecompensacion.component";
 import { PartidosJudicialesComponent } from "./features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component";
 import { ComisariasComponent } from "./features/sjcs/maestros/comisarias/comisarias/comisarias.component";
-import { TurnosComponent } from "./features/sjcs/oficio/turnos/turnos.component";
+import { TurnosComponent } from "./features/sjcs/oficio/turnos/busqueda-turnos.component";
 
 import { FichaModeloComunicacionesComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/ficha-modelo-comunicaciones.component';
 import { PlantillaDocumentoComponent } from './features/informes-comunicaciones/modelos-comunicaciones/ficha-modelo-comunicaciones/tarjeta-informes/plantilla-documento/plantilla-documento.component';

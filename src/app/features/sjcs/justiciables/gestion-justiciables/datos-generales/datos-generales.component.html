@@ -142,51 +142,31 @@
               <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="comboEstadoCivil" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-<<<<<<< HEAD
-                [(ngModel)]="body.idestadocivil" [disabled]="!permisoEscritura"></p-dropdown>
-=======
                 [filter]="true" filterBy="label,labelSinTilde" [(ngModel)]="body.idestadocivil" [disabled]="!permisoEscritura"></p-dropdown>
->>>>>>> Fase3
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.personaJG.literal.regimenConyugal" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-<<<<<<< HEAD
-                [(ngModel)]="body.regimenConyugal" [disabled]="!permisoEscritura"></p-dropdown>
-=======
                 [(ngModel)]="body.regimenConyugal" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
->>>>>>> Fase3
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.personaJG.literal.profesion" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="comboProfesion" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-<<<<<<< HEAD
-                [(ngModel)]="body.idprofesion" [disabled]="!permisoEscritura"></p-dropdown>
-=======
                 [(ngModel)]="body.idprofesion" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
->>>>>>> Fase3
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "gratuita.busquedaSOJ.literal.minusvalia" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="comboMinusvalia" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-<<<<<<< HEAD
-                [(ngModel)]="body.idminusvalia" [disabled]="!permisoEscritura"></p-dropdown>
-=======
                 [(ngModel)]="body.idminusvalia" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
->>>>>>> Fase3
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ 'censo.usuario.idioma' | translate }}
               </label>
               <p-dropdown class="select-form" [options]="comboIdiomas" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-<<<<<<< HEAD
-                [(ngModel)]="body.idlenguaje" [disabled]="!permisoEscritura"></p-dropdown>
-=======
                 [(ngModel)]="body.idlenguaje" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
->>>>>>> Fase3
             </div>
 
           </div>
@@ -204,11 +184,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.justiciables.literal.tipoVia' | translate }}</label>
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idtipovia"
-<<<<<<< HEAD
-                [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboTipoVia" [disabled]="!permisoEscritura">
-=======
                 [showClear]="true" [filter]="true" [options]="comboTipoVia" [disabled]="!permisoEscritura">
->>>>>>> Fase3
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -246,12 +222,7 @@
                 {{"censo.datosDireccion.literal.pais2" | translate}}
               </label>
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.idpaisdir1"
-<<<<<<< HEAD
-                [showClear]="true" [filter]="true" filterMatchMode="contains" [options]="comboPais" (onChange)="onChangePais()"
-                disabled>
-=======
                 [showClear]="true" [filter]="true" [options]="comboPais" (onChange)="onChangePais()" disabled>
->>>>>>> Fase3
               </p-dropdown>
             </div>
 
@@ -269,13 +240,8 @@
               </label>
 
               <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='body.idprovincia'
-<<<<<<< HEAD
-                [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                [options]="comboProvincia" [disabled]="isDisabledProvincia || !permisoEscritura">
-=======
                 [showClear]="true" (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde" [options]="comboProvincia"
                 [disabled]="isDisabledProvincia || !permisoEscritura">
->>>>>>> Fase3
               </p-dropdown>
             </div>
 
@@ -410,19 +376,11 @@
                       </div>
 
                       <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo == 'Telefono' && !selectAll && !selectMultiple">
-<<<<<<< HEAD
-                        <input class="form-control" [(ngModel)]="dato.nombreTelefono" maxLength="100" pInputText [disabled]="!permisoEscritura">
-                      </div>
-
-                      <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo == 'Telefono' && (selectAll || selectMultiple)">
-                        <span>{{ dato[col.field] }}</span>
-=======
                         <input class="form-control" [(ngModel)]="dato.nombreTelefono" maxLength="98" pInputText [disabled]="!permisoEscritura">
                       </div>
 
                       <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo == 'Telefono' && (selectAll || selectMultiple)">
                         <span>{{ dato.nombreTelefono }}</span>
->>>>>>> Fase3
                       </div>
 
                       <div *ngIf="col.field == 'tipo' && !dato.nuevo && dato.tipo != 'Telefono'">
@@ -442,21 +400,12 @@
 
             </div>
             <div class="text-right form-group main-button col-lg-12 col-md-12 pt-2">
-<<<<<<< HEAD
-              <button class="botontabla" (click)="restData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-undo" iconPos="left"
-                label="{{ 'general.boton.restablecer' | translate}}"></button>
-              <button [disabled]="!permisoEscritura || disabledDelete()" (click)="deleteData(selectedDatos)" pButton type="button" icon="fa fa-trash-alt"
-                iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-              <button class="botontabla" (click)="newData()" [disabled]="!permisoEscritura || selectAll || selectMultiple" pButton type="button"
-                icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-=======
               <button class="botontabla" (click)="checkPermisosRestData()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-undo"
                 iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
               <button [disabled]="!permisoEscritura || disabledDelete()" (click)="checkPermisosDeleteData(selectedDatos)" pButton type="button"
                 icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
               <button class="botontabla" (click)="checkPermisosNewData()" [disabled]="!permisoEscritura || selectAll || selectMultiple"
                 pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
->>>>>>> Fase3
             </div>
           </div>
         </div>
@@ -467,17 +416,10 @@
       <div class="text-right main-button">
         <button *ngIf="!fromJusticiable" pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"
           [disabled]="!permisoEscritura"></button>
-<<<<<<< HEAD
-        <button pButton (click)="rest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
-          [disabled]="!permisoEscritura"></button>
-        <button pButton (click)="save()" [disabled]="disabledSave() || !permisoEscritura" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate }}"></button>
-=======
         <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"
           [disabled]="!permisoEscritura"></button>
         <button pButton (click)="checkPermisosSave()" [disabled]="disabledSave() || !permisoEscritura" type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
->>>>>>> Fase3
 
       </div>
     </div>

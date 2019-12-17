@@ -469,7 +469,6 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
-		TurnosComponent,
 		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
 		GuardiasBajasTemporalesComponent,
