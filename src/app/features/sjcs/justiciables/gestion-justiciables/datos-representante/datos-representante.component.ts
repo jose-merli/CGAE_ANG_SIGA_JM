@@ -24,7 +24,7 @@ import { Dialog } from 'primeng/primeng';
 @Component({
 	selector: 'app-datos-representante',
 	templateUrl: './datos-representante.component.html',
-	styleUrls: [ './datos-representante.component.scss' ]
+	styleUrls: ['./datos-representante.component.scss']
 })
 export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy {
 	generalBody: JusticiableItem = new JusticiableItem();
@@ -67,7 +67,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		private confirmationService: ConfirmationService,
 		private translateService: TranslateService,
 		private commonsService: CommonsService
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.progressSpinner = true;
@@ -252,40 +252,43 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			);
 		} else {
 			this.persistenceService.clearBody();
-			this.router.navigate([ '/justiciables' ], { queryParams: { rp: '1' } });
+			this.router.navigate(['/justiciables'], { queryParams: { rp: '1' } });
+		}
+	}
+
+	checkPermisosSearchRepresentanteByNif() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			this.searchRepresentanteByNif();
 		}
 	}
 
 	searchRepresentanteByNif() {
-		if (this.permisoEscritura != undefined && !this.permisoEscritura) {
-			this.showMessage(
-				'error',
-				this.translateService.instant('general.message.incorrect'),
-				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
-			);
-		} else {
-			if (this.generalBody.nif.trim() != undefined && this.generalBody.nif.trim() != '') {
-				this.progressSpinner = true;
-				let bodyBusqueda = new JusticiableBusquedaItem();
-				bodyBusqueda.nif = this.generalBody.nif;
 
-				this.sigaServices.post('gestionJusticiables_getJusticiableByNif', bodyBusqueda).subscribe(
-					(n) => {
-						this.generalBody = JSON.parse(n.body).justiciable;
-						this.nifRepresentante = this.generalBody.nif;
-						this.progressSpinner = false;
-						this.compruebaDNI();
+		if (this.generalBody.nif.trim() != undefined && this.generalBody.nif.trim() != '') {
+			this.progressSpinner = true;
+			let bodyBusqueda = new JusticiableBusquedaItem();
+			bodyBusqueda.nif = this.generalBody.nif;
 
-						if (this.generalBody.idpersona == null || this.generalBody.idpersona == undefined) {
-							this.callServiceConfirmationCreateRepresentante();
-						}
-					},
-					(err) => {
-						this.progressSpinner = false;
-						console.log(err);
+			this.sigaServices.post('gestionJusticiables_getJusticiableByNif', bodyBusqueda).subscribe(
+				(n) => {
+					this.generalBody = JSON.parse(n.body).justiciable;
+					this.nifRepresentante = this.generalBody.nif;
+					this.progressSpinner = false;
+					this.compruebaDNI();
+
+					if (this.generalBody.idpersona == null || this.generalBody.idpersona == undefined) {
+						this.callServiceConfirmationCreateRepresentante();
 					}
-				);
-			}
+				},
+				(err) => {
+					this.progressSpinner = false;
+					console.log(err);
+				}
+			);
 		}
 	}
 
@@ -395,6 +398,20 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		}
 	}
 
+	checkPermisosAssociate() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (this.disabledSave()) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.associate();
+			}
+		}
+	}
+
 	associate() {
 		if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != '0') {
 			this.callConfirmationAssociate();
@@ -446,6 +463,20 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				this.translateService.instant('general.message.error.realiza.accion');
 			}
 		);
+	}
+
+	checkPermisosDisassociate() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			if (this.disabledDisassociate()) {
+				this.msgs = this.commonsService.checkPermisoAccion();
+			} else {
+				this.callConfirmationDisassociate();
+			}
+		}
 	}
 
 	disassociate() {
@@ -538,7 +569,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 						}
 					}
 				},
-				reject: () => {}
+				reject: () => { }
 			});
 		}
 	}
@@ -584,41 +615,34 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	}
 
 	callConfirmationDisassociate() {
-		if (!this.permisoEscritura) {
-			this.showMessage(
-				'error',
-				this.translateService.instant('general.message.incorrect'),
-				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
-			);
-		} else {
-			this.progressSpinner = false;
-			this.confirmationDisassociate = true;
 
-			this.confirmationService.confirm({
-				key: 'cdRepresentanteDisassociate',
-				message: this.translateService.instant(
-					'gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos'
-				),
-				icon: 'fa fa-search ',
-				accept: () => {
-					if (
-						this.body.edad == undefined ||
-						(this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)
-					) {
-						this.callServiceDisassociate();
-					} else {
-						this.showMessage(
-							'error',
-							this.translateService.instant('general.message.incorrect'),
-							this.translateService.instant(
-								'justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable'
-							)
-						);
-					}
-				},
-				reject: () => {}
-			});
-		}
+		this.progressSpinner = false;
+		this.confirmationDisassociate = true;
+
+		this.confirmationService.confirm({
+			key: 'cdRepresentanteDisassociate',
+			message: this.translateService.instant(
+				'gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos'
+			),
+			icon: 'fa fa-search ',
+			accept: () => {
+				if (
+					this.body.edad == undefined ||
+					(this.body.edad != undefined && JSON.parse(this.body.edad) > SigaConstants.EDAD_ADULTA)
+				) {
+					this.callServiceDisassociate();
+				} else {
+					this.showMessage(
+						'error',
+						this.translateService.instant('general.message.incorrect'),
+						this.translateService.instant(
+							'justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable'
+						)
+					);
+				}
+			},
+			reject: () => { }
+		});
 	}
 
 	rejectDisassociate() {
@@ -668,6 +692,16 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.commonsService.scrollTop();
 			this.idPersona = this.generalBody.idpersona;
 			this.viewRepresentante.emit(this.generalBody);
+		}
+	}
+
+	checkPermisosRest() {
+		let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+		if (msg != undefined) {
+			this.msgs = msg;
+		} else {
+			this.rest();
 		}
 	}
 

@@ -232,54 +232,55 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.getComboTipoVia();
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
 
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    this.progressSpinner = true;
+    let url = "";
+    this.body.validacionRepeticion = false;
+
+    if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
+      || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
+      this.menorEdadJusticiable = false;
+
     } else {
-      this.progressSpinner = true;
-      let url = "";
-      this.body.validacionRepeticion = false;
+      this.menorEdadJusticiable = true;
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+    }
 
-      if ((this.body.edad != undefined && JSON.parse(this.body.edad) < this.edadAdulta && this.body.idrepresentantejg != undefined) || this.body.edad == undefined
-        || (this.body.edad != undefined && JSON.parse(this.body.edad) >= this.edadAdulta)) {
-        this.menorEdadJusticiable = false;
-
-      } else {
-        this.menorEdadJusticiable = true;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
+    if (!this.modoEdicion) {
+      //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
+      if (this.menorEdadJusticiable) {
+        this.body.fechanacimiento = undefined;
+        this.body.edad = undefined;
       }
 
-      if (!this.modoEdicion) {
-        //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
-        if (this.menorEdadJusticiable) {
-          this.body.fechanacimiento = undefined;
-          this.body.edad = undefined;
-        }
+      url = "gestionJusticiables_createJusticiable";
+      this.validateCampos(url);
+    } else {
 
-        url = "gestionJusticiables_createJusticiable";
-        this.validateCampos(url);
-      } else {
-
-        if (!this.menorEdadJusticiable) {
-          url = "gestionJusticiables_updateJusticiable";
-          //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
-          if (this.bodyInicial.autorizaavisotelematico == "1") {
-            if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
-              this.progressSpinner = false;
-            } else {
-
-              if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
-                this.callConfirmationUpdate();
-
-              } else {
-                let url = "gestionJusticiables_updateJusticiable";
-                this.validateCampos(url);
-              }
-            }
+      if (!this.menorEdadJusticiable) {
+        url = "gestionJusticiables_updateJusticiable";
+        //Comprueba que si autorizaavisotelematico el correo no se pueda borrar
+        if (this.bodyInicial.autorizaavisotelematico == "1") {
+          if (!(this.body.correoelectronico != undefined && this.body.correoelectronico != "")) {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.justiciables.message.necesarioCorreoElectronico.recibirNotificaciones"));
+            this.progressSpinner = false;
           } else {
+
             if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
               this.callConfirmationUpdate();
 
@@ -288,12 +289,19 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
               this.validateCampos(url);
             }
           }
-
         } else {
-          this.progressSpinner = false;
-        }
-      }
+          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+            this.callConfirmationUpdate();
 
+          } else {
+            let url = "gestionJusticiables_updateJusticiable";
+            this.validateCampos(url);
+          }
+        }
+
+      } else {
+        this.progressSpinner = false;
+      }
     }
   }
 
@@ -698,6 +706,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       { label: "Separación de bienes", value: "S" }
     ];
 
+    this.commonsService.arregloTildesCombo(this.comboRegimenConyugal);
+
+
   }
 
   getComboTipoPersona() {
@@ -707,6 +718,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.comboTipoPersona = [
       { label: "Física", value: "F" },
       { label: "Jurídica", value: "J" }
+
     ];
 
     this.commonsService.arregloTildesCombo(this.comboTipoPersona);
@@ -852,8 +864,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       .subscribe(
         n => {
           this.comboPoblacion = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboPoblacion)
-
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
         },
         error => {
           this.progressSpinner = false;
@@ -1029,35 +1040,42 @@ para poder filtrar el dato con o sin estos caracteres*/
     return labelSinTilde;
   }
 
-  rest() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
     } else {
-      this.nuevoTelefono = false;
-      this.selectedDatos = [];
-      this.body.idpaisdir1 = "191";
+      this.rest();
+    }
+  }
 
-      if (this.modoEdicion) {
-        if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-        if (this.body.idpoblacion != undefined) {
-          this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-        }
+  rest() {
 
-        this.parseFechas();
+    this.nuevoTelefono = false;
+    this.selectedDatos = [];
+    this.body.idpaisdir1 = "191";
 
-        if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-        this.faxValido = true;
-        this.emailValido = true;
-
-        if (this.body.idpaisdir1 != "191") {
-          this.poblacionExtranjera = true;
-        } else {
-          this.poblacionExtranjera = false;
-        }
-
-      } else {
-        this.body = new JusticiableItem();
+    if (this.modoEdicion) {
+      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+      if (this.body.idpoblacion != undefined) {
+        this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
       }
+
+      this.parseFechas();
+
+      if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      this.faxValido = true;
+      this.emailValido = true;
+
+      if (this.body.idpaisdir1 != "191") {
+        this.poblacionExtranjera = true;
+      } else {
+        this.poblacionExtranjera = false;
+      }
+
+    } else {
+      this.body = new JusticiableItem();
     }
   }
 
@@ -1071,25 +1089,36 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   }
 
-  newData() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+  checkPermisosNewData() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
     } else {
-      this.nuevoTelefono = true;
-
-      let dato = new JusticiableTelefonoItem();
-      dato.nuevo = true;
-      dato.preferenteSmsCheck = false;
-      dato.preferenteSms = "0";
-      dato.count = this.count;
-      dato.tlfValido = true;
-      dato.numeroTelefono = undefined;
-      dato.nombreTelefono = undefined;
-
-      this.datos.push(dato);
-
-      this.count += 1;
+      if (!this.permisoEscritura || this.selectAll || this.selectMultiple) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newData();
+      }
     }
+  }
+
+  newData() {
+
+    this.nuevoTelefono = true;
+
+    let dato = new JusticiableTelefonoItem();
+    dato.nuevo = true;
+    dato.preferenteSmsCheck = false;
+    dato.preferenteSms = "0";
+    dato.count = this.count;
+    dato.tlfValido = true;
+    dato.numeroTelefono = undefined;
+    dato.nombreTelefono = undefined;
+
+    this.datos.push(dato);
+
+    this.count += 1;
   }
 
   onChangePreferente(dato) {
@@ -1254,43 +1283,61 @@ para poder filtrar el dato con o sin estos caracteres*/
     else this.edicionEmail = true;
   }
 
-  restData() {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+  checkPermisosRestData() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
     } else {
-      if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.faxValido = true;
-      this.emailValido = true;
-      this.selectedDatos = [];
+      this.restData();
+    }
+  }
+
+  restData() {
+
+    if (this.datosInicial != undefined) this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+    this.faxValido = true;
+    this.emailValido = true;
+    this.selectedDatos = [];
+  }
+
+  checkPermisosDeleteData(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledDelete()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.deleteData(selectedDatos);
+      }
     }
   }
 
   deleteData(selectedDatos) {
-    if (!this.permisoEscritura) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
-    } else {
-      selectedDatos.forEach(element => {
 
-        if (!element.nuevo) {
-          let pos = this.datos.findIndex(
-            x => x.idTelefono == element.idTelefono);
+    selectedDatos.forEach(element => {
 
-          if (pos != -1) {
-            this.datos.splice(pos, 1);
-          }
-        } else {
-          let pos = this.datos.findIndex(
-            x => x.count == element.count);
+      if (!element.nuevo) {
+        let pos = this.datos.findIndex(
+          x => x.idTelefono == element.idTelefono);
 
-          if (pos != -1) {
-            this.datos.splice(pos, 1);
-          }
+        if (pos != -1) {
+          this.datos.splice(pos, 1);
         }
+      } else {
+        let pos = this.datos.findIndex(
+          x => x.count == element.count);
 
-      });
+        if (pos != -1) {
+          this.datos.splice(pos, 1);
+        }
+      }
 
-      this.selectedDatos = [];
-    }
+    });
+
+    this.selectedDatos = [];
   }
 
   onRowSelect(dato) {

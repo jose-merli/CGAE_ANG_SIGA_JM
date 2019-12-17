@@ -6,6 +6,7 @@ import { ZonasObject } from '../../../../../models/sjcs/ZonasObject';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-gestion-zonas',
@@ -48,7 +49,8 @@ export class TablaGestionZonasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -78,6 +80,22 @@ export class TablaGestionZonasComponent implements OnInit {
 
     }
   }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+
+    }
+  }
+
 
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
@@ -129,6 +147,21 @@ export class TablaGestionZonasComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+
+    }
   }
 
   activate() {

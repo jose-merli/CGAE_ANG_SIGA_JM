@@ -87,6 +87,21 @@ export class TiposActuacionComponent implements OnInit {
     this.updateTiposActuacion = [];
     this.nuevo = false;
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisoEscritura || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -111,6 +126,7 @@ export class TiposActuacionComponent implements OnInit {
       }
     });
   }
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
@@ -162,6 +178,7 @@ export class TiposActuacionComponent implements OnInit {
     );
 
   }
+
   searchTiposActuaciones() {
     this.sigaServices
       .getParam("gestionTiposActuacion_busquedaTiposActuacion", "?historico=" + this.historico)
@@ -235,6 +252,16 @@ export class TiposActuacionComponent implements OnInit {
     } else
       element.importemaximo = "0"
   }
+
+
+  checkPermisosSearchHistorical() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchHistorical();
+    }
+  }
+
   searchHistorical() {
     this.historico = !this.historico;
     if (this.historico) {
@@ -255,6 +282,20 @@ export class TiposActuacionComponent implements OnInit {
     }
     this.searchTiposActuaciones();
     this.selectAll = false;
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
   }
 
   save() {
@@ -316,7 +357,6 @@ export class TiposActuacionComponent implements OnInit {
     return check;
   }
 
-
   callSaveService(url) {
     if (this.body.tiposActuacionItem != undefined) {
       this.body.tiposActuacionItem.forEach(element => {
@@ -369,6 +409,20 @@ export class TiposActuacionComponent implements OnInit {
 
   }
 
+  checkPermisosNewTipoActuacion() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisoEscritura) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newTipoActuacion();
+      }
+    }
+  }
+
   newTipoActuacion() {
     this.nuevo = true;
     this.editMode = false;
@@ -403,6 +457,7 @@ export class TiposActuacionComponent implements OnInit {
     }
 
   }
+
   changeImporte(dato) {
     dato.importe = dato.valorNum;
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
@@ -427,6 +482,7 @@ export class TiposActuacionComponent implements OnInit {
     }
 
   }
+
   changeImporteMaximo(dato) {
     dato.importemaximo = dato.valorNum;
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
@@ -451,6 +507,7 @@ export class TiposActuacionComponent implements OnInit {
 
 
   }
+
   editarTipoAsistencia(dato) {
 
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion);
@@ -481,6 +538,7 @@ export class TiposActuacionComponent implements OnInit {
       }
     }
   }
+
   editarTipoActuacion(dato) {
     let findDato = this.datosInicial.find(item => item.idtipoactuacion === dato.idtipoactuacion && item.idtipoasistencia === dato.idtipoasistencia);
 
@@ -604,6 +662,20 @@ export class TiposActuacionComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0))) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
+
   activate() {
     this.progressSpinner = true;
     this.body = new TiposActuacionObject();
@@ -643,6 +715,15 @@ export class TiposActuacionComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
 
   rest() {
     if (this.datosInicial != undefined) {

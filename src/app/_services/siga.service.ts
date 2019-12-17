@@ -744,10 +744,6 @@ export class SigaServices {
   private habilitarDocs = new Subject<any>();
   private desHabilitarDocs = new Subject<any>();
   private sendFechaBaja = new Subject<any>();
-  private guardarDatosGeneralesJusticiable = new Subject<any>();
-  private guardarDatosGeneralesRepresentante = new Subject<any>();
-  private guardarDatosSolicitudJusticiable = new Subject<any>();
-  private createJusticiable = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
@@ -759,9 +755,17 @@ export class SigaServices {
   habilitarDocs$ = this.habilitarDocs.asObservable();
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
   sendFechaBaja$ = this.sendFechaBaja.asObservable();
+
+  private guardarDatosGeneralesJusticiable = new Subject<any>();
   guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
+
+  private guardarDatosGeneralesRepresentante = new Subject<any>();
   guardarDatosGeneralesRepresentante$ = this.guardarDatosGeneralesRepresentante.asObservable();
+
+  private guardarDatosSolicitudJusticiable = new Subject<any>();
   guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
+
+  private createJusticiable = new Subject<any>();
   createJusticiable$ = this.createJusticiable.asObservable();
 
   constructor(
@@ -1035,9 +1039,6 @@ export class SigaServices {
     this.desHabilitarDocs.next();
   }
 
-  notifysendFechaBaja(fecha) {
-    this.sendFechaBaja.next(fecha);
-  }
   notifyGuardarDatosGeneralesRepresentante(data) {
     this.guardarDatosGeneralesRepresentante.next(data);
   }
@@ -1053,6 +1054,11 @@ export class SigaServices {
   notifyCreateJusticiable(data) {
     this.createJusticiable.next(data);
   }
+
+  notifysendFechaBaja(fecha) {
+    this.sendFechaBaja.next(fecha);
+  }
+  
   postSendContentAndParameter(
     service: string,
     param: string,

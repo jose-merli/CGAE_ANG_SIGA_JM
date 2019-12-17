@@ -6,6 +6,7 @@ import { RetencionIrpfItem } from '../../../../../models/sjcs/RetencionIrpfItem'
 import { RetencionIrpfObject } from '../../../../../models/sjcs/RetencionIrpfObject';
 import { SortEvent, ConfirmationService } from '../../../../../../../node_modules/primeng/api';
 import { truncateSync } from 'fs';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-retenciones-irpf',
@@ -57,7 +58,8 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -120,7 +122,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
   }
 
-
   getComboSociedades() {
     this.sigaServices
       .get("busquedaRetencionesIRPF_sociedades")
@@ -153,6 +154,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
 
   }
+
   changeClaveModelo(dato) {
 
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
@@ -171,6 +173,7 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
 
   }
+
   changeRetencion(dato) {
     dato.retencion = dato.valorNum;
     let findDato = this.datosInicial.find(item => item.idRetencion === dato.idRetencion);
@@ -187,7 +190,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
 
   }
-
 
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -217,6 +219,19 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     }
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -308,6 +323,16 @@ export class TablaRetencionesIrpfComponent implements OnInit {
 
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -325,6 +350,20 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     this.buscadores = this.buscadores.map(it => it = "");
 
 
+  }
+
+  checkPermisosNewRetencion() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newRetencion();
+      }
+    }
   }
 
   newRetencion() {
@@ -402,6 +441,20 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     return check;
   }
 
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+    }
+  }
+
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -427,6 +480,19 @@ export class TablaRetencionesIrpfComponent implements OnInit {
     });
   }
 
+  checkPermisosActivate(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple || !this.selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete(selectedDatos);
+      }
+    }
+  }
 
   delete(selectedDatos) {
     let del = new RetencionIrpfObject();
@@ -483,6 +549,14 @@ export class TablaRetencionesIrpfComponent implements OnInit {
       if (this.historico)
         this.selectMultiple = true;
       this.selectionMode = "multiple";
+    }
+  }
+
+  checkPermisosIsHistorico() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.isHistorico();
     }
   }
 

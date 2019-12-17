@@ -25,15 +25,11 @@ export class FiltrosProcuradoresComponent implements OnInit {
   resultadosPoblaciones: any;
 
   @Input() permisoEscritura;
-  @ViewChild("prueba") prueba;
-
-  comboProvincias = [];
-  comboPoblacion = [];
 
   @Output() isOpen = new EventEmitter<boolean>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonServices: CommonsService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -55,8 +51,6 @@ export class FiltrosProcuradoresComponent implements OnInit {
 
   }
 
-
-
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
@@ -70,6 +64,16 @@ export class FiltrosProcuradoresComponent implements OnInit {
       this.isOpen.emit(false)
     }
 
+  }
+
+  checkPermisosNuevo() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.nuevo();
+    }
   }
 
   nuevo() {

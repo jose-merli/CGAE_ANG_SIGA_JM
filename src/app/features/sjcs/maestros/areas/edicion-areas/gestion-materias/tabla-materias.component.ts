@@ -7,6 +7,7 @@ import { AreasObject } from '../../../../../../models/sjcs/AreasObject';
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 
 @Component({
@@ -46,6 +47,7 @@ export class TablaMateriasComponent implements OnInit {
   overlayVisible: boolean = false;
   selectionMode: string = "single";
   buscadores = [];
+  historico: boolean = false;
   //Resultados de la busqueda
   @Input() idArea;
   //Resultados de la busqueda
@@ -56,7 +58,8 @@ export class TablaMateriasComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private confirmationService: ConfirmationService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
     this.getCols();
@@ -72,7 +75,11 @@ export class TablaMateriasComponent implements OnInit {
     let datos = this.persistenceService.getDatos();
     if (datos != null && datos != undefined && datos.fechabaja != undefined) {
       this.disableAll = true;
+      this.historico = true;
+    } else {
+      this.historico = false;
     }
+
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
@@ -80,7 +87,26 @@ export class TablaMateriasComponent implements OnInit {
 
   }
 
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (((!this.selectMultiple && !this.selectAll) || this.nuevo) ||
+        selectedDatos == undefined || selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+
+    }
+  }
+
+
   confirmDelete(selectedDatos) {
+
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
     );
@@ -209,6 +235,20 @@ export class TablaMateriasComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -296,6 +336,20 @@ export class TablaMateriasComponent implements OnInit {
 
   }
 
+  checkPermisosNewMateria() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newMateria();
+      }
+    }
+  }
+
   newMateria() {
     this.nuevo = true;
     this.seleccion = false;
@@ -322,7 +376,6 @@ export class TablaMateriasComponent implements OnInit {
     } else {
       this.datos = [materia, ...this.datos];
     }
-
   }
 
   validateArea(e) {
@@ -515,6 +568,16 @@ export class TablaMateriasComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
   }
 
   rest() {

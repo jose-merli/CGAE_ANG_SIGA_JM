@@ -2,9 +2,10 @@
   <div class="form-row">
     <div class="form-group col-lg-3 col-md-3">
       <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
-      <input type="text" name="nColegiado" class="form-control" [(ngModel)]="nColegiado" (blur)="isBuscar()" (focus)="focusNColegiado()" pInputText />
+      <input type="text" name="nColegiado" class="form-control" [(ngModel)]="nColegiado" (blur)="isBuscar()" (focus)="focusNColegiado()"
+        pInputText />
     </div>
-    <div class="form-group col-lg-3 col-md-3">
+    <div class="form-group col-lg-6 col-md-6">
       <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
       <input type="text" name="apellidosNombre" class="form-control" disabled [(ngModel)]="apellidosNombre" pInputText />
     </div>

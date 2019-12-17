@@ -6,6 +6,8 @@ import { MenubarModule } from 'primeng/menubar';
 import { routingOficio } from './oficio-routing.module';
 import { GestionTurnosModule } from './turnos/turnos.module';
 import { GestionInscripcionesModule } from './inscripciones/inscripciones.module';
+// import { GestionTurnosModule } from '../oficio/turnos/turnos.module';
+import { OficioRoutingModule } from './oficio-routing.module';
 
 @NgModule({
         declarations: [],
@@ -14,7 +16,7 @@ import { GestionInscripcionesModule } from './inscripciones/inscripciones.module
                 MenubarModule,
                 routingOficio,
                 GestionTurnosModule,
-                GestionInscripcionesModule
+                GestionInscripcionesModule,
         ],
 
         providers: []

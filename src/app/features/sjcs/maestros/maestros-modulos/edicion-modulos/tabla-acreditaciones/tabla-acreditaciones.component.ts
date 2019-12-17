@@ -7,6 +7,7 @@ import { AcreditacionesObject } from '../../../../../../models/sjcs/Acreditacion
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 
 @Component({
@@ -60,7 +61,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
     this.getCols();
@@ -110,6 +111,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
+
   getId() {
     let seleccionados = [];
     seleccionados.push(this.selectedDatos);
@@ -181,6 +183,20 @@ export class TablaAcreditacionesComponent implements OnInit {
       );
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
 
   save() {
     this.progressSpinner = true;
@@ -240,6 +256,20 @@ export class TablaAcreditacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  checkPermisosNewAcreditacion() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newAcreditacion();
+      }
+    }
   }
 
   newAcreditacion() {
@@ -481,6 +511,20 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   }
 
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple && !this.selectAll) || this.nuevo) || this.selectedDatos == undefined || this.selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
+  }
+
   delete() {
     this.progressSpinner = true;
 
@@ -509,6 +553,16 @@ export class TablaAcreditacionesComponent implements OnInit {
 
       }
     );
+  }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
   }
 
   rest() {

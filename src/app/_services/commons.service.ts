@@ -7,6 +7,7 @@ import "rxjs/add/operator/map";
 import { HttpBackend, HttpClient } from "@angular/common/http";
 import { ControlAccesoDto } from "../models/ControlAccesoDto";
 import { SigaServices } from "./siga.service";
+import { TranslateService } from '../commons/translate/translation.service';
 
 @Injectable()
 export class CommonsService {
@@ -17,7 +18,8 @@ export class CommonsService {
     private http: HttpClient,
     handler: HttpBackend,
     private httpbackend: HttpClient,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) {
     this.httpbackend = new HttpClient(handler);
   }
@@ -250,4 +252,23 @@ export class CommonsService {
     }
 
   }
+
+  checkPermisos(permiso: boolean, historico: boolean) {
+    if (!permiso) {
+      return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    } else {
+
+      if (historico != undefined && historico) {
+        return this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      } else {
+        return undefined;
+      }
+
+    }
+  }
+
+  checkPermisoAccion() {
+    return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
+  }
+
 }
