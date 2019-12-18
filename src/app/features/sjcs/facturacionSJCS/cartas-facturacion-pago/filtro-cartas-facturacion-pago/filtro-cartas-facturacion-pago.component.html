@@ -1,0 +1,69 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <div class="form-row">
+      <div class="col-4">
+        <p-radioButton class="pr-2" name="carta" value="f" label="Carta Facturación" [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+        <p-radioButton name="carta" value="p" label="Carta Pago" [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+      </div>
+    </div>
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+      <div class="form-row">
+
+        <div *ngIf="modoBusquedaFacturacion" class="form-group col-lg-3 col-md-3">
+          <label>{{ 'menu.facturacion' | translate }}</label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboFacturacion" [filter]="true"
+            filterBy="label,labelSinTilde" [(ngModel)]="filtros.idFacturacion" [showClear]="true"></p-dropdown>
+        </div>
+
+        <div *ngIf="!modoBusquedaFacturacion" class="form-group col-lg-3 col-md-3">
+          <label>Pago</label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboPagos" [filter]="true"
+            filterBy="label,labelSinTilde" [(ngModel)]="filtros.idPago" [showClear]="true"></p-dropdown>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Concepto</label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboConceptos" [filter]="true"
+            filterBy="label,labelSinTilde" [(ngModel)]="filtros.idConcepto" [showClear]="true"></p-dropdown>
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Grupo de Turnos</label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboGrupoTurnos" [filter]="true"
+            filterBy="label,labelSinTilde" [(ngModel)]="filtros.idTurno" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Partida Presupuestaria</label>
+          <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboPartidaPresupuestaria"
+            [filter]="true" filterBy="label,labelSinTilde" [(ngModel)]="filtros.idPartidaPresupuestaria" [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <p (click)="onHideDatosColegiado()" class="title-module"> Colegiado
+      <i *ngIf="showDatosColegiado" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosColegiado" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showDatosColegiado" class="module vista-simple">
+      <app-busqueda-colegiado-express [disabled]="esColegiado" [nColegiado]="filtros.ncolegiado" [apellidosNombre]="filtros.apellidosNombre"></app-busqueda-colegiado-express>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button pButton (click)="clearFilters()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+      <!-- <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button> -->
+    </div>
+  </div>
+</div>

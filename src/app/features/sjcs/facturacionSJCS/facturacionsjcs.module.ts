@@ -6,6 +6,7 @@ import { SpinnerModule } from '../../../../../node_modules/primeng/primeng';
 import { MenubarModule } from 'primeng/menubar';
 
 import { FacturacionesYPagosModule } from './facturaciones-pagos/facturaciones-pagos.module';
+import { CartasFacturacionPagoModule } from './cartas-facturacion-pago/cartas-facturacion-pago.module';
 
 @NgModule({
         declarations: [],
@@ -14,7 +15,8 @@ import { FacturacionesYPagosModule } from './facturaciones-pagos/facturaciones-p
                 routingFacturacionsjcs,
                 FacturacionesYPagosModule,
                 MenubarModule,
-                SpinnerModule
+                SpinnerModule,
+                CartasFacturacionPagoModule
         ],
 
         providers: []

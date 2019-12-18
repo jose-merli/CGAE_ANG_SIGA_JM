@@ -800,6 +800,10 @@ const appRoutes: Routes = [
 		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
 	},
 	{
+		path: '	cartaFacturacionPago',
+		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+	},
+	{
 		path: 'definirListasGuardias',
 		component: DefinirListasGuardiasComponent,
 		canActivate: [AuthGuard]

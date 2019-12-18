@@ -1,0 +1,17 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS
+    <i class="fa fa-angle-right"></i> Carta Facturación-Pago
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-filtro-cartas-facturacion-pago (emitSearch)="search($event)"></app-filtro-cartas-facturacion-pago>
+  <app-tabla-cartas-facturacion-pago *ngIf="buscar" [datos]="datos"></app-tabla-cartas-facturacion-pago>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PersistenceService } from '../../_services/persistence.service';
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
-import { TranslateService } from '../../commons/translate';
-import { Router } from '../../../../node_modules/@angular/router';
+import { TranslateService } from '../translate';
+import { Router } from '@angular/router';
 import { FiltrosGeneralSJCSComponent } from './filtros-generalSJCS/filtros-generalSJCS.component';
 import { TablaGeneralSJCSComponent } from './tabla-generalSJCS/tabla-generalSJCS.component';
 import { procesos_maestros } from '../../permisos/procesos_maestros';
@@ -29,6 +29,7 @@ export class BusquedaGeneralSJCSComponent implements OnInit {
 
   //comboPartidosJudiciales
   comboPJ;
+
   msgs;
 
   permisoEscritura;

@@ -8,6 +8,10 @@ const routesSjcs: Routes = [
 		loadChildren: './facturacionSJCS/facturacionsjcs.module#FacturacionSJCSModule'
 	},
 	{
+		path: 'cartaFacturacionPago',
+		loadChildren: './facturacionSJCS/facturacionsjcs.module#FacturacionSJCSModule'
+	},
+	{
 		path: 'zonasYsubzonas',
 		loadChildren: './maestros/maestros.module#MaestrosModule'
 	},
@@ -75,12 +79,11 @@ const routesSjcs: Routes = [
 		path: 'justiciables',
 		loadChildren: './justiciables/justiciables.module#JusticiablesModule'
 	}
-
 ];
 
 @NgModule({
-	imports: [ RouterModule.forChild(routesSjcs) ],
-	exports: [ RouterModule ]
+	imports: [RouterModule.forChild(routesSjcs)],
+	exports: [RouterModule]
 })
-export class SjcsRoutingModule {}
+export class SjcsRoutingModule { }
 export const routingSjcs = RouterModule.forChild(routesSjcs);

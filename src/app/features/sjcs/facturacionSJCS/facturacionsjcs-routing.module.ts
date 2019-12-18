@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../_guards/auth.guards';
 import { FacturacionesYPagosComponent } from './facturaciones-pagos/facturaciones-pagos.component';
 import { GestionFacturacionComponent } from './facturaciones-pagos/gestion-facturacion/gestion-facturacion.component';
+import { CartasFacturacionPagoComponent } from './cartas-facturacion-pago/cartas-facturacion-pago.component';
+import { BusquedaGeneralSJCSComponent } from '../../../commons/busqueda-generalSJCS/busqueda-generalSJCS.component';
 
 const routesFacturacionsjcs: Routes = [
   {
@@ -13,6 +15,16 @@ const routesFacturacionsjcs: Routes = [
   {
     path: "fichaFacturacion",
     component: GestionFacturacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'cartaFacturacionPago',
+    component: CartasFacturacionPagoComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'gestionGeneralSJCS',
+    component: BusquedaGeneralSJCSComponent,
     canActivate: [AuthGuard]
   },
 ];
