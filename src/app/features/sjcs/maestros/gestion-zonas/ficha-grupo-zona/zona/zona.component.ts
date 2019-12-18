@@ -7,6 +7,7 @@ import { ZonasObject } from '../../../../../../models/sjcs/ZonasObject';
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-zona',
@@ -27,7 +28,7 @@ export class ZonaComponent implements OnInit {
   rowsPerPage;
   fechaEvento;
   datos = [];
-
+  buscador = [];
   historico: boolean = false;
 
   comboPJ;
@@ -43,6 +44,8 @@ export class ZonaComponent implements OnInit {
   overlayVisible: boolean = false;
   selectionMode: string = "single";
 
+  permisoEscritura: boolean = true;
+
   //Resultados de la busqueda
   @Input() idZona;
   //Resultados de la busqueda
@@ -52,10 +55,17 @@ export class ZonaComponent implements OnInit {
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService, private confirmationService: ConfirmationService
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService, private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
+
     this.getCols();
     this.getComboPartidosJudiciales();
 
@@ -168,6 +178,19 @@ export class ZonaComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -175,21 +198,25 @@ export class ZonaComponent implements OnInit {
 
     if (this.nuevo) {
       url = "fichaZonas_createZone";
+      this.body = this.datos[0];
+      this.body.descripcionsubzona = this.body.descripcionsubzona.trim();
+
       this.validateNewZone(url);
 
     } else {
       url = "fichaZonas_updateZones";
       this.body = new ZonasObject();
       this.body.zonasItems = this.updateZonas;
+      this.body.zonasItems = this.body.zonasItems.map(it => {
+        it.descripcionsubzona = it.descripcionsubzona.trim();
+        return it;
+      })
       this.callSaveZoneService(url);
     }
-
-
   }
 
 
   callSaveZoneService(url) {
-
 
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -221,9 +248,26 @@ export class ZonaComponent implements OnInit {
 
   }
 
+  checkPermisosNewZone() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || this.selectMultiple || this.selectAll || this.nuevo || this.historico) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newZone();
+      }
+    }
+  }
+
   newZone() {
     this.nuevo = true;
     this.seleccion = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
 
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -261,7 +305,7 @@ export class ZonaComponent implements OnInit {
         this.datos[datoId].descripcionsubzona = this.selectedBefore.descripcionsubzona;
 
       } else {
-        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e.srcElement.value.trim()));
+        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona.trim()) === this.upperCasePipe.transform(e.srcElement.value.trim()));
         this.editarDescripcionZona(dato);
       }
 
@@ -269,13 +313,12 @@ export class ZonaComponent implements OnInit {
     }
   }
 
-
-  validateZona(e) {
+  validateZoneChange(e) {
 
     if (!this.nuevo) {
       let datoId = this.datos.findIndex(item => item.idsubzona === this.selectedBefore.idsubzona);
 
-      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e));
+      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e.trim()));
 
       if (findDato.length > 1) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.existeZonaMismaDescripcion"));
@@ -283,11 +326,10 @@ export class ZonaComponent implements OnInit {
         this.datos[datoId].descripcionsubzona = this.selectedBefore.descripcionsubzona;
 
       } else {
-        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona) === this.upperCasePipe.transform(e));
+        let dato = this.datos.find(item => this.upperCasePipe.transform(item.descripcionsubzona.trim()) === this.upperCasePipe.transform(e.trim()));
         this.editarDescripcionZona(dato);
       }
 
-      this.seleccion = false;
     }
   }
 
@@ -308,20 +350,38 @@ export class ZonaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.nuevo) {
-      if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona != null
-        && this.datos[0].descripcionsubzona != "" && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
-        return false;
-      } else {
-        return true;
+    let guardar = true;
+    this.datos.forEach(element => {
+      if (element.partidosJudiciales.length == 0) {
+        guardar = false;
       }
+    });
+    if (guardar) {
+      if (this.nuevo) {
+        if (this.datos[0].descripcionsubzona != undefined && this.datos[0].descripcionsubzona.trim()
+          && this.datos[0].partidosJudiciales != undefined && this.datos[0].partidosJudiciales.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
 
-    } else {
-      if (!this.historico && (this.updateZonas != undefined && this.updateZonas.length > 0)) {
-        return false;
       } else {
-        return true;
+        if (!this.historico && (this.updateZonas != undefined && this.updateZonas.length > 0)) {
+          let val = true;
+          this.updateZonas.forEach(it => {
+            if ((it.descripcionsubzona == undefined || !it.descripcionsubzona.trim()) || (it.partidosJudiciales == undefined || it.partidosJudiciales.length == 0))
+              val = false;
+          });
+          if (val)
+            return false;
+          else
+            return true;
+        } else {
+          return true;
+        }
       }
+    } else {
+      return true;
     }
   }
 
@@ -358,6 +418,7 @@ export class ZonaComponent implements OnInit {
 
     let findDato = this.datosInicial.find(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
 
+    dato.descripcionsubzona = dato.descripcionsubzona.trim();
     if (findDato != undefined) {
       if (dato.descripcionsubzona != findDato.descripcionsubzona) {
 
@@ -372,11 +433,8 @@ export class ZonaComponent implements OnInit {
   }
 
   editPartidosJudiciales(dato) {
-
     if (!this.nuevo) {
-
       if (dato.partidosJudiciales.length == 0) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.jgr.maestros.gestionZonasySubzonas.seleccionarPartidoJudicial"));
         let findUpdate = this.updateZonas.findIndex(item => item.idzona === dato.idzona && item.idsubzona === dato.idsubzona);
 
         if (findUpdate != undefined) {
@@ -397,6 +455,20 @@ export class ZonaComponent implements OnInit {
       this.selectedDatos = [];
     }
 
+  }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || (!this.selectMultiple && !this.selectAll) || selectedDatos.length == 0 || this.nuevo || this.historico) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+    }
   }
 
   confirmDelete(selectedDatos) {
@@ -452,6 +524,19 @@ export class ZonaComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.updateZonas.length == 0 && !this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.rest();
+      }
+    }
+  }
 
   rest() {
     if (this.datosInicial != undefined) {
@@ -463,6 +548,10 @@ export class ZonaComponent implements OnInit {
     this.selectedDatos = [];
     this.updateZonas = [];
     this.nuevo = false;
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscador = this.buscador.map(it => it = "");
   }
 
   showMessage(severity, summary, msg) {
@@ -480,7 +569,7 @@ export class ZonaComponent implements OnInit {
       { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
       { field: "jurisdiccion", header: "menu.justiciaGratuita.maestros.partidosJudiciales" }
     ];
-
+    this.cols.forEach(it => this.buscador.push(""))
     this.rowsPerPage = [
       {
         label: 10,
@@ -527,20 +616,22 @@ export class ZonaComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.nuevo) {
-      this.selectMultiple = !this.selectMultiple;
+    if (this.permisoEscritura) {
+      if (!this.nuevo) {
+        this.selectMultiple = !this.selectMultiple;
 
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
+        if (!this.selectMultiple) {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectionMode = "single";
 
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "multiple";
+        } else {
+          this.selectAll = false;
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectionMode = "multiple";
 
+        }
       }
     }
 

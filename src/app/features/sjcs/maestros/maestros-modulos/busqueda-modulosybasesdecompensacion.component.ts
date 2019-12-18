@@ -88,10 +88,15 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
             if (element.precio[0] == '.' || element.precio[0] == ',')
               element.precio = "0".concat(element.precio)
           });
-        this.progressSpinner = false;
+
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        this.progressSpinner = false;
         this.resetSelect();
       },
       err => {

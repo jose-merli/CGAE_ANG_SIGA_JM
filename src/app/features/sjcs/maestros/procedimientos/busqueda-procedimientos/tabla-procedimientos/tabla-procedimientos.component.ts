@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges, ViewChildren } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PretensionObject } from '../../../../../../models/sjcs/PretensionObject';
 import { PretensionItem } from '../../../../../../models/sjcs/PretensionItem';
-import { ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
+import { ConfirmationService, Paginator } from '../../../../../../../../node_modules/primeng/primeng';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-procedimientos',
@@ -17,7 +18,7 @@ export class TablaProcedimientosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  page: number = 0;
   comboJurisdiccion;
   datosInicial = [];
   editMode: boolean = false;
@@ -41,7 +42,7 @@ export class TablaProcedimientosComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
-
+  buscadores = []
   //Resultados de la busqueda
   @Input() datos;
 
@@ -57,7 +58,8 @@ export class TablaProcedimientosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -78,6 +80,20 @@ export class TablaProcedimientosComponent implements OnInit {
     this.updatePartidasPres = [];
     this.nuevo = false;
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisos || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
   }
 
   confirmDelete() {
@@ -155,30 +171,27 @@ export class TablaProcedimientosComponent implements OnInit {
 
   changeDescripcion(dato) {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
-
     if (findDato != undefined) {
-      if (dato.descripcion.trim() != "") {
-        if (dato.descripcion != findDato.descripcion) {
+      if (dato.descripcion != findDato.descripcion) {
 
-          let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
 
-          if (findUpdate == undefined) {
-            this.updatePartidasPres.push(dato);
-          }
+        if (findUpdate == undefined) {
+          this.updatePartidasPres.push(dato);
         }
-      } else {
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
-        if (findUpdate != undefined) {
-          let cambios = [];
-          this.updatePartidasPres.forEach(data => {
-            if (data.idPretension != findUpdate.idPretension) {
-              cambios.push(data);
-            }
-          });
-          if (cambios != undefined) {
-            this.updatePartidasPres = [];
-            this.updatePartidasPres = cambios;
+      }
+    } else {
+      let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
+      if (findUpdate != undefined) {
+        let cambios = [];
+        this.updatePartidasPres.forEach(data => {
+          if (data.idPretension != findUpdate.idPretension) {
+            cambios.push(data);
           }
+        });
+        if (cambios != undefined) {
+          this.updatePartidasPres = [];
+          this.updatePartidasPres = cambios;
         }
       }
     }
@@ -190,7 +203,7 @@ export class TablaProcedimientosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.codigoExt != findDato.codigoExt) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.codigoExt === dato.codigoExt);
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -204,7 +217,13 @@ export class TablaProcedimientosComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idPretension === dato.idPretension);
     if (findDato != undefined) {
       if (dato.idJurisdiccion != findDato.idJurisdiccion) {
-        let findUpdate = this.updatePartidasPres.find(item => item.idJurisdiccion === dato.idJurisdiccion);
+        if (dato.idJurisdiccion) {
+          let valueCombo = this.comboJurisdiccion.find(item => item.value === dato.idJurisdiccion);
+          dato.descripcionJurisdiccion = valueCombo.label;
+        } else {
+          dato.descripcionJurisdiccion = "";
+        }
+        let findUpdate = this.updatePartidasPres.find(item => item.idPretension === dato.idPretension);
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
         }
@@ -248,6 +267,19 @@ export class TablaProcedimientosComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -258,8 +290,9 @@ export class TablaProcedimientosComponent implements OnInit {
       let pretension: PretensionItem;
       pretension = this.datos[0];
       pretension.descripcionJurisdiccion = this.comboJurisdiccion[pretension.idJurisdiccion].label
-      this.body = pretension;
 
+      this.body = pretension;
+      this.body.descripcion = this.body.descripcion.trim();
       this.callSaveService(url);
 
     } else {
@@ -267,6 +300,10 @@ export class TablaProcedimientosComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new PretensionObject();
         this.body.pretensionItems = this.updatePartidasPres;
+        this.body.pretensionItems = this.body.pretensionItems.map(it => {
+          it.descripcion = it.descripcion.trim();
+          return it;
+        })
         this.callSaveService(url);
       } else {
 
@@ -276,6 +313,18 @@ export class TablaProcedimientosComponent implements OnInit {
     }
 
   }
+
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -290,6 +339,21 @@ export class TablaProcedimientosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+  }
+
+  checkPermisosNewPretension() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newPretension();
+      }
+    }
   }
 
   newPretension() {
@@ -324,7 +388,8 @@ export class TablaProcedimientosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].descripcion != undefined && this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion != "") {
+      if (this.datos[0].descripcion != undefined && this.datos[0].descripcion.trim() &&
+        this.datos[0].idJurisdiccion != undefined && this.datos[0].idJurisdiccion.trim() != "") {
         return false;
       } else {
         return true;
@@ -332,7 +397,15 @@ export class TablaProcedimientosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if ((it.descripcion == undefined || !it.descripcion.trim()) || !it.idJurisdiccion)
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }
@@ -357,6 +430,19 @@ export class TablaProcedimientosComponent implements OnInit {
     return check;
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
+  }
 
   delete() {
     let del = new PretensionObject();
@@ -367,7 +453,7 @@ export class TablaProcedimientosComponent implements OnInit {
     this.sigaServices.post(url, del).subscribe(
       data => {
         this.selectedDatos = [];
-        this.search.emit(false);
+        this.search.emit(this.historico);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -418,6 +504,14 @@ export class TablaProcedimientosComponent implements OnInit {
     }
   }
 
+  checkPermisosIsHistorico() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.isHistorico();
+    }
+  }
+
   isHistorico() {
     this.historico = !this.historico;
     if (this.historico) {
@@ -454,6 +548,7 @@ export class TablaProcedimientosComponent implements OnInit {
       { field: "descripcionJurisdiccion", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""))
 
     this.rowsPerPage = [
       {

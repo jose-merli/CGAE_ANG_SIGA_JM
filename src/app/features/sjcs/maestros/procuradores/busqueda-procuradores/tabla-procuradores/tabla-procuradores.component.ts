@@ -8,6 +8,7 @@ import { ProcuradoresItem } from '../../../../../../models/sjcs/ProcuradoresItem
 import { ProcuradoresModule } from '../../procuradores.module';
 import { ProcuradoresObject } from '../../../../../../models/sjcs/ProcuradoresObject';
 import { Identifiers } from '../../../../../../../../node_modules/@angular/compiler';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 
 
@@ -31,7 +32,7 @@ export class TablaProcuradoresComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
-
+  buscadores = [];
   message;
 
   initDatos;
@@ -52,7 +53,8 @@ export class TablaProcuradoresComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -67,6 +69,21 @@ export class TablaProcuradoresComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -82,7 +99,7 @@ export class TablaProcuradoresComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: "Cancelar",
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -91,6 +108,7 @@ export class TablaProcuradoresComponent implements OnInit {
       }
     });
   }
+
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -117,7 +135,6 @@ export class TablaProcuradoresComponent implements OnInit {
     }
 
   }
-
 
   openTab(evento) {
 
@@ -168,6 +185,20 @@ export class TablaProcuradoresComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
+
   activate() {
     let procuradorActivate = new ProcuradoresObject();
     procuradorActivate.procuradorItems = this.selectedDatos;
@@ -194,8 +225,6 @@ export class TablaProcuradoresComponent implements OnInit {
     );
   }
 
-
-
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
@@ -212,6 +241,7 @@ export class TablaProcuradoresComponent implements OnInit {
       { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

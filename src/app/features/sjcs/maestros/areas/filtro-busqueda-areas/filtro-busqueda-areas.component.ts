@@ -7,6 +7,7 @@ import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-c
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtro-busqueda-areas',
@@ -24,6 +25,7 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   filtros: AreasItem = new AreasItem();
   filtroAux: AreasItem = new AreasItem();
   jurisdicciones: any[] = [];
+
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -33,7 +35,8 @@ export class FiltroBusquedaAreasComponent implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -76,6 +79,16 @@ export class FiltroBusquedaAreasComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  checkPermisosNewArea() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newArea();
+    }
   }
 
   newArea() {

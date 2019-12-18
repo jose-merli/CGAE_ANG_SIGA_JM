@@ -7,6 +7,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { TableModule } from 'primeng/table';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -51,7 +52,8 @@ export class TablaBusquedaAreasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
 
   ) { }
 
@@ -77,6 +79,23 @@ export class TablaBusquedaAreasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisos || (!this.selectMultiple || !this.selectAll) && selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+
+    }
+  }
+
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -109,13 +128,73 @@ export class TablaBusquedaAreasComponent implements OnInit {
     this.sigaServices.post("fichaAreas_deleteAreas", AreasDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchAreasSend.emit(false);
+        if (this.historico) {
+          this.searchAreasSend.emit(true);
+        } else {
+          this.searchAreasSend.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
+
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.historico = false;
+        this.selectAll = false;
+      }
+    );
+  }
+
+  checkPermisosActivate(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisos || selectedDatos.length == 0 || selectedDatos == undefined) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate(selectedDatos);
+      }
+    }
+  }
+
+  activate(selectedDatos) {
+
+    let AreasActivate = new AreasObject();
+    AreasActivate.areasItems = selectedDatos
+    this.sigaServices.post("areasMaterias_activateMaterias", AreasActivate).subscribe(
+      data => {
+        this.selectedDatos = [];
+        if (this.historico) {
+          this.searchAreasSend.emit(true);
+        } else {
+          this.searchAreasSend.emit(false);
+        }
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+      },
+
+      err => {
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.areaEnUso") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          }
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -130,21 +209,22 @@ export class TablaBusquedaAreasComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    this.selectMultiple = false;
+    if (this.permisos) {
+      this.selectMultiple = false;
 
-    if (this.selectAll === true) {
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-      } else {
+      if (this.selectAll === true) {
         this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+        if (this.historico) {
+          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        } else {
+          this.selectedDatos = this.datos;
+        }
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
       }
-    } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
     }
-
   }
 
   searchAreas() {
@@ -166,7 +246,7 @@ export class TablaBusquedaAreasComponent implements OnInit {
       { field: "nombreMateria", header: "menu.justiciaGratuita.maestros.Materia" },
       { field: "jurisdicciones", header: "menu.justiciaGratuita.maestros.Jurisdiccion" }
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

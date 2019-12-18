@@ -36,10 +36,11 @@
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscador[i]" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
                 table.filter($event.target.value, col.field, 'contains')
               " />
             </th>
@@ -51,7 +52,7 @@
 
             <td class="text-center" *ngFor="let col of columns">
 
-              <div *ngIf="col.field == 'jurisdiccion'">
+              <div *ngIf="col.field == 'jurisdiccion' && permisoEscritura">
                 <span *ngIf="selectMultiple || selectAll">
                   {{ dato.nombrePartidosJudiciales }}
                 </span>
@@ -67,14 +68,26 @@
                   [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editPartidosJudiciales(dato)"></p-multiSelect>
               </div>
 
-              <div *ngIf="col.field == 'descripcionsubzona'">
+              <div *ngIf="col.field == 'jurisdiccion' && !permisoEscritura">
+                <span>
+                  {{ dato.nombrePartidosJudiciales }}
+                </span>
+              </div>
+
+              <div *ngIf="col.field == 'descripcionsubzona' && permisoEscritura">
                 <span *ngIf="(nuevo && dato.zonaNueva == undefined) || (!nuevo && !seleccion) || (seleccion && !nuevo && !selectMultiple && !dato.editable) || historico || selectMultiple">
                   {{ dato[col.field] }}
                 </span>
 
                 <input *ngIf="!historico && ((seleccion && !nuevo && !selectMultiple && dato.editable)  || (nuevo && dato.zonaNueva))" type="text"
                   class="form-control paddingInput" [(ngModel)]="dato.descripcionsubzona" name="descripcionsubzona" type="text"
-                  on-focusout="validateZone($event)" (onBlur)="validateZone($event)" maxLength="60" />
+                  on-focusout="validateZone($event)" (onBlur)="validateZone($event)" (ngModelChange)="validateZoneChange($event)"
+                  maxLength="60" />
+              </div>
+              <div *ngIf="col.field == 'descripcionsubzona' && !permisoEscritura">
+                <span>
+                  {{ dato[col.field] }}
+                </span>
               </div>
             </td>
 
@@ -100,8 +113,8 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox [disabled]="nuevo" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
+              <p-checkbox [disabled]="!permisoEscritura || nuevo" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
@@ -111,13 +124,14 @@
     </div>
     <div *ngIf="modoEdicion" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="(!selectMultiple && !selectAll) || selectedDatos.length == 0 || nuevo || historico" (click)="confirmDelete(selectedDatos)"
-          pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button [disabled]="historico || (updateZonas.length == 0 && !nuevo)" (click)="rest()" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton [disabled]="disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico" (click)="newZone()" type="button" icon="fa fa-plus"
-          iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button [disabled]="!permisoEscritura || (!selectMultiple && !selectAll) || selectedDatos.length == 0 || nuevo || historico"
+          (click)="checkPermisosDelete(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+        <button [disabled]="historico || (updateZonas.length == 0 && !nuevo)" (click)="checkPermisosRest()" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton [disabled]="!permisoEscritura || disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton [disabled]="!permisoEscritura || selectMultiple || selectAll || nuevo || historico" (click)="checkPermisosNewZone()"
+          type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
     </div>

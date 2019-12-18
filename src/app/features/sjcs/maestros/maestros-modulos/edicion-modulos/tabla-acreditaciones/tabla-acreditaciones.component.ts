@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { AcreditacionesItem } from '../../../../../../models/sjcs/AcreditacionesItem';
@@ -7,12 +7,14 @@ import { AcreditacionesObject } from '../../../../../../models/sjcs/Acreditacion
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 
 @Component({
   selector: 'app-tabla-acreditaciones',
   templateUrl: './tabla-acreditaciones.component.html',
-  styleUrls: ['./tabla-acreditaciones.component.scss']
+  styleUrls: ['./tabla-acreditaciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TablaAcreditacionesComponent implements OnInit {
 
@@ -28,7 +30,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   seleccion: boolean = false;
   cols;
   rowsPerPage;
-
+  buscadores = [];
   datos: any[];
   listaTabla: AcreditacionesItem[] = [];
   idAcreditacion;
@@ -59,7 +61,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
     this.getCols();
@@ -109,6 +111,7 @@ export class TablaAcreditacionesComponent implements OnInit {
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
+
   getId() {
     let seleccionados = [];
     seleccionados.push(this.selectedDatos);
@@ -180,6 +183,20 @@ export class TablaAcreditacionesComponent implements OnInit {
       );
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
 
   save() {
     this.progressSpinner = true;
@@ -239,6 +256,20 @@ export class TablaAcreditacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  checkPermisosNewAcreditacion() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newAcreditacion();
+      }
+    }
   }
 
   newAcreditacion() {
@@ -437,7 +468,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.codSubTarifa != findDato.codSubTarifa) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.codSubTarifa === dato.codSubTarifa);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -454,7 +485,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.porcentaje != findDato.porcentaje) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.porcentaje === dato.porcentaje);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -468,9 +499,9 @@ export class TablaAcreditacionesComponent implements OnInit {
     let findDato = this.datosInicial.find(item => item.idAcreditacion === dato.idAcreditacion);
 
     if (findDato != undefined) {
-      if (dato.nig_numprocedimiento != findDato.nig_numprocedimiento) {
+      if (dato.nigProcedimiento != findDato.nigProcedimiento) {
 
-        let findUpdate = this.updateAcreditaciones.find(item => item.nig_numprocedimiento === dato.porcentaje);
+        let findUpdate = this.updateAcreditaciones.find(item => item.idAcreditacion === dato.idAcreditacion);
 
         if (findUpdate == undefined) {
           this.updateAcreditaciones.push(dato);
@@ -478,6 +509,20 @@ export class TablaAcreditacionesComponent implements OnInit {
       }
     }
 
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (((!this.selectMultiple && !this.selectAll) || this.nuevo) || this.selectedDatos == undefined || this.selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
   }
 
   delete() {
@@ -510,6 +555,16 @@ export class TablaAcreditacionesComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(!this.disableAll, this.disableAll);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -526,7 +581,7 @@ export class TablaAcreditacionesComponent implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
-
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   showMessage(severity, summary, msg) {

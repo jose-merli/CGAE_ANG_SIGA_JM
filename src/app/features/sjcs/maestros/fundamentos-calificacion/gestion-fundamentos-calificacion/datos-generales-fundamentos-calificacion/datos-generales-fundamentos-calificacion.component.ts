@@ -3,6 +3,7 @@ import { FundamentosCalificacionItem } from '../../../../../../models/sjcs/Funda
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-generales-fundamentos-calificacion',
@@ -30,7 +31,7 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private commonsService: CommonsService) { }
   comboDictamen = [];
   idFundamento;
 
@@ -79,6 +80,20 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
     }
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -96,11 +111,9 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
 
   callSaveService(url) {
 
-    if (this.body.codigo != undefined && this.body.codigo != null)
-      this.body.codigo = this.body.codigo.trim();
-
-    if (this.body.textoEnPlantilla != undefined && this.body.textoEnPlantilla != null)
-      this.body.textoEnPlantilla = this.body.textoEnPlantilla.trim();
+    if (this.body.codigo != undefined) this.body.codigo = this.body.codigo.trim();
+    if (this.body.descripcionFundamento != undefined) this.body.descripcionFundamento = this.body.descripcionFundamento.trim();
+    if (this.body.textoEnPlantilla != undefined) this.body.textoEnPlantilla = this.body.textoEnPlantilla.trim();
 
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -138,6 +151,16 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
 
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
 
@@ -158,10 +181,12 @@ export class DatosGeneralesFundamentosCalificacionComponent implements OnInit {
 
 
   disabledSave() {
-    if (!this.historico && ((this.body.idTipoDictamenEjg != undefined && this.body.idTipoDictamenEjg != null && this.body.idTipoDictamenEjg != "") &&
-      (this.body.descripcionFundamento != undefined && this.body.descripcionFundamento != null && this.body.descripcionFundamento != "")
+    if (!this.historico && ((this.body.idTipoDictamenEjg != undefined && this.body.idTipoDictamenEjg != null) &&
+      (this.body.descripcionFundamento != undefined && this.body.descripcionFundamento != null)
     ) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
-      return false;
+      if (this.body.descripcionFundamento.trim() != "" && this.body.idTipoDictamenEjg.trim() != "") {
+        return false;
+      } else { return true; }
     } else {
       return true;
     }

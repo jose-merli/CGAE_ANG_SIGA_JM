@@ -45,7 +45,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   progressSpinner: boolean = false;
   avisoMail: boolean = false
 
-  emailValido: boolean = false;
+  emailValido: boolean = true;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
   faxValido: boolean = true;
@@ -55,7 +55,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   @ViewChild("mailto") mailto;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
+    private translateService: TranslateService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -67,16 +67,12 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
     this.validateHistorical();
 
+
     if (this.modoEdicion) {
       this.body = this.datos;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       if (this.datos.visibleMovil == "1")
         this.movilCheck = true
-      if (this.body.email != undefined && this.body.email != "") {
-        this.edicionEmail = false;
-      } else {
-        this.edicionEmail = true;
-      }
 
       if (this.body != undefined && this.datos.nombrePoblacion != null) {
         this.getComboPoblacion(this.body.nombrePoblacion);
@@ -84,12 +80,14 @@ export class DatosGeneralesPrisionComponent implements OnInit {
         this.progressSpinner = false;
       }
 
+      this.changeEmail();
     } else {
       this.body = new PrisionItem();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.edicionEmail = true;
 
     }
+
+
   }
 
 
@@ -117,7 +115,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboProvincias);
+        this.commonsService.arregloTildesCombo(this.comboProvincias);
         this.progressSpinner = false;
 
       },
@@ -177,7 +175,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
           this.progressSpinner = false;
-          this.commonsServices.arregloTildesCombo(this.comboPoblacion);
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
 
         },
         error => {
@@ -219,6 +217,20 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     );
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -233,6 +245,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
     }
 
   }
+
   trimeando() {
     this.body.nombre = this.body.nombre.trim()
     if (this.body.domicilio != null && this.body.domicilio != undefined)
@@ -256,6 +269,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.visibleMovil == null) {
       this.body.visibleMovil = 0
     }
@@ -296,10 +310,19 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.emailValido = false
-    this.edicionEmail = true
+    this.changeEmail();
     this.tlf1Valido = true
     this.tlf2Valido = true
     this.faxValido = true
@@ -314,7 +337,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
   openOutlook(dato) {
     let correo = dato.email;
-    this.commonsServices.openOutlook(correo);
+    this.commonsService.openOutlook(correo);
   }
 
   abreCierraFicha() {
@@ -331,23 +354,27 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   changeEmail() {
-    if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
+    if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != "") {
       this.emailValido = true
       this.avisoMail = false
     }
     else {
-      this.emailValido = false
-      this.avisoMail = false
 
-      if (this.body.email != null && this.body.email != "")
+      if (this.body.email != null && this.body.email != "" && this.body.email != undefined) {
         this.avisoMail = true
+        this.emailValido = false
+      } else {
+        this.emailValido = true
+        this.avisoMail = false
+      }
+
     }
   }
 
   disabledSave() {
     if (!this.historico && (this.body.nombre != undefined && this.body.nombre != null && this.body.nombre.trim() != "" &&
       this.body.idProvincia != undefined && this.body.idProvincia != "" && this.body.idPoblacion != undefined && this.body.idPoblacion != null && this.body.idPoblacion != ""
-      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length == 5 && !this.avisoMail && this.tlf1Valido
+      && this.body.codigoPostal != null && this.body.codigoPostal.trim() != "" && this.body.codigoPostal.trim().length >= 4 && this.body.codigoPostal.trim().length <= 5 && !this.avisoMail && this.tlf1Valido
       && this.tlf2Valido && this.faxValido && this.mvlValido) && this.permisoEscritura && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
       return false;
     } else {
@@ -356,20 +383,29 @@ export class DatosGeneralesPrisionComponent implements OnInit {
   }
 
   changeTelefono1() {
-    this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+    this.tlf1Valido = this.commonsService.validateTelefono(this.body.telefono1);
   }
 
   changeTelefono2() {
-    this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+    this.tlf2Valido = this.commonsService.validateTelefono(this.body.telefono2);
   }
   changeFax() {
-    this.faxValido = this.commonsServices.validateFax(this.body.fax);
+    this.faxValido = this.commonsService.validateFax(this.body.fax);
   }
 
   changeMovil() {
-    this.mvlValido = this.commonsServices.validateMovil(this.body.movil);
+    this.mvlValido = this.commonsService.validateMovil(this.body.movil);
   }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
+    }
+  }
   clear() {
     this.msgs = [];
   }

@@ -6,6 +6,7 @@ import { TranslateService } from '../../../../../../commons/translate/translatio
 import { ProcedimientoObject } from '../../../../../../models/sjcs/ProcedimientoObject';
 import { exists } from 'fs';
 import { element } from '../../../../../../../../node_modules/protractor';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 
 @Component({
@@ -39,14 +40,16 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   procItems = [];
   prItems = [];
   permisoEscritura;
-
+  buscadores = [];
   procedimientos = [];
   procedimientosElegir = [];
 
   initSelectedDatos;
   progressSpinner: boolean = false;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService
+  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private confirmationService: ConfirmationService, private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -58,7 +61,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
     this.validateHistorical();
     this.getCols();
-    this.getProcJuged();
+    if (this.modoEdicion) {
+      this.getProcJuged();
+    }
+
     // this.getProcess();
 
   }
@@ -106,6 +112,16 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     this.nuevo = false;
     if (this.initSelectedDatos != undefined) {
@@ -114,7 +130,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       this.procedimientos = [];
     }
     this.selectionMode = "multiple";
-
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   setItalic(dato) {
@@ -130,6 +149,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       return true;
     }
   }
+
   searchProc() {
     this.errorRep = false;
     this.prItems = this.procItems.filter(it => this.selectedProcedimiento == it.idProcedimiento)
@@ -147,6 +167,21 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
     if (this.prItems[0] != null && !this.errorRep)
       this.procedimientos[0] = this.prItems[0];
   }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disableGuardar()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let procedimientoDTO = new ProcedimientoObject();
@@ -237,6 +272,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       this.selectMultiple = true;
       this.selectedDatos = this.procedimientos;
       this.numSelected = this.procedimientos.length;
@@ -250,6 +287,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   isSelectMultiple() {
 
     if (!this.historico && this.permisoEscritura) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
       // if (this.selectedDatos != undefined && this.selectedDatos.length == 0) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
@@ -305,6 +344,21 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
     }
   }
+
+  checkPermisosNewProcedimiento() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectAll || this.historico || !this.permisoEscritura || !this.disableGuardar() || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newProcedimiento();
+      }
+    }
+  }
+
   newProcedimiento() {
     this.getProcess();
 
@@ -336,6 +390,21 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
     }
 
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.historico || this.nuevo || !this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"

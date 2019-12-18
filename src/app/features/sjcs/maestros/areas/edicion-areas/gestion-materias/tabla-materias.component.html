@@ -55,10 +55,11 @@
         </ng-template>
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="
                 table.filter($event.target.value, col.field, 'contains')
               " />
             </th>
@@ -76,7 +77,7 @@
                   [panelStyle]="{ width: '100%' }" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato)"></p-multiSelect> -->
 
                 <p-multiSelect #multiSelect defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.jurisdiccionesReal" [options]="comboJurisdicciones"
-                  optionLabel="label" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
+                  optionLabel="label" [disabled]="disableAll" [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }"
                   [overlayVisible]="dato.overlayVisible" (onFocus)="openMultiSelect(dato)" (onChange)="editJurisdicciones(dato); openMultiSelect(dato)"></p-multiSelect>
               </div>
 
@@ -135,12 +136,12 @@
     <div [hidden]="!showTarjeta" *ngIf="modoEdicion" class="card-footer">
       <div class="text-right main-button">
         <button [disabled]="disableAll || ((!selectMultiple && !selectAll) || nuevo) || selectedDatos == undefined || !selectedDatos.length > 0"
-          (click)="confirmDelete(selectedDatos);" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-        <button [disabled]="disableAll" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button pButton [disabled]="disableAll || disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button pButton [disabled]="disableAll || selectMultiple || selectAll || nuevo" (click)="newMateria()" type="button" icon="fa fa-plus"
-          iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          (click)="checkPermisosDelete(selectedDatos);" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+        <button [disabled]="disableAll" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton [disabled]="disableAll || disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton [disabled]="disableAll || selectMultiple || selectAll || nuevo" (click)="checkPermisosNewMateria()" type="button"
+          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
       </div>
     </div>

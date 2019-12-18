@@ -3,6 +3,7 @@ import { AreasItem } from '../../../../../../models/sjcs/AreasItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-edicion-areas',
@@ -24,7 +25,8 @@ export class EdicionAreasComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.areasItem != undefined) {
@@ -60,6 +62,16 @@ export class EdicionAreasComponent implements OnInit {
   ngAfterViewInit() {
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(!this.areasItem.historico, this.areasItem.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.modoEdicion) {
       if (this.bodyInicial != undefined) this.areasItem = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -68,9 +80,31 @@ export class EdicionAreasComponent implements OnInit {
     }
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(!this.areasItem.historico, this.areasItem.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.disabledSave()) {
+        this.save();
+      } else {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      }
+    }
+  }
+
   save() {
+
     this.progressSpinner = true;
     let url = "";
+    if (this.areasItem.contenido != undefined) {
+      this.areasItem.contenido = this.areasItem.contenido.trim();
+    }
+    if (this.areasItem.nombreArea != undefined) {
+      this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
+    }
     if (!this.modoEdicion) {
       url = "fichaAreas_createAreas";
       this.callSaveService(url);
@@ -78,7 +112,6 @@ export class EdicionAreasComponent implements OnInit {
       url = "fichaAreas_updateAreas";
       this.callSaveService(url);
     }
-
   }
 
   callSaveService(url) {
@@ -132,9 +165,12 @@ export class EdicionAreasComponent implements OnInit {
   }
 
   disabledSave() {
-    if (this.areasItem.nombreArea != undefined) this.areasItem.nombreArea = this.areasItem.nombreArea.trim();
-    if (this.areasItem.nombreArea != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
-      return false;
+
+    if (this.areasItem.nombreArea != undefined) {
+      if (this.areasItem.nombreArea.trim() != "" && (JSON.stringify(this.areasItem) != JSON.stringify(this.bodyInicial))) {
+        return false;
+      } else { return true; }
+
     } else {
       return true;
     }

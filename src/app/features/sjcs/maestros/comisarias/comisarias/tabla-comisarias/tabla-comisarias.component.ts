@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PrisionObject } from '../../../../../../models/sjcs/PrisionObject';
 import { ComisariaObject } from '../../../../../../models/sjcs/ComisariaObject';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-comisarias',
@@ -17,7 +18,7 @@ export class TablaComisariasComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
+  buscadores = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -46,7 +47,8 @@ export class TablaComisariasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -63,6 +65,22 @@ export class TablaComisariasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -78,7 +96,7 @@ export class TablaComisariasComponent implements OnInit {
         this.msgs = [
           {
             severity: "info",
-            summary: "Cancel",
+            summary: "Cancelar",
             detail: this.translateService.instant(
               "general.message.accion.cancelada"
             )
@@ -87,6 +105,7 @@ export class TablaComisariasComponent implements OnInit {
       }
     });
   }
+
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -113,7 +132,6 @@ export class TablaComisariasComponent implements OnInit {
     }
 
   }
-
 
   openTab(evento) {
 
@@ -167,6 +185,20 @@ export class TablaComisariasComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
+
   activate() {
     let comisariaActivate = new ComisariaObject();
     comisariaActivate.comisariaItems = this.selectedDatos;
@@ -203,14 +235,15 @@ export class TablaComisariasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "codigoExt", header: "general.codeext" },
-      { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion" },
-      { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion" },
-      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia" }
+      { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "40%" },
+      { field: "codigoExt", header: "general.codeext", width: "15%" },
+      { field: "domicilio", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
+      { field: "nombrePoblacion", header: "censo.consultaDirecciones.literal.poblacion", width: "15%" },
+      { field: "nombreProvincia", header: "censo.datosDireccion.literal.provincia", width: "15%" }
 
     ];
 
+    this.cols.forEach(element => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

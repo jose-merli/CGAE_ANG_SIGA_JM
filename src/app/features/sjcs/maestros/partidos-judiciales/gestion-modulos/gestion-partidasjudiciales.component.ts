@@ -10,6 +10,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { PartidasJudicialesObject } from '../../../../../models/sjcs/PartidasJudicialesObject';
 import { PartidasJudicialesItems } from '../../../../../models/sjcs/PartidasJudicialesItems';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
   msgs;
   @Input() institucionActual;
   selectedItem: number = 10;
-  selectAll;
+  selectAll: boolean = false;
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;
@@ -41,6 +42,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
   selectionMode: string = "single";
   //Resultados de la busqueda
   @Input() datos;
+  buscadores = [];
 
   @Input() permisos;
   //Combo partidos judiciales
@@ -55,7 +57,8 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -73,6 +76,21 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.selectAll = false;
     this.selectMultiple = false;
   }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || ((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0))) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+    }
+  }
+
 
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
@@ -130,14 +148,28 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     if (this.selectAll === true) {
       if (this.nuevo) this.datos.shift();
       this.nuevo = false;
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos.filter(dato => dato.idinstitucion == this.institucionActual);
+      this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
   }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -162,6 +194,9 @@ export class TablaPartidasJudicialesComponent implements OnInit {
         this.searchPartidas.emit(false);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.selectedDatos = [];
+        this.selectAll = false;
+        this.selectMultiple = false;
       },
       err => {
 
@@ -180,6 +215,16 @@ export class TablaPartidasJudicialesComponent implements OnInit {
 
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -193,6 +238,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
 
@@ -206,7 +252,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     this.cols = [
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" }
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,
@@ -248,6 +294,20 @@ export class TablaPartidasJudicialesComponent implements OnInit {
 
     if (this.datos.length == 0) {
       this.datosInicial = [];
+    }
+  }
+
+  checkPermisosNewPartidaJudicial() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newPartidaJudicial();
+      }
     }
   }
 
@@ -322,13 +382,10 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       this.nuevo = false;
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
-        this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";
       } else {
         // this.pressNew = false;
-        this.selectAll = false;
-        this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "multiple";
       }
@@ -349,7 +406,6 @@ export class TablaPartidasJudicialesComponent implements OnInit {
     if (this.selectedDatos[0] == undefined) {
       this.selectedDatos = []
     }
-    if (this.institucionActual != event.data.idinstitucion) this.selectedDatos.pop();
   }
   disabledSave() {
     if (this.permisos) {

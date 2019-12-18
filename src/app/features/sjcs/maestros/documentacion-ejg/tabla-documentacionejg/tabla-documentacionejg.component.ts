@@ -4,8 +4,8 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
-import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
 import { DocumentacionEjgObject } from '../../../../../models/sjcs/DocumentacionEjgObject';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-documentacionejg',
@@ -27,7 +27,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
   historico: boolean = false;
 
   message;
-
+  buscadores = [];
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -46,7 +46,8 @@ export class TablaDocumentacionejgComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -62,6 +63,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
   }
+
   editElementDisabled() {
     this.datos.forEach(element => {
       element.editable = false
@@ -97,15 +99,14 @@ export class TablaDocumentacionejgComponent implements OnInit {
 
   openTab(evento) {
 
-
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      if (this.historico) {
-        this.persistenceService.setHistorico(!this.historico);
-      }
-      else {
-        this.persistenceService.setHistorico(this.historico);
-      }
+      // if (this.historico) {
+      this.persistenceService.setHistorico(this.historico);
+      // }
+      // else {
+      //   this.persistenceService.setHistorico(this.historico);
+      // }
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestiondocumentacionejg"]);
     } else {
@@ -114,6 +115,20 @@ export class TablaDocumentacionejgComponent implements OnInit {
         this.selectedDatos.pop();
       }
 
+    }
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
     }
   }
 
@@ -175,6 +190,20 @@ export class TablaDocumentacionejgComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
+
   activate() {
     let docActivate = new DocumentacionEjgObject();
     docActivate.documentacionejgItems = this.selectedDatos;
@@ -215,11 +244,12 @@ export class TablaDocumentacionejgComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
-      { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento" },
-      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviatura" },
-      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos" },
+      { field: "abreviaturaTipoDoc", header: "administracion.parametrosGenerales.literal.abreviaturaTipoDocumento", width: "18%" },
+      { field: "descripcionTipoDoc", header: "administracion.parametrosGenerales.literal.descripcionTipoDocumento", width: "32%" },
+      { field: "abreviaturaDoc", header: "administracion.parametrosGenerales.literal.abreviaturaDocumento", width: "18%" },
+      { field: "descripcionDoc", header: "administracion.parametrosGenerales.literal.descripcionDocumentos", width: "32%" },
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {
@@ -269,9 +299,14 @@ export class TablaDocumentacionejgComponent implements OnInit {
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
-      if (this.historico)
-        this.selectMultiple = true;
-      this.selectionMode = "multiple";
+      this.selectAll = false;
+      this.selectMultiple = false;
+      this.selectionMode = "single";
+      // if (this.historico){
+
+      // }
+      //   this.selectMultiple = true;
+      // this.selectionMode = "multiple";
     }
 
   }
@@ -285,6 +320,7 @@ export class TablaDocumentacionejgComponent implements OnInit {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";

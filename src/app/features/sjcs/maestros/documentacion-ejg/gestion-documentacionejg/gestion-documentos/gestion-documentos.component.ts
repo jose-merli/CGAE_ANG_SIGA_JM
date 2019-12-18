@@ -6,6 +6,8 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { DocumentacionEjgObject } from '../../../../../../models/sjcs/DocumentacionEjgObject';
 import { UpperCasePipe } from '../../../../../../../../node_modules/@angular/common';
+import { DocumentacionEjgItem } from '../../../../../../models/sjcs/DocumentacionEjgItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-gestion-documentos',
@@ -26,7 +28,9 @@ export class GestionDocumentosComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
+  historicoDocumentos: boolean = false;
   message;
+  buscadores = [];
   filtros;
   nuevo: boolean = true;
   progressSpinner: boolean = false;
@@ -50,18 +54,17 @@ export class GestionDocumentosComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
     this.getCols();
     // this.datos = this.persistenceService.getDatos();
-
     if (this.datos != null && this.datos != undefined) {
       this.modoEdicion = true;
       this.datosInicial = JSON.parse(JSON.stringify((this.datos)));
     }
-
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
@@ -74,11 +77,26 @@ export class GestionDocumentosComponent implements OnInit {
       this.selectMultiple = false;
       this.selectionMode = "single"
     }
+
     this.selectedDatos = [];
     this.updateDocumentos = [];
     this.nuevo = false;
     if (this.datos != null && this.datos != undefined)
       this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+  }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0 || this.selectedDatos[0].idDocumento == undefined) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
   }
 
   confirmDelete() {
@@ -106,10 +124,17 @@ export class GestionDocumentosComponent implements OnInit {
     });
   }
 
+  checkPermisosSearchHistorical() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchHistorical();
+    }
+  }
 
   searchHistorical() {
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
+    this.historicoDocumentos = !this.historicoDocumentos;
+
     if (this.historico && this.permisos) {
 
       this.editElementDisabled();
@@ -130,7 +155,7 @@ export class GestionDocumentosComponent implements OnInit {
     // this.selectMultiple = false;
     // this.historico = !this.historico;
     // this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
+    this.searchHistoricalSend.emit(this.historicoDocumentos);
 
   }
 
@@ -141,6 +166,8 @@ export class GestionDocumentosComponent implements OnInit {
         if (this.nuevo) {
           this.nuevo = false;
         }
+
+        this.editMode = false;
 
         this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
         this.searchHistoricalSend.emit(false);
@@ -164,6 +191,7 @@ export class GestionDocumentosComponent implements OnInit {
     );
 
   }
+
   validateHistorical() {
     if (this.persistenceService.getDatos() != undefined) {
 
@@ -178,6 +206,20 @@ export class GestionDocumentosComponent implements OnInit {
     }
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.deleteDoc();
+      }
+    }
+  }
+
   deleteDoc() {
 
     let tipoDocDelete = new DocumentacionEjgObject();
@@ -187,10 +229,10 @@ export class GestionDocumentosComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        if (this.historico == false) {
-          this.searchHistoricalSend.emit(false);
+        if (this.historicoDocumentos) {
+          this.searchHistoricalSend.emit(true);
         } else {
-          this.searchHistorical();
+          this.searchHistoricalSend.emit(false);
         }
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -209,8 +251,15 @@ export class GestionDocumentosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.selectMultiple = false;
-        this.progressSpinner = false;
+        if (this.historicoDocumentos) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+          this.progressSpinner = false;
+        } else {
+          this.selectMultiple = false;
+          this.progressSpinner = false;
+        }
+
       }
     );
   }
@@ -250,6 +299,7 @@ export class GestionDocumentosComponent implements OnInit {
 
     }
   }
+
   activate() {
     let docActivate = new DocumentacionEjgObject();
     docActivate.documentacionejgItems = this.selectedDatos;
@@ -257,7 +307,7 @@ export class GestionDocumentosComponent implements OnInit {
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
+        this.searchHistoricalSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.selectMultiple = false;
@@ -282,6 +332,7 @@ export class GestionDocumentosComponent implements OnInit {
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
@@ -383,6 +434,22 @@ export class GestionDocumentosComponent implements OnInit {
     this.seleccion = false;
   }
 
+  checkPermisosNewDocumento() {
+
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newDocumento();
+      }
+    }
+  }
+
   newDocumento() {
     this.editMode = false;
     this.seleccion = false;
@@ -393,7 +460,6 @@ export class GestionDocumentosComponent implements OnInit {
     } else {
       this.datos = [];
     }
-
 
     let Documento = {
       abreviaturaDoc: undefined,
@@ -413,13 +479,16 @@ export class GestionDocumentosComponent implements OnInit {
     }
 
   }
+
   changeAbreviatura(dato) {
 
     let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
 
+    dato.abreviaturaDoc = dato.abreviaturaDoc.trim();
+
     if (findDato != undefined) {
       if (dato.abreviaturaDoc != findDato.abreviaturaDoc) {
-        let findUpdate = this.updateDocumentos.find(item => item.abreviaturaDoc === dato.abreviaturaDoc);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -434,7 +503,7 @@ export class GestionDocumentosComponent implements OnInit {
 
     if (findDato != undefined) {
       if (dato.codigoExt != findDato.codigoExt) {
-        let findUpdate = this.updateDocumentos.find(item => item.codigoExt === dato.codigoExt);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -448,10 +517,11 @@ export class GestionDocumentosComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idDocumento === dato.idDocumento);
+    dato.descripcionDoc = dato.descripcionDoc.trim();
 
     if (findDato != undefined) {
       if (dato.descripcionDoc != findDato.descripcionDoc) {
-        let findUpdate = this.updateDocumentos.find(item => item.descripcionDoc === dato.descripcionDoc);
+        let findUpdate = this.updateDocumentos.find(item => item.idDocumento === dato.idDocumento);
 
         if (findUpdate == undefined) {
           this.updateDocumentos.push(dato);
@@ -461,6 +531,19 @@ export class GestionDocumentosComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -468,18 +551,27 @@ export class GestionDocumentosComponent implements OnInit {
     if (this.datos[0].idDocumento == null || this.datos[0].idDocumento == undefined) {
       this.body = this.datos[0]
       url = "gestionDocumentacionEjg_createDoc";
+      this.body.abreviaturaDoc = this.body.abreviaturaDoc.trim();
+      this.body.descripcionDoc = this.body.descripcionDoc.trim();
       this.callSaveService(url);
     } else {
       this.body = new DocumentacionEjgObject();
       this.body.documentacionejgItems = this.updateDocumentos;
+      this.body.documentacionejgItems = this.body.documentacionejgItems.map(it => {
+        it.abreviaturaDoc = it.abreviaturaDoc.trim();
+        it.descripcionDoc = it.descripcionDoc.trim();
+        return it;
+      })
       url = "gestionDocumentacionEjg_updateDoc";
       this.callSaveService(url);
     }
 
   }
+
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined && this.datos[0].abreviaturaDoc != undefined) {
+      if (this.datos[0].abreviaturaDoc != undefined && this.datos[0].descripcionDoc != undefined
+        && this.datos[0].abreviaturaDoc.trim() && this.datos[0].descripcionDoc.trim()) {
         return false;
       } else {
         return true;
@@ -487,7 +579,16 @@ export class GestionDocumentosComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updateDocumentos != undefined && this.updateDocumentos.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updateDocumentos.forEach(it => {
+          if (it.abreviaturaDoc == undefined || it.descripcionDoc == undefined || !it.abreviaturaDoc.trim() ||
+            !it.descripcionDoc.trim())
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
       } else {
         return true;
       }
@@ -513,12 +614,22 @@ export class GestionDocumentosComponent implements OnInit {
       element.overlayVisible = false;
     });
   }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
     }
+    this.datos.abreviaturaDoc = null;
     this.selectAll = false;
     this.selectMultiple = false;
     this.editElementDisabled();
@@ -529,6 +640,8 @@ export class GestionDocumentosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
 }

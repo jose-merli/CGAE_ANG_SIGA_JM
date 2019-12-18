@@ -3,6 +3,7 @@ import { DocumentacionEjgItem } from '../../../../../../models/sjcs/Documentacio
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-gestion-tipodocumento',
@@ -16,6 +17,7 @@ export class GestionTipodocumentoComponent implements OnInit {
   bodyInicial;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
+  historico: boolean = false;
   permisos;
   msgs;
   nuevo;
@@ -28,9 +30,11 @@ export class GestionTipodocumentoComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
+
     this.permisos = this.persistenceService.getPermisos();
     if (this.documentacionEjgItem != undefined) {
       this.body = this.documentacionEjgItem;
@@ -40,11 +44,13 @@ export class GestionTipodocumentoComponent implements OnInit {
       this.nuevo = true;
       this.documentacionEjgItem = new DocumentacionEjgItem();
     }
-    if (!this.permisos) {
-      this.modoEdicion = false;
-    } else {
-      this.modoEdicion = true;
-    }
+    // if (!this.permisos) {
+    //   this.modoEdicion = false;
+    // } else {
+    //   this.modoEdicion = true;
+    // }
+
+    this.historico = this.persistenceService.getHistorico();
 
     if (this.persistenceService.getHistorico()) {
       this.modoEdicion = false;
@@ -67,16 +73,37 @@ export class GestionTipodocumentoComponent implements OnInit {
     // }
   }
 
-  ngAfterViewInit() {
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
   }
 
   rest() {
-    if (this.modoEdicion) {
-      if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    } else {
+    if (this.bodyInicial != undefined) this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    else {
       this.body = new DocumentacionEjgItem();
     }
   }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
 
   save() {
     this.progressSpinner = true;
@@ -94,11 +121,14 @@ export class GestionTipodocumentoComponent implements OnInit {
   }
 
   callSaveService(url) {
+    if (this.body.abreviaturaTipoDoc != undefined) this.body.abreviaturaTipoDoc = this.body.abreviaturaTipoDoc.trim();
+    if (this.body.descripcionTipoDoc != undefined) this.body.descripcionTipoDoc = this.body.descripcionTipoDoc.trim();
     this.sigaServices.post(url, this.body).subscribe(
       data => {
 
         if (this.nuevo) {
           this.nuevo = false;
+          this.modoEdicion = true;
           let tipodocs = JSON.parse(data.body);
           // this.areasItem = JSON.parse(data.body);
           this.body.idTipoDocumento = tipodocs.id;
@@ -145,14 +175,10 @@ export class GestionTipodocumentoComponent implements OnInit {
 
   disabledSave() {
 
-    if (this.body.abreviaturaTipoDoc != null &&
-      this.body.abreviaturaTipoDoc != undefined &&
-      this.body.abreviaturaTipoDoc.trim() != "" &&
-      this.body.descripcionTipoDoc != null &&
-      this.body.descripcionTipoDoc != undefined &&
-      this.body.descripcionTipoDoc.trim() != ""
-      && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)))) {
-      return false;
+    if (this.body.abreviaturaTipoDoc != undefined && this.body.descripcionTipoDoc != undefined && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)))) {
+      if (this.body.abreviaturaTipoDoc.trim() != "" && this.body.descripcionTipoDoc.trim() != "") {
+        return false;
+      } else { return true; }
     } else {
       return true;
     }

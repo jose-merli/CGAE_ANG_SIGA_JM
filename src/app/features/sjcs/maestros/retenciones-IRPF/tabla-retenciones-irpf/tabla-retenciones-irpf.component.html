@@ -14,10 +14,11 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="
                 tabla.filter($event.target.value, col.field, 'contains')
               " />
           </th>
@@ -53,10 +54,11 @@
               <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion" type="text" maxLength="58" on-focusout="changeDescripcion(dato)"
                 [(disabled)]="!permisos" (onBlur)="changeDescripcion(dato)" (input)="changeDescripcion(dato)" />
             </div>
-            <div *ngIf="dato.editable && col.field == 'tipoSociedad'">
-              <p-dropdown class="select-form" [(ngModel)]='dato.descripcionSociedad' placeholder="Seleccionar" [options]="comboSociedades"
-                on-focusout="changeSociedad(dato)" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onBlur)="changeSociedad(dato)"
-                (onChange)="changeSociedad(dato)"></p-dropdown>
+            <div *ngIf="dato.editable && col.field == 'descripcionSociedad'">
+              <p-dropdown class="select-form" [(ngModel)]='dato.tipoSociedad' (onChange)="changeSociedad(dato)" [filter]="true" filterBy="label,labelSinTilde"
+                [options]="comboSociedades" (input)="changeSociedad(dato)" (onBlur)="changeSociedad(dato)" [emptyFilterMessage]="resultadosPoblaciones"
+                id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+              </p-dropdown>
             </div>
           </td>
 
@@ -85,7 +87,7 @@
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname" [disabled]="!permisos"></p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple && permisos}" (click)="isSelectMultiple()">
             <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>
@@ -96,23 +98,25 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="isHistorico(); selectedDatos = []" pButton type="button"
+      <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="checkPermisosIsHistorico(); selectedDatos = []" pButton type="button"
         icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
-      <button [disabled]="nuevo" *ngIf="historico" (click)="isHistorico(); selectedDatos = []" pButton type="button" icon="fa fa-undo"
+      <button [disabled]="nuevo" *ngIf="historico" (click)="checkPermisosIsHistorico(); selectedDatos = []" pButton type="button" icon="fa fa-undo"
         iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-      <button [disabled]="historico || !permisos" (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button [disabled]="historico || !permisos" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
-        (click)="confirmDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0"
+        (click)="checkPermisosDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
 
       <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
-        (click)="delete()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+        (click)="checkPermisosActivate(selectedDatos)" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
 
-      <button pButton [disabled]="disabledSave()" (click)="save()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
 
-      <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="newRetencion()"
+      <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="checkPermisosNewRetencion()"
         type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>

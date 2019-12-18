@@ -9,6 +9,7 @@ import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { DestinatariosRetencObject } from '../../../../../models/sjcs/DestinatariosRetencObject';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class TablaDestinatariosComponent implements OnInit {
   updateDestinatariosRet = [];
 
   body;
-
+  buscadores = []
   selectedItem: number = 10;
   selectAll;
   selectedDatos: any[] = [];
@@ -61,7 +62,7 @@ export class TablaDestinatariosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) { }
 
@@ -83,6 +84,22 @@ export class TablaDestinatariosComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.disabledSave();
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -107,6 +124,7 @@ export class TablaDestinatariosComponent implements OnInit {
       }
     });
   }
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
 
@@ -179,7 +197,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.cuentacontable != findDato.cuentacontable) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.cuentacontable === dato.cuentacontable);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -192,11 +210,12 @@ export class TablaDestinatariosComponent implements OnInit {
   changeNombre(dato) {
 
     let findDato = this.datosInicial.find(item => item.iddestinatario === dato.iddestinatario);
+    dato.nombre = dato.nombre.trim();
 
     if (findDato != undefined) {
       if (dato.nombre != findDato.nombre) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.nombre === dato.nombre);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -212,7 +231,7 @@ export class TablaDestinatariosComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.orden != findDato.orden) {
 
-        let findUpdate = this.updateDestinatariosRet.find(item => item.orden === dato.orden);
+        let findUpdate = this.updateDestinatariosRet.find(item => item.iddestinatario === dato.iddestinatario);
 
         if (findUpdate == undefined) {
           this.updateDestinatariosRet.push(dato);
@@ -255,6 +274,19 @@ export class TablaDestinatariosComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -264,6 +296,7 @@ export class TablaDestinatariosComponent implements OnInit {
       url = "gestionDestinatariosRetenc_createDestinatarioRetenc";
       let destinatariosRetenc = this.datos[0];
       this.body = destinatariosRetenc;
+      this.body.nombre = this.body.nombre.trim();
       this.callSaveService(url);
 
     } else {
@@ -272,6 +305,10 @@ export class TablaDestinatariosComponent implements OnInit {
       if (this.validateUpdate()) {
         this.body = new DestinatariosRetencObject();
         this.body.destinatariosItem = this.updateDestinatariosRet;
+        this.body.destinatariosItem = this.body.destinatariosItem.map(it => {
+          it.nombre = it.nombre.trim();
+          return it;
+        })
         this.callSaveService(url);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Uno o varios de las partidas presupuestrias ya se encuentran registrados");
@@ -280,6 +317,17 @@ export class TablaDestinatariosComponent implements OnInit {
     }
 
   }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -294,6 +342,8 @@ export class TablaDestinatariosComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+
   }
 
   // rest() {
@@ -303,6 +353,22 @@ export class TablaDestinatariosComponent implements OnInit {
   //     this.destinatariosItem = new destinatariosItem();
   //   }
   // }
+
+  checkPermisosNewDestinatariosRetenc() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newDestinatariosRetenc();
+      }
+
+    }
+  }
 
   newDestinatariosRetenc() {
     this.tabla.sortOrder = 0;
@@ -334,7 +400,7 @@ export class TablaDestinatariosComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim() != "") {
+      if (this.datos[0].nombre != undefined && this.datos[0].nombre.trim()) {
         return false;
       } else {
         return true;
@@ -372,6 +438,20 @@ export class TablaDestinatariosComponent implements OnInit {
     return check;
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
+  }
 
   delete() {
     let DestinatariosRetencDelete = new DestinatariosRetencObject();
@@ -379,7 +459,11 @@ export class TablaDestinatariosComponent implements OnInit {
     this.sigaServices.post("gestionDestinatariosRetenc_eliminateDestinatariosRetenc", DestinatariosRetencDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchPartidas.emit(false);
+        if (this.historico) {
+          this.searchPartidas.emit(true);
+        } else {
+          this.searchPartidas.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -392,12 +476,18 @@ export class TablaDestinatariosComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (this.historico) {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+          this.progressSpinner = false;
+        } else {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        }
       }
     );
   }
@@ -427,6 +517,14 @@ export class TablaDestinatariosComponent implements OnInit {
       if (this.historico)
         this.selectMultiple = true;
       this.selectionMode = "multiple";
+    }
+  }
+
+  checkPermisosSearchPartida() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchPartida();
     }
   }
 
@@ -466,7 +564,7 @@ export class TablaDestinatariosComponent implements OnInit {
       { field: "cuentacontable", header: "censo.consultaDatosGenerales.literal.cuentaContable" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
       {
         label: 10,

@@ -8,6 +8,7 @@ import { findIndex } from 'rxjs/operators';
 import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class TablaPartidasComponent implements OnInit {
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
-
+  buscadores = [];
   updatePartidasPres = [];
 
   body;
@@ -61,14 +62,15 @@ export class TablaPartidasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private  confirmationService:  ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
     this.selectedDatos = [];
-    this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.getCols();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -153,7 +155,7 @@ export class TablaPartidasComponent implements OnInit {
 
       if (dato.importepartida != findDato.importepartida) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.importepartida === dato.importepartida);
+        let findUpdate = this.updatePartidasPres.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -170,7 +172,7 @@ export class TablaPartidasComponent implements OnInit {
     if (findDato != undefined) {
       if (dato.nombrepartida != findDato.nombrepartida) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.nombrepartida === dato.nombrepartida);
+        let findUpdate = this.updatePartidasPres.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -182,11 +184,12 @@ export class TablaPartidasComponent implements OnInit {
   changeDescripcion(dato) {
 
     let findDato = this.datosInicial.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
+    dato.descripcion = dato.descripcion.trim();
 
     if (findDato != undefined) {
       if (dato.descripcion != findDato.descripcion) {
 
-        let findUpdate = this.updatePartidasPres.find(item => item.descripcion === dato.descripcion);
+        let findUpdate = this.updatePartidasPres.find(item => item.idpartidapresupuestaria === dato.idpartidapresupuestaria);
 
         if (findUpdate == undefined) {
           this.updatePartidasPres.push(dato);
@@ -228,6 +231,19 @@ export class TablaPartidasComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -240,9 +256,15 @@ export class TablaPartidasComponent implements OnInit {
       this.body.importepartida = this.body.valorNum;
       this.body.importepartida = this.body.importepartida.replace(",", ".");
       this.body.importepartidaReal = +this.body.importepartida;
+      this.body.nombrepartida = this.body.nombrepartida.trim();
+      this.body.descripcion = this.body.descripcion.trim();
       if (this.body.importepartida == ".") {
         this.body.importepartida = 0;
       }
+      if (this.body.nombrepartida != undefined)
+        this.body.nombrepartida = this.body.nombrepartida.trim();
+      if (this.body.descripcion != undefined)
+        this.body.descripcion = this.body.descripcion.trim();
       this.callSaveService(url);
 
     } else {
@@ -257,7 +279,12 @@ export class TablaPartidasComponent implements OnInit {
           if (element.importepartida == ".") {
             element.importepartida = 0;
           }
+          if (element.nombrepartida != undefined)
+            element.nombrepartida = element.nombrepartida.trim();
+          if (element.descripcion != undefined)
+            element.descripcion = element.descripcion.trim();
         });
+
         this.callSaveService(url);
       } else {
         err => {
@@ -273,6 +300,17 @@ export class TablaPartidasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.datosInicial != undefined) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
@@ -287,6 +325,7 @@ export class TablaPartidasComponent implements OnInit {
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
     this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   // rest() {
@@ -296,6 +335,20 @@ export class TablaPartidasComponent implements OnInit {
   //     this.partidasItem = new PartidasItem();
   //   }
   // }
+
+  checkPermisosNewPartidaPresupuestaria() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisos) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newPartidaPresupuestaria();
+      }
+    }
+  }
 
   newPartidaPresupuestaria() {
     this.nuevo = true;
@@ -328,6 +381,20 @@ export class TablaPartidasComponent implements OnInit {
     this.tabla.reset();
   }
 
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+    }
+  }
+
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -355,8 +422,8 @@ export class TablaPartidasComponent implements OnInit {
 
   disabledSave() {
     if (this.nuevo) {
-      if (this.datos[0].nombrepartida != "" && this.datos[0].descripcion != "" && this.datos[0].nombrepartida != undefined && this.datos[0].descripcion != undefined
-        && this.datos[0].valorNum != undefined) {
+      if (this.datos[0].nombrepartida != undefined && this.datos[0].valorNum != undefined && this.datos[0].descripcion != undefined && this.datos[0].nombrepartida.trim() &&
+        this.datos[0].descripcion.trim() && this.datos[0].valorNum) {
         return false;
       } else {
         return true;
@@ -364,7 +431,16 @@ export class TablaPartidasComponent implements OnInit {
 
     } else {
       if (!this.historico && (this.updatePartidasPres != undefined && this.updatePartidasPres.length > 0) && this.permisos) {
-        return false;
+        let val = true;
+        this.updatePartidasPres.forEach(it => {
+          if ((it.nombrepartida == undefined || !it.nombrepartida.trim()) || (it.descripcion == undefined || !it.descripcion.trim()) || (it.importepartida == undefined || !it.importepartida.trim()))
+            val = false;
+        });
+        if (val)
+          return false;
+        else
+          return true;
+
       } else {
         return true;
       }
@@ -378,7 +454,7 @@ export class TablaPartidasComponent implements OnInit {
 
     this.updatePartidasPres.forEach(dato => {
 
-      let findDatos = this.datos.filter(item => item.nombrepartida === dato.nombrepartida && item.descripcion === dato.descripcion && item.importepartida === dato.importepartida);
+      let findDatos = this.datos.filter(item => item.nombrepartida.trim() === dato.nombrepartida.trim() && item.descripcion.trim() === dato.descripcion.trim() && item.importepartida === dato.importepartida);
 
       if (findDatos != undefined && findDatos.length > 1) {
         check = false;
@@ -389,6 +465,19 @@ export class TablaPartidasComponent implements OnInit {
     return check;
   }
 
+  checkPermisosActivate(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple || !this.selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete(selectedDatos);
+      }
+    }
+  }
 
   delete(selectedDatos) {
     let PartidasPresDelete = new PartidasObject();
@@ -396,7 +485,11 @@ export class TablaPartidasComponent implements OnInit {
     this.sigaServices.post("gestionPartidasPres_eliminatePartidasPres", PartidasPresDelete).subscribe(
       data => {
         this.selectedDatos = [];
-        this.searchPartidas.emit(false);
+        if (this.historico) {
+          this.searchPartidas.emit(true);
+        } else {
+          this.searchPartidas.emit(false);
+        }
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -409,12 +502,18 @@ export class TablaPartidasComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
+        if (!this.historico) {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
+        } else {
+          this.selectMultiple = true;
+          this.selectionMode = "multiple";
+        }
+
       }
     );
   }
@@ -444,6 +543,14 @@ export class TablaPartidasComponent implements OnInit {
       if (this.historico)
         this.selectMultiple = true;
       this.selectionMode = "multiple";
+    }
+  }
+
+  checkPermisosSearchPartida() {
+    if ((this.nuevo && this.historico) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchPartida();
     }
   }
 
@@ -483,6 +590,7 @@ export class TablaPartidasComponent implements OnInit {
       { field: "importepartidaReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
 
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [
       {

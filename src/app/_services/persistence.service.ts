@@ -6,7 +6,10 @@ export class PersistenceService {
 
     private filtrosName: string = "filtros";
     private filtrosAuxName: string = "filtroAux";
+    private paginacionName: string = "paginacion";
     private datosName: string = "datos";
+    private bodyName: string = "body";
+    private bodyAuxName: string = "bodyAux";
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
     private fichasPosibles: string = "fichasPosibles";
@@ -39,6 +42,19 @@ export class PersistenceService {
         sessionStorage.removeItem(this.filtrosAuxName);
     }
 
+    setPaginacion(data: any) {
+        sessionStorage.setItem(this.paginacionName, JSON.stringify(data));
+    }
+
+    getPaginacion() {
+        let data = sessionStorage.getItem(this.paginacionName);
+        return JSON.parse(data);
+    }
+
+    clearPaginacion() {
+        sessionStorage.removeItem(this.paginacionName);
+    }
+
     setDatos(data: any) {
         sessionStorage.setItem(this.datosName, JSON.stringify(data));
     }
@@ -50,6 +66,32 @@ export class PersistenceService {
 
     clearDatos() {
         sessionStorage.removeItem(this.datosName);
+    }
+
+    setBody(data: any) {
+        sessionStorage.setItem(this.bodyName, JSON.stringify(data));
+    }
+
+    getBody() {
+        let data = sessionStorage.getItem(this.bodyName);
+        return JSON.parse(data);
+    }
+
+    clearBody() {
+        sessionStorage.removeItem(this.bodyName);
+    }
+
+    setBodyAux(data: any) {
+        sessionStorage.setItem(this.bodyAuxName, JSON.stringify(data));
+    }
+
+    getBodyAux() {
+        let data = sessionStorage.getItem(this.bodyAuxName);
+        return JSON.parse(data);
+    }
+
+    clearBodyAux() {
+        sessionStorage.removeItem(this.bodyAuxName);
     }
 
     setHistorico(data: any) {
@@ -91,6 +133,7 @@ export class PersistenceService {
         sessionStorage.removeItem(this.fichasPosibles);
     }
 
+
     clearPersistence() {
         this.clearFiltros();
         this.clearHistorico();
@@ -98,6 +141,9 @@ export class PersistenceService {
         this.clearPermisos();
         this.clearFiltrosAux();
         this.clearFichasPosibles();
+        this.clearBody();
+        this.clearBodyAux();
+        this.clearPaginacion();
     }
 
 }

@@ -6,6 +6,7 @@ import { ZonasObject } from '../../../../../models/sjcs/ZonasObject';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-gestion-zonas',
@@ -40,15 +41,16 @@ export class TablaGestionZonasComponent implements OnInit {
   @Input() comboPJ;
 
   @Output() searchZonasSend = new EventEmitter<boolean>();
-
-  @ViewChild("table") table: DataTable;
+  buscadores = []
+  @ViewChild("table") table;
 
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -78,6 +80,22 @@ export class TablaGestionZonasComponent implements OnInit {
 
     }
   }
+
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+
+    }
+  }
+
 
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
@@ -131,6 +149,21 @@ export class TablaGestionZonasComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+
+    }
+  }
+
   activate() {
     let zonasActivate = new ZonasObject();
     zonasActivate.zonasItems = this.selectedDatos
@@ -139,7 +172,7 @@ export class TablaGestionZonasComponent implements OnInit {
         this.historico = false;
         this.persistenceService.setHistorico(this.historico);
         this.selectedDatos = [];
-        this.searchZonasSend.emit(false);
+        this.searchZonasSend.emit(true);
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },
@@ -177,7 +210,7 @@ export class TablaGestionZonasComponent implements OnInit {
       { field: "descripcionsubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zona" },
       { field: "descripcionpartido", header: "agenda.fichaEvento.tarjetaGenerales.partidoJudicial" }
     ];
-
+    this.cols.forEach(element => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,

@@ -19,7 +19,7 @@ export class GestionCostesfijosComponent implements OnInit {
   textSelected: String = "{label}";
 
   selectedItem: number = 10;
-  selectAll: boolean = false;;
+  selectAll: boolean = false;
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;
@@ -44,7 +44,7 @@ export class GestionCostesfijosComponent implements OnInit {
   nuevo: boolean = false;
   datosInicial = [];
   updateCosteFijo = [];
-
+  buscadores = [];
   idTipoAsistencia;
   selectedBefore;
   selectionMode: string = "single";
@@ -142,8 +142,8 @@ export class GestionCostesfijosComponent implements OnInit {
 
   searchCostesFijos() {
 
-    this.selectAll = false;
-    this.selectMultiple = false;
+    // this.selectAll = false;
+    // this.selectMultiple = false;
 
     this.sigaServices
       .getParam("gestionCostesFijos_searchCosteFijos", "?historico=" + this.historico)
@@ -161,7 +161,13 @@ export class GestionCostesfijosComponent implements OnInit {
 
           this.getTipoActuacion();
           this.progressSpinner = false;
+          if (this.table) {
 
+            this.table.sortOrder = 0;
+            this.table.sortField = '';
+            this.table.reset();
+            this.buscadores = this.buscadores.map(it => it = "");
+          }
         },
         err => {
           console.log(err);
@@ -171,13 +177,37 @@ export class GestionCostesfijosComponent implements OnInit {
       );
   }
 
+  checkSearchHistorical() {
+
+    if ((this.historico && this.nuevo) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchHistorical();
+    }
+
+  }
+
+
   searchHistorical() {
     this.historico = !this.historico;
-    this.searchCostesFijos();
     if (this.historico) {
+
+      this.editElementDisabled();
+      this.editMode = false;
+      this.nuevo = false;
       this.selectMultiple = true;
+
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
       this.selectionMode = "multiple";
     }
+    else {
+      this.selectMultiple = false;
+      this.selectionMode = "single";
+    }
+    this.searchCostesFijos();
+    this.selectAll = false;
 
   }
 
@@ -189,6 +219,22 @@ export class GestionCostesfijosComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
 
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisoEscritura || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -213,6 +259,22 @@ export class GestionCostesfijosComponent implements OnInit {
       }
     });
   }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -287,6 +349,11 @@ export class GestionCostesfijosComponent implements OnInit {
         this.searchCostesFijos();
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        this.table.sortOrder = 0;
+        this.table.sortField = '';
+        this.table.reset();
+        this.buscadores = this.buscadores.map(it => it = "");
         this.progressSpinner = false;
       },
       err => {
@@ -302,9 +369,25 @@ export class GestionCostesfijosComponent implements OnInit {
         this.selectedDatos = [];
         this.updateCosteFijo = [];
         this.progressSpinner = false;
+
       }
     );
 
+  }
+
+  checkPermisosNewCosteFijo() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisoEscritura) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newCosteFijo();
+      }
+    }
   }
 
   newCosteFijo() {
@@ -460,9 +543,12 @@ export class GestionCostesfijosComponent implements OnInit {
 
   edit(evento) {
     this.getId();
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = [];
+    }
     if (!this.nuevo && this.permisoEscritura) {
 
-      if (!this.selectAll && !this.selectMultiple) {
+      if (!this.selectAll && !this.selectMultiple && !this.historico) {
 
         this.datos.forEach(element => {
           element.editable = false;
@@ -481,12 +567,14 @@ export class GestionCostesfijosComponent implements OnInit {
         this.selectedBefore = findDato;
 
       } else {
-        if (evento.data.fechaBaja == undefined && this.historico) {
-          this.selectedDatos.pop();
+        if ((evento.data.fechaBaja == undefined || evento.data.fechaBaja == null) && this.historico) {
+          if (this.selectedDatos[0] != undefined) {
+            this.selectedDatos.pop();
+          } else {
+            this.selectedDatos = [];
+          }
         }
-
       }
-
     }
   }
 
@@ -498,11 +586,7 @@ export class GestionCostesfijosComponent implements OnInit {
 
     this.sigaServices.post("gestionCostesFijos_deleteCostesFijos", this.body).subscribe(
       data => {
-
-        this.nuevo = false;
         this.selectedDatos = [];
-        this.selectMultiple = false;
-        this.selectAll = false;
         this.searchCostesFijos();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
@@ -518,8 +602,28 @@ export class GestionCostesfijosComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+        this.historico = false;
+        this.selectMultiple = false;
+        this.selectAll = false;
+        this.editMode = false;
+        this.nuevo = false;
       }
     );
+  }
+
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0))) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
   }
 
   activate() {
@@ -550,6 +654,20 @@ export class GestionCostesfijosComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.historico || this.selectedDatos == [] || !this.permisoEscritura) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.rest();
+      }
+    }
+  }
 
   rest() {
     if (this.datosInicial != undefined) {
@@ -562,6 +680,11 @@ export class GestionCostesfijosComponent implements OnInit {
     this.updateCosteFijo = [];
     this.nuevo = false;
     this.editMode = false;
+
+    this.table.sortOrder = 0;
+    this.table.sortField = '';
+    this.table.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
   }
 
   showMessage(severity, summary, msg) {
@@ -576,13 +699,13 @@ export class GestionCostesfijosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripcion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoCoste" },
-      { field: "tipoAsistencia", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoAsistencia" },
-      { field: "tipoActuacion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion" },
-      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "descripcion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoCoste", width: "25%" },
+      { field: "tipoAsistencia", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoAsistencia", width: "40%" },
+      { field: "tipoActuacion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion", width: "25%" },
+      { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" }
 
     ];
-
+    this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
         label: 10,
@@ -622,12 +745,12 @@ export class GestionCostesfijosComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-
-    this.editElementDisabled();
-    this.editMode = false;
-
-    if (this.selectAll) {
-      this.selectMultiple = true;
+    if (this.selectAll === true) {
+      if (this.nuevo) this.datos.shift();
+      this.nuevo = false;
+      this.editMode = false;
+      this.selectMultiple = false;
+      this.editElementDisabled();
 
       if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null);
@@ -638,13 +761,8 @@ export class GestionCostesfijosComponent implements OnInit {
         this.selectMultiple = false;
         this.selectionMode = "single";
       }
-
-      if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {
-        this.selectMultiple = true;
-        this.numSelected = this.selectedDatos.length;
-      }
-      this.numSelected = this.datos.length;
       this.selectionMode = "multiple";
+      this.numSelected = this.datos.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -652,24 +770,21 @@ export class GestionCostesfijosComponent implements OnInit {
         this.selectMultiple = true;
       this.selectionMode = "multiple";
     }
-
-
   }
 
   isSelectMultiple() {
 
-    if (this.permisoEscritura) {
-
+    if (this.permisoEscritura && !this.historico) {
+      if (this.nuevo) this.datos.shift();
       this.editElementDisabled();
       this.editMode = false;
-
+      this.nuevo = false;
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
         this.selectionMode = "single";
-
       } else {
         this.selectAll = false;
         this.selectedDatos = [];

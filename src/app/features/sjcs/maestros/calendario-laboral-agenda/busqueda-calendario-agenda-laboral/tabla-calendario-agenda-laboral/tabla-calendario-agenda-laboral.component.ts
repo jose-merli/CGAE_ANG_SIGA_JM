@@ -5,6 +5,7 @@ import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { EventoObject } from '../../../../../../models/EventoObject';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-calendario-agenda-laboral',
@@ -26,7 +27,7 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
   historico: boolean = false;
   institucionActual;
   message;
-
+  buscadores = []
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -44,7 +45,8 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -61,9 +63,15 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
-
+    this.getInstitucion();
   }
 
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+
+  }
   searchHistorical() {
 
     this.historico = !this.historico;
@@ -101,6 +109,20 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
     }
   }
 
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.delete();
+      }
+    }
+  }
+
   delete() {
 
     let eventoDelete = new EventoObject();
@@ -127,6 +149,20 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
   }
 
   activate() {
@@ -170,6 +206,8 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
       { field: "fiestaLocalPartido", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.fiestaLocalPartidoJudicial" }
     ];
 
+    this.cols.forEach(it => this.buscadores.push(""));
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -198,11 +236,19 @@ export class TablaCalendarioAgendaLaboralComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll) {
-
-      if (this.historico) {
-        this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null) || dato.title == 'Fiesta Autonómica');
+      if (this.institucionActual == "2000") {
+        if (this.historico) {
+          this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null) && dato.title != 'Fiesta Autonómica');
+        } else {
+          this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica');
+        }
       } else {
-        this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica');
+        if (this.historico) {
+          this.selectedDatos = this.datos.filter(dato => (dato.fechaBaja != undefined && dato.fechaBaja != null && dato.title != 'Fiesta Autonómica' && dato.title != 'Fiesta Nacional'));
+        } else {
+
+          this.selectedDatos = this.datos.filter(dato => dato.title != 'Fiesta Autonómica' && dato.title != 'Fiesta Nacional');
+        }
       }
 
       if (this.selectedDatos != undefined && this.selectedDatos.length > 0) {

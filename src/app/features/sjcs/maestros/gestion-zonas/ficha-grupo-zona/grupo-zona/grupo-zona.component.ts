@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ZonasItem } from '../../../../../../models/sjcs/ZonasItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-grupo-zona',
@@ -18,16 +20,21 @@ export class GrupoZonaComponent implements OnInit {
   msgs;
 
   historico: boolean = false;
+  permisoEscritura: boolean = true;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
   //Resultados de la busqueda
   @Input() idZona;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService,
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
 
     if (this.idZona != undefined) {
       this.getGrupoZona();
@@ -64,6 +71,16 @@ export class GrupoZonaComponent implements OnInit {
       );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     if (this.bodyInicial != undefined)
       this.body = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -81,16 +98,33 @@ export class GrupoZonaComponent implements OnInit {
     }
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
 
     if (!this.modoEdicion) {
       url = "fichaZonas_createGroupZone";
+      this.body.descripcionzona = this.body.descripcionzona.trim();
       this.callSaveService(url);
 
     } else {
       url = "fichaZonas_updateGroupZone";
+      this.body.descripcionzona = this.body.descripcionzona.trim();
+      this.body.idzona = this.idZona;
       this.callSaveService(url);
     }
 
@@ -148,22 +182,20 @@ export class GrupoZonaComponent implements OnInit {
   disabledSave() {
 
     if (this.nuevo) {
-      if (this.body.descripcionzona != undefined && this.body.descripcionzona != "") {
+      if ((this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != "") && (JSON.stringify(this.bodyInicial) != JSON.stringify(this.body))) {
         return false;
       } else {
         return true;
       }
     } else {
-      if (this.body.descripcionzona != undefined)
-        this.body.descripcionzona = this.body.descripcionzona.trim();
 
-      if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona != null && this.body.descripcionzona.trim() != ""))
-
-        if ((JSON.stringify(this.body.descripcionzona) != JSON.stringify(this.bodyInicial.descripcionzona))) {
+      if (!this.historico && (this.body.descripcionzona != undefined && this.body.descripcionzona.trim() != ""))
+        if ((JSON.stringify(this.body.descripcionzona.trim()) != JSON.stringify(this.bodyInicial.descripcionzona.trim()))) {
           return false;
         } else {
           return true;
         }
+      return true;
     }
   }
 }
