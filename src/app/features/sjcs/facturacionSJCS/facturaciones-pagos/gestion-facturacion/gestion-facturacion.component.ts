@@ -19,16 +19,13 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   idEstadoFacturacion;
   modoEdicion;
   permisos;
+  msgs;
 
   constructor(private location: Location, private persistenceService: PersistenceService) { 
     super(USER_VALIDATIONS);
   }
 
   ngOnInit() {
-    if (undefined!=this.persistenceService.getPermisos()) {
-			this.permisos = this.persistenceService.getPermisos();
-		}
-
     if (undefined != this.persistenceService.getPermisos()) {
 			this.permisos = this.persistenceService.getPermisos();
     }
@@ -74,4 +71,8 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   changeIdFacturacion(event){
     this.idFacturacion=event;
   }
+
+  clear() {
+		this.msgs = [];
+	}
 }

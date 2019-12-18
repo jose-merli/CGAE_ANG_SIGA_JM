@@ -265,4 +265,8 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.filtros = new FacturacionItem();
 		this.filtrosAux = new FacturacionItem();
 	}
+
+	clear() {
+		this.msgs = [];
+	}
 }

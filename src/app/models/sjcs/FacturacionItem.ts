@@ -16,6 +16,9 @@ export class FacturacionItem {
 	importePendiente: string;
 	prevision: string;
 	visible: string;
+	idGrupo: string;
+	descGrupo: string;
+	descConcepto: string;
 	
   	constructor() {}
 }  

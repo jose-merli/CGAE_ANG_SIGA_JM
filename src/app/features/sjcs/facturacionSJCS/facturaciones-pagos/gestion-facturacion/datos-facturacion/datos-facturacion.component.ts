@@ -147,7 +147,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 			},	  
 			err => {
         this.progressSpinner = false;
-			  console.log(err);
+        if(null!=err.error){
+          console.log(err.error);
+        } 
 			}
     );
     
@@ -155,19 +157,23 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   historicoEstados(){
-    this.progressSpinner = true;
+    if(undefined!=this.body.idFacturacion){
+      this.progressSpinner = true;
 
-    this.sigaService.getParam("facturacionsjcs_historicofacturacion", "?idFacturacion=" + this.idFacturacion).subscribe(
-      data => {
-        this.progressSpinner = false;
+      this.sigaService.getParam("facturacionsjcs_historicofacturacion", "?idFacturacion=" + this.body.idFacturacion).subscribe(
+        data => {
+          this.progressSpinner = false;
 
-        this.estadosFacturacion = data.facturacionItem;
-      },	  
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }
-    );
+          this.estadosFacturacion = data.facturacionItem;
+        },	  
+        err => {
+          this.progressSpinner = false;
+          if(null!=err.error){
+            console.log(err.error);
+          } 
+        }
+      );
+    }
   }  
 
   comboPartidasPresupuestarias(){
@@ -177,7 +183,9 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 			  this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
 			},	  
 			err => {
-			  console.log(err);
+			  if(null!=err.error){
+          console.log(err.error);
+        } 
 			}
 		);
   }
@@ -242,19 +250,18 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
 
-        this.historicoEstados();
         this.changeIdFacturacion.emit(this.body.idFacturacion);
         this.changeEstadoFacturacion.emit("10");
         this.changeCerrada.emit(false);
+        this.historicoEstados();
       },
       err => {
-        if(undefined!=err){
-          if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
+        if (null!=err.error && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
+
         this.progressSpinner = false;
       },
       () => {
@@ -276,18 +283,17 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
 
-        this.historicoEstados();
         this.changeEstadoFacturacion.emit("50");
         this.changeCerrada.emit(true);
+        this.historicoEstados();
       },
       err => {
-        if(undefined != err){
-          if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-      }
+        if (null!=err.error && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      
         this.progressSpinner = false;
       },
       () => {
@@ -314,13 +320,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.changeCerrada.emit(false);
       },
       err => {
-        if(undefined!=err){
-          if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
+        if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
+        
         this.progressSpinner = false;
       },
       () => {
@@ -347,13 +352,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.changeCerrada.emit(true);
       },
       err => {
-        if(undefined!=err){
-          if (JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
+        if (null!=err.error && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
+        
         this.progressSpinner = false;
       },
       () => {

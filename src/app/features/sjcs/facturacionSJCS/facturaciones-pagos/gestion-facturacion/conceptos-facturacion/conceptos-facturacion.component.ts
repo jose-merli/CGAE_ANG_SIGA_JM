@@ -5,6 +5,8 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
 import { SigaWrapper } from '../../../../../../wrapper/wrapper.class';
+import { ComboItem } from '../../../../../../models/ComboItem';
+import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
 
 @Component({
   selector: 'app-conceptos-facturacion',
@@ -23,8 +25,17 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  datos: any[] = [];
+  //datos: any[] = [];
   selectAll: boolean = false;
+  nuevoConcepto: boolean = false;
+  selectionMode: string = "single";
+
+  body = [];
+  bodyAux = [];
+
+  //COMBOS
+  conceptos: ComboItem;
+  grupoTurnos: ComboItem;
 
   @Input() cerrada;
   @Input() idFacturacion;
@@ -32,11 +43,12 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   @Input() modoEdicion;
   @Input() permisos;
 
-  @ViewChild("table") tabla;
+  @ViewChild("tabla") tabla;
   
   constructor(private sigaService: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
+    private commonsService: CommonsService,
 		private persistenceService: PersistenceService) { 
     super(USER_VALIDATIONS);
   }
@@ -44,23 +56,114 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   ngOnInit() {
     this.progressSpinner = true;
 
-    if(!this.modoEdicion){
-      this.showFichaConceptos=false;
-    }else{
-      //this.cargarConceptos();
-      //this.cargarGrupos()
-      
-      this.getCols();
+    this.comboConceptos();
+    this.comboGruposTurnos();    
+
+    this.cargaDatos();
+    
+    this.getCols();
+  }
+
+  comboConceptos(){
+    this.sigaService.get("combo_comboFactConceptos").subscribe(
+			data => {
+			  this.conceptos = data.combooItems;
+			  this.commonsService.arregloTildesCombo(this.conceptos);
+			},	  
+			err => {
+			  console.log(err);
+			}
+		);
+  }
+
+  comboGruposTurnos(){
+    this.sigaService.get("combo_grupoFacturacion").subscribe(
+			data => {
+			  this.grupoTurnos = data.combooItems;
+			  this.commonsService.arregloTildesCombo(this.grupoTurnos);
+			},	  
+			err => {
+			  console.log(err);
+			}
+		);
+  }
+
+  cargaDatos(){
+    if(undefined!=this.idFacturacion){
+      this.progressSpinner = true;
+      //datos de la facturación
+      this.sigaService.getParam("facturacionsjcs_tarjetaConceptosfac", "?idFacturacion=" + this.idFacturacion).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          if(undefined != data.facturacionItem && data.facturacionItem.length>0){
+            let datos=data.facturacionItem;
+
+            datos.forEach(element => {
+              if(element.importeTotal!=undefined){
+                element.importeTotalFormat = element.importeTotal.replace(".", ",");
+              
+                if (element.importeTotalFormat[0] == '.' || element.importeTotalFormat[0] == ','){
+                  element.importeTotalFormat = "0".concat(element.importeTotalFormat)
+                }
+              }else{
+                element.importeTotalFormat = 0;
+              }				
+
+              if(element.importePendiente!=undefined){
+                element.importePendienteFormat = element.importePendiente.replace(".", ",");
+                
+                if (element.importePendienteFormat[0] == '.' || element.importePendienteFormat[0] == ','){
+                  element.importePendienteFormat = "0".concat(element.importePendienteFormat)
+                }
+              }else{
+                element.importePendienteFormat = 0;
+              }
+            });
+            
+            this.body = JSON.parse(JSON.stringify(datos));
+            this.bodyAux=JSON.parse(JSON.stringify(datos));
+          }
+        },	  
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+        }
+      );
     }
   }
 
   seleccionaFila(evento) {
-    
-
+    if (evento != undefined) {
+      this.numSelected = evento.length;
+    }
   }
 
   nuevo(){
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
+    this.nuevoConcepto = true;
 
+    this.selectionMode = "single";
+
+    if (undefined==this.body || null!=this.body || this.body.length<0) {
+      this.body = [];
+    }
+
+    let concepto = {
+      idConcepto: undefined,
+      idGrupo: undefined,
+      importeTotal: "0",
+      importePendiente: "0",
+      editable: true
+    };
+
+    if (this.body.length == 0) {
+      this.body.push(concepto);
+    } else {
+      this.body = [concepto, ...this.body];
+    }
   }
 
   disabled(){
@@ -107,6 +210,21 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.seleccion = false;
   }
 
+  changeConcepto(dato) {
+    /*let findDato = this.datosInicial.find(item => item.descripcion === dato.descripcion && item.tipoAsistencia === dato.tipoAsistencia && item.tipoActuacion === dato.tipoActuacion);
+
+    if (findDato != undefined) {
+      if (dato.idCosteFijo != findDato.idCosteFijo) {
+
+        let findUpdate = this.updateCosteFijo.find(item => item.descripcion === dato.descripcion && item.tipoAsistencia === dato.tipoAsistencia && item.tipoActuacion === dato.tipoActuacion);
+
+        if (findUpdate == undefined) {
+          this.updateCosteFijo.push(dato);
+        }
+      }
+    }*/
+  }
+
   onHideDatosGenerales() {
     this.showFichaConceptos = !this.showFichaConceptos;
     
@@ -124,8 +242,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   onChangeSelectAllCurriculares() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.selectedDatos = this.body;
+      this.numSelected = this.body.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -168,10 +286,10 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   getCols() {
     this.cols = [
-      { field: "conceptos", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
-      { field: "grupoTurnos", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" },
-      { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" },
-      { field: "grupoTurnos", header: "facturacionSJCS.facturacionesYPagos.importePendiente" }
+      { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
+      { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" },
+      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
+      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
