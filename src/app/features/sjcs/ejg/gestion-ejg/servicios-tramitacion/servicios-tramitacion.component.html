@@ -1,3 +1,95 @@
-<p>
-  servicios-tramitacion works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row" id="cabeza">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">Servicios de Tramitación</label>
+          </div>
+          <div class="form-row">
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>{{ "menu.justiciaGratuita.oficio.comboturno" | translate }}: </b>{{body.turno}}</label>
+            </div>
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}: </b>{{body.guardia}}</label>
+            </div>
+            <div class="d-flex flex-wrap">
+              <label name>
+                <b>Tramitador: </b>{{body.idPersona}}</label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <br>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha">Servicios de Tramitación</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+
+      <div class="form-row">
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{ "dato.jgr.guardia.guardias.turno" | translate }}</label>
+          <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.turno' placeholder="Seleccionar" [options]="comboTurno"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.guardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
+            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
+          <input type="text" name="body.numColegiado" class="form-control" [(ngModel)]="body.numColegiado" (blur)="isBuscar()" (focus)="focusNColegiado()"
+            pInputText />
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+          <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
+          <input type="text" name="body.apellidosYNombre" class="form-control" disabled [(ngModel)]="body.apellidosYNombre" pInputText
+          />
+        </div>
+        <div class="form-group col-lg-3 col-md-3 form-row">
+          <div class="form-group col-lg-6 pt-1 col-md-6">
+            <label>Designacion</label>
+            <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="cambiaMovil()" [disabled]="!permisoEscritura" binary="true" label="Art 27-28"></p-checkbox>
+
+          </div>
+          <div class="form-group col-lg-6 col-md-6 pt-4">
+            <div id="buttonExpressColegiados" class="text-right main-button">
+              <button (click)="isLimpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left"></button>
+              <button (click)="isBuscar()" pButton [disabled]="buscarDisabled" type="button" icon="fa fa-search" iconPos="left"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="save()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="rest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

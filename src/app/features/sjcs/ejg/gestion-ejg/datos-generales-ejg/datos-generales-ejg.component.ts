@@ -59,6 +59,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     }
   }
 
+
+
   getComboTipoEJG() {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(
       n => {
