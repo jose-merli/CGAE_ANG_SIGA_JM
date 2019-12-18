@@ -436,22 +436,19 @@ export class TablaInscripcionesComponent implements OnInit {
 
 
   setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
+    // if (dato.fechabaja == null) return false;
+    // else return true;
   }
 
   getCols() {
 
     this.cols = [
-      { field: "abreviatura", header: "gratuita.definirTurnosIndex.literal.abreviatura" },
-      { field: "nombre", header: "censo.usuario.nombre" },
-      { field: "area", header: "menu.justiciaGratuita.maestros.Area" },
-      { field: "materia", header: "menu.justiciaGratuita.maestros.Materia" },
-      { field: "zona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" },
-      { field: "subzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zonas.cabecera" },
-      { field: "grupofacturacion", header: "justiciaGratuita.oficio.turnos.grupofacturacion" },
-      { field: "nletrados", header: "justiciaGratuita.oficio.turnos.nletrados" },
-
+      { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
+      { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
+      { field: "nombreturno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "fechasolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
+      { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" },
+      
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");

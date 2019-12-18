@@ -30,6 +30,7 @@ export let endpoints_oficio: any = {
     turnos_updateUltimo: "oficio/turnos/updateUltimo",
     //FIN DE TURNOS
 
-    inscripciones_comboTurnos: "oficio/inscripciones/comboTurnos"
+    inscripciones_comboTurnos: "oficio/inscripciones/comboTurnos",
+    inscripciones_busquedaInscripciones:"oficio/inscripciones/busquedaInscripciones"
 
 }

@@ -80,11 +80,26 @@ export class InscripcionesComponent implements OnInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("turnos_busquedaTurnos", this.filtros.filtroAux).subscribe(
+    this.sigaServices.post("inscripciones_busquedaInscripciones", this.filtros.filtroAux).subscribe(
       n => {
-        this.datos = JSON.parse(n.body).turnosItem;
+        this.datos = JSON.parse(n.body).inscripcionesItem;
         this.datos.forEach(element => {
-          element.nletrados = +element.nletrados;
+          if(element.estado == "0"){
+            element.estadonombre = "Pendiente de Alta";
+          }
+          if(element.estado == "1"){
+            element.estadonombre = "Confirmada Alta";
+          }
+          if(element.estado == "2"){
+            element.estadonombre = "Pendiente de Baja";
+          }
+          if(element.estado == "3"){
+            element.estadonombre = "Confirmada Baja";
+          }
+          if(element.estado == "4"){
+            element.estadonombre = "Denegada";
+          }
+          element.ncolegiado = +element.ncolegiado;
         });
         this.buscar = true;
         this.progressSpinner = false;

@@ -15,7 +15,7 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'censo.fichaIntegrantes.literal.estado'|translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar" [options]="comboEstados"
-            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'menu.justiciaGratuita.oficio.comboturno'|translate}}</label>
@@ -25,17 +25,17 @@
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
           </label>
-          <app-fecha (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.fechadesde" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
         </div>
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
           </label>
-          <app-fecha (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.fechahasta" [minDate]="filtros.fechadesde" (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)"></app-fecha>
         </div>
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
           </label>
-          <app-fecha (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
+          <app-fecha [(value)]="filtros.afechade" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
         </div>
 
 

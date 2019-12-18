@@ -5,6 +5,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
+import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 
 @Component({
   selector: 'app-filtrosinscripciones',
@@ -15,14 +16,15 @@ export class FiltrosInscripciones implements OnInit {
 
   showDatosGenerales: boolean = true;
   buscar: boolean = false;
-  filtroAux: TurnosItems = new TurnosItems();
+  filtroAux: InscripcionesItems = new InscripcionesItems();
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
   turnos: any[] = [];
   partidoJudicial: string;
   resultadosPoblaciones: any;
+  disabledestado: boolean = false;
   msgs: any[] = [];
-  filtros: TurnosItems = new TurnosItems();
+  filtros: InscripcionesItems = new InscripcionesItems();
   jurisdicciones: any[] = [];
   areas: any[] = [];
   tiposturno: any[] = [];
@@ -76,118 +78,6 @@ export class FiltrosInscripciones implements OnInit {
   }
 
 
-
-  onChangeArea() {
-
-    this.filtros.idmateria = "";
-    this.materias = [];
-
-    if (this.filtros.idarea != undefined && this.filtros.idarea != "") {
-      this.isDisabledMateria = false;
-      this.getComboMaterias();
-    } else {
-      this.isDisabledMateria = true;
-    }
-
-  }
-
-  onChangeZona() {
-
-    this.filtros.idsubzona = "";
-    this.subzonas = [];
-
-    if (this.filtros.idzona != undefined && this.filtros.idzona != "") {
-      this.isDisabledSubZona = false;
-      this.getComboSubZonas();
-      this.partidoJudicial = "";
-    } else {
-      this.isDisabledSubZona = true;
-    }
-
-  }
-
-  // buscarPoblacion(e) {
-  //   if (e.target.value && e.target.value !== null && e.target.value !== "") {
-  //     if (e.target.value.length >= 3) {
-  //       this.getComboMaterias(e.target.value);
-  //       this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-  //     } else {
-  //       this.materias = [];
-  //       this.resultadosPoblaciones = this.translateService.instant("formacion.busquedaCursos.controlFiltros.minimoCaracteres");
-  //     }
-  //   } else {
-  //     this.materias = [];
-  //     this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
-  //   }
-  // }
-
-  getComboMaterias() {
-    this.sigaServices
-      .getParam(
-        "combossjcs_comboMaterias",
-        "?idArea=" + this.filtros.idarea)
-      .subscribe(
-        n => {
-          // this.isDisabledPoblacion = false;
-          this.materias = n.combooItems;
-        },
-        error => { },
-        () => { }
-      );
-  }
-
-  getComboSubZonas() {
-    this.sigaServices
-      .getParam(
-        "combossjcs_comboSubZonas",
-        "?idZona=" + this.filtros.idzona)
-      .subscribe(
-        n => {
-          // this.isDisabledPoblacion = false;
-          this.subzonas = n.combooItems;
-        },
-        error => { },
-        () => {
-
-        }
-      );
-  }
-
-  getPartidosJudiciales() {
-
-    for (let i = 0; i < this.partidasJudiciales.length; i++) {
-      this.partidasJudiciales[i].partidosJudiciales = [];
-      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
-        let findPartido = this.comboPJ.find(x => x.value === partido);
-
-        if (findPartido != undefined) {
-          // this.partidasJudiciales[i].partidosJudiciales.push(findPartido);
-          this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
-        }
-
-      });
-    }
-  }
-
-  partidoJudiciales() {
-    this.sigaServices
-      .getParam(
-        "fichaZonas_searchSubzones",
-        "?idZona=" + this.filtros.idzona
-      )
-      .subscribe(
-        n => {
-          this.partidasJudiciales = n.zonasItems;
-        },
-        err => {
-          console.log(err);
-
-        }, () => {
-          this.getPartidosJudiciales();
-        }
-      );
-  }
-
   newTurno() {
     this.persistenceService.setFiltros(this.filtros);
     this.router.navigate(["/gestionTurnos"]);
@@ -225,6 +115,56 @@ export class FiltrosInscripciones implements OnInit {
     }
   }
 
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+    return fecha;
+  }
+
+  fillFechaDesdeCalendar(event) {
+    this.filtros.fechadesde = this.transformaFecha(event);
+    if(this.filtros.fechadesde != undefined){
+      this.filtros.estado = undefined;
+      this.disabledestado = true;
+    }else{
+      this.disabledestado = false;
+    }
+  }
+
+  fillAfechaDeCalendar(event) {
+    this.filtros.afechade = this.transformaFecha(event);
+    if(this.filtros.afechade != undefined){
+      this.filtros.estado = undefined;
+      this.disabledestado = true;
+    }else{
+      this.disabledestado = false;
+    }
+  }
+
+  fillFechaHastaCalendar(event) {
+    this.filtros.fechahasta = this.transformaFecha(event);
+    if(this.filtros.fechadesde == undefined){
+      this.filtros.fechahasta = undefined;
+    }
+    if(this.filtros.fechahasta != undefined){
+      this.filtros.estado = undefined;
+      this.disabledestado = true;
+    }else{
+      this.disabledestado = false;
+    }
+  }
 
   showSearchIncorrect() {
     this.msgs = [];
@@ -240,14 +180,6 @@ export class FiltrosInscripciones implements OnInit {
   clearFilters() {
     this.filtros.nombre = "";
     this.filtros.abreviatura = "";
-    this.filtros.idarea = undefined;
-    this.filtros.idzubzona = undefined
-    this.filtros.idmateria = undefined
-    this.filtros.idtipoturno = undefined
-    this.filtros.idpartidapresupuestaria = undefined
-    this.filtros.idzona = undefined
-    this.filtros.jurisdiccion = undefined
-    this.filtros.grupofacturacion = undefined
     this.partidoJudicial = "";
   }
 
