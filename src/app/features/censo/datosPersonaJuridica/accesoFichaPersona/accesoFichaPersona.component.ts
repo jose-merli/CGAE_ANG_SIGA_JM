@@ -89,6 +89,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
       if (this.notario[0].idPersona != undefined) {
         // modo de asignacion de notario
+        this.body = this.notario[0];
         this.body.idPersonaAsociar = this.notario[0].idPersona;
         // si no se editan campos => boton guardar activo
         this.guardarNotario = true;
@@ -106,6 +107,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
       } else if (this.notario[0].denominacion != undefined) {
         this.body.nombre = this.notario[0].denominacion;
       }
+      if (this.notario[0].apellido1 != undefined) {
+        this.body.apellido1 = this.notario[0].apellido1;
+      }
+      if (this.notario[0].apellido2 != undefined) {
+        this.body.apellido2 = this.notario[0].apellido2;
+      }
       if (this.notario[0].primerApellido != undefined) {
         this.body.apellido1 = this.notario[0].primerApellido;
       }
@@ -119,7 +126,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     if (this.usuarioBody != null && this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
     }
-
+    this.activarGuardarNotarioNoExistente();
     // si viene de pantalla de persona fisica => no hace busqueda
     if (
       sessionStorage.getItem("notario") != undefined &&
@@ -287,7 +294,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
     );
   }
 
-  activarGuardarNotarioNoExistente(event) {
+  activarGuardarNotarioNoExistente() {
     if (
       this.editar &&
       this.body.nombre != undefined &&
