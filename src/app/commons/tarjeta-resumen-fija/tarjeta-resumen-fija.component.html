@@ -16,10 +16,12 @@
         </div>
       </div>
       <div class="col-1"></div>
-      <div class="col-11 form-row">
-        <div class="d-flex flex-wrap" *ngFor="let dato of datos">
-          <label name>
-            <b>{{dato.label}}: </b>{{dato.value}}</label>
+      <div class="col-11">
+        <div class="form-row">
+          <div class="d-flex flex-wrap" *ngFor="let dato of datos">
+            <label name>
+              <b>{{dato.label}}: </b>{{dato.value}}</label>
+          </div>
         </div>
       </div>
     </div>
