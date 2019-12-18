@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { GestionEjgComponent } from './ejg/gestion-ejg/gestion-ejg.component';
+import { AuthGuard } from '../../_guards/auth.guards';
 
 const routesSjcs: Routes = [
 	{
@@ -69,12 +71,17 @@ const routesSjcs: Routes = [
 	{
 		path: 'justiciables',
 		loadChildren: './justiciables/justiciables.module#JusticiablesModule'
-	}
+	},
+	{
+		path: 'gestionEjg',
+		component: GestionEjgComponent,
+		canActivate: [AuthGuard]
+	},
 ];
 
 @NgModule({
-	imports: [ RouterModule.forChild(routesSjcs) ],
-	exports: [ RouterModule ]
+	imports: [RouterModule.forChild(routesSjcs)],
+	exports: [RouterModule]
 })
-export class SjcsRoutingModule {}
+export class SjcsRoutingModule { }
 export const routingSjcs = RouterModule.forChild(routesSjcs);
