@@ -11,6 +11,7 @@ import { FechaModule } from "../../../../commons/fecha/fecha.module";
 import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 import { GestionFacturacionComponent } from './gestion-facturacion/gestion-facturacion.component';
 import { DatosFacturacionComponent } from './gestion-facturacion/datos-facturacion/datos-facturacion.component';
+import { ConceptosFacturacionComponent } from './gestion-facturacion/conceptos-facturacion/conceptos-facturacion.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,7 @@ import { DatosFacturacionComponent } from './gestion-facturacion/datos-facturaci
     TableModule,
     FechaModule
   ],
-  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent],
+  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent],
   exports: [FacturacionesYPagosComponent]
 })
 export class FacturacionesYPagosModule {}

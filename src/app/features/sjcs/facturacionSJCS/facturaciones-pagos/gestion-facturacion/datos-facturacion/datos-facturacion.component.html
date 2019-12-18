@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="card">
-  <div class="card-body">         
+  <div class="card-body">
     <p class="title-module">
       <i class="fas fa-cog icon-ficha"></i>
       <label>{{'facturacionSJCS.facturacionesYPagos.datosFacturacion' | translate}} </label>
@@ -10,95 +10,122 @@
     </p>
     <div *ngIf="showFichaFacturacion" class="module vista-avanzada">
       <div class="form-row">
-        <div class="form-group col-lg-6 col-md-6">   
+        <div class="form-group col-lg-6 col-md-6">
           <div>
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}} (*)</label>
-            <input type="text" maxlength="100" name="nombre" class="form-control" [(disabled)]='cerrada' [(ngModel)]='body.nombre' pInputText />
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(disabled)]='cerrada || !permisos'
+              [(ngModel)]='body.nombre' pInputText />
           </div>
           <div style="margin-top: 1em; margin-bottom: 1em;">
-            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}} (*)</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"  [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='cerrada'></p-dropdown>    
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}
+              (*)</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"
+              [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>
           </div>
           <div style="display: flex;">
             <div class="form-group col-lg-6 col-md-6" style="margin-left: -1em;">
               <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}} (*)</label>
-              <app-fecha [utc]="false" [(value)]="body.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)" [(disabled)]='cerrada'></app-fecha>
-            </div>  
+              <app-fecha [utc]="false" [(value)]="body.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)"
+                (valueChangeInput)="fillFechaDesde($event)" [(disabled)]='cerrada || !permisos'></app-fecha>
+            </div>
             <div class="form-group col-lg-6 col-md-6" style="margin-left: 2em;">
               <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta' | translate}} (*)</label>
-              <app-fecha [utc]="false" [(value)]="body.fechaHasta" [minDate]="minDate" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)" [(disabled)]='cerrada'></app-fecha>
-            </div> 
+              <app-fecha [utc]="false" [(value)]="body.fechaHasta" [minDate]="minDate"
+                (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"
+                [(disabled)]='cerrada || !permisos'></app-fecha>
+            </div>
           </div>
           <div style="display: flex;">
             <div class="form-group col-lg-6 col-md-6">
-              <p-checkbox [(ngModel)]='checkRegularizar' binary="true" label="{{'facturacionSJCS.facturacionesYPagos.regularizarFacturado' | translate}}" [(disabled)]='cerrada'></p-checkbox>
-            </div> 
+              <p-checkbox [(ngModel)]='checkRegularizar' binary="true"
+                label="{{'facturacionSJCS.facturacionesYPagos.regularizarFacturado' | translate}}"
+                [(disabled)]='cerrada || !permisos'></p-checkbox>
+            </div>
             <div class="form-group col-lg-6 col-md-6">
-              <p-checkbox [(ngModel)]='checkVisible' binary="true" label="{{'facturacionSJCS.facturacionesYPagos.visible' | translate}}" [(disabled)]='cerrada'></p-checkbox>
+              <p-checkbox [(ngModel)]='checkVisible' binary="true"
+                label="{{'facturacionSJCS.facturacionesYPagos.visible' | translate}}"
+                [(disabled)]='cerrada || !permisos'></p-checkbox>
             </div>
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-6">
-          <p-table [value]="estadosFacturacion" [columns]="cols" [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
-          <ng-template pTemplate="colgroup" let-columns>
-            <colgroup>
-              <col *ngFor="let col of cols" [style.width]="col.width">
-            </colgroup>
-          </ng-template>
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">{{ col.header | translate}}</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-            <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-              <td class="text-center" *ngFor="let col of columns">
-    
-                <div *ngIf="col.field == 'fechaEstado'">
-                  <div *ngIf="setItalic(dato)">
-                    <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
-                      {{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+          <p-table [value]="estadosFacturacion" [columns]="cols" [responsive]="true" #tabla class="tabla-listado"
+            [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}"
+            (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of cols" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                  {{ col.header | translate}}</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                <td class="text-center" *ngFor="let col of columns">
+
+                  <div *ngIf="col.field == 'fechaEstado'">
+                    <div *ngIf="setItalic(dato)">
+                      <label
+                        [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
+                        {{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                    </div>
+                    <div *ngIf="!setItalic(dato)">
+                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                    </div>
                   </div>
-                  <div *ngIf="!setItalic(dato)">
-                    <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+
+                  <div *ngIf="col.field != 'fechaEstado'">
+                    <div *ngIf="setItalic(dato)">
+                      <span
+                        [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato)">
+                      <span>{{dato[col.field]}}</span>
+                    </div>
                   </div>
-                </div>
-    
-                <div *ngIf="col.field != 'fechaEstado'">
-                  <div *ngIf="setItalic(dato)">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                  </div>
-                  <div *ngIf="!setItalic(dato)">
-                    <span>{{dato[col.field]}}</span>
-                  </div>
-                </div>    
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="emptymessage" let-columns>
-            <tr>
-              <td [attr.colspan]="columns.length">
-                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="paginatorleft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
-            </div>
-          </ng-template>
-        </p-table>
-        </div>  
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="columns.length">
+                  {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al
+                  {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
       </div>
     </div>
-  <div class="card-footer">
+  </div>
+  <div class="card-footer" *ngIf="showFichaFacturacion">
     <div class="text-right main-button">
-      <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
-      <button (click)="ejecutar()" [disabled]='disabledEjecutar()' pButton type="button" label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
-      <button pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"></button>
-      <button pButton type="button" label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}"></button>
-      <button (click)="restablecer()" [disabled]="disabledRestablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
-      <button [disabled]="disabledSave()" (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      <button (click)="simular()" [disabled]="disabledSimular()  || !permisos" pButton type="button"
+        icon="fa fa-play-circle" iconPos="left"
+        label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
+      <button (click)="ejecutar()" [disabled]='disabledEjecutar() || !permisos' pButton type="button" icon="fa fa-play"
+        iconPos="left"
+        label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
+      <button [disabled]="true" pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"
+        icon="fa fa-send" iconPos="left"></button>
+      <button (click)="reabrir()" [disabled]='disabledReabrir() || !permisos' pButton type="button"
+        label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"
+        iconPos="left"></button>
+      <button (click)="restablecer()" [disabled]="disabledRestablecer() || !permisos" pButton type="button"
+        icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+      <button (click)="save()" [disabled]="disabledSave() || !permisos" pButton type="button" icon="fa fa-save"
+        iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>
 </div>

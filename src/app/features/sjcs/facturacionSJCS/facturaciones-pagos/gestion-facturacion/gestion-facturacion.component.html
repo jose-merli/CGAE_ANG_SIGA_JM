@@ -5,10 +5,14 @@
     <i class="fa fa-square"></i>
     <p>SJCS<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' | translate}}</p>
   </div>
-  <app-datos-facturacion></app-datos-facturacion>
+  
+  <app-datos-facturacion [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
+  <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos"></app-conceptos-facturacion>
+
+  <div class="text-right main-button">
+    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>
 </div>
-
-
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
