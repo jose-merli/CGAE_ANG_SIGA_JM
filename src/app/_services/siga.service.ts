@@ -22,6 +22,7 @@ import { RequestOptions, Headers, ResponseContentType } from "@angular/http";
 import { Subject } from "rxjs/Subject";
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
+import { endpoints_oficio } from "../utils/endpoints_oficio";
 import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_EJG } from "../utils/endpoints_EJG";
 import { endpoints_generales } from "../utils/endpoints_generales";
@@ -725,6 +726,7 @@ export class SigaServices {
       "dialogoComunicacion/obtenerCamposDinamicos",
     dialogo_envioTest: "dialogoComunicacion/envioTest",
     ...endpoints_justiciables,
+    ...endpoints_oficio,
     dialogo_maxModelos: "dialogoComunicacion/maxModelos",
     ...endpoints_maestros
   };
@@ -738,6 +740,7 @@ export class SigaServices {
   private habilitarDocs = new Subject<any>();
   private desHabilitarDocs = new Subject<any>();
   private sendFechaBaja = new Subject<any>();
+  private sendDatosRedy = new Subject<any>();
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
@@ -747,8 +750,15 @@ export class SigaServices {
   habilitarDocs$ = this.habilitarDocs.asObservable();
   desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
   sendFechaBaja$ = this.sendFechaBaja.asObservable();
-
-
+  datosRedy$ = this.sendDatosRedy.asObservable();
+  private guardarDatosGeneralesJusticiable = new Subject<any>();
+  guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
+  private guardarDatosGeneralesRepresentante = new Subject<any>();
+  guardarDatosGeneralesRepresentante$ = this.guardarDatosGeneralesRepresentante.asObservable();
+  private guardarDatosSolicitudJusticiable = new Subject<any>();
+  guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
+  private createJusticiable = new Subject<any>();
+  createJusticiable$ = this.createJusticiable.asObservable();
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
@@ -1011,11 +1021,25 @@ export class SigaServices {
   notifyDesHabilitarDocumentos() {
     this.desHabilitarDocs.next();
   }
+  notifyGuardarDatosGeneralesRepresentante(data) {
+    this.guardarDatosGeneralesRepresentante.next(data);
+  }
+  notifyGuardarDatosGeneralesJusticiable(data) {
+    this.guardarDatosGeneralesJusticiable.next(data);
+  }
+  notifyGuardarDatosSolicitudJusticiable(data) {
+    this.guardarDatosSolicitudJusticiable.next(data);
+  }
+  notifyCreateJusticiable(data) {
+    this.createJusticiable.next(data);
+  }
 
   notifysendFechaBaja(fecha) {
     this.sendFechaBaja.next(fecha);
   }
-
+  notifysendDatosRedy(datos) {
+    this.sendDatosRedy.next(datos);
+  }
   postSendContentAndParameter(
     service: string,
     param: string,

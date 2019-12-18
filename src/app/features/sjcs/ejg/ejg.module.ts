@@ -20,11 +20,13 @@ import { JwtInterceptor } from '../../../_interceptor/jwt.interceptor';
 import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { FiltrosEjgComponent } from './filtros-busqueda-ejg/filtros-ejg.component';
 import { TablaEjgComponent } from './tabla-ejg/tabla-ejg.component';
-import { EJGComponent } from './ejg.component';
+// import { EJGComponent } from './ejg.component';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { GestionEjgComponent } from './gestion-ejg/gestion-ejg.component';
 import { DatosGeneralesEjgComponent } from './gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
+import { ServiciosTramitacionComponent } from './gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
+import { EJGComponent } from './ejg.component';
 
 // import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
 // import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
@@ -62,7 +64,8 @@ import { DatosGeneralesEjgComponent } from './gestion-ejg/datos-generales-ejg/da
     TablaEjgComponent,
     EJGComponent,
     GestionEjgComponent,
-    DatosGeneralesEjgComponent
+    DatosGeneralesEjgComponent,
+    ServiciosTramitacionComponent
   ],
   providers: [
     ImagePipe,
