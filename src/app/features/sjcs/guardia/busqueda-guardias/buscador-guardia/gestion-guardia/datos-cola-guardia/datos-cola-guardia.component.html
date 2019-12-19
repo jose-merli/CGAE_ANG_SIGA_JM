@@ -52,12 +52,12 @@
           <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
         </div>
         <div class="col-3 form-group">
-          <label>{{"justiciaGratuita.oficio.turnos.mostr arinscripciones" | translate}}</label>
+          <label>{{"justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate}}</label>
           <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
             [disabled]="permisoEscritura || historico"></app-fecha>
         </div>
         <div class="col-12">
-          <app-tabla-dinamica-cola-guardia [botActivos]="body.porGrupos" [datos]="datos"></app-tabla-dinamica-cola-guardia>
+          <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [porGrupos]="body.porGrupos" [datos]="datos"></app-tabla-dinamica-cola-guardia>
         </div>
 
       </div>
@@ -66,13 +66,13 @@
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
       <button pButton [disabled]="historico || permisoEscritura" (click)="double()" type="button" icon="fa fa-reply-all" iconPos="left"
-        label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura || disabledSave()" (click)="zuletzt()" type="button" label="{{ 'general.boton.guardar' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-undo-alt" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" (click)="save()" icon="fa fa-save" iconPos="left"
-        label="{{ 'general.boton.new' | translate}}"></button>
+        label="{{ 'general.boton.duplicar' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" (click)="zuletzt()" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-undo-alt" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
+        icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>

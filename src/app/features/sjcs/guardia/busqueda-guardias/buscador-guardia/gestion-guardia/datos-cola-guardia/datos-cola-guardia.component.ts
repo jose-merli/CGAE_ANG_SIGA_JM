@@ -25,6 +25,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   historico: boolean = false;
   progressSpinner: boolean = false;
   updateInscripciones = [];
+  selectionMode = "single";
 
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
@@ -48,11 +49,13 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.apellido1 = data.apellidos1;
         this.body.apellido2 = data.apellidos2;
         this.body.porGrupos = data.porGrupos;
+        this.selectionMode = data.porGrupos ? "multiple" : "single"
         this.body.nombreApe = data.nombre, data.apellido1, data.apellido2;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
-        this.body.porGrupos = data.porGrupos;
+        this.body.porGrupos = data.porGrupos == "1" ? true : false;
+
         this.body.letradosIns = new Date();
         this.getColaGuardia();
       });

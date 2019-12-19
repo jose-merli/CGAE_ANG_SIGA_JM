@@ -7,6 +7,7 @@ export class GuardiaItem {
     idGuardiaVinculada;
     idTurnoVinculada;
     idOrdenacionColas;
+    ordenacionManual;
     idPersonaUltimo;
     idTipoGuardia
     turno;

@@ -1,8 +1,8 @@
 <div class="form-row p-0">
   <!-- TABLA RESULTADOS -->
   <div class="col-11" style="padding-left: 4px;">
-    <p-table [value]="datos" [columns]="cols" [paginator]="true" paginatorPosition="both" [(selection)]="selectedDatos" selectionMode="single"
-      [responsive]="true" #table class="tabla-listado" [rows]="selectedItem">
+    <p-table [value]="datos" [columns]="cols" [paginator]="true" datakey="numeroGrupo" paginatorPosition="both" [selectionMode]="selectionMode"
+      [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table class="tabla-listado" [rows]="selectedItem">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -23,9 +23,14 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <span *ngIf="!col.editable">{{dato[col.field]}}</span>
-            <div *ngIf="col.editable && dato == selectedDatos[0]">
-              <input class="form-control paddingInput" [(ngModel)]="dato[col.field]" type="text" maxLength="10" />
+            <span *ngIf="dato != selectedDatos || !col.editable">{{dato[col.field]}}</span>
+            <div *ngIf="col.editable && dato == selectedDatos">
+              <input class="form-control paddingInput" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10"
+              />
+            </div>
+            <div *ngIf="col.editable && selectedDatos">
+              <input class="form-control paddingInput" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10"
+              />
             </div>
           </td>
 
@@ -41,7 +46,7 @@
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
           <label>{{"general.message.mostrar" | translate}}</label>
-          <div class="ml-3 selectAll">
+          <div class="ml-3">
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
           </div>

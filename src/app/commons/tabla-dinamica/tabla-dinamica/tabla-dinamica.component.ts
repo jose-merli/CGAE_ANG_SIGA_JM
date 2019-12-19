@@ -13,7 +13,7 @@ export class TablaDinamicaComponent implements OnInit {
   selectedItem = 10;
   selectedDatos = [];
   seleccion: boolean = false;
-
+  selectionMode: string = "single";
   message;
 
   @Input() datos;
@@ -70,7 +70,6 @@ export class TablaDinamicaComponent implements OnInit {
       }
     ];
   }
-  onChangeRowsPerPages(event) {
-
-  }
+  onChangeRowsPerPages(event) { }
+  rowSelect(evento) { }
 }
