@@ -57,7 +57,7 @@
             [disabled]="permisoEscritura || historico"></app-fecha>
         </div>
         <div class="col-12">
-          <app-tabla-dinamica [cols]="cols" [datos]="datos"></app-tabla-dinamica>
+          <app-tabla-dinamica-cola-guardia [botActivos]="body.porGrupos" [datos]="datos"></app-tabla-dinamica-cola-guardia>
         </div>
 
       </div>

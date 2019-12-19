@@ -1,10 +1,8 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div class="form-row p-0">
   <!-- TABLA RESULTADOS -->
   <div class="col-11" style="padding-left: 4px;">
     <p-table [value]="datos" [columns]="cols" [paginator]="true" paginatorPosition="both" [(selection)]="selectedDatos" selectionMode="single"
-      [responsive]="true" #table class="tabla-listado" [rows]="selectedItem" (onRowSelect)="edit($event)" [ngClass]="{ 'customCursor': selectMultiple}">
+      [responsive]="true" #table class="tabla-listado" [rows]="selectedItem">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -26,7 +24,7 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <span *ngIf="!col.editable">{{dato[col.field]}}</span>
-            <div *ngIf="col.editable">
+            <div *ngIf="col.editable && dato == selectedDatos[0]">
               <input class="form-control paddingInput" [(ngModel)]="dato[col.field]" type="text" maxLength="10" />
             </div>
           </td>
@@ -53,10 +51,10 @@
   </div>
   <div class="col-1 row cuerpo">
     <div id="botones" class="row">
-      <div class="col-12 boton">
+      <div class="col-12 boton" *ngIf="botActivos">
         <button pButton (click)="sube(selectedDatos)" style="width: -webkit-fill-available;" icon="fas fa-chevron-up"> </button>
       </div>
-      <div class="col-12 boton">
+      <div class="col-12 boton" *ngIf="botActivos">
         <button pButton (click)="baja(selectedDatos)" style="width: -webkit-fill-available;" icon="fas fa-chevron-down"> </button>
       </div>
     </div>

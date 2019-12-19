@@ -12,6 +12,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
 
 
+  msgs = [];
   cols = [];
   openFicha;
 
@@ -98,5 +99,5 @@ export class DatosIncompatibilidadesComponent implements OnInit {
         }
       )
   }
-
+  clear() { }
 }

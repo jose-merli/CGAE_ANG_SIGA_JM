@@ -43,6 +43,7 @@ export class GuardiaItem {
     porGrupos;
     fechabaja;
     filtros;
+    partidoJudicial;
     rotarComponentes;
     historico: boolean;
     constructor() { }

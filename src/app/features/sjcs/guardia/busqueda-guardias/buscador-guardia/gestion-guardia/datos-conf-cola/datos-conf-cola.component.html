@@ -45,8 +45,7 @@
               <label>
                 <strong>{{"justiciaGratuita.guardia.gestion.porGrupos" | translate}} </strong>
               </label>
-              <p-checkbox [(ngModel)]="body.porGrupos" binary="true" [(ngModel)]="body.porGrupos" [disabled]="historico || !permisoEscritura"
-                (onChange)="cambiaGrupo()"></p-checkbox>
+              <p-checkbox binary="true" [(ngModel)]="body.porGrupos" [disabled]="historico || !permisoEscritura" (onChange)="cambiaGrupo()"></p-checkbox>
             </div>
 
             <!-- Letrados Guardia -->

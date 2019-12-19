@@ -53,7 +53,7 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.zona' [filter]="true" filterMatchMode="contains" filterBy="label,labelSinTilde"
-            [(disabled)]="isDisabledZona" [options]="comboZona" (onChange)="onChangeSubZona($event)" (input)="buscarZona($event)"
+            [(disabled)]="isDisabledZona" [options]="comboZona" (onChange)="onChangeSubZona()" (input)="buscarZona($event)"
             placeholder="{{'general.boton.seleccionar' | translate}}" [emptyFilterMessage]="resultadosZonas" [showClear]="true">
           </p-dropdown>
         </div>
@@ -62,7 +62,7 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate}}</label>
           <input type="text" name="nombre" class="box" [disabled]="true" [(ngModel)]="filtros.partidoJudicial" class="form-control"
-            pInputText>
+            pInputText/>
         </div>
 
         <!-- JURISDICCION -->

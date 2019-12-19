@@ -10,7 +10,7 @@ export class InscritoItem {
     apellido1;
     apellido2;
     nombre;
-
+    ordenCola;
 
     constructor() { }
 }

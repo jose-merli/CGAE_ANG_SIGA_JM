@@ -61,7 +61,7 @@ export class DatosConfColaComponent implements OnInit {
 
         this.body.letradosGuardia = data.letradosGuardia;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
-        this.body.porGrupos = data.porGrupos;
+        this.body.porGrupos = data.porGrupos == "1" ? true : false;
         this.body.rotarComponentes = data.rotarComponentes;
         this.body.idGuardia = this.idGuardia;
         this.body.idTurno = this.idTurno;
@@ -376,5 +376,5 @@ export class DatosConfColaComponent implements OnInit {
       detail: msg
     });
   }
-
+  clear() { }
 }

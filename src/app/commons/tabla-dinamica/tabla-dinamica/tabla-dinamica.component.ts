@@ -19,9 +19,11 @@ export class TablaDinamicaComponent implements OnInit {
   @Input() datos;
   @Input() cols = [
     {
-      header: "", filed: ""
+      header: "", field: ""
     }
   ]
+  @Input() botActivos: true;
+
 
   progressSpinner: boolean = false;
 
@@ -34,10 +36,6 @@ export class TablaDinamicaComponent implements OnInit {
 
   }
 
-  edit(evento) {
-    if (!evento.data.editable) { }
-
-  }
 
   sube(selected) {
     let index = this.datos.indexOf(selected);

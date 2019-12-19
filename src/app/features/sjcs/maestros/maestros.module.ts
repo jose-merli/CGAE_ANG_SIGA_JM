@@ -51,12 +51,8 @@ import { JusticiablesModule } from '../justiciables/justiciables.module';
                 RetencionesIrpfModule,
                 SpinnerModule,
                 GestionTiposActuacionModule,
-<<<<<<< HEAD
                 GestionDestinatariosComponent,
         ],
-=======
-                GestionDestinatariosComponent],
->>>>>>> Fase3
 
         providers: []
 })
