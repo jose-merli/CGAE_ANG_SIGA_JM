@@ -29,6 +29,7 @@ export class SigaServices {
     login: "login",
     loginDevelop: "loginDevelop",
     validaInstitucion: "validaInstitucion",
+    validaUsuario: "validaUsuario",
     menu: "menu",
     entorno: "getEntorno",
     usuario: "usuario",
