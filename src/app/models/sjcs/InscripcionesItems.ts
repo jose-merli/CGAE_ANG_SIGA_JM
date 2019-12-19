@@ -28,5 +28,6 @@ export class InscripcionesItems {
   observacionesdenegacion: String;
   fechavaloralta: Date;
   fechavalorbaja: Date;
+  fechaActual:Date;
   constructor() { }
 }

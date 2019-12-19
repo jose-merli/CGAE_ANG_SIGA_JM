@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
@@ -16,7 +16,8 @@ import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem
 @Component({
   selector: 'app-gestion-inscripciones',
   templateUrl: './gestion-inscripciones.component.html',
-  styleUrls: ['./gestion-inscripciones.component.scss']
+  styleUrls: ['./gestion-inscripciones.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TablaInscripcionesComponent implements OnInit {
 
@@ -31,7 +32,7 @@ export class TablaInscripcionesComponent implements OnInit {
   selectedBefore;
   buscadores = [];
   updatePartidasPres = [];
-
+  disabledSolicitarBaja: boolean = false;
   body;
   partidasJudiciales: any[] = [];
 
@@ -47,6 +48,7 @@ export class TablaInscripcionesComponent implements OnInit {
   public ascNumberSort = true;
   permisos: boolean = false;
   initDatos;
+  fechaDeHoy;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   selectionMode: string = "single";
@@ -72,6 +74,7 @@ export class TablaInscripcionesComponent implements OnInit {
 
   ngOnInit() {
     this.selectedDatos = [];
+    this.datos.fechaActual = new Date();
     this.getCols();
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -87,6 +90,7 @@ export class TablaInscripcionesComponent implements OnInit {
       this.selectMultiple = false;
       this.selectionMode = "single"
     }
+    this.datos.fechaActual = new Date();
     this.selectedDatos = [];
     this.updatePartidasPres = [];
     this.nuevo = false;
@@ -173,6 +177,29 @@ export class TablaInscripcionesComponent implements OnInit {
     this.id = this.datos.findIndex(item => item.idpartidapresupuestaria === seleccionados[0].idpartidapresupuestaria);
   }
 
+
+  transformaFecha(fecha) {
+    if (fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(fecha);
+      }
+    } else {
+      fecha = undefined;
+    }
+
+
+    return fecha;
+  }
+  fillFechaCalendar(event) {
+    this.fechaDeHoy = new Date();
+    this.datos.fechaActual = this.transformaFecha(event);
+  }
 
   callSaveService(url) {
     this.sigaServices.post(url, this.body).subscribe(
@@ -353,35 +380,39 @@ export class TablaInscripcionesComponent implements OnInit {
     //   this.selectionMode = "multiple";
     // }
   }
+  
 
-
-  delete() {
-    let turnosDelete = new TurnosObject();
-    turnosDelete.turnosItem = this.selectedDatos
-    this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
-      data => {
-        this.selectedDatos = [];
-        this.searchPartidas.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+  solicitarBaja() {
+    if(this.datos.fechaActual != this.fechaDeHoy){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
+    }else{
+      let turnosDelete = new TurnosObject();
+      turnosDelete.turnosItem = this.selectedDatos
+      this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchPartidas.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          this.historico = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
+          this.editMode = false;
+          this.nuevo = false;
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-        this.editMode = false;
-        this.nuevo = false;
-      }
-    );
+      );
+    }  
   }
 
   onChangeSelectAll() {
@@ -445,10 +476,10 @@ export class TablaInscripcionesComponent implements OnInit {
     this.cols = [
       { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "nombreturno", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "abreviatura", header: "dato.jgr.guardia.guardias.turno" },
       { field: "fechasolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
       { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" },
-      
+
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");

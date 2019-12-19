@@ -20,6 +20,7 @@ export class FiltrosInscripciones implements OnInit {
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
   turnos: any[] = [];
+  disabledFechaHasta:boolean = true;
   partidoJudicial: string;
   resultadosPoblaciones: any;
   disabledestado: boolean = false;
@@ -134,13 +135,14 @@ export class FiltrosInscripciones implements OnInit {
   }
 
   fillFechaDesdeCalendar(event) {
-    this.filtros.fechadesde = this.transformaFecha(event);
-    if(this.filtros.fechadesde != undefined){
-      this.filtros.estado = undefined;
-      this.disabledestado = true;
+    if(event != null){
+      this.filtros.fechadesde = this.transformaFecha(event);
+      this.disabledFechaHasta = false;
     }else{
-      this.disabledestado = false;
+      this.filtros.fechahasta = undefined;
+      this.disabledFechaHasta = true;
     }
+  
   }
 
   fillAfechaDeCalendar(event) {
@@ -155,15 +157,6 @@ export class FiltrosInscripciones implements OnInit {
 
   fillFechaHastaCalendar(event) {
     this.filtros.fechahasta = this.transformaFecha(event);
-    if(this.filtros.fechadesde == undefined){
-      this.filtros.fechahasta = undefined;
-    }
-    if(this.filtros.fechahasta != undefined){
-      this.filtros.estado = undefined;
-      this.disabledestado = true;
-    }else{
-      this.disabledestado = false;
-    }
   }
 
   showSearchIncorrect() {
@@ -178,9 +171,13 @@ export class FiltrosInscripciones implements OnInit {
   }
 
   clearFilters() {
-    this.filtros.nombre = "";
-    this.filtros.abreviatura = "";
-    this.partidoJudicial = "";
+    this.filtros.estado = undefined;
+    this.filtros.idturno = undefined; 
+    this.filtros.fechadesde = undefined;
+    this.filtros.fechahasta = undefined;
+    this.filtros.afechade = undefined;
+    this.disabledestado = false;
+    this.disabledFechaHasta = true;
   }
 
   //búsqueda con enter
