@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { datos_combos } from '../../../../../utils/datos_combos';
+import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
 
 @Component({
   selector: 'app-servicios-tramitacion',
@@ -20,19 +21,25 @@ export class ServiciosTramitacionComponent implements OnInit {
   progressSpinner: boolean = false;
   buscarDisabled: boolean = false;
   isDisabledGuardia: boolean = true;
+  destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 
   body: EJGItem;
   bodyInicial: EJGItem;
   comboTurno = [];
   comboGuardia = [];
+  institucionActual = 2000;
   comboTipoLetrado = datos_combos.comboTipoLetrado;
   msgs = [];
   nuevo;
   tipoLetrado;
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonServices: CommonsService, private commonsServices: CommonsService) { }
+    private commonServices: CommonsService, private translateService: TranslateService,
+    private commonsServices: CommonsService) { }
 
   ngOnInit() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
 
     if (this.persistenceService.getPermisos() != undefined)
       // this.permisoEscritura = this.persistenceService.getPermisos()
@@ -42,6 +49,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
+        console.log(this.body);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       }
     } else {
@@ -98,7 +106,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   getComboGuardia() {
     this.sigaServices.getParam(
       "combo_guardiaPorTurno",
-      "?idTurno=" + this.body.turno
+      "?idTurno=" + this.body.idTurno
     )
       .subscribe(
         col => {
@@ -112,7 +120,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
   onChangeTurnos() {
     this.comboGuardia = [];
-    if (this.body.turno != undefined && this.body.turno != "") {
+    if (this.body.idTurno != undefined) {
       this.isDisabledGuardia = false;
       this.getComboGuardia();
     } else {
@@ -122,40 +130,38 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
   //busqueda express
   isBuscar() {
-    if (this.body.numColegiado.length != 0) {
+    let objPersona = null;
+    if (this.body.idPersona.length != 0) {
       this.progressSpinner = true;
-
-      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + this.body.numColegiado).subscribe(
+      objPersona = {
+        idPersona: this.body.idPersona,
+        idInstitucion: this.institucionActual
+      }
+      this.sigaServices.post("busquedaPer_institucion", objPersona).subscribe(
         data => {
-          this.progressSpinner = false;
-
-          if (data.colegiadoJGItem.length == 1) {
-            this.body.apellidosYNombre = data.colegiadoJGItem[0].nombre;
-            this.body.idPersona = data.colegiadoJGItem[0].idPersona;
-          } else {
-            this.body.apellidosYNombre = "";
-            this.body.numColegiado = "";
-            this.body.idPersona = "";
+          let persona = JSON.parse(data["body"]);
+          if (persona && persona.colegiadoItem) {
+            this.destinatario = persona.colegiadoItem[0];
+          } else if (persona && persona.noColegiadoItem) {
+            this.destinatario = persona.noColegiadoItem[0];
           }
-        },
-        error => {
+          this.body.apellidosYNombre = this.destinatario.apellidos1 + " " + this.destinatario.apellidos2 + ", " + this.destinatario.soloNombre;
           this.progressSpinner = false;
-          this.body.apellidosYNombre = "";
-          this.body.numColegiado = "";
-          this.body.idPersona = "";
-          console.log(error);
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = true;
+        },
+        () => {
+          //this.buscar();
         }
       );
     } else {
       this.progressSpinner = false;
       this.body.apellidosYNombre = "";
-      this.body.idPersona = "";
+      // this.body.idPersona = "";
     }
     this.buscarDisabled = false;
-  }
-
-  focusNColegiado() {
-    this.buscarDisabled = true;
   }
 
   isLimpiar() {

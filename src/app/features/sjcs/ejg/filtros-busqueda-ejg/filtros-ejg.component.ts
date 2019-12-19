@@ -182,7 +182,7 @@ export class FiltrosEjgComponent implements OnInit {
   }
   onChangeTurnos() {
     this.comboGuardia = [];
-    if (this.body.turno != undefined && this.body.turno != "") {
+    if (this.body.idTurno != undefined) {
       this.isDisabledGuardia = false;
       this.getComboGuardia();
     } else {
@@ -409,7 +409,7 @@ export class FiltrosEjgComponent implements OnInit {
   getComboGuardia() {
     this.sigaServices.getParam(
       "combo_guardiaPorTurno",
-      "?idTurno=" + this.body.turno
+      "?idTurno=" + this.body.idTurno
     )
       .subscribe(
         col => {
@@ -566,8 +566,7 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.apellidos = this.body.apellidos.trim();
     if (this.body.nombre != undefined)
       this.body.nombre = this.body.nombre.trim();
-    if (this.body.numColegiado != undefined)
-      this.body.numColegiado = this.body.numColegiado.trim();
+
     if (
       (this.body.annio == null || this.body.annio.trim() == "" || this.body.annio.trim().length < 3) &&
       (this.body.numero == null || this.body.numero.trim() == "" || this.body.numero.trim().length < 3) &&
@@ -583,7 +582,6 @@ export class FiltrosEjgComponent implements OnInit {
       (this.body.nif == null || this.body.nif.trim() == "" || this.body.nif.trim().length < 3) &&
       (this.body.apellidos == null || this.body.apellidos.trim() == "" || this.body.apellidos.trim().length < 3) &&
       (this.body.nombre == null || this.body.nombre.trim() == "" || this.body.nombre.trim().length < 3) &&
-      (this.body.numColegiado == null || this.body.numColegiado.trim() == "" || this.body.numColegiado.trim().length < 3) &&
       (this.body.asunto == null || this.body.asunto.trim() == "" || this.body.asunto.trim().length < 3)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
@@ -608,7 +606,7 @@ export class FiltrosEjgComponent implements OnInit {
     });
   }
   clearFiltersTramitador() {
-    this.body.turno = "";
+    this.body.idTurno = "";
     this.body.guardia = "";
     this.body.numColegiado = "";
     this.body.apellidosYNombre = "";

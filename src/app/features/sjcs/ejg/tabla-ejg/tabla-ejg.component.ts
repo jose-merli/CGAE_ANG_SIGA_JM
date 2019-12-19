@@ -28,6 +28,7 @@ export class TablaEjgComponent implements OnInit {
   buscadores = [];
   message;
   initDatos;
+  datosItem: EJGItem;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
 
@@ -91,16 +92,31 @@ export class TablaEjgComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
     if (!this.selectAll && !this.selectMultiple) {
-      this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data);
-      this.router.navigate(['/gestionEjg']);
+      // this.progressSpinner = true;
+      this.datosEJG();
+
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
     }
   }
-
+  datosEJG() {
+    this.body = this.persistenceService.getFiltros();
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_datosEJG", this.body).subscribe(
+      n => {
+        this.ejgObject = JSON.parse(n.body).ejgItems;
+        this.datosItem = this.ejgObject[0];
+        this.persistenceService.setDatos(this.datosItem);
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
@@ -114,8 +130,8 @@ export class TablaEjgComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "turno", header: "censo.busquedaClientesAvanzada.literal.colegio", width: "20%" },
-      { field: "turnoDes", header: "dato.jgr.guardia.guardias.turno", width: "12%" },
+      { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "12%" },
       { field: "annio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "5%" },
       { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "20%" },
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "8%" },
@@ -171,7 +187,7 @@ export class TablaEjgComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.table.reset();//tabla o table??
+    this.table.reset();
   }
   onChangeSelectAll() {
     if (this.permisoEscritura) {

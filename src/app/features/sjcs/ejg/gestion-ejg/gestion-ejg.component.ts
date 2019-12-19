@@ -26,6 +26,7 @@ export class GestionEjgComponent implements OnInit {
   body: EJGItem = new EJGItem();
   ejgObject: any;
   datos;
+  // datosItem: EJGItem;
   idEJG;
   filtros;
   filtrosAux;
@@ -37,14 +38,44 @@ export class GestionEjgComponent implements OnInit {
 
   ngOnInit() {
     // this.getFichasPosibles();
-    this.route.queryParams
-      .subscribe(params => {
-        this.idEJG = params.idEJG
-        console.log(params);
-      });
+    // this.route.queryParams
+    //   .subscribe(params => {
+    //     this.idEJG = params.idEJG
+    //     console.log(params);
+    //   });
     this.body = this.persistenceService.getDatos();
+    this.datos = [
+      {
+        label: "Año/Numero EJG",
+        value: this.body.numAnnioProcedimiento
+      },
+      {
+        label: "Apellidos, Nombre Solicitante",
+        value: this.body.nombreApeSolicitante
+      },
+
+      {
+        label: "Estado EJG",
+        value: this.body.estadoEJG
+      },
+      {
+        label: "Apellidos, Nombre Designado",
+        value: this.body.apellidosYNombre
+      },
+      {
+        label: "Dictamen",
+        value: this.body.dictamenSing
+      },
+      {
+        label: "Resolución CAJG",
+        value: this.body.resolucion
+      },
+      {
+        label: "Impugnación",
+        value: this.body.impugnacion
+      },
+    ];
     if (this.body != undefined || this.body != null) {
-      this.datosEJG();
       this.modoEdicion = true;
       //  if (this.dato.fechabaja != null) {
       //    this.modoEdicion = true;
@@ -57,51 +88,7 @@ export class GestionEjgComponent implements OnInit {
       this.modoEdicion = false;
     }
   }
-  datosEJG() {
-    this.body = this.persistenceService.getDatos();
-    this.idEJG = this.body.idEJG;
-    this.progressSpinner = true;
-    this.sigaServices.post("gestionejg_datosEJG", this.body).subscribe(
-      n => {
-        this.ejgObject = JSON.parse(n.body).ejgItems;
-        this.datos = [
-          {
-            label: "Año/Numero EJG",
-            value: this.ejgObject[0].numAnnioProcedimiento
-          },
-          {
-            label: "Apellidos, Nombre Solicitante",
-            value: this.ejgObject[0].nombreApeSolicitante
-          },
 
-          {
-            label: "Estado EJG",
-            value: this.ejgObject[0].estadoEJG
-          },
-          {
-            label: "Apellidos, Nombre Designado",
-            value: this.ejgObject[0].apellidosYNombre
-          },
-          {
-            label: "Dictamen",
-            value: this.ejgObject[0].dictamenSing
-          },
-          {
-            label: "Resolución CAJG",
-            value: this.ejgObject[0].resolucion
-          },
-          {
-            label: "Impugnación",
-            value: this.ejgObject[0].impugnacion
-          },
-        ];
-        this.progressSpinner = false;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
   clear() {
     this.msgs = [];
   }

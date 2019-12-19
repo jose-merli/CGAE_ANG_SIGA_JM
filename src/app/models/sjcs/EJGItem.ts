@@ -4,6 +4,7 @@ export class EJGItem {
     colegio: string;
     annio: string;
     numero: string;
+    numEjg: string;
     tipoEJG: string;
     tipoEJGColegio: string;
     creadoDesde: string;
@@ -59,6 +60,7 @@ export class EJGItem {
     rol: string;
 
     turno: string;
+    idTurno: string;
     guardia: string;
     numColegiado: string;
     apellidosYNombre: string;
