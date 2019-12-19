@@ -40,22 +40,45 @@ export class LoginComponent implements OnInit {
   onSubmit() { }
 
   ngOnInit() {
-    this.progressSpinner = true;
-    this.service.autenticate().subscribe(
+        this.progressSpinner = true;
+    this.sigaServices.getBackend("validaUsuario").subscribe(
       response => {
-        if (response) {
-          this.progressSpinner = false;
-          this.router.navigate(["/home"]);
-        } else {
-          this.progressSpinner = false;
-          this.router.navigate(["/landpage"]);
-        }
+              this.service.autenticate().subscribe(
+                response => {
+                  if (response) {
+                    this.progressSpinner = false;
+                    this.router.navigate(["/home"]);
+                  } else {
+                    this.progressSpinner = false;
+                    this.router.navigate(["/landpage"]);
+                  }
+                },
+                err => {
+                  console.log(err);
+                  this.progressSpinner = false;
+                }
+              );
       },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
+      error => {
+        console.log("ERROR", error);
+        if (error.status == 403) {
+          let codError = error.status;
+
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Usuario no válido");
+          this.router.navigate(["/errorAcceso"]);
+          this.progressSpinner = false;
+        }
+         if (error.status == 500) {
+          let codError = error.status;
+
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Usuario no válido");
+          this.router.navigate(["/errorAcceso"]);
+          this.progressSpinner = false;
+        }
       }
-    );
+    );              
   }
 
   submit() {
