@@ -973,11 +973,15 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
               notarioNIF.tipoIdentificacion = this.tipoCIF;
 
-              notarioNIF.nombre = "";
               let notariosNEW = [];
-              notariosNEW.push(notarioNIF);
 
+              notarioNIF.nombre = this.bodyFisica.nombre;
+              notarioNIF.apellido1 = this.bodyFisica.primerApellido;
+              notarioNIF.apellido2 = this.bodyFisica.segundoApellido;
+
+              notariosNEW.push(notarioNIF);
               sessionStorage.removeItem("notario");
+
 
               sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
               this.location.back();
