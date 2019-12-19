@@ -6,7 +6,6 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
 import { SigaWrapper } from '../../../../../../wrapper/wrapper.class';
 import { ComboItem } from '../../../../../../models/ComboItem';
-import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
 
 @Component({
   selector: 'app-conceptos-facturacion',
@@ -28,9 +27,13 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   //datos: any[] = [];
   selectAll: boolean = false;
   nuevoConcepto: boolean = false;
+  modificaConcepto: boolean = false;
   selectionMode: string = "single";
+  idConcepto: string = undefined;
+  idGrupo: string = undefined;
 
   body = [];
+  bodyUpdate;
   bodyAux = [];
 
   //COMBOS
@@ -133,9 +136,126 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     }
   }
 
-  seleccionaFila(evento) {
-    if (evento != undefined) {
+  seleccionaFila(evento){
+    let i;
+    if(undefined!=evento && null!=evento && this.idEstadoFacturacion=='10'){
       this.numSelected = evento.length;
+      this.seleccion = true;
+      this.modificaConcepto=true;
+    }    
+  }
+
+  disabled(){
+    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  eliminar(){
+
+  }
+
+  callServiceEliminar(){
+
+  }
+
+  disabledEliminar(){
+    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  restablecer(){
+    this.body=JSON.parse(JSON.stringify(this.bodyAux));
+    this.bodyUpdate=[];
+    this.modificaConcepto=false;
+    this.nuevoConcepto=false;
+    this.idGrupo=undefined;
+    this.idConcepto=undefined;
+
+    this.tabla.sortOrder = 0;
+    this.tabla.sortField = '';
+    this.tabla.reset();
+    this.buscadores = this.buscadores.map(it => it = "");
+  }
+
+  disabledRestablecer(){
+    if(this.modoEdicion && this.idEstadoFacturacion=='10' && (this.nuevoConcepto || this.modificaConcepto)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  guardar(){
+    this.bodyUpdate = {
+      idConcepto: undefined,
+      idGrupo: undefined,
+      importeTotal: undefined,
+      importePendiente: undefined,
+      idFacturacion: undefined
+    };
+
+    if(!this.cerrada && undefined!=this.idConcepto && undefined!=this.idGrupo){
+      this.bodyUpdate.idConcepto=this.idConcepto;
+      this.bodyUpdate.idGrupo=this.idGrupo;   
+      this.bodyUpdate.idFacturacion=this.idFacturacion;     
+      
+      if(this.modificaConcepto){
+        this.callServiceGuardar("facturacionsjcs_updateConceptosFac");
+      }else{
+        this.callServiceGuardar("facturacionsjcs_saveConceptosFac");
+      }
+    }
+  }
+
+  callServiceGuardar(url){
+    this.progressSpinner=true;
+
+    this.sigaService.post(url, this.bodyUpdate).subscribe(
+      data => {
+        this.body.push(this.bodyUpdate);
+
+        this.bodyAux=JSON.parse(JSON.stringify(this.body));
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+
+        this.bodyUpdate=[];
+        this.modificaConcepto=false;
+        this.nuevoConcepto=false;
+        this.idGrupo=undefined;
+        this.idConcepto=undefined;
+        this.cargaDatos();
+      },
+      err => {
+        if (null!=err.error && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  disabledGuardar(){
+    if(this.modoEdicion && this.idEstadoFacturacion=='10' && (this.nuevoConcepto || this.modificaConcepto)){
+      if(undefined!=this.idConcepto && undefined!=this.idGrupo){
+        return false;
+      }else{
+        return true;
+      }
+    }else{
+      return true;
     }
   }
 
@@ -147,7 +267,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
     this.selectionMode = "single";
 
-    if (undefined==this.body || null!=this.body || this.body.length<0) {
+    if (undefined==this.body || null==this.body || this.body.length<1) {
       this.body = [];
     }
 
@@ -166,63 +286,26 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     }
   }
 
-  disabled(){
-    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      return false;
-    }else{
-      return true;
-    }
-  }
-
-  disabledEliminar(){
-    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      return false;
-    }else{
-      return true;
-    }
-  }
-
-  disabledRestablecer(){
-    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      return false;
-    }else{
-      return true;
-    }
-  }
-
-  disabledGuardar(){
-    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      return false;
-    }else{
-      return true;
-    }
-  }
-
   disabledNuevo(){
     if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      return false;
+      if(this.nuevoConcepto || this.modificaConcepto){
+        return true;
+      }else{
+        return false;
+      }
     }else{
       return true;
     }
   }
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
-  }
 
-  changeConcepto(dato) {
-    /*let findDato = this.datosInicial.find(item => item.descripcion === dato.descripcion && item.tipoAsistencia === dato.tipoAsistencia && item.tipoActuacion === dato.tipoActuacion);
-
-    if (findDato != undefined) {
-      if (dato.idCosteFijo != findDato.idCosteFijo) {
-
-        let findUpdate = this.updateCosteFijo.find(item => item.descripcion === dato.descripcion && item.tipoAsistencia === dato.tipoAsistencia && item.tipoActuacion === dato.tipoActuacion);
-
-        if (findUpdate == undefined) {
-          this.updateCosteFijo.push(dato);
-        }
-      }
-    }*/
+  changeCombo(dato) {
+    if (undefined!= dato.idConcepto && null!=dato.idConcepto){
+      this.idConcepto=dato.idConcepto;
+    }
+    
+    if (undefined!=dato.idGrupo && null!=dato.idGrupo){
+      this.idGrupo=dato.idGrupo;
+    }
   }
 
   onHideDatosGenerales() {
@@ -239,7 +322,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     //this.tabla.reset();
   }
 
-  onChangeSelectAllCurriculares() {
+  onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
       this.selectedDatos = this.body;
@@ -253,17 +336,17 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   isSelectMultiple() {
     if (this.permisos && !this.disabled()) {
       this.selectMultiple = !this.selectMultiple;
+      
       if (!this.selectMultiple) {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {
+        this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.selectAll = false;
       }
     }
-    
-    // this.volver();
   }
 
   showMessage(severity, summary, msg) {

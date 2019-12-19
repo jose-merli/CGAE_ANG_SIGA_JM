@@ -157,10 +157,18 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   historicoEstados(){
-    if(undefined!=this.body.idFacturacion){
+    let idFac;
+
+    if(this.modoEdicion){
+      idFac = this.idFacturacion;
+    }else if(!this.modoEdicion && undefined!=this.body.idFacturacion){
+      idFac= this.body.idFacturacion;
+    }
+
+    if(undefined!=idFac){
       this.progressSpinner = true;
 
-      this.sigaService.getParam("facturacionsjcs_historicofacturacion", "?idFacturacion=" + this.body.idFacturacion).subscribe(
+      this.sigaService.getParam("facturacionsjcs_historicofacturacion", "?idFacturacion=" + idFac).subscribe(
         data => {
           this.progressSpinner = false;
 

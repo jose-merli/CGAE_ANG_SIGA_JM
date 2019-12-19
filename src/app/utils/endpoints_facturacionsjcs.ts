@@ -15,5 +15,8 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_buscarCartasfacturacion: "facturacionsjcs/buscarCartasfacturacion",
     facturacionsjcs_reabrirfacturacion: "facturacionsjcs/reabrirfacturacion",
     facturacionsjcs_simularfacturacion: "facturacionsjcs/simularfacturacion",
-    facturacionsjcs_tarjetaConceptosfac: "facturacionsjcs/tarjetaConceptosfac"
+    facturacionsjcs_tarjetaConceptosfac: "facturacionsjcs/tarjetaConceptosfac",
+    facturacionsjcs_saveConceptosFac: "facturacionsjcs/saveConceptosFac",
+    facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosfac",
+    facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosfac"
 }
