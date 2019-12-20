@@ -17,6 +17,6 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_simularfacturacion: "facturacionsjcs/simularfacturacion",
     facturacionsjcs_tarjetaConceptosfac: "facturacionsjcs/tarjetaConceptosfac",
     facturacionsjcs_saveConceptosFac: "facturacionsjcs/saveConceptosFac",
-    facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosfac",
+    facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosFac", 
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosfac"
 }

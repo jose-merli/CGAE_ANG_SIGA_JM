@@ -31,6 +31,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   selectionMode: string = "single";
   idConcepto: string = undefined;
   idGrupo: string = undefined;
+  idConceptoOld: string = undefined;
+  idGrupoOld: string = undefined;
 
   body = [];
   bodyUpdate;
@@ -137,11 +139,23 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   seleccionaFila(evento){
-    let i;
-    if(undefined!=evento && null!=evento && this.idEstadoFacturacion=='10'){
+    if(undefined!=evento.data.idConcepto && undefined!=evento.data.idGrupo && this.idEstadoFacturacion=='10'){
+      this.body.forEach(element => {
+        element.editable = false;
+        
+        if(undefined==this.idConceptoOld){
+          this.idConceptoOld=evento.data.idConcepto;
+        }
+
+        if(undefined==this.idGrupoOld){
+          this.idGrupoOld=evento.data.idGrupo;
+        }
+      });
+
       this.numSelected = evento.length;
       this.seleccion = true;
       this.modificaConcepto=true;
+      evento.data.editable=true;
     }    
   }
 
@@ -176,6 +190,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.nuevoConcepto=false;
     this.idGrupo=undefined;
     this.idConcepto=undefined;
+    this.idGrupoOld=undefined;
+    this.idConceptoOld=undefined;
 
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
@@ -197,15 +213,19 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       idGrupo: undefined,
       importeTotal: undefined,
       importePendiente: undefined,
-      idFacturacion: undefined
+      idFacturacion: undefined,
+      idConceptoOld: undefined,
+      idGrupoOld: undefined
     };
 
     if(!this.cerrada && undefined!=this.idConcepto && undefined!=this.idGrupo){
       this.bodyUpdate.idConcepto=this.idConcepto;
       this.bodyUpdate.idGrupo=this.idGrupo;   
-      this.bodyUpdate.idFacturacion=this.idFacturacion;     
+      this.bodyUpdate.idFacturacion=this.idFacturacion;   
       
       if(this.modificaConcepto){
+        this.bodyUpdate.idConceptoOld=this.idConceptoOld;
+        this.bodyUpdate.idGrupoOld=this.idGrupoOld;
         this.callServiceGuardar("facturacionsjcs_updateConceptosFac");
       }else{
         this.callServiceGuardar("facturacionsjcs_saveConceptosFac");
@@ -231,6 +251,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
         this.idGrupo=undefined;
         this.idConcepto=undefined;
         this.cargaDatos();
+        this.idConceptoOld=undefined;
+        this.idGrupoOld=undefined;
       },
       err => {
         if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -265,8 +287,6 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.tabla.reset();
     this.nuevoConcepto = true;
 
-    this.selectionMode = "single";
-
     if (undefined==this.body || null==this.body || this.body.length<1) {
       this.body = [];
     }
@@ -276,7 +296,9 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       idGrupo: undefined,
       importeTotal: "0",
       importePendiente: "0",
-      editable: true
+      editable: true,
+      idConceptoOld: undefined,
+      idGrupoOld: undefined
     };
 
     if (this.body.length == 0) {
@@ -341,10 +363,12 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.selectionMode="single";
       } else {
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.selectionMode="multiple";
       }
     }
   }

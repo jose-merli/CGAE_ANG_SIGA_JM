@@ -13,12 +13,14 @@ export class FacturacionItem {
 	importeTotal: String;
 	importePagado: String;
 	idPartidaPresupuestaria: String;
-	importePendiente: string;
-	prevision: string;
-	visible: string;
-	idGrupo: string;
-	descGrupo: string;
-	descConcepto: string;
+	importePendiente: String;
+	prevision: String;
+	visible: String;
+	idGrupo: String;
+	descGrupo: String;
+	descConcepto: String;
+	idGrupoOld: String;
+	idConceptoOld: String;
 	
   	constructor() {}
 }  

@@ -10,7 +10,7 @@
     </p>
     <div *ngIf="showFichaConceptos" class="module vista-avanzada">
       <div class="form-row">
-        <p-table [value]="body" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #tabla
+        <p-table [value]="body" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true" #tabla
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
