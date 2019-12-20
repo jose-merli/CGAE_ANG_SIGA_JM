@@ -19,6 +19,7 @@ import { StringObject } from '../../../models/StringObject';
 import { NuevaSancionItem } from '../../../models/NuevaSancionItem';
 import { OnDestroy } from '@angular/core';
 import { AuthenticationService } from '../../../_services/authentication.service';
+import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { PersonaJuridicaItem } from '../../../models/PersonaJuridicaItem';
 import { ArrayType } from '../../../../../node_modules/@angular/compiler/src/output/output_ast';
 
@@ -795,10 +796,56 @@ export class BusquedaGeneralComponent implements OnDestroy {
             enviar.idEstado = id[0].situacion;
 
             if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
-              sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
-              sessionStorage.setItem('esColegiado', 'false');
-              sessionStorage.setItem('esNuevoNoColegiado', 'true');
-              this.router.navigate(['/fichaColegial']);
+              // sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
+              // sessionStorage.setItem('esColegiado', 'false');
+              // sessionStorage.setItem('esNuevoNoColegiado', 'true');
+              // this.router.navigate(['/fichaColegial']);
+              // INCIDENCIA 1331 Agregamos caso en el cual viniendo de NuevoNoColegiado, el no-colegiado seleccionado existe en nuestro colegio como no-colegiado, en cuyo caso vamos a ficha colegial en modo edición, no en modo creación.
+              if (id[0].numeroInstitucion == this.authenticationService.getInstitucionSession()) {
+                sessionStorage.removeItem("personaBody");
+                sessionStorage.removeItem("fichaColegialByMenu");
+
+                let body = new NoColegiadoItem();
+                body.nif = id[0].nif;
+                body.idInstitucion = id[0].numeroInstitucion;
+                this.sigaServices
+                  .postPaginado(
+                    "busquedaNoColegiados_searchNoColegiado",
+                    "?numPagina=1",
+                    body
+                  )
+                  .subscribe(
+                    data => {
+                      this.progressSpinner = false;
+                      sessionStorage.setItem("esColegiado", "false");
+                      sessionStorage.setItem("destinatarioCom", "true");
+                      sessionStorage.setItem("esNuevoNoColegiado", "false");
+                      if (id[0].fechaBaja != null) {
+                        sessionStorage.setItem("disabledAction", "true");
+                      } else {
+                        sessionStorage.setItem("disabledAction", "false");
+                      }
+                      sessionStorage.setItem("personaBody", JSON.stringify(JSON.parse(data["body"]).noColegiadoItem[0]));
+                      this.router.navigate(["/fichaColegial"]);
+                    },
+                    err => {
+                      console.log(err);
+                      this.progressSpinner = false;
+                    },
+                    () => {
+                      this.progressSpinner = false;
+                    }
+                  );
+                // INCIDENCIA 1331 Agregamos caso en el cual viniendo de NuevoNoColegiado, el no-colegiado seleccionado existe en nuestro colegio como no-colegiado, en cuyo caso vamos a ficha colegial en modo edición, no en modo creación.
+              } else {
+                sessionStorage.setItem(
+                  "nuevoNoColegiado",
+                  JSON.stringify(enviar)
+                );
+                sessionStorage.setItem("esColegiado", "false");
+                sessionStorage.setItem("esNuevoNoColegiado", "true");
+                this.router.navigate(["/fichaColegial"]);
+              }
             } else {
               sessionStorage.setItem('nuevaIncorporacion', JSON.stringify(enviar));
               this.router.navigate(['/nuevaIncorporacion']);
