@@ -3139,8 +3139,12 @@ export class FichaColegialComponent implements OnInit {
                   this.colegialesObject = JSON.parse(data["body"]);
                   this.datosColegialesActual = this.colegialesObject.colegiadoItem;
                   //this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
-                  this.residente = this.datosColegialesActual[0].situacionResidente;
 
+                  if (this.generalBody.situacionResidente == "1") {
+                    this.residente = "Si";
+                  } else {
+                    this.residente = "No";
+                  }
                 }
               );
           }
@@ -3183,8 +3187,10 @@ export class FichaColegialComponent implements OnInit {
     if (!this.isCrearColegial) {
       if (event.value == 1) {
         selectedDatos.situacionResidente = 'Si';
-      } else {
+      } else if (event.value == 0) {
         selectedDatos.situacionResidente = 'No';
+      } else {
+        selectedDatos.situacionResidente = undefined;
       }
     }
     this.isRestablecer = true;
