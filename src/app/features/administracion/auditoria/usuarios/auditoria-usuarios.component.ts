@@ -62,6 +62,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   volver: boolean = false;
   pButton;
   first: number = 0;
+  idPerReal: any;
 
   constructor(
     private sigaServices: SigaServices,
@@ -85,6 +86,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     if (sessionStorage.getItem("tarjeta") != null) {
       this.volver = true;
     }
+    if (sessionStorage.getItem("idPersonaReal") != null) {
+      this.idPerReal = JSON.parse(sessionStorage.getItem("idPersonaReal"));
+      this.isBuscar();
+    }
+
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
         this.tipoAcciones = n.combooItems;
@@ -241,24 +247,24 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   arreglarFechas() {
     this.returnDesde = JSON.stringify(this.bodySearch.fechaDesde);
     this.returnHasta = JSON.stringify(this.bodySearch.fechaHasta);
-    this.returnDesde = this.returnDesde.substring(1, 11);
-    this.returnHasta = this.returnHasta.substring(1, 11);
-    this.arrayDesde = this.returnDesde.split("-");
-    this.arrayHasta = this.returnHasta.split("-");
-    this.arrayDesde[2] = parseInt(this.arrayDesde[2]) + 1;
-    this.arrayHasta[2] = parseInt(this.arrayHasta[2]) + 1;
-    this.returnDesde =
+    if (this.returnDesde != undefined) this.returnDesde = this.returnDesde.substring(1, 11);
+    if (this.returnHasta != undefined) this.returnHasta = this.returnHasta.substring(1, 11);
+    if (this.returnDesde != undefined) this.arrayDesde = this.returnDesde.split("-");
+    if (this.returnHasta != undefined) this.arrayHasta = this.returnHasta.split("-");
+    if (this.returnDesde != undefined) this.arrayDesde[2] = parseInt(this.arrayDesde[2]) + 1;
+    if (this.returnHasta != undefined) this.arrayHasta[2] = parseInt(this.arrayHasta[2]) + 1;
+    if (this.returnDesde != undefined) this.returnDesde =
       this.arrayDesde[1] + "/" + this.arrayDesde[2] + "/" + this.arrayDesde[0];
-    this.returnHasta =
+    if (this.returnHasta != undefined) this.returnHasta =
       this.arrayHasta[1] + "/" + this.arrayHasta[2] + "/" + this.arrayHasta[0];
-    this.fechaDesdeCalendar = new Date(this.returnDesde);
-    this.fechaHastaCalendar = new Date(this.returnHasta);
+    if (this.returnDesde != undefined) this.fechaDesdeCalendar = new Date(this.returnDesde);
+    if (this.returnHasta != undefined) this.fechaHastaCalendar = new Date(this.returnHasta);
   }
 
   construirObjetoBodySearch() {
     if (this.usuario != undefined) this.bodySearch.usuario = this.usuario;
     else this.usuario = undefined;
-
+    if (this.idPerReal != undefined) this.bodySearch.idPersonaReal = this.idPerReal;
     if (this.persona != undefined) this.bodySearch.idPersona = this.persona;
     else this.persona = undefined;
 
@@ -462,4 +468,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.fechaHastaCalendar = event;
   }
 
+  ngOnDestroy() {
+    sessionStorage.removeItem("idPersonaReal");
+  }
 }

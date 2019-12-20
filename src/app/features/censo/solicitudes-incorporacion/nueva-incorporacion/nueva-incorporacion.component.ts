@@ -110,6 +110,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   mvlValido: boolean = true;
 
   numColegiadoDuplicado: boolean = false;
+  bodyInicial;
+  cargarDatos: boolean = false;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -157,6 +159,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         sessionStorage.getItem("editedSolicitud")
       );
       this.consulta = true;
+      this.cargarDatos = true;
       this.tratarDatos();
     } else {
       this.consulta = false;
@@ -166,9 +169,11 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.getItem("nuevaIncorporacion")
         );
 
-        this.solicitudEditar = JSON.parse(
+        this.solicitudEditar = new SolicitudIncorporacionItem();
+        let nuevaIncorporacion = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
+        this.solicitudEditar.numeroIdentificacion = nuevaIncorporacion.numeroIdentificacion;
 
         if (this.solicitudEditar.fechaIncorporacion != null)
           if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
@@ -230,6 +235,8 @@ export class NuevaIncorporacionComponent implements OnInit {
           if (this.solicitudEditar.fechaEstado.getDate == undefined && this.solicitudEditar.fechaEstado != undefined) {
             this.solicitudEditar.fechaEstado = new Date(this.solicitudEditar.fechaEstado);
           }
+
+        this.cargarDatos = true;
         this.tratarDatos();
       }
       this.estadoSolicitudSelected = "20";
@@ -239,7 +246,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     }
 
-    if (this.solicitudEditar.apellido2 != undefined) {
+    if (this.solicitudEditar.apellido2 != undefined && this.solicitudEditar.apellido2 != null && this.solicitudEditar.apellido2 != "") {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
     } else {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1;
@@ -251,8 +258,13 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.titular == undefined ||
         this.solicitudEditar.titular == "")
     ) {
-      this.solicitudEditar.titular =
-        this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+
+      if (this.solicitudEditar.nombre != undefined && this.solicitudEditar.nombre != null && this.solicitudEditar.nombre != ""
+        && this.solicitudEditar.apellidos != undefined && this.solicitudEditar.apellidos != null && this.solicitudEditar.apellidos != "") {
+        this.solicitudEditar.titular =
+          this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+      }
+
     }
 
     if (this.solicitudEditar.iban != undefined && this.solicitudEditar.iban != "") {
@@ -266,6 +278,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (this.solicitudEditar.nombrePoblacion != undefined) {
       this.getComboPoblacion(this.solicitudEditar.nombrePoblacion.toString());
     }
+
+    this.cargarDatos = true;
+    this.tratarDatos()
+
   }
 
   cargarCombos() {
@@ -324,6 +340,9 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.paisSelected = "191";
           let paisSpain = this.paises.find(x => x.value == "191");
           this.solicitudEditar.pais = paisSpain.label;
+          this.bodyInicial.pais = paisSpain.label;
+          this.bodyInicial.idPais = this.paisSelected;
+          this.solicitudEditar.idPais = this.paisSelected;
         }
 
       },
@@ -407,6 +426,12 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   tratarDatos() {
+    this.bodyInicial = JSON.parse(JSON.stringify(this.solicitudEditar));
+
+    if (this.cargarDatos && this.solicitudEditar.iban != undefined && this.solicitudEditar.iban != null && this.solicitudEditar.iban != "") {
+      this.autogenerarDatos();
+    }
+
     if (this.solicitudEditar.residente == "1") {
       this.residente = true;
     } else {
@@ -432,6 +457,36 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     }
 
+    if (this.bodyInicial.fechaSolicitud != undefined &&
+      this.bodyInicial.fechaSolicitud != null) {
+      this.bodyInicial.fechaSolicitud = new Date(
+        this.bodyInicial.fechaSolicitud
+      );
+    }
+
+    if (this.bodyInicial.fechaEstado != undefined &&
+      this.bodyInicial.fechaEstado != null) {
+      this.bodyInicial.fechaEstado = new Date(
+        this.bodyInicial.fechaEstado
+      );
+
+      this.bodyInicial.fechaEstadoSolicitud = this.solicitudEditar.fechaEstado;
+    }
+
+    if (this.bodyInicial.fechaNacimiento != undefined &&
+      this.bodyInicial.fechaNacimiento != null) {
+      this.bodyInicial.fechaNacimiento = new Date(
+        this.bodyInicial.fechaNacimiento
+      );
+    }
+
+    if (this.bodyInicial.fechaIncorporacion != undefined &&
+      this.bodyInicial.fechaIncorporacion != null) {
+      this.bodyInicial.fechaIncorporacion = new Date(
+        this.bodyInicial.fechaIncorporacion
+      );
+    }
+
     if (this.solicitudEditar.fechaSolicitud != undefined &&
       this.solicitudEditar.fechaSolicitud != null) {
       this.solicitudEditar.fechaSolicitud = new Date(
@@ -455,7 +510,19 @@ export class NuevaIncorporacionComponent implements OnInit {
       );
     }
 
-    this.estadoSolicitudSelected = this.solicitudEditar.idEstado;
+    if (this.bodyInicial.apellidos != undefined &&
+      this.bodyInicial.apellidos != null) {
+      this.bodyInicial.apellidos = this.bodyInicial.apellidos.trim();
+    }
+
+    if (this.solicitudEditar.poblacionExtranjera == undefined) {
+      this.bodyInicial.poblacionExtranjera = undefined;
+    } else if (this.solicitudEditar.poblacionExtranjera == null) {
+      this.bodyInicial.poblacionExtranjera = null;
+    } else {
+      this.bodyInicial.poblacionExtranjera = this.solicitudEditar.poblacionExtranjera;
+    }
+
     this.tipoSolicitudSelected = this.solicitudEditar.idTipo;
     this.tipoColegiacionSelected = this.solicitudEditar.idTipoColegiacion;
     this.modalidadDocumentacionSelected = this.solicitudEditar.idModalidadDocumentacion;
@@ -466,6 +533,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.provinciaSelected = this.solicitudEditar.idProvincia;
     this.poblacionSelected = this.solicitudEditar.idPoblacion;
     this.sexoSelected = this.solicitudEditar.sexo;
+
 
   }
 
@@ -506,10 +574,11 @@ export class NuevaIncorporacionComponent implements OnInit {
   validarIban(): boolean {
     if (!this.isSave || (this.isSave && this.solicitudEditar.iban != null)) {
       if (
-        (this.solicitudEditar.iban != null ||
+        ((this.solicitudEditar.iban != null ||
           this.solicitudEditar.iban != undefined ||
           this.solicitudEditar.iban != "") &&
-        (this.isValidIBAN() || this.isValidIbanExt())
+          (this.isValidIBAN() || this.isValidIbanExt())) || this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined
+        || this.solicitudEditar.iban == null
       ) {
         this.ibanValido = true;
         return true;
@@ -628,7 +697,11 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     }
 
-
+    if (this.cargarDatos) {
+      this.bodyInicial.bic = this.solicitudEditar.bic;
+      this.bodyInicial.banco = this.solicitudEditar.nombreBanco;
+      this.cargarDatos = false;
+    }
 
   }
 
@@ -954,6 +1027,34 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
   }
 
+  disabledAprobar() {
+
+    if (this.solicitudEditar.idEstado != this.estadoSolicitudSelected
+      || this.solicitudEditar.idTipo != this.tipoSolicitudSelected
+      || this.solicitudEditar.idTipoColegiacion != this.tipoColegiacionSelected
+      || this.solicitudEditar.idModalidadDocumentacion != this.modalidadDocumentacionSelected
+      || this.solicitudEditar.idTipoIdentificacion != this.tipoIdentificacionSelected
+      || this.solicitudEditar.idTratamiento != this.tratamientoSelected
+      || this.solicitudEditar.idEstadoCivil != this.estadoCivilSelected
+      || this.solicitudEditar.idPais != this.paisSelected
+      || this.solicitudEditar.sexo != this.sexoSelected
+      || this.solicitudEditar.idProvincia != this.provinciaSelected
+      || this.solicitudEditar.idPoblacion != this.poblacionSelected
+      || JSON.stringify(this.solicitudEditar) != JSON.stringify(this.bodyInicial)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  validateAprobarSolitud() {
+    if (this.solicitudEditar.fechaIncorporacion != undefined && this.solicitudEditar.fechaIncorporacion != null) {
+      this.aprobarSolicitud();
+    } else {
+      this.showFailNotTraduce("Es necesario informar de la fecha de incorporación antes de aprobar. Rellénela y guarde");
+    }
+  }
+
   aprobarSolicitud() {
     if (this.habilitaAceptar()) {
       if (this.solicitudEditar.fechaIncorporacion != null &&
@@ -1252,9 +1353,23 @@ export class NuevaIncorporacionComponent implements OnInit {
               this.solicitudEditar.titular == undefined ||
               this.solicitudEditar.titular == "")
           ) {
-            this.solicitudEditar.titular =
-              this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+
+            if (this.solicitudEditar.apellido2 != undefined && this.solicitudEditar.apellido2 != null && this.solicitudEditar.apellido2 != "") {
+              this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
+            } else {
+              this.solicitudEditar.apellidos = this.solicitudEditar.apellido1;
+            }
+
+            if (this.solicitudEditar.nombre != undefined && this.solicitudEditar.nombre != null && this.solicitudEditar.nombre != ""
+              && this.solicitudEditar.apellidos != undefined && this.solicitudEditar.apellidos != null && this.solicitudEditar.apellidos != "") {
+              this.solicitudEditar.titular =
+                this.solicitudEditar.nombre + " " + this.solicitudEditar.apellidos;
+            }
+
           }
+
+          this.bodyInicial = JSON.parse(JSON.stringify(this.solicitudEditar));
+          this.tratarDatos();
 
           if (back == true) {
             this.msgs = [
@@ -1463,19 +1578,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
     if (
-      JSON.stringify(this.checkSolicitudInicio) !=
-      JSON.stringify(this.solicitudEditar) &&
+      JSON.stringify(this.solicitudEditar) != JSON.stringify(this.bodyInicial) &&
       !this.isLetrado
     ) {
       if (
         this.compruebaDNI() &&
-        (this.validarIban() ||
-          this.solicitudEditar.iban == "" ||
-          this.solicitudEditar.iban == undefined &&
-          this.solicitudEditar.bic == "" ||
-          this.solicitudEditar.bic == undefined &&
-          this.solicitudEditar.titular == "" ||
-          this.solicitudEditar.titular == undefined && this.solicitudEditar.titular.trim() != "") &&
         this.estadoSolicitudSelected != "" &&
         this.estadoSolicitudSelected != undefined &&
         this.solicitudEditar.fechaEstado != null &&
@@ -1491,34 +1598,54 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.solicitudEditar.correoElectronico != null &&
         this.solicitudEditar.correoElectronico != undefined &&
         this.emailValido &&
-        this.solicitudEditar.numColegiado != null &&
-        this.solicitudEditar.numColegiado != undefined &&
         this.tipoIdentificacionSelected != "" &&
         this.tipoIdentificacionSelected != undefined &&
         this.solicitudEditar.numeroIdentificacion != null &&
+        this.solicitudEditar.numeroIdentificacion != "" &&
         this.solicitudEditar.numeroIdentificacion != undefined &&
         this.tratamientoSelected != "" &&
         this.tratamientoSelected != undefined &&
         this.solicitudEditar.nombre != null &&
         this.solicitudEditar.nombre != undefined &&
+        this.solicitudEditar.nombre != "" &&
         this.solicitudEditar.apellido1 != null &&
+        this.solicitudEditar.apellido1 != "" &&
         this.solicitudEditar.apellido1 != undefined &&
         this.solicitudEditar.fechaNacimiento != null &&
         this.solicitudEditar.fechaNacimiento != undefined &&
         this.paisSelected != undefined &&
         this.solicitudEditar.domicilio != null &&
+        this.solicitudEditar.domicilio != "" &&
         this.solicitudEditar.domicilio != undefined &&
         (this.isValidCodigoPostal() || this.isPoblacionExtranjera) &&
         this.solicitudEditar.codigoPostal != null &&
         this.solicitudEditar.codigoPostal != undefined &&
+        this.solicitudEditar.codigoPostal != "" &&
         this.solicitudEditar.telefono1 != null &&
+        this.solicitudEditar.telefono1 != "" &&
         this.solicitudEditar.telefono1 != undefined &&
         this.tlf1Valido && this.tlf2Valido && this.fax1Valido &&
         this.fax2Valido && this.mvlValido &&
         this.solicitudEditar.correoElectronico != null &&
-        this.solicitudEditar.correoElectronico != undefined
+        this.solicitudEditar.correoElectronico != undefined &&
+        this.solicitudEditar.correoElectronico != ""
       ) {
-        return true;
+
+        if (this.solicitudEditar.iban != "" &&
+          this.solicitudEditar.iban != undefined && (this.validarIban() &&
+            this.solicitudEditar.bic != "" &&
+            this.solicitudEditar.bic != undefined &&
+            this.solicitudEditar.titular != "" &&
+            this.solicitudEditar.titular != undefined && this.solicitudEditar.titular.trim() != "")) {
+          return true;
+
+        } else {
+          if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
+            return true;
+          } else {
+            return false;
+          }
+        }
       } else {
         return false;
       }
@@ -1633,6 +1760,15 @@ para poder filtrar el dato con o sin estos caracteres*/
       severity: "error",
       summary: "",
       detail: this.translateService.instant(mensaje)
+    });
+  }
+
+  showFailNotTraduce(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "error",
+      summary: this.translateService.instant("general.message.incorrect"),
+      detail: mensaje
     });
   }
 
