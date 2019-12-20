@@ -817,12 +817,30 @@ export class BusquedaGeneralComponent implements OnDestroy {
         }
       );
     } else if (sessionStorage.getItem('crearnuevo') == 'true') {
-      let cuerpo = [];
-      cuerpo.push(id[0]);
-      sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
-      sessionStorage.removeItem('abrirSociedad');
-      sessionStorage.setItem("nuevoRegistro", "true");
-      this.router.navigate(['fichaPersonaJuridica']);
+      let mess = "La sociedad ya existe en otro colegio, se procederá a crear una nueva con los datos básicos de la seleccionada. ¿Desea continuar?";
+      let icon = 'fa fa-edit';
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          let cuerpo = [];
+          cuerpo.push(id[0]);
+          sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
+          sessionStorage.removeItem('abrirSociedad');
+          sessionStorage.setItem("nuevoRegistro", "true");
+          this.router.navigate(['fichaPersonaJuridica']);
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: 'info',
+              summary: 'Cancel',
+              detail: this.translateService.instant('general.message.accion.cancelada')
+            }
+          ];
+        }
+      });
+
     } else if (this.isFormador) {
       // ir a ficha de formador
       this.checkTypeCIF(id[0].nif);
