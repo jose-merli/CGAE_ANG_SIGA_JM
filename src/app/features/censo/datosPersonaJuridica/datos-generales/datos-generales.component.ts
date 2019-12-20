@@ -241,6 +241,10 @@ export class DatosGenerales implements OnInit {
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
       this.body.denominacion = this.usuarioBody[0].denominacion;
       this.body.abreviatura = this.usuarioBody[0].abreviatura;
+      this.body.fechaConstitucion = this.usuarioBody[0].fechaConstitucion;
+      if (this.usuarioBody[0].fechaBaja != null) {
+        this.body.fechaBaja = this.usuarioBody[0].fechaBaja;
+      }
 
       this.getComboIdentificacion();
     }

@@ -99,7 +99,9 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.tipoPersonaJuridica" | translate}}</label>
                         <!-- <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.tipo'> -->
-                        <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
+                        [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" 
+                        ></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>

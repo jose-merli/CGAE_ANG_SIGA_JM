@@ -1,46 +1,36 @@
-import {
-  Component,
-  ViewChild,
-  ChangeDetectorRef,
-  HostListener
-} from "@angular/core";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl
-} from "@angular/forms";
-import { esCalendar } from "../../../utils/calendar";
-import { SigaServices } from "../../../_services/siga.service";
-import { TranslateService } from "../../../commons/translate/translation.service";
-import { Router } from "@angular/router";
-import { ConfirmationService } from "primeng/api";
-import { ComboItem } from "../../../models/ComboItem";
-import { Location } from "@angular/common";
-import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
-import { BusquedaJuridicaItem } from "../../../models/BusquedaJuridicaItem";
-import { BusquedaJuridicaObject } from "../../../models/BusquedaJuridicaObject";
-import { BusquedaFisicaObject } from "../../../models/BusquedaFisicaObject";
-import { DatosNotarioItem } from "../../../models/DatosNotarioItem";
-import { DatosIntegrantesItem } from "../../../models/DatosIntegrantesItem";
-import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
-import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
-import { StringObject } from "../../../models/StringObject";
-import { NuevaSancionItem } from "../../../models/NuevaSancionItem";
+import { Component, ViewChild, ChangeDetectorRef, HostListener } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { esCalendar } from '../../../utils/calendar';
+import { SigaServices } from '../../../_services/siga.service';
+import { TranslateService } from '../../../commons/translate/translation.service';
+import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
+import { ComboItem } from '../../../models/ComboItem';
+import { Location } from '@angular/common';
+import { BusquedaFisicaItem } from '../../../models/BusquedaFisicaItem';
+import { BusquedaJuridicaItem } from '../../../models/BusquedaJuridicaItem';
+import { BusquedaJuridicaObject } from '../../../models/BusquedaJuridicaObject';
+import { BusquedaFisicaObject } from '../../../models/BusquedaFisicaObject';
+import { DatosNotarioItem } from '../../../models/DatosNotarioItem';
+import { DatosIntegrantesItem } from '../../../models/DatosIntegrantesItem';
+import { FormadorCursoItem } from '../../../models/FormadorCursoItem';
+import { SolicitudIncorporacionItem } from '../../../models/SolicitudIncorporacionItem';
+import { StringObject } from '../../../models/StringObject';
+import { NuevaSancionItem } from '../../../models/NuevaSancionItem';
 import { OnDestroy } from '@angular/core';
 import { AuthenticationService } from '../../../_services/authentication.service';
-import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
-import { ArrayType } from "../../../../../node_modules/@angular/compiler/src/output/output_ast";
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
+import { PersonaJuridicaItem } from '../../../models/PersonaJuridicaItem';
+import { ArrayType } from '../../../../../node_modules/@angular/compiler/src/output/output_ast';
 
 export enum KEY_CODE {
   ENTER = 13
 }
 
 @Component({
-  selector: "app-busqueda-general",
-  templateUrl: "./busqueda-general.component.html",
-  styleUrls: ["./busqueda-general.component.scss"]
+  selector: 'app-busqueda-general',
+  templateUrl: './busqueda-general.component.html',
+  styleUrls: ['./busqueda-general.component.scss']
 })
 export class BusquedaGeneralComponent implements OnDestroy {
   formBusqueda: FormGroup;
@@ -53,8 +43,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   datos: any[];
   select: any[];
   es: any = esCalendar;
-  selectedValue: string = "simple";
-  textSelected: String = "{0} opciones seleccionadas";
+  selectedValue: string = 'simple';
+  textSelected: String = '{0} opciones seleccionadas';
   persona: String;
   bodyFisica: BusquedaFisicaItem = new BusquedaFisicaItem();
   bodyJuridica: BusquedaJuridicaItem = new BusquedaJuridicaItem();
@@ -66,7 +56,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   rowsPerPage: any = [];
   selectMultiple: boolean = false;
   progressSpinner: boolean = false;
-  textFilter: String = "Elegir";
+  textFilter: String = 'Elegir';
   buscar: boolean = false;
   selectAll: boolean = false;
   msgs: any[];
@@ -76,10 +66,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
   continue: boolean = false;
   existe: boolean = false;
 
-  resultado: string = "";
+  resultado: string = '';
   remitente: boolean = false;
 
-  @ViewChild("table") table;
+  @ViewChild('table') table;
   selectedDatos;
   tipoCIF: string;
   newIntegrante: boolean = false;
@@ -96,22 +86,22 @@ export class BusquedaGeneralComponent implements OnDestroy {
   idClaseComunicacion: String;
   keys: any[] = [];
 
-  migaPan: string = "";
-  migaPan2: string = "";
-  menuProcede: string = "";
+  migaPan: string = '';
+  migaPan2: string = '';
+  menuProcede: string = '';
   dosMigas: boolean = false;
 
   fichasPosibles = [
     {
-      key: "generales",
+      key: 'generales',
       activa: false
     },
     {
-      key: "colegiales",
+      key: 'colegiales',
       activa: false
     },
     {
-      key: "facturacion",
+      key: 'facturacion',
       activa: false
     }
   ];
@@ -119,7 +109,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   isFormador: boolean = false;
   isSociedad: boolean = false;
 
-  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
+  private DNI_LETTERS = 'TRWAGMYFPDXBNJZSQVHLCKE';
   selectedTipo: any;
 
   constructor(
@@ -146,63 +136,58 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.getMigaPan();
     this.getInstitucion();
 
-    if (sessionStorage.getItem("abrirSociedad") != null ||
-      sessionStorage.getItem("abrirSociedad") != undefined) {
-      this.persona = "j";
+    if (sessionStorage.getItem('abrirSociedad') != null || sessionStorage.getItem('abrirSociedad') != undefined) {
+      this.persona = 'j';
 
       this.isFormador = true;
-      sessionStorage.removeItem("abrirSolicitudIncorporacion");
+      sessionStorage.removeItem('abrirSolicitudIncorporacion');
     } else {
-      this.persona = "f";
+      this.persona = 'f';
     }
 
-    this.sigaServices.get("institucionActual").subscribe(n => {
+    this.sigaServices.get('institucionActual').subscribe((n) => {
       this.institucion = n;
     });
 
-    if (
-      sessionStorage.getItem("newIntegrante") != null ||
-      sessionStorage.getItem("newIntegrante") != undefined
-    ) {
-      this.newIntegrante = JSON.parse(sessionStorage.getItem("newIntegrante"));
+    if (sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) {
+      this.newIntegrante = JSON.parse(sessionStorage.getItem('newIntegrante'));
     }
 
-    if (
-      sessionStorage.getItem("abrirFormador") != null ||
-      sessionStorage.getItem("abrirFormador") != undefined
-    ) {
+    if (sessionStorage.getItem('abrirFormador') != null || sessionStorage.getItem('abrirFormador') != undefined) {
       this.isFormador = true;
-      sessionStorage.setItem("toBackNewFormador", "true");
+      sessionStorage.setItem('toBackNewFormador', 'true');
     }
 
-    if (sessionStorage.getItem("abrirSociedad") != null ||
-      sessionStorage.getItem("abrirSociedad") != undefined) {
+    if (sessionStorage.getItem('abrirSociedad') != null || sessionStorage.getItem('abrirSociedad') != undefined) {
       this.isSociedad = true;
     }
 
-    if (sessionStorage.getItem("abrirSolicitudIncorporacion") != null || sessionStorage.getItem("abrirSolicitudIncorporacion") != undefined) {
-      this.persona = "f";
+    if (
+      sessionStorage.getItem('abrirSolicitudIncorporacion') != null ||
+      sessionStorage.getItem('abrirSolicitudIncorporacion') != undefined
+    ) {
+      this.persona = 'f';
 
       this.isFormador = true;
     }
 
     this.colsFisicas = [
-      { field: "nif", header: "NIF/CIF" },
-      { field: "nombre", header: "Nombre" },
-      { field: "apellidos", header: "Apellidos" },
-      { field: "colegio", header: "Colegio" },
-      { field: "numeroColegiado", header: "Numero de Colegiado" },
-      { field: "situacion", header: "Estado colegial" },
-      { field: "residente", header: "Residencia" }
+      { field: 'nif', header: 'NIF/CIF' },
+      { field: 'nombre', header: 'Nombre' },
+      { field: 'apellidos', header: 'Apellidos' },
+      { field: 'colegio', header: 'Colegio' },
+      { field: 'numeroColegiado', header: 'Numero de Colegiado' },
+      { field: 'situacion', header: 'Estado colegial' },
+      { field: 'residente', header: 'Residencia' }
     ];
 
     this.colsJuridicas = [
-      { field: "tipo", header: "Tipo" },
-      { field: "nif", header: "NIF/CIF" },
-      { field: "denominacion", header: "Denominacion" },
-      { field: "fechaConstitucion", header: "Fecha Constitucion" },
-      { field: "abreviatura", header: "Abreviatura" },
-      { field: "numeroIntegrantes", header: "Número de integrantes" }
+      { field: 'tipo', header: 'Tipo' },
+      { field: 'nif', header: 'NIF/CIF' },
+      { field: 'denominacion', header: 'Denominacion' },
+      { field: 'fechaConstitucion', header: 'Fecha Constitucion' },
+      { field: 'abreviatura', header: 'Abreviatura' },
+      { field: 'numeroIntegrantes', header: 'Número de integrantes' }
     ];
 
     this.rowsPerPage = [
@@ -224,11 +209,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
       }
     ];
 
-    this.sigaServices.get("busquedaPer_colegio").subscribe(
-      n => {
+    this.sigaServices.get('busquedaPer_colegio').subscribe(
+      (n) => {
         this.colegios_rol = n.combooItems;
       },
-      err => {
+      (err) => {
         console.log(err);
       },
       () => {
@@ -241,88 +226,109 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.checkStatusInit();
 
     // Combo de identificación
-    this.sigaServices.get("busquedaPerJuridica_tipo").subscribe(
-      n => {
+    this.sigaServices.get('busquedaPerJuridica_tipo').subscribe(
+      (n) => {
         this.comboIdentificacion = n.combooItems;
+        this.comboIdentificacion.map((e) => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
-      error => { }
+      (error) => { }
     );
   }
 
   ngOnDestroy() {
-    sessionStorage.removeItem("AddDestinatarioIndv");
-    sessionStorage.removeItem("abrirRemitente");
+    sessionStorage.removeItem('AddDestinatarioIndv');
+    sessionStorage.removeItem('abrirRemitente');
   }
 
   getInstitucion() {
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      this.institucionActual = n.value;
+    this.sigaServices.get('institucionActual').subscribe(
+      (n) => {
+        this.institucionActual = n.value;
 
-      this.sigaServices.get("busquedaPer_colegio").subscribe(
-        n => {
-          this.colegios_rol = n.combooItems;
-          if (sessionStorage.getItem("abrirRemitente") == "true") {
-            this.bodyRemitente = sessionStorage.getItem("plantillasEnvioSearch");
-            this.remitente = true;
+        this.sigaServices.get('busquedaPer_colegio').subscribe(
+          (n) => {
+            this.colegios_rol = n.combooItems;
+            if (sessionStorage.getItem('abrirRemitente') == 'true') {
+              this.bodyRemitente = sessionStorage.getItem('plantillasEnvioSearch');
+              this.remitente = true;
 
-            for (let colegio of this.colegios_rol) {
-              if (colegio.value == this.institucionActual) {
-                this.colegios_seleccionados = [
-                  {
-                    label: colegio.label,
-                    value: this.institucionActual
-                  }
-                ];
-                this.labelRemitente = colegio.label;
+              for (let colegio of this.colegios_rol) {
+                if (colegio.value == this.institucionActual) {
+                  this.colegios_seleccionados = [
+                    {
+                      label: colegio.label,
+                      value: this.institucionActual
+                    }
+                  ];
+                  this.labelRemitente = colegio.label;
+                }
               }
-            }
 
-            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")
-              || sessionStorage.getItem("nuevoNoColegiadoGen") || sessionStorage.getItem("crearnuevo")) {
-              this.addDestinatarioIndv = true;
-            } else {
-              this.addDestinatarioIndv = false;
-            }
-
-            this.colegioDisabled = false;
-            // this.colegios_seleccionados[0].label = this.institucionActual;
-            this.progressSpinner = false;
-          } else {
-            for (let colegio of this.colegios_rol) {
-              if (colegio.value == this.institucionActual) {
-                this.colegios_seleccionados = [
-                  {
-                    label: colegio.label,
-                    value: this.institucionActual
-                  }
-                ];
+              if (
+                sessionStorage.getItem('AddDestinatarioIndv') ||
+                sessionStorage.getItem('abrirRemitente') ||
+                sessionStorage.getItem('nuevoNoColegiadoGen') ||
+                sessionStorage.getItem('crearnuevo')
+              ) {
+                this.addDestinatarioIndv = true;
+              } else {
+                this.addDestinatarioIndv = false;
               }
-            }
 
-            if (sessionStorage.getItem("AddDestinatarioIndv") || sessionStorage.getItem("abrirRemitente")
-              || sessionStorage.getItem("nuevoNoColegiadoGen") || sessionStorage.getItem("crearnuevo")) {
-              this.addDestinatarioIndv = true;
+              this.colegioDisabled = false;
+              // this.colegios_seleccionados[0].label = this.institucionActual;
+              this.progressSpinner = false;
             } else {
-              this.addDestinatarioIndv = false;
-            }
+              for (let colegio of this.colegios_rol) {
+                if (colegio.value == this.institucionActual) {
+                  this.colegios_seleccionados = [
+                    {
+                      label: colegio.label,
+                      value: this.institucionActual
+                    }
+                  ];
+                }
+              }
 
-            this.colegioDisabled = false;
+              if (
+                sessionStorage.getItem('AddDestinatarioIndv') ||
+                sessionStorage.getItem('abrirRemitente') ||
+                sessionStorage.getItem('nuevoNoColegiadoGen') ||
+                sessionStorage.getItem('crearnuevo')
+              ) {
+                this.addDestinatarioIndv = true;
+              } else {
+                this.addDestinatarioIndv = false;
+              }
+
+              this.colegioDisabled = false;
+              this.progressSpinner = false;
+            }
+          },
+          (err) => {
             this.progressSpinner = false;
+            console.log(err);
+          },
+          () => {
+            console.log('eeee', this.colegioDisabled);
+            // this.sigaServices.get("institucionActual").subscribe(n => {
+            //   this.colegios_seleccionados.push(n);
+            // });
           }
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-        },
-        () => {
-          // this.sigaServices.get("institucionActual").subscribe(n => {
-          //   this.colegios_seleccionados.push(n);
-          // });
-        }
-      );
-
-    },
-      err => {
+        );
+      },
+      (err) => {
         this.progressSpinner = false;
         console.log(err);
       },
@@ -330,114 +336,105 @@ export class BusquedaGeneralComponent implements OnDestroy {
         // this.sigaServices.get("institucionActual").subscribe(n => {
         //   this.colegios_seleccionados.push(n);
         // });
-      });
+      }
+    );
   }
 
   isValidDNI(dni: String): boolean {
     return (
       dni &&
-      typeof dni === "string" &&
+      typeof dni === 'string' &&
       /^[0-9]{8}([A-Za-z]{1})$/.test(dni) &&
-      dni.substr(8, 9).toUpperCase() ===
-      this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
+      dni.substr(8, 9).toUpperCase() === this.DNI_LETTERS.charAt(parseInt(dni.substr(0, 8), 10) % 23)
     );
   }
 
   checkTypeCIF(value: String): boolean {
     if (this.isValidDNI(value)) {
-      this.tipoCIF = "10";
+      this.tipoCIF = '10';
       return true;
     } else if (this.isValidCIF(value)) {
-      this.tipoCIF = "20";
+      this.tipoCIF = '20';
       return true;
     } else if (this.isValidNIE(value)) {
-      this.tipoCIF = "40";
+      this.tipoCIF = '40';
       return true;
     } else if (this.isValidPassport(value)) {
-      this.tipoCIF = "30";
+      this.tipoCIF = '30';
       return true;
     } else {
-      this.tipoCIF = "50";
+      this.tipoCIF = '50';
       return false;
     }
   }
 
   getMigaPan() {
-
-    this.menuProcede = sessionStorage.getItem("menuProcede");
-    this.migaPan = sessionStorage.getItem("migaPan");
-    this.migaPan2 = sessionStorage.getItem("migaPan2");
+    this.menuProcede = sessionStorage.getItem('menuProcede');
+    this.migaPan = sessionStorage.getItem('migaPan');
+    this.migaPan2 = sessionStorage.getItem('migaPan2');
 
     if (this.migaPan2 != undefined) {
       this.dosMigas = true;
     } else {
       this.dosMigas = false;
     }
-
   }
 
   isValidPassport(dni: String): boolean {
-    return (
-      dni && typeof dni === "string" && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni)
-    );
+    return dni && typeof dni === 'string' && /^[a-z]{3}[0-9]{6}[a-z]?$/i.test(dni);
   }
 
   isValidNIE(nie: String): boolean {
-    return (
-      nie &&
-      typeof nie === "string" &&
-      /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie)
-    );
+    return nie && typeof nie === 'string' && /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(nie);
   }
 
   isValidCIF(cif: String): boolean {
-    return (
-      cif &&
-      typeof cif === "string" &&
-      /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif)
-    );
+    return cif && typeof cif === 'string' && /^([ABCDEFGHJKLMNPQRSUVW])(\d{7})([0-9A-J])$/.test(cif);
   }
 
   changeColsAndData() {
-
-    if (this.persona == "f") {
+    if (this.persona == 'f') {
       this.cols = this.colsFisicas;
 
-      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined &&
-        sessionStorage.getItem("abrirRemitente") == undefined && sessionStorage.getItem("nuevoNoColegiadoGen") == undefined) {
+      if (
+        sessionStorage.getItem('AddDestinatarioIndv') == undefined &&
+        sessionStorage.getItem('abrirRemitente') == undefined &&
+        sessionStorage.getItem('nuevoNoColegiadoGen') == undefined
+      ) {
         //this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
-
       } else {
         this.addDestinatarioIndv = true;
       }
 
       this.datos = [];
-      this.bodyFisica.nif = "";
-      this.bodyFisica.nombre = "";
-      this.bodyFisica.primerApellido = "";
-      this.bodyFisica.segundoApellido = "";
-      this.bodyFisica.numeroColegiado = "";
+      this.bodyFisica.nif = '';
+      this.bodyFisica.nombre = '';
+      this.bodyFisica.primerApellido = '';
+      this.bodyFisica.segundoApellido = '';
+      this.bodyFisica.numeroColegiado = '';
     } else {
       this.cols = this.colsJuridicas;
 
-      if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined
-        && sessionStorage.getItem("nuevoNoColegiadoGen") == undefined && sessionStorage.getItem("crearnuevo") == undefined) {
+      if (
+        sessionStorage.getItem('AddDestinatarioIndv') == undefined &&
+        sessionStorage.getItem('abrirRemitente') == undefined &&
+        sessionStorage.getItem('nuevoNoColegiadoGen') == undefined &&
+        sessionStorage.getItem('crearnuevo') == undefined
+      ) {
         //this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
-
       } else {
         this.addDestinatarioIndv = true;
       }
 
       this.datos = [];
 
-      this.selectedTipo = "";
+      this.selectedTipo = '';
       //this.bodyJuridica.tipo = this.selectedTipo;
-      this.bodyJuridica.nif = "";
-      this.bodyJuridica.denominacion = "";
-      this.bodyJuridica.abreviatura = "";
-
+      this.bodyJuridica.nif = '';
+      this.bodyJuridica.denominacion = '';
+      this.bodyJuridica.abreviatura = '';
     }
   }
 
@@ -455,9 +452,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       (this.bodyFisica.numeroColegiado == null ||
         this.bodyFisica.numeroColegiado == null ||
         this.bodyFisica.numeroColegiado.trim().length < 3) &&
-      (this.bodyFisica.nif == null ||
-        this.bodyFisica.nif == null ||
-        this.bodyFisica.nif.trim().length < 3) &&
+      (this.bodyFisica.nif == null || this.bodyFisica.nif == null || this.bodyFisica.nif.trim().length < 3) &&
       (this.colegios_seleccionados == undefined ||
         this.colegios_seleccionados == null ||
         this.colegios_seleccionados.length < 1)
@@ -491,7 +486,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     if (
       (this.selectedTipo == undefined ||
         this.selectedTipo == null ||
-        this.selectedTipo.value == "" ||
+        this.selectedTipo.value == '' ||
         this.selectedTipo.length < 1) &&
       (this.bodyJuridica.abreviatura == null ||
         this.bodyJuridica.abreviatura == null ||
@@ -527,7 +522,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     }
   }
   checkStatusInit() {
-    if (this.persona == "f") {
+    if (this.persona == 'f') {
       this.cols = this.colsFisicas;
     } else {
       this.cols = this.colsJuridicas;
@@ -539,126 +534,105 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.progressSpinner = true;
     this.buscar = true;
 
-    if (this.persona == "f") {
+    if (this.persona == 'f') {
       if (this.checkFilterFisic()) {
         if (this.bodyFisica.nif == undefined) {
-          this.bodyFisica.nif = "";
+          this.bodyFisica.nif = '';
         }
         if (this.colegios_seleccionados != undefined) {
           this.bodyFisica.idInstitucion = [];
-          this.colegios_seleccionados.forEach(
-            (value: ComboItem, key: number) => {
-              this.bodyFisica.idInstitucion.push(value.value);
-            }
-          );
+          this.colegios_seleccionados.forEach((value: ComboItem, key: number) => {
+            this.bodyFisica.idInstitucion.push(value.value);
+          });
         } else {
           this.bodyFisica.idInstitucion = [];
         }
         if (this.bodyFisica.nombre == undefined) {
-          this.bodyFisica.nombre = "";
+          this.bodyFisica.nombre = '';
         }
         if (this.bodyFisica.primerApellido == undefined) {
-          this.bodyFisica.primerApellido = "";
+          this.bodyFisica.primerApellido = '';
         }
         if (this.bodyFisica.segundoApellido == undefined) {
-          this.bodyFisica.segundoApellido = "";
+          this.bodyFisica.segundoApellido = '';
         }
         if (this.bodyFisica.numeroColegiado == undefined) {
-          this.bodyFisica.numeroColegiado = "";
+          this.bodyFisica.numeroColegiado = '';
         }
         this.checkTypeCIF(this.bodyFisica.nif);
 
-        if (sessionStorage.getItem("nuevoNoColegiadoGen")) {
+        if (sessionStorage.getItem('nuevoNoColegiadoGen')) {
           this.bodyFisica.addDestinatarioIndv = false;
         } else {
           this.bodyFisica.addDestinatarioIndv = this.addDestinatarioIndv;
         }
 
-        this.sigaServices
-          .postPaginado(
-            "busquedaPer_searchFisica",
-            "?numPagina=1",
-            this.bodyFisica
-          )
-          .subscribe(
-            data => {
-              this.progressSpinner = false;
-              this.searchFisica = JSON.parse(data["body"]);
+        this.sigaServices.postPaginado('busquedaPer_searchFisica', '?numPagina=1', this.bodyFisica).subscribe(
+          (data) => {
+            this.progressSpinner = false;
+            this.searchFisica = JSON.parse(data['body']);
 
-              if (this.searchFisica.busquedaFisicaItems.length == 0) {
-
-                if (this.searchFisica.error != null && this.searchFisica.error.message != null) {
-                  this.showInfo(this.searchFisica.error.message);
-                  this.existe = true;
-                }
-                this.datos = [];
-
-              } else {
-                this.datos = [];
-                this.datos = this.searchFisica.busquedaFisicaItems;
+            if (this.searchFisica.busquedaFisicaItems.length == 0) {
+              if (this.searchFisica.error != null && this.searchFisica.error.message != null) {
+                this.showInfo(this.searchFisica.error.message);
+                this.existe = true;
               }
-
-            },
-            err => {
-              console.log(err);
-              this.progressSpinner = false;
-            },
-            () => {
-              if (this.datos.length == 0 ||
-                this.datos == null ||
-                this.datos == undefined
-              ) {
-
-                if (
-                  this.bodyFisica.nif != "" &&
-                  this.bodyFisica.nif != undefined && !this.existe
-                ) {
-                  if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
-
-                    if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
-                      this.noDataFoundWithDNI();
-                    } else {
-                      if (sessionStorage.getItem("AddDestinatarioIndv")) {
-                        sessionStorage.setItem("AddDestinatarioIndvBack", "true");
-
-                      }
+              this.datos = [];
+            } else {
+              this.datos = [];
+              this.datos = this.searchFisica.busquedaFisicaItems;
+            }
+          },
+          (err) => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            if (this.datos.length == 0 || this.datos == null || this.datos == undefined) {
+              if (this.bodyFisica.nif != '' && this.bodyFisica.nif != undefined && !this.existe) {
+                if (this.tipoIdentificacionPermitido(this.bodyFisica.nif)) {
+                  if (
+                    sessionStorage.getItem('AddDestinatarioIndv') == undefined &&
+                    sessionStorage.getItem('abrirRemitente') == undefined
+                  ) {
+                    this.noDataFoundWithDNI();
+                  } else {
+                    if (sessionStorage.getItem('AddDestinatarioIndv')) {
+                      sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
                     }
-
                   }
                 }
-              } else {
-                // encuentra datos, muestra mensaje informativo si tiene nif + {nombre || primer apellido || segundo apellido informado}
+              }
+            } else {
+              // encuentra datos, muestra mensaje informativo si tiene nif + {nombre || primer apellido || segundo apellido informado}
 
-                if (this.searchFisica.onlyNif) {
-                  this.showInfo(
-                    "busquedaGeneral.literal.colegiado.otroColegio"
-                  );
-                }
+              if (this.searchFisica.onlyNif) {
+                this.showInfo('busquedaGeneral.literal.colegiado.otroColegio');
+              }
 
-                if (sessionStorage.getItem("AddDestinatarioIndv") != undefined) {
-                  sessionStorage.setItem("AddDestinatarioIndvBack", "true");
-                }
-
+              if (sessionStorage.getItem('AddDestinatarioIndv') != undefined) {
+                sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
               }
             }
-          );
+          }
+        );
       }
     } else {
       if (this.checkFilterJuridic()) {
-        if (this.selectedTipo != undefined && this.selectedTipo.value == "") {
-          this.bodyJuridica.tipo = "";
+        if (this.selectedTipo != undefined && this.selectedTipo.value == '') {
+          this.bodyJuridica.tipo = '';
         }
         if (this.bodyJuridica.nif == undefined) {
-          this.bodyJuridica.nif = "";
+          this.bodyJuridica.nif = '';
         }
         if (this.bodyJuridica.denominacion == undefined) {
-          this.bodyJuridica.denominacion = "";
+          this.bodyJuridica.denominacion = '';
         }
         if (this.bodyJuridica.numColegiado == undefined) {
-          this.bodyJuridica.numColegiado = "";
+          this.bodyJuridica.numColegiado = '';
         }
         if (this.bodyJuridica.abreviatura == undefined) {
-          this.bodyJuridica.abreviatura = "";
+          this.bodyJuridica.abreviatura = '';
         }
 
         this.bodyJuridica.idInstitucion = [];
@@ -667,15 +641,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
         });
         this.checkTypeCIF(this.bodyJuridica.nif);
         this.sigaServices
-          .postPaginado(
-            "busquedaPer_searchJuridica",
-            "?numPagina=1",
-            this.bodyJuridica
-          )
+          .postPaginado('busquedaPer_searchJuridica', '?numPagina=1', this.bodyJuridica)
           .subscribe(
-            data => {
+            (data) => {
               this.progressSpinner = false;
-              this.searchJuridica = JSON.parse(data["body"]);
+              this.searchJuridica = JSON.parse(data['body']);
 
               if (this.searchJuridica.busquedaPerJuridicaItems.length == 0) {
                 if (this.searchJuridica.error != null && this.searchJuridica.error.message != null) {
@@ -683,7 +653,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
                   this.existe = true;
                 }
                 this.datos = [];
-
               } else {
                 this.datos = [];
                 this.datos = this.searchJuridica.busquedaPerJuridicaItems;
@@ -691,32 +660,30 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
               // this.table.paginator = true;
             },
-            err => {
+            (err) => {
               console.log(err);
               this.progressSpinner = false;
             },
             () => {
               if (
-                (this.datos.length == 0 ||
-                  this.datos == null ||
-                  this.datos == undefined) && !this.existe
+                (this.datos.length == 0 || this.datos == null || this.datos == undefined) &&
+                !this.existe
               ) {
                 if (this.tipoIdentificacionPermitido(this.bodyJuridica.nif)) {
-                  if (sessionStorage.getItem("AddDestinatarioIndv") == undefined && sessionStorage.getItem("abrirRemitente") == undefined) {
+                  if (
+                    sessionStorage.getItem('AddDestinatarioIndv') == undefined &&
+                    sessionStorage.getItem('abrirRemitente') == undefined
+                  ) {
                     this.noDataFoundWithDNI();
                   }
-
                 }
               } else {
-
                 if (this.searchJuridica.onlyNif) {
-                  this.showInfo(
-                    "busquedaGeneral.literal.colegiado.otroColegio"
-                  );
+                  this.showInfo('busquedaGeneral.literal.colegiado.otroColegio');
                 }
 
-                if (sessionStorage.getItem("AddDestinatarioIndv") != undefined) {
-                  sessionStorage.setItem("AddDestinatarioIndvBack", "true");
+                if (sessionStorage.getItem('AddDestinatarioIndv') != undefined) {
+                  sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
                 }
               }
             }
@@ -747,215 +714,203 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   irFichaColegial(id) {
     // ir a ficha de notario
-    if (
-      sessionStorage.getItem("abrirNotario") == "true" &&
-      sessionStorage.getItem("abrirRemitente") != "true"
-    ) {
+    if (sessionStorage.getItem('abrirNotario') == 'true' && sessionStorage.getItem('abrirRemitente') != 'true') {
       if (!this.selectMultiple && !this.selectAll) {
-        if (
-          sessionStorage.getItem("notario") != null ||
-          sessionStorage.getItem("notario") != undefined
-        ) {
-          sessionStorage.removeItem("notario");
-          sessionStorage.removeItem("abrirRemitente");
+        if (sessionStorage.getItem('notario') != null || sessionStorage.getItem('notario') != undefined) {
+          sessionStorage.removeItem('notario');
+          sessionStorage.removeItem('abrirRemitente');
         }
         this.checkTypeCIF(id[0].nif);
         id[0].tipoIdentificacion = this.tipoCIF;
 
-        sessionStorage.setItem("notario", JSON.stringify(id));
+        sessionStorage.setItem('notario', JSON.stringify(id));
         //this.location.back();
 
-        this.router.navigate(["fichaPersonaJuridica"]);
+        this.router.navigate(['fichaPersonaJuridica']);
       }
     } else if (
-      (sessionStorage.getItem("newIntegrante") != null ||
-        sessionStorage.getItem("newIntegrante") != undefined) &&
-      sessionStorage.getItem("abrirRemitente") != "true"
+      (sessionStorage.getItem('newIntegrante') != null || sessionStorage.getItem('newIntegrante') != undefined) &&
+      sessionStorage.getItem('abrirRemitente') != 'true'
     ) {
       // ir a ficha de integrante
-      sessionStorage.removeItem("notario");
-      sessionStorage.removeItem("abrirRemitente");
+      sessionStorage.removeItem('notario');
+      sessionStorage.removeItem('abrirRemitente');
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
       id[0].colegio = this.colegios_seleccionados[0];
       id[0].completo = true;
-      sessionStorage.removeItem("nIntegrante");
-      sessionStorage.setItem("nIntegrante", JSON.stringify(id));
-      this.router.navigate(["detalleIntegrante"]);
-    } else if (sessionStorage.getItem("abrirRemitente") == "true") {
+      sessionStorage.removeItem('nIntegrante');
+      sessionStorage.setItem('nIntegrante', JSON.stringify(id));
+      this.router.navigate(['detalleIntegrante']);
+    } else if (sessionStorage.getItem('abrirRemitente') == 'true') {
       if (id[0].idPersona != null && id[0].idPersona != null) {
-        sessionStorage.setItem("remitente", JSON.stringify(id[0]));
-        sessionStorage.removeItem("abrirRemitente");
-        sessionStorage.removeItem("notario");
-        sessionStorage.removeItem("integrante");
+        sessionStorage.setItem('remitente', JSON.stringify(id[0]));
+        sessionStorage.removeItem('abrirRemitente');
+        sessionStorage.removeItem('notario');
+        sessionStorage.removeItem('integrante');
         this.location.back();
         // ir a ficha de solicitud de Incorporación
       }
-    } else if (sessionStorage.getItem("AddDestinatarioIndv") != null) {
-      sessionStorage.setItem("destinatarioIndv", JSON.stringify(id[0]));
+    } else if (sessionStorage.getItem('AddDestinatarioIndv') != null) {
+      sessionStorage.setItem('destinatarioIndv', JSON.stringify(id[0]));
       // sessionStorage.removeItem("AddDestinatarioIndv");
       this.location.back();
     } else if (
-      sessionStorage.getItem("solicitudIncorporacion") == "true" &&
-      sessionStorage.getItem("abrirRemitente") != "true"
+      sessionStorage.getItem('solicitudIncorporacion') == 'true' &&
+      sessionStorage.getItem('abrirRemitente') != 'true'
     ) {
       let enviar = new SolicitudIncorporacionItem();
 
       this.nifCif.valor = id[0].nif;
-      this.sigaServices
-        .post("solicitudModificacion_verifyPerson", this.nifCif)
-        .subscribe(
-          data => {
-            this.resultado = JSON.parse(data["body"]).valor;
+      this.sigaServices.post('solicitudModificacion_verifyPerson', this.nifCif).subscribe(
+        (data) => {
+          this.resultado = JSON.parse(data['body']).valor;
 
-            if (this.resultado == "existe") {
-              this.continue = false;
-            } else {
-              this.continue = true;
-            }
+          if (this.resultado == 'existe') {
+            this.continue = false;
+          } else {
+            this.continue = true;
+          }
 
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            if (this.continue == true) {
-              enviar.numeroIdentificacion = id[0].nif;
-              enviar.apellido1 = id[0].primerApellido;
-              enviar.nombre = id[0].nombre;
+          this.progressSpinner = false;
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          if (this.continue == true) {
+            enviar.numeroIdentificacion = id[0].nif;
+            enviar.apellido1 = id[0].primerApellido;
+            enviar.nombre = id[0].nombre;
 
-              enviar.numColegiado = id[0].numeroColegiado;
+            enviar.numColegiado = id[0].numeroColegiado;
 
+            enviar.idInstitucion = id[0].numeroInstitucion;
+            enviar.apellido2 = id[0].segundoApellido;
+            enviar.sexo = id[0].sexo;
+            enviar.naturalDe = id[0].naturalDe;
+            enviar.idTipoIdentificacion = id[0].idTipoIdentificacion;
+            enviar.idEstadoCivil = id[0].idEstadoCivil;
+            enviar.fechaNacimiento = id[0].fechaNacimiento;
+            enviar.idTratamiento = id[0].idTratamiento;
+            enviar.idEstado = id[0].situacion;
 
-              enviar.idInstitucion = id[0].numeroInstitucion;
-              enviar.apellido2 = id[0].segundoApellido;
-              enviar.sexo = id[0].sexo;
-              enviar.naturalDe = id[0].naturalDe;
-              enviar.idTipoIdentificacion = id[0].idTipoIdentificacion;
-              enviar.idEstadoCivil = id[0].idEstadoCivil;
-              enviar.fechaNacimiento = id[0].fechaNacimiento;
-              enviar.idTratamiento = id[0].idTratamiento;
-              enviar.idEstado = id[0].situacion;
+            if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
+              // sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
+              // sessionStorage.setItem('esColegiado', 'false');
+              // sessionStorage.setItem('esNuevoNoColegiado', 'true');
+              // this.router.navigate(['/fichaColegial']);
+              // INCIDENCIA 1331 Agregamos caso en el cual viniendo de NuevoNoColegiado, el no-colegiado seleccionado existe en nuestro colegio como no-colegiado, en cuyo caso vamos a ficha colegial en modo edición, no en modo creación.
+              if (id[0].numeroInstitucion == this.authenticationService.getInstitucionSession()) {
+                sessionStorage.removeItem("personaBody");
+                sessionStorage.removeItem("fichaColegialByMenu");
 
-              if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
-                // INCIDENCIA 1331 Agregamos caso en el cual viniendo de NuevoNoColegiado, el no-colegiado seleccionado existe en nuestro colegio como no-colegiado, en cuyo caso vamos a ficha colegial en modo edición, no en modo creación.
-                if (id[0].numeroInstitucion == this.authenticationService.getInstitucionSession()) {
-                  sessionStorage.removeItem("personaBody");
-                  sessionStorage.removeItem("fichaColegialByMenu");
-
-                  let body = new NoColegiadoItem();
-                  body.nif = id[0].nif;
-                  body.idInstitucion = id[0].numeroInstitucion;
-                  this.sigaServices
-                    .postPaginado(
-                      "busquedaNoColegiados_searchNoColegiado",
-                      "?numPagina=1",
-                      body
-                    )
-                    .subscribe(
-                      data => {
-                        this.progressSpinner = false;
-                        sessionStorage.setItem("esColegiado", "false");
-                        sessionStorage.setItem("destinatarioCom", "true");
-                        sessionStorage.setItem("esNuevoNoColegiado", "false");
-                        if (id[0].fechaBaja != null) {
-                          sessionStorage.setItem("disabledAction", "true");
-                        } else {
-                          sessionStorage.setItem("disabledAction", "false");
-                        }
-                        sessionStorage.setItem("personaBody", JSON.stringify(JSON.parse(data["body"]).noColegiadoItem[0]));
-                        this.router.navigate(["/fichaColegial"]);
-                      },
-                      err => {
-                        console.log(err);
-                        this.progressSpinner = false;
-                      },
-                      () => {
-                        this.progressSpinner = false;
+                let body = new NoColegiadoItem();
+                body.nif = id[0].nif;
+                body.idInstitucion = id[0].numeroInstitucion;
+                this.sigaServices
+                  .postPaginado(
+                    "busquedaNoColegiados_searchNoColegiado",
+                    "?numPagina=1",
+                    body
+                  )
+                  .subscribe(
+                    data => {
+                      this.progressSpinner = false;
+                      sessionStorage.setItem("esColegiado", "false");
+                      sessionStorage.setItem("destinatarioCom", "true");
+                      sessionStorage.setItem("esNuevoNoColegiado", "false");
+                      if (id[0].fechaBaja != null) {
+                        sessionStorage.setItem("disabledAction", "true");
+                      } else {
+                        sessionStorage.setItem("disabledAction", "false");
                       }
-                    );
-                  // INCIDENCIA 1331 Agregamos caso en el cual viniendo de NuevoNoColegiado, el no-colegiado seleccionado existe en nuestro colegio como no-colegiado, en cuyo caso vamos a ficha colegial en modo edición, no en modo creación.
-                } else {
-                  sessionStorage.setItem(
-                    "nuevoNoColegiado",
-                    JSON.stringify(enviar)
+                      sessionStorage.setItem("personaBody", JSON.stringify(JSON.parse(data["body"]).noColegiadoItem[0]));
+                      this.router.navigate(["/fichaColegial"]);
+                    },
+                    err => {
+                      console.log(err);
+                      this.progressSpinner = false;
+                    },
+                    () => {
+                      this.progressSpinner = false;
+                    }
                   );
-                  sessionStorage.setItem("esColegiado", "false");
-                  sessionStorage.setItem("esNuevoNoColegiado", "true");
-                  this.router.navigate(["/fichaColegial"]);
-                }
-
+                // INCIDENCIA 1331 Agregamos caso en el cual viniendo de NuevoNoColegiado, el no-colegiado seleccionado existe en nuestro colegio como no-colegiado, en cuyo caso vamos a ficha colegial en modo edición, no en modo creación.
               } else {
                 sessionStorage.setItem(
-                  "nuevaIncorporacion",
+                  "nuevoNoColegiado",
                   JSON.stringify(enviar)
                 );
-                this.router.navigate(["/nuevaIncorporacion"]);
+                sessionStorage.setItem("esColegiado", "false");
+                sessionStorage.setItem("esNuevoNoColegiado", "true");
+                this.router.navigate(["/fichaColegial"]);
               }
-
             } else {
-              if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
-                this.showFail(
-                  "No se puede crear un no colegiado a partir de un colegiado de la misma institución"
-                );
-              } else {
-                this.showFail(
-                  "No se puede crear una solicitud a partir de una persona de la misma institución"
-                );
-              }
-
+              sessionStorage.setItem('nuevaIncorporacion', JSON.stringify(enviar));
+              this.router.navigate(['/nuevaIncorporacion']);
+            }
+          } else {
+            if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
+              this.showFail(
+                'No se puede crear un no colegiado a partir de un colegiado de la misma institución'
+              );
+            } else {
+              this.showFail(
+                'No se puede crear una solicitud a partir de una persona de la misma institución'
+              );
             }
           }
-        );
-    } else if (sessionStorage.getItem("crearnuevo") == "true") {
+        }
+      );
+    } else if (sessionStorage.getItem('crearnuevo') == 'true') {
       let cuerpo = [];
       cuerpo.push(id[0]);
-      sessionStorage.setItem("usuarioBody", JSON.stringify(cuerpo));
-      sessionStorage.removeItem("abrirSociedad");
-      //sessionStorage.setItem("nuevoRegistro", "true");
-      this.router.navigate(["fichaPersonaJuridica"]);
+      sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
+      sessionStorage.removeItem('abrirSociedad');
+      sessionStorage.setItem("nuevoRegistro", "true");
+      this.router.navigate(['fichaPersonaJuridica']);
     } else if (this.isFormador) {
       // ir a ficha de formador
       this.checkTypeCIF(id[0].nif);
       id[0].tipoIdentificacion = this.tipoCIF;
       id[0].completo = true;
-      sessionStorage.removeItem("abrirFormador");
-      sessionStorage.removeItem("abrirSolicitudIncorporacion");
+      sessionStorage.removeItem('abrirFormador');
+      sessionStorage.removeItem('abrirSolicitudIncorporacion');
 
-      sessionStorage.setItem("formador", JSON.stringify(id[0]));
+      sessionStorage.setItem('formador', JSON.stringify(id[0]));
       if (
-        sessionStorage.getItem("backInscripcion") != null ||
-        sessionStorage.getItem("backInscripcion") != undefined
+        sessionStorage.getItem('backInscripcion') != null ||
+        sessionStorage.getItem('backInscripcion') != undefined
       ) {
-        this.router.navigate(["/buscarInscripciones"]);
-        sessionStorage.removeItem("backInscripcion");
+        this.router.navigate(['/buscarInscripciones']);
+        sessionStorage.removeItem('backInscripcion');
       } else if (
-        sessionStorage.getItem("backFichaInscripcion") != null ||
-        sessionStorage.getItem("backFichaInscripcion") != undefined
+        sessionStorage.getItem('backFichaInscripcion') != null ||
+        sessionStorage.getItem('backFichaInscripcion') != undefined
       ) {
-        sessionStorage.removeItem("backFichaInscripcion");
-        if (sessionStorage.getItem("modoEdicionInscripcion") != null) {
-          sessionStorage.removeItem("modoEdicionInscripcion");
+        sessionStorage.removeItem('backFichaInscripcion');
+        if (sessionStorage.getItem('modoEdicionInscripcion') != null) {
+          sessionStorage.removeItem('modoEdicionInscripcion');
         }
 
-        sessionStorage.setItem("modoEdicionInscripcion", "false");
-        this.router.navigate(["/fichaInscripcion"]);
+        sessionStorage.setItem('modoEdicionInscripcion', 'false');
+        this.router.navigate(['/fichaInscripcion']);
       } else {
-        this.router.navigate(["/fichaCurso"]);
+        this.router.navigate(['/fichaCurso']);
       }
     } else if (
-      sessionStorage.getItem("nuevaSancion") != null &&
-      sessionStorage.getItem("nuevaSancion") != undefined
+      sessionStorage.getItem('nuevaSancion') != null &&
+      sessionStorage.getItem('nuevaSancion') != undefined
     ) {
-      sessionStorage.setItem("nSancion", JSON.stringify(id));
-      this.router.navigate(["detalleSancion"]);
+      sessionStorage.setItem('nSancion', JSON.stringify(id));
+      this.router.navigate(['detalleSancion']);
     }
   }
 
   tipoIdentificacionPermitido(value: String): boolean {
     // busqueda fisica => todos menos cif
-    if (this.persona == "f") {
+    if (this.persona == 'f') {
       if (this.isValidCIF(value)) {
         return false;
       } else {
@@ -972,40 +927,32 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   noDataFoundWithDNI() {
-    let mess = "";
-    if (this.persona == "f") {
-      mess =
-        "No existe ningun elemento con el NIF seleccionado, ¿Desea crear un elemento?";
+    let mess = '';
+    if (this.persona == 'f') {
+      mess = 'No existe ningun elemento con el NIF seleccionado, ¿Desea crear un elemento?';
     } else {
-      mess =
-        "No existe ningun elemento con el CIF seleccionado, ¿Desea crear un elemento?";
+      mess = 'No existe ningun elemento con el CIF seleccionado, ¿Desea crear un elemento?';
     }
 
-    let icon = "fa fa-edit";
+    let icon = 'fa fa-edit';
 
-    if (sessionStorage.getItem("nuevaSancion") == undefined) {
+    if (sessionStorage.getItem('nuevaSancion') == undefined) {
       this.confirmationService.confirm({
         message: mess,
         icon: icon,
         accept: () => {
           let enviar = new SolicitudIncorporacionItem();
-          if (sessionStorage.getItem("nuevoNoColegiadoGen") == "true") {
-            sessionStorage.setItem(
-              "nuevoNoColegiado",
-              JSON.stringify(enviar)
-            );
-            sessionStorage.setItem("esColegiado", "false");
-            sessionStorage.setItem("esNuevoNoColegiado", "true");
-            sessionStorage.setItem("nifNuevo", this.bodyFisica.nif);
-            sessionStorage.setItem("bodyNuevo", JSON.stringify(this.bodyFisica));
-            this.router.navigate(["/fichaColegial"]);
+          if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
+            sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
+            sessionStorage.setItem('esColegiado', 'false');
+            sessionStorage.setItem('esNuevoNoColegiado', 'true');
+            sessionStorage.setItem('nifNuevo', this.bodyFisica.nif);
+            sessionStorage.setItem('bodyNuevo', JSON.stringify(this.bodyFisica));
+            this.router.navigate(['/fichaColegial']);
           } else {
-            if (sessionStorage.getItem("abrirNotario") == "true") {
+            if (sessionStorage.getItem('abrirNotario') == 'true') {
               let notarioNIF = new DatosNotarioItem();
-              if (
-                this.bodyFisica.nif != null ||
-                this.bodyFisica.nif != undefined
-              ) {
+              if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
                 notarioNIF.nif = this.bodyFisica.nif;
               } else {
                 notarioNIF.nif = this.bodyJuridica.nif;
@@ -1020,40 +967,31 @@ export class BusquedaGeneralComponent implements OnDestroy {
               notarioNIF.apellido2 = this.bodyFisica.segundoApellido;
 
               notariosNEW.push(notarioNIF);
-              sessionStorage.removeItem("notario");
+              sessionStorage.removeItem('notario');
 
-
-              sessionStorage.setItem("notario", JSON.stringify(notariosNEW));
+              sessionStorage.setItem('notario', JSON.stringify(notariosNEW));
               this.location.back();
-            } else if (
-              sessionStorage.getItem("solicitudIncorporacion") == "true"
-            ) {
+            } else if (sessionStorage.getItem('solicitudIncorporacion') == 'true') {
               let enviar = new SolicitudIncorporacionItem();
-              if (this.bodyFisica.nif != undefined || this.bodyFisica.nif != "") {
+              if (this.bodyFisica.nif != undefined || this.bodyFisica.nif != '') {
                 enviar.numeroIdentificacion = this.bodyFisica.nif;
                 enviar.nombre = this.bodyFisica.nombre;
                 enviar.apellido1 = this.bodyFisica.primerApellido;
                 enviar.apellido2 = this.bodyFisica.segundoApellido;
                 enviar.numColegiado = this.bodyFisica.numeroColegiado;
-                sessionStorage.setItem(
-                  "nuevaIncorporacion",
-                  JSON.stringify(enviar)
-                );
-                this.router.navigate(["/nuevaIncorporacion"]);
+                sessionStorage.setItem('nuevaIncorporacion', JSON.stringify(enviar));
+                this.router.navigate(['/nuevaIncorporacion']);
               } else {
                 this.showFail(
-                  "No se puede crear una solicitud de modificación a partir de una persona jurídica"
+                  'No se puede crear una solicitud de modificación a partir de una persona jurídica'
                 );
               }
             } else if (
-              sessionStorage.getItem("newIntegrante") != null ||
-              sessionStorage.getItem("newIntegrante") != undefined
+              sessionStorage.getItem('newIntegrante') != null ||
+              sessionStorage.getItem('newIntegrante') != undefined
             ) {
               let integranteNew = new DatosIntegrantesItem();
-              if (
-                this.bodyFisica.nif != null ||
-                this.bodyFisica.nif != undefined
-              ) {
+              if (this.bodyFisica.nif != null || this.bodyFisica.nif != undefined) {
                 integranteNew.nifCif = this.bodyFisica.nif;
               } else {
                 integranteNew.nifCif = this.bodyJuridica.nif;
@@ -1063,16 +1001,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
               integranteNew.tipoIdentificacion = this.tipoCIF;
 
               // datos de persona fisica para pasar a pantalla integrante
-              if (this.persona == "f") {
+              if (this.persona == 'f') {
                 integranteNew.nombre = this.bodyFisica.nombre;
                 integranteNew.apellidos1 = this.bodyFisica.primerApellido;
                 integranteNew.apellidos2 = this.bodyFisica.segundoApellido;
-                integranteNew.ejerciente = "NO COLEGIADO";
+                integranteNew.ejerciente = 'NO COLEGIADO';
               } else {
                 // datos de persona fisica para pasar a pantalla integrante
                 integranteNew.nombre = this.bodyJuridica.denominacion;
                 integranteNew.apellidos1 = this.bodyJuridica.abreviatura;
-                integranteNew.ejerciente = "SOCIEDAD";
+                integranteNew.ejerciente = 'SOCIEDAD';
                 integranteNew.colegio = this.colegios_seleccionados[0];
               }
 
@@ -1080,46 +1018,42 @@ export class BusquedaGeneralComponent implements OnDestroy {
               let integrantesNEW = [];
               integrantesNEW.push(integranteNew);
 
-              sessionStorage.removeItem("nIntegrante");
-              sessionStorage.setItem(
-                "nIntegrante",
-                JSON.stringify(integrantesNEW)
-              );
-              this.router.navigate(["detalleIntegrante"]);
+              sessionStorage.removeItem('nIntegrante');
+              sessionStorage.setItem('nIntegrante', JSON.stringify(integrantesNEW));
+              this.router.navigate(['detalleIntegrante']);
             } else if (
-              sessionStorage.getItem("abrirFormador") != null ||
-              sessionStorage.getItem("abrirFormador") != undefined
+              sessionStorage.getItem('abrirFormador') != null ||
+              sessionStorage.getItem('abrirFormador') != undefined
             ) {
               let formador = new FormadorCursoItem();
               formador.tipoIdentificacion = this.tipoCIF;
               formador.nif = this.bodyFisica.nif;
-              sessionStorage.removeItem("abrirFormador");
-              sessionStorage.setItem("formador", JSON.stringify(formador));
+              sessionStorage.removeItem('abrirFormador');
+              sessionStorage.setItem('formador', JSON.stringify(formador));
               if (
-                sessionStorage.getItem("backFichaInscripcion") != null &&
-                sessionStorage.getItem("backFichaInscripcion")
+                sessionStorage.getItem('backFichaInscripcion') != null &&
+                sessionStorage.getItem('backFichaInscripcion')
               )
-                this.router.navigate(["/fichaInscripcion"]);
-              else this.router.navigate(["/fichaCurso"]);
-            } else if (sessionStorage.getItem("crearnuevo") != null ||
-              sessionStorage.getItem("crearnuevo") != undefined) {
+                this.router.navigate(['/fichaInscripcion']);
+              else this.router.navigate(['/fichaCurso']);
+            } else if (
+              sessionStorage.getItem('crearnuevo') != null ||
+              sessionStorage.getItem('crearnuevo') != undefined
+            ) {
               let cuerpo = [];
               cuerpo.push(this.bodyJuridica);
-              sessionStorage.setItem("usuarioBody", JSON.stringify(cuerpo));
-              sessionStorage.setItem("nuevoRegistro", "true");
-              this.router.navigate(["fichaPersonaJuridica"]);
+              sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
+              sessionStorage.setItem('nuevoRegistro', 'true');
+              this.router.navigate(['fichaPersonaJuridica']);
             }
           }
-
         },
         reject: () => {
           this.msgs = [
             {
-              severity: "info",
-              summary: "Cancel",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
+              severity: 'info',
+              summary: 'Cancel',
+              detail: this.translateService.instant('general.message.accion.cancelada')
             }
           ];
         }
@@ -1130,8 +1064,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
-      severity: "error",
-      summary: this.translateService.instant("general.message.incorrect"),
+      severity: 'error',
+      summary: this.translateService.instant('general.message.incorrect'),
       detail: mensaje
     });
   }
@@ -1139,8 +1073,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   showWarning(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
-      severity: "warn",
-      summary: "Atención",
+      severity: 'warn',
+      summary: 'Atención',
       detail: mensaje
     });
   }
@@ -1148,11 +1082,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({
-      severity: "error",
-      summary: this.translateService.instant("general.message.incorrect"),
-      detail: this.translateService.instant(
-        "cen.busqueda.error.busquedageneral"
-      )
+      severity: 'error',
+      summary: this.translateService.instant('general.message.incorrect'),
+      detail: this.translateService.instant('cen.busqueda.error.busquedageneral')
     });
   }
 
@@ -1186,7 +1118,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
+    let fichaPosible = this.fichasPosibles.filter((elto) => {
       return elto.key === key;
     });
     if (fichaPosible && fichaPosible.length) {
@@ -1205,7 +1137,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   //búsqueda con enter
-  @HostListener("document:keypress", ["$event"])
+  @HostListener('document:keypress', ['$event'])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
       this.isBuscar();
@@ -1226,8 +1158,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   navigateComunicar(dato) {
-    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-    sessionStorage.setItem("idModulo", '3');
+    sessionStorage.setItem('rutaComunicacion', this.currentRoute.toString());
+    sessionStorage.setItem('idModulo', '3');
     this.getDatosComunicar();
   }
 
@@ -1235,43 +1167,41 @@ export class BusquedaGeneralComponent implements OnDestroy {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
-    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
-      data => {
+    this.sigaServices.post('dialogo_claseComunicacion', rutaClaseComunicacion).subscribe(
+      (data) => {
         this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
-        this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-          data => {
+        this.sigaServices.post('dialogo_keys', this.idClaseComunicacion).subscribe(
+          (data) => {
             this.keys = JSON.parse(data['body']).keysItem;
-            this.selectedDatos.forEach(element => {
+            this.selectedDatos.forEach((element) => {
               let keysValues = [];
-              this.keys.forEach(key => {
+              this.keys.forEach((key) => {
                 if (element[key.nombre] != undefined) {
                   keysValues.push(element[key.nombre]);
                 }
-              })
+              });
               datosSeleccionados.push(keysValues);
             });
 
-            sessionStorage.setItem("datosComunicar", JSON.stringify(datosSeleccionados));
-            this.router.navigate(["/dialogoComunicaciones"]);
+            sessionStorage.setItem('datosComunicar', JSON.stringify(datosSeleccionados));
+            this.router.navigate(['/dialogoComunicaciones']);
           },
-          err => {
+          (err) => {
             console.log(err);
           }
         );
       },
-      err => {
+      (err) => {
         console.log(err);
       }
     );
-
   }
-
 
   showInfo(message) {
     this.msgs = [];
     this.msgs.push({
-      severity: "info",
-      summary: this.translateService.instant("general.message.informacion"),
+      severity: 'info',
+      summary: this.translateService.instant('general.message.informacion'),
       detail: this.translateService.instant(message)
     });
   }
@@ -1279,5 +1209,4 @@ export class BusquedaGeneralComponent implements OnDestroy {
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
   }
-
 }
