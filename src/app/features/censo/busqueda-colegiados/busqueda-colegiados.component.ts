@@ -655,7 +655,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             this.colegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.colegiadoSearch.colegiadoItem;
             this.convertirStringADate(this.datos);
-            this.table.paginator = true;
+            // this.table.paginator = true;
             this.body.fechaIncorporacion = [];
           },
           err => {
@@ -738,6 +738,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "colegioResultado",
         header: "censo.busquedaClientesAvanzada.literal.colegio"
+
       },
       {
         field: "nif",
@@ -746,6 +747,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "nombre",
         header: "administracion.parametrosGenerales.literal.nombre"
+
       },
       {
         field: "numberColegiado",
@@ -777,7 +779,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "noAparecerRedAbogacia2",
-        header: "censo.busquedaColegial.lopd"
+        header: "censo.busquedaColegial.lopd",
+        filter: "noAparecerRedAbogaciaFilter"
       }
     ];
 
