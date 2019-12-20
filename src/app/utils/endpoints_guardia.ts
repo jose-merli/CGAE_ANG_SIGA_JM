@@ -24,6 +24,7 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getBaremos: "guardia/busquedaGuardia/getBaremos",
     busquedaGuardias_getCalendario: "guardia/busquedaGuardia/getCalendario",
     busquedaGuardias_getColaGuardia: "guardia/busquedaGuardia/getColaGuardia",
+    busquedaGuardias_getUltimo: "guardia/gestionGuardia/ultimo",
     gestionGuardias_updateColaGuardia: "guardia/gestionGuardia/updateColaGuardia",
 
 }

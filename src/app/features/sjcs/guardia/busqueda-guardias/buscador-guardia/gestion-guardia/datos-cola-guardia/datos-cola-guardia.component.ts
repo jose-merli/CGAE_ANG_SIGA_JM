@@ -4,6 +4,7 @@ import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { DatePipe } from '../../../../../../../../../node_modules/@angular/common';
 import { CommonsService } from '../../../../../../../_services/commons.service';
+import { TablaDinamicaColaGuardiaComponent } from '../../../../../../../commons/tabla-dinamica-cola-guardia/tabla-dinamica-cola-guardia.component';
 
 @Component({
   selector: 'app-datos-cola-guardia',
@@ -29,8 +30,7 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
-
-  @ViewChild("app-tabla-dinamica") table;
+  @ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
 
   constructor(private sigaService: SigaServices,
     private persistenceService: PersistenceService,
@@ -49,7 +49,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.apellido1 = data.apellidos1;
         this.body.apellido2 = data.apellidos2;
         this.body.porGrupos = data.porGrupos;
-        this.selectionMode = data.porGrupos ? "multiple" : "single"
+        // this.selectionMode = data.porGrupos ? "multiple" : "single"
         this.body.nombreApe = data.nombre, data.apellido1, data.apellido2;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.idGuardia = data.idGuardia;
@@ -118,7 +118,8 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   getColaGuardia() {
-    this.transformDate(this.body.letradosIns);
+    if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
+      this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porqie viene del back.
     this.progressSpinner = true;
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
@@ -144,9 +145,9 @@ export class DatosColaGuardiaComponent implements OnInit {
     this.body.letradosIns = event;
     //  this.getColaGuardia();
   }
-
   zuletzt() {
-    // this.progressSpinner = true;
+    this.progressSpinner = true;
+    this.body.idPersonaUltimo = this.tabla.selectedDatos.idPersona;
     this.sigaService.post(
       "busquedaGuardias_getUltimo", this.body).subscribe(
         data => {
@@ -158,8 +159,6 @@ export class DatosColaGuardiaComponent implements OnInit {
         }
       )
   }
-
-
 
   clear() { }
 }

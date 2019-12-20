@@ -28,10 +28,6 @@
               <input class="form-control paddingInput" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10"
               />
             </div>
-            <div *ngIf="col.editable && selectedDatos">
-              <input class="form-control paddingInput" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10"
-              />
-            </div>
           </td>
 
         </tr>

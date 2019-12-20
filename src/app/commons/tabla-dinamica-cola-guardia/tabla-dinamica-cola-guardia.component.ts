@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
+import { EventEmitter } from 'events';
+import { SigaServices } from '../../_services/siga.service';
 
 @Component({
   selector: 'app-tabla-dinamica-cola-guardia',
@@ -19,12 +21,11 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   @Input() botActivos: boolean = true;
   @Input() porGrupos: boolean = false;
   @Input() selectionMode: string = "single";
-
   progressSpinner: boolean = false;
 
 
 
-  constructor() { }
+  constructor(private sigaService: SigaServices) { }
 
   ngOnInit() {
     this.getCols()
@@ -33,9 +34,9 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
 
   sube(selected) {
-    let index = this.datos.indexOf(selected[0]);
+    let index = this.datos.indexOf(selected);
     if (this.porGrupos) {
-      let seMueve = this.datos.filter(it => selected[0].numeroGrupo == it.numeroGrupo); // Los que se desplazan
+      let seMueve = this.datos.filter(it => selected.numeroGrupo == it.numeroGrupo); // Los que se desplazan
       let primero = this.datos.indexOf(seMueve[0]);
       if (primero != 0) {
         let primeroMovido = this.datos[primero - 1];
@@ -68,9 +69,9 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   }
 
   baja(selected) {
-    let index = this.datos.indexOf(selected[0]);
+    let index = this.datos.indexOf(selected);
     if (this.porGrupos) {
-      let seMueve = this.datos.filter(it => selected[0].numeroGrupo == it.numeroGrupo); // Los que se desplazan
+      let seMueve = this.datos.filter(it => selected.numeroGrupo == it.numeroGrupo); // Los que se desplazan
       let ultimo = this.datos.indexOf(seMueve[seMueve.length - 1]);
       if (ultimo != this.datos.length - 1) {
         let primeroMovido = this.datos[ultimo + 1];
@@ -141,7 +142,19 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
     }
   }
-
+  // zuletzt() {
+  //   // this.progressSpinner = true;
+  //   this.sigaService.post(
+  //     "busquedaGuardias_getUltimo", this.selectedDatos).subscribe(
+  //       data => {
+  //         this.getColaGuardias.emit("");
+  //       },
+  //       err => {
+  //         console.log(err);
+  //         this.progressSpinner = false;
+  //       }
+  //     )
+  // }
 
 
   onChangeRowsPerPages(event) { }
