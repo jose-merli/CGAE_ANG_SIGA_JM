@@ -4,26 +4,26 @@
         <i class="fa fa-square"></i>
         <p>{{ menuProcede }}
             <i class="fa fa-angle-right"> </i> {{ migaPan }}
-            <i class="pl-1 fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}}</p>
+            <i class="fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}}</p>
     </div>
     <div *ngIf="dosMigas" class="header-title">
         <i class="fa fa-square"></i>
         <p>{{ menuProcede }}
             <i class="fa fa-angle-right"> </i> {{ migaPan }}
             <i class="fa fa-angle-right"> </i> {{ migaPan2 }}
-            <i class="pl-1 fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}}</p>
+            <i class="fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}}</p>
     </div>
     <!-- <div *ngIf="!remitente" class="header-title">
         <i class="fa fa-square"></i>
         <p>{{"menu.censo" | translate}}
             <i class="fa fa-angle-right"> </i> {{ 'menu.censo.buscarSociedades' | translate}}
-            <i class="pl-1 fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
+            <i class="fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
     </div>
     <div *ngIf="remitente" class="header-title">
         <i class="fa fa-square"></i>
         <p>{{'menu.enviosAGrupos' | translate}}
             <i class="fa fa-angle-right"> </i>{{ 'enviosMasivos.literal.titulo' | translate}}
-            <i class="pl-1 fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
+            <i class="fa fa-angle-right"></i>{{"censo.busquedaClientes.Colegiados.titulo" | translate}}</p>
     </div> -->
     <div class="info-limit d-flex justify-content-center align-items-center mb-1">
         <i class="fa fa-info-circle pr-2"></i>
@@ -153,14 +153,15 @@
                         <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                     </div>
                 </ng-template>
-                <p-footer *ngIf="selectedDatos && selectedDatos != ''">
-                    <div class="text-right main-button">
-                        <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
-                        <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button"
-                            icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
-                    </div>
-                </p-footer>
+
             </p-dataTable>
+        </div>
+        <div class="card-footer" *ngIf="selectedDatos && selectedDatos != ''">
+            <div class="text-right main-button">
+                <button pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
+                <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button"
+                    icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+            </div>
         </div>
     </div>
 </div>
