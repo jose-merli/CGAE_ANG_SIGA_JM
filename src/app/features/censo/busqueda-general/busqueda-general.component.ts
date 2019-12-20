@@ -873,7 +873,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       cuerpo.push(id[0]);
       sessionStorage.setItem("usuarioBody", JSON.stringify(cuerpo));
       sessionStorage.removeItem("abrirSociedad");
-      //sessionStorage.setItem("nuevoRegistro", "true");
+      sessionStorage.setItem("nuevoRegistro", "true");
       this.router.navigate(["fichaPersonaJuridica"]);
     } else if (this.isFormador) {
       // ir a ficha de formador
