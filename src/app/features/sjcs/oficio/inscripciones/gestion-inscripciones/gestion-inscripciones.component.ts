@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEm
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
-import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
+import { UpperCasePipe, DatePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect, SortEvent, DataTable } from 'primeng/primeng';
@@ -11,6 +11,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
+import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class TablaInscripcionesComponent implements OnInit {
   msgs;
   partidoJudicial;
   id;
+
   datosInicial = [];
   editMode: boolean = false;
   selectedBefore;
@@ -69,7 +71,8 @@ export class TablaInscripcionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -196,8 +199,8 @@ export class TablaInscripcionesComponent implements OnInit {
 
     return fecha;
   }
+ 
   fillFechaCalendar(event) {
-    this.fechaDeHoy = new Date();
     this.datos.fechaActual = this.transformaFecha(event);
   }
 
@@ -383,12 +386,15 @@ export class TablaInscripcionesComponent implements OnInit {
   
 
   solicitarBaja() {
-    if(this.datos.fechaActual != this.fechaDeHoy){
+    this.fechaDeHoy = new Date();
+    let fechaHoy =this.datepipe.transform(this.fechaDeHoy, 'dd/MM/yyyy');
+    let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')
+    if(fechaActual2 != fechaHoy){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
     }else{
-      let turnosDelete = new TurnosObject();
-      turnosDelete.turnosItem = this.selectedDatos
-      this.sigaServices.post("turnos_eliminateTurnos", turnosDelete).subscribe(
+      let inscripcionBaja = new InscripcionesObject();
+      inscripcionBaja.inscripcionesItem = this.selectedDatos
+      this.sigaServices.post("turnos_eliminateTurnos", inscripcionBaja).subscribe(
         data => {
           this.selectedDatos = [];
           this.searchPartidas.emit(false);
@@ -518,7 +524,13 @@ export class TablaInscripcionesComponent implements OnInit {
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
     } else {
-
+       this.selectedDatos.forEach(element => {
+         if(element.estado == 1 && element.validarinscripciones == "S"){
+           this.disabledSolicitarBaja = false;
+         }else{
+           this.disabledSolicitarBaja = true;
+         }
+       }); 
       if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
@@ -572,6 +584,13 @@ export class TablaInscripcionesComponent implements OnInit {
     }
     if (selectedDatos != undefined) {
       this.numSelected = selectedDatos.length;
+      this.selectedDatos.forEach(element => {
+        if(element.estado == 1 && element.validarinscripciones){
+          this.disabledSolicitarBaja = false;
+        }else{
+          this.disabledSolicitarBaja = true;
+        }
+      }); 
     }
   }
 

@@ -88,13 +88,13 @@ export class InscripcionesComponent implements OnInit {
             element.estadonombre = "Pendiente de Alta";
           }
           if(element.estado == "1"){
-            element.estadonombre = "Confirmada Alta";
+            element.estadonombre = "Alta";
           }
           if(element.estado == "2"){
             element.estadonombre = "Pendiente de Baja";
           }
           if(element.estado == "3"){
-            element.estadonombre = "Confirmada Baja";
+            element.estadonombre = "Baja";
           }
           if(element.estado == "4"){
             element.estadonombre = "Denegada";
