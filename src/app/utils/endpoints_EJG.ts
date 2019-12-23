@@ -29,10 +29,8 @@ export let endpoints_EJG: any = {
     filtrosejg_comboJuzgados: "ejg/filtros-ejg/comboJuzgados",
     filtrosejg_comboPonente: "ejg/filtros-ejg/comboPonente",
     filtrosejg_comboTurno: "ejg/filtros-ejg/comboTurnosTipo",
+    filtrosejg_comboPrestaciones: "ejg/filtros-ejg/comboPrestaciones",
     gestionejg_datosEJG: "ejg/gestion-ejg/datosEJG",
-    filtrosejg_comboPrestaciones: "ejg/filtros-ejg/comboPrestaciones"
-
-
-
+    gestionejg_unidadFamiliarEJG: "ejg/gestion-ejg/unidadFamiliarEJG"
 
 }

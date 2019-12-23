@@ -27,6 +27,16 @@ import { GestionEjgComponent } from './gestion-ejg/gestion-ejg.component';
 import { DatosGeneralesEjgComponent } from './gestion-ejg/datos-generales-ejg/datos-generales-ejg.component';
 import { ServiciosTramitacionComponent } from './gestion-ejg/servicios-tramitacion/servicios-tramitacion.component';
 import { EJGComponent } from './ejg.component';
+import { UnidadFamiliarComponent } from './gestion-ejg/unidad-familiar/unidad-familiar.component';
+import { ExpedientesEconomicosComponent } from './gestion-ejg/expedientes-economicos/expedientes-economicos.component';
+import { RelacionesComponent } from './gestion-ejg/relaciones/relaciones.component';
+import { EstadosComponent } from './gestion-ejg/estados/estados.component';
+import { DocumentacionComponent } from './gestion-ejg/documentacion/documentacion.component';
+import { InformeCalificacionComponent } from './gestion-ejg/informe-calificacion/informe-calificacion.component';
+import { ResolucionComponent } from './gestion-ejg/resolucion/resolucion.component';
+import { ImpugnacionComponent } from './gestion-ejg/impugnacion/impugnacion.component';
+import { RegtelComponent } from './gestion-ejg/regtel/regtel.component';
+import { ComunicacionesComponent } from './gestion-ejg/comunicaciones/comunicaciones.component';
 
 // import { GestionModulosYBasesComponent } from './edicion-modulos/gestion-modulosybasesdecompensacion.component';
 // import { MaestrosModulosComponent } from './busqueda-modulosybasesdecompensacion.component';
@@ -65,7 +75,17 @@ import { EJGComponent } from './ejg.component';
     EJGComponent,
     GestionEjgComponent,
     DatosGeneralesEjgComponent,
-    ServiciosTramitacionComponent
+    ServiciosTramitacionComponent,
+    UnidadFamiliarComponent,
+    ExpedientesEconomicosComponent,
+    RelacionesComponent,
+    EstadosComponent,
+    DocumentacionComponent,
+    InformeCalificacionComponent,
+    ResolucionComponent,
+    ImpugnacionComponent,
+    RegtelComponent,
+    ComunicacionesComponent
   ],
   providers: [
     ImagePipe,

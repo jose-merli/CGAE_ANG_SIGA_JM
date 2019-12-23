@@ -24,7 +24,7 @@ export class GestionEjgComponent implements OnInit {
   icono = "clipboard";
   msgs;
   body: EJGItem = new EJGItem();
-  ejgObject: any;
+  datosFamiliares: any;
   datos;
   // datosItem: EJGItem;
   idEJG;

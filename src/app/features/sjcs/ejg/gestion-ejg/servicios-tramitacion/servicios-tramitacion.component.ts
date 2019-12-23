@@ -49,7 +49,6 @@ export class ServiciosTramitacionComponent implements OnInit {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
-        console.log(this.body);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       }
     } else {

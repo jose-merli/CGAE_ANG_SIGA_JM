@@ -93,7 +93,8 @@ export class TablaEjgComponent implements OnInit {
     }
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
-      this.datosEJG();
+      this.datosEJG(evento.data);
+
 
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
@@ -101,14 +102,28 @@ export class TablaEjgComponent implements OnInit {
       }
     }
   }
-  datosEJG() {
-    this.body = this.persistenceService.getFiltros();
+  datosEJG(selected) {
+    // this.body = this.persistenceService.getFiltros();
     this.progressSpinner = true;
-    this.sigaServices.post("gestionejg_datosEJG", this.body).subscribe(
+    this.sigaServices.post("gestionejg_datosEJG", selected).subscribe(
       n => {
         this.ejgObject = JSON.parse(n.body).ejgItems;
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
+        this.consultaUnidadFamiliar(selected);
+        // this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+  consultaUnidadFamiliar(selected) {
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+      n => {
+        this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
+        this.persistenceService.setFiltrosAux(this.datosFamiliares);
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
       },

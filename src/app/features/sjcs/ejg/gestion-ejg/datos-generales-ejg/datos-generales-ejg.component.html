@@ -131,10 +131,10 @@
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="asociarDes()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="Asociar Designacion"></button>
-        <button (click)="createDes()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
-        <button (click)="addExpSostenibilidad()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="createDes()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-plus" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
+        <button (click)="addExpSostenibilidad()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-plus" iconPos="left"
           label="Añadir Expediente de Sostenibilidad"></button>
-        <button (click)="comunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+        <button (click)="comunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
         <button (click)="save()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="rest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
