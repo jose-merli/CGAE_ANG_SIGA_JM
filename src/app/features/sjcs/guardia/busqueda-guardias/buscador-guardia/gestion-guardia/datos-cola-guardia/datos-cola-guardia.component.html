@@ -13,17 +13,8 @@
           <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.turnos.coladeguardias' | translate }}</label>
         </div>
         <div class="d-flex justify-content-between sub">
-          <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
-            <strong>3 meses</strong>
-          </label>
-          <label>{{'justiciaGratuita.guardia.gestion.tipoDias' | translate}}:
-            <strong> L-S, Fest.- S-D</strong>
-          </label>
-          <label>{{'justiciaGratuita.guardia.gestion.diasSeparacionGuardias' | translate}}:
-            <strong>2</strong>
-          </label>
-          <label>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario' | translate}}:
-            <strong>NO</strong>
+          <label>
+            <strong>{{resumenColaGuardia}}</strong>
           </label>
           <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
         </div>
@@ -65,11 +56,11 @@
   </div>
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
-      <button pButton [disabled]="historico || permisoEscritura" (click)="double()" type="button" icon="fa fa-reply-all" iconPos="left"
-        label="{{ 'general.boton.duplicar' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura || body.porGrupos || duplicarDisabled()" (click)="duplicar()" type="button"
+        icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura" (click)="zuletzt()" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura || true" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-undo-alt" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
         icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>

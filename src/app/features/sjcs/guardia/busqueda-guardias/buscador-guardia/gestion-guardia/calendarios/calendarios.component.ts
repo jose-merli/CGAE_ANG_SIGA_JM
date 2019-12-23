@@ -21,13 +21,21 @@ export class CalendariosComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.modoEdicion) this.getDatosCalendario();
+    this.sigaServices.datosRedy$.subscribe(
+      data => {
+        if (data.body) {
+          data = JSON.parse(data.body)
+          this.modoEdicion = true;
+          this.getDatosCalendario();
+        }
+      });
+
   }
 
 
   getDatosCalendario() {
     this.sigaServices.post(
-      "busquedaGuardias_getCalendario", this.persistenceService.getDatos()).subscribe(
+      "busquedaGuardias_getCalendario", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
           if (data.body)
             this.datos = JSON.parse(data.body);

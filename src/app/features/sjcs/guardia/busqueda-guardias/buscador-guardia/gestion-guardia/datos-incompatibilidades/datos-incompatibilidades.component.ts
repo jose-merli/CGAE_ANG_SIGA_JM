@@ -24,8 +24,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @ViewChild("tabla") tabla;
   datos;
-
-
+  resumenIncompatibilidades = "";
 
 
   constructor(private sigaServices: SigaServices,
@@ -34,7 +33,25 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
+    if (this.persistenceService.getDatos().idGuardia)
+      this.getResumenIncompatibilidades();
 
+  }
+
+  getResumenIncompatibilidades() {
+    this.sigaServices.post(
+      "gestionGuardias_resumenIncompatibilidades", this.persistenceService.getDatos()).subscribe(
+        data => {
+          this.datos = JSON.parse(data.body).guardiaItems;
+          this.resumenIncompatibilidades = this.datos[0].incompatibilidades;
+          this.onChangeRowsPerPages({ value: 10 });
+          this.progressSpinner = false;
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   abreCierraFicha() {
@@ -85,19 +102,22 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   }
 
   getDatosIncompatibilidades() {
-    this.sigaServices.post(
-      "busquedaGuardias_tarjetaIncompatibilidades", this.persistenceService.getDatos().idGuardia).subscribe(
-        data => {
-          this.datos = JSON.parse(data.body).guardiaItems;
+    if (this.persistenceService.getDatos().idGuardia) {
+      this.sigaServices.post(
+        "busquedaGuardias_tarjetaIncompatibilidades", this.persistenceService.getDatos().idGuardia).subscribe(
+          data => {
+            this.datos = JSON.parse(data.body).guardiaItems;
 
-          this.onChangeRowsPerPages({ value: 10 });
-          this.progressSpinner = false;
+            this.onChangeRowsPerPages({ value: 10 });
+            this.progressSpinner = false;
 
-        },
-        err => {
-          console.log(err);
-        }
-      )
+          },
+          err => {
+            console.log(err);
+          }
+        );
+
+    }
   }
   clear() { }
 }

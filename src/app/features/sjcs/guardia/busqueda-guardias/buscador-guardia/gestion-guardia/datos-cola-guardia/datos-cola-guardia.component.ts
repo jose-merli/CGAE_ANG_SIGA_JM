@@ -27,6 +27,8 @@ export class DatosColaGuardiaComponent implements OnInit {
   progressSpinner: boolean = false;
   updateInscripciones = [];
   selectionMode = "single";
+  resumenColaGuardia = "";
+
 
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
@@ -119,7 +121,7 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   getColaGuardia() {
     if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
-      this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porqie viene del back.
+      this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
     this.progressSpinner = true;
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
@@ -130,7 +132,10 @@ export class DatosColaGuardiaComponent implements OnInit {
             return it;
           });
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-
+          this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe;
+          if (this.datosInicial.length > 0)
+            this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
+              + " " + this.datos.length, " inscritos");
           this.progressSpinner = false;
 
         },
@@ -146,6 +151,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     //  this.getColaGuardia();
   }
   zuletzt() {
+    // if (this.permisoEscritura && this.historico && this.tabla.selectedDatos) {
     this.progressSpinner = true;
     this.body.idPersonaUltimo = this.tabla.selectedDatos.idPersona;
     this.sigaService.post(
@@ -157,8 +163,23 @@ export class DatosColaGuardiaComponent implements OnInit {
           console.log(err);
           this.progressSpinner = false;
         }
-      )
+      );
+    // }
   }
 
+  duplicar() {
+
+  }
+
+  rest() {
+    if (this.datosInicial && this.datos)
+      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+
+  }
+
+  duplicarDisabled() {
+    if (this.tabla.selectedDatos) return false;
+    return true;
+  }
   clear() { }
 }

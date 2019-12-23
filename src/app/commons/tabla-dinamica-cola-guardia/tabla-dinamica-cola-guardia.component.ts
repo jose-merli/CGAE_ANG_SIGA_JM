@@ -35,14 +35,47 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
   sube(selected) {
     let index = this.datos.indexOf(selected);
-    if (this.porGrupos) {
+    if (this.porGrupos) { // MOVIMIENTO CUANDO ESTAN AGRUPADOS
       let seMueve = this.datos.filter(it => selected.numeroGrupo == it.numeroGrupo); // Los que se desplazan
       let primero = this.datos.indexOf(seMueve[0]);
       if (primero != 0) {
         let primeroMovido = this.datos[primero - 1];
         let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // Los que se mueven
         this.datos = this.datos.slice(0, this.datos.indexOf(esMovido[0])).concat(seMueve).concat(esMovido).concat(this.datos.slice(this.datos.indexOf(seMueve[seMueve.length - 1]) + 1));
+
+        if (this.datos.indexOf(esMovido[0]) != 0) {// MOVIMIENTO CUANDO NO IMPLICA AL PRIMER GRUPO
+          let valorG = +this.datos[this.datos.indexOf(seMueve[0]) - 1].numeroGrupo + 1
+          seMueve = seMueve.map(it => {
+            it.numeroGrupo = valorG.toString();
+            return it;
+          })
+          esMovido = esMovido.map(it => {
+            it.numeroGrupo = (valorG + 1).toString();
+            return it;
+          })
+        }
+        else if (esMovido[0].numeroGrupo == "1") { // MOVIMIENTO DEL PRIMER GRUPO CON GRUPO 1
+          esMovido = esMovido.map(it => {
+            it.numeroGrupo = "2";
+            return it;
+          });
+          seMueve = seMueve.map(it => {
+            it.numeroGrupo = "1";
+            return it;
+          });
+        } else if (esMovido[0].numeroGrupo == "2") {
+          esMovido = esMovido.map(it => {
+            it.numeroGrupo = "3";
+            return it;
+          });
+          seMueve = seMueve.map(it => {
+            it.numeroGrupo = "2";
+            return it;
+          });
+        }
+
       }
+
     } else {
       if (index != 0) {
         [this.datos[index], this.datos[index - 1]] = [this.datos[index - 1], this.datos[index]];
@@ -70,14 +103,27 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
   baja(selected) {
     let index = this.datos.indexOf(selected);
-    if (this.porGrupos) {
+    if (this.porGrupos) { // MOVIMIENTO CUANDO ESTAN AGRUPADOS
       let seMueve = this.datos.filter(it => selected.numeroGrupo == it.numeroGrupo); // Los que se desplazan
       let ultimo = this.datos.indexOf(seMueve[seMueve.length - 1]);
       if (ultimo != this.datos.length - 1) {
         let primeroMovido = this.datos[ultimo + 1];
         let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // Los que se mueven
         this.datos = this.datos.slice(0, this.datos.indexOf(seMueve[0])).concat(esMovido).concat(seMueve).concat(this.datos.slice(this.datos.indexOf(esMovido[esMovido.length - 1]) + 1));
+
+        if (this.datos.indexOf(esMovido[esMovido.length - 1]) != (this.datos.length - 1)) {
+          let valorG = +this.datos[this.datos.indexOf(esMovido[0]) - 1].numeroGrupo + 1
+          seMueve = seMueve.map(it => {
+            it.numeroGrupo = (valorG + 1).toString();
+            return it;
+          })
+          esMovido = esMovido.map(it => {
+            it.numeroGrupo = valorG.toString();
+            return it;
+          })
+        }
       }
+
     } else {
       if (index != this.datos.length - 1) {
         [this.datos[index], this.datos[index + 1]] = [this.datos[index + 1], this.datos[index]];
