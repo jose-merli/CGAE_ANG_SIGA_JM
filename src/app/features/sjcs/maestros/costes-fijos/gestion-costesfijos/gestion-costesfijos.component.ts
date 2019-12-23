@@ -177,6 +177,17 @@ export class GestionCostesfijosComponent implements OnInit {
       );
   }
 
+  checkSearchHistorical() {
+
+    if ((this.historico && this.nuevo) || ((this.nuevo || this.editMode) && !this.historico)) {
+      this.msgs = this.commonsService.checkPermisoAccion();
+    } else {
+      this.searchHistorical();
+    }
+
+  }
+
+
   searchHistorical() {
     this.historico = !this.historico;
     if (this.historico) {
@@ -208,6 +219,22 @@ export class GestionCostesfijosComponent implements OnInit {
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
 
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisoEscritura || this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -232,6 +259,22 @@ export class GestionCostesfijosComponent implements OnInit {
       }
     });
   }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+
   save() {
     this.progressSpinner = true;
     let url = "";
@@ -330,6 +373,21 @@ export class GestionCostesfijosComponent implements OnInit {
       }
     );
 
+  }
+
+  checkPermisosNewCosteFijo() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.selectMultiple || this.selectAll || this.nuevo || this.historico || this.editMode || !this.permisoEscritura) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newCosteFijo();
+      }
+    }
   }
 
   newCosteFijo() {
@@ -553,6 +611,21 @@ export class GestionCostesfijosComponent implements OnInit {
     );
   }
 
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0))) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
+  }
+
   activate() {
     this.progressSpinner = true;
     let costesFijosActivate = new CosteFijoObject();
@@ -581,6 +654,20 @@ export class GestionCostesfijosComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (this.historico || this.selectedDatos == [] || !this.permisoEscritura) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.rest();
+      }
+    }
+  }
 
   rest() {
     if (this.datosInicial != undefined) {

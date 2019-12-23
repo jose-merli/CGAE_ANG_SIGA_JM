@@ -4,6 +4,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SpinnerModule } from 'primeng/spinner';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-edicion-modulos',
@@ -32,7 +33,8 @@ export class EdicionModulosComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.textFilter = this.translateService.instant("general.boton.seleccionar");
@@ -257,6 +259,17 @@ export class EdicionModulosComponent implements OnInit {
     }
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(!this.modulosItem.historico, this.modulosItem.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
+
   rest() {
     if (this.modoEdicion) {
       if (this.modulosItem.idjurisdiccion != undefined) {
@@ -269,6 +282,20 @@ export class EdicionModulosComponent implements OnInit {
       this.arreglaChecks();
     } else {
       this.modulosItem = new ModulosItem();
+    }
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(!this.modulosItem.historico, this.modulosItem.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
     }
   }
 

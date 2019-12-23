@@ -3,6 +3,7 @@ import { SigaServices } from '../../../../../../../_services/siga.service';
 import { FundamentoResolucionItem } from '../../../../../../../models/sjcs/FundamentoResolucionItem';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-generales-fundamentos',
@@ -25,7 +26,8 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
   @Input() body;
   @Input() modoEdicion;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private persistenceService: PersistenceService) { }
+  constructor(private sigaServices: SigaServices, private translateService: TranslateService,
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -58,6 +60,20 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if(this.disabledSave()){
+        this.msgs = this.commonsService.checkPermisoAccion();
+      }else{
+        this.save();
+      }
+    }
   }
 
   save() {
@@ -119,6 +135,16 @@ export class DatosGeneralesFundamentosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
   }
 
   rest() {

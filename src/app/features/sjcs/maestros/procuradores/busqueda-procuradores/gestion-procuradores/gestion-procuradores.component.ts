@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { DatosGeneralesProcuradoresComponent } from './datos-generales-procuradores/datos-generales-procuradores.component';
 import { DatosDireccionesProcuradoresComponent } from './datos-direcciones-procuradores/datos-direcciones-procuradores.component';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-gestion-procuradores',
@@ -31,7 +32,7 @@ export class GestionProcuradoresComponent implements OnInit {
   @ViewChild(DatosDireccionesProcuradoresComponent) direcciones;
 
   constructor(private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -69,6 +70,20 @@ export class GestionProcuradoresComponent implements OnInit {
   modoEdicionSend(event) {
     this.modoEdicion = event.modoEdicion;
     this.datos.idProcurador = event.idProcurador;
+  }
+
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
   }
 
   save() {
@@ -142,10 +157,11 @@ export class GestionProcuradoresComponent implements OnInit {
 
 
     if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.apellido1 != undefined &&
-      this.generales.body.apellido1 != null) && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
+      this.generales.body.apellido1 != null && this.generales.body.nColegiado != undefined && this.generales.body.nColegiado != null)
+      && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
       this.permisoEscritura && ((JSON.stringify(this.direcciones.body) != JSON.stringify(this.direcciones.bodyInicial))
         || (JSON.stringify(this.generales.body) != JSON.stringify(this.generales.bodyInicial)))) {
-      if (this.generales.body.apellido1.trim() != "" && this.generales.body.nombre.trim() != "") {
+      if (this.generales.body.apellido1.trim() != "" && this.generales.body.nombre.trim() != "" && this.generales.body.nColegiado.trim()) {
         return false;
       } else { return true; }
 
@@ -154,14 +170,40 @@ export class GestionProcuradoresComponent implements OnInit {
     }
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+
   rest() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.direcciones.avisoMail = false
-    this.direcciones.edicionEmail = true
+    this.validateEmail();
     this.direcciones.validDir = true
     this.direcciones.tlf1Valido = true
     this.direcciones.tlf2Valido = true
     this.direcciones.faxValido = true
+  }
+
+
+  validateEmail() {
+    if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
+      this.direcciones.emailValido = true;
+      this.direcciones.avisoMail = false;
+    } else {
+
+      if (this.body.email != null && this.body.email != '' && this.body.email != undefined) {
+        this.direcciones.emailValido = false;
+        this.direcciones.avisoMail = true;
+      } else {
+        this.direcciones.emailValido = true;
+        this.direcciones.avisoMail = false;
+      }
+    }
   }
 
 

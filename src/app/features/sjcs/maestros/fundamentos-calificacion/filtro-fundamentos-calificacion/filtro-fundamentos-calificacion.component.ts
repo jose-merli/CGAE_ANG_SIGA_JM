@@ -61,6 +61,16 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
     );
   }
 
+  checkPermisosNewFundamento() {
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newFundamento();
+    }
+  }
+
   newFundamento() {
     this.persistenceService.clearDatos();
     this.router.navigate(["/gestionFundamentos"]);

@@ -42,7 +42,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 	validDir = true;
 
 	avisoMail: boolean = false;
-	emailValido: boolean = false;
+	emailValido: boolean = true;
 	tlf1Valido: boolean = true;
 	tlf2Valido: boolean = true;
 	faxValido: boolean = true;
@@ -54,7 +54,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		private persistenceService: PersistenceService,
 		private sigaServices: SigaServices,
 		private translateService: TranslateService,
-		private commonsServices: CommonsService
+		private commonsService: CommonsService
 	) { }
 
 	ngOnInit() {
@@ -64,16 +64,10 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 
 		if (this.modoEdicion) {
 			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-			if (this.bodyInicial.email != null && this.bodyInicial.email != undefined) this.emailValido = true;
+			// if (this.bodyInicial.email != null && this.bodyInicial.email != undefined) this.emailValido = true;
 
 			if (this.bodyInicial.idProvincia != null && this.bodyInicial.idProvincia != undefined)
 				this.isDisabledPoblacion = false;
-
-			if (this.body.email != undefined && this.body.email != '') {
-				this.edicionEmail = false;
-			} else {
-				this.edicionEmail = true;
-			}
 
 			if (this.body != undefined && this.body.nombrePoblacion != null) {
 				this.getComboPoblacion(this.body.nombrePoblacion);
@@ -81,10 +75,13 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 			} else {
 				this.progressSpinner = false;
 			}
+
+			this.validateEmail();
+
 		} else {
 			this.body = new ProcuradoresItem();
 			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-			this.edicionEmail = true;
+
 		}
 	}
 
@@ -108,7 +105,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 		this.sigaServices.get('busquedaComisarias_provinces').subscribe(
 			(n) => {
 				this.comboProvincias = n.combooItems;
-				this.commonsServices.arregloTildesCombo(this.comboProvincias);
+				this.commonsService.arregloTildesCombo(this.comboProvincias);
 				this.progressSpinner = false;
 			},
 			(err) => {
@@ -129,6 +126,25 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 			this.isDisabledPoblacion = true;
 		}
 		this.disabledSave();
+	}
+
+	validateEmail() {
+		if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
+			this.emailValido = true;
+			this.avisoMail = false;
+		} else {
+
+			if (this.body.email != null && this.body.email != '' && this.body.email != undefined) {
+				this.emailValido = false;
+				this.avisoMail = true;
+			} else {
+				this.emailValido = true;
+				this.avisoMail = false;
+			}
+
+			// this.avisoMail = false;
+			// if (this.body.email != null && this.body.email != '') this.avisoMail = true;
+		}
 	}
 
 	onChangePoblacion() {
@@ -172,6 +188,7 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 				(n) => {
 					this.isDisabledPoblacion = false;
 					this.comboPoblacion = n.combooItems;
+					this.commonsService.arregloTildesCombo(this.comboPoblacion);
 					this.progressSpinner = false;
 				},
 				(error) => {
@@ -223,37 +240,46 @@ export class DatosDireccionesProcuradoresComponent implements OnInit {
 
 	openOutlook(dato) {
 		let correo = dato.email;
-		this.commonsServices.openOutlook(correo);
+		this.commonsService.openOutlook(correo);
 	}
 
 	abreCierraFicha() {
 		this.openFicha = !this.openFicha;
 	}
 
+
 	changeEmail() {
-		if (this.commonsServices.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
+		if (this.commonsService.validateEmail(this.body.email) && this.body.email != null && this.body.email != '') {
 			this.emailValido = true;
 			this.avisoMail = false;
 		} else {
-			this.emailValido = false;
-			this.avisoMail = false;
-			if (this.body.email != null && this.body.email != '') this.avisoMail = true;
+
+			if (this.body.email != null && this.body.email != '' && this.body.email != undefined) {
+				this.emailValido = false;
+				this.avisoMail = true;
+			} else {
+				this.emailValido = true;
+				this.avisoMail = false;
+			}
+
+			// this.avisoMail = false;
+			// if (this.body.email != null && this.body.email != '') this.avisoMail = true;
 		}
 		this.disabledSave();
 	}
 
 	changeTelefono1() {
-		this.tlf1Valido = this.commonsServices.validateTelefono(this.body.telefono1);
+		this.tlf1Valido = this.commonsService.validateTelefono(this.body.telefono1);
 		this.disabledSave();
 	}
 
 	changeTelefono2() {
-		this.tlf2Valido = this.commonsServices.validateTelefono(this.body.telefono2);
+		this.tlf2Valido = this.commonsService.validateTelefono(this.body.telefono2);
 		this.disabledSave();
 	}
 
 	changeFax() {
-		this.faxValido = this.commonsServices.validateFax(this.body.fax1);
+		this.faxValido = this.commonsService.validateFax(this.body.fax1);
 		this.disabledSave();
 	}
 
