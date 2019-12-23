@@ -75,7 +75,11 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			if (undefined!=this.persistenceService.getHistorico()) {
 			  this.buscarFacturacion.emit(this.persistenceService.getHistorico());
 			}else {
-			  this.isBuscar();
+			  if(undefined!=this.filtros.idEstado){
+				this.isBuscar();
+			  }else{
+				this.filtros = new FacturacionItem();
+			  }
 			}
 		  } else {
 			this.filtros = new FacturacionItem();

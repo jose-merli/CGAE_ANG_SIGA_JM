@@ -7,7 +7,7 @@
   </div>
   
   <app-datos-facturacion [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
-  <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos"></app-conceptos-facturacion>
+  <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada"></app-conceptos-facturacion>
 
   <div class="text-right main-button">
     <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
