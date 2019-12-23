@@ -139,7 +139,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   seleccionaFila(evento){
-    if(undefined!=evento.data.idConcepto && undefined!=evento.data.idGrupo && this.idEstadoFacturacion=='10'){
+    if(undefined!=evento.data.idConcepto && undefined!=evento.data.idGrupo && this.idEstadoFacturacion=='10' && !this.selectMultiple){
       this.body.forEach(element => {
         element.editable = false;
         
@@ -156,7 +156,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       this.seleccion = true;
       this.modificaConcepto=true;
       evento.data.editable=true;
-    }    
+    }
   }
 
   disabled(){
@@ -168,16 +168,52 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   eliminar(){
-
+    if(!this.cerrada && undefined!=this.selectedDatos){      
+      this.callServiceEliminar();
+    }
   }
 
   callServiceEliminar(){
+    this.progressSpinner=true;
 
+    if(undefined!=this.selectedDatos && this.selectedDatos.length>0){
+      this.sigaService.post("facturacionsjcs_deleteConceptosFac", this.selectedDatos).subscribe(
+        data => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+
+          this.selectedDatos=[];
+          this.selectMultiple=false;
+          this.selectAll=false;
+          this.idGrupo=undefined;
+          this.idConcepto=undefined;
+          this.cargaDatos();
+          this.idConceptoOld=undefined;
+          this.idGrupoOld=undefined;
+        },
+        err => {
+          if (null!=err.error && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   disabledEliminar(){
     if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      return false;
+      if(!this.nuevoConcepto && !this.modificaConcepto && (this.selectMultiple || this.selectAll)){
+        return false;
+      }else{
+        return true;
+      }
     }else{
       return true;
     }
@@ -289,6 +325,10 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
     if (undefined==this.body || null==this.body || this.body.length<1) {
       this.body = [];
+    }else{
+      this.body.forEach(element => {
+        element.editable = false;
+      });
     }
 
     let concepto = {
@@ -310,7 +350,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   disabledNuevo(){
     if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      if(this.nuevoConcepto || this.modificaConcepto){
+      if(this.nuevoConcepto || this.modificaConcepto || this.selectMultiple || this.selectAll){
         return true;
       }else{
         return false;
@@ -341,11 +381,10 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    //this.tabla.reset();
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
+    if (this.selectAll === true && !this.modificaConcepto && !this.nuevoConcepto) {
       this.selectMultiple = false;
       this.selectedDatos = this.body;
       this.numSelected = this.body.length;
@@ -356,7 +395,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   isSelectMultiple() {
-    if (this.permisos && !this.disabled()) {
+    if (this.permisos && !this.disabled() && !this.modificaConcepto && !this.nuevoConcepto) {
       this.selectMultiple = !this.selectMultiple;
       
       if (!this.selectMultiple) {
