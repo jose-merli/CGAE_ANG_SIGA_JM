@@ -67,8 +67,7 @@
                 {{"censo.datosDireccion.literal.provincia" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                disabled="true" [showClear]="true">
+                [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" disabled [showClear]="true">
               </p-dropdown>
             </div>
 
@@ -122,7 +121,7 @@
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
               <div *ngIf="edicionEmail" class="row">
-                <div class="form-row col-9 mr-4 pr-0">
+                <div class="form-row col-10 mr-1 pr-0">
                   <input type="text" [disabled]="historico || !permisoEscritura" maxlength="50" pInputText [(ngModel)]="body.email" (input)="changeEmail()"
                     style="width: 100%" />
                 </div>
@@ -134,7 +133,7 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
               </div>
               <div *ngIf="!edicionEmail" class="row">
-                <div class="col-3 mr-4 pr-0">
+                <div class="col-9 mr-4 pr-0">
                   <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
                 </div>
                 <div>
@@ -170,9 +169,10 @@
 
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

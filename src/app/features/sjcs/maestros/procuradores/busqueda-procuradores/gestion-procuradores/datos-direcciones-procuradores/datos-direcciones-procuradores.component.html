@@ -58,8 +58,7 @@
                 {{"censo.datosDireccion.literal.provincia" | translate}}
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}"
-                disabled="true" [showClear]="true">
+                [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" disabled [showClear]="true">
               </p-dropdown>
             </div>
 
@@ -79,8 +78,8 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 1
               </label>
-              <input (keypress)="numberOnly($event)" type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
-                pInputText>
+              <input (keypress)="numberOnly($event)" type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()"
+                [disabled]="historico || !permisoEscritura" pInputText>
               <div *ngIf="!tlf1Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
@@ -90,8 +89,8 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 2
               </label>
-              <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.telefono2"
-                (input)="changeTelefono2()" pInputText>
+              <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
+                [(ngModel)]="body.telefono2" (input)="changeTelefono2()" pInputText>
               <div *ngIf="!tlf2Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
@@ -101,8 +100,8 @@
               <label>
                 {{"censo.ws.literal.fax" | translate}}
               </label>
-              <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.fax1"
-                (input)="changeFax()" pInputText>
+              <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
+                [(ngModel)]="body.fax1" (input)="changeFax()" pInputText>
               <div *ngIf="!faxValido">
                 <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
               </div>
@@ -113,7 +112,7 @@
                 {{"censo.datosDireccion.literal.correo" | translate}}
               </label>
               <div *ngIf="edicionEmail" class="row">
-                <div class="col-9 mr-4 pr-0">
+                <div class="col-10 mr-3 pr-0">
                   <input type="text" maxlength="100" [disabled]="historico || !permisoEscritura" pInputText [(ngModel)]="body.email" (ngModelChange)="changeEmail()"
                     style="width: 100%" />
                 </div>
@@ -125,7 +124,7 @@
                 <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
               </div>
               <div *ngIf="!edicionEmail" class="row">
-                <div class="col-6 mr-4 pr-0">
+                <div class="col-10 mr-3 pr-0">
                   <a [href]="'mailto:'+body.email" target="_blank">{{body.email}}</a>
                 </div>
                 <div>

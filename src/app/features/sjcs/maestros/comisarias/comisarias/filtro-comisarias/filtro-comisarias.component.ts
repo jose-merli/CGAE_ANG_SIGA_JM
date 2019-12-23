@@ -34,7 +34,7 @@ export class FiltroComisariasComponent implements OnInit {
   @Output() isOpen = new EventEmitter<boolean>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonServices: CommonsService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -62,7 +62,7 @@ export class FiltroComisariasComponent implements OnInit {
     this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
       n => {
         this.comboProvincias = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboProvincias);
+        this.commonsService.arregloTildesCombo(this.comboProvincias);
       },
       err => {
         console.log(err);
@@ -108,20 +108,8 @@ export class FiltroComisariasComponent implements OnInit {
         n => {
           this.isDisabledPoblacion = false;
           this.comboPoblacion = n.combooItems;
-          this.comboPoblacion.map(e => {
-            let accents =
-              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-            let accentsOut =
-              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-            let i;
-            let x;
-            for (i = 0; i < e.label.length; i++) {
-              if ((x = accents.indexOf(e.label[i])) != -1) {
-                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-                return e.labelSinTilde;
-              }
-            }
-          });
+          this.commonsService.arregloTildesCombo(this.comboPoblacion);
+
         },
         error => { },
         () => { }
@@ -141,6 +129,16 @@ export class FiltroComisariasComponent implements OnInit {
       this.isOpen.emit(false)
     }
 
+  }
+
+  checkPermisosNuevo() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.nuevo();
+    }
   }
 
   nuevo() {

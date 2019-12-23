@@ -4,6 +4,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { KEY_CODE } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { Router } from '@angular/router';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtros-fundamentosresolucion',
@@ -23,7 +24,8 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   @Output() isOpen = new EventEmitter<boolean>();
   @Input() permisoEscritura;
 
-  constructor(private persistenceService: PersistenceService, private translateService: TranslateService, private router: Router) { }
+  constructor(private persistenceService: PersistenceService, private translateService: TranslateService,
+    private router: Router, private commonsService: CommonsService) { }
 
   ngOnInit() {
 
@@ -47,6 +49,16 @@ export class FiltrosFundamentosresolucionComponent implements OnInit {
   search() {
     this.persistenceService.setFiltros(this.filtros);
     this.isOpen.emit(false)
+  }
+
+  checkPermisosNewFundamentoResolucion() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newFundamentoResolucion();
+    }
   }
 
   newFundamentoResolucion() {

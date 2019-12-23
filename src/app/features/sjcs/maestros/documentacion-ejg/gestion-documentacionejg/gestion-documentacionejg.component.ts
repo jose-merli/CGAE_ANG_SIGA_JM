@@ -49,14 +49,10 @@ export class GestionDocumentacionejgComponent implements OnInit {
 
   ngOnInit() {
     // this.getFichasPosibles();
-    this.route.queryParams
-      .subscribe(params => {
-        this.idTipoDoc = params.idTipoDoc
-        console.log(params);
-      });
     this.dato = this.persistenceService.getDatos();
     if (this.dato != undefined || this.dato != null) {
-      this.searchDocumentos(this.persistenceService.getHistorico());
+      //De un principio siempre se recarga la tabla sin historico
+      this.searchDocumentos(false);
       this.modoEdicion = true;
       if (this.dato.fechabaja != null) {
         this.modoEdicion = true;
@@ -71,11 +67,13 @@ export class GestionDocumentacionejgComponent implements OnInit {
   }
 
   searchDocumentos(event) {
-    this.filtros = this.persistenceService.getDatos();
-    this.idTipoDoc = this.filtros.idTipoDocumento;
-    this.filtros.historico = this.persistenceService.getHistorico();
+    let datos = this.persistenceService.getDatos();
+    this.idTipoDoc = datos.idTipoDocumento;
+    this.filtros = new DocumentacionEjgItem();
+    this.filtros.idTipoDocumento = this.idTipoDoc;
+    this.filtros.historico = event;
 
-    this.persistenceService.setHistorico(event);
+    // this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
     this.sigaServices.post("busquedaDocumentacionEjg_searchDocumentos", this.filtros).subscribe(
       n => {

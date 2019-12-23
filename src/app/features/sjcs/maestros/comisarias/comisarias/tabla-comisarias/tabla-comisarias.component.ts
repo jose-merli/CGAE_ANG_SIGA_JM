@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { PrisionObject } from '../../../../../../models/sjcs/PrisionObject';
 import { ComisariaObject } from '../../../../../../models/sjcs/ComisariaObject';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-comisarias',
@@ -46,7 +47,8 @@ export class TablaComisariasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -63,6 +65,22 @@ export class TablaComisariasComponent implements OnInit {
     }
 
   }
+
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -87,6 +105,7 @@ export class TablaComisariasComponent implements OnInit {
       }
     });
   }
+
   isSelectMultiple() {
     this.selectAll = false;
     if (this.permisoEscritura) {
@@ -113,7 +132,6 @@ export class TablaComisariasComponent implements OnInit {
     }
 
   }
-
 
   openTab(evento) {
 
@@ -165,6 +183,20 @@ export class TablaComisariasComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkPermisosActivate() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.activate();
+      }
+    }
   }
 
   activate() {

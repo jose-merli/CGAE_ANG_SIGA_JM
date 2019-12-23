@@ -7,6 +7,7 @@ import { ZonasObject } from '../../../../../../models/sjcs/ZonasObject';
 import { findIndex } from 'rxjs/operators';
 import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-zona',
@@ -43,6 +44,8 @@ export class ZonaComponent implements OnInit {
   overlayVisible: boolean = false;
   selectionMode: string = "single";
 
+  permisoEscritura: boolean = true;
+
   //Resultados de la busqueda
   @Input() idZona;
   //Resultados de la busqueda
@@ -52,10 +55,17 @@ export class ZonaComponent implements OnInit {
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService, private confirmationService: ConfirmationService
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private upperCasePipe: UpperCasePipe, private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService, private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos()
+    }
+
     this.getCols();
     this.getComboPartidosJudiciales();
 
@@ -168,6 +178,19 @@ export class ZonaComponent implements OnInit {
 
   }
 
+  checkPermisosSave() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
 
   save() {
     this.progressSpinner = true;
@@ -190,13 +213,10 @@ export class ZonaComponent implements OnInit {
       })
       this.callSaveZoneService(url);
     }
-
-
   }
 
 
   callSaveZoneService(url) {
-
 
     this.sigaServices.post(url, this.body).subscribe(
       data => {
@@ -226,6 +246,20 @@ export class ZonaComponent implements OnInit {
       }
     );
 
+  }
+
+  checkPermisosNewZone() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || this.selectMultiple || this.selectAll || this.nuevo || this.historico) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.newZone();
+      }
+    }
   }
 
   newZone() {
@@ -423,6 +457,20 @@ export class ZonaComponent implements OnInit {
 
   }
 
+  checkPermisosDelete(selectedDatos) {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisoEscritura || (!this.selectMultiple && !this.selectAll) || selectedDatos.length == 0 || this.nuevo || this.historico) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete(selectedDatos);
+      }
+    }
+  }
+
   confirmDelete(selectedDatos) {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -476,6 +524,19 @@ export class ZonaComponent implements OnInit {
     );
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.updateZonas.length == 0 && !this.nuevo) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.rest();
+      }
+    }
+  }
 
   rest() {
     if (this.datosInicial != undefined) {
@@ -555,20 +616,22 @@ export class ZonaComponent implements OnInit {
 
   isSelectMultiple() {
 
-    if (!this.nuevo) {
-      this.selectMultiple = !this.selectMultiple;
+    if (this.permisoEscritura) {
+      if (!this.nuevo) {
+        this.selectMultiple = !this.selectMultiple;
 
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "single";
+        if (!this.selectMultiple) {
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectionMode = "single";
 
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-        this.selectionMode = "multiple";
+        } else {
+          this.selectAll = false;
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.selectionMode = "multiple";
 
+        }
       }
     }
 

@@ -52,6 +52,7 @@ export class PartidasPresupuestarias implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
+
   checkFilters() {
     // if (
     //   (this.filtros.nombrepartida == null || this.filtros.nombrepartida.trim() == "" || this.filtros.nombrepartida.trim().length < 3) &&
