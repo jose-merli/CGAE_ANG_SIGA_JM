@@ -54,8 +54,7 @@ export class BusquedaGeneralSJCSComponent implements OnInit {
 
   search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
-    this.filtros.filtroAux.historico = event;
-    this.persistenceService.setHistorico(event);
+
     this.progressSpinner = true;
     this.sigaServices.post("componenteGeneralJG_busquedaGeneralSJCS", this.filtros.filtroAux).subscribe(
       n => {
@@ -82,6 +81,7 @@ export class BusquedaGeneralSJCSComponent implements OnInit {
       this.tabla.selectAll = false;
     }
   }
+
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({

@@ -54,7 +54,8 @@
     </p>
 
     <div *ngIf="showDatosColegiado" class="module vista-simple">
-      <app-busqueda-colegiado-express [disabled]="esColegiado" [nColegiado]="filtros.ncolegiado" [apellidosNombre]="filtros.apellidosNombre"></app-busqueda-colegiado-express>
+      <app-busqueda-colegiado-express [disabled]="esColegiado" [nColegiado]="filtros.ncolegiado" [apellidosNombre]="filtros.apellidosNombre"
+        (idPersona)="recuperarColegiado($event)"></app-busqueda-colegiado-express>
     </div>
   </div>
   <div class="card-footer">
@@ -62,8 +63,6 @@
     <div class="text-right main-button">
       <button pButton (click)="clearFilters()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
-      <!-- <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
-      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button> -->
     </div>
   </div>
 </div>

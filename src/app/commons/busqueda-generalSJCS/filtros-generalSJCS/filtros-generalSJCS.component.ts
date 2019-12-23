@@ -19,7 +19,6 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
   msgs = [];
 
   filtroAux: any;
-  historico: boolean = false;
   textSelected: String = "{0} perfiles seleccionados";
 
   filtros: BusquedaGeneralSJCSItem = new BusquedaGeneralSJCSItem();
@@ -30,7 +29,6 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
   comboEstadoColegial: any[];
 
   permisoEscritura: boolean = true;
-  @ViewChild("prueba") prueba;
   textFilter = "Elegir";
 
   comboProvincias = [];
@@ -52,10 +50,7 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if (this.persistenceService.getHistorico() != undefined) {
-        this.historico = this.persistenceService.getHistorico();
-      }
-      this.isOpen.emit(this.historico)
+      this.isOpen.emit(false)
 
     } else {
       this.filtros = new BusquedaGeneralSJCSItem();
