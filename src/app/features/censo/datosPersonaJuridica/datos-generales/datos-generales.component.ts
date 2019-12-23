@@ -411,7 +411,10 @@ export class DatosGenerales implements OnInit {
         this.body.idPersona = this.idPersona;
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
-        this.body.etiquetas = this.createItems;
+        if (this.createItems.length != 0) {
+          this.body.etiquetas = this.createItems;
+        }
+
         // this.body.motivo = "registro creado";
 
         console.log("BODY", this.body);
