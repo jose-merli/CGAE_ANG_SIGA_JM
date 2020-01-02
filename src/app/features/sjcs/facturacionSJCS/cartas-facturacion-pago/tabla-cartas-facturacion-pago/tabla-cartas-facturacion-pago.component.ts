@@ -35,14 +35,14 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "ncolegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado", width: "20%" },
+      { field: "ncolegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado", width: "10%" },
       { field: "nombreCol", header: "justiciaGratuita.justiciables.literal.colegiado", width: "20%" },
       { field: "nombreFac", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion", width: "20%" },
-      { field: "importeOficio", header: "menu.justiciaGratuita.Turnos", width: "20%" },
-      { field: "importeGuardia", header: "menu.justiciaGratuita.guardia.guardias", width: "20%" },
-      { field: "importeEjg", header: "justiciaGratuita.ejg.datosGenerales.EJG", width: "20%" },
-      { field: "importeSoj", header: "censo.busquedaClientes.noResidente", width: "20%" },
-      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "20%" }
+      { field: "importeOficio", header: "menu.justiciaGratuita.Turnos", width: "10%" },
+      { field: "importeGuardia", header: "menu.justiciaGratuita.guardia.guardias", width: "10%" },
+      { field: "importeEjg", header: "justiciaGratuita.ejg.datosGenerales.EJG", width: "10%" },
+      { field: "importeSoj", header: "censo.busquedaClientes.noResidente", width: "10%" },
+      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" }
 
     ];
 

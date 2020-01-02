@@ -13,6 +13,7 @@ export class PersistenceService {
     private historicoName: string = "historico";
     private permisosName: string = "permisos";
     private fichasPosibles: string = "fichasPosibles";
+    private datosBusquedaGeneralSJCS: string = "datosBusquedaGeneralSJCS";
 
     constructor() { }
 
@@ -133,6 +134,20 @@ export class PersistenceService {
         sessionStorage.removeItem(this.fichasPosibles);
     }
 
+    setDatosBusquedaGeneralSJCS(data: any) {
+        sessionStorage.setItem(this.datosBusquedaGeneralSJCS, JSON.stringify(data));
+    }
+
+    getDatosBusquedaGeneralSJCS() {
+        let data = sessionStorage.getItem(this.datosBusquedaGeneralSJCS);
+        return JSON.parse(data);
+    }
+
+    clearDatosBusquedaGeneralSJCS() {
+        sessionStorage.removeItem(this.datosBusquedaGeneralSJCS);
+    }
+
+
 
     clearPersistence() {
         this.clearFiltros();
@@ -144,6 +159,7 @@ export class PersistenceService {
         this.clearBody();
         this.clearBodyAux();
         this.clearPaginacion();
+        this.clearDatosBusquedaGeneralSJCS();
     }
 
 }

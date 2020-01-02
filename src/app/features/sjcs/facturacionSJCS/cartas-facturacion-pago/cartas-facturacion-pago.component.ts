@@ -93,6 +93,33 @@ export class CartasFacturacionPagoComponent implements OnInit {
 
   searchPago() {
 
+    // this.progressSpinner = true;
+
+    // this.sigaServices.post("facturacionsjcs_buscarCartaspago", this.filtros.filtros).subscribe(
+    //   data => {
+
+    //     let datos = JSON.parse(data["body"]);
+    //     this.datos = datos.cartasFacturacionPagosItems;
+
+    //     if (this.tabla != undefined) {
+    //       this.tabla.tabla.sortOrder = 0;
+    //       this.tabla.tabla.sortField = '';
+    //       this.tabla.tabla.reset();
+    //     }
+
+    //     this.progressSpinner = false;
+
+    //   },
+    //   err => {
+    //     console.log(err);
+    //     this.progressSpinner = false;
+
+    //   },
+    //   () => {
+    //     this.progressSpinner = false;
+    //   }
+    // );
+
   }
 
 }

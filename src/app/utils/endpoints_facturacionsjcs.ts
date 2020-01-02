@@ -13,10 +13,11 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_updateFacturacion: "facturacionsjcs/updateFacturacion",
     facturacionsjcs_ejecutarfacturacion: "facturacionsjcs/ejecutarfacturacion",
     facturacionsjcs_buscarCartasfacturacion: "facturacionsjcs/buscarCartasfacturacion",
+    facturacionsjcs_buscarCartaspago: "facturacionsjcs/buscarCartaspago",
     facturacionsjcs_reabrirfacturacion: "facturacionsjcs/reabrirfacturacion",
     facturacionsjcs_simularfacturacion: "facturacionsjcs/simularfacturacion",
     facturacionsjcs_tarjetaConceptosfac: "facturacionsjcs/tarjetaConceptosfac",
     facturacionsjcs_saveConceptosFac: "facturacionsjcs/saveConceptosFac",
-    facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosFac", 
+    facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosFac",
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosFac"
 }

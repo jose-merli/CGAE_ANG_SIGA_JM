@@ -1,8 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { CartasFacturacionPagosItem } from '../../../../../models/sjcs/CartasFacturacionPagosItem';
+import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 
 @Component({
   selector: 'app-filtro-cartas-facturacion-pago',
@@ -17,6 +19,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   esColegiado: boolean = false;
   modoBusqueda: string = "f";
   modoBusquedaFacturacion: boolean = true;
+  progressSpinner: boolean = false;
 
   msgs = [];
   comboFacturacion: any[];
@@ -27,19 +30,25 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
   @Output() emitSearch = new EventEmitter<string>();
 
-  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private persistenceService: PersistenceService) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices,
+    private persistenceService: PersistenceService, private translateService: TranslateService) { }
 
   ngOnInit() {
+
+    this.getCombos();
+    this.isColegiado();
+  }
+
+  getCombos() {
     this.getComboPartidasPresupuestarias();
     this.getComboGrupoTurnos();
     this.getComboFactConceptos();
     this.getComboFacturacion();
     this.getComboPagos();
-    this.isColegiado();
   }
 
   isColegiado() {
-
+    this.progressSpinner = true;
     this.sigaServices.get("isColegiado").subscribe(
       data => {
         let persona = data;
@@ -47,40 +56,61 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
         if (persona != undefined && persona != null) {
           this.filtros.apellidosNombre = persona.nombre;
           this.filtros.ncolegiado = persona.numColegiado;
+          this.filtros.idPersona = persona.idPersona;
           this.esColegiado = true;
         } else {
+          //Comprobamos que se ha realizado una busqueda en la busqueda express
+          let busquedaColegiado = this.persistenceService.getDatosBusquedaGeneralSJCS();
+
+          if (busquedaColegiado != undefined) {
+            this.filtros.ncolegiado = busquedaColegiado.nColegiado;
+            this.filtros.idPersona = busquedaColegiado.idPersona;
+            this.filtros.apellidosNombre = busquedaColegiado.nombre;
+          }
           this.esColegiado = false;
         }
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+
       }
     );
 
-    if (JSON.parse(JSON.parse(sessionStorage.getItem("isLetrado")))) {
-      let persona = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.filtros.ncolegiado = persona.ncolegiado;
-      this.filtros.apellidosNombre = persona.apellidosNombre;
+    // if (JSON.parse(JSON.parse(sessionStorage.getItem("isLetrado")))) {
+    //   let persona = JSON.parse(sessionStorage.getItem("personaBody"));
+    //   this.filtros.ncolegiado = persona.ncolegiado;
+    //   this.filtros.apellidosNombre = persona.apellidosNombre;
 
-      this.search();
-    }
+    //   this.search();
+    // }
   }
 
   search() {
 
-    // if (this.checkFilters()) {
+    if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.emitSearch.emit(this.modoBusqueda);
-    // }
+    }
+  }
 
+  recuperarColegiado(event) {
+    if (event != undefined) {
+      this.filtros.apellidosNombre = event.nombre;
+      this.filtros.ncolegiado = event.nColegiado;
+      this.filtros.idPersona = event.idPersona;
+    }
   }
 
   checkFilters() {
-    if (
+    if (!this.esColegiado && (
       (this.filtros.idPartidaPresupuestaria == null || this.filtros.idPartidaPresupuestaria == undefined) &&
       (this.filtros.idConcepto == null || this.filtros.idConcepto == undefined) &&
       (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined)) {
+      (this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined))) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
       return false;
     } else {
       return true;
@@ -158,10 +188,16 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   }
 
   clearFilters() {
-    this.filtros.idFacturacion = undefined;
-    this.filtros.idConcepto = undefined;
-    this.filtros.idPartidaPresupuestaria = undefined;
-    this.filtros.idTurno = undefined;
+
+    if (this.esColegiado) {
+      this.filtros.idFacturacion = undefined;
+      this.filtros.idConcepto = undefined;
+      this.filtros.idPartidaPresupuestaria = undefined;
+      this.filtros.idTurno = undefined;
+
+    } else {
+      this.filtros = new CartasFacturacionPagosItem();
+    }
   }
 
   onHideDatosGenerales() {
@@ -171,6 +207,27 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   onHideDatosColegiado() {
     this.showDatosColegiado = !this.showDatosColegiado;
 
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.search();
+    }
   }
 
 }

@@ -19,6 +19,7 @@ export class CartasFacturacionPagosItem {
 	visible: string;
 	apellidosNombre: string;
 	ncolegiado: string;
+	idPersona: string;
 
 	constructor() { }
 }  

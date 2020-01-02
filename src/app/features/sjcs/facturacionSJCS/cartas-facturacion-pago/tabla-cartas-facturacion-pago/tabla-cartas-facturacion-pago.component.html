@@ -24,7 +24,13 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <span>{{dato[col.field]}}</span>
+            <div *ngIf="col.field == 'ncolegiado' || col.field == 'nombreCol' || col.field == 'nombreFac'">
+              <span>{{dato[col.field]}}</span>
+            </div>
+            <div *ngIf="col.field == 'importeOficio' || col.field == 'importeGuardia' || col.field == 'importeEjg'
+          || col.field == 'importeSoj' || col.field == 'importeTotal'">
+              <span>{{dato[col.field] | numberPipe }} €</span>
+            </div>
           </td>
         </tr>
       </ng-template>
