@@ -7,7 +7,7 @@
         <div class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado">
-              <i class="fas fa-file-invoice-dollar icon-ficha"></i>
+              <i class="fas fa-money-bill-alt icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
@@ -16,12 +16,18 @@
               </label>
             </div>
             <div class="d-flex justify-content-between">
-              <label>
-                <a (click)="irTurnoOficio()">
-                  <span style="color: blue; text-decoration: underline">{{ "gratuita.personaJG.literal.masInfo" | translate }}
-                  </span>
-                </a>
-              </label>
+              <div class="col-lg-9 col-md-9">
+                <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: xx</label>
+              </div>
+              <div class="col-lg-3 col-md-3">
+                <label style="float: right;">
+                  <a>
+                    <i class="fas fa-edit icon-enlace"></i>
+                    <span style="color: blue; text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
+                    </span>
+                  </a>
+                </label>
+              </div>
               <i class="float-right"></i>
             </div>
           </div>

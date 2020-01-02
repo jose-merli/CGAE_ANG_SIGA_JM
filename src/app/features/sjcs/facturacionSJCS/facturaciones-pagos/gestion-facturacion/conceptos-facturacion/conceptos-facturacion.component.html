@@ -73,8 +73,6 @@
               <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
               <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}
               </label>
-              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0
-              </label>
               <label>{{"general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
               </p-dropdown>

@@ -24,33 +24,21 @@
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field == 'descConcepto'">
-                  <div *ngIf='dato.editable'>
-                    <p-dropdown class="select-form"  [(ngModel)]='dato.idConcepto' (onChange)="changeCombo(dato)" [options]="conceptos" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
-                  </div>
-                  <div *ngIf="!dato.editable">
-                    {{ dato[col.field] }}
-                  </div>
-                </div>
-                
-                <div *ngIf="col.field == 'descGrupo'">
-                  <div *ngIf='dato.editable'>
-                    <p-dropdown class="select-form" [(ngModel)]='dato.idGrupo' (onChange)="changeCombo(dato)" [options]="grupoTurnos" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
-                  </div>
-                  <div *ngIf='!dato.editable'>
-                    {{ dato[col.field] }}
-                  </div>
-                </div>
-                <div *ngIf="col.field == 'importeTotal'">
-                  <div *ngIf='!dato.editable'>
-                      {{ dato.importeTotalFormat | numberPipe }} €
-                  </div>
+                <div *ngIf="col.field == 'importePagado'">
+                    {{ dato.importePagadoFormat | numberPipe }} €
                 </div>
 
-                <div *ngIf="col.field == 'importePendiente'">
-                  <div *ngIf='!dato.editable'>
-                      {{ dato.importePendienteFormat | numberPipe }} €
-                  </div>
+                <div *ngIf="col.field=='fechaEstado'">
+                  <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
+                    {{ dato[col.field] | date: 'dd/MM/yyyy HH:mm'}}</label>
+                </div>
+
+                <div *ngIf="col.field == 'porcentaje'">
+                  {{ dato[col.field] }} %
+                </div>
+
+                <div *ngIf="col.field != 'porcentaje' && col.field!='fechaEstado' && col.field != 'importePagado'">
+                  {{ dato[col.field] }}
                 </div>
               </td>
             </tr>
@@ -79,9 +67,9 @@
       </div>
     </div>
   </div>
-  <div class="card-footer" *ngIf="showFichaPagos">
+  <div class="card-footer">
     <div class="text-right main-button">
-        <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}" [(disabled)]='disabledNuevo() || !permisos'></button>
+      <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}" [(disabled)]='disabledNuevo() || !permisos'></button>
     </div>
   </div>
 </div>
