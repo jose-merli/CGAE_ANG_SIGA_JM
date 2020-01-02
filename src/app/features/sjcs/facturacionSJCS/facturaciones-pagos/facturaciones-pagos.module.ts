@@ -12,6 +12,9 @@ import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.mo
 import { GestionFacturacionComponent } from './gestion-facturacion/gestion-facturacion.component';
 import { DatosFacturacionComponent } from './gestion-facturacion/datos-facturacion/datos-facturacion.component';
 import { ConceptosFacturacionComponent } from './gestion-facturacion/conceptos-facturacion/conceptos-facturacion.component';
+import { BaremosComponent } from './gestion-facturacion/baremos/baremos.component';
+import { PagosComponent } from './gestion-facturacion/pagos/pagos.component';
+import { CartasFacturacionComponent } from './gestion-facturacion/cartas-facturacion/cartas-facturacion.component';
 
 @NgModule({
   imports: [
@@ -31,7 +34,7 @@ import { ConceptosFacturacionComponent } from './gestion-facturacion/conceptos-f
     TableModule,
     FechaModule
   ],
-  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent],
+  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent, BaremosComponent, PagosComponent, CartasFacturacionComponent],
   exports: [FacturacionesYPagosComponent]
 })
 export class FacturacionesYPagosModule {}

@@ -458,13 +458,4 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       }
     ];
   }
-
-  showFail() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: this.translateService.instant("general.message.incorrect")
-    });
-  }
 }
