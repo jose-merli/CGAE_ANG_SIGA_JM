@@ -6,6 +6,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
 import { SigaWrapper } from '../../../../../../wrapper/wrapper.class';
 import { ComboItem } from '../../../../../../models/ComboItem';
+import { ConfirmationService } from 'primeng/primeng';
 
 @Component({
   selector: 'app-conceptos-facturacion',
@@ -54,6 +55,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
+    private confirmationService: ConfirmationService,
 		private persistenceService: PersistenceService) { 
     super(USER_VALIDATIONS);
   }
@@ -100,11 +102,10 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       this.sigaService.getParam("facturacionsjcs_tarjetaConceptosfac", "?idFacturacion=" + this.idFacturacion).subscribe(
         data => {
           this.progressSpinner = false;
+          let datos=data.facturacionItem;
 
           if(undefined != data.facturacionItem && data.facturacionItem.length>0){
-            let datos=data.facturacionItem;
-
-            datos.forEach(element => {
+              datos.forEach(element => {
               if(element.importeTotal!=undefined){
                 element.importeTotalFormat = element.importeTotal.replace(".", ",");
               
@@ -125,10 +126,10 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
                 element.importePendienteFormat = 0;
               }
             });
-            
-            this.body = JSON.parse(JSON.stringify(datos));
-            this.bodyAux=JSON.parse(JSON.stringify(datos));
           }
+
+          this.body = JSON.parse(JSON.stringify(datos));
+          this.bodyAux=JSON.parse(JSON.stringify(datos));          
         },	  
         err => {
           this.progressSpinner = false;
@@ -139,7 +140,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   seleccionaFila(evento){
-    if(undefined!=evento.data.idConcepto && undefined!=evento.data.idGrupo && this.idEstadoFacturacion=='10' && !this.selectMultiple){
+    if(undefined!=evento.data.idConcepto && undefined!=evento.data.idGrupo && this.idEstadoFacturacion=='10' && !this.selectMultiple && !this.nuevoConcepto){
       this.body.forEach(element => {
         element.editable = false;
         
@@ -168,8 +169,21 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   eliminar(){
-    if(!this.cerrada && undefined!=this.selectedDatos){      
-      this.callServiceEliminar();
+    if(!this.cerrada && undefined!=this.selectedDatos && this.selectedDatos.length>0){   
+      let mess = this.translateService.instant(
+        "messages.deleteConfirmation"
+      );
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.callServiceEliminar();
+        },
+        reject: () => {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });   
     }
   }
 
@@ -322,6 +336,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.tabla.sortField = '';
     this.tabla.reset();
     this.nuevoConcepto = true;
+    this.modificaConcepto=false;
 
     if (undefined==this.body || null==this.body || this.body.length<1) {
       this.body = [];

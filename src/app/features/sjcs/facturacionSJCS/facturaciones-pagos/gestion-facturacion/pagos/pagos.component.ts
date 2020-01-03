@@ -95,11 +95,6 @@ export class PagosComponent implements OnInit {
     this.msgs = [];
   }
 
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
-  }
-
   getCols() {
     this.cols = [
       { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "30%" },

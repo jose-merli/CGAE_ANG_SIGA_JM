@@ -99,4 +99,9 @@
     </div>
   </div>
 </div>
-    
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+  <p-footer>
+    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

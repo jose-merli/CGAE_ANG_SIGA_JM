@@ -25,54 +25,21 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-  
               <div *ngIf="col.field == 'fechaDesde' || col.field == 'fechaHasta' || col.field=='fechaEstado'">
-                <div *ngIf="setItalic(dato)">
-                  <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
-                    {{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-                </div>
-              </div>
-  
+                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+              </div>  
               <div *ngIf="col.field != 'fechaDesde'&& col.field != 'fechaEstado' && col.field != 'fechaHasta' && col.field != 'importeTotal' && col.field != 'importePagado' && col.field != 'importePendiente'">
-                <div *ngIf="setItalic(dato)">
-                  <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <span>{{dato[col.field]}}</span>
-                </div>
-              </div>
-  
+                <span>{{dato[col.field]}}</span>
+              </div>  
               <div *ngIf="col.field == 'importeTotal'">
-                <div *ngIf="setItalic(dato)">
-                  <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">
-                    {{ dato.importeTotalFormat }} €</label>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <label>{{ dato.importeTotalFormat | numberPipe}} €</label>
-                </div>
+                <label>{{ dato.importeTotalFormat | numberPipe}} €</label>
               </div>
-
               <div *ngIf="col.field == 'importePagado'">
-                <div *ngIf="setItalic(dato)">
-                  <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.importePagadoFormat }} €</label>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <label>{{ dato.importePagadoFormat | numberPipe}} €</label>
-                </div>
+                <label>{{ dato.importePagadoFormat | numberPipe}} €</label>            
               </div>
-
-              <div *ngIf="col.field == 'importePendiente'">
-                <div *ngIf="setItalic(dato)">
-                  <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.importePendienteFormat }} €</label>
-                </div>
-                <div *ngIf="!setItalic(dato)">
-                  <label>{{ dato.importePendienteFormat | numberPipe}} €</label>
-                </div>
-              </div>
-  
+              <div *ngIf="col.field == 'importePendiente'">           
+                <label>{{ dato.importePendienteFormat | numberPipe}} €</label>      
+              </div>  
             </td>
           </tr>
         </ng-template>
@@ -86,10 +53,6 @@
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">Seleccionados: {{selectedDatos.length}}
-            </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">Seleccionados: 0
-            </label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>

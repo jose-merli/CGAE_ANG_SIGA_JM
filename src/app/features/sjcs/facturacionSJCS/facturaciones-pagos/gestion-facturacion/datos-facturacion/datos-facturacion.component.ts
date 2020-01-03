@@ -473,11 +473,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
       }
     }
 	}
-  
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
-  }
 
   getCols() {
     this.cols = [

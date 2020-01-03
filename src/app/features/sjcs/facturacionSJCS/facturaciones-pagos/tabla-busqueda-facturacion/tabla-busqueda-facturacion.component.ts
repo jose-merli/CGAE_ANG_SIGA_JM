@@ -83,7 +83,6 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
         this.numSelected = 0;
       }
     }
-    // this.volver();
   }
 
   showMessage(severity, summary, msg) {
@@ -120,22 +119,17 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     });
   }
 
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
-    else return true;
-  }
   getCols() {
-
     this.cols = [
-      { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde" },
-      { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta" },
-      { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" },
-      { field: "regularizacion", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizacion" },
-      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" },
-      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente" },
-      { field: "importePagado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pagado" },
-      { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado" },
-      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" }
+      { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde", width: "10%" },
+      { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "10%" },
+      { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "20%" },
+      { field: "regularizacion", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizacion", width: "10%" },
+      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" },
+      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente", width: "10%" },
+      { field: "importePagado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pagado", width: "10%" },
+      { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado", width: "10%" },
+      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "10%" }
     ];
     this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
@@ -174,37 +168,26 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     return encontrado;
   }
 
-  confirmDelete(selectedDatos) {
-    if(this.checkDelete(selectedDatos)){
-      let mess = this.translateService.instant(
-        "messages.deleteConfirmation"
-      );
-      let icon = "fa fa-edit";
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          this.delete(selectedDatos)
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: "info",
-              summary: "Cancelar",
-              detail: this.translateService.instant(
-                "general.message.accion.cancelada"
-              )
-            }
-          ];
-        }
-      });
-    }else{
-      this.msgs = [];
-      this.msgs.push({
-      severity: "error",
-      summary: this.translateService.instant("Error"),
-      detail: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar")
-    });
+  confirmDelete(selectedDatos) {     
+    if(undefined!=selectedDatos.idFacturacion || null!=selectedDatos.idFacturacion){
+      if(this.checkDelete(selectedDatos)){
+        let mess = this.translateService.instant(
+          "messages.deleteConfirmation"
+        );
+        let icon = "fa fa-edit";
+        this.confirmationService.confirm({
+          message: mess,
+          icon: icon,
+          accept: () => {
+            this.delete(selectedDatos)
+          },
+          reject: () => {
+            this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+          }
+        });
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
+      }
     }
   }
 
@@ -213,35 +196,16 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     this.sigaServices.post("facturacionsjcs_eliminarFacturacion",selectedDatos.idFacturacion).subscribe(
 			data => {
         console.log(data);
-        this.showSuccessDelete();
+        this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
       },
       err => {
-        console.log(err); 
         this.progressSpinner = false;
-        this.showFail();
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
       },
       () => {
         this.progressSpinner = false;
         this.tabla.reset();
       }
     );
-  }
-
-  showSuccessDelete() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "success",
-      summary: this.translateService.instant("general.message.correct"),
-      detail: this.translateService.instant("messages.deleted.success")
-    });
-  }
-
-  showFail() {
-    this.msgs = [];
-    this.msgs.push({
-      severity: "error",
-      summary: "Error",
-      detail: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar")
-    });
   }
 }

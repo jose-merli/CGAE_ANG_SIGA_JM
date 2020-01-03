@@ -98,12 +98,11 @@ export class FacturacionesYPagosComponent implements OnInit {
 				this.resetSelect();
 			},	  
 			err => {
-				console.log(err);
-				/*if (err != undefined && JSON.parse(err.error).error.description != "") {
+				if (err != undefined && JSON.parse(err.error).error.description != "") {
 					  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
 				  } else {
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-				  }*/
+				  }
 				  this.progressSpinner = false;
 			},
 			() => {
