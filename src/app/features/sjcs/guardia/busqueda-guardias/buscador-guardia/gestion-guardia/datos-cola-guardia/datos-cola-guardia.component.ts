@@ -61,6 +61,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.letradosIns = new Date();
         this.getColaGuardia();
       });
+
   }
 
   abreCierraFicha() {
@@ -132,10 +133,11 @@ export class DatosColaGuardiaComponent implements OnInit {
             return it;
           });
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-          this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe;
+          if (this.datos && this.datos.length > 0)
+            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe;
           if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
-              + " " + this.datos.length, " inscritos");
+              + " ... " + this.datos.length, " inscritos");
           this.progressSpinner = false;
 
         },
@@ -148,9 +150,9 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   fillFecha(event) {
     this.body.letradosIns = event;
-    //  this.getColaGuardia();
+    this.getColaGuardia();
   }
-  zuletzt() {
+  ultimo() {
     // if (this.permisoEscritura && this.historico && this.tabla.selectedDatos) {
     this.progressSpinner = true;
     this.body.idPersonaUltimo = this.tabla.selectedDatos.idPersona;
@@ -178,7 +180,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   duplicarDisabled() {
-    if (this.tabla.selectedDatos) return false;
+    if (this.tabla && this.tabla.selectedDatos) return false;
     return true;
   }
   clear() { }

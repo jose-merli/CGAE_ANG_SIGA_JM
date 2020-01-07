@@ -14,7 +14,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   msgs = [];
   cols = [];
-  openFicha;
+  openFicha: boolean = false;
 
   buscadores = [];
   rowsPerPage;
@@ -42,8 +42,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
     this.sigaServices.post(
       "gestionGuardias_resumenIncompatibilidades", this.persistenceService.getDatos()).subscribe(
         data => {
-          this.datos = JSON.parse(data.body).guardiaItems;
-          this.resumenIncompatibilidades = this.datos[0].incompatibilidades;
+          this.resumenIncompatibilidades = JSON.parse(data.body).guardiaItems[0].incompatibilidades;
           this.onChangeRowsPerPages({ value: 10 });
           this.progressSpinner = false;
 
@@ -98,7 +97,8 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
-    this.tabla.reset();
+
+    if (this.tabla) this.tabla.reset();
   }
 
   getDatosIncompatibilidades() {

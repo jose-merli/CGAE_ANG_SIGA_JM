@@ -188,6 +188,9 @@ export class DatosConfColaComponent implements OnInit {
               }
               else if (element.por_filas == "FECHANACIMIENTO") {
                 element.por_filas = "Edad Colegiado";
+              } else {
+                element.por_filas = ordManual;
+                element.orden = "";
               }
 
               if (element.orden == "asc") {
@@ -197,6 +200,7 @@ export class DatosConfColaComponent implements OnInit {
                 element.orden = desc;
               }
             });
+
 
           },
           err => {
@@ -213,25 +217,24 @@ export class DatosConfColaComponent implements OnInit {
     let pesosFiltrados = Object.assign([], this.pesosExistentes);
     this.pesosSeleccionados = [];
 
-    if (this.body.porGrupos) {
-      let existe = this.pesosSeleccionados.findIndex(it => it.por_filas == ordManual);
-      if (existe)
-        this.pesosSeleccionados.push({
-          numero: "5",
-          por_filas: ordManual,
-          orden: ""
-        });
-    }
-    else {
-      let existe = this.pesosExistentes.findIndex(it => it.por_filas == ordManual);
-      if (existe)
-        this.pesosExistentes.push({
-          numero: "0",
-          por_filas: ordManual,
-          orden: ""
-        });
-    }
-
+    // if (this.body.porGrupos) {
+    //   let existe = this.pesosSeleccionados.findIndex(it => it.por_filas == ordManual);
+    //   if (existe == -1)
+    //     this.pesosSeleccionados.push({
+    //       numero: "5",
+    //       por_filas: ordManual,
+    //       orden: ""
+    //     });
+    // }
+    // else {
+    //   let existe = this.pesosExistentes.findIndex(it => it.por_filas == ordManual);
+    //   if (existe == -1)
+    //     this.pesosExistentes.push({
+    //       numero: "0",
+    //       por_filas: ordManual,
+    //       orden: ""
+    //     });
+    // }
     pesosFiltrados.forEach(element => {
       if (element.numero > 0) {
         this.pesosSeleccionados.push(element);
@@ -240,12 +243,18 @@ export class DatosConfColaComponent implements OnInit {
     });
     this.pesosExistentes.forEach(element => {
       let e = { numero: element.numero, por_filas: element.por_filas, orden: element.orden };
-      if (!e.orden) {
-        element.orden = asc;
-      }
-      if (e.orden != "desc") {
-        e.orden = desc;
-        this.pesosExistentes.push(e)
+      if (e.por_filas != ordManual) {
+        if (!e.orden) {
+          element.orden = asc;
+        }
+        if (e.orden != "desc") {
+          e.orden = desc;
+          this.pesosExistentes.push(e)
+        }
+      } else {
+        let existManual = this.pesosExistentes.find(it => it.por_filas == ordManual);
+        if (!existManual || existManual == 0)
+          this.pesosExistentes.push(e);
       }
     });
 
@@ -308,27 +317,28 @@ export class DatosConfColaComponent implements OnInit {
   }
   save() {
     let montag = [0, 0, 0, 0, 0];
+    console.log(this.pesosSeleccionados);
     this.pesosSeleccionados.forEach(element => {
       if (element.por_filas == "Apellidos y nombre") {
         montag[0] = element.numero;
-        if (element.por_filas == desc) montag[0] = -montag[0];
+        if (element.orden == desc) montag[0] = -montag[0];
       }
       else if (element.por_filas == "Antigüedad en la cola") {
-        montag[1] = element.numero;
-        if (element.por_filas == desc) montag[3] = -montag[0];
+        montag[3] = element.numero;
+        if (element.orden == desc) montag[3] = -montag[3];
       }
       else if (element.por_filas == "Nº Colegiado") {
         montag[2] = element.numero;
-        if (element.por_filas == desc) montag[2] = -montag[0];
+        if (element.orden == desc) montag[2] = -montag[2];
       }
       else if (element.por_filas == "Edad Colegiado") {
-        montag[3] = element.numero;
-        if (element.por_filas == desc) montag[2] = -montag[0];
+        montag[1] = element.numero;
+        if (element.orden == desc) montag[1] = -montag[1];
       } else {
         montag[4] = element.numero;
       }
-
     });
+    console.log(this.pesosSeleccionados);
     this.body.filtros = montag.toString();
     this.callSaveService();
   }
@@ -338,8 +348,10 @@ export class DatosConfColaComponent implements OnInit {
     this.sigaServices.post("busquedaGuardias_updateGuardia", this.body).subscribe(
       data => {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.pesosExistentesInicial = this.pesosExistentes;
-        this.pesosSeleccionadosInicial = this.pesosSeleccionados;
+        this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
+        this.pesosSeleccionadosInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
+
+        this.modoEdicionSend.emit(undefined);
         this.modoEdicion = true;
         this.progressSpinner = false;
       },

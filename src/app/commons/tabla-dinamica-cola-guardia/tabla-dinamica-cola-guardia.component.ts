@@ -40,7 +40,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
       let primero = this.datos.indexOf(seMueve[0]);
       if (primero != 0) {
         let primeroMovido = this.datos[primero - 1];
-        let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // Los que se mueven
+        let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // A los que mueven
         this.datos = this.datos.slice(0, this.datos.indexOf(esMovido[0])).concat(seMueve).concat(esMovido).concat(this.datos.slice(this.datos.indexOf(seMueve[seMueve.length - 1]) + 1));
 
         if (this.datos.indexOf(esMovido[0]) != 0) {// MOVIMIENTO CUANDO NO IMPLICA AL PRIMER GRUPO
@@ -108,7 +108,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
       let ultimo = this.datos.indexOf(seMueve[seMueve.length - 1]);
       if (ultimo != this.datos.length - 1) {
         let primeroMovido = this.datos[ultimo + 1];
-        let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // Los que se mueven
+        let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // A los que mueven
         this.datos = this.datos.slice(0, this.datos.indexOf(seMueve[0])).concat(esMovido).concat(seMueve).concat(this.datos.slice(this.datos.indexOf(esMovido[esMovido.length - 1]) + 1));
 
         if (this.datos.indexOf(esMovido[esMovido.length - 1]) != (this.datos.length - 1)) {

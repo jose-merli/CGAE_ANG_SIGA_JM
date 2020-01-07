@@ -10,7 +10,7 @@
     <app-tarjeta-resumen-fija [titulo]="titulo" [datos]="infoResumen"></app-tarjeta-resumen-fija>
     <app-datos-generales-guardias [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
     <app-datos-calendarios-guardias [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
-    <app-datos-conf-cola [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion"></app-datos-conf-cola>
+    <app-datos-conf-cola [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-conf-cola>
     <app-datos-cola-guardia [modoEdicion]="modoEdicion"></app-datos-cola-guardia>
     <app-datos-incompatibilidades [modoEdicion]="modoEdicion"></app-datos-incompatibilidades>
     <app-datos-baremos></app-datos-baremos>
