@@ -408,14 +408,33 @@ export class DatosGenerales implements OnInit {
     if (sessionStorage.getItem("nuevoRegistro") != null) {
       // comprobacion de cif
       if (this.isValidCIF(this.body.nif)) {
+        // let newBody = new DatosGeneralesItem();
         this.body.idPersona = this.idPersona;
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
-        this.body.etiquetas = this.createItems;
+        this.body.fechaConstitucion = this.transformaFecha(this.body.fechaConstitucion);
+        // newBody.idPersona = this.idPersona;
+        // newBody.idioma = this.idiomaPreferenciaSociedad;
+        // newBody.tipo = this.selectedTipo.value;
+        // newBody.idInstitucion = this.body.idInstitucion;
+        // newBody.fechaConstitucion = this.body.fechaConstitucion;
+        // newBody.nif = this.body.nif;
+        // newBody.denominacion = this.body.denominacion;
+        // newBody.abreviatura = this.body.abreviatura;
+        // newBody.idioma = this.body.idioma;
+        if (this.createItems.length != 0) {
+          this.body.etiquetas = this.createItems;
+          // newBody.etiquetas = this.createItems;
+        }
+        // else {
+        //   this.body.etiquetas = undefined;
+        //   newBody.etiquetas = [];
+        // }
+
         // this.body.motivo = "registro creado";
 
         console.log("BODY", this.body);
-
+        // console.log("NEWBODY", newBody);
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(

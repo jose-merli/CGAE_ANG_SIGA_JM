@@ -66,8 +66,9 @@ export class AccesoFichaPersonaComponent implements OnInit {
       this.openFicha = !this.openFicha;
       sessionStorage.removeItem("abrirNotario");
     }
-
-    this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    if (sessionStorage.getItem("nuevoRegistro") != "true") {
+      this.usuarioBody = JSON.parse(sessionStorage.getItem("usuarioBody"));
+    }
     this.tipoPersona = "Notario";
 
     // this.suscripcionBusquedaNuevo = this.cardService.searchNewAnnounce$.subscribe(

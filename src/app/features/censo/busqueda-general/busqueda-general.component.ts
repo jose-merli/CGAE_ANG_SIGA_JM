@@ -714,6 +714,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   irFichaColegial(id) {
     // ir a ficha de notario
+    let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     if (sessionStorage.getItem('abrirNotario') == 'true' && sessionStorage.getItem('abrirRemitente') != 'true') {
       if (!this.selectMultiple && !this.selectAll) {
         if (sessionStorage.getItem('notario') != null || sessionStorage.getItem('notario') != undefined) {
@@ -864,30 +865,37 @@ export class BusquedaGeneralComponent implements OnDestroy {
         }
       );
     } else if (sessionStorage.getItem('crearnuevo') == 'true') {
-      let mess = "La sociedad ya existe en otro colegio, se procederá a crear una nueva con los datos básicos de la seleccionada. ¿Desea continuar?";
-      let icon = 'fa fa-edit';
-      this.confirmationService.confirm({
-        message: mess,
-        icon: icon,
-        accept: () => {
-          let cuerpo = [];
-          cuerpo.push(id[0]);
-          sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
-          sessionStorage.removeItem('abrirSociedad');
-          sessionStorage.setItem("nuevoRegistro", "true");
-          this.router.navigate(['fichaPersonaJuridica']);
-        },
-        reject: () => {
-          this.msgs = [
-            {
-              severity: 'info',
-              summary: 'Cancel',
-              detail: this.translateService.instant('general.message.accion.cancelada')
-            }
-          ];
-        }
-      });
-
+      if (id[0].idInstitucion != this.colegios_seleccionados[0].value) {
+        let mess = "La sociedad ya existe en otro colegio, se procederá a crear una nueva con los datos básicos de la seleccionada. ¿Desea continuar?";
+        let icon = 'fa fa-edit';
+        this.confirmationService.confirm({
+          message: mess,
+          icon: icon,
+          accept: () => {
+            let cuerpo = [];
+            cuerpo.push(id[0]);
+            sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
+            sessionStorage.removeItem('abrirSociedad');
+            sessionStorage.setItem("nuevoRegistro", "true");
+            this.router.navigate(['fichaPersonaJuridica']);
+          },
+          reject: () => {
+            this.msgs = [
+              {
+                severity: 'info',
+                summary: 'Cancel',
+                detail: this.translateService.instant('general.message.accion.cancelada')
+              }
+            ];
+          }
+        });
+      } else {
+        let cuerpo = [];
+        cuerpo.push(id[0]);
+        sessionStorage.setItem('usuarioBody', JSON.stringify(cuerpo));
+        sessionStorage.removeItem('abrirSociedad');
+        this.router.navigate(['fichaPersonaJuridica']);
+      }
     } else if (this.isFormador) {
       // ir a ficha de formador
       this.checkTypeCIF(id[0].nif);
