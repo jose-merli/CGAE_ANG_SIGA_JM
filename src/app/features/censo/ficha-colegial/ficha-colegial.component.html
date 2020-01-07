@@ -1,14 +1,24 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div *ngIf="emptyLoadFichaColegial || publicarDatosContacto || solicitudModificacionMens != undefined" class="info-limit d-flex justify-content-center align-items-center mb-1">
+ <div *ngIf="!publicarDatosContacto">
   <i class="fa fa-info-circle pr-2"></i>
   <div class="d-inline-block">
     <div>
       <span *ngIf="emptyLoadFichaColegial" class="pr-2 text-left">{{ 'censo.fichaColegial.mensaje.noCargaDatos.noColegiado' | translate }}</span>
-      <span *ngIf="publicarDatosContacto" class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
       <span *ngIf="solicitudModificacionMens != undefined" class="pr-2 text-left">{{solicitudModificacionMens}}</span>
 
     </div>
   </div>
+</div>
+  <div *ngIf="publicarDatosContacto" >
+    <img src="./assets/images/icons/warning.png">
+    <div class="d-inline-block">
+      <div>
+        <span class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+      </div> 
+    </div>
+</div>
+
 </div>
 <div class="busqueda-container">
   <div class="header-title">
