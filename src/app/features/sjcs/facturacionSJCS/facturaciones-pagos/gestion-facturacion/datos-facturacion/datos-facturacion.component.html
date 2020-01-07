@@ -1,14 +1,36 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="card">
-  <div class="card-body">
-    <p class="title-module">
-      <i class="fas fa-cog icon-ficha"></i>
-      <label>{{'facturacionSJCS.facturacionesYPagos.datosFacturacion' | translate}} </label>
-      <i (click)="onHideDatosGenerales()" *ngIf="showFichaFacturacion" class="fa fa-angle-up float-right"></i>
-      <i (click)="onHideDatosGenerales()" *ngIf="!showFichaFacturacion" class="fa fa-angle-down float-right"></i>
-    </p>
-    <div *ngIf="showFichaFacturacion" class="module vista-avanzada">
+  <div class="card-header header-ficha">
+    <div *ngIf="!showFichaFacturacion" class="form-row" (click)="onHideDatosGenerales()">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.datosFacturacion" | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" | translate }}:
+            <span>{{ body.nombre }}</span>
+          </label>
+          <i *ngIf="!showFichaFacturacion" class="fa fa-angle-down float-right"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showFichaFacturacion" class="header-ficha-open d-flex justify-content-start align-items-center" (click)="onHideDatosGenerales()">
+      <div class="img-colegiado">
+        <i class="fas fa-cog icon-ficha"></i>
+      </div>
+      <label class="title-ficha">{{ 'facturacionSJCS.facturacionesYPagos.datosFacturacion' | translate }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <div *ngIf="showFichaFacturacion" class="card-body">
+    <div class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
           <div>

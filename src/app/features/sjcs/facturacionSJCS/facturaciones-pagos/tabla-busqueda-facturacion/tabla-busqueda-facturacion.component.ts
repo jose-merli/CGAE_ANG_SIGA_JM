@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { USER_VALIDATIONS } from "../../../../../properties/val-properties";
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
@@ -34,6 +34,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @Input() datos;
+
+  @Output() delete = new EventEmitter<String>();
   
   @ViewChild("table") tabla;
   
@@ -179,7 +181,8 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
           message: mess,
           icon: icon,
           accept: () => {
-            this.delete(selectedDatos)
+            //this.delete(selectedDatos)
+            this.delete.emit(selectedDatos.idFacturacion);
           },
           reject: () => {
             this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
@@ -189,23 +192,5 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
       }
     }
-  }
-
-  delete(selectedDatos) {
-    this.progressSpinner = true;
-    this.sigaServices.post("facturacionsjcs_eliminarFacturacion",selectedDatos.idFacturacion).subscribe(
-			data => {
-        console.log(data);
-        this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
-      },
-      err => {
-        this.progressSpinner = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
-      },
-      () => {
-        this.progressSpinner = false;
-        this.tabla.reset();
-      }
-    );
   }
 }

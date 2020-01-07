@@ -17,7 +17,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   progressSpinner: boolean = false;
   cols;
   msgs; 
-  showFichaConceptos: boolean = true;
+  showFichaConceptos: boolean = false;
   rowsPerPage: any = [];
   buscadores = [];
   selectedItem: number = 10;
@@ -34,6 +34,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   idGrupo: string = undefined;
   idConceptoOld: string = undefined;
   idGrupoOld: string = undefined;
+  numCriterios: number = 0;
 
   body = [];
   bodyUpdate;
@@ -129,7 +130,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           }
 
           this.body = JSON.parse(JSON.stringify(datos));
-          this.bodyAux=JSON.parse(JSON.stringify(datos));          
+          this.bodyAux=JSON.parse(JSON.stringify(datos)); 
+          this.numCriterios=datos.length;         
         },	  
         err => {
           this.progressSpinner = false;
@@ -447,7 +449,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   getCols() {
     this.cols = [
-      { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
+      { field: "desConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
       { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
       { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" }

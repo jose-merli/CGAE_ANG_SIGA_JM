@@ -126,6 +126,24 @@ export class FacturacionesYPagosComponent implements OnInit {
 		}
 	}
 
+	delete(event) {
+		this.progressSpinner = true;
+		this.sigaServices.post("facturacionsjcs_eliminarFacturacion",event).subscribe(
+				data => {
+			console.log(data);
+			this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+			this.buscarFacturaciones(false);
+		  },
+		  err => {
+			this.progressSpinner = false;
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
+		  },
+		  () => {
+			this.progressSpinner = false;
+		  }
+		);
+	  }
+
 	showMessage(severity, summary, msg) {
 		this.msgs = [];
 		this.msgs.push({

@@ -10,7 +10,9 @@ export class PagosjgItem {
 	importeRepartir: String;
 	importePagado: String;
 	fechaEstado: Date;
-	desEstado: String;
+	desEstado: String;	
+	desConcepto: String;
+	porcentaje: String;
 	
   	constructor() {}
 }  

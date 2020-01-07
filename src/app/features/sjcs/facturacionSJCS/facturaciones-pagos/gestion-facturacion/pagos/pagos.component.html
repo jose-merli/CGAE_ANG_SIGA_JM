@@ -1,7 +1,35 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="card">
-  <div class="card-body">         
+  <div class="card-header header-ficha">
+    <div *ngIf="!showFichaPagos" class="form-row" (click)="onHideDatosGenerales()">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class="fas fa-dollar icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.pagos" | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label>{{ "facturacionSJCS.facturacionesYPagos.numeroPagos" | translate }}:
+            <span>{{ numPagos }}</span>
+          </label>
+          <i *ngIf="!showFichaPagos" class="fa fa-angle-down float-right"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showFichaPagos" class="header-ficha-open d-flex justify-content-start align-items-center" (click)="onHideDatosGenerales()">
+      <div class="img-colegiado">
+        <i class="fas fa-dollar icon-ficha"></i>
+      </div>
+      <label class="title-ficha">{{ 'facturacionSJCS.facturacionesYPagos.pagos' | translate }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <div *ngIf="showFichaPagos" class="card-body">         
     <div class="module vista-avanzada">
       <div class="form-row">
         <p-table [value]="body" [columns]="cols" [selectionMode]="single" [responsive]="true" #tabla
@@ -30,7 +58,7 @@
 
                 <div *ngIf="col.field=='fechaEstado'">
                   <label>
-                    {{ dato[col.field] | date: 'dd/MM/yyyy HH:mm'}}</label>
+                    {{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                 </div>
 
                 <div *ngIf="col.field == 'porcentaje'">
@@ -63,7 +91,7 @@
       </div>
     </div>
   </div>
-  <div class="card-footer">
+  <div class="card-footer" *ngIf="showFichaPagos">
     <div class="text-right main-button">
       <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}" [(disabled)]='disabledNuevo() || !permisos'></button>
     </div>

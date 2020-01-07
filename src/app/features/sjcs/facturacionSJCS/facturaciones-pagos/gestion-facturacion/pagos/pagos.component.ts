@@ -14,7 +14,9 @@ export class PagosComponent implements OnInit {
   buscadores = [];
   body = [];
   selectedItem: number = 10;
-
+  showFichaPagos: boolean = false;
+  numPagos: number = 0;
+  
   @Input() cerrada;
   @Input() idFacturacion;
   @Input() idEstadoFacturacion;
@@ -55,6 +57,7 @@ export class PagosComponent implements OnInit {
               }				
             });
             this.body = JSON.parse(JSON.stringify(datos));
+            this.numPagos = datos.length;
           }
         },	  
         err => {
@@ -71,6 +74,10 @@ export class PagosComponent implements OnInit {
 
   disabledNuevo(){
     return true;
+  }
+
+  onHideDatosGenerales() {
+    this.showFichaPagos = !this.showFichaPagos;
   }
 
   onChangeRowsPerPages(event) {

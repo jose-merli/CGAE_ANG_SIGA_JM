@@ -74,8 +74,10 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     if (undefined == this.idFacturacion) {
       this.body=new FacturacionItem();
       this.bodyAux=new FacturacionItem();
+      this.showFichaFacturacion=true;
     } else {
       this.cargaDatos();
+      this.showFichaFacturacion=false;
     }
 
     this.getCols();
