@@ -8,7 +8,7 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-cartas-facturacion-pago (emitSearch)="search($event)"></app-filtro-cartas-facturacion-pago>
+  <app-filtro-cartas-facturacion-pago [permisoEscritura]="permisoEscritura" (emitSearch)="search($event)" (changeModoBusqueda)="changeModoBusqueda()"></app-filtro-cartas-facturacion-pago>
   <app-tabla-cartas-facturacion-pago *ngIf="buscar" [datos]="datos"></app-tabla-cartas-facturacion-pago>
 </div>
 
