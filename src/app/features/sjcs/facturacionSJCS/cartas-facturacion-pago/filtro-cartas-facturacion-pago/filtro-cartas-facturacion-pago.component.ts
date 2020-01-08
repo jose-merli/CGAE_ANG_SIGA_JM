@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, HostListener, Input } from '@angular/core';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -29,14 +29,27 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   comboPagos: any[];
 
   @Output() emitSearch = new EventEmitter<string>();
+  @Output() changeModoBusqueda = new EventEmitter<string>();
+  @Input() permisoEscritura;
 
   constructor(private commonsService: CommonsService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private translateService: TranslateService) { }
 
   ngOnInit() {
 
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      this.modoBusqueda = this.filtros.modoBusqueda;
+      this.emitSearch.emit(this.modoBusqueda)
+
+    } else {
+      this.filtros = new CartasFacturacionPagosItem();
+      this.filtros.modoBusqueda = this.modoBusqueda;
+    }
+
     this.getCombos();
     this.isColegiado();
+   
   }
 
   getCombos() {
@@ -179,12 +192,18 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
   changeFilters() {
     this.clearFilters();
+    this.persistenceService.clearFiltros();
 
     if (this.modoBusqueda == "f") {
       this.modoBusquedaFacturacion = true;
     } else if (this.modoBusqueda == "p") {
       this.modoBusquedaFacturacion = false;
     }
+
+    this.filtros.modoBusqueda = this.modoBusqueda;
+    this.persistenceService.setFiltros(this.filtros);
+
+    this.changeModoBusqueda.emit();
   }
 
   clearFilters() {

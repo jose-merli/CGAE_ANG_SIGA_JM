@@ -21,6 +21,8 @@ export class CartasFacturacionPagoComponent implements OnInit {
   buscar: boolean = false;
   progressSpinner: boolean = false;
   activaVolver: boolean = false;
+  modoBusqueda: string;
+  msgs = [];
 
   @ViewChild(FiltroCartasFacturacionPagoComponent) filtros;
   @ViewChild(TablaCartasFacturacionPagoComponent) tabla;
@@ -68,14 +70,19 @@ export class CartasFacturacionPagoComponent implements OnInit {
 
   search(event) {
 
+    this.modoBusqueda = event;
     this.buscar = true;
 
-    if (event == "f") {
+    if (event == "f") {    
       this.searchFacturacion();
     } else if (event == "p") {
       this.searchPago();
     }
 
+  }
+
+  changeModoBusqueda(){
+    this.buscar = false;
   }
 
   searchFacturacion() {
@@ -86,6 +93,8 @@ export class CartasFacturacionPagoComponent implements OnInit {
       data => {
 
         let datos = JSON.parse(data["body"]);
+        let error = JSON.parse(data.body).error;
+
         this.datos = datos.cartasFacturacionPagosItems;
 
         if (this.tabla != undefined) {
@@ -95,6 +104,10 @@ export class CartasFacturacionPagoComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
 
       },
       err => {
@@ -111,33 +124,48 @@ export class CartasFacturacionPagoComponent implements OnInit {
 
   searchPago() {
 
-    // this.progressSpinner = true;
+    this.progressSpinner = true;
 
-    // this.sigaServices.post("facturacionsjcs_buscarCartaspago", this.filtros.filtros).subscribe(
-    //   data => {
+    this.sigaServices.post("facturacionsjcs_buscarCartaspago", this.filtros.filtros).subscribe(
+      data => {
+        let datos = JSON.parse(data["body"]);
+        let error = JSON.parse(data.body).error;
+        this.datos = datos.cartasFacturacionPagosItems;
+        if (this.tabla != undefined) {
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+        }
+        this.progressSpinner = false;
 
-    //     let datos = JSON.parse(data["body"]);
-    //     this.datos = datos.cartasFacturacionPagosItems;
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
 
-    //     if (this.tabla != undefined) {
-    //       this.tabla.tabla.sortOrder = 0;
-    //       this.tabla.tabla.sortField = '';
-    //       this.tabla.tabla.reset();
-    //     }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
 
-    //     this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
 
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.progressSpinner = false;
+  }
 
-    //   },
-    //   () => {
-    //     this.progressSpinner = false;
-    //   }
-    // );
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
+  clear(){
+    this.msgs = [];
   }
 
 }

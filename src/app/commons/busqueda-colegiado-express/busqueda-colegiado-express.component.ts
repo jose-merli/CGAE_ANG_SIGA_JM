@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
-import { USER_VALIDATIONS } from "../../properties/val-properties";
 import { SigaServices } from "./../../_services/siga.service";
 import { Router } from '@angular/router';
 import { PersistenceService } from '../../_services/persistence.service';
+import { CommonsService } from '../../_services/commons.service';
 
 @Component({
   selector: "app-busqueda-colegiado-express",
@@ -15,14 +15,47 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() nColegiado;
   @Input() apellidosNombre;
   @Input() disabled;
+  @Input() permisoEscritura;
 
   progressSpinner: boolean = false;
   buscarDisabled: boolean = false;
+  msgs = [];
 
-  constructor(private sigaServices: SigaServices, private router: Router, private persistenceService: PersistenceService) { }
+  constructor(private sigaServices: SigaServices, private router: Router, private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
 
+  }
+
+  checkPermisosBuscarGeneralSJCS(){
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.disabled);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.isBuscarGeneralSJCS();
+    }
+  }
+
+  checkPermisoLimpiar(){
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.disabled);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.isLimpiar();
+    }
+  }
+
+  checkPermisoBuscar(){
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, this.disabled);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.isBuscar();
+    }
   }
 
   isBuscar() {
@@ -71,5 +104,18 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     this.apellidosNombre = "";
     this.nColegiado = "";
     this.idPersona.emit("");
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear(){
+    this.msgs = [];
   }
 }
