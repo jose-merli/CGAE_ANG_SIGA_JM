@@ -105,7 +105,7 @@ export class PagosComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "30%" },
-      { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos", width: "25%" },
+      { field: "desConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos", width: "25%" },
       { field: "porcentaje", header: "facturacionSJCS.facturacionesYPagos.porcentaje", width: "10%" },
       { field: "importePagado", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%" },
       { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado", width: "15%" },

@@ -20,6 +20,8 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   modoEdicion;
   permisos;
   msgs;
+  insertConcept;
+  numCriterios;
 
   constructor(private location: Location, private persistenceService: PersistenceService) { 
     super(USER_VALIDATIONS);
@@ -49,11 +51,17 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
       }
 
       this.modoEdicion = true;
-    }    
+    } 
+    this.insertConcept=false;   
+    this.numCriterios=0;
   }
 
   volver(){
     this.location.back();
+  }
+
+  changeNumCriterios(event){
+    this.numCriterios=event;
   }
 
   changeModoEdicion(event){
@@ -70,6 +78,10 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
 
   changeIdFacturacion(event){
     this.idFacturacion=event;
+  }
+
+  newConcept(event){
+    this.insertConcept=event;
   }
 
   clear() {

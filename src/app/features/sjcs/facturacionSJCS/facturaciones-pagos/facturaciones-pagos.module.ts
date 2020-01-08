@@ -15,12 +15,14 @@ import { ConceptosFacturacionComponent } from './gestion-facturacion/conceptos-f
 import { BaremosComponent } from './gestion-facturacion/baremos/baremos.component';
 import { PagosComponent } from './gestion-facturacion/pagos/pagos.component';
 import { CartasFacturacionComponent } from './gestion-facturacion/cartas-facturacion/cartas-facturacion.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     PipeTranslationModule,
+    TooltipModule,
     InputTextModule,
     ConfirmDialogModule,
     CheckboxModule,

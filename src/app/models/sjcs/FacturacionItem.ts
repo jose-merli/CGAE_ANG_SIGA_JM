@@ -21,6 +21,7 @@ export class FacturacionItem {
 	descConcepto: String;
 	idGrupoOld: String;
 	idConceptoOld: String;
+	observaciones: String;
 	
   	constructor() {}
 }  
