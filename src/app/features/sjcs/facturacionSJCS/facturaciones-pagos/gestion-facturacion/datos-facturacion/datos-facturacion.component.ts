@@ -7,7 +7,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { SigaWrapper } from "../../../../../../wrapper/wrapper.class";
-import { Calendar } from 'primeng/primeng';
+import { Calendar, ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 
 @Component({
@@ -35,6 +35,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Input() idEstadoFacturacion;
   @Input() modoEdicion;
   @Input() permisos;
+  @Input() insertConcept;
+  @Input() numCriterios;
 
   @Output() changeCerrada = new EventEmitter<boolean>();
   @Output() changeModoEdicion = new EventEmitter<boolean>();
@@ -61,6 +63,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
   constructor(private sigaService: SigaServices,
     private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private commonsService: CommonsService) { 
     super(USER_VALIDATIONS);
   }
@@ -282,7 +285,24 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
   ejecutar(){
     if((this.modoEdicion && this.idEstadoFacturacion=="10") || (this.modoEdicion && this.idEstadoFacturacion=="20")){
-      this.callEjecutarService();
+      if(this.numCriterios==0){   
+        let mess = this.translateService.instant(
+          "facturacionSJCS.facturacionesYPagos.mensaje.noConceptos"
+        );
+        let icon = "fa fa-edit";
+        this.confirmationService.confirm({
+          message: mess,
+          icon: icon,
+          accept: () => {
+            this.callEjecutarService();
+          },
+          reject: () => {
+            this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+          }
+        });   
+      }else{
+        this.callEjecutarService();
+      }
     }
   }
 
@@ -376,7 +396,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     );
   }
   disabledSimular(){
-    if(this.modoEdicion && this.idEstadoFacturacion=="10"){
+    if(this.modoEdicion && this.idEstadoFacturacion=="10" && !this.insertConcept){
       return false;
     }else{
       return true;
@@ -393,7 +413,11 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
   disabledEjecutar(){
     if((this.modoEdicion && this.idEstadoFacturacion=="10") || (this.modoEdicion && this.idEstadoFacturacion=="20")){
-      return false;
+      if(!this.insertConcept){
+        return false;
+      }else{
+        return true;
+      }
     }else{
       return true;
     }

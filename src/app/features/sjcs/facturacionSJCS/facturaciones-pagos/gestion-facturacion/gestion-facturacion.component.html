@@ -6,8 +6,8 @@
     <p>SJCS<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' | translate}}</p>
   </div>
   
-  <app-datos-facturacion [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
-  <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada"></app-conceptos-facturacion>
+  <app-datos-facturacion [insertConcept]="insertConcept" [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
+  <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada" (newConcept)="newConcept($event)" (changeNumCriterios)="changeNumCriterios($event)"></app-conceptos-facturacion>
   <app-baremos *ngIf="modoEdicion"></app-baremos>
   <app-pagos *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada"></app-pagos>
   <app-cartas-facturacion *ngIf="modoEdicion"></app-cartas-facturacion>

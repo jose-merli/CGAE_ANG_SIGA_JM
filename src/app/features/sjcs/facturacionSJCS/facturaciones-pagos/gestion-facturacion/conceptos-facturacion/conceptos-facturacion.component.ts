@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
@@ -49,6 +49,9 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   @Input() idEstadoFacturacion;
   @Input() modoEdicion;
   @Input() permisos;
+
+  @Output() newConcept = new EventEmitter<boolean>();
+  @Output() changeNumCriterios = new EventEmitter<number>();
 
   @ViewChild("tabla") tabla;
   
@@ -131,7 +134,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
           this.body = JSON.parse(JSON.stringify(datos));
           this.bodyAux=JSON.parse(JSON.stringify(datos)); 
-          this.numCriterios=datos.length;         
+          this.numCriterios=datos.length; 
+          this.changeNumCriterios.emit(this.numCriterios);        
         },	  
         err => {
           this.progressSpinner = false;
@@ -159,6 +163,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       this.seleccion = true;
       this.modificaConcepto=true;
       evento.data.editable=true;
+      this.newConcept.emit(true);
     }
   }
 
@@ -244,6 +249,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.idConcepto=undefined;
     this.idGrupoOld=undefined;
     this.idConceptoOld=undefined;
+    this.newConcept.emit(false);
 
     this.tabla.sortOrder = 0;
     this.tabla.sortField = '';
@@ -305,6 +311,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
         this.cargaDatos();
         this.idConceptoOld=undefined;
         this.idGrupoOld=undefined;
+        this.newConcept.emit(false);
       },
       err => {
         if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -339,6 +346,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.tabla.reset();
     this.nuevoConcepto = true;
     this.modificaConcepto=false;
+    this.newConcept.emit(true);
 
     if (undefined==this.body || null==this.body || this.body.length<1) {
       this.body = [];
@@ -449,7 +457,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   getCols() {
     this.cols = [
-      { field: "desConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
+      { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
       { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
       { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" }
