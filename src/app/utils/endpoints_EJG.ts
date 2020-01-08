@@ -31,6 +31,8 @@ export let endpoints_EJG: any = {
     filtrosejg_comboTurno: "ejg/filtros-ejg/comboTurnosTipo",
     filtrosejg_comboPrestaciones: "ejg/filtros-ejg/comboPrestaciones",
     gestionejg_datosEJG: "ejg/gestion-ejg/datosEJG",
-    gestionejg_unidadFamiliarEJG: "ejg/gestion-ejg/unidadFamiliarEJG"
+    gestionejg_unidadFamiliarEJG: "ejg/gestion-ejg/unidadFamiliarEJG",
+    gestionejg_getExpedientesEconomicos: "ejg/gestion-ejg/getExpedientesEconomicos",
+    gestionejg_getEstados: "ejg/gestion-ejg/gestionejg_getEstados"
 
 }

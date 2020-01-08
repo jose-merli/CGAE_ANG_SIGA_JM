@@ -62,6 +62,7 @@ export class EJGItem {
     turno: string;
     idTurno: string;
     guardia: string;
+    idGuardia: string;
     numColegiado: string;
     apellidosYNombre: string;
     tipoLetrado: string;
@@ -72,6 +73,7 @@ export class EJGItem {
     numeroexpediente: string;
     fechapresentacion: Date;
     fechalimitepresentacion: Date;
+    historico: boolean;
     // correoelectronico: string;
     // fechanacimiento: Date;
     // idInstitucion: String;

@@ -54,8 +54,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     } else {
       this.nuevo = true;
-      this.body = new EJGItem();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      // this.body = new EJGItem();
+      // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
 

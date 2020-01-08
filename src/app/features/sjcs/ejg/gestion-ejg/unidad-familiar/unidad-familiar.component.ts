@@ -28,7 +28,6 @@ export class UnidadFamiliarComponent implements OnInit {
   permisoEscritura: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices,
     private persistenceService: PersistenceService, ) { }
 
   ngOnInit() {
@@ -36,14 +35,38 @@ export class UnidadFamiliarComponent implements OnInit {
       // this.permisoEscritura = this.persistenceService.getPermisos()
       // De momento todo disabled, funcionalidades FAC. Cuando esté todo cambiar Permisos. 
       this.permisoEscritura = false;
-    this.getCols();
     if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
         this.datosFamiliares = this.persistenceService.getFiltrosAux();
+        let nombresol = this.body.nombreApeSolicitante;
+        this.datosFamiliares.forEach(element => {
+          element.nombreApeSolicitante = nombresol;
+          if (element.estado == 30) {
+            element.estadoDes = "Denegada";
+          } else if (element.estado == 40) {
+            element.estadoDes = "Suspendida";
+          } else if (element.estado == 50) {
+            element.estadoDes = "Aprobada";
+          } else if (element.estado == 10) {
+            element.estadoDes = "Pendiente documentación";
+          } else if (element.estado == 20) {
+            element.estadoDes = "Pendiente aprobación";
+          }
+          if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
+            element.expedienteEconom = element.estadoDes + " * " + element.fechaSolicitud;
+          } else if (element.estadoDes != undefined && element.fechaSolicitud == undefined) {
+            element.expedienteEconom = element.estadoDes + " * ";
+          } else if (element.estadoDes == undefined && element.fechaSolicitud != undefined) {
+            element.expedienteEconom = " * " + element.fechaSolicitud;
+          } else if (element.estadoDes == undefined && element.fechaSolicitud == undefined) {
+            element.expedienteEconom = "  ";
+          }
+        });
       }
     }
+    this.getCols();
   }
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -65,13 +88,13 @@ export class UnidadFamiliarComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "pjg_nif", header: "Identificador", width: "20%" },
-      { field: "pjg_nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "12%" },
-      { field: "pjg_ape1", header: "censo.consultaDirecciones.literal.direccion", width: "20%" }, //falta ape2
-      { field: "uf_enCalidad", header: "administracion.usuarios.literal.rol", width: "15%" },
-      { field: "pjg_nombre", header: "Relacionado con", width: "15%" }, //falta ape1
+      { field: "pjg_nif", header: "administracion.usuarios.literal.NIF", width: "10%" },
+      { field: "pjg_nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },//falta apellidos
+      { field: "pjg_direccion", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
+      { field: "uf_enCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
+      { field: "nombreApeSolicitante", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
       { field: "pd_descripcion", header: "informes.solicitudAsistencia.parentesco", width: "15%" },
-      { field: "estado", header: "Expediente Económico", width: "15%" }, //falta fecha
+      { field: "expedienteEconom", header: "justiciaGratuita.ejg.datosGenerales.ExpedienteEcon", width: "20%" },
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 

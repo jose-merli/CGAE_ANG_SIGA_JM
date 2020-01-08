@@ -125,6 +125,7 @@ export class TablaEjgComponent implements OnInit {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setFiltrosAux(this.datosFamiliares);
         this.router.navigate(['/gestionEjg']);
+        // this.getExpedientesEconomicos(selected);
         this.progressSpinner = false;
       },
       err => {

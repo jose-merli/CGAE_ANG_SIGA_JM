@@ -1,5 +1,6 @@
 export class UnidadFamiliarEJGItem {
-
+    nombreApeSolicitante: string;
+    expedienteEconom: string;
     uf_idTipoejg: string;
     uf_anio: string;
     uf_numero: string;
@@ -11,11 +12,12 @@ export class UnidadFamiliarEJGItem {
     pjg_ape1: string;
     pjg_ape2: string;
     pjg_direccion: string;
-    nombrePrincipal: string;
-    apellido1Principal: string;
-    apellido2Principal: string;
+    // nombrePrincipal: string;
+    // apellido1Principal: string;
+    // apellido2Principal: string;
     pd_descripcion: string;
     estado: string;
+    estadoDes: string;
     fechaSolicitud: Date;
     constructor() { }
 }
