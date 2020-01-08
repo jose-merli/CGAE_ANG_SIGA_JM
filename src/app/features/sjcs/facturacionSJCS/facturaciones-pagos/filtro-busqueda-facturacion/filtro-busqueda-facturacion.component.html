@@ -6,12 +6,17 @@
     <p>SJCS<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.titulo' | translate}}</p>
   </div>
   <div class="card">
-    <div class="card-body">         
-      <p class="title-module">
-        <p-radioButton name="filtroBusquedaFacturacion" value="facturacion" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}" [(ngModel)]="selectedValue"></p-radioButton>
-        <p-radioButton name="filtroBusquedaFacturacion" value="pagos" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}" [(ngModel)]="selectedValue" disabled></p-radioButton>  
-        <i (click)="onHideDatosGenerales()" *ngIf="showFiltroBusquedaFacturacion" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showFiltroBusquedaFacturacion" class="fa fa-angle-down float-right"></i>
+    <div class="card-body">   
+      <div class="form-row">
+        <div class="col-4">
+          <p-radioButton name="filtroBusquedaFacturacion" value="facturacion" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}" [(ngModel)]="selectedValue"></p-radioButton>
+          <p-radioButton name="filtroBusquedaFacturacion" value="pagos" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}" [(ngModel)]="selectedValue" disabled></p-radioButton>  
+        </div>
+      </div>      
+      <p class="title-module" (click)="onHideDatosGenerales()"> 
+        {{ 'general.message.datos.generales' | translate }}      
+        <i *ngIf="showFiltroBusquedaFacturacion" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showFiltroBusquedaFacturacion" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showFiltroBusquedaFacturacion" class="module vista-avanzada">
         <div class="form-row">
