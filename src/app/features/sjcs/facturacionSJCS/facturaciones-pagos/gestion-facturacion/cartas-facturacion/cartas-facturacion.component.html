@@ -16,13 +16,11 @@
               </label>
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: xx</label>
-              <label style="float: right;">
-                <a>
+              <!--<label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: xx</label>-->
+              <label>
                   <i class="fas fa-edit icon-enlace"></i>
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
+                  <span style="color: blue; text-decoration: underline; cursor: pointer;" (click)="linkCartasFacturacion()">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
                   </span>
-                </a>
               </label>
               <i class="float-right"></i>
             </div>

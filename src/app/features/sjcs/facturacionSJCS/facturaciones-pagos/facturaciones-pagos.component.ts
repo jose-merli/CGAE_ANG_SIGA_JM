@@ -4,7 +4,7 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
-import { procesos_maestros } from '../../../../permisos/procesos_maestros';
+import { procesos_facturacionSJCS} from '../../../../permisos/procesos_facturacion';
 
 import { FiltroBusquedaFacturacionComponent } from "./filtro-busqueda-facturacion/filtro-busqueda-facturacion.component";
 import { TablaBusquedaFacturacionComponent } from "./tabla-busqueda-facturacion/tabla-busqueda-facturacion.component";
@@ -37,7 +37,7 @@ export class FacturacionesYPagosComponent implements OnInit {
   	ngOnInit() { 
 		this.buscar = this.filtros.buscar;
 
-		this.commonsService.checkAcceso(procesos_maestros.areasMaterias).then(respuesta => {
+		this.commonsService.checkAcceso(procesos_facturacionSJCS.facturacionYpagos).then(respuesta => {
         	this.permisoEscritura = respuesta;
 
         	this.persistenceService.setPermisos(this.permisoEscritura);

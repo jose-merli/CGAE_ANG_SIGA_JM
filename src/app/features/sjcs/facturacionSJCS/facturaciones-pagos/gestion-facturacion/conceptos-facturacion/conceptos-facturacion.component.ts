@@ -191,6 +191,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
         }
       });   
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     }
   }
 
@@ -241,20 +243,24 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   restablecer(){
-    this.body=JSON.parse(JSON.stringify(this.bodyAux));
-    this.bodyUpdate=[];
-    this.modificaConcepto=false;
-    this.nuevoConcepto=false;
-    this.idGrupo=undefined;
-    this.idConcepto=undefined;
-    this.idGrupoOld=undefined;
-    this.idConceptoOld=undefined;
-    this.newConcept.emit(false);
+    if(this.modoEdicion && this.idEstadoFacturacion=='10' && (this.nuevoConcepto || this.modificaConcepto)){
+      this.body=JSON.parse(JSON.stringify(this.bodyAux));
+      this.bodyUpdate=[];
+      this.modificaConcepto=false;
+      this.nuevoConcepto=false;
+      this.idGrupo=undefined;
+      this.idConcepto=undefined;
+      this.idGrupoOld=undefined;
+      this.idConceptoOld=undefined;
+      this.newConcept.emit(false);
 
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-    this.buscadores = this.buscadores.map(it => it = "");
+      this.tabla.sortOrder = 0;
+      this.tabla.sortField = '';
+      this.tabla.reset();
+      this.buscadores = this.buscadores.map(it => it = "");
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    }
   }
 
   disabledRestablecer(){
@@ -288,6 +294,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       }else{
         this.callServiceGuardar("facturacionsjcs_saveConceptosFac");
       }
+    }else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     }
   }
 
@@ -341,35 +349,43 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   nuevo(){
-    this.tabla.sortOrder = 0;
-    this.tabla.sortField = '';
-    this.tabla.reset();
-    this.nuevoConcepto = true;
-    this.modificaConcepto=false;
-    this.newConcept.emit(true);
+    if(this.modoEdicion && this.idEstadoFacturacion=='10'){
+      if(this.nuevoConcepto || this.modificaConcepto || this.selectMultiple || this.selectAll){
+        this.tabla.sortOrder = 0;
+        this.tabla.sortField = '';
+        this.tabla.reset();
+        this.nuevoConcepto = true;
+        this.modificaConcepto=false;
+        this.newConcept.emit(true);
 
-    if (undefined==this.body || null==this.body || this.body.length<1) {
-      this.body = [];
+        if (undefined==this.body || null==this.body || this.body.length<1) {
+          this.body = [];
+        }else{
+          this.body.forEach(element => {
+            element.editable = false;
+          });
+        }
+
+        let concepto = {
+          idConcepto: undefined,
+          idGrupo: undefined,
+          importeTotal: "0",
+          importePendiente: "0",
+          editable: true,
+          idConceptoOld: undefined,
+          idGrupoOld: undefined
+        };
+
+        if (this.body.length == 0) {
+          this.body.push(concepto);
+        } else {
+          this.body = [concepto, ...this.body];
+        }
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+      }
     }else{
-      this.body.forEach(element => {
-        element.editable = false;
-      });
-    }
-
-    let concepto = {
-      idConcepto: undefined,
-      idGrupo: undefined,
-      importeTotal: "0",
-      importePendiente: "0",
-      editable: true,
-      idConceptoOld: undefined,
-      idGrupoOld: undefined
-    };
-
-    if (this.body.length == 0) {
-      this.body.push(concepto);
-    } else {
-      this.body = [concepto, ...this.body];
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     }
   }
 

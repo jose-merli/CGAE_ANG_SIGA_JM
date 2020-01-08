@@ -10,7 +10,7 @@
   <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada" (newConcept)="newConcept($event)" (changeNumCriterios)="changeNumCriterios($event)"></app-conceptos-facturacion>
   <app-baremos *ngIf="modoEdicion"></app-baremos>
   <app-pagos *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada"></app-pagos>
-  <app-cartas-facturacion *ngIf="modoEdicion"></app-cartas-facturacion>
+  <app-cartas-facturacion [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion" *ngIf="modoEdicion"></app-cartas-facturacion>
 
   <div class="text-right main-button">
     <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>

@@ -3,7 +3,8 @@ import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturac
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from "@angular/common";
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroCartasFacturacionPagoComponent } from './filtro-cartas-facturacion-pago/filtro-cartas-facturacion-pago.component';
 import { TablaCartasFacturacionPagoComponent } from './tabla-cartas-facturacion-pago/tabla-cartas-facturacion-pago.component';
@@ -19,15 +20,16 @@ export class CartasFacturacionPagoComponent implements OnInit {
   datos = [];
   buscar: boolean = false;
   progressSpinner: boolean = false;
+  activaVolver: boolean = false;
 
   @ViewChild(FiltroCartasFacturacionPagoComponent) filtros;
   @ViewChild(TablaCartasFacturacionPagoComponent) tabla;
 
   constructor(private commonsService: CommonsService, private persistenceService: PersistenceService,
-    private translateService: TranslateService, private router: Router, private sigaServices: SigaServices) { }
+    private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute,
+    private location: Location, private sigaServices: SigaServices) { }
 
   ngOnInit() {
-
     this.commonsService.checkAcceso(procesos_facturacionSJCS.cartasFacturacionPago)
       .then(respuesta => {
 
@@ -44,8 +46,24 @@ export class CartasFacturacionPagoComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
       }
-      ).catch(error => console.error(error));
+    ).catch(error => console.error(error));
+    
+    this.activaVolver=false;
 
+    this.activatedRoute.queryParams.subscribe(params => {
+
+      if (params.modo == "f") {
+        let datos = this.persistenceService.getDatos();
+        this.activaVolver=true;
+        this.filtros.filtros.idFacturacion=datos.idFacturacion;
+
+        this.search("f");
+      }
+    });
+  }
+
+  volver(){
+    this.location.back();
   }
 
   search(event) {
