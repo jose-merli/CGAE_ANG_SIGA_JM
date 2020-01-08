@@ -28,7 +28,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   updateInscripciones = [];
   selectionMode = "single";
   resumenColaGuardia = "";
-
+  botActivos: boolean = true;
 
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
@@ -83,6 +83,7 @@ export class DatosColaGuardiaComponent implements OnInit {
           this.datos = JSON.parse(data.body).inscripcionesItem;
 
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+          this.botActivos = true;
 
           this.progressSpinner = false;
 
@@ -170,17 +171,33 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   duplicar() {
-
+    this.datos = [JSON.parse(JSON.stringify(this.tabla.selectedDatos)), ...this.datos];
+    this.datos[0].numeroGrupo = "";
+    this.datos[0].orden = "";
+    let menorOrdenCola = 0;
+    this.datos.forEach(element => {
+      if (+element.ordenCola <= menorOrdenCola)
+        menorOrdenCola = +element.ordenCola - 1;
+    });
+    this.datos[0].ordenCola = menorOrdenCola;
+    this.botActivos = false;
   }
 
   rest() {
-    if (this.datosInicial && this.datos)
+    if (this.datosInicial && this.datos) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
+      this.tabla.table.reset();
+      this.tabla.table.sortOrder = 0;
+      this.tabla.table.sortField = '';
+      this.tabla.selectedDatos = null;
+      // this.tabla.buscadores = this.tabla.buscadores.map(it => it = ""); NO OLVIDAAAAAAAAR!!!!!
+      this.botActivos = true;
 
+    }
   }
 
   duplicarDisabled() {
-    if (this.tabla && this.tabla.selectedDatos) return false;
+    if (this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0) return false;
     return true;
   }
   clear() { }

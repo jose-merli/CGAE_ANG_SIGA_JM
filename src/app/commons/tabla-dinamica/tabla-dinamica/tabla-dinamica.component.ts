@@ -35,7 +35,9 @@ export class TablaDinamicaComponent implements OnInit {
     this.getCols()
 
   }
+  cambiaInput() {
 
+  }
 
   sube(selected) {
     let index = this.datos.indexOf(selected);

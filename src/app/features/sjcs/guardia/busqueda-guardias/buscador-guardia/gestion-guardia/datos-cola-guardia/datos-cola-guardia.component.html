@@ -48,7 +48,7 @@
             [disabled]="permisoEscritura || historico"></app-fecha>
         </div>
         <div class="col-12">
-          <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [porGrupos]="body.porGrupos" [datos]="datos"></app-tabla-dinamica-cola-guardia>
+          <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [porGrupos]="body.porGrupos" [botActivos]="botActivos" [datos]="datos"></app-tabla-dinamica-cola-guardia>
         </div>
 
       </div>
@@ -56,8 +56,8 @@
   </div>
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
-      <button pButton [disabled]="historico || permisoEscritura || body.porGrupos || duplicarDisabled()" (click)="duplicar()" type="button"
-        icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+      <button pButton [disabled]="historico || permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
+        type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura" (click)="ultimo()" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
       <button pButton [disabled]="historico || permisoEscritura || true" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>

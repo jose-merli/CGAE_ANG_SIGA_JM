@@ -73,7 +73,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
             this.datos.pop()
           }
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
           this.progressSpinner = false;
         });
     }
@@ -85,14 +84,14 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   disabledSave() {
-    if (!this.modoEdicion)
+    if (this.permisoEscritura)
       if (!this.historico && (this.body.nombre && this.body.nombre.trim())
         && (this.body.descripcion && this.body.descripcion.trim())
         && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
         return false;
       } else return true;
     else
-      return false;
+      return true;
   }
 
   getCols() {
@@ -162,7 +161,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial))
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
 
@@ -225,6 +224,11 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     });
   }
 
+  tipoGuardiaResumen() {
+    let tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value = this.body.idTipoGuardia)[0]
+    if (tipoGuardiaResumen)
+      return tipoGuardiaResumen.label;
+  }
   clear() {
     this.msgs = [];
   }

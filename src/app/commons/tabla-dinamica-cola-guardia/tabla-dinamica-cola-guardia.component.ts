@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { EventEmitter } from 'events';
 import { SigaServices } from '../../_services/siga.service';
 
@@ -21,6 +21,8 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   @Input() botActivos: boolean = true;
   @Input() porGrupos: boolean = false;
   @Input() selectionMode: string = "single";
+  @ViewChild("table") table;
+
   progressSpinner: boolean = false;
 
 
@@ -202,7 +204,9 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   //     )
   // }
 
-
+  cambiaInput() {
+    this.botActivos = false;
+  }
   onChangeRowsPerPages(event) { }
 }
 

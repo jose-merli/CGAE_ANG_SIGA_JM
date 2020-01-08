@@ -50,6 +50,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
           this.body.diasPeriodo = n.diasPeriodo;
           this.body.diasGuardia = n.diasGuardia;
           this.body.idGuardia = n.idGuardia;
+          this.body.idTurno = n.idTurno;
           this.body.seleccionFestivos = n.seleccionFestivos;
           this.body.seleccionLaborables = n.seleccionLaborables;
           if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
