@@ -14,7 +14,7 @@ export class DatosBaremosComponent implements OnInit {
   cols;
   colsPartidoJudicial;
   msgs;
-  modoEdicion: boolean = false;
+  @Input() modoEdicion: boolean = false;
   selectedFile
   selectedItem: number = 10;
   selectAll;
@@ -50,7 +50,7 @@ export class DatosBaremosComponent implements OnInit {
 
   getBaremos() {
     this.sigaServices.post(
-      "busquedaGuardias_getBaremos", this.persistenceService.getDatos()).subscribe(
+      "busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
           JSON.parse(data.body).combooItems.forEach(it => {
             this.datos += (it.label + ": " + it.value + "€ , ");

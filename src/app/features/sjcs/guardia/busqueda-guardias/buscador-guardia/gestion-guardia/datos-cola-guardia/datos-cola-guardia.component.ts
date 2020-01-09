@@ -29,6 +29,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   selectionMode = "single";
   resumenColaGuardia = "";
   botActivos: boolean = true;
+  editable: boolean = true;
 
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
@@ -48,15 +49,22 @@ export class DatosColaGuardiaComponent implements OnInit {
           data = JSON.parse(data.body)
 
         this.body.nombre = data.nombre;
-        this.body.apellido1 = data.apellidos1;
-        this.body.apellido2 = data.apellidos2;
+
         this.body.porGrupos = data.porGrupos;
         // this.selectionMode = data.porGrupos ? "multiple" : "single"
-        this.body.nombreApe = data.nombre, data.apellido1, data.apellido2;
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
+        if (this.body.porGrupos) {
+          this.body.ordenacionManual = true;
+          this.editable = true;
+          this.botActivos = true;
+        }
+        else {
+          this.body.ordenacionManual = false;
+          this.isOrdenacionManual();
+        }
 
         this.body.letradosIns = new Date();
         this.getColaGuardia();
@@ -130,7 +138,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         data => {
           this.datos = JSON.parse(data.body).inscripcionesItem;
           this.datos = this.datos.map(it => {
-            it.nombreApe = it.nombre + " " + it.apellido1 + " " + it.apellido2;
+            it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
             return it;
           });
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -165,9 +173,30 @@ export class DatosColaGuardiaComponent implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+
         }
       );
     // }
+  }
+
+  isOrdenacionManual() {
+    this.sigaService
+      .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
+      .subscribe(
+        n => {
+          n.colaOrden.forEach(it => {
+            if (it.por_filas == "ORDENACIONMANUAL" && +it.numero != 0)
+              this.body.ordenacionManual = true;
+          });
+
+          if (!this.body.ordenacionManual) {
+            this.botActivos = false;
+            this.editable = false;
+          } else {
+            this.botActivos = true;
+            this.editable = true;
+          }
+        });
   }
 
   duplicar() {
@@ -198,6 +227,12 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   duplicarDisabled() {
     if (this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0) return false;
+    return true;
+  }
+  disabledUltimo() {
+    if (this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0) {
+      return false;
+    }
     return true;
   }
   clear() { }

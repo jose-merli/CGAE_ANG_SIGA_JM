@@ -19,6 +19,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
   @Input() datos;
   @Input() botActivos: boolean = true;
+  @Input() editable;
   @Input() porGrupos: boolean = false;
   @Input() selectionMode: string = "single";
   @ViewChild("table") table;

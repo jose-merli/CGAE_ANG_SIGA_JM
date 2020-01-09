@@ -51,6 +51,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
           this.body.diasGuardia = n.diasGuardia;
           this.body.idGuardia = n.idGuardia;
           this.body.idTurno = n.idTurno;
+          this.body.requeridaValidacion = n.requeridaValidacion;
           this.body.seleccionFestivos = n.seleccionFestivos;
           this.body.seleccionLaborables = n.seleccionLaborables;
           if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
@@ -204,23 +205,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     this.sigaServices.post("busquedaGuardias_updateGuardia", this.body).subscribe(
       data => {
 
-        if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
-          this.body.seleccionFestivos.split("").forEach(element => {
-            this.festividades.forEach(it => {
-              if (it.label == element)
-                it.value = true;
-            })
-          });
-        if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
-          this.body.seleccionLaborables.split("").forEach(element => {
-            this.laborables.forEach(it => {
-              if (it.label == element)
-                it.value = true;
-            })
-          });
+        this.rellenaDias();
 
-        this.changeFestividades();
-        this.changeLaborables();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
@@ -241,9 +227,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     );
   }
   rest() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial))
-    this.changeFestividades();
-    this.changeLaborables();
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.rellenaDias();
   }
 
   disabledSave() {
@@ -253,7 +238,25 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
 
     }
+  }
+  rellenaDias() {
+    if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
+      this.body.seleccionFestivos.split("").forEach(element => {
+        this.festividades.forEach(it => {
+          if (it.label == element)
+            it.value = true;
+        })
+      });
+    if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
+      this.body.seleccionLaborables.split("").forEach(element => {
+        this.laborables.forEach(it => {
+          if (it.label == element)
+            it.value = true;
+        })
+      });
 
+    this.changeFestividades();
+    this.changeLaborables();
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];

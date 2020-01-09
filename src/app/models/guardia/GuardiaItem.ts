@@ -46,6 +46,7 @@ export class GuardiaItem {
     filtros;
     partidoJudicial;
     rotarComponentes;
+    requeridaValidacion;
     historico: boolean;
     constructor() { }
 

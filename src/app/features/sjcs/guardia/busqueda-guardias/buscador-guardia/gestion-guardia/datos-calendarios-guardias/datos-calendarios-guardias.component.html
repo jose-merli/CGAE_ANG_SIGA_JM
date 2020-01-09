@@ -96,8 +96,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.diasSeparacionGuardias" | translate}} (*)
             </label>
-            <input type="text" [(ngModel)]="body.diasSeparacionGuardias" disabled="true" class="form-control" pInputText>
-
+            <input type="text" [(ngModel)]="body.diasSeparacionGuardias" class="form-control" pInputText>
           </div>
 
 
@@ -107,7 +106,7 @@
               <strong>{{ "justiciaGratuita.guardia.gestion.requeridaValidacionGuardiasColegio" | translate }}</strong>
             </div>
             <div class="col-2 p-0 pt-2">
-              <p-checkbox binary="true" [(ngModel)]="body.requeridaValidacion"></p-checkbox>
+              <p-checkbox binary="true" [disabled]="true" [(ngModel)]="body.requeridaValidacion"></p-checkbox>
             </div>
           </div>
         </div>

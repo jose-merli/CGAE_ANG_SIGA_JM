@@ -31,9 +31,10 @@ import { DatosColaGuardiaComponent } from './buscador-guardia/gestion-guardia/da
 import { DatosConfColaComponent } from './buscador-guardia/gestion-guardia/datos-conf-cola/datos-conf-cola.component';
 import { DatosGeneralesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-generales-guardias/datos-generales-guardias.component';
 import { DatosIncompatibilidadesComponent } from './buscador-guardia/gestion-guardia/datos-incompatibilidades/datos-incompatibilidades.component';
-import { DatosInscripcionesComponent } from './buscador-guardia/gestion-guardia/datos-inscripciones/datos-inscripciones.component';
 import { GestionGuardiaComponent } from './buscador-guardia/gestion-guardia/gestion-guardia.component';
 import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-guardias.component';
+import { DatosIncripcionesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-incripciones-guardias/datos-incripciones-guardias.component';
+import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-turno-guardias/datos-turno-guardias.component';
 
 @NgModule({
   imports: [
@@ -61,7 +62,7 @@ import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-
 
 
   ],
-  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosInscripcionesComponent, DatosIncompatibilidadesComponent, CalendariosComponent],
+  declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosIncompatibilidadesComponent, CalendariosComponent, DatosIncripcionesGuardiasComponent, DatosTurnoGuardiasComponent],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
