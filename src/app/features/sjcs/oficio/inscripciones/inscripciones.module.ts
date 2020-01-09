@@ -28,7 +28,11 @@ import { InscripcionesComponent } from './busqueda-inscripciones.component';
 import { TablaInscripcionesComponent } from './gestion-inscripciones/gestion-inscripciones.component';
 import { FiltrosInscripciones } from './filtros-inscripciones/filtros-inscripciones.component';
 import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
-
+import { FichaInscripcionesComponent } from './ficha-inscripciones/ficha-inscripciones.component';
+import { TarjetaLetradoComponent } from './ficha-inscripciones/tarjeta-letrado/tarjeta-letrado.component';
+import { TarjetaInscripcion } from './ficha-inscripciones/tarjeta-inscripciones/tarjeta-inscripcion.component';
+import {TreeTableModule} from 'primeng/treetable';
+import {TreeNode} from 'primeng/api';
 @NgModule({
   imports: [
     CommonModule,
@@ -51,13 +55,16 @@ import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-col
     TarjetaResumenFijaModule,
     ConfirmDialogModule,
     FechaModule,
-    BusquedaColegiadoExpressModule
-
+    BusquedaColegiadoExpressModule,
+    TreeTableModule,
   ],
   declarations: [
     InscripcionesComponent,
     TablaInscripcionesComponent,
-    FiltrosInscripciones
+    FiltrosInscripciones,
+    FichaInscripcionesComponent,
+    TarjetaLetradoComponent,
+    TarjetaInscripcion
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

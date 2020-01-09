@@ -12,6 +12,7 @@ import { TurnosObject } from '../../../../../models/sjcs/TurnosObject';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
+import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
 
 
 @Component({
@@ -35,6 +36,8 @@ export class TablaInscripcionesComponent implements OnInit {
   buscadores = [];
   updatePartidasPres = [];
   disabledSolicitarBaja: boolean = false;
+  disabledValidar: boolean = false;
+  disabledDenegar: boolean = false;
   body;
   partidasJudiciales: any[] = [];
 
@@ -42,6 +45,7 @@ export class TablaInscripcionesComponent implements OnInit {
   selectAll;
   selectedDatos: any[] = [];
   numSelected = 0;
+  isLetrado:boolean = false;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
@@ -76,6 +80,12 @@ export class TablaInscripcionesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (
+      sessionStorage.getItem("isLetrado") != null &&
+      sessionStorage.getItem("isLetrado") != undefined
+    ) {
+      this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+    }
     this.selectedDatos = [];
     this.datos.fechaActual = new Date();
     this.getCols();
@@ -385,16 +395,20 @@ export class TablaInscripcionesComponent implements OnInit {
   }
   
 
-  solicitarBaja() {
+  solicitarBaja(selectedDatos) {
     this.fechaDeHoy = new Date();
     let fechaHoy =this.datepipe.transform(this.fechaDeHoy, 'dd/MM/yyyy');
     let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')
     if(fechaActual2 != fechaHoy){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
     }else{
-      let inscripcionBaja = new InscripcionesObject();
-      inscripcionBaja.inscripcionesItem = this.selectedDatos
-      this.sigaServices.post("turnos_eliminateTurnos", inscripcionBaja).subscribe(
+      this.body = new InscripcionesObject();
+      this.body.inscripcionesItem = selectedDatos
+      this.body.inscripcionesItem.forEach(element => {
+        element.fechaActual = this.datos.fechaActual;
+        element.observaciones = this.datos.observaciones;
+      });
+      this.sigaServices.post("inscripciones_updateSolicitarBaja", this.body).subscribe(
         data => {
           this.selectedDatos = [];
           this.searchPartidas.emit(false);
@@ -522,15 +536,24 @@ export class TablaInscripcionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
+      this.router.navigate(["/gestionInscripciones"], { queryParams: { idpersona: evento.data.idpersona } });
     } else {
-       this.selectedDatos.forEach(element => {
-         if(element.estado == 1 && element.validarinscripciones == "S"){
-           this.disabledSolicitarBaja = false;
-         }else{
-           this.disabledSolicitarBaja = true;
-         }
-       }); 
+      let findDato = this.selectedDatos.find(item => item.estado != 1);
+      if(findDato != null){
+        this.disabledSolicitarBaja = true;
+      }
+      else{
+        this.disabledSolicitarBaja = false;
+      }
+      let findDato2 = this.selectedDatos.find(item => item.estado != (2 || 0));
+      if(findDato2 != null){
+        this.disabledValidar = true;
+        this.disabledDenegar = true;
+      }
+      else{
+        this.disabledValidar = false;
+        this.disabledDenegar = false;
+      }
       if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
@@ -584,13 +607,22 @@ export class TablaInscripcionesComponent implements OnInit {
     }
     if (selectedDatos != undefined) {
       this.numSelected = selectedDatos.length;
-      this.selectedDatos.forEach(element => {
-        if(element.estado == 1 && element.validarinscripciones){
-          this.disabledSolicitarBaja = false;
-        }else{
-          this.disabledSolicitarBaja = true;
-        }
-      }); 
+      let findDato = this.selectedDatos.find(item => item.estado != 1);
+      if(findDato != null){
+        this.disabledSolicitarBaja = true;
+      }
+      else{
+        this.disabledSolicitarBaja = false;
+      }
+      let findDato2 = this.selectedDatos.find(item => item.estado != (2 || 0));
+      if(findDato2 != null){
+        this.disabledValidar = true;
+        this.disabledDenegar = true;
+      }
+      else{
+        this.disabledValidar = false;
+        this.disabledDenegar = false;
+      }
     }
   }
 

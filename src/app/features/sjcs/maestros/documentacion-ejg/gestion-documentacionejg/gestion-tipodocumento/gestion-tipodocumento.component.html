@@ -68,14 +68,9 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-<<<<<<< HEAD
-        <button (click)="rest()" pButton [disabled]="historico || !permisos" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave() || !permisos" type="button" icon="far fa-save" iconPos="left"
-=======
         <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisos" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave() || !permisos" type="button" icon="far fa-save" iconPos="left"
->>>>>>> Fase3
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

@@ -78,13 +78,8 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 1
               </label>
-<<<<<<< HEAD
-              <input (keypress)="numberOnly($event)" type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()" [disabled]="historico || !permisoEscritura"
-                pInputText>
-=======
               <input (keypress)="numberOnly($event)" type="text" class="form-control" maxLength="20" [(ngModel)]="body.telefono1" (input)="changeTelefono1()"
                 [disabled]="historico || !permisoEscritura" pInputText>
->>>>>>> Fase3
               <div *ngIf="!tlf1Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
@@ -94,13 +89,8 @@
               <label>
                 {{"censo.ws.literal.telefono" | translate}} 2
               </label>
-<<<<<<< HEAD
-              <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.telefono2"
-                (input)="changeTelefono2()" pInputText>
-=======
               <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
                 [(ngModel)]="body.telefono2" (input)="changeTelefono2()" pInputText>
->>>>>>> Fase3
               <div *ngIf="!tlf2Valido">
                 <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
               </div>
@@ -110,13 +100,8 @@
               <label>
                 {{"censo.ws.literal.fax" | translate}}
               </label>
-<<<<<<< HEAD
-              <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20" [(ngModel)]="body.fax1"
-                (input)="changeFax()" pInputText>
-=======
               <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
                 [(ngModel)]="body.fax1" (input)="changeFax()" pInputText>
->>>>>>> Fase3
               <div *ngIf="!faxValido">
                 <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
               </div>

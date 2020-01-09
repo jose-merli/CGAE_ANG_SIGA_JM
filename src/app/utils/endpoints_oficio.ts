@@ -31,6 +31,8 @@ export let endpoints_oficio: any = {
     //FIN DE TURNOS
 
     inscripciones_comboTurnos: "oficio/inscripciones/comboTurnos",
-    inscripciones_busquedaInscripciones:"oficio/inscripciones/busquedaInscripciones"
+    inscripciones_busquedaInscripciones:"oficio/inscripciones/busquedaInscripciones",
+    inscripciones_updateSolicitarBaja:"oficio/inscripciones/updateSolicitarBaja",
+    inscripciones_busquedaTarjetaInscripciones:"oficio/inscripciones/busquedaTarjetaInscripciones"
 
 }

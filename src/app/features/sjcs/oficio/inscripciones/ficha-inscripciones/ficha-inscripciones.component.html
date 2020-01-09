@@ -1,0 +1,25 @@
+<div class="consultas-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>
+      {{ "menu.informesYcomunicaciones" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.consultas" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.consultas.ficha.fichaConsulta" | translate }}
+    </p>
+  </div>
+  <app-tarjeta-resumen-fija *ngIf="permisosTarjetaResumen" chincheta="true" icono="far fa-file-alt" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+  [datos]="datos2"></app-tarjeta-resumen-fija>
+  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <app-tarjeta-letrado [datos]="datos" (datosSend)="datosSend($event)" (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'"></app-tarjeta-letrado>
+    <!-- <app-configuracion-turnos [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'configuracion'"></app-configuracion-turnos>
+    <app-configuracion-colaoficio [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'configuracioncolaoficio'"></app-configuracion-colaoficio>
+    <app-tarjeta-colaoficio [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tablacolaoficio'"></app-tarjeta-colaoficio>
+    <app-tarjeta-guardias [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tarjetaguardias'"></app-tarjeta-guardias>
+    <app-tarjeta-colaguardias [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'tablacolaguardias'"></app-tarjeta-colaguardias> -->
+    <app-tarjeta-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion" *ngSwitchCase="'inscripcion'"></app-tarjeta-inscripcion>
+  </div>
+  
+</div>
+<div class="mt-3 text-right main-button ">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>

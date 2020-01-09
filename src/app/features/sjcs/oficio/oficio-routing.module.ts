@@ -4,6 +4,7 @@ import { AuthGuard } from '../../../_guards/auth.guards';
 import { TurnosComponent } from './turnos/busqueda-turnos.component';
 import { FichaTurnosComponent } from './turnos/ficha-turnos/ficha-turnos.component';
 import { InscripcionesComponent } from './inscripciones/busqueda-inscripciones.component';
+import { FichaInscripcionesComponent } from './inscripciones/ficha-inscripciones/ficha-inscripciones.component';
 
 
 const routesOficio: Routes = [
@@ -20,6 +21,11 @@ const routesOficio: Routes = [
   {
     path: "inscripciones",
     component: InscripcionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "gestionInscripciones",
+    component: FichaInscripcionesComponent,
     canActivate: [AuthGuard]
   },
 ];
