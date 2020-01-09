@@ -4,7 +4,7 @@
   <div class="card-body p-0">
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
-      #table [first]="first" class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
+      #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>

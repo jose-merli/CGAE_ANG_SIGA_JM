@@ -1,9 +1,15 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Location } from "@angular/common";
 import { USER_VALIDATIONS } from '../../../../../properties/val-properties';
 import { SigaWrapper } from "../../../../../wrapper/wrapper.class";
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
+import { PagosComponent } from './pagos/pagos.component';
+import { BaremosComponent } from './baremos/baremos.component';
+import { CartasFacturacionComponent } from './cartas-facturacion/cartas-facturacion.component';
+import { ConceptosFacturacionComponent } from './conceptos-facturacion/conceptos-facturacion.component';
+import { DatosFacturacionComponent } from './datos-facturacion/datos-facturacion.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-gestion-facturacion',
@@ -13,7 +19,7 @@ import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
 export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   progressSpinner: boolean = false;
   datos: FacturacionItem = new FacturacionItem();
-  
+
   cerrada;
   idFacturacion;
   idEstadoFacturacion;
@@ -22,6 +28,13 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   msgs;
   insertConcept;
   numCriterios;
+  psBaremos;
+
+  @ViewChild(PagosComponent) pagos;
+  @ViewChild(BaremosComponent) baremos;
+  @ViewChild(CartasFacturacionComponent) cartas;
+  @ViewChild(ConceptosFacturacionComponent) conceptos;
+  @ViewChild(DatosFacturacionComponent) datosFac;
 
   constructor(private location: Location, private persistenceService: PersistenceService) { 
     super(USER_VALIDATIONS);

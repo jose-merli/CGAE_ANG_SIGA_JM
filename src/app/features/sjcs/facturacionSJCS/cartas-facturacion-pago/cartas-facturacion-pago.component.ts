@@ -51,21 +51,28 @@ export class CartasFacturacionPagoComponent implements OnInit {
     ).catch(error => console.error(error));
     
     this.activaVolver=false;
+    
+    if (undefined!=this.persistenceService.getDatos()) {
+      let datos = this.persistenceService.getDatos();
 
-    this.activatedRoute.queryParams.subscribe(params => {
+      if(undefined!=datos.idFacturacion && null!=datos.idFacturacion){
+        datos.modoBusqueda="f";
 
-      if (params.modo == "f") {
-        let datos = this.persistenceService.getDatos();
         this.activaVolver=true;
-        this.filtros.filtros.idFacturacion=datos.idFacturacion;
+        this.persistenceService.setFiltros(datos);
 
         this.search("f");
       }
-    });
+    }
   }
 
   volver(){
+    this.persistenceService.setFiltros(this.persistenceService.getFiltrosAux());
     this.location.back();
+  }
+
+  desactivaVolver(){
+    this.activaVolver=false;
   }
 
   search(event) {
@@ -78,7 +85,6 @@ export class CartasFacturacionPagoComponent implements OnInit {
     } else if (event == "p") {
       this.searchPago();
     }
-
   }
 
   changeModoBusqueda(){

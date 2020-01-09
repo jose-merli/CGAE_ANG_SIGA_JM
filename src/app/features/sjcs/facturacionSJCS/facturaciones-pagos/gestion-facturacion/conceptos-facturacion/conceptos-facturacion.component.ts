@@ -14,7 +14,7 @@ import { ConfirmationService } from 'primeng/primeng';
   styleUrls: ['./conceptos-facturacion.component.scss']
 })
 export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit {
-  progressSpinner: boolean = false;
+  progressSpinnerConceptos: boolean = false;
   cols;
   msgs; 
   showFichaConceptos: boolean = false;
@@ -65,8 +65,6 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   ngOnInit() {
-    this.progressSpinner = true;
-
     this.comboConceptos();
     this.comboGruposTurnos();    
 
@@ -76,36 +74,43 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   comboConceptos(){
+    this.progressSpinnerConceptos = true;
+
     this.sigaService.get("combo_comboFactConceptos").subscribe(
 			data => {
 			  this.conceptos = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.conceptos);
+        this.commonsService.arregloTildesCombo(this.conceptos);
+        this.progressSpinnerConceptos = false;
 			},	  
 			err => {
-			  console.log(err);
+        console.log(err);
+        this.progressSpinnerConceptos = false;
 			}
 		);
   }
 
   comboGruposTurnos(){
+    this.progressSpinnerConceptos = true;
+
     this.sigaService.get("combo_grupoFacturacion").subscribe(
 			data => {
 			  this.grupoTurnos = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.grupoTurnos);
+        this.commonsService.arregloTildesCombo(this.grupoTurnos);
+        this.progressSpinnerConceptos = false;
 			},	  
 			err => {
-			  console.log(err);
-			}
+        console.log(err);
+        this.progressSpinnerConceptos = false;
+      }
 		);
   }
 
   cargaDatos(){
     if(undefined!=this.idFacturacion){
-      this.progressSpinner = true;
+      this.progressSpinnerConceptos = true;
       //datos de la facturación
       this.sigaService.getParam("facturacionsjcs_tarjetaConceptosfac", "?idFacturacion=" + this.idFacturacion).subscribe(
         data => {
-          this.progressSpinner = false;
           let datos=data.facturacionItem;
 
           if(undefined != data.facturacionItem && data.facturacionItem.length>0){
@@ -135,11 +140,12 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           this.body = JSON.parse(JSON.stringify(datos));
           this.bodyAux=JSON.parse(JSON.stringify(datos)); 
           this.numCriterios=datos.length; 
-          this.changeNumCriterios.emit(this.numCriterios);        
+          this.changeNumCriterios.emit(this.numCriterios);  
+          this.progressSpinnerConceptos = false;      
         },	  
         err => {
-          this.progressSpinner = false;
           console.log(err);
+          this.progressSpinnerConceptos = false;
         }
       );
     }
@@ -197,13 +203,12 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   callServiceEliminar(){
-    this.progressSpinner=true;
+    this.progressSpinnerConceptos = true;
 
     if(undefined!=this.selectedDatos && this.selectedDatos.length>0){
       this.sigaService.post("facturacionsjcs_deleteConceptosFac", this.selectedDatos).subscribe(
         data => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.progressSpinner = false;
 
           this.selectedDatos=[];
           this.selectMultiple=false;
@@ -213,6 +218,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           this.cargaDatos();
           this.idConceptoOld=undefined;
           this.idGrupoOld=undefined;
+          this.progressSpinnerConceptos = false;
         },
         err => {
           if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -220,11 +226,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
-
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
+          this.progressSpinnerConceptos = false;
         }
       );
     }
@@ -300,7 +302,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   callServiceGuardar(url){
-    this.progressSpinner=true;
+    this.progressSpinnerConceptos = true;
 
     this.sigaService.post(url, this.bodyUpdate).subscribe(
       data => {
@@ -309,7 +311,6 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
         this.bodyAux=JSON.parse(JSON.stringify(this.body));
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
 
         this.bodyUpdate=[];
         this.modificaConcepto=false;
@@ -320,6 +321,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
         this.idConceptoOld=undefined;
         this.idGrupoOld=undefined;
         this.newConcept.emit(false);
+        this.progressSpinnerConceptos = false;
       },
       err => {
         if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -327,11 +329,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
+        this.progressSpinnerConceptos = false;
       }
     );
   }

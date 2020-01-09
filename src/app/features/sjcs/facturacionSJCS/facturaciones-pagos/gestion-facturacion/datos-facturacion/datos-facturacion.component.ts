@@ -44,7 +44,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Output() changeIdFacturacion = new EventEmitter<String>();
 
   showFichaFacturacion: boolean = true;
-  progressSpinner: boolean = false;
+  progressSpinnerDatos: boolean = false;
   checkRegularizar:boolean = false;
   checkVisible:boolean = false;
   checkRegularizarInicial:boolean = false;
@@ -69,7 +69,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   ngOnInit() {
-    this.progressSpinner = true;
     this.getRangeYear();   
 
     this.comboPartidasPresupuestarias();
@@ -87,13 +86,11 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   cargaDatos(){
-    this.progressSpinner = true;
+    this.progressSpinnerDatos = true;
 
     //datos de la facturación
 		this.sigaService.getParam("facturacionsjcs_datosfacturacion", "?idFacturacion=" + this.idFacturacion).subscribe(
 			data => {
-        this.progressSpinner = false;
-
         this.body = new FacturacionItem();
 
         if(undefined != data.facturacionItem && data.facturacionItem.length>0){
@@ -149,12 +146,13 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
             this.bodyAux.fechaEstado = new Date(data.facturacionItem[0].fechaEstado);
           }
         }
+        this.progressSpinnerDatos= false;
 			},	  
 			err => {
-        this.progressSpinner = false;
         if(null!=err.error){
           console.log(err.error);
         } 
+        this.progressSpinnerDatos= false;
 			}
     );
     
@@ -171,34 +169,37 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     }
 
     if(undefined!=idFac){
-      this.progressSpinner = true;
+      this.progressSpinnerDatos = true;
 
       this.sigaService.getParam("facturacionsjcs_historicofacturacion", "?idFacturacion=" + idFac).subscribe(
         data => {
-          this.progressSpinner = false;
-
           this.estadosFacturacion = data.facturacionItem;
+          this.progressSpinnerDatos= false;
         },	  
         err => {
-          this.progressSpinner = false;
           if(null!=err.error){
             console.log(err.error);
           } 
+          this.progressSpinnerDatos= false;
         }
       );
     }
   }  
 
   comboPartidasPresupuestarias(){
+    this.progressSpinnerDatos=true;
+
 		this.sigaService.getParam("combo_partidasPresupuestarias", "?importe=1").subscribe(
 			data => {
 			  this.partidaPresupuestaria = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
+        this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
+        this.progressSpinnerDatos= false;
 			},	  
 			err => {
 			  if(null!=err.error){
           console.log(err.error);
         } 
+        this.progressSpinnerDatos= false;
 			}
 		);
   }
@@ -247,7 +248,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   callSaveService(url) {
-    this.progressSpinner=true;
+    this.progressSpinnerDatos=true;
     this.sigaService.post(url, this.body).subscribe(
       data => {
         if (!this.modoEdicion) {
@@ -263,12 +264,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.bodyAux=JSON.parse(JSON.stringify(this.body));
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
 
         this.changeIdFacturacion.emit(this.body.idFacturacion);
         this.changeEstadoFacturacion.emit("10");
         this.changeCerrada.emit(false);
         this.historicoEstados();
+        this.progressSpinnerDatos= false;
       },
       err => {
         if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -276,11 +277,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
+        this.progressSpinnerDatos= false;
       }
     );
   }
@@ -311,15 +308,16 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   callEjecutarService(){
-    this.progressSpinner=true;
+    this.progressSpinnerDatos=true;
+
     this.sigaService.post("facturacionsjcs_ejecutarfacturacion", this.body.idFacturacion).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
 
         this.changeEstadoFacturacion.emit("50");
         this.changeCerrada.emit(true);
         this.historicoEstados();
+        this.progressSpinnerDatos = false;
       },
       err => {
         if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -327,12 +325,8 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-      
-        this.progressSpinner = false;
+        this.progressSpinnerDatos = false;
       },
-      () => {
-        this.progressSpinner = false;
-      }
     );
   }
 
@@ -345,15 +339,16 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   callReabrirService(){
-    this.progressSpinner=true;
+    this.progressSpinnerDatos=true;
+
     this.sigaService.post("facturacionsjcs_reabrirfacturacion", this.body.idFacturacion).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
 
         this.historicoEstados();
         this.changeEstadoFacturacion.emit("10");
         this.changeCerrada.emit(false);
+        this.progressSpinnerDatos = false;
       },
       err => {
         if (JSON.parse(err.error).error.description != "") {
@@ -361,11 +356,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
+        this.progressSpinnerDatos = false;
       }
     );
   }
@@ -379,15 +370,16 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   callSimularService(){
-    this.progressSpinner=true;
+    this.progressSpinnerDatos=true;
+
     this.sigaService.post("facturacionsjcs_simularfacturacion", this.body.idFacturacion).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
 
         this.historicoEstados();
         this.changeEstadoFacturacion.emit("50");
         this.changeCerrada.emit(true);
+        this.progressSpinnerDatos = false;
       },
       err => {
         if (null!=err.error && JSON.parse(err.error).error.description != "") {
@@ -395,11 +387,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
+        this.progressSpinnerDatos = false;
       }
     );
   }

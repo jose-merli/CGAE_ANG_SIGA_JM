@@ -49,6 +49,9 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
       this.getColsFacturacion();
     }else if(this.modoBusqueda == "p"){
       this.getColsPago();
+    }else{
+      this.modoBusqueda="f";
+      this.getColsFacturacion();
     }
 
     this.rowsPerPage = [

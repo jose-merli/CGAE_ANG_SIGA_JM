@@ -6,10 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./baremos.component.scss']
 })
 export class BaremosComponent implements OnInit {
+  progressSpinnerBaremos: boolean = false;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() { 
+    this.progressSpinnerBaremos=false;
   }
 
 }

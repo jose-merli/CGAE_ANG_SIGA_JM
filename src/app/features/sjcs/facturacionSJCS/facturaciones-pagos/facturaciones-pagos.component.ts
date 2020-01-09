@@ -5,11 +5,9 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
 import { procesos_facturacionSJCS} from '../../../../permisos/procesos_facturacion';
-
 import { FiltroBusquedaFacturacionComponent } from "./filtro-busqueda-facturacion/filtro-busqueda-facturacion.component";
 import { TablaBusquedaFacturacionComponent } from "./tabla-busqueda-facturacion/tabla-busqueda-facturacion.component";
 import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
-
 
 @Component({
   selector: 'app-facturaciones-pagos',
@@ -59,7 +57,6 @@ export class FacturacionesYPagosComponent implements OnInit {
 			data => {
 				this.datos = JSON.parse(data.body).facturacionItem;
 				this.buscar = true;
-				this.progressSpinner = false;
 				
 				if (this.datos != undefined){
           			this.datos.forEach(element => {
@@ -96,17 +93,16 @@ export class FacturacionesYPagosComponent implements OnInit {
 				}
 				
 				this.resetSelect();
+				this.progressSpinner = false;
 			},	  
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
 					  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
 				  } else {
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-				  }
-				  this.progressSpinner = false;
-			},
-			() => {
-			  this.progressSpinner = false;
+				}
+
+				this.progressSpinner = false;
 			}
 		);
 	}
@@ -128,19 +124,18 @@ export class FacturacionesYPagosComponent implements OnInit {
 
 	delete(event) {
 		this.progressSpinner = true;
+
 		this.sigaServices.post("facturacionsjcs_eliminarFacturacion",event).subscribe(
-				data => {
-			console.log(data);
-			this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
-			this.buscarFacturaciones(false);
-		  },
-		  err => {
-			this.progressSpinner = false;
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
-		  },
-		  () => {
-			this.progressSpinner = false;
-		  }
+			data => {
+				console.log(data);
+				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+				this.buscarFacturaciones(false);
+				this.progressSpinner = false;
+			},
+			err => {
+				this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
+				this.progressSpinner = false;
+			}
 		);
 	  }
 

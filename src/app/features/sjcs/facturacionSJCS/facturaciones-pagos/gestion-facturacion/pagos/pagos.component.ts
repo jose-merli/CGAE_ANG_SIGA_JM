@@ -7,7 +7,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   styleUrls: ['./pagos.component.scss']
 })
 export class PagosComponent implements OnInit {
-  progressSpinner: boolean = false;
+  progressSpinnerPagos: boolean = false;
   cols;
   msgs; 
   rowsPerPage: any = [];
@@ -28,20 +28,18 @@ export class PagosComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef,
   private sigaService: SigaServices) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;    
+  ngOnInit() {   
     this.cargaDatos();
     this.getCols();
   }
 
   cargaDatos(){
     if(undefined!=this.idFacturacion){
-      this.progressSpinner = true;
+      this.progressSpinnerPagos = true;
+
       //datos de la facturación
       this.sigaService.getParam("facturacionsjcs_datospagos", "?idFacturacion=" + this.idFacturacion).subscribe(
         data => {
-          this.progressSpinner = false;
-
           if(undefined != data.pagosjgItem && data.pagosjgItem.length>0){
             let datos=data.pagosjgItem;
 
@@ -58,11 +56,12 @@ export class PagosComponent implements OnInit {
             });
             this.body = JSON.parse(JSON.stringify(datos));
             this.numPagos = datos.length;
+            this.progressSpinnerPagos = false;
           }
         },	  
         err => {
-          this.progressSpinner = false;
           console.log(err);
+          this.progressSpinnerPagos = false;
         }
       );
     }

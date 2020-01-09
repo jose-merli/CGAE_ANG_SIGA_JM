@@ -1,14 +1,10 @@
 import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
-import { USER_VALIDATIONS } from "../../../../../properties/val-properties";
 import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService } from 'primeng/primeng';
 import { SortEvent } from '../../../../../../../node_modules/primeng/api';
-import { FacturacionDTO } from '../../../../../models/sjcs/FacturacionDTO';
-import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
-import { checkAndUpdateElementInline } from '@angular/core/src/view/element';
 
 @Component({
   selector: 'app-tabla-busqueda-facturacion',
@@ -31,7 +27,6 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   permisos: boolean = false;
 
   initDatos;
-  progressSpinner: boolean = false;
 
   @Input() datos;
 

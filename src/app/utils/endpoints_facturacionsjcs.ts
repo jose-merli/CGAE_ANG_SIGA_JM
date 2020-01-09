@@ -20,5 +20,6 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_saveConceptosFac: "facturacionsjcs/saveConceptosFac",
     facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosFac",
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosFac",
-    facturacionsjcs_datospagos: "facturacionsjcs/datospagos"
+    facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
+    facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes"
 }

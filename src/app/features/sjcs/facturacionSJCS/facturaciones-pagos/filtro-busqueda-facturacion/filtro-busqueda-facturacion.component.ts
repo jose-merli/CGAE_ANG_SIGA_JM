@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { SigaWrapper } from "../../../../../wrapper/wrapper.class";
 import { USER_VALIDATIONS } from "../../../../../properties/val-properties";
-import { Calendar, ConfirmationService } from 'primeng/primeng';
+import { Calendar } from 'primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -49,26 +49,28 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 
 	filtros: FacturacionItem = new FacturacionItem();
 	filtrosAux: FacturacionItem = new FacturacionItem();
+	progressSpinnerFiltro: boolean = false;
 
 	constructor(private router: Router,
 		private sigaService: SigaServices,
 		private translateService: TranslateService,
 		private persistenceService: PersistenceService,
-		private confirmationService: ConfirmationService,
 		private commonsService: CommonsService) { 
 		super(USER_VALIDATIONS);
 	}
 
 	ngOnInit() {
+		this.progressSpinnerFiltro = true;
+
+		if (undefined!=this.persistenceService.getPermisos()) {
+			this.permisos = this.persistenceService.getPermisos();
+		}
+
 		this.getRangeYear();
 		this.comboFactEstados();
 		this.comboPartidasPresupuestarias();
 		this.comboGrupoTurnos();
 		this.comboFactConceptos();
-
-		if (undefined!=this.persistenceService.getPermisos()) {
-			this.permisos = this.persistenceService.getPermisos();
-		}
 	  
 		if (undefined!=this.persistenceService.getFiltros()) {
 			this.filtros = this.persistenceService.getFiltros();
@@ -114,49 +116,64 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	comboFactEstados(){
+		this.progressSpinnerFiltro = true;
 		this.sigaService.get("combo_comboFactEstados").subscribe(
 			data => {
 			  this.estadoFacturas = data.combooItems;
 			  this.commonsService.arregloTildesCombo(this.estadoFacturas);
+			  this.progressSpinnerFiltro = false;
 			},	  
 			err => {
 			  console.log(err);
+			  this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
 	comboPartidasPresupuestarias(){
+		this.progressSpinnerFiltro = true;
+
 		this.sigaService.get("combo_partidasPresupuestarias").subscribe(
 			data => {
 			  this.partidaPresupuestaria = data.combooItems;
 			  this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
+			  this.progressSpinnerFiltro = false;
 			},	  
 			err => {
 			  console.log(err);
+			  this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
 	comboGrupoTurnos(){
+		this.progressSpinnerFiltro = true;
+
 		this.sigaService.get("combo_grupoFacturacion").subscribe(
 			data => {
 			  this.grupoTurnos = data.combooItems;
 			  this.commonsService.arregloTildesCombo(this.grupoTurnos);
+			  this.progressSpinnerFiltro = false;
 			},	  
 			err => {
 			  console.log(err);
+			  this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
 	comboFactConceptos(){
+		this.progressSpinnerFiltro = true;
+
 		this.sigaService.get("combo_comboFactConceptos").subscribe(
 			data => {
 			  this.conceptos = data.combooItems;
 			  this.commonsService.arregloTildesCombo(this.conceptos);
+			  this.progressSpinnerFiltro = false;
 			},	  
 			err => {
 			  console.log(err);
+			  this.progressSpinnerFiltro = false;
 			}
 		);
 	}

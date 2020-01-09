@@ -30,7 +30,10 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
   @Output() emitSearch = new EventEmitter<string>();
   @Output() changeModoBusqueda = new EventEmitter<string>();
+  @Output() desactivaVolver = new EventEmitter();
+
   @Input() permisoEscritura;
+  @Input() activaVolver;
 
   constructor(private commonsService: CommonsService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private translateService: TranslateService) { }
@@ -106,6 +109,10 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.emitSearch.emit(this.modoBusqueda);
+      
+      if(this.activaVolver){
+        this.desactivaVolver.emit();
+      }
     }
   }
 
@@ -191,31 +198,45 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   }
 
   changeFilters() {
-    this.clearFilters();
-    this.persistenceService.clearFiltros();
+    if(!this.activaVolver){
+      this.clearFilters();
+      this.persistenceService.clearFiltros();
 
-    if (this.modoBusqueda == "f") {
-      this.modoBusquedaFacturacion = true;
-    } else if (this.modoBusqueda == "p") {
-      this.modoBusquedaFacturacion = false;
+      if (this.modoBusqueda == "f") {
+        this.modoBusquedaFacturacion = true;
+      } else if (this.modoBusqueda == "p") {
+        this.modoBusquedaFacturacion = false;
+      }else{
+        this.modoBusquedaFacturacion = true;
+        this.modoBusqueda=="f;"
+      }
+
+      if(this.activaVolver){
+        this.desactivaVolver.emit();
+      }
+
+      this.filtros.modoBusqueda = this.modoBusqueda;
+      this.persistenceService.setFiltros(this.filtros);
+
+      this.changeModoBusqueda.emit();
     }
-
-    this.filtros.modoBusqueda = this.modoBusqueda;
-    this.persistenceService.setFiltros(this.filtros);
-
-    this.changeModoBusqueda.emit();
   }
 
   clearFilters() {
 
     if (this.esColegiado) {
       this.filtros.idFacturacion = undefined;
+      this.filtros.idPago = undefined;
       this.filtros.idConcepto = undefined;
       this.filtros.idPartidaPresupuestaria = undefined;
       this.filtros.idTurno = undefined;
 
     } else {
       this.filtros = new CartasFacturacionPagosItem();
+    }
+
+    if(this.activaVolver){
+      this.desactivaVolver.emit();
     }
   }
 

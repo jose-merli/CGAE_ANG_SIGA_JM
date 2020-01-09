@@ -1,5 +1,3 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
 <div class="cartasFacturacion-container">
   <div>
     <div class="card">
@@ -16,7 +14,7 @@
               </label>
             </div>
             <div class="d-flex justify-content-between">
-              <!--<label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: xx</label>-->
+              <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: {{ numApuntes }}</label>
               <label>
                   <i class="fas fa-edit icon-enlace"></i>
                   <span style="color: blue; text-decoration: underline; cursor: pointer;" (click)="linkCartasFacturacion()">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
