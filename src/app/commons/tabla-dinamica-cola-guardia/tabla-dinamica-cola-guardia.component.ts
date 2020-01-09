@@ -150,7 +150,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "ordenCola", header: "dato.jgr.guardia.guardias.grupo", editable: false },
+      { field: "ordenCola", header: "justiciaGratuita.guardia.gestion.ordenCola", editable: false },
       { field: "numeroGrupo", header: "dato.jgr.guardia.guardias.grupo", editable: true },
       { field: "orden", header: "administracion.informes.literal.orden", editable: true },
       { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado", editable: false },
