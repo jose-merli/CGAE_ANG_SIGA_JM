@@ -2638,6 +2638,14 @@ export class FichaColegialComponent implements OnInit {
                 this.showFailNumColegiado("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
                 this.progressSpinner = false;
               }
+
+              this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].situacion).label;
+              
+              if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
+                this.residente = "Si";
+              } else {
+                this.residente = "No";
+              }
             },
             error => {
               let resultado = JSON.parse(error["error"]);
@@ -2656,10 +2664,11 @@ export class FichaColegialComponent implements OnInit {
   comprobarDirecciones() {
     //Si es un nuevo estado
     if (this.isCrearColegial == true) {
+      
       this.colegialesBody.situacionResidente = this.nuevoEstadoColegial.situacionResidente;
       this.colegialesBody.fechaEstado = this.arreglarFecha(this.nuevoEstadoColegial.fechaEstadoStr);
       this.colegialesBody.fechaEstadoStr = JSON.stringify(this.nuevoEstadoColegial.fechaEstadoStr);
-      this.colegialesBody.estadoColegial = this.nuevoEstadoColegial.situacion;
+      this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.nuevoEstadoColegial.situacion).label;
 
       //Si el cambio es a ejerciente
       if (this.nuevoEstadoColegial.situacion == "20") {
@@ -2728,6 +2737,11 @@ export class FichaColegialComponent implements OnInit {
       } else {
         this.callServiceGuardarColegiales();
       }
+    }
+    if (this.nuevoEstadoColegial.situacionResidente == "1"  || this.nuevoEstadoColegial.situacionResidente == "Si") {
+      this.residente = "Si";
+    } else {
+      this.residente = "No";
     }
   }
 
@@ -2888,6 +2902,7 @@ export class FichaColegialComponent implements OnInit {
           // Siempre realizaremos el update de los registros de la tabla, tanto del registro editable como de los registros que solo se pueden modificar las observaciones
           this.datosColegiales[0].idInstitucion = this.colegialesBody.idInstitucion;
           this.datosColegiales[0].idPersona = this.colegialesBody.idPersona;
+          if(this.datosColegiales[0].observaciones == undefined) this.datosColegiales[0].observaciones = "";
           this.sigaServices
             .post("fichaDatosColegiales_datosColegialesUpdateEstados", this.datosColegiales)
             .subscribe(
@@ -2900,6 +2915,7 @@ export class FichaColegialComponent implements OnInit {
                   this.nuevoEstadoColegial.idPersona = this.colegialesBody.idPersona;
                   this.nuevoEstadoColegial.fechaEstado = estadoCol.fechaEstado;
                   this.nuevoEstadoColegial.observaciones = estadoCol.observaciones;
+                  if(this.nuevoEstadoColegial.observaciones == undefined) this.nuevoEstadoColegial.observaciones = "";
                   this.nuevoEstadoColegial.situacion = estadoCol.situacion;
                   this.nuevoEstadoColegial.situacionResidente = estadoCol.situacionResidente;
 
@@ -3140,7 +3156,7 @@ export class FichaColegialComponent implements OnInit {
                   this.datosColegialesActual = this.colegialesObject.colegiadoItem;
                   //this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
 
-                  if (this.generalBody.situacionResidente == "1") {
+                  if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
                     this.residente = "Si";
                   } else {
                     this.residente = "No";
@@ -3177,6 +3193,7 @@ export class FichaColegialComponent implements OnInit {
         this.activarGuardarColegiales = false;
       }
       selectedDatos.estadoColegial = identificacion.label;
+      this.colegialesBody.estadoColegial = identificacion.label;
     }
     this.isRestablecer = true;
     this.showMessageInscripcion = true;
@@ -3299,6 +3316,7 @@ export class FichaColegialComponent implements OnInit {
     selectedItem.idPersona = this.colegialesBody.idPersona;
     selectedItem.situacionResidente = this.datosColegiales[1].situacionResidente;
     selectedItem.idEstado = this.datosColegiales[1].idEstado;
+    this.colegialesBody.estadoColegial = this.datosColegiales[1].estadoColegial;
 
     this.sigaServices
       .post("fichaDatosColegiales_datosColegialesDeleteEstado", selectedItem)
