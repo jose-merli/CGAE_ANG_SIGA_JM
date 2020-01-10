@@ -30,7 +30,6 @@
                 <b>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}: </b>{{body.estadoEJG}}</label>
             </div>
           </div>
-
           <div class="d-flex justify-content-between">
             <br>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -49,7 +48,7 @@
       <div class="card mt-3">
         <div class="card-body p-0">
           <!-- TABLA RESULTADOS -->
-          <p-table [value]="datosFamiliares" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
+          <p-table [value]="datosFamiliaresActivos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
             #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
@@ -124,19 +123,23 @@
         <div class="card-footer">
           <div class="text-right main-button">
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="solicitarEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.solicitudEejg' | translate}}"></button>
+              type="button" label="{{'general.boton.volver.solicitudEejg' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()"
               type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="solicitarEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.solicitudEejg' | translate}}"></button>
+              type="button" label="{{'general.boton.solicitudEejg' | translate}}"></button>
             <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="navigateComunicar(selectedDatos)"
               pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" *ngIf="!historico"
-              (click)="mostrarHistorico(); selectedDatos = []" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+              <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
+              label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+            <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
+              label="{{'general.message.ocultarHistorico' | translate}}"></button>
+            <button pButton *ngIf="!historico" [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
               (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+            <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+              (click)="activate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="asociar()"
-              type="button" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.Asociar' | translate }}"></button>
+              type="button" icon="fa fa-plus" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.Asociar' | translate }}"></button>
           </div>
         </div>
         <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>

@@ -13,17 +13,17 @@
             <label class="mr-auto title-ficha">{{ "censo.fichaIntegrantes.literal.estado" | translate }}s</label>
           </div>
           <div class="form-row">
-            <div class="d-flex flex-wrap">
+            <div *ngIf="estados && estados[0]" class="d-flex flex-wrap">
               <label name>
                 <b>{{ "censo.fichaIntegrantes.literal.estado" | translate }}: </b>{{estados[0].descripcion}}</label>
             </div>
-            <div class="d-flex flex-wrap">
+            <div *ngIf="estados && estados[0]" class="d-flex flex-wrap">
               <label name>
-                <b>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: </b>{{estados[0].fechamodificacion}}</label>
+                <b>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: </b>{{estados[0].fechaModificacion | date: 'dd/MM/yyyy'}}</label>
             </div>
-            <div class="d-flex flex-wrap">
+            <div *ngIf="estados && estados[0]" class="d-flex flex-wrap">
               <label name>
-                <b>{{ "general.boton.usuario" | translate }}: </b>{{estados[0].fechamodificacion.user}}</label>
+                <b>{{ "general.boton.usuario" | translate }}: </b>{{estados[0].user}}</label>
             </div>
           </div>
           <div class="d-flex justify-content-between">
@@ -67,12 +67,48 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div>
+                  <div *ngIf="col.field == 'fechaInicio' || col.field == 'fechaModificacion'">
+                    <div *ngIf="setItalic(dato)">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato)">
+                      <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field != 'fechaInicio' && col.field != 'fechaModificacion' && col.field != 'automatico' && col.field != 'propietario'">
                     <div *ngIf="setItalic(dato)">
                       <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                     </div>
                     <div *ngIf="!setItalic(dato)">
                       <span>{{dato[col.field]}}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field == 'automatico'">
+                    <div *ngIf="setItalic(dato) && dato[col.field] == '1'">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "messages.si" | translate }}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato) && dato[col.field] == '1'">
+                      <span>{{ "messages.si" | translate }}</span>
+                    </div>
+                    <div *ngIf="setItalic(dato) && dato[col.field] == '0'">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "general.boton.no" | translate }}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato) && dato[col.field] == '0'">
+                      <span>{{ "general.boton.no" | translate }}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field == 'propietario'">
+                    <div *ngIf="setItalic(dato) && dato[col.field] == '1'">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato) && dato[col.field] == '1'">
+                      <span>{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+                    </div>
+                    <div *ngIf="setItalic(dato) && dato[col.field] == '0'">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato) && dato[col.field] == '0'">
+                      <span>{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
                     </div>
                   </div>
                 </td>
@@ -111,11 +147,12 @@
 
         <div class="card-footer">
           <div class="text-right main-button">
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="confirmDelete()"
+            <button *ngIf="!historico" [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="confirmDelete()"
               pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+            <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+              (click)="activate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
             <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="consultar()"
-              pButton type="button" icon="fa fa-angle-up" iconPos="left" label="Consultar/Editar"></button>
-            <!-- cambiar label-->
+              pButton type="button" icon="fa fa-angle-up" iconPos="left" label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button>
             <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="newEstado()"
               pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"

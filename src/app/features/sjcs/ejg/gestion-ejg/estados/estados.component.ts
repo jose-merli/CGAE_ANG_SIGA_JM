@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -11,6 +11,7 @@ import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
 })
 export class EstadosComponent implements OnInit {
   @Input() modoEdicion;
+
   openFicha: boolean = true;
   permisoEscritura: boolean = false;
   nuevo;
@@ -80,13 +81,13 @@ export class EstadosComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "fechaInicio", header: "censo.nuevaSolicitud.fechaEstado", width: "15%" },
-      { field: "fechamodificacion", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "20%" },
+      { field: "fechaInicio", header: "censo.nuevaSolicitud.fechaEstado", width: "10%" },
+      { field: "fechaModificacion", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
       { field: "descripcion", header: "censo.fichaIntegrantes.literal.estado", width: "10%" },
-      { field: "observaciones", header: "gratuita.mantenimientoLG.literal.observaciones", width: "10%" },
-      { field: "automatico", header: "administracion.auditoriaUsuarios.literal.usuarioAutomatico", width: "15%" }, //cambiar
-      { field: "propietario", header: "menu.justiciaGratuita.estado.propietario", width: "10%" }, //aun sin insertar
-      { field: "user", header: "menu.administracion.auditoria.usuarios", width: "10%" },
+      { field: "observaciones", header: "gratuita.mantenimientoLG.literal.observaciones", width: "25%" },
+      { field: "automatico", header: "administracion.auditoriaUsuarios.literal.Automatico", width: "10%" }, 
+      { field: "propietario", header: "menu.justiciaGratuita.estado.propietario", width: "10%" },
+      { field: "user", header: "menu.administracion.auditoria.usuarios", width: "25%" },
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 
@@ -202,6 +203,9 @@ export class EstadosComponent implements OnInit {
   delete() {
 
   }
+  activate() {
+
+  }
 
   newEstado() {
 
@@ -210,21 +214,17 @@ export class EstadosComponent implements OnInit {
     this.item.historico = !this.item.historico;
     this.historico = !this.historico;
     if (this.historico) {
-      this.editElementDisabled();
       this.editMode = false;
       this.nuevo = false;
-      this.selectMultiple = false;
-      this.selectionMode = "single";
       this.selectAll = false;
-      this.selectedDatos = [];
       this.numSelected = 0;
-    } else {
-      this.selectMultiple = false;
-      this.selectionMode = "single";
     }
+    this.selectMultiple = false;
+     this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
+    this.getEstados(this.item);
   }
+
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }

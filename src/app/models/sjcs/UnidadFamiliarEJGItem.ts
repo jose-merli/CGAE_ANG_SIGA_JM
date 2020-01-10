@@ -8,9 +8,10 @@ export class UnidadFamiliarEJGItem {
     uf_solicitante: string;
     uf_enCalidad: string;
     pjg_nif: string;
-    pjg_nombre: string;
-    pjg_ape1: string;
-    pjg_ape2: string;
+    //pjg_nombre: string;
+    //pjg_ape1: string;
+    //pjg_ape2: string;
+    pjg_nombrecompleto: string;
     pjg_direccion: string;
     // nombrePrincipal: string;
     // apellido1Principal: string;
@@ -18,6 +19,7 @@ export class UnidadFamiliarEJGItem {
     pd_descripcion: string;
     estado: string;
     estadoDes: string;
-    fechaSolicitud: Date;
+    fechaSolicitud: Date
+    fechaBaja: String;
     constructor() { }
 }

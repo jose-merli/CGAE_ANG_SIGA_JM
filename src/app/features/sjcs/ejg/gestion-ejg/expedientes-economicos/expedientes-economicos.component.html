@@ -61,7 +61,15 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div>
+                  <div *ngIf="col.field == 'f_solicitud' || col.field == 'f_recepcion'">
+                    <div *ngIf="setItalic(dato)">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato)">
+                      <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field != 'f_solicitud' && col.field != 'f_recepcion'">
                     <div *ngIf="setItalic(dato)">
                       <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                     </div>
@@ -102,24 +110,12 @@
             </ng-template>
           </p-table>
         </div>
-        <!-- <div class="card-footer">
+         <div class="card-footer">
           <div class="text-right main-button">
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="solicitarEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.solicitudEejg' | translate}}"></button>
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()"
               type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="solicitarEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.solicitudEejg' | translate}}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="navigateComunicar(selectedDatos)"
-              pButton type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" *ngIf="!historico"
-              (click)="mostrarHistorico(); selectedDatos = []" pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-            <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-              (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="asociar()"
-              type="button" iconPos="left" label="AsociarMAL"></button>
           </div>
-        </div> -->
+        </div>
         <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
           <p-footer>
             <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>

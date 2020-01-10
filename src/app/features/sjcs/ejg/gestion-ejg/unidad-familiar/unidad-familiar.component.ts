@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -22,9 +22,13 @@ export class UnidadFamiliarComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   openFicha: boolean = true;
+  historico: boolean = false;
   datosFamiliares;
+  datosFamiliaresActivos;
 
   @Input() modoEdicion;
+  @Output() searchHistoricalSend = new EventEmitter<boolean>();
+
   permisoEscritura: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -64,9 +68,15 @@ export class UnidadFamiliarComponent implements OnInit {
             element.expedienteEconom = "  ";
           }
         });
+        
       }
+      this.datosFamiliaresActivos = this.datosFamiliares.filter(
+        (dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
     }
     this.getCols();
+  }
+  ngOnChanges() {
+    
   }
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -89,7 +99,7 @@ export class UnidadFamiliarComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "pjg_nif", header: "administracion.usuarios.literal.NIF", width: "10%" },
-      { field: "pjg_nombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },//falta apellidos
+      { field: "pjg_nombrecompleto", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
       { field: "pjg_direccion", header: "censo.consultaDirecciones.literal.direccion", width: "15%" },
       { field: "uf_enCalidad", header: "administracion.usuarios.literal.rol", width: "10%" },
       { field: "nombreApeSolicitante", header: "justiciaGratuita.ejg.datosGenerales.RelacionadoCon", width: "20%" },
@@ -129,16 +139,6 @@ export class UnidadFamiliarComponent implements OnInit {
         this.selectedDatos = [];
         this.numSelected = 0;
       }
-    }
-  }
-
-  searchHistorical() {
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false;
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
     }
   }
   onChangeRowsPerPages(event) {
@@ -217,8 +217,26 @@ export class UnidadFamiliarComponent implements OnInit {
   delete() {
 
   }
-  mostrarHistorico() {
+  activate(){
 
+  }
+  searchHistorical(){
+    this.datosFamiliares.historico = !this.datosFamiliares.historico;
+    this.historico = !this.historico;
+    if (this.historico) {
+      this.editMode = false;
+      this.nuevo = false;
+      this.selectAll = false;
+      this.numSelected = 0;
+      this.datosFamiliaresActivos = JSON.parse(JSON.stringify(this.datosFamiliares));
+    }else{
+      this.datosFamiliaresActivos = this.datosFamiliares.filter(
+        (dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
+    }
+    this.selectMultiple = false;
+     this.selectionMode = "single";
+    this.persistenceService.setHistorico(this.historico);
+    
   }
   abreCierraFicha() {
     this.openFicha = !this.openFicha;

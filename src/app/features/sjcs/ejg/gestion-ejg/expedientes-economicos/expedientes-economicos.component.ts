@@ -172,33 +172,10 @@ export class ExpedientesEconomicosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-  delete() {
+  downloadEEJ(){
 
   }
+
   mostrarHistorico() {
 
   }
