@@ -1,9 +1,11 @@
-import { Component, OnInit, EventEmitter, Input, ViewChild } from '@angular/core';
-import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
-import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { TranslateService } from '../../../../../../commons/translate';
+import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
+import { procesos_maestros } from '../../../../../../permisos/procesos_maestros';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
-import { DatosIncompatibilidadesComponent } from './datos-incompatibilidades/datos-incompatibilidades.component';
 
 
 @Component({
@@ -17,7 +19,16 @@ export class GestionGuardiaComponent implements OnInit {
 
   @Input() datos;
   modoEdicion: boolean;
-  permisoEscritura: boolean = false;
+  permisoEscrituraDatosGenerales: boolean = false;
+  permisoEscrituraResumen: boolean = false;
+  permisoEscrituraConfCalen: boolean = false;
+  permisoEscrituraConfCola: boolean = false;
+  permisoEscrituraColaGuardia: boolean = false;
+  permisoEscrituraIncomp: boolean = false;
+  permisoEscrituraBaremos: boolean = false;
+  permisoEscrituraCalen: boolean = false;
+  permisoEscrituraInscripciones: boolean = false;
+  permisoEscrituraTurno: boolean = false;
   historico: boolean = false;
   progressSpinner: boolean = false;
   datosRedy = new EventEmitter<any>();
@@ -26,7 +37,10 @@ export class GestionGuardiaComponent implements OnInit {
 
 
   constructor(private persistenceService: PersistenceService,
-    private location: Location, private sigaServices: SigaServices) { }
+    private location: Location, private sigaServices: SigaServices,
+    private commonService: CommonsService,
+    private translateService: TranslateService) { }
+
 
   ngOnInit() {
 
@@ -36,8 +50,6 @@ export class GestionGuardiaComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
-    if (this.persistenceService.getPermisos())
-      this.permisoEscritura = this.persistenceService.getPermisos();
 
 
   }
@@ -96,5 +108,140 @@ export class GestionGuardiaComponent implements OnInit {
 
   }
 
+  obtenerPermisos() {
+    this.commonService.checkAcceso(procesos_guardia.resumen)
+      .then(respuesta => {
 
+        this.permisoEscrituraResumen = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+
+        // if (this.permisoEscrituraResumen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+    this.commonService.checkAcceso(procesos_guardia.turno)
+      .then(respuesta => {
+
+        this.permisoEscrituraTurno = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraTurno);
+
+        // if (this.permisoEscrituraTurno == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+    this.commonService.checkAcceso(procesos_guardia.conf_cola)
+      .then(respuesta => {
+
+        this.permisoEscrituraConfCola = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraConfCola);
+
+        // if (this.permisoEscrituraConfCola == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+    this.commonService.checkAcceso(procesos_guardia.conf_calendario)
+      .then(respuesta => {
+
+        this.permisoEscrituraConfCalen = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraConfCalen);
+
+        // if (this.permisoEscrituraConfCalen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+    this.commonService.checkAcceso(procesos_guardia.resumen)
+      .then(respuesta => {
+
+        this.permisoEscrituraResumen = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+
+        // if (this.permisoEscrituraResumen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+    this.commonService.checkAcceso(procesos_guardia.resumen)
+      .then(respuesta => {
+
+        this.permisoEscrituraResumen = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+
+        // if (this.permisoEscrituraResumen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+    this.commonService.checkAcceso(procesos_guardia.resumen)
+      .then(respuesta => {
+
+        this.permisoEscrituraResumen = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+
+        // if (this.permisoEscrituraResumen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+  }
 }
+
+
