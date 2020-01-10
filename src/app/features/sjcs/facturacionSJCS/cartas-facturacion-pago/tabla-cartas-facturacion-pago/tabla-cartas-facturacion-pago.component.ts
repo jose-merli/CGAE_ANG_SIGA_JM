@@ -23,6 +23,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
   modoBusqueda;
+  modoSeleccion="single";
 
   @ViewChild("table") tabla: Table;
   @Input() datos = [];
@@ -123,10 +124,12 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
     if (!this.selectMultiple) {
       this.selectedDatos = [];
       this.numSelected = 0;
+      this.modoSeleccion="single";
     } else {
       this.selectAll = false;
       this.selectedDatos = [];
       this.numSelected = 0;
+      this.modoSeleccion="multiple";
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-baremos',
@@ -8,10 +8,20 @@ import { Component, OnInit } from '@angular/core';
 export class BaremosComponent implements OnInit {
   progressSpinnerBaremos: boolean = false;
 
+  @Input() idFacturacion;
+  @Input() idEstadoFacturacion;
+  
   constructor() { }
 
   ngOnInit() { 
     this.progressSpinnerBaremos=false;
   }
 
+  disableEnlaceBaremos(){
+    if(this.idEstadoFacturacion=='30' || this.idEstadoFacturacion=='20'){
+      return false;
+    }else{
+      return true;
+    }
+  }
 }

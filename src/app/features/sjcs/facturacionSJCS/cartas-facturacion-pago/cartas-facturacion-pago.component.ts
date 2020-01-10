@@ -58,6 +58,7 @@ export class CartasFacturacionPagoComponent implements OnInit {
       if(undefined!=datos.idFacturacion && null!=datos.idFacturacion){
         datos.modoBusqueda="f";
 
+        this.filtros.filtros.idFacturacion=datos.idFacturacion;
         this.activaVolver=true;
         this.persistenceService.setFiltros(datos);
 

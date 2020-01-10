@@ -14,11 +14,16 @@
               </label>
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: {{ numApuntes }}</label>
-              <label>
+              <label>{{ "facturacionSJCS.facturacionesYPagos.apuntes" | translate }}: <span>{{ numApuntes }}</span></label>
+              <label *ngIf="!disableEnlaceCartas()">
                   <i class="fas fa-edit icon-enlace"></i>
                   <span style="color: blue; text-decoration: underline; cursor: pointer;" (click)="linkCartasFacturacion()">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
                   </span>
+              </label>
+              <label *ngIf="disableEnlaceCartas()">
+                <i class="fas fa-edit icon-enlace"></i>
+                <span style="color: rgb(167, 184, 170); text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.cartasFacturacion" | translate }}
+                </span>
               </label>
               <i class="float-right"></i>
             </div>

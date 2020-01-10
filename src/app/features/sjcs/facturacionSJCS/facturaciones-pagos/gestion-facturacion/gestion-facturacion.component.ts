@@ -96,7 +96,27 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   newConcept(event){
     this.insertConcept=event;
   }
+  
+  spinnerGlobal(){
+    if(this.modoEdicion){
+      if(this.conceptos != undefined || this.baremos != undefined || this.pagos != undefined || this.cartas != undefined){
+        if(this.datosFac.progressSpinnerDatos || this.conceptos.progressSpinnerConceptos || this.baremos.progressSpinnerBaremos || this.pagos.progressSpinnerPagos || this.cartas.progressSpinnerCartas){
+          return false;
+        }else{
+          return true;
+        }
+      }else{
+        return false;
+      }
 
+    }else{
+      if(this.datosFac.progressSpinnerDatos){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }
   clear() {
 		this.msgs = [];
 	}

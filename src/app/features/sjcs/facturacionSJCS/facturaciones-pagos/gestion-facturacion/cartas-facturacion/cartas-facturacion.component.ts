@@ -43,8 +43,16 @@ export class CartasFacturacionComponent implements OnInit {
     }
   }
 
+  disableEnlaceCartas(){
+    if(this.idEstadoFacturacion=='30' || this.idEstadoFacturacion=='20'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
   linkCartasFacturacion(){
-    if(undefined!=this.idFacturacion && undefined!=this.idEstadoFacturacion){
+    if(undefined!=this.idFacturacion && undefined!=this.idEstadoFacturacion && (this.idEstadoFacturacion=='30' || this.idEstadoFacturacion=='20')){
       let datos= this.persistenceService.getDatos();
       this.persistenceService.setFiltrosAux(this.persistenceService.getFiltros());
 

@@ -7,9 +7,13 @@
   </div>
   
   <app-datos-facturacion [insertConcept]="insertConcept" [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" (changeModoEdicion)="changeModoEdicion($event)" (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)" (changeIdFacturacion)="changeIdFacturacion($event)"></app-datos-facturacion>
+  
   <app-conceptos-facturacion *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada" (newConcept)="newConcept($event)" (changeNumCriterios)="changeNumCriterios($event)"></app-conceptos-facturacion>
-  <app-baremos *ngIf="modoEdicion"></app-baremos>
+  
+  <app-baremos [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion" *ngIf="modoEdicion"></app-baremos>
+  
   <app-pagos *ngIf="modoEdicion" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [permisos]="permisos" [cerrada]="cerrada"></app-pagos>
+  
   <app-cartas-facturacion [idFacturacion]="idFacturacion" [idEstadoFacturacion]="idEstadoFacturacion" *ngIf="modoEdicion"></app-cartas-facturacion>
 
   <div class="text-right main-button">
@@ -17,6 +21,6 @@
   </div>
 </div>
 
-<div *ngIf="progressSpinner || datosFac.progressSpinnerDatos || conceptos.progressSpinnerConceptos || baremos.progressSpinnerBaremos || cartas.progressSpinnerCartas" class="overlay-spinner">
+<div *ngIf="progressSpinner || spinnerGlobal()" class="overlay-spinner">
   <div class="loader"></div>
 </div>

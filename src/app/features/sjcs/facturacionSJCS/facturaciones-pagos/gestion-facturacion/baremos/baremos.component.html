@@ -14,13 +14,16 @@
               </label>
             </div>
             <div class="d-flex justify-content-between">
-             <!-- <label>{{ "facturacionSJCS.facturacionesYPagos.numero" | translate }}: xx</label>-->
-              <label style="float: right;">
-                <a>
-                  <i class="fas fa-edit icon-enlace"></i>
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.baremos" | translate }}
-                  </span>
-                </a>
+              <label><!--{{ "facturacionSJCS.facturacionesYPagos.numero" | translate }}: xx-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+              <label *ngIf="!disableEnlaceBaremos()">
+                <i class="fas fa-edit icon-enlace"></i>
+                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.baremos" | translate }}
+                </span>
+              </label>
+              <label *ngIf="disableEnlaceBaremos()">
+                <i class="fas fa-edit icon-enlace"></i>
+                <span style="color: rgb(167, 184, 170); text-decoration: underline; cursor: pointer;">{{ "facturacionSJCS.facturacionesYPagos.baremos" | translate }}
+                </span>
               </label>
               <i class="float-right"></i>
             </div>

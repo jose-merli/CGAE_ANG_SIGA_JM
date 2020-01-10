@@ -178,6 +178,10 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       data => {
         this.comboFacturacion = data.combooItems;
         this.commonsService.arregloTildesCombo(this.comboFacturacion);
+        
+        if(undefined==this.filtros.idFacturacion || null==this.filtros.idFacturacion){
+          this.filtros.idFacturacion=this.comboFacturacion[0].value;
+        }
       },
       err => {
         console.log(err);
