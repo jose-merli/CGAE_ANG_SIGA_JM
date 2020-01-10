@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { SigaServices } from '../../../../../../../_services/siga.service';
+import { TurnosItems } from '../../../../../../../models/sjcs/TurnosItems';
+import { TranslateService } from '../../../../../../../commons/translate';
+import { PersistenceService } from '../../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-datos-turno-guardias',
@@ -7,9 +11,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DatosTurnoGuardiasComponent implements OnInit {
 
-  constructor() { }
+  body: TurnosItems = new TurnosItems();
+  progressSpinner: boolean = false;
+
+
+  constructor(private sigaServices: SigaServices,
+    private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if (this.persistenceService.getDatos())
+      this.getResumen();
   }
 
+  getResumen() {
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionGuardias_resumenTurno", this.persistenceService.getDatos().idTurno).subscribe(
+      data => {
+        this.body = JSON.parse(data.body).turnosItem[0];
+        this.progressSpinner = false;
+      },
+
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
 }
+
+

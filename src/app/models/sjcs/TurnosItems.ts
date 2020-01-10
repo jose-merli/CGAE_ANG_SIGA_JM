@@ -41,5 +41,6 @@ export class TurnosItems {
   activarretriccionacreditCheck: boolean;
   visiblemovil: string;
   visibleMovilCheck: boolean;
+  numeroInscritos;
   constructor() { }
 }

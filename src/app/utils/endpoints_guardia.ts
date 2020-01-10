@@ -27,5 +27,5 @@ export let endpoints_guardia: any = {
     busquedaGuardias_getUltimo: "guardia/gestionGuardia/ultimo",
     gestionGuardias_updateColaGuardia: "guardia/gestionGuardia/updateColaGuardia",
     gestionGuardias_resumenIncompatibilidades: "guardia/gestionGuardia/resumenIncompatibilidades",
-
+    gestionGuardias_resumenTurno: "guardia/gestionGuardia/resumenTurno",
 }
