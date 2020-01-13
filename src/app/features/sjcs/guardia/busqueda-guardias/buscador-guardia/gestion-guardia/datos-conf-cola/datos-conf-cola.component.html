@@ -15,9 +15,13 @@
           </div>
           <div class="d-flex justify-content-between sub">
             <strong> {{ordenacion}}</strong>
-            <label>{{'dato.jgr.guardia.guardias.letradosGuardia' | translate}}:
+            <label *ngIf="ordenacion != 'Por grupos'">
+              {{'dato.jgr.guardia.guardias.letradosGuardia' | translate}}:
               <strong>{{numeroletradosguardia}}</strong>
-
+            </label>
+            <label *ngIf="ordenacion == 'Por grupos'">
+              {{"dato.jgr.guardia.guardias.minimoLetradosGrupo" | translate}}:
+              <strong>{{numeroletradosguardia}}</strong>
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>

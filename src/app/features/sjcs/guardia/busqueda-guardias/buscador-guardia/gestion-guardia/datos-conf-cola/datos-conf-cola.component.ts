@@ -67,7 +67,7 @@ export class DatosConfColaComponent implements OnInit {
         this.getPerfilesSeleccionados();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         if (this.modoEdicion) this.getResumen();
-      })
+      });
   }
 
   abreCierraFicha() {
@@ -93,6 +93,8 @@ export class DatosConfColaComponent implements OnInit {
           data = JSON.parse(data.body);
         this.numeroletradosguardia = data.letradosIns;
         this.ordenacion = data.idOrdenacionColas;
+        if (this.ordenacion.split(",").length > 4)
+          this.ordenacion = this.ordenacion.substring(0, this.ordenacion.lastIndexOf(","));
       },
         err => {
           console.log(err);

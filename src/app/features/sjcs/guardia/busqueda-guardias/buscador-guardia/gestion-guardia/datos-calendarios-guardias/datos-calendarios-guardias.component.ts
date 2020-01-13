@@ -270,19 +270,27 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   }
   rellenaDias() {
     if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
-      this.body.seleccionFestivos.split("").forEach(element => {
-        this.festividades.forEach(it => {
-          if (it.label == element)
-            it.value = true;
-        })
-      });
+      this.festividades = this.festividades.map(it => {
+        it.value = false;
+        return it;
+      })
+    this.body.seleccionFestivos.split("").forEach(element => {
+      this.festividades.forEach(it => {
+        if (it.label == element)
+          it.value = true;
+      })
+    });
     if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
-      this.body.seleccionLaborables.split("").forEach(element => {
-        this.laborables.forEach(it => {
-          if (it.label == element)
-            it.value = true;
-        })
-      });
+      this.laborables = this.laborables.map(it => {
+        it.value = false;
+        return it;
+      })
+    this.body.seleccionLaborables.split("").forEach(element => {
+      this.laborables.forEach(it => {
+        if (it.label == element)
+          it.value = true;
+      })
+    });
 
     this.changeFestividades();
     this.changeLaborables();
