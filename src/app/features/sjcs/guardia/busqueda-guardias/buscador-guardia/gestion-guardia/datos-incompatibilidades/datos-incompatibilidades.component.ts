@@ -67,11 +67,11 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "nombre", header: "menu.justiciaGratuita.GuardiaMenu" },
-      { field: "tipoDia", header: "dato.jgr.guardia.guardias.dias" },
-      { field: "descripcion", header: "dato.jgr.guardia.guardias.motivos" },
-      { field: "diasSeparacionGuardias", header: "dato.jgr.guardia.guardias.diasSeparacion" },
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "20%" },
+      { field: "nombre", header: "menu.justiciaGratuita.GuardiaMenu", width: "15%" },
+      { field: "tipoDia", header: "dato.jgr.guardia.guardias.dias", width: "15%" },
+      { field: "descripcion", header: "dato.jgr.guardia.guardias.motivos", width: "40%" },
+      { field: "diasSeparacionGuardias", header: "dato.jgr.guardia.guardias.diasSeparacion", width: "10%" },
 
     ];
     this.cols.forEach(it => this.buscadores.push(""))

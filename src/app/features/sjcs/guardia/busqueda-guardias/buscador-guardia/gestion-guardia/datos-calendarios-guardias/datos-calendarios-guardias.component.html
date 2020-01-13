@@ -14,17 +14,17 @@
         </div>
         <div class="d-flex justify-content-between sub">
           <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
-            <strong>3 meses</strong>
+            <strong>{{resumen.duracion}}</strong>
           </label>
           <label>{{'justiciaGratuita.guardia.gestion.tipoDias' | translate}}:
-            <strong> L-S, Fest.- S-D</strong>
+            <strong> {{resumen.dias}}</strong>
           </label>
           <label>{{'justiciaGratuita.guardia.gestion.diasSeparacionGuardias' | translate}}:
-            <strong>2</strong>
+            <strong>{{resumen.diasSeparacion}}</strong>
           </label>
           <label>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario' | translate}}:
-            <strong *ngIf="!body.separarGuardiaCalendario">No</strong>
-            <strong *ngIf="body.sincCentralGuardias">Sí</strong>
+            <strong *ngIf="!resumen.separarGuardia">No</strong>
+            <strong *ngIf="resumen.separarGuardia">Sí</strong>
           </label>
           <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
         </div>
@@ -178,10 +178,11 @@
           <div class="form-group col-12">
             <div class="form-row mt-3">
               <div class="col-7 ml-2 p-0">
-                <strong>{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}}</strong>
+                <strong *ngIf="!body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}}</strong>
+                <strong *ngIf="body.separarGuardia">{{'justiciaGratuita.guardia.gestion.separarGuardiaCalendario'|translate}} [{{body.separarGuardia}}]</strong>
               </div>
               <div class="col-2">
-                <p-checkbox binary="true"></p-checkbox>
+                <p-checkbox binary="true" disabled="true" [(ngModel)]="body.separarGuardia"></p-checkbox>
               </div>
             </div>
           </div>

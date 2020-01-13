@@ -8,19 +8,28 @@
   </div>
   <div>
     <app-tarjeta-resumen-fija *ngIf="permisoEscrituraResumen != undefined" [titulo]="titulo" [datos]="infoResumen" [icono]="clipboard"></app-tarjeta-resumen-fija>
+
     <app-datos-generales-guardias *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales"
       [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
+
     <app-datos-calendarios-guardias *ngIf="permisoEscrituraConfCalen != undefined" [permisoEscritura]="permisoEscrituraConfCalen"
       [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
+
     <app-datos-conf-cola *ngIf="permisoEscrituraConfCola != undefined" [permisoEscritura]="permisoEscrituraConfCola" [modoEdicion]="modoEdicion"
       (modoEdicionSend)="modoEdicionSend($event)"></app-datos-conf-cola>
-    <app-datos-cola-guardia *ngIf="permisoEscrituraColaGuardia != undefined" [permisoEscritura]="permisoEscrituraColaGuardia"></app-datos-cola-guardia>
-    </app-datos-cola-guardia> [modoEdicion]="modoEdicion"></app-datos-cola-guardia>
+
+    <app-datos-cola-guardia *ngIf="permisoEscrituraColaGuardia != undefined" [permisoEscritura]="permisoEscrituraColaGuardia"
+      [modoEdicion]="modoEdicion"></app-datos-cola-guardia>
+
     <app-datos-incompatibilidades *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion"></app-datos-incompatibilidades>
-    <app-datos-baremos *ngIf="permisoEscrituraBaremos != undefined"></app-datos-baremos>
+
+    <app-datos-baremos *ngIf="permisoEscrituraBaremos != undefined" [modoEdicion]="modoEdicion"></app-datos-baremos>
+
     <app-calendarios *ngIf="permisoEscrituraCalen != undefined"></app-calendarios>
-    <app-datos-incripciones-guardias *ngIf="permisoEscrituraInscripciones != undefined"></app-datos-incripciones-guardias>
-    <app-datos-turno-guardias *ngIf="permisoEscrituraTurno != undefined"></app-datos-turno-guardias>
+
+    <app-datos-incripciones-guardias *ngIf="permisoEscrituraInscripciones != undefined" [modoEdicion]="modoEdicion"></app-datos-incripciones-guardias>
+
+    <app-datos-turno-guardias *ngIf="permisoEscrituraTurno != undefined" [modoEdicion]="modoEdicion"></app-datos-turno-guardias>
   </div>
 </div>
 <div class="mt-3 text-right main-button ">

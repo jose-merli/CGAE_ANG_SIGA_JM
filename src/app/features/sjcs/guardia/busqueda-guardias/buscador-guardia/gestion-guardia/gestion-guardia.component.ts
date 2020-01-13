@@ -50,7 +50,7 @@ export class GestionGuardiaComponent implements OnInit {
     } else {
       this.modoEdicion = false;
     }
-
+    this.obtenerPermisos();
 
   }
 
@@ -185,12 +185,12 @@ export class GestionGuardiaComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-    this.commonService.checkAcceso(procesos_guardia.resumen)
+    this.commonService.checkAcceso(procesos_guardia.cola_guardia)
       .then(respuesta => {
 
-        this.permisoEscrituraResumen = respuesta;
+        this.permisoEscrituraColaGuardia = respuesta;
 
-        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+        this.persistenceService.setPermisos(this.permisoEscrituraColaGuardia);
 
         // if (this.permisoEscrituraResumen == undefined) {
         //   sessionStorage.setItem("codError", "403");
@@ -204,12 +204,12 @@ export class GestionGuardiaComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-    this.commonService.checkAcceso(procesos_guardia.resumen)
+    this.commonService.checkAcceso(procesos_guardia.inscripciones)
       .then(respuesta => {
 
-        this.permisoEscrituraResumen = respuesta;
+        this.permisoEscrituraInscripciones = respuesta;
 
-        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+        this.persistenceService.setPermisos(this.permisoEscrituraInscripciones);
 
         // if (this.permisoEscrituraResumen == undefined) {
         //   sessionStorage.setItem("codError", "403");
@@ -223,12 +223,12 @@ export class GestionGuardiaComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-    this.commonService.checkAcceso(procesos_guardia.resumen)
+    this.commonService.checkAcceso(procesos_guardia.baremos)
       .then(respuesta => {
 
-        this.permisoEscrituraResumen = respuesta;
+        this.permisoEscrituraBaremos = respuesta;
 
-        this.persistenceService.setPermisos(this.permisoEscrituraResumen);
+        this.persistenceService.setPermisos(this.permisoEscrituraBaremos);
 
         // if (this.permisoEscrituraResumen == undefined) {
         //   sessionStorage.setItem("codError", "403");
@@ -241,7 +241,47 @@ export class GestionGuardiaComponent implements OnInit {
 
       }
       ).catch(error => console.error(error));
+
+
+    this.commonService.checkAcceso(procesos_guardia.incompatibilidades)
+      .then(respuesta => {
+
+        this.permisoEscrituraIncomp = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraIncomp);
+
+        // if (this.permisoEscrituraResumen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
+
+    this.commonService.checkAcceso(procesos_guardia.calendario)
+      .then(respuesta => {
+
+        this.permisoEscrituraCalen = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraCalen);
+
+        // if (this.permisoEscrituraResumen == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
+
   }
+
 }
-
-

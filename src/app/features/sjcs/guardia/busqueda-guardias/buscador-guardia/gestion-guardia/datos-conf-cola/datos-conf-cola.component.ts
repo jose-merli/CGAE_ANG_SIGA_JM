@@ -52,7 +52,6 @@ export class DatosConfColaComponent implements OnInit {
       this.idGuardia = this.persistenceService.getDatos().idGuardia;
       this.idTurno = this.persistenceService.getDatos().idTurno;
     }
-    if (this.modoEdicion) this.getResumen();
 
     this.sigaServices.datosRedy$.subscribe(
       data => {
@@ -67,7 +66,7 @@ export class DatosConfColaComponent implements OnInit {
         this.body.idTurno = this.idTurno;
         this.getPerfilesSeleccionados();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
+        if (this.modoEdicion) this.getResumen();
       })
   }
 
@@ -87,8 +86,8 @@ export class DatosConfColaComponent implements OnInit {
 
 
   getResumen() {
-    this.body = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
-    this.sigaServices.post("busquedaGuardias_resumenConfCola", this.body)
+    let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    this.sigaServices.post("busquedaGuardias_resumenConfCola", datos)
       .subscribe(data => {
         if (data.body)
           data = JSON.parse(data.body);

@@ -13,7 +13,7 @@ export const datos_combos: any = {
             value: "Q"
         },
         {
-            label: "MesesNaturales",
+            label: "Meses Naturales",
             value: "M"
         },
     ],

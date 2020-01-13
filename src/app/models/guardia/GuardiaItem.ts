@@ -47,6 +47,7 @@ export class GuardiaItem {
     partidoJudicial;
     rotarComponentes;
     requeridaValidacion;
+    separarGuardia;
     historico: boolean;
     constructor() { }
 

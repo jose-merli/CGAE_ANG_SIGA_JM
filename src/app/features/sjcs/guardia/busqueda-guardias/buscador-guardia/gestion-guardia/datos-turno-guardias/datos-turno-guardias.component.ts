@@ -14,12 +14,13 @@ export class DatosTurnoGuardiasComponent implements OnInit {
   body: TurnosItems = new TurnosItems();
   progressSpinner: boolean = false;
 
+  @Input() modoEdicion: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos())
+    if (this.modoEdicion)
       this.getResumen();
   }
 

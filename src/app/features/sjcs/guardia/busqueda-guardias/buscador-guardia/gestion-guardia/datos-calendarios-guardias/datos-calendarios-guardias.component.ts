@@ -5,6 +5,7 @@ import { datos_combos } from '../../../../../../../utils/datos_combos';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { element } from '../../../../../../../../../node_modules/protractor';
+import { Jsonp } from '../../../../../../../../../node_modules/@angular/http';
 
 @Component({
   selector: 'app-datos-calendarios-guardias',
@@ -23,6 +24,12 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   laborables;
   festividades;
   bodyInicial;
+  resumen = {
+    duracion: "",
+    dias: "",
+    diasSeparacion: "",
+    separarGuardia: ""
+  }
   progressSpinner: boolean = false;
   msgs = [];
   @Input() modoEdicion: boolean = false;
@@ -51,6 +58,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
           this.body.diasGuardia = n.diasGuardia;
           this.body.idGuardia = n.idGuardia;
           this.body.idTurno = n.idTurno;
+          this.body.separarGuardia = n.separarGuardia;
           this.body.requeridaValidacion = n.requeridaValidacion;
           this.body.seleccionFestivos = n.seleccionFestivos;
           this.body.seleccionLaborables = n.seleccionLaborables;
@@ -68,9 +76,30 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
                   it.value = true;
               })
             });
-
           this.changeFestividades();
           this.changeLaborables();
+          this.resumen.dias = JSON.parse(JSON.stringify(this.infoDiasLab)) + " " + JSON.parse(JSON.stringify(this.infoDiasFes))
+          let tipoDuracion;
+          switch (this.body.tipoDiasGuardia) {
+            case "D":
+              tipoDuracion = " días";
+              break;
+            case "M":
+              tipoDuracion = " meses";
+              break;
+            case "Q":
+              tipoDuracion = " quincenas";
+              break;
+            case "S":
+              tipoDuracion = " semanas";
+              break;
+            default:
+              tipoDuracion = " días"
+              break;
+          }
+          this.resumen.duracion = this.body.diasGuardia + tipoDuracion;
+          this.resumen.diasSeparacion = this.body.diasSeparacionGuardias;
+          this.resumen.separarGuardia = this.body.separarGuardia;
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
         });
