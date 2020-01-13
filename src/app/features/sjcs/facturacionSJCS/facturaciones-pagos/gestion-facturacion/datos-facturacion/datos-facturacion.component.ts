@@ -453,50 +453,52 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   restablecer(){
-    if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible) && (this.idEstadoFacturacion=="10" || this.idEstadoFacturacion=="50")) {
-      if(this.modoEdicion){
+    if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial!=this.checkRegularizar || this.checkVisibleInicial!=this.checkVisible)) {
+      if(!this.modoEdicion){
         this.body = new FacturacionItem();
         this.checkRegularizar=false;
         this.checkVisible=false;
         this.estadosFacturacion=[];
         this.changeCerrada.emit(false);
       }else{
-        this.body=JSON.parse(JSON.stringify(this.bodyAux));
+        if(this.idEstadoFacturacion=="10" || this.idEstadoFacturacion=="50"){
+          this.body=JSON.parse(JSON.stringify(this.bodyAux));
 
-        if(undefined != this.body){
+          if(undefined != this.body){
 
-          if(undefined!=this.body.fechaDesde){
-            this.body.fechaDesde = new Date(this.bodyAux.fechaDesde);
-          }
-
-          if(undefined!=this.body.fechaHasta){
-            this.body.fechaHasta = new Date(this.bodyAux.fechaHasta);
-            this.minDate = new Date(this.body.fechaDesde);
-          }
-
-          if(undefined!=this.body.fechaEstado){
-            this.body.fechaEstado = new Date(this.bodyAux.fechaEstado);
-          }
-
-          if(undefined!=this.body.regularizacion){
-            if(this.body.regularizacion=='1'){
-              this.checkRegularizar=true;
-            }else{
-              this.checkRegularizar=false;
+            if(undefined!=this.body.fechaDesde){
+              this.body.fechaDesde = new Date(this.bodyAux.fechaDesde);
             }
-          }
 
-          if(undefined!=this.body.visible){
-            if(this.body.visible=='1'){
-              this.checkVisible=true;
-            }else{
-              this.checkVisible=false;
+            if(undefined!=this.body.fechaHasta){
+              this.body.fechaHasta = new Date(this.bodyAux.fechaHasta);
+              this.minDate = new Date(this.body.fechaDesde);
             }
+
+            if(undefined!=this.body.fechaEstado){
+              this.body.fechaEstado = new Date(this.bodyAux.fechaEstado);
+            }
+
+            if(undefined!=this.body.regularizacion){
+              if(this.body.regularizacion=='1'){
+                this.checkRegularizar=true;
+              }else{
+                this.checkRegularizar=false;
+              }
+            }
+
+            if(undefined!=this.body.visible){
+              if(this.body.visible=='1'){
+                this.checkVisible=true;
+              }else{
+                this.checkVisible=false;
+              }
+            }
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
           }
         }
       }
-    }else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     }
 	}
 

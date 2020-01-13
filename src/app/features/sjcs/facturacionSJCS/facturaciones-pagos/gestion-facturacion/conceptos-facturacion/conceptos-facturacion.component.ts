@@ -349,7 +349,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   nuevo(){
     if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      if(this.nuevoConcepto || this.modificaConcepto || this.selectMultiple || this.selectAll){
+      if(!this.nuevoConcepto || this.modificaConcepto || this.selectMultiple || this.selectAll){
         this.tabla.sortOrder = 0;
         this.tabla.sortField = '';
         this.tabla.reset();

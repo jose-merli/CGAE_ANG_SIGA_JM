@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
 import { SigaWrapper } from "../../../../../wrapper/wrapper.class";
 import { USER_VALIDATIONS } from "../../../../../properties/val-properties";
 import { Calendar } from 'primeng/primeng';
@@ -10,6 +10,7 @@ import { FacturacionItem } from "../../../../../models/sjcs/FacturacionItem";
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 
 @Component({
 	selector: 'app-filtro-busqueda-facturacion',
@@ -289,5 +290,13 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 
 	clear() {
 		this.msgs = [];
+	}
+
+	//búsqueda con enter
+	@HostListener("document:keypress", ["$event"])
+	onKeyPress(event: KeyboardEvent) {
+	  if (event.keyCode === KEY_CODE.ENTER) {
+		this.isBuscar();
+	  }
 	}
 }
