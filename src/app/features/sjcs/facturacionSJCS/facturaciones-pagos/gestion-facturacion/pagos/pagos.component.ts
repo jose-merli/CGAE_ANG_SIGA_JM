@@ -78,7 +78,11 @@ export class PagosComponent implements OnInit {
   }
 
   onHideDatosGenerales() {
-    this.showFichaPagos = !this.showFichaPagos;
+
+    if(this.modoEdicion){
+      this.showFichaPagos = !this.showFichaPagos;
+    }
+    
   }
 
   onChangeRowsPerPages(event) {

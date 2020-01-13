@@ -52,17 +52,19 @@ export class CartasFacturacionPagoComponent implements OnInit {
     
     this.activaVolver=false;
     
+    //Viene de ficha de facturación 
     if (undefined!=this.persistenceService.getDatos()) {
       let datos = this.persistenceService.getDatos();
+      let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+      this.activaVolver=true;
 
-      if(undefined!=datos.idFacturacion && null!=datos.idFacturacion){
-        datos.modoBusqueda="f";
-
+      //Si es letrado no puede ver las cartas de facturacion de las ficha de facturacion 
+      if(undefined!=datos.idFacturacion && null!=datos.idFacturacion && !isLetrado){
+        datos.modoBusqueda=datos.modo;
         this.filtros.filtros.idFacturacion=datos.idFacturacion;
-        this.activaVolver=true;
         this.persistenceService.setFiltros(datos);
 
-        this.search("f");
+        this.search(datos.modo);
       }
     }
   }

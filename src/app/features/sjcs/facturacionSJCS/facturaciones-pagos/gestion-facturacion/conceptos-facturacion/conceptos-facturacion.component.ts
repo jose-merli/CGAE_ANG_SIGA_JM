@@ -411,7 +411,10 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   onHideDatosGenerales() {
-    this.showFichaConceptos = !this.showFichaConceptos;
+
+    if(this.modoEdicion){
+      this.showFichaConceptos = !this.showFichaConceptos;
+    }
     
     if (undefined != this.persistenceService.getPermisos()) {
 			this.permisos = this.persistenceService.getPermisos();

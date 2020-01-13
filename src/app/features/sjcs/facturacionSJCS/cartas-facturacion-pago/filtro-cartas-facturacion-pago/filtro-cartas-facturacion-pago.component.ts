@@ -27,6 +27,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   comboGrupoTurnos: any[];
   comboPartidaPresupuestaria: any[];
   comboPagos: any[];
+  isLetrado;
 
   @Output() emitSearch = new EventEmitter<string>();
   @Output() changeModoBusqueda = new EventEmitter<string>();
@@ -51,8 +52,12 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     }
 
     this.getCombos();
-    this.isColegiado();
-   
+
+    this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
+  
+    if(this.isLetrado){
+      this.isColegiado();
+    }
   }
 
   getCombos() {
@@ -74,6 +79,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
           this.filtros.ncolegiado = persona.numColegiado;
           this.filtros.idPersona = persona.idPersona;
           this.esColegiado = true;
+
         } else {
           //Comprobamos que se ha realizado una busqueda en la busqueda express
           let busquedaColegiado = this.persistenceService.getDatosBusquedaGeneralSJCS();
@@ -82,8 +88,21 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
             this.filtros.ncolegiado = busquedaColegiado.nColegiado;
             this.filtros.idPersona = busquedaColegiado.idPersona;
             this.filtros.apellidosNombre = busquedaColegiado.nombre;
+            this.esColegiado = true;
+          }else{
+            this.esColegiado = false;
           }
-          this.esColegiado = false;
+        }
+
+        //Si proviene de la ficha de facturacion se realiza la busqueda de cartas de facturacion perteneciente a ese colegiado
+        if (undefined!=this.persistenceService.getDatos()) {
+          let datos = this.persistenceService.getDatos();
+      
+          if(undefined!=datos.idFacturacion && null!=datos.idFacturacion && this.esColegiado){
+            this.filtros.idFacturacion=datos.idFacturacion;
+            this.modoBusqueda = datos.modo;
+            this.emitSearch.emit(this.modoBusqueda);
+          }
         }
 
         this.progressSpinner = false;
