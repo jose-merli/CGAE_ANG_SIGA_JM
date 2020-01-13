@@ -133,6 +133,10 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
     }
   }
 
+  actualizaSeleccionados(selectedDatos) {
+		this.numSelected = selectedDatos.length;
+  }
+
   onChangeSelectAll() {
 		if (this.permisoEscritura) {
 			if (this.selectAll === true) {
@@ -146,10 +150,6 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
 			}
 
 		}
-  }
-  
-  actualizaSeleccionados(selectedDatos) {
-		this.numSelected = selectedDatos.length;
   }
   
   checkPermisosComunicar() {
