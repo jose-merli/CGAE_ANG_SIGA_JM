@@ -65,6 +65,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   ngOnInit() {
+    this.progressSpinnerConceptos = false;
     this.comboConceptos();
     this.comboGruposTurnos();    
 

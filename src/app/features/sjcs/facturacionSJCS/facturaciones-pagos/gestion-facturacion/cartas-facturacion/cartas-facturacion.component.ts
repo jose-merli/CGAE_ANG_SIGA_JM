@@ -20,6 +20,8 @@ export class CartasFacturacionComponent implements OnInit {
     private sigaService: SigaServices) { }
 
   ngOnInit() {
+    this.progressSpinnerCartas = false;
+    
     if(undefined!=this.idFacturacion){
       this.serviceNumApuntes();    
     }

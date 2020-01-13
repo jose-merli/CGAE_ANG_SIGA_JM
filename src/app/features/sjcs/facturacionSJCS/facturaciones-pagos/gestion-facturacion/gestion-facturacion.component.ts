@@ -101,12 +101,12 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
     if(this.modoEdicion){
       if(this.conceptos != undefined || this.baremos != undefined || this.pagos != undefined || this.cartas != undefined){
         if(this.datosFac.progressSpinnerDatos || this.conceptos.progressSpinnerConceptos || this.baremos.progressSpinnerBaremos || this.pagos.progressSpinnerPagos || this.cartas.progressSpinnerCartas){
-          return false;
-        }else{
           return true;
+        }else{
+          return false;
         }
       }else{
-        return false;
+        return true;
       }
 
     }else{
