@@ -7,7 +7,7 @@
     </p>
   </div>
   <div>
-    <app-tarjeta-resumen-fija *ngIf="permisoEscrituraResumen != undefined" [titulo]="titulo" [datos]="infoResumen" [icono]="clipboard"></app-tarjeta-resumen-fija>
+    <app-tarjeta-resumen-fija *ngIf="permisoEscrituraResumen != undefined" [titulo]="titulo" [datos]="infoResumen" icono="clipboard"></app-tarjeta-resumen-fija>
 
     <app-datos-generales-guardias *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales"
       [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>

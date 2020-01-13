@@ -282,6 +282,24 @@ export class GestionGuardiaComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
+    this.commonService.checkAcceso(procesos_guardia.datos_generales)
+      .then(respuesta => {
+
+        this.permisoEscrituraDatosGenerales = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraDatosGenerales);
+
+        // if (this.permisoEscrituraDatosGenerales == undefined) {
+        //   sessionStorage.setItem("codError", "403");
+        //   sessionStorage.setItem(
+        //     "descError",
+        //     this.translateService.instant("generico.error.permiso.denegado")
+        //   );
+        //   this.router.navigate(["/errorAcceso"]);
+        // }
+
+      }
+      ).catch(error => console.error(error));
   }
 
 }

@@ -225,7 +225,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   tipoGuardiaResumen() {
-    let tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value = this.body.idTipoGuardia)[0]
+    let tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0]
     if (tipoGuardiaResumen)
       return tipoGuardiaResumen.label;
   }
