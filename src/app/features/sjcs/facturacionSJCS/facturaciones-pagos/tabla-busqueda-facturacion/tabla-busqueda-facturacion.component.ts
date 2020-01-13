@@ -58,11 +58,6 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     } 
   }
 
-  actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
-  }
-
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -186,6 +181,14 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
       }else{
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeErrorEliminar"));
       }
+    }
+  }
+
+  disabledEliminar(){
+    if(this.selectMultiple){
+      return true;
+    }else{
+      return false;
     }
   }
 }
