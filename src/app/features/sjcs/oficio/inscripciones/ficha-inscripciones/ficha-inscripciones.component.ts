@@ -41,11 +41,11 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.permisosTarjetaResumen = true;
 		  }
 		}).catch(error => console.error(error));
-		this.route.queryParams
-			.subscribe(params => {
-				this.idPersona = params.idpersona
-				console.log(params);
-			});
+		// this.route.queryParams
+		// 	.subscribe(params => {
+		// 		this.idPersona = params.idpersona
+		// 		console.log(params);
+		// 	});
 			if (this.persistenceService.getDatos() != undefined) {
 				this.datos = this.persistenceService.getDatos();
 				this.modoEdicion = true;
