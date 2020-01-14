@@ -45,6 +45,12 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
       if(this.filtros.modoBusqueda != undefined){
         this.modoBusqueda = this.filtros.modoBusqueda;
+
+        if(this.modoBusqueda == "f"){
+          this.modoBusquedaFacturacion = true;
+        }else{
+          this.modoBusquedaFacturacion = false;
+        }
       }
       this.emitSearch.emit(this.modoBusqueda)
 
@@ -167,10 +173,27 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     if (!this.esColegiado && (
       (this.filtros.idPartidaPresupuestaria == null || this.filtros.idPartidaPresupuestaria == undefined) &&
       (this.filtros.idConcepto == null || this.filtros.idConcepto == undefined) &&
-      (this.filtros.idTurno == null || this.filtros.idTurno == undefined) &&
-      (this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined))) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      return false;
+      (this.filtros.idTurno == null || this.filtros.idTurno == undefined))) {
+
+
+        if (this.modoBusquedaFacturacion){
+          if(this.filtros.idFacturacion == null || this.filtros.idFacturacion == undefined){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+            return false;
+
+          }else{
+            return true;
+          }
+        }else{
+          if(this.filtros.idPago == null || this.filtros.idPago == undefined){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+            return false;
+
+          }else{
+            return true;
+          }
+        } 
+  
     } else {
       return true;
     }

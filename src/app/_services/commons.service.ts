@@ -271,4 +271,18 @@ export class CommonsService {
     return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
   }
 
+  arreglarFecha(fecha) {
+		let jsonDate = JSON.stringify(fecha);
+		let rawDate = jsonDate.slice(1, -1);
+		if (rawDate.length < 14) {
+		  let splitDate = rawDate.split("/");
+		  let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+		  fecha = new Date((arrayDate += "T00:00:00.001Z"));
+		} else {
+		  fecha = new Date(rawDate);
+		}
+	
+		return fecha;
+	  }
+
 }

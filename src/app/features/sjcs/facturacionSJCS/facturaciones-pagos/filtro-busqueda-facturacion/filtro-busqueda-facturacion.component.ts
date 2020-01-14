@@ -15,7 +15,7 @@ import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.com
 @Component({
 	selector: 'app-filtro-busqueda-facturacion',
 	templateUrl: './filtro-busqueda-facturacion.component.html',
-  	styleUrls: ['./filtro-busqueda-facturacion.component.scss']
+	styleUrls: ['./filtro-busqueda-facturacion.component.scss']
 })
 export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements OnInit {
 	//FECHAS
@@ -41,9 +41,9 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	partidaPresupuestaria: ComboItem;
 	msgs: any[];
 	buscar: boolean = false;
-	selectedValue: string="facturacion";
-	showFiltroBusquedaFacturacion: boolean = true; 
-	
+	selectedValue: string = "facturacion";
+	showFiltroBusquedaFacturacion: boolean = true;
+
 	@Output() buscarFacturacion = new EventEmitter<boolean>();
 
 	@Input() permisos;
@@ -56,14 +56,14 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		private sigaService: SigaServices,
 		private translateService: TranslateService,
 		private persistenceService: PersistenceService,
-		private commonsService: CommonsService) { 
+		private commonsService: CommonsService) {
 		super(USER_VALIDATIONS);
 	}
 
 	ngOnInit() {
 		this.progressSpinnerFiltro = true;
 
-		if (undefined!=this.persistenceService.getPermisos()) {
+		if (undefined != this.persistenceService.getPermisos()) {
 			this.permisos = this.persistenceService.getPermisos();
 		}
 
@@ -72,25 +72,28 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.comboPartidasPresupuestarias();
 		this.comboGrupoTurnos();
 		this.comboFactConceptos();
-	  
 
-		if(undefined!=this.persistenceService.getFiltrosAux()){
+
+		if (undefined != this.persistenceService.getFiltrosAux()) {
 			this.persistenceService.setFiltros(this.persistenceService.getFiltrosAux());
 
 		}
-		
-		if (undefined!=this.persistenceService.getFiltros()) {
+
+		if (undefined != this.persistenceService.getFiltros()) {
 			this.filtros = this.persistenceService.getFiltros();
-			
-			  if(undefined!=this.filtros.idEstado){
-				this.isBuscar();
-			  }else{
-				this.filtros = new FacturacionItem();
-			  }
-			
-		  } else {
+
+			if(this.filtros.fechaDesde != undefined){
+				this.filtros.fechaDesde = this.commonsService.arreglarFecha(this.filtros.fechaDesde);
+			}
+
+			if(this.filtros.fechaHasta != undefined){
+				this.filtros.fechaHasta = this.commonsService.arreglarFecha(this.filtros.fechaHasta);
+			}
+
+			this.isBuscar();
+		} else {
 			this.filtros = new FacturacionItem();
-		  }
+		}
 	}
 
 	nuevo() {
@@ -109,81 +112,81 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.yearRange = year - 80 + ':' + (year + 20);
 	}
 
-  	onHideDatosGenerales() {
-    	this.showFiltroBusquedaFacturacion = !this.showFiltroBusquedaFacturacion;
-  	}
+	onHideDatosGenerales() {
+		this.showFiltroBusquedaFacturacion = !this.showFiltroBusquedaFacturacion;
+	}
 
-  	borrarFecha() {
+	borrarFecha() {
 		this.value = null;
 		this.valueChangeInput.emit(this.value);
 		this.fechaSelectedFromCalendar = true;
 		this.calendar.onClearButtonClick("");
 	}
 
-	comboFactEstados(){
+	comboFactEstados() {
 		this.progressSpinnerFiltro = true;
 		this.sigaService.get("combo_comboFactEstados").subscribe(
 			data => {
-			  this.estadoFacturas = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.estadoFacturas);
-			  this.progressSpinnerFiltro = false;
-			},	  
+				this.estadoFacturas = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.estadoFacturas);
+				this.progressSpinnerFiltro = false;
+			},
 			err => {
-			  console.log(err);
-			  this.progressSpinnerFiltro = false;
+				console.log(err);
+				this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
-	comboPartidasPresupuestarias(){
+	comboPartidasPresupuestarias() {
 		this.progressSpinnerFiltro = true;
 
 		this.sigaService.get("combo_partidasPresupuestarias").subscribe(
 			data => {
-			  this.partidaPresupuestaria = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
-			  this.progressSpinnerFiltro = false;
-			},	  
+				this.partidaPresupuestaria = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
+				this.progressSpinnerFiltro = false;
+			},
 			err => {
-			  console.log(err);
-			  this.progressSpinnerFiltro = false;
+				console.log(err);
+				this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
-	comboGrupoTurnos(){
+	comboGrupoTurnos() {
 		this.progressSpinnerFiltro = true;
 
 		this.sigaService.get("combo_grupoFacturacion").subscribe(
 			data => {
-			  this.grupoTurnos = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.grupoTurnos);
-			  this.progressSpinnerFiltro = false;
-			},	  
+				this.grupoTurnos = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.grupoTurnos);
+				this.progressSpinnerFiltro = false;
+			},
 			err => {
-			  console.log(err);
-			  this.progressSpinnerFiltro = false;
+				console.log(err);
+				this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
-	comboFactConceptos(){
+	comboFactConceptos() {
 		this.progressSpinnerFiltro = true;
 
 		this.sigaService.get("combo_comboFactConceptos").subscribe(
 			data => {
-			  this.conceptos = data.combooItems;
-			  this.commonsService.arregloTildesCombo(this.conceptos);
-			  this.progressSpinnerFiltro = false;
-			},	  
+				this.conceptos = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.conceptos);
+				this.progressSpinnerFiltro = false;
+			},
 			err => {
-			  console.log(err);
-			  this.progressSpinnerFiltro = false;
+				console.log(err);
+				this.progressSpinnerFiltro = false;
 			}
 		);
 	}
 
-  	getLenguage() {
+	getLenguage() {
 		this.sigaService.get('usuario').subscribe((response) => {
 			this.currentLang = response.usuarioItem[0].idLenguaje;
 
@@ -205,15 +208,15 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 					break;
 			}
 		});
-  	}
-  
+	}
+
 	fechaHoy() {
 		this.value = new Date();
 		this.valueChangeSelected.emit(this.value);
 		this.calendar.overlayVisible = false;
 		this.fechaSelectedFromCalendar = true;
 	}
-	
+
 	change(newValue) {
 		//evento que cambia el value de la fecha
 		if (!this.showTime) {
@@ -239,17 +242,17 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 	fillFechaDesde(event) {
 		this.filtros.fechaDesde = event;
-		if(this.filtros.fechaHasta < this.filtros.fechaDesde){
+		if (this.filtros.fechaHasta < this.filtros.fechaDesde) {
 			this.filtros.fechaHasta = undefined;
 		}
-	  }
+	}
 
-	  fillFechaHasta(event) {
+	fillFechaHasta(event) {
 		this.filtros.fechaHasta = event;
-	  }
+	}
 
 
-	isBuscar(){
+	isBuscar() {
 		if (this.checkFilters()) {
 			this.persistenceService.setFiltros(this.filtros);
 			this.persistenceService.setFiltrosAux(this.filtros);
@@ -259,21 +262,21 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	checkFilters() {
-		if ((undefined!=this.filtros.idEstado) || (undefined!=this.filtros.fechaDesde) || (undefined!=this.filtros.fechaHasta) ||
-		(undefined!=this.filtros.idConcepto) ||	(undefined!=this.filtros.idFacturacion) || (undefined!=this.filtros.idPartidaPresupuestaria) ||
-		(undefined!=this.filtros.nombre && this.filtros.nombre.trim()!="")) {
+		if ((undefined != this.filtros.idEstado) || (undefined != this.filtros.fechaDesde) || (undefined != this.filtros.fechaHasta) ||
+			(undefined != this.filtros.idConcepto) || (undefined != this.filtros.idFacturacion) || (undefined != this.filtros.idPartidaPresupuestaria) ||
+			(undefined != this.filtros.nombre && this.filtros.nombre.trim() != "")) {
 
-			if((undefined!=this.filtros.fechaDesde) && (undefined!=this.filtros.fechaHasta)){				
-				if(this.filtros.fechaDesde <= this.filtros.fechaHasta){
+			if ((undefined != this.filtros.fechaDesde) && (undefined != this.filtros.fechaHasta)) {
+				if (this.filtros.fechaDesde <= this.filtros.fechaHasta) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
-			}else{
+			} else {
 				return true;
 			}
-		}else{
-			this.showMessage("error",  this.translateService.instant("general.message.incorrect"),  this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeFiltroVacio"));
+		} else {
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeFiltroVacio"));
 			return false;
 		}
 	}
@@ -281,13 +284,13 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	showMessage(severity, summary, msg) {
 		this.msgs = [];
 		this.msgs.push({
-		  severity: severity,
-		  summary: summary,
-		  detail: msg
+			severity: severity,
+			summary: summary,
+			detail: msg
 		});
-	  }
+	}
 
-	restablecer(){
+	restablecer() {
 		this.filtros = new FacturacionItem();
 		this.filtrosAux = new FacturacionItem();
 	}
@@ -299,8 +302,8 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	//búsqueda con enter
 	@HostListener("document:keypress", ["$event"])
 	onKeyPress(event: KeyboardEvent) {
-	  if (event.keyCode === KEY_CODE.ENTER) {
-		this.isBuscar();
-	  }
+		if (event.keyCode === KEY_CODE.ENTER) {
+			this.isBuscar();
+		}
 	}
 }

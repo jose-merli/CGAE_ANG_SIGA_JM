@@ -4,7 +4,7 @@
     <div class="card-body p-0">
       <!-- TABLA RESULTADOS -->  
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #tabla
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)"
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="seleccionaFila($event)" [first]="first"
         [ngClass]="{ 'customCursor': selectMultiple}" (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -70,7 +70,7 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="!permisos && disabledEliminar()"
+        <button pButton [disabled]="!permisos || disabledEliminar()"
           (click)="confirmDelete(selectedDatos); selectedDatos =[]" type="button"
           icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
         <button pButton disabled type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>

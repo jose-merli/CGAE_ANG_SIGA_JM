@@ -235,7 +235,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   disabledEliminar(){
     if(this.modoEdicion && this.idEstadoFacturacion=='10'){
-      if(!this.nuevoConcepto && !this.modificaConcepto && (this.selectMultiple || this.selectAll)){
+      if(!this.nuevoConcepto && !this.modificaConcepto && ((this.selectMultiple && this.selectedDatos.length > 0) || this.selectAll)){
         return false;
       }else{
         return true;

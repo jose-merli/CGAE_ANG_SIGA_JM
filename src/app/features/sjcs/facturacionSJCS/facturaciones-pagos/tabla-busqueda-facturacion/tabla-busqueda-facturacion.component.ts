@@ -25,14 +25,14 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   message;
   permisos: boolean = false;
-
+  first = 0;
   initDatos;
 
   @Input() datos;
 
   @Output() delete = new EventEmitter<String>();
   
-  @ViewChild("table") tabla;
+  @ViewChild("tabla") tabla;
   
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -42,6 +42,15 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     private confirmationService: ConfirmationService) {}
 
   ngOnInit() {
+
+    if (this.persistenceService.getPaginacion() != undefined) {
+      let paginacion = this.persistenceService.getPaginacion();
+      this.persistenceService.clearPaginacion();
+
+      this.first = paginacion.paginacion;
+      this.selectedItem = paginacion.selectedItem;
+    }
+
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     if (this.persistenceService.getPermisos()) {
@@ -53,6 +62,14 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
 
   seleccionaFila(evento) {
     if (!this.selectMultiple) {
+
+      let paginacion = {
+        paginacion: this.tabla.first,
+        selectedItem: this.selectedItem
+      };
+
+      this.persistenceService.setPaginacion(paginacion);
+  
       this.persistenceService.setDatos(evento.data);
       this.router.navigate(["/fichaFacturacion"]);
     } 
@@ -185,7 +202,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   disabledEliminar(){
-    if(this.selectMultiple){
+    if(!this.selectMultiple || this.selectedDatos.length == 0){
       return true;
     }else{
       return false;
