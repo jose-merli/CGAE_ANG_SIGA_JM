@@ -427,7 +427,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true && !this.modificaConcepto && !this.nuevoConcepto) {
+    if (this.selectAll === true && !this.disabled() && !this.modificaConcepto && !this.nuevoConcepto) {
       this.selectMultiple = false;
       this.selectedDatos = this.body;
       this.numSelected = this.body.length;

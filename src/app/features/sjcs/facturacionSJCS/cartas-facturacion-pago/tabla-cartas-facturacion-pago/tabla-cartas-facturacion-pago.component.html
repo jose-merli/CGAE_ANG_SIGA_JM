@@ -49,12 +49,12 @@
             + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
             {{table.totalRecords}}</label>
           <label class="pr-3 numSeleccionados"
-            *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            *ngIf="selectedDatos  && selectedDatos.length >= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
             {{selectedDatos.length}}
           </label>
           <label class="pr-3 numSeleccionados"
-            *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-            0
+            *ngIf="selectedDatos && selectedDatos.length == undefined">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            1
           </label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">

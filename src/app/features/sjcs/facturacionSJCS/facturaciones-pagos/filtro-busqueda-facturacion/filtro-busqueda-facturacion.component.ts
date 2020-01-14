@@ -276,7 +276,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 				return true;
 			}
 		} else {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeFiltroVacio"));
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
 			return false;
 		}
 	}

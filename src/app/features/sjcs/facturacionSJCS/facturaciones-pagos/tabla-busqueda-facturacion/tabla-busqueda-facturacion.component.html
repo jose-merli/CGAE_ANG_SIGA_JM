@@ -53,7 +53,7 @@
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="undefined==selectedDatos.idFacturacion || null!=selectedDatos.idFacturacion">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 1
+            <label class="pr-3 numSeleccionados" *ngIf="undefined!=selectedDatos.idFacturacion || null!=selectedDatos.idFacturacion">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 1
             </label>
             <label class="pr-3 numSeleccionados" *ngIf="undefined==selectedDatos.idFacturacion || null==selectedDatos.idFacturacion">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
             </label>

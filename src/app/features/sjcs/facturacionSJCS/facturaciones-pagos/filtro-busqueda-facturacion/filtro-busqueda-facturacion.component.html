@@ -16,28 +16,30 @@
       </p>
       <div *ngIf="showFiltroBusquedaFacturacion" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">   
-            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='filtros.idEstado' [options]="estadoFacturas" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-          </div>  
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
-            <app-fecha [utc]="false" [(value)]="filtros.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
-          </div>  
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta' | translate}}</label>
-            <app-fecha [utc]="false" [(value)]="filtros.fechaHasta" [minDate]="filtros.fechaDesde" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
-          </div>  
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='filtros.idConcepto' [options]="conceptos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>    
-          </div>  
-        </div>
-        <div class="form-row">
           <div class="form-group col-lg-6 col-md-6">   
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}}</label>
             <input type="text"  maxlength="95"  name="nombre" class="form-control" [(ngModel)]='filtros.nombre' pInputText />
           </div>  
+          <div class="form-group col-lg-3 col-md-3">   
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idEstado' [options]="estadoFacturas" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>  
+          <div class="form-row col-lg-3 col-md-3">
+            <div class="form-group col-lg-6 col-md-6">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
+            <app-fecha [utc]="false" [(value)]="filtros.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+            <label>{{'gratuita.personaJG.literal.hasta' | translate}}</label>
+            <app-fecha [utc]="false" [(value)]="filtros.fechaHasta" [minDate]="filtros.fechaDesde" (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
+            </div>
+          </div>  
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios' | translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idConcepto' [options]="conceptos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>    
+          </div>            
           <div class="form-group col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos' | translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='filtros.idFacturacion' [options]="grupoTurnos" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>      
