@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacion';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
@@ -14,7 +14,7 @@ import { TablaCartasFacturacionPagoComponent } from './tabla-cartas-facturacion-
   templateUrl: './cartas-facturacion-pago.component.html',
   styleUrls: ['./cartas-facturacion-pago.component.scss']
 })
-export class CartasFacturacionPagoComponent implements OnInit {
+export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
   permisoEscritura: boolean = false;
   datos = [];
@@ -70,6 +70,7 @@ export class CartasFacturacionPagoComponent implements OnInit {
   }
 
   volver(){
+    this.persistenceService.clearFiltros();
     this.persistenceService.setFiltros(this.persistenceService.getFiltrosAux());
     this.location.back();
   }
@@ -177,4 +178,7 @@ export class CartasFacturacionPagoComponent implements OnInit {
     this.msgs = [];
   }
 
+  ngOnDestroy(): void {
+    this.persistenceService.clearDatosBusquedaGeneralSJCS();
+  }
 }

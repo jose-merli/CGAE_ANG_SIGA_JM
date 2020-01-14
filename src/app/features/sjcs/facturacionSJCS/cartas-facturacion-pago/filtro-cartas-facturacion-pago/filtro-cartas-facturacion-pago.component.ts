@@ -43,7 +43,9 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      this.modoBusqueda = this.filtros.modoBusqueda;
+      if(this.filtros.modoBusqueda != undefined){
+        this.modoBusqueda = this.filtros.modoBusqueda;
+      }
       this.emitSearch.emit(this.modoBusqueda)
 
     } else {
@@ -54,10 +56,23 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     this.getCombos();
 
     this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
-  
-    if(this.isLetrado){
+
+    if (this.isLetrado) {
       this.isColegiado();
+    } else {
+      //Comprobamos que se ha realizado una busqueda en la busqueda express
+      let busquedaColegiado = this.persistenceService.getDatosBusquedaGeneralSJCS();
+
+      if (busquedaColegiado != undefined) {
+        this.filtros.ncolegiado = busquedaColegiado.nColegiado;
+        this.filtros.idPersona = busquedaColegiado.idPersona;
+        this.filtros.apellidosNombre = busquedaColegiado.nombre;
+      }
+
+      this.esColegiado = false;
     }
+
+
   }
 
   getCombos() {
@@ -88,18 +103,18 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
             this.filtros.ncolegiado = busquedaColegiado.nColegiado;
             this.filtros.idPersona = busquedaColegiado.idPersona;
             this.filtros.apellidosNombre = busquedaColegiado.nombre;
-            this.esColegiado = true;
-          }else{
-            this.esColegiado = false;
           }
+
+          this.esColegiado = false;
+
         }
 
         //Si proviene de la ficha de facturacion se realiza la busqueda de cartas de facturacion perteneciente a ese colegiado
-        if (undefined!=this.persistenceService.getDatos()) {
+        if (undefined != this.persistenceService.getDatos()) {
           let datos = this.persistenceService.getDatos();
-      
-          if(undefined!=datos.idFacturacion && null!=datos.idFacturacion && this.esColegiado){
-            this.filtros.idFacturacion=datos.idFacturacion;
+
+          if (undefined != datos.idFacturacion && null != datos.idFacturacion && this.esColegiado) {
+            this.filtros.idFacturacion = datos.idFacturacion;
             this.modoBusqueda = datos.modo;
             this.emitSearch.emit(this.modoBusqueda);
           }
@@ -126,10 +141,11 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   search() {
 
     if (this.checkFilters()) {
+      this.filtros.modoBusqueda = this.modoBusqueda;
       this.persistenceService.setFiltros(this.filtros);
       this.emitSearch.emit(this.modoBusqueda);
-      
-      if(this.activaVolver){
+
+      if (this.activaVolver) {
         this.desactivaVolver.emit();
       }
     }
@@ -140,6 +156,10 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       this.filtros.apellidosNombre = event.nombre;
       this.filtros.ncolegiado = event.nColegiado;
       this.filtros.idPersona = event.idPersona;
+    } else {
+      this.filtros.apellidosNombre = undefined;
+      this.filtros.ncolegiado = undefined;
+      this.filtros.idPersona = undefined;
     }
   }
 
@@ -197,9 +217,9 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       data => {
         this.comboFacturacion = data.combooItems;
         this.commonsService.arregloTildesCombo(this.comboFacturacion);
-        
-        if(undefined==this.filtros.idFacturacion || null==this.filtros.idFacturacion){
-          this.filtros.idFacturacion=this.comboFacturacion[0].value;
+
+        if (undefined == this.filtros.idFacturacion || null == this.filtros.idFacturacion) {
+          this.filtros.idFacturacion = this.comboFacturacion[0].value;
         }
       },
       err => {
@@ -221,7 +241,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   }
 
   changeFilters() {
-    if(!this.activaVolver){
+    if (!this.activaVolver) {
       this.clearFilters();
       this.persistenceService.clearFiltros();
 
@@ -229,12 +249,12 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
         this.modoBusquedaFacturacion = true;
       } else if (this.modoBusqueda == "p") {
         this.modoBusquedaFacturacion = false;
-      }else{
+      } else {
         this.modoBusquedaFacturacion = true;
-        this.modoBusqueda=="f;"
+        this.modoBusqueda == "f;"
       }
 
-      if(this.activaVolver){
+      if (this.activaVolver) {
         this.desactivaVolver.emit();
       }
 
@@ -258,7 +278,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       this.filtros = new CartasFacturacionPagosItem();
     }
 
-    if(this.activaVolver){
+    if (this.activaVolver) {
       this.desactivaVolver.emit();
     }
   }

@@ -14,6 +14,7 @@ export class PersistenceService {
     private permisosName: string = "permisos";
     private fichasPosibles: string = "fichasPosibles";
     private datosBusquedaGeneralSJCS: string = "datosBusquedaGeneralSJCS";
+    private filtrosBusquedaGeneralSJCS: string = "filtrosBusquedaGeneralSJCS";
 
     constructor() { }
 
@@ -147,6 +148,19 @@ export class PersistenceService {
         sessionStorage.removeItem(this.datosBusquedaGeneralSJCS);
     }
 
+    setFiltrosBusquedaGeneralSJCS(data: any) {
+        sessionStorage.setItem(this.filtrosBusquedaGeneralSJCS, JSON.stringify(data));
+    }
+
+    getFiltrosBusquedaGeneralSJCS() {
+        let data = sessionStorage.getItem(this.filtrosBusquedaGeneralSJCS);
+        return JSON.parse(data);
+    }
+
+    clearFiltrosBusquedaGeneralSJCS() {
+        sessionStorage.removeItem(this.filtrosBusquedaGeneralSJCS);
+    }
+
 
 
     clearPersistence() {
@@ -160,6 +174,7 @@ export class PersistenceService {
         this.clearBodyAux();
         this.clearPaginacion();
         this.clearDatosBusquedaGeneralSJCS();
+        this.clearFiltrosBusquedaGeneralSJCS();
     }
 
 }

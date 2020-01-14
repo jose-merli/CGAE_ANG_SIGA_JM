@@ -92,7 +92,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   isBuscarGeneralSJCS() {
-    this.persistenceService.clearFiltrosAux();
+    this.persistenceService.clearFiltrosBusquedaGeneralSJCS();
     this.router.navigate(["/busquedaGeneralSJCS"]);
   }
 

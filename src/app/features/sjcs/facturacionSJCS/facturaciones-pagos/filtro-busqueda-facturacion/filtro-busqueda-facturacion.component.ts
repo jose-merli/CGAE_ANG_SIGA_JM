@@ -73,17 +73,21 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		this.comboGrupoTurnos();
 		this.comboFactConceptos();
 	  
+
+		if(undefined!=this.persistenceService.getFiltrosAux()){
+			this.persistenceService.setFiltros(this.persistenceService.getFiltrosAux());
+
+		}
+		
 		if (undefined!=this.persistenceService.getFiltros()) {
 			this.filtros = this.persistenceService.getFiltros();
-			if (undefined!=this.persistenceService.getHistorico()) {
-			  this.buscarFacturacion.emit(this.persistenceService.getHistorico());
-			}else {
+			
 			  if(undefined!=this.filtros.idEstado){
 				this.isBuscar();
 			  }else{
 				this.filtros = new FacturacionItem();
 			  }
-			}
+			
 		  } else {
 			this.filtros = new FacturacionItem();
 		  }
