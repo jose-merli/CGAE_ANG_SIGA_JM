@@ -20,7 +20,6 @@ export class GestionEjgComponent implements OnInit {
   progressSpinner: boolean = false;
   permisos;
   nuevo;
-  titulo = "Hola";
   icono = "clipboard";
   msgs;
   body: EJGItem = new EJGItem();

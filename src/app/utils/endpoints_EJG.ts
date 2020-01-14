@@ -34,6 +34,7 @@ export let endpoints_EJG: any = {
     gestionejg_unidadFamiliarEJG: "ejg/gestion-ejg/unidadFamiliarEJG",
     gestionejg_getExpedientesEconomicos: "ejg/gestion-ejg/getExpedientesEconomicos",
     gestionejg_getEstados: "ejg/gestion-ejg/getEstados",
-    gestionejg_getDocumentos: "ejg/gestion-ejg/getDocumentos"
+    gestionejg_getDocumentos: "ejg/gestion-ejg/getDocumentos",
+    gestionejg_getDictamen: "ejg/gestion-ejg/getDictamen"
 
 }

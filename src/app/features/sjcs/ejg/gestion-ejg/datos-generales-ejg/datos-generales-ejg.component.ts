@@ -30,7 +30,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboPrestaciones = [];
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private commonsServices: CommonsService) { }
+    private commonsServices: CommonsService) { }
 
   ngOnInit() {
     this.getComboTipoEJG();

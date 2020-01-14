@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { TranslateService } from '../../../../../commons/translate';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-documentacion',
@@ -29,7 +31,7 @@ export class DocumentacionComponent implements OnInit {
   seleccion: boolean = false;
   nDocumentos;
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,) { }
+    private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined)
@@ -79,15 +81,27 @@ export class DocumentacionComponent implements OnInit {
     }
   }
   getCols() {
-    this.cols = [
-      { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion", width: "10%" },
-      { field: "presentador", header: "justiciaGratuita.ejg.documentacion.Presentador", width: "20%" },
-      { field: "documentoDesc", header: "justiciaGratuita.ejg.documentacion.Documento", width: "10%" },
-      { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada", width: "10%" },
-      { field: "regSalida", header: "justiciaGratuita.ejg.datosGenerales.ReagistroSalida", width: "15%" },
-      { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion", width: "15%" },
-      { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario", width: "15%" },
-    ];
+    if(this.documentos != undefined && this.documentos.presentador != undefined){
+      this.cols = [
+        { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion", width: "10%" },
+        { field: "presentador", header: "justiciaGratuita.ejg.documentacion.Presentador", width: "20%" },
+        { field: "documentoDesc", header: "justiciaGratuita.ejg.documentacion.Documento", width: "20%" },
+        { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada", width: "15%" },
+        { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida", width: "15%" },
+        { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion", width: "10%" },
+        { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario", width: "10%" },
+      ];
+    }else{
+      this.cols = [
+        { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion", width: "10%" },
+        { field: "presentador_persona", header: "justiciaGratuita.ejg.documentacion.Presentador", width: "20%" },
+        { field: "documentoDesc", header: "justiciaGratuita.ejg.documentacion.Documento", width: "20%" },
+        { field: "regEntrada", header: "justiciaGratuita.ejg.documentacion.RegistroEntrada", width: "15%" },
+        { field: "regSalida", header: "justiciaGratuita.ejg.documentacion.RegistroSalida", width: "15%" },
+        { field: "f_presentacion", header: "censo.consultaDatosGenerales.literal.fechaPresentacion", width: "10%" },
+        { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario", width: "10%" },
+      ];
+    }  
     this.cols.forEach(it => this.buscadores.push(""));
 
     this.rowsPerPage = [

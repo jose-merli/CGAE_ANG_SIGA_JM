@@ -1,5 +1,5 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container">
+<div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row" id="cabeza">
@@ -13,13 +13,15 @@
             <label class="mr-auto title-ficha">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate }}</label>
           </div>
           <div class="form-row">
-            <div class="d-flex flex-wrap">
+            <div *ngIf="nDocumentos <= 3" class="d-flex flex-wrap">
               <label name>
-                <b>{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: </b>{{nExpedientes}}</label>
+                <b>{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: </b>{{nDocumentos}}</label>
             </div>
-
+            <div *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined" class="d-flex flex-wrap">
+                <label name>
+                  <b>{{ "enviosMasivos.literal.documentos" | translate }}: </b>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</label>
+              </div>
           </div>
-
           <div class="d-flex justify-content-between">
             <br>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -34,9 +36,8 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="card mt-3">
-        <div class="card-body p-0">
+    <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+   <!--  <div *ngIf="openFicha" class="card-body card-body-ficha">-->
           <!-- TABLA RESULTADOS -->
           <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
             #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
@@ -61,7 +62,7 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div *ngIf="col.field == 'f_solicitud' || col.field == 'f_recepcion'">
+                  <div *ngIf="col.field == 'flimite_presentacion' || col.field == 'f_presentacion'">
                     <div *ngIf="setItalic(dato)">
                       <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
                     </div>
@@ -69,12 +70,26 @@
                       <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
                     </div>
                   </div>
-                  <div *ngIf="col.field != 'f_solicitud' && col.field != 'f_recepcion'">
+                  <div *ngIf="col.field != 'flimite_presentacion' && col.field != 'f_presentacion' && col.field != 'propietario'">
                     <div *ngIf="setItalic(dato)">
                       <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                     </div>
                     <div *ngIf="!setItalic(dato)">
                       <span>{{dato[col.field]}}</span>
+                    </div>
+                  </div>
+                  <div *ngIf="col.field == 'propietario'">
+                    <div *ngIf="setItalic(dato) && dato[col.field] == '1'">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato) && dato[col.field] == '1'">
+                      <span>{{ "justiciaGratuita.ejg.datosGenerales.CAJG" | translate }}</span>
+                    </div>
+                    <div *ngIf="setItalic(dato) && dato[col.field] == '0'">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
+                    </div>
+                    <div *ngIf="!setItalic(dato) && dato[col.field] == '0'">
+                      <span>{{ "justiciaGratuita.ejg.datosGenerales.ICA" | translate }}</span>
                     </div>
                   </div>
                 </td>
@@ -109,7 +124,6 @@
               </div>
             </ng-template>
           </p-table>
-        </div>
 
         <div class="card-footer">
           <div class="text-right main-button">
@@ -123,7 +137,7 @@
               pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
               <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="print()"
               pButton type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
-          
+
           </div>
         </div>
         <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
@@ -132,7 +146,6 @@
             <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
           </p-footer>
         </p-confirmDialog>
-      </div>
     </div>
   </div>
 </div>

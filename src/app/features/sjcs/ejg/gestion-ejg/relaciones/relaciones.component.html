@@ -1,5 +1,5 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container">
+<div class="ficha-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
       <div *ngIf="!openFicha" class="form-row" id="cabeza">
@@ -34,9 +34,7 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <!-- <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="card mt-3">
-        <div class="card-body p-0">
+    <!-- <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <p-table [value]="relaciones" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
             #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">
@@ -100,7 +98,7 @@
               </div>
             </ng-template>
           </p-table>
-        </div> -->
+         -->
 
 
 
@@ -138,5 +136,4 @@
         </p-confirmDialog>
       </div>
     </div>
-  </div>
 </div> -->

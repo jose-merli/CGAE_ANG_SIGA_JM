@@ -146,10 +146,10 @@ export class TablaEjgComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "12%" },
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "10%" },
       { field: "annio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "5%" },
       { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "20%" },
-      { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "8%" },
+      { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "10%" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
       { field: "nombreApeSolicitante", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
 

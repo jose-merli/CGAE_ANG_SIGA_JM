@@ -21,8 +21,11 @@ export class EJGItem {
     dictamen: string;
     dictamenSing: string;
     fundamentoCalif: string;
+    fundamentoCalifDes: string;
+
     fechaDictamenDesd: Date;
     fechaDictamenHast: Date;
+    fechaDictamen: Date;
     resolucion: string;
     fundamentoJuridico: string;
     fechaResolucionDesd: Date;
@@ -74,8 +77,7 @@ export class EJGItem {
     fechapresentacion: Date;
     fechalimitepresentacion: Date;
     historico: boolean;
-    // correoelectronico: string;
-    // fechanacimiento: Date;
-    // idInstitucion: String;
+    observacionesDictamen: String;
+    iddictamen: String;
     constructor() { }
 }

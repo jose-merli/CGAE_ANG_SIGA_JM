@@ -83,10 +83,10 @@ export class EstadosComponent implements OnInit {
     this.cols = [
       { field: "fechaInicio", header: "censo.nuevaSolicitud.fechaEstado", width: "10%" },
       { field: "fechaModificacion", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
-      { field: "descripcion", header: "censo.fichaIntegrantes.literal.estado", width: "10%" },
+      { field: "descripcion", header: "censo.fichaIntegrantes.literal.estado", width: "15%" },
       { field: "observaciones", header: "gratuita.mantenimientoLG.literal.observaciones", width: "25%" },
       { field: "automatico", header: "administracion.auditoriaUsuarios.literal.Automatico", width: "10%" }, 
-      { field: "propietario", header: "menu.justiciaGratuita.estado.propietario", width: "10%" },
+      { field: "propietario", header: "justiciaGratuita.ejg.documentacion.Propietario", width: "5%" },
       { field: "user", header: "menu.administracion.auditoria.usuarios", width: "25%" },
     ];
     this.cols.forEach(it => this.buscadores.push(""));

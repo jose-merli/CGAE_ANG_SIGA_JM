@@ -103,7 +103,7 @@
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Prestaciones</label>
+              <label>{{ "justiciaGratuita.ejg.datosGenerales.Prestaciones" | translate }}</label>
               <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion' [options]="comboPrestaciones"
                 [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
             </div>
@@ -130,10 +130,10 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="asociarDes()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="Asociar Designacion"></button>
+        <button (click)="asociarDes()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
         <button (click)="createDes()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-plus" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
         <button (click)="addExpSostenibilidad()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-plus" iconPos="left"
-          label="Añadir Expediente de Sostenibilidad"></button>
+          label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
         <button (click)="comunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
         <button (click)="save()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>

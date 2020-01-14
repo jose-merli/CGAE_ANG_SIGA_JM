@@ -71,7 +71,7 @@ export class UnidadFamiliarComponent implements OnInit {
         
       }
       this.datosFamiliaresActivos = this.datosFamiliares.filter(
-        (dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
+        (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
     }
     this.getCols();
   }
@@ -231,7 +231,7 @@ export class UnidadFamiliarComponent implements OnInit {
       this.datosFamiliaresActivos = JSON.parse(JSON.stringify(this.datosFamiliares));
     }else{
       this.datosFamiliaresActivos = this.datosFamiliares.filter(
-        (dato) => dato.fechaBaja != undefined && dato.fechaBaja != null);
+        (dato) =>  /*dato.fechaBaja != undefined && */dato.fechaBaja == null);
     }
     this.selectMultiple = false;
      this.selectionMode = "single";
