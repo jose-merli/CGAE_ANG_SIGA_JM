@@ -300,7 +300,8 @@ export class DatosConfColaComponent implements OnInit {
         por_filas: ordManual,
         orden: ""
       }), ...this.pesosSeleccionados];
-
+      this.cambioSeleccionados(this.pesosSeleccionados);
+      this.cambioExistentes(this.pesosExistentes);
     }
     // else {
     //   this.pesosExistentes = this.pesosExistentes.filter(it => {

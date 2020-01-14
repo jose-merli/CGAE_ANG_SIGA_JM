@@ -229,6 +229,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     if (tipoGuardiaResumen)
       return tipoGuardiaResumen.label;
   }
+
   clear() {
     this.msgs = [];
   }

@@ -105,28 +105,46 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   }
 
+  changeGrupo(dato) {
 
-  transformDate(fecha) {
-    if (fecha)
-      fecha = new Date(fecha).toLocaleDateString();
-    this.body.letradosIns = this.datepipe.transform(fecha, 'dd/MM/yyyy')
-  }
-
-  changeOrden(dato) {
-    let findDato = this.datosInicial.find(item => item.ordenCola === dato.ordenCola);
-
+    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
+    if (dato.descripcion != undefined)
+      dato.numeroGrupo = dato.numeroGrupo.trim();
     if (findDato != undefined) {
+      if (dato.numeroGrupo != findDato.numeroGrupo) {
 
-      // this.updateTiposActuacion.push(dato);
-      if (dato.orden != findDato.orden) {
+        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
 
-        let findUpdate = this.updateInscripciones.find(item => item.ordenCola === dato.ordenCola);
-        this.permitirGuardar = true
         if (findUpdate == undefined) {
           this.updateInscripciones.push(dato);
         }
       }
     }
+
+  }
+
+  changeOrden(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
+    if (dato.ordenCola != undefined)
+      dato.ordenCola = dato.ordenCola.trim();
+    if (findDato != undefined) {
+      if (dato.ordenCola != findDato.ordenCola) {
+
+        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
+
+        if (findUpdate == undefined) {
+          this.updateInscripciones.push(dato);
+        }
+      }
+    }
+
+  }
+
+  transformDate(fecha) {
+    if (fecha)
+      fecha = new Date(fecha).toLocaleDateString();
+    this.body.letradosIns = this.datepipe.transform(fecha, 'dd/MM/yyyy')
   }
 
   getColaGuardia() {

@@ -45,7 +45,7 @@
         <div class="col-3 form-group">
           <label>{{"justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate}}</label>
           <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
-            [disabled]="permisoEscritura || historico"></app-fecha>
+            [disabled]="!permisoEscritura || historico"></app-fecha>
         </div>
         <div class="col-12">
           <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [porGrupos]="body.porGrupos" [botActivos]="botActivos"
