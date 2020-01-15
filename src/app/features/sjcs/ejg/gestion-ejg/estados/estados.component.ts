@@ -228,6 +228,41 @@ export class EstadosComponent implements OnInit {
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
+  checkPermisosDelete() {
+    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
 
-
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (!this.permisos || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0) {
+        this.msgs = this.commonsService.checkPermisoAccion();
+      } else {
+        this.confirmDelete();
+      }
+    }
+  }
+  checkPermisosActivate(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.activate();
+    }
+  }
+  checkPermisosConsultar(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.consultar();
+    }
+  }
+  checkPermisosNewEstado(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.newEstado();
+    }
+  }
 }

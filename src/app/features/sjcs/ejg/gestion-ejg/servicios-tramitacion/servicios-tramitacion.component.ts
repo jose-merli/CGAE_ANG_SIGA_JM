@@ -70,9 +70,7 @@ export class ServiciosTramitacionComponent implements OnInit {
       detail: msg
     });
   }
-  disabledSave() {
 
-  }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {
@@ -167,5 +165,50 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.body.apellidosYNombre = "";
     this.body.numColegiado = "";
     this.body.idPersona = "";
+  }
+  checkPermisosSave() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsServices.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+  save(){
+
+  }
+  checkPermisosRest() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+  rest(){
+
+  }
+  disabledSave() {
+    if (this.nuevo) {
+      if (this.body.fechaApertura != undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (this.permisoEscritura) {
+        if (this.body.fechaApertura != undefined) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
   }
 }

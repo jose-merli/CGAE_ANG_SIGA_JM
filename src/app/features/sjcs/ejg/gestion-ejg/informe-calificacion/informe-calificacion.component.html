@@ -63,10 +63,10 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="save()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="confirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="!permisoEscritura" (click)="confirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
-        <button [disabled]="!permisoEscritura" (click)="download()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.informe' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="!permisoEscritura" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
+        <button [disabled]="!permisoEscritura" (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.informe' | translate}}"></button>
       </div> 
     </div>
     <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>

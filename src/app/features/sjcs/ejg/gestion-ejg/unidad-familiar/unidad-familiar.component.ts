@@ -240,4 +240,64 @@ export class UnidadFamiliarComponent implements OnInit {
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
+  checkPermisosDownloadEEJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.downloadEEJ();
+    }
+  }
+  downloadEEJ(){
+
+  }
+  checkPermisosSolicitarEEJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.solicitarEEJ();
+    }
+  }
+    solicitarEEJ(){
+
+    }
+    checkPermisosComunicar(datos){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.comunicar(datos);
+      }
+    }
+    comunicar(datos){
+
+    }
+    checkPermisosConfirmDelete(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.confirmDelete();
+      }
+    }
+    checkPermisosActivate(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.activate();
+      }
+    }
+    checkPermisosAsociar(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.asociar();
+      }
+    }
+    asociar(){
+      
+    }
 }

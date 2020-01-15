@@ -101,8 +101,7 @@
           </p-table>
          <div class="card-footer">
           <div class="text-right main-button">
-            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="downloadEEJ()"
-              type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
+            <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDownloadEEJ()" type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
           </div>
         </div>
         <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>

@@ -151,7 +151,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.msgs = [];
   }
   checkPermisosSave() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, false);
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -164,5 +164,60 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
   save(){
 
+  }
+  checkPermisosRest() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+  rest(){
+
+  }
+  checkPermisosComunicar(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.comunicar();
+    }
+  }
+  comunicar(){
+
+  }
+  checkPermisosAsociarDes(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarDes();
+    }
+  }
+  asociarDes(){
+    
+  }
+  checkPermisosCreateDes(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.createDes();
+    }
+  }
+  createDes(){
+    
+  }
+  checkPermisosAddExp(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.addExp();
+    }
+  }
+  addExp(){
+    
   }
 }

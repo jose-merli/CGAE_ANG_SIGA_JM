@@ -172,11 +172,15 @@ export class ExpedientesEconomicosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  downloadEEJ(){
-
+  checkPermisosDownloadEEJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.downloadEEJ();
+    }
   }
-
-  mostrarHistorico() {
+  downloadEEJ(){
 
   }
   abreCierraFicha() {

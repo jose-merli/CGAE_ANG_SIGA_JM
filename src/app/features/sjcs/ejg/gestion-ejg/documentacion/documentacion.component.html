@@ -118,15 +118,15 @@
 
         <div class="card-footer">
           <div class="text-right main-button">
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="consultar()"
+            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosConsultar()"
               pButton type="button" label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button>
             <button [disabled]="!permisoEscritura" (click)="newDoc()"
               pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-              <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="download()"
+              <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDownload()"
               pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="confirmDelete()"
+            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosConfirmDelete()"
               pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-              <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="print()"
+              <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosPrint()"
               pButton type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
 
           </div>
