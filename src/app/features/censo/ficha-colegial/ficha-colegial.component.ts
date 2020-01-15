@@ -3216,6 +3216,7 @@ export class FichaColegialComponent implements OnInit {
       } else {
         selectedDatos.situacionResidente = undefined;
       }
+      this.colegialesBody.situacionResidente = selectedDatos.situacionResidente;
     }
     this.isRestablecer = true;
     this.activacionGuardarColegiales();
