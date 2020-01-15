@@ -5,7 +5,6 @@ import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
-
 @Component({
   selector: 'app-tabla-ejg',
   templateUrl: './tabla-ejg.component.html',

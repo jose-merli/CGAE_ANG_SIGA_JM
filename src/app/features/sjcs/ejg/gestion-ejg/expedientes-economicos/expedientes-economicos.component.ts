@@ -52,9 +52,11 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
       n => {
         this.expedientesEcon = JSON.parse(n.body).expEconItems;
+        if(n.body)
+          this.expedientesEcon.forEach(element => {
+            element.justiciable = JSON.parse(JSON.stringify(selected.nombreApeSolicitante));
+          });
         this.nExpedientes = this.expedientesEcon.length;
-        // this.persistenceService.setFiltrosAux(this.expedientesEcon);
-        // this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
       },
       err => {
@@ -73,7 +75,6 @@ export class ExpedientesEconomicosComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
       // this.datosEJG();
-
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
@@ -82,14 +83,13 @@ export class ExpedientesEconomicosComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "justiciable", header: "menu.justiciaGratuita.justiciable", width: "15%" },
-      { field: "solicitadoPor", header: "justiciaGratuita.ejg.datosGenerales.SolicitadoPor", width: "20%" },//falta apellidos
+      { field: "justiciable", header: "menu.justiciaGratuita.justiciable", width: "30%" },
+      { field: "solicitadoPor", header: "justiciaGratuita.ejg.datosGenerales.SolicitadoPor", width: "30%" },
       { field: "f_solicitud", header: "formacion.busquedaInscripcion.fechaSolicitud", width: "10%" },
       { field: "f_recepcion", header: "justiciaGratuita.ejg.datosGenerales.FechaRecepcion", width: "10%" },
-      { field: "estado", header: "censo.busquedaSolicitudesModificacion.literal.estado", width: "15%" },
+      { field: "estado", header: "censo.busquedaSolicitudesModificacion.literal.estado", width: "20%" },
     ];
     this.cols.forEach(it => this.buscadores.push(""));
-
     this.rowsPerPage = [
       {
         label: 10,
@@ -182,5 +182,4 @@ export class ExpedientesEconomicosComponent implements OnInit {
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
-
 }

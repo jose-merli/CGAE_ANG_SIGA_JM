@@ -43,6 +43,7 @@ export class InformeCalificacionComponent implements OnInit {
     } else {
       this.nuevo = true;
       this.dictamen = new EJGItem();
+      this.getComboTipoDictamen();
     }
   }
   ngOnChanges(){
@@ -79,11 +80,15 @@ export class InformeCalificacionComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getDictamen", selected).subscribe(
     n => {
-        this.dictamen = JSON.parse((n.body));
-        if (this.dictamen.fechaDictamen != undefined)
-          this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
-        this.getComboTipoDictamen();
-        this.progressSpinner = false;
+      if(n.body){
+        this.dictamen = JSON.parse(n.body);
+      }else{this.dictamen = new EJGItem();}
+      if (this.dictamen.fechaDictamen != undefined)
+        this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
+      this.getComboTipoDictamen();
+      if(this.dictamen.iddictamen)
+        this.getComboFundamentoCalif();
+      this.progressSpinner = false;
       },
       err => {
        console.log(err);

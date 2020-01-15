@@ -5,5 +5,6 @@ export class ExpedientesEconItem {
     f_solicitud: Date;
     f_recepcion: Date;
     estado: string;
+    csv: string;
     constructor() { }
 }
