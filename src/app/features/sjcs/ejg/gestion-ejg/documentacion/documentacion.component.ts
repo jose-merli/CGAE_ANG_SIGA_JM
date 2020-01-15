@@ -12,7 +12,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class DocumentacionComponent implements OnInit {
   @Input() modoEdicion;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;

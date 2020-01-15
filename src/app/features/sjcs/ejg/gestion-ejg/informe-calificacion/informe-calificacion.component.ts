@@ -14,7 +14,7 @@ import { ConfirmationService } from 'primeng/primeng';
 export class InformeCalificacionComponent implements OnInit {
   @Input() modoEdicion;
   permisoEscritura: boolean = true;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
   dictamen: EJGItem;

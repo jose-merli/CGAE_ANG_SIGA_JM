@@ -1,8 +1,8 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="ficha-container">
+<div class="busqueda-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row" id="cabeza">
+      <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fas fa-users icon-ficha"></i>
@@ -12,27 +12,12 @@
           <div class="d-flex justify-content-end mb-1">
             <label class="mr-auto title-ficha">{{ "justiciaGratuita.justiciables.rol.unidadFamiliar" | translate }}</label>
           </div>
-          <div class="form-row">
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "censo.fichaCliente.literal.identificacion" | translate }}: </b>{{body.nif}}</label>
-            </div>
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}: </b>{{body.apellidos}}</label>
-            </div>
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}: </b>{{body.nombre}}</label>
-            </div>
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}: </b>{{body.estadoEJG}}</label>
-            </div>
-          </div>
           <div class="d-flex justify-content-between">
-            <br>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <label name>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{body.nif}}</span></label>
+              <label name>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}: <span>{{body.apellidos}}</span></label>
+              <label name>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}: <span>{{body.nombre}}</span></label>
+              <label name>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}: <span>{{body.estadoEJG}}</span></label>
+            <i class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>

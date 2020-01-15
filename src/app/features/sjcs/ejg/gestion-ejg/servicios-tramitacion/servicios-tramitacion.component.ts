@@ -16,7 +16,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
   permisoEscritura: boolean = true;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
   buscarDisabled: boolean = false;

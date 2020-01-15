@@ -12,7 +12,7 @@ import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
 export class EstadosComponent implements OnInit {
   @Input() modoEdicion;
 
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
