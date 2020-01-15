@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
-import { EventEmitter } from 'events';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../_services/siga.service';
 
 @Component({
@@ -22,13 +21,14 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   @Input() editable;
   @Input() porGrupos: boolean = false;
   @Input() selectionMode: string = "single";
+  @Output() updateInscripciones = new EventEmitter<any>();
   @ViewChild("table") table;
 
   progressSpinner: boolean = false;
 
 
 
-  constructor(private sigaService: SigaServices) { }
+  constructor() { }
 
   ngOnInit() {
     this.getCols()
@@ -181,6 +181,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
     ];
   }
 
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {
@@ -205,8 +206,9 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   //     )
   // }
 
-  cambiaInput() {
+  cambiaInput(event) {
     this.botActivos = false;
+    this.updateInscripciones.emit(event)
   }
   onChangeRowsPerPages(event) { }
 }

@@ -49,23 +49,22 @@
         </div>
         <div class="col-12">
           <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [porGrupos]="body.porGrupos" [botActivos]="botActivos"
-            [datos]="datos"></app-tabla-dinamica-cola-guardia>
+            [datos]="datos" (updateInscripciones)="changeGrupo($event);changeOrden($event)"></app-tabla-dinamica-cola-guardia>
         </div>
-
       </div>
     </div>
   </div>
   <div *ngIf="openFicha" class="card-footer ">
     <div class="text-right main-button ">
-      <button pButton [disabled]="historico || permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
+      <button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
         type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" (click)="ultimo()" [disabled]="disabledUltimo()" type="button"
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" (click)="ultimo()" [disabled]="disabledUltimo()" type="button"
         label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura || true" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura" type="button" icon="fa fa-undo-alt" (click)="rest()" iconPos="left"
+      <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+      <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo-alt" (click)="rest()" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"></button>
-      <button pButton [disabled]="historico || permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
+      <button pButton [disabled]="historico || !permisoEscritura || disabledSave()" type="button" (click)="save()" label="{{'general.boton.guardar' | translate}}"
         icon="fa fa-save" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>

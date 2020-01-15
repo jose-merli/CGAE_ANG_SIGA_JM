@@ -28,4 +28,5 @@ export let endpoints_guardia: any = {
     gestionGuardias_updateColaGuardia: "guardia/gestionGuardia/updateColaGuardia",
     gestionGuardias_resumenIncompatibilidades: "guardia/gestionGuardia/resumenIncompatibilidades",
     gestionGuardias_resumenTurno: "guardia/gestionGuardia/resumenTurno",
+    gestionGuardias_guardarCola: "guardia/gestionGuardia/guardarCola",
 }

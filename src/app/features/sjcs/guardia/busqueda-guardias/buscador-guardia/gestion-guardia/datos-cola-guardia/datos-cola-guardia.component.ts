@@ -78,7 +78,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.permitirGuardar || !this.permisoEscritura) {
+    if (!this.permisoEscritura || !this.updateInscripciones || this.updateInscripciones.length == 0) {
       return true;
     } else return false;
   }
@@ -86,13 +86,10 @@ export class DatosColaGuardiaComponent implements OnInit {
 
     this.progressSpinner = true;
     this.sigaService.post(
-      "busquedaGuardias_getColaGuardia", this.body).subscribe(
+      "gestionGuardias_guardarCola", this.updateInscripciones).subscribe(
         data => {
-          this.datos = JSON.parse(data.body).inscripcionesItem;
-
-          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-          this.botActivos = true;
-
+          this.getColaGuardia();
+          this.updateInscripciones = [];
           this.progressSpinner = false;
 
         },
@@ -107,13 +104,13 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   changeGrupo(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
+    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
     if (dato.descripcion != undefined)
       dato.numeroGrupo = dato.numeroGrupo.trim();
     if (findDato != undefined) {
       if (dato.numeroGrupo != findDato.numeroGrupo) {
 
-        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
+        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
 
         if (findUpdate == undefined) {
           this.updateInscripciones.push(dato);
@@ -125,13 +122,13 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   changeOrden(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
-    if (dato.ordenCola != undefined)
-      dato.ordenCola = dato.ordenCola.trim();
+    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
+    if (dato.orden != undefined)
+      dato.orden = dato.orden.trim();
     if (findDato != undefined) {
-      if (dato.ordenCola != findDato.ordenCola) {
+      if (dato.orden != findDato.orden) {
 
-        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.numeroGrupo === dato.numeroGrupo);
+        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
 
         if (findUpdate == undefined) {
           this.updateInscripciones.push(dato);
@@ -165,6 +162,7 @@ export class DatosColaGuardiaComponent implements OnInit {
           if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
               + " ... " + this.datos.length, " inscritos");
+          this.rest();
           this.progressSpinner = false;
 
         },
@@ -231,14 +229,13 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   rest() {
-    if (this.datosInicial && this.datos) {
+    if (this.datosInicial && this.datos && this.tabla && this.tabla.table) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
       this.tabla.table.reset();
       this.tabla.table.sortOrder = 0;
       this.tabla.table.sortField = '';
       this.tabla.selectedDatos = null;
       // this.tabla.buscadores = this.tabla.buscadores.map(it => it = ""); NO OLVIDAAAAAAAAR!!!!!
-      this.botActivos = true;
 
     }
   }

@@ -24,10 +24,10 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <span *ngIf="(dato != selectedDatos || !col.editable) && (col.field != 'ordenCola' || +dato[col.field] > 0 ) || (!editable)">{{dato[col.field]}}</span>
-            <span *ngIf="col.field == 'ordenCola' && +dato[col.field] <= 0 "></span>
+            <span *ngIf="col.field == 'ordenCola' && +dato[col.field] <= 0"></span>
             <div *ngIf="col.editable && dato == selectedDatos && (col.editable && editable)">
-              <input class="form-control paddingInput" (ngModelChange)="cambiaInput()" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]"
-                type="text" maxLength="10" />
+              <input class="form-control paddingInput" (onBlur)="cambiaInput(dato)" (input)="cambiaInput(dato)" (onChange)="cambiaInput(dato)"
+                (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10" />
             </div>
           </td>
 

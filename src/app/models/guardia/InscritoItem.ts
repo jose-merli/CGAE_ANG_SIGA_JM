@@ -11,6 +11,8 @@ export class InscritoItem {
     apellido2;
     nombre;
     ordenCola;
-
+    idTurno;
+    idGuardia;
+    fechaSuscripcion;
     constructor() { }
 }
