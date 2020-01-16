@@ -3,6 +3,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { fichasPosibles_unidadFamiliar } from '../../../../../utils/fichasPosibles_justiciables';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -32,7 +33,7 @@ export class UnidadFamiliarComponent implements OnInit {
   permisoEscritura: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService, ) { }
+    private persistenceService: PersistenceService, private router: Router ) { }
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined)
@@ -43,7 +44,7 @@ export class UnidadFamiliarComponent implements OnInit {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
-        this.datosFamiliares = this.persistenceService.getFiltrosAux();
+        this.datosFamiliares = this.persistenceService.getBodyAux();
         let nombresol = this.body.nombreApeSolicitante;
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;
@@ -83,18 +84,11 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-    if (!this.selectAll && !this.selectMultiple) {
-      // this.progressSpinner = true;
-      // this.datosEJG();
+    
+    this.persistenceService.setBody(evento.data);
+    this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
+    this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
 
-    } else {
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
   }
   getCols() {
     this.cols = [

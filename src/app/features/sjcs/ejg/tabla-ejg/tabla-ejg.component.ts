@@ -122,7 +122,7 @@ export class TablaEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
-        this.persistenceService.setFiltrosAux(this.datosFamiliares);
+        this.persistenceService.setBodyAux(this.datosFamiliares);
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
       },

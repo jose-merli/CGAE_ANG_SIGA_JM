@@ -45,7 +45,8 @@ export class GestionJusticiablesComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commnosService: CommonsService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService,
+    private location: Location) { }
 
   ngOnInit() {
 
@@ -73,8 +74,9 @@ export class GestionJusticiablesComponent implements OnInit {
               this.modoRepresentante = true;
               this.body = new JusticiableItem();
               this.nuevo();
+            }else if(params.fr == "u"){
+              this.permisoEscritura = false;
             }
-
 
           });
 
@@ -86,11 +88,14 @@ export class GestionJusticiablesComponent implements OnInit {
           }
 
           //Carga de la persistencia 
-          if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
-            this.justiciableBusquedaItem = this.persistenceService.getDatos();
-
-            this.search();
+          if (!this.fromJusticiable && this.persistenceService.getBody() != null && this.persistenceService.getBody() != undefined) {
             this.modoEdicion = true;
+            this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
+
+          } else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
+            this.modoEdicion = true;
+            this.justiciableBusquedaItem = this.persistenceService.getDatos();
+            this.search();
 
           } else {
             this.modoEdicion = false;
@@ -122,6 +127,17 @@ export class GestionJusticiablesComponent implements OnInit {
       ).catch(error => console.error(error));
 
 
+  }
+
+
+  fillJusticiableBuesquedaItemToUnidadFamiliarEJG(){
+    let justiciableUnidadFamiliar = this.persistenceService.getBody();
+    this.justiciableBusquedaItem = new JusticiableBusquedaItem();
+    this.justiciableBusquedaItem.idpersona = justiciableUnidadFamiliar.uf_idPersona;
+    this.justiciableBusquedaItem.idinstitucion = justiciableUnidadFamiliar.uf_idInstitucion;
+
+
+    this.searchByIdPersona(this.justiciableBusquedaItem);
   }
 
   newJusticiable(event) {
@@ -282,6 +298,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearFiltrosAux();
+
     //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
     if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {
       this.checkedViewRepresentante = false;
@@ -290,7 +307,9 @@ export class GestionJusticiablesComponent implements OnInit {
       this.commnosService.scrollTop();
       this.navigateToJusticiable = false;
       this.search();
-    } else {
+    } else if(!this.fromJusticiable){
+      this.location.back();
+    }else {
       this.router.navigate(["/justiciables"]);
     }
 
@@ -319,4 +338,26 @@ export class GestionJusticiablesComponent implements OnInit {
     justiciableBusqueda.idinstitucion = this.authenticationService.getInstitucionSession();
     this.callServiceSearch(justiciableBusqueda);
   }
+
+
+  searchByIdPersona(bodyBusqueda) {
+
+			this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', bodyBusqueda).subscribe(
+				(n) => {
+          this.body = JSON.parse(n.body).justiciable;
+          
+          if (this.body != undefined) {
+            this.body.numeroAsuntos = undefined;
+            this.body.ultimoAsunto = undefined;
+            this.getAsuntos();
+          }
+
+					this.progressSpinner = false;
+				},
+				(err) => {
+					this.progressSpinner = false;
+					console.log(err);
+				}
+			);
+	}
 }
