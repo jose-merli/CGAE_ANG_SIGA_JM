@@ -443,12 +443,19 @@ export class DatosGenerales implements OnInit {
               this.idPersona = respuesta.id;
             },
             error => {
-              let e = JSON.parse(error["error"]).error;
-              if (e.message == "messages.censo.nifcifExiste2") {
-                this.showFail(e.message);
-                this.progressSpinner = false;
-                this.showGuardar = false;
+
+              if (JSON.parse(error.error) != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
+                let e = JSON.parse(error.error).error;
+                if (e.message == "messages.censo.nifcifExiste2") {
+                  this.showFail(e.message);
+                }
+              } else {
+                this.showError();
               }
+
+              this.progressSpinner = false;
+              this.showGuardar = false;
+
             },
             () => {
 
@@ -1245,4 +1252,5 @@ export class DatosGenerales implements OnInit {
       }
     );
   }
+
 }

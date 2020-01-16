@@ -593,33 +593,33 @@ export class PlantillaDocumentoComponent implements OnInit {
       nombreCompletoArchivo.length
     );
 
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      (!/\.(xls|xlsx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
-        this.body.idFormatoSalida == "1")
-    ) {
-      this.file = undefined;
-      this.showMessage(
-        "info",
-        this.translateService.instant("general.message.informacion"),
-        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
-      );
-    } else if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      (!/\.(doc|docx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
-        this.body.idFormatoSalida == "2")
-    ) {
-      this.file = undefined;
-      this.showMessage(
-        "info",
-        this.translateService.instant("general.message.informacion"),
-        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
-      );
-    } else {
-      this.validateSizeFile(dato);
-    }
+    // if (
+    //   extensionArchivo == null ||
+    //   extensionArchivo.trim() == "" ||
+    //   (!/\.(xls|xlsx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
+    //     this.body.idFormatoSalida == "1")
+    // ) {
+    //   this.file = undefined;
+    //   this.showMessage(
+    //     "info",
+    //     this.translateService.instant("general.message.informacion"),
+    //     this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
+    //   );
+    // } else if (
+    //   extensionArchivo == null ||
+    //   extensionArchivo.trim() == "" ||
+    //   (!/\.(doc|docx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
+    //     this.body.idFormatoSalida == "2")
+    // ) {
+    //   this.file = undefined;
+    //   this.showMessage(
+    //     "info",
+    //     this.translateService.instant("general.message.informacion"),
+    //     this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
+    //   );
+    // } else {
+    this.validateSizeFile(dato);
+    // }
   }
 
   validateSizeFile(dato) {
