@@ -23,11 +23,12 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <span *ngIf="(dato != selectedDatos || !col.editable) && (col.field != 'ordenCola' || +dato[col.field] > 0 ) || (!editable)">{{dato[col.field]}}</span>
+            <span *ngIf="(dato != selectedDatos || !col.editable) && (col.field != 'ordenCola' || +dato[col.field] > 0 ) || (!editable) ||(col.field == 'orden' && !porGrupos)">{{dato[col.field]}}</span>
             <span *ngIf="col.field == 'ordenCola' && +dato[col.field] <= 0"></span>
-            <div *ngIf="col.editable && dato == selectedDatos && (col.editable && editable)">
-              <input class="form-control paddingInput" (onBlur)="cambiaInput(dato)" (input)="cambiaInput(dato)" (onChange)="cambiaInput(dato)"
-                (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10" />
+            <div *ngIf="col.editable && dato == selectedDatos && (col.editable && editable) && ( (!porGrupos && col.field != 'orden')||(porGrupos && col.editable))">
+              <input class="form-control paddingInput" (onBlur)="cambiaInput(dato)" (input)="cambiaInput(dato)" (ngModelChange)="cambiaInput(dato)"
+                (onChange)="cambiaInput(dato)" (keypress)="numberOnly($event)" [(ngModel)]="dato[col.field]" type="text" maxLength="10"
+              />
             </div>
           </td>
 

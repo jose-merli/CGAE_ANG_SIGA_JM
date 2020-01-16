@@ -100,6 +100,11 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
             this.datos[index].numeroGrupo = +this.datos[index - 1].numeroGrupo + 1;
           }
         }
+        this.datos[index].numeroGrupo = this.datos[index].numeroGrupo.toString();
+        this.datos[index - 1].numeroGrupo = this.datos[index - 1].numeroGrupo.toString();
+        this.cambiaInput(this.datos[index]);
+        this.cambiaInput(this.datos[index - 1]);
+        this.botActivos = true;
       }
     }
   }
@@ -146,7 +151,14 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
             this.datos[index + 1].numeroGrupo = +this.datos[index].numeroGrupo - 1;
           }
         }
+        this.datos[index].numeroGrupo = this.datos[index].numeroGrupo.toString();
+        this.datos[index + 1].numeroGrupo = this.datos[index + 1].numeroGrupo.toString();
+        this.cambiaInput(this.datos[index]);
+        this.cambiaInput(this.datos[index + 1]);
+        this.botActivos = true;
+
       }
+
     }
   }
   getCols() {

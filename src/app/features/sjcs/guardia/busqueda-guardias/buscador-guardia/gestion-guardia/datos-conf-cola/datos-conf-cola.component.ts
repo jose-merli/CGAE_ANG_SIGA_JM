@@ -295,6 +295,13 @@ export class DatosConfColaComponent implements OnInit {
       this.pesosExistentes = this.pesosExistentes.filter(it => {
         return it.por_filas != ordManual;
       });
+      let pos = 5
+      this.pesosSeleccionados = this.pesosSeleccionados.map(it => {
+        pos -= 1
+        it.numero = pos + "";
+        return it;
+      });
+
       this.pesosSeleccionados = [({
         numero: "5",
         por_filas: ordManual,

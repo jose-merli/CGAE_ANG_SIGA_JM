@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../../../_services/persistence.s
 import { DatePipe } from '../../../../../../../../../node_modules/@angular/common';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { TablaDinamicaColaGuardiaComponent } from '../../../../../../../commons/tabla-dinamica-cola-guardia/tabla-dinamica-cola-guardia.component';
+import { TranslateService } from '../../../../../../../commons/translate';
 
 @Component({
   selector: 'app-datos-cola-guardia',
@@ -31,6 +32,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   botActivos: boolean = true;
   editable: boolean = true;
 
+
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
   @ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
@@ -38,7 +40,8 @@ export class DatosColaGuardiaComponent implements OnInit {
   constructor(private sigaService: SigaServices,
     private persistenceService: PersistenceService,
     public datepipe: DatePipe,
-    public commonsService: CommonsService) { }
+    public commonsService: CommonsService,
+    public translateService: TranslateService) { }
 
   ngOnInit() {
     this.historico = this.persistenceService.getHistorico();
@@ -83,7 +86,56 @@ export class DatosColaGuardiaComponent implements OnInit {
     } else return false;
   }
   save() {
+    this.progressSpinner = true;
 
+    if (!this.body.porGrupos && this.body.ordenacionManual) {
+      let repes = []
+      this.datos.forEach(it => {
+        if (repes.length <= 1)
+          repes = this.datos.filter(element => {
+            if (element.numeroGrupo.trim() == it.numeroGrupo.trim())
+              return true;
+            return false;
+          });
+      });
+      if (repes.length > 1)
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
+      else {
+        this.datos = this.datos.map(it => {
+          it.orden = 1;
+          return it;
+        });
+        this.callSaveService();
+
+      }
+    } else {
+      let repes = [];
+      let mismoGrupo = []
+      this.datos.forEach(it => {
+        if (mismoGrupo.length <= 1 && repes.length <= 1) {
+          mismoGrupo = this.datos.filter(element => {
+            if (element.numeroGrupo.trim() == it.numeroGrupo.trim() && element.idPersona == it.idPersona)
+              return true;
+            return false
+          });
+          repes = this.datos.filter(element => {
+            if (element.numeroGrupo.trim() == it.numeroGrupo.trim() && element.orden == it.orden)
+              return true;
+            return false
+          })
+        }
+      });
+      if (mismoGrupo.length > 1 || repes.length > 1)
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
+      else
+        this.callSaveService();
+
+    }
+
+    this.progressSpinner = false;
+
+  }
+  callSaveService() {
     this.progressSpinner = true;
     this.sigaService.post(
       "gestionGuardias_guardarCola", this.updateInscripciones).subscribe(
@@ -99,7 +151,6 @@ export class DatosColaGuardiaComponent implements OnInit {
 
         }
       );
-
   }
 
   changeGrupo(dato) {
@@ -154,6 +205,10 @@ export class DatosColaGuardiaComponent implements OnInit {
           this.datos = JSON.parse(data.body).inscripcionesItem;
           this.datos = this.datos.map(it => {
             it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
+            if (!this.body.porGrupos && !this.body.ordenacionManual) {
+              it.numeroGrupo = "";
+              it.orden = "";
+            }
             return it;
           });
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
@@ -235,20 +290,32 @@ export class DatosColaGuardiaComponent implements OnInit {
       this.tabla.table.sortOrder = 0;
       this.tabla.table.sortField = '';
       this.tabla.selectedDatos = null;
+      this.updateInscripciones = [];
       // this.tabla.buscadores = this.tabla.buscadores.map(it => it = ""); NO OLVIDAAAAAAAAR!!!!!
-
     }
   }
-
+  disabledBotones() {
+    if (!this.botActivos || !this.tabla || (!this.tabla.selectedDatos || this.tabla.selectedDatos.length == 0))
+      return false;
+    return true;
+  }
   duplicarDisabled() {
-    if (this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0) return false;
+    if (this.tabla && this.tabla.selectedDatos && this.updateInscripciones.length == 0 && this.tabla.selectedDatos.length != 0) return false;
     return true;
   }
   disabledUltimo() {
-    if (this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0) {
+    if (!this.historico && this.permisoEscritura && this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0 && this.updateInscripciones.length == 0) {
       return false;
     }
     return true;
   }
   clear() { }
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 }
