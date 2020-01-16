@@ -14,7 +14,7 @@ import { ConfirmationService } from 'primeng/primeng';
 export class InformeCalificacionComponent implements OnInit {
   @Input() modoEdicion;
   permisoEscritura: boolean = true;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
   dictamen: EJGItem;
@@ -112,6 +112,8 @@ export class InformeCalificacionComponent implements OnInit {
     this.openFicha = !this.openFicha;
   }
 save(){
+  if(this.disabledSave()){
+    }
 }
 confirmRest(){
   let mess = this.translateService.instant(
@@ -161,18 +163,16 @@ confirmDelete() {
     }
   });
 }
-delete(){
+    delete(){
 
-}
-rest(){
-  
-}
-download(){
-  
-}
-  disabledSave() {
+    }
+    rest(){
+      
+    }
+    download(){
+      
+    }
 
-  }
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -184,4 +184,59 @@ download(){
   clear() {
     this.msgs = [];
   }
+  checkPermisosConfirmDelete(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.confirmDelete();
+    }
+  }
+  checkPermisosConfirmRest(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.confirmRest();
+    }
+  }
+  checkPermisosSave(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsServices.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+  disabledSave() {
+    if (this.nuevo) {
+      if (this.body.fechaApertura != undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (this.permisoEscritura) {
+        if (this.body.fechaApertura != undefined) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
+  }
+  checkPermisosDownload(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.download();
+    }
+    }
 }

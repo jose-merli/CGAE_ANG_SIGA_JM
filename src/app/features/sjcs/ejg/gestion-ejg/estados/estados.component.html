@@ -1,8 +1,8 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="ficha-container">
+<div class="busqueda-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row" id="cabeza">
+      <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fas fa-graduation-cap icon-ficha"></i>
@@ -12,23 +12,11 @@
           <div class="d-flex justify-content-end mb-1">
             <label class="mr-auto title-ficha">{{ "censo.fichaIntegrantes.literal.estado" | translate }}s</label>
           </div>
-          <div class="form-row">
-            <div *ngIf="estados && estados[0]" class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "censo.fichaIntegrantes.literal.estado" | translate }}: </b>{{estados[0].descripcion}}</label>
-            </div>
-            <div *ngIf="estados && estados[0]" class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: </b>{{estados[0].fechaModificacion | date: 'dd/MM/yyyy'}}</label>
-            </div>
-            <div *ngIf="estados && estados[0]" class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "general.boton.usuario" | translate }}: </b>{{estados[0].user}}</label>
-            </div>
-          </div>
           <div class="d-flex justify-content-between">
-            <br>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}: <span *ngIf="estados && estados[0]">{{estados[0].descripcion}}</span></label>
+              <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="estados && estados[0]">{{estados[0].fechaModificacion | date: 'dd/MM/yyyy'}}</span></label>
+              <label>{{ "general.boton.usuario" | translate }}: <span *ngIf="estados && estados[0]">{{estados[0].user}}</span></label>
+            <i class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -144,13 +132,13 @@
 
         <div class="card-footer">
           <div class="text-right main-button">
-            <button *ngIf="!historico" [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="confirmDelete()"
+            <button *ngIf="!historico" [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosDelete()"
               pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
             <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-              (click)="activate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="consultar()"
+              (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosConsultar()"
               pButton type="button" icon="fa fa-angle-up" iconPos="left" label="{{ 'general.boton.consultar' | translate}}/{{ 'general.boton.edit' | translate}}"></button>
-            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="newEstado()"
+            <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="checkPermisosNewEstado()"
               pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
               label="{{ 'general.message.mostrarHistorico' | translate}}"></button>

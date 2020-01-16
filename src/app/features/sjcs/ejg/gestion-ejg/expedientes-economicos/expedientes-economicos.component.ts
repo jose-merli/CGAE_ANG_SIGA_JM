@@ -10,7 +10,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 })
 export class ExpedientesEconomicosComponent implements OnInit {
   @Input() modoEdicion;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
@@ -172,11 +172,15 @@ export class ExpedientesEconomicosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  downloadEEJ(){
-
+  checkPermisosDownloadEEJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.downloadEEJ();
+    }
   }
-
-  mostrarHistorico() {
+  downloadEEJ(){
 
   }
   abreCierraFicha() {

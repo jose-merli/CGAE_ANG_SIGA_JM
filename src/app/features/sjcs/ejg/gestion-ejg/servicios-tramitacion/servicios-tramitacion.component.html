@@ -2,34 +2,21 @@
 <div class="busqueda-container">
   <div class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row" id="cabeza">
+      <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fas fa-gavel icon-ficha"></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha">Servicios de Tramitación</label>
+       <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "justiciaGratuita.ejg.datosGenerales.ServiciosTramit" | translate }}</label>
           </div>
-          <div class="form-row">
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "menu.justiciaGratuita.oficio.comboturno" | translate }}: </b>{{body.turno}}</label>
-            </div>
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}: </b>{{body.guardia}}</label>
-            </div>
-            <div class="d-flex flex-wrap">
-              <label name>
-                <b>Tramitador: </b>{{body.apellidosYNombre}}</label>
-            </div>
-          </div>
-
           <div class="d-flex justify-content-between">
-            <br>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <label name>{{ "menu.justiciaGratuita.oficio.comboturno" | translate }}: <span>{{body.turno}}</span></label>
+              <label name>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}: <span>{{body.guardia}}</span></label>
+              <label name>{{ "menu.justiciaGratuita.Tramitador" | translate }}: <span>{{body.apellidosYNombre}}</span></label>
+              <i class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -37,7 +24,7 @@
         <div class="img-colegiado">
           <i class="fas fa-gavel icon-ficha"></i>
         </div>
-        <label class="title-ficha">Servicios de Tramitación</label>
+        <label class="title-ficha">{{ "justiciaGratuita.ejg.datosGenerales.ServiciosTramit" | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -79,10 +66,8 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="save()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button (click)="rest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-
+        <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { ActivatedRoute } from '../../../../../../node_modules/@angular/router';
 import { Location } from '@angular/common'
+import { CommonsService } from '../../../../_services/commons.service';
 @Component({
   selector: 'app-gestion-ejg',
   templateUrl: './gestion-ejg.component.html',
@@ -33,15 +34,11 @@ export class GestionEjgComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private route: ActivatedRoute,
     private location: Location,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
-    // this.getFichasPosibles();
-    // this.route.queryParams
-    //   .subscribe(params => {
-    //     this.idEJG = params.idEJG
-    //     console.log(params);
-    //   });
+    this.commonsService.scrollTop();
     this.body = this.persistenceService.getDatos();
     this.datos = [
       {

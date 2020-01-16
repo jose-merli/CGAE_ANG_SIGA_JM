@@ -12,7 +12,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class DocumentacionComponent implements OnInit {
   @Input() modoEdicion;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
@@ -53,6 +53,13 @@ export class DocumentacionComponent implements OnInit {
      this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
      n => {
          this.documentos = JSON.parse(n.body).ejgDocItems;
+         if(this.documentos){
+          this.documentos.forEach(element => {
+            if(!element.presentador && element.parentesco){
+              element.presentador_persona = element.presentador_persona + " ("  + element.parentesco + " )";
+            }
+          });
+         }
          this.nDocumentos = this.documentos.length;
          this.progressSpinner = false;
        },
@@ -81,6 +88,7 @@ export class DocumentacionComponent implements OnInit {
     }
   }
   getCols() {
+    //docuemntos o recorrer el array?
     if(this.documentos != undefined && this.documentos.presentador != undefined){
       this.cols = [
         { field: "flimite_presentacion", header: "justiciaGratuita.ejg.datosGenerales.FechaLimPresentacion", width: "10%" },
@@ -210,11 +218,52 @@ export class DocumentacionComponent implements OnInit {
       }
     });
   }
-  delete() {
+    delete() {
 
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
-  }
+    }
+    abreCierraFicha() {
+      this.openFicha = !this.openFicha;
+    }
+    checkPermisosConsultar(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.consultar();
+      }
+    }
+    consultar(){
+      
+    }
+    checkPermisosDownload(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.download();
+      }
+    }
+    download(){
+
+    }
+    checkPermisosConfirmDelete(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.confirmDelete();
+      }
+    }
+    checkPermisosPrint(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.print();
+      }
+    }
+    print(){
+
+    }
   }
 

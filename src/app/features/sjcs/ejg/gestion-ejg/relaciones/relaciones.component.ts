@@ -10,7 +10,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 })
 export class RelacionesComponent implements OnInit {
   @Input() modoEdicion;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;

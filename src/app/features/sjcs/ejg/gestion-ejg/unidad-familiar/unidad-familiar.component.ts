@@ -22,14 +22,13 @@ export class UnidadFamiliarComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   historico: boolean = false;
   datosFamiliares;
   datosFamiliaresActivos;
 
   @Input() modoEdicion;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
-
   permisoEscritura: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -235,4 +234,64 @@ export class UnidadFamiliarComponent implements OnInit {
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
   }
+  checkPermisosDownloadEEJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.downloadEEJ();
+    }
+  }
+  downloadEEJ(){
+
+  }
+  checkPermisosSolicitarEEJ(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.solicitarEEJ();
+    }
+  }
+    solicitarEEJ(){
+
+    }
+    checkPermisosComunicar(datos){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.comunicar(datos);
+      }
+    }
+    comunicar(datos){
+
+    }
+    checkPermisosConfirmDelete(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.confirmDelete();
+      }
+    }
+    checkPermisosActivate(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.activate();
+      }
+    }
+    checkPermisosAsociar(){
+      let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+      if (msg != undefined) {
+        this.msgs = msg;
+      } else {
+        this.asociar();
+      }
+    }
+    asociar(){
+      
+    }
 }

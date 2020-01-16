@@ -16,7 +16,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
   permisoEscritura: boolean = true;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
   body: EJGItem;
@@ -119,7 +119,23 @@ export class DatosGeneralesEjgComponent implements OnInit {
     });
   }
   disabledSave() {
-
+    if (this.nuevo) {
+      if (this.body.fechaApertura != undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (this.permisoEscritura) {
+        if (this.body.fechaApertura != undefined) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
   }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -133,5 +149,75 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
   clear() {
     this.msgs = [];
+  }
+  checkPermisosSave() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      if (this.disabledSave()) {
+        this.msgs = this.commonsServices.checkPermisoAccion();
+      } else {
+        this.save();
+      }
+    }
+  }
+  save(){
+
+  }
+  checkPermisosRest() {
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
+  rest(){
+
+  }
+  checkPermisosComunicar(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.comunicar();
+    }
+  }
+  comunicar(){
+
+  }
+  checkPermisosAsociarDes(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarDes();
+    }
+  }
+  asociarDes(){
+    
+  }
+  checkPermisosCreateDes(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.createDes();
+    }
+  }
+  createDes(){
+    
+  }
+  checkPermisosAddExp(){
+    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.addExp();
+    }
+  }
+  addExp(){
+    
   }
 }

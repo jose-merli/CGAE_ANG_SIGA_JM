@@ -22,6 +22,7 @@ export class FiltrosEjgComponent implements OnInit {
   body: EJGItem = new EJGItem();
   nuevo: boolean = true;
   inst2000: boolean;
+  permisoEscritura: boolean = true;
   showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = true;
   showDatosDefensa: boolean = true;
@@ -69,7 +70,6 @@ export class FiltrosEjgComponent implements OnInit {
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private commonsService: CommonsService,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService) { }
 
@@ -615,6 +615,14 @@ export class FiltrosEjgComponent implements OnInit {
   clearFilters() {
     this.body = new EJGItem();
     this.persistenceService.clearFiltros();
+  }
+  checkPermisosIsNuevo(){
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.isNuevo();
+    }
   }
   isNuevo() {
     this.persistenceService.clearDatos();
