@@ -2519,6 +2519,8 @@ export class FichaColegialComponent implements OnInit {
   }
 
   activacionGuardarColegiales() {
+    if(this.colegialesBody.situacionResidente == undefined && this.datosColegiales[0].situacionResidente != undefined ) 
+    this.colegialesBody.situacionResidente = this.datosColegiales[0].situacionResidente 
     this.inscritoAItem();
     this.mostrarFechas();
     if (
@@ -3105,6 +3107,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   searchColegiales() {
+    this.isEliminarEstadoColegial = false;
     // fichaDatosColegiales_datosColegialesSearch
     this.sigaServices
       .postPaginado(
@@ -3250,6 +3253,8 @@ export class FichaColegialComponent implements OnInit {
   }
 
   nuevoColegial() {
+    this.activarGuardarColegiales = false;
+    this.datosColegiales = JSON.parse(JSON.stringify(this.checkDatosColegiales));
     this.showMessageInscripcion = true;
     this.selectedDatosColegiales = '';
     this.isCrearColegial = true;
@@ -3282,7 +3287,7 @@ export class FichaColegialComponent implements OnInit {
     this.datosColegiales.forEach(element => {
       element.habilitarObs = false;
     });
-
+  
   }
 
 
@@ -3390,10 +3395,10 @@ export class FichaColegialComponent implements OnInit {
           this.numSelectedColegiales = 0;
         }
       );
+      this.isRestablecer = false;
   }
 
   eliminarEstadoColegial(selectedItem) {
-
     if (this.datosColegiales[1].idEstado == "20" && selectedItem.idEstado != "20") {
       //Se comprueba si le falta alguna direccion
       //Si no le falta llamamos al servicio para guardar los cambios
@@ -3419,7 +3424,6 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.callServiceEliminarEstadoColegial(selectedItem);
     }
-
   }
 
   // FIN DATOS COLEGIALES
