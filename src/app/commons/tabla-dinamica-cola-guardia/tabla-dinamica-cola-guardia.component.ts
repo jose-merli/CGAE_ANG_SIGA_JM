@@ -17,6 +17,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   cols = [];
 
   @Input() datos;
+  @Input() idUltimo;
   @Input() botActivos: boolean = true;
   @Input() editable;
   @Input() porGrupos: boolean = false;
@@ -46,7 +47,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
         let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // A los que mueven
         this.datos = this.datos.slice(0, this.datos.indexOf(esMovido[0])).concat(seMueve).concat(esMovido).concat(this.datos.slice(this.datos.indexOf(seMueve[seMueve.length - 1]) + 1));
 
-        if (this.datos.indexOf(esMovido[0]) != 0) {// MOVIMIENTO CUANDO NO IMPLICA AL PRIMER GRUPO
+        if (this.datos.indexOf(seMueve[0]) != 0) {// MOVIMIENTO CUANDO NO IMPLICA AL PRIMER GRUPO
           let valorG = +this.datos[this.datos.indexOf(seMueve[0]) - 1].numeroGrupo + 1
           seMueve = seMueve.map(it => {
             it.numeroGrupo = valorG.toString();
@@ -57,7 +58,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
             return it;
           })
         }
-        else if (esMovido[0].numeroGrupo == "1") { // MOVIMIENTO DEL PRIMER GRUPO CON GRUPO 1
+        else if (esMovido[0].numeroGrupo == "1") { // MOVIMIENTO CON GRUPO 1
           esMovido = esMovido.map(it => {
             it.numeroGrupo = "2";
             return it;
@@ -114,12 +115,13 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
     if (this.porGrupos) { // MOVIMIENTO CUANDO ESTAN AGRUPADOS
       let seMueve = this.datos.filter(it => selected.numeroGrupo == it.numeroGrupo); // Los que se desplazan
       let ultimo = this.datos.indexOf(seMueve[seMueve.length - 1]);
+      let esMovido = [];
       if (ultimo != this.datos.length - 1) {
         let primeroMovido = this.datos[ultimo + 1];
-        let esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // A los que mueven
+        esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // A los que mueven
         this.datos = this.datos.slice(0, this.datos.indexOf(seMueve[0])).concat(esMovido).concat(seMueve).concat(this.datos.slice(this.datos.indexOf(esMovido[esMovido.length - 1]) + 1));
 
-        if (this.datos.indexOf(esMovido[esMovido.length - 1]) != (this.datos.length - 1)) {
+        if (this.datos.indexOf(esMovido[0]) != 0) { // Cuando se mueve en el medio de la lista.
           let valorG = +this.datos[this.datos.indexOf(esMovido[0]) - 1].numeroGrupo + 1
           seMueve = seMueve.map(it => {
             it.numeroGrupo = (valorG + 1).toString();
@@ -129,8 +131,27 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
             it.numeroGrupo = valorG.toString();
             return it;
           })
+        } else {
+          esMovido = esMovido.map(it => {
+            it.numeroGrupo = "1";
+            return it;
+          });
+          seMueve = seMueve.map(it => {
+            it.numeroGrupo = "2";
+            return it;
+          });
         }
       }
+      seMueve = seMueve.map(it => {
+        it.numeroGrupo = it.numeroGrupo.toString();
+        this.cambiaInput(it);
+      });
+      esMovido = esMovido.map(it => {
+        it.numeroGrupo = it.numeroGrupo.toString();
+        this.cambiaInput(it);
+      });
+      this.botActivos = true;
+
 
     } else {
       if (index != this.datos.length - 1) {

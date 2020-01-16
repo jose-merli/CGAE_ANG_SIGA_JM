@@ -48,8 +48,8 @@
             [disabled]="!permisoEscritura || historico"></app-fecha>
         </div>
         <div class="col-12">
-          <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [porGrupos]="body.porGrupos" [botActivos]="disabledBotones()"
-            [datos]="datos" (updateInscripciones)="changeGrupo($event);changeOrden($event)"></app-tabla-dinamica-cola-guardia>
+          <app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [idUltimo]="body.idPersonaUltimo"
+            [porGrupos]="body.porGrupos" [botActivos]="disabledBotones()" [datos]="datos" (updateInscripciones)="changeGrupo($event);changeOrden($event)"></app-tabla-dinamica-cola-guardia>
         </div>
       </div>
     </div>

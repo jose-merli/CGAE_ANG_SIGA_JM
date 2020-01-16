@@ -58,6 +58,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
+        this.body.idPersonaUltimo = data.idPersonaUltimo;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
         if (this.body.porGrupos) {
           this.body.ordenacionManual = true;
