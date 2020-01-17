@@ -30,6 +30,7 @@ export class GestionEjgComponent implements OnInit {
   idEJG;
   filtros;
   filtrosAux;
+  permisoEscritura: boolean = true;
 
   constructor(private sigaServices: SigaServices,
     private route: ActivatedRoute,
@@ -39,6 +40,10 @@ export class GestionEjgComponent implements OnInit {
 
   ngOnInit() {
     this.commonsService.scrollTop();
+    if (this.persistenceService.getPermisos() != undefined)
+    // this.permisoEscritura = this.persistenceService.getPermisos()
+    // De momento todo disabled, funcionalidades FAC.Cuando esté todo cambiar Permisos. 
+      this.permisoEscritura = false;
     this.body = this.persistenceService.getDatos();
     this.datos = [
       {

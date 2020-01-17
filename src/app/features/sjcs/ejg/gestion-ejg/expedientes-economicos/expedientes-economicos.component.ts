@@ -34,7 +34,9 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined)
-      this.permisoEscritura = false;
+      // this.permisoEscritura = this.persistenceService.getPermisos()
+    // De momento todo disabled, funcionalidades FAC.Cuando esté todo cambiar Permisos. 
+      this.permisoEscritura = false; 
     if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;

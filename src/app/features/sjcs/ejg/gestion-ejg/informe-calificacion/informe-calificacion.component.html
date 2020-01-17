@@ -54,7 +54,7 @@
               <div *ngIf="dictamen" class="form-group col-lg-12 col-md-12">
                   <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}
                   </label>
-                  <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="dictamen.observacionesDictamen" [disabled]="true"></textarea>
+                  <textarea class="form-control ui-inputtext" autoResize="autoResize" maxLength="3900" pInputTextarea [(ngModel)]="dictamen.observacionesDictamen" [disabled]="true"></textarea>
                 </div>
             </div>
         </div>

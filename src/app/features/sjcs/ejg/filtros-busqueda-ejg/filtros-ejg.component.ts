@@ -37,7 +37,7 @@ export class FiltrosEjgComponent implements OnInit {
   comboDictamen = [];
   comboFundamentoCalif = [];
   comboResolucion = [];
-  comboFundamentosResolucion = [];
+ // comboFundamentosResolucion = [];
   comboFundamentoJurid = [];
   comboImpugnacion = [];
   comboFundamentoImpug = [];
@@ -139,7 +139,7 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   onChangeResolucion() {
-    this.comboFundamentosResolucion = [];
+    //this.comboFundamentosResolucion = [];
 
     if (this.body.resolucion != undefined && this.body.resolucion != "") {
       this.isDisabledFundamentosJurid = false;
