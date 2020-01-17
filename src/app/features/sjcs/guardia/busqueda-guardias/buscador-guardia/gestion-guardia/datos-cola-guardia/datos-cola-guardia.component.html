@@ -59,7 +59,7 @@
       <button pButton [disabled]="historico || !permisoEscritura || !body.porGrupos || duplicarDisabled()" (click)="duplicar()"
         type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
-      <button pButton [disabled]="disabledUltimo()" (click)="ultimo()" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
+      <button pButton [disabled]="disabledUltimo()" (click)="ultimo(tabla.selectedDatos)" type="button" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura || true" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
       <button pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo-alt" (click)="rest()" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"></button>

@@ -11,10 +11,11 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   rowsPerPage: any = [];
   msgs;
   selectedItem = 10;
-  selectedDatos = [];
+  selectedDatos;
   seleccion: boolean = false;
   message;
   cols = [];
+  buscadores = [];
 
   @Input() datos;
   @Input() idUltimo;
@@ -119,65 +120,68 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
       if (ultimo != this.datos.length - 1) {
         let primeroMovido = this.datos[ultimo + 1];
         esMovido = this.datos.filter(it => primeroMovido.numeroGrupo == it.numeroGrupo); // A los que mueven
-        this.datos = this.datos.slice(0, this.datos.indexOf(seMueve[0])).concat(esMovido).concat(seMueve).concat(this.datos.slice(this.datos.indexOf(esMovido[esMovido.length - 1]) + 1));
+        if (esMovido[esMovido.length - 1].idPersona != this.idUltimo) {
+          this.datos = this.datos.slice(0, this.datos.indexOf(seMueve[0])).concat(esMovido).concat(seMueve).concat(this.datos.slice(this.datos.indexOf(esMovido[esMovido.length - 1]) + 1));
 
-        if (this.datos.indexOf(esMovido[0]) != 0) { // Cuando se mueve en el medio de la lista.
-          let valorG = +this.datos[this.datos.indexOf(esMovido[0]) - 1].numeroGrupo + 1
+          if (this.datos.indexOf(esMovido[0]) != 0) { // Cuando se mueve en el medio de la lista.
+            let valorG = +this.datos[this.datos.indexOf(esMovido[0]) - 1].numeroGrupo + 1
+            seMueve = seMueve.map(it => {
+              it.numeroGrupo = (valorG + 1).toString();
+              return it;
+            })
+            esMovido = esMovido.map(it => {
+              it.numeroGrupo = valorG.toString();
+              return it;
+            })
+          } else {
+            esMovido = esMovido.map(it => {
+              it.numeroGrupo = "1";
+              return it;
+            });
+            seMueve = seMueve.map(it => {
+              it.numeroGrupo = "2";
+              return it;
+            });
+          }
           seMueve = seMueve.map(it => {
-            it.numeroGrupo = (valorG + 1).toString();
-            return it;
-          })
-          esMovido = esMovido.map(it => {
-            it.numeroGrupo = valorG.toString();
-            return it;
-          })
-        } else {
-          esMovido = esMovido.map(it => {
-            it.numeroGrupo = "1";
-            return it;
+            it.numeroGrupo = it.numeroGrupo.toString();
+            this.cambiaInput(it);
           });
-          seMueve = seMueve.map(it => {
-            it.numeroGrupo = "2";
-            return it;
+          esMovido = esMovido.map(it => {
+            it.numeroGrupo = it.numeroGrupo.toString();
+            this.cambiaInput(it);
           });
+          this.botActivos = true;
         }
       }
-      seMueve = seMueve.map(it => {
-        it.numeroGrupo = it.numeroGrupo.toString();
-        this.cambiaInput(it);
-      });
-      esMovido = esMovido.map(it => {
-        it.numeroGrupo = it.numeroGrupo.toString();
-        this.cambiaInput(it);
-      });
-      this.botActivos = true;
-
 
     } else {
       if (index != this.datos.length - 1) {
-        [this.datos[index], this.datos[index + 1]] = [this.datos[index + 1], this.datos[index]];
-        //Esto es en caso que se quiera mover a un primer puesto
-        if (index == 0) {
-          if (this.datos[this.datos.length - 1].numeroGrupo == "1") {
-            this.datos[0].numeroGrupo = "2";
-            this.datos[1].numeroGrupo = "3"
-          } else {
-            this.datos[0].numeroGrupo = "1";
-            if (this.datos[1].numeroGrupo == "1")
-              this.datos[1].numeroGrupo = "2";
-          }
-        } else {// Esto es cambiar la ordenacion de normal si no se cambia al primer puesto
-          if (this.datos[index + 1].numeroGrupo != this.datos[index].numeroGrupo) {
-            this.datos[index].numeroGrupo = +this.datos[index + 1].numeroGrupo - 1;
-            this.datos[index + 1].numeroGrupo = +this.datos[index].numeroGrupo - 1;
-          }
-        }
-        this.datos[index].numeroGrupo = this.datos[index].numeroGrupo.toString();
-        this.datos[index + 1].numeroGrupo = this.datos[index + 1].numeroGrupo.toString();
-        this.cambiaInput(this.datos[index]);
-        this.cambiaInput(this.datos[index + 1]);
-        this.botActivos = true;
+        if (this.datos[index + 1].idPersona != this.idUltimo) {
 
+          [this.datos[index], this.datos[index + 1]] = [this.datos[index + 1], this.datos[index]];
+          //Esto es en caso que se quiera mover a un primer puesto
+          if (index == 0) {
+            if (this.datos[this.datos.length - 1].numeroGrupo == "1") {
+              this.datos[0].numeroGrupo = "2";
+              this.datos[1].numeroGrupo = "3"
+            } else {
+              this.datos[0].numeroGrupo = "1";
+              if (this.datos[1].numeroGrupo == "1")
+                this.datos[1].numeroGrupo = "2";
+            }
+          } else {// Esto es cambiar la ordenacion de normal si no se cambia del primer puesto
+            if (this.datos[index + 1].numeroGrupo != this.datos[index].numeroGrupo) {
+              this.datos[index].numeroGrupo = +this.datos[index - 1].numeroGrupo + 1;
+              this.datos[index + 1].numeroGrupo = +this.datos[index].numeroGrupo + 1;
+            }
+          }
+          this.datos[index].numeroGrupo = this.datos[index].numeroGrupo.toString();
+          this.datos[index + 1].numeroGrupo = this.datos[index + 1].numeroGrupo.toString();
+          this.cambiaInput(this.datos[index]);
+          this.cambiaInput(this.datos[index + 1]);
+          this.botActivos = true;
+        }
       }
 
     }
@@ -194,6 +198,8 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
       { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones", editable: false },
       { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos", editable: false },
     ];
+    this.cols.forEach(it => this.buscadores.push(""));
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -225,19 +231,15 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
     }
   }
-  // zuletzt() {
-  //   // this.progressSpinner = true;
-  //   this.sigaService.post(
-  //     "busquedaGuardias_getUltimo", this.selectedDatos).subscribe(
-  //       data => {
-  //         this.getColaGuardias.emit("");
-  //       },
-  //       err => {
-  //         console.log(err);
-  //         this.progressSpinner = false;
-  //       }
-  //     )
-  // }
+  disabledBotones() {
+    if (this.table) {
+      let grupo = this.datos.filter(it => this.selectedDatos.numeroGrupo == it.numeroGrupo && this.idUltimo == it.idPersona);
+      let filtros = this.buscadores.filter(it => it.length > 0);
+      if (this.table.sortField || grupo.length == 1 || this.selectedDatos.idPersona == this.idUltimo || filtros.length > 0)
+        return true;
+      return false;
+    }
+  }
 
   cambiaInput(event) {
     this.botActivos = false;
