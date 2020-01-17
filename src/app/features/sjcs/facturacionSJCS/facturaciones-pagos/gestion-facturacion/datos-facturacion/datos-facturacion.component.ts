@@ -399,7 +399,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     );
   }
   disabledSimular() {
-    if (this.modoEdicion && this.idEstadoFacturacion == "10" && !this.insertConcept) {
+    if (this.modoEdicion && this.idEstadoFacturacion == "10" && !this.insertConcept && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -407,7 +407,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledReabrir() {
-    if (this.modoEdicion && this.idEstadoFacturacion == "20") {
+    if ((this.modoEdicion && this.idEstadoFacturacion == "20") && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -415,7 +415,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   }
 
   disabledEjecutar() {
-    if ((this.modoEdicion && this.idEstadoFacturacion == "10") || (this.modoEdicion && this.idEstadoFacturacion == "20")) {
+    if (((this.modoEdicion && this.idEstadoFacturacion == "10") || (this.modoEdicion && this.idEstadoFacturacion == "20")) && this.disabledRestablecer()) {
       if (!this.insertConcept) {
         return false;
       } else {
