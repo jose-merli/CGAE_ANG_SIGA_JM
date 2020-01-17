@@ -6,7 +6,7 @@
       <div class="form-row">
         <div class="col-4">
           <p-radioButton name="filtroBusquedaFacturacion" value="facturacion" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}" [(ngModel)]="selectedValue"></p-radioButton>
-          <p-radioButton name="filtroBusquedaFacturacion" value="pagos" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}" [(ngModel)]="selectedValue"></p-radioButton>  
+          <p-radioButton name="filtroBusquedaFacturacion" value="pagos" label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}" [(ngModel)]="selectedValue" disabled></p-radioButton>  
         </div>
       </div>      
       <p class="title-module" (click)="onHideDatosGenerales()"> 
