@@ -94,7 +94,7 @@ export class DatosColaGuardiaComponent implements OnInit {
       this.datos.forEach(it => {
         if (repes.length <= 1)
           repes = this.datos.filter(element => {
-            if (element.numeroGrupo.trim() == it.numeroGrupo.trim())
+            if (element.numeroGrupo == it.numeroGrupo)
               return true;
             return false;
           });
@@ -123,12 +123,12 @@ export class DatosColaGuardiaComponent implements OnInit {
             mismoGrupo.push("Habia un campo vacio");
           } else {
             mismoGrupo = this.datos.filter(element => {
-              if (element.numeroGrupo.trim() == it.numeroGrupo.trim() && element.idPersona == it.idPersona)
+              if (element.numeroGrupo == it.numeroGrupo && element.idPersona == it.idPersona)
                 return true;
               return false;
             });
             repes = this.datos.filter(element => {
-              if (element.numeroGrupo.trim() == it.numeroGrupo.trim() && element.orden == it.orden)
+              if (element.numeroGrupo == it.numeroGrupo && element.orden == it.orden)
                 return true;
               return false;
             })
@@ -176,13 +176,15 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   changeGrupo(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
+    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+      dato.ordenCola == dato.ordenCola);
     if (dato.descripcion != undefined)
-      dato.numeroGrupo = dato.numeroGrupo.trim();
+      dato.numeroGrupo = dato.numeroGrupo;
     if (findDato != undefined) {
       if (dato.numeroGrupo != findDato.numeroGrupo) {
 
-        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
+        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+          dato.ordenCola == dato.ordenCola);
 
         if (findUpdate == undefined) {
           this.updateInscripciones.push(dato);
@@ -194,13 +196,15 @@ export class DatosColaGuardiaComponent implements OnInit {
 
   changeOrden(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
+    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+      dato.ordenCola == dato.ordenCola);
     if (dato.orden != undefined)
-      dato.orden = dato.orden.trim();
+      dato.orden = dato.orden;
     if (findDato != undefined) {
       if (dato.orden != findDato.orden) {
 
-        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado);
+        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+          dato.ordenCola == dato.ordenCola);
 
         if (findUpdate == undefined) {
           this.updateInscripciones.push(dato);
@@ -295,6 +299,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     this.datos = [JSON.parse(JSON.stringify(this.tabla.selectedDatos)), ...this.datos];
     this.datos[0].numeroGrupo = "";
     this.datos[0].orden = "";
+    this.datos[0].idGrupoGuardiaColegiado = "";
     let menorOrdenCola = 0;
     this.datos.forEach(element => {
       if (+element.ordenCola <= menorOrdenCola)
