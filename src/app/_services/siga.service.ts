@@ -744,6 +744,9 @@ export class SigaServices {
   private habilitarDocs = new Subject<any>();
   private desHabilitarDocs = new Subject<any>();
   private sendFechaBaja = new Subject<any>();
+  private sendSelectedDatos = new Subject<any>();
+  sendSelectedDatos$ = this.sendSelectedDatos.asObservable();
+
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
@@ -1017,6 +1020,10 @@ export class SigaServices {
 
   notifynewIdOrdenacion(send) {
     this.newIdOrdenacion.next(send);
+  }
+
+  notifysendSelectedDatos(send) {
+    this.sendSelectedDatos.next(send);
   }
 
   notifyRefreshModelos() {

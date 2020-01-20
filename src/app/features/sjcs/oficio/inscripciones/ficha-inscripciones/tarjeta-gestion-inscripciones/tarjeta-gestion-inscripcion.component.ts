@@ -22,12 +22,12 @@ import { findIndex } from 'rxjs/operators';
 import { Table } from 'primeng/table';
 import { Checkbox } from 'primeng/primeng';
 @Component({
-  selector: "app-tarjeta-inscripcion",
-  templateUrl: "./tarjeta-inscripcion.component.html",
-  styleUrls: ["./tarjeta-inscripcion.component.scss"],
+  selector: "app-tarjeta-gestion-inscripcion",
+  templateUrl: "./tarjeta-gestion-inscripcion.component.html",
+  styleUrls: ["./tarjeta-gestion-inscripcion.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class TarjetaInscripcion implements OnInit {
+export class TarjetaGestionInscripcion implements OnInit {
 
 
   openFicha: boolean = false;
@@ -47,7 +47,7 @@ export class TarjetaInscripcion implements OnInit {
   fechaActual;
   disableAll: boolean = false;
   comboJurisdicciones: any[] = [];
-  bodyInicial: TurnosItems;
+  bodyInicial: InscripcionesItems;
   apeyNombreUltimo;
   mostrarDatos: boolean = false;
   mostrarNumero: boolean = false;
@@ -64,6 +64,7 @@ export class TarjetaInscripcion implements OnInit {
   nombreGuardia;
   numeroGuardias;
   duracionGuardias;
+  datos2;
   disabledGuardias: boolean = true;
   nletradosGuardias;
   overlayVisible: boolean = false;
@@ -92,7 +93,7 @@ export class TarjetaInscripcion implements OnInit {
       activa: false
     },
     {
-      key: "tarjetainscripciones",
+      key: "gestioninscripcion",
       activa: true
     },
   ];
@@ -103,24 +104,15 @@ export class TarjetaInscripcion implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
     if (this.datos != undefined) {
-      this.idPersona = this.datos.idpersona;
-      if (this.idPersona != undefined) {
-        this.body = this.datos;
-       
-        this.getInscripciones();
 
-        if (this.body.idpersona == undefined) {
-          this.modoEdicion = false;
-        } else {
-          if (this.persistenceService.getDatos() != undefined) {
-            this.datos = this.persistenceService.getDatos();
-          }
-          if (this.datos.fechabaja != undefined) {
-            this.disableAll = true;
-          }
-          this.modoEdicion = true;
-        }
+      // this.getInscripciones();
+      if (this.persistenceService.getDatos() != undefined) {
+        this.datos = this.persistenceService.getDatos();
+        this.body = this.datos;
       }
+      this.busqueda();
+      this.modoEdicion = true;
+
     } else {
       this.datos = new InscripcionesItems();
     }
@@ -128,7 +120,7 @@ export class TarjetaInscripcion implements OnInit {
   }
 
   ngOnInit() {
-   
+
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
@@ -142,14 +134,6 @@ export class TarjetaInscripcion implements OnInit {
         }
       }).catch(error => console.error(error));
     this.getCols();
-    if (this.idPersona != undefined) {
-      this.modoEdicion = true;
-      // this.getMaterias();
-    } else {
-      this.modoEdicion = false;
-      this.mostrarVacio = true;
-      this.numeroGuardias = 0;
-    }
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
     }
@@ -170,6 +154,20 @@ export class TarjetaInscripcion implements OnInit {
     }
 
     return fecha;
+  }
+  busqueda() {
+    this.progressSpinner = true;
+    this.sigaServices.post("inscripciones_busquedaTarjeta", this.datos).subscribe(
+      n => {
+        this.datos2 = JSON.parse(n.body).inscripcionesTarjetaItem;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }, () => {
+      }
+    );
   }
   fillFechaDesdeCalendar(event) {
     this.datos.fechaActual = this.transformaFecha(event);
@@ -202,48 +200,48 @@ export class TarjetaInscripcion implements OnInit {
 
     // }
   }
-  getInscripciones() {
-    this.datos.historico = this.historico;
-    this.progressSpinner = true;
-    this.sigaServices.post("inscripciones_busquedaTarjetaInscripciones", this.datos).subscribe(
-      n => {
-        // this.datos = n.turnosItem;
-        this.inscripcionesItem = JSON.parse(n.body).inscripcionesItem;
-        // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-        //   this.turnosItem.historico = true;
-        // }
-        this.inscripcionesItem.forEach(element => {
-          element.selectedBoolean = false;
-          element.selectedBooleanPadre = false;
-        });
-        this.rowGroupMetadata = {};
-        if (this.inscripcionesItem) {
-          for (let i = 0; i < this.inscripcionesItem.length; i++) {
+  // getInscripciones() {
+  //   this.datos.historico = this.historico;
+  //   this.progressSpinner = true;
+  //   this.sigaServices.post("inscripciones_busquedaTarjetaInscripciones", this.datos).subscribe(
+  //     n => {
+  //       // this.datos = n.turnosItem;
+  //       this.inscripcionesItem = JSON.parse(n.body).inscripcionesItem;
+  //       // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
+  //       //   this.turnosItem.historico = true;
+  //       // }
+  //       this.inscripcionesItem.forEach(element => {
+  //         element.selectedBoolean = false;
+  //         element.selectedBooleanPadre = false;
+  //       });
+  //       this.rowGroupMetadata = {};
+  //       if (this.inscripcionesItem) {
+  //         for (let i = 0; i < this.inscripcionesItem.length; i++) {
 
-            let rowData = this.inscripcionesItem[i];
-            let inscripcion = rowData.nombre_turno;
-            if (i == 0) {
-              this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
-            }
-            else {
-              let previousRowData = this.inscripcionesItem[i - 1];
-              let previousRowGroup = previousRowData.nombre_turno;
-              if (inscripcion === previousRowGroup)
-                this.rowGroupMetadata[inscripcion].size++;
-              else
-                this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
-            }
-          }
-        }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
+  //           let rowData = this.inscripcionesItem[i];
+  //           let inscripcion = rowData.nombre_turno;
+  //           if (i == 0) {
+  //             this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
+  //           }
+  //           else {
+  //             let previousRowData = this.inscripcionesItem[i - 1];
+  //             let previousRowGroup = previousRowData.nombre_turno;
+  //             if (inscripcion === previousRowGroup)
+  //               this.rowGroupMetadata[inscripcion].size++;
+  //             else
+  //               this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
+  //           }
+  //         }
+  //       }
+  //     },
+  //     err => {
+  //       console.log(err);
+  //       this.progressSpinner = false;
+  //     }, () => {
+  //       this.progressSpinner = false;
+  //     }
+  //   );
+  // }
 
 
 
@@ -464,24 +462,16 @@ export class TarjetaInscripcion implements OnInit {
 
   onRowSelect(event) {
     if (event != null) {
-      let send = {
-        event
-      }
-      this.sigaServices.notifysendSelectedDatos(send);
+
     }
   }
 
   getCols() {
 
     this.cols = [
-      { field: "nombre_turno", header: "justiciaGratuita.oficio.inscripciones.nombreturnoguardia" , width:'25%' },
-      { field: "nombre_zona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera",width:'15%' },
-      { field: "nombre_subzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zonas.cabecera", width:'15%' },
-      { field: "nombre_area", header: "menu.justiciaGratuita.maestros.Area",width:'15%' },
-      { field: "nombre_materia", header: "menu.justiciaGratuita.maestros.Materia",width:'15%' },
-      // { field: "descripcion_tipo_guardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
-      { field: "tipoguardias", header: "dato.jgr.guardia.guardias.tipoGuardia",width:'15%' },
-      // { field: "ncolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha"},
+      { field: "accion", header: "justiciaGratuita.oficio.inscripciones.accion"},
+      { field: "observaciones", header: "gratuita.mantenimientoLG.literal.observaciones"},
     ];
 
     this.rowsPerPage = [
@@ -620,7 +610,7 @@ export class TarjetaInscripcion implements OnInit {
     */
     if (event == true) {
       rowData.selectedBoolean = true;
-      if(rowData.tipoguardias == "Todas o ninguna"){
+      if (rowData.tipoguardias == "Todas o ninguna") {
         this.inscripcionesItem.forEach(element => {
           if (element.idturno == rowData.idturno) {
             element.selectedBoolean = true;
@@ -628,12 +618,12 @@ export class TarjetaInscripcion implements OnInit {
           }
         });
       }
-      else{
+      else {
         this.selectedDatos.push(rowData);
       }
-      
+
     } else {
-      if(rowData.tipoguardias == "Todas o ninguna"){
+      if (rowData.tipoguardias == "Todas o ninguna") {
         rowData.selectedBoolean = false;
         this.inscripcionesItem.forEach(element => {
           if (element.idturno == rowData.idturno) {
@@ -644,7 +634,7 @@ export class TarjetaInscripcion implements OnInit {
             }
           }
         });
-      }else{
+      } else {
         rowData.selectedBoolean = false;
         let findDato = this.selectedDatos.find(item => item.idguardia == rowData.idguardia);
         if (findDato != undefined) {
@@ -660,18 +650,18 @@ export class TarjetaInscripcion implements OnInit {
       if (rowData.tipoguardias == "Obligatorias") {
         this.disabledGuardias = true;
         rowData.selectedBooleanPadre = true;
-      this.inscripcionesItem.forEach(element => {
-        if (element.idturno == rowData.idturno) {
-          element.selectedBoolean = true;
-          this.selectedDatos.push(element);
-        }
-      });
+        this.inscripcionesItem.forEach(element => {
+          if (element.idturno == rowData.idturno) {
+            element.selectedBoolean = true;
+            this.selectedDatos.push(element);
+          }
+        });
       }
       if (rowData.tipoguardias == "Todas o ninguna") {
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
       }
-      if(rowData.tipoguardias == "A elegir"){
+      if (rowData.tipoguardias == "A elegir") {
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
       }

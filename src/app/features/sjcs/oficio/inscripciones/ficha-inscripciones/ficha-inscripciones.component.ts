@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
@@ -11,7 +11,8 @@ import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItem
 @Component({
 	selector: 'app-ficha-inscripciones',
 	templateUrl: './ficha-inscripciones.component.html',
-	styleUrls: ['./ficha-inscripciones.component.scss']
+	styleUrls: ['./ficha-inscripciones.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 export class FichaInscripcionesComponent implements OnInit {
 	idModelo: string;
@@ -27,10 +28,16 @@ export class FichaInscripcionesComponent implements OnInit {
 	pesosSeleccionadosTarjeta: string;
 	datos;
 	datos2;
+	datos3;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
+	permisosTarjeta: boolean = true;
+
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
+	ngOnChanges(changes: SimpleChanges) {
+		
+	}
 	ngOnInit() {
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 		.then(respuesta => {
@@ -41,6 +48,16 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.permisosTarjetaResumen = true;
 		  }
 		}).catch(error => console.error(error));
+
+		this.commonsService.checkAcceso(procesos_oficio.tarjetaPosicionCola)
+      .then(respuesta => {
+        this.permisosTarjeta = respuesta;
+        if (this.permisosTarjeta != true) {
+          this.permisosTarjeta = false;
+        } else {
+          this.permisosTarjeta = true;
+        }
+      }).catch(error => console.error(error));
 		// this.route.queryParams
 		// 	.subscribe(params => {
 		// 		this.idPersona = params.idpersona
@@ -63,27 +80,10 @@ export class FichaInscripcionesComponent implements OnInit {
 				key: 'inscripcion',
 				activa: true
 			},
-			// {
-			// 	key: 'configuracioncolaoficio',
-			// 	activa: false
-			// },
-			// {
-			// 	key: 'tablacolaoficio',
-			// 	activa: false
-			// },
-			// {
-			// 	key: 'tarjetaguardias',
-			// 	activa: false
-			// },
-			// {
-			// 	key: 'tablacolaguardias',
-			// 	activa: false
-			// },
-			// {
-			// 	key: 'tarjetainscripciones',
-			// 	activa: true
-			// },
-
+			{
+				key: 'gestioninscripcion',
+				activa: true
+			},
 		];
 	}
 
@@ -94,6 +94,10 @@ export class FichaInscripcionesComponent implements OnInit {
 
 	datosSend(event){
 		this.datos2 = event;
+	}
+
+	datosSend2(event){
+		this.datos3 = event;
 	}
 
 	backTo() {

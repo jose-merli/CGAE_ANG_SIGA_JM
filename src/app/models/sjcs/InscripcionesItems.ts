@@ -43,5 +43,8 @@ export class InscripcionesItems {
   descripcion_tipo_guardia:String;
   obligatoriedad_inscripcion:String;
   tipoguardias:String;
+  orden:String;
+  observacionestabla:String;
+  fechatabla:Date;
   constructor() { }
 }

@@ -33,6 +33,8 @@ import { TarjetaLetradoComponent } from './ficha-inscripciones/tarjeta-letrado/t
 import { TarjetaInscripcion } from './ficha-inscripciones/tarjeta-inscripciones/tarjeta-inscripcion.component';
 import {TreeTableModule} from 'primeng/treetable';
 import {TreeNode} from 'primeng/api';
+import { TarjetaColaFijaComponent } from './ficha-inscripciones/tarjeta-cola-fija/tarjeta-cola-fija.component';
+import { TarjetaGestionInscripcion } from './ficha-inscripciones/tarjeta-gestion-inscripciones/tarjeta-gestion-inscripcion.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -64,7 +66,9 @@ import {TreeNode} from 'primeng/api';
     FiltrosInscripciones,
     FichaInscripcionesComponent,
     TarjetaLetradoComponent,
-    TarjetaInscripcion
+    TarjetaInscripcion,
+    TarjetaColaFijaComponent,
+    TarjetaGestionInscripcion
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

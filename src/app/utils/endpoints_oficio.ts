@@ -36,6 +36,8 @@ export let endpoints_oficio: any = {
     inscripciones_busquedaTarjetaInscripciones:"oficio/inscripciones/busquedaTarjetaInscripciones",
     inscripciones_updateValidar:"oficio/inscripciones/updateValidar",
     inscripciones_updateDenegar:"oficio/inscripciones/updateDenegar",
-    inscripciones_updateCambiarFecha:"oficio/inscripciones/updateCambiarFecha"
+    inscripciones_updateCambiarFecha:"oficio/inscripciones/updateCambiarFecha",
+    inscripciones_TarjetaColaOficio:"oficio/inscripciones/TarjetaColaOficio",
+    inscripciones_busquedaTarjeta:"oficio/inscripciones/busquedaTarjeta"
 
 }

@@ -5,5 +5,6 @@ export const procesos_oficio: any = {
     tarjetaGuardia: "91L",
     colaDeGuardia: "916",
     tarjetaResumen: "92M",
-    tarjetaListadoInscripciones: "93M"
+    tarjetaListadoInscripciones: "93M",
+    tarjetaPosicionCola:"9S5",
 }
