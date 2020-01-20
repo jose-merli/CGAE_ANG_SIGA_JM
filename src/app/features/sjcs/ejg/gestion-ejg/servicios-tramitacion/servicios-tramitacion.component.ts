@@ -14,8 +14,8 @@ import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialG
 })
 export class ServiciosTramitacionComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   @Output() modoEdicionSend = new EventEmitter<any>();
-  permisoEscritura: boolean = true;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -40,21 +40,15 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-
-    if (this.persistenceService.getPermisos() != undefined)
-      // this.permisoEscritura = this.persistenceService.getPermisos()
-      // De momento todo disabled, funcionalidades FAC. Cuando esté todo cambiar Permisos. 
-      this.permisoEscritura = false;
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
+        this.modoEdicion = true;
         this.body = this.persistenceService.getDatos();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      }
-    } else {
+      }else {
+      this.modoEdicion = false;
       this.nuevo = true;
-      // this.body = new EJGItem();
-      // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+       this.body = new EJGItem();
     }
     this.getComboGuardia();
     this.getComboTurno();

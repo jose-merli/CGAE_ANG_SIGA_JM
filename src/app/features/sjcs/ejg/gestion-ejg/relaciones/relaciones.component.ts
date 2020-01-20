@@ -10,8 +10,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 })
 export class RelacionesComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   openFicha: boolean = false;
-  permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
   bodyInicial;
@@ -32,16 +32,14 @@ export class RelacionesComponent implements OnInit {
     private persistenceService: PersistenceService, ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined)
-      this.permisoEscritura = false;
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.body = this.persistenceService.getDatos();
         this.nuevo = false;
+        this.modoEdicion = true;
         this.getRelaciones(this.body);
-      }
-    } else {
-      this.nuevo = true;
+      }else {
+      this.nuevo = true;       
+      this.modoEdicion = true;
     }
     this.getCols();
   }

@@ -12,8 +12,8 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class DocumentacionComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   openFicha: boolean = false;
-  permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
   item: EJGItem;
@@ -34,18 +34,17 @@ export class DocumentacionComponent implements OnInit {
     private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined)
-    this.permisoEscritura = false;
-  if (this.modoEdicion) {
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
+      this.modoEdicion = true;
       this.body = this.persistenceService.getDatos();
       this.item = this.body;
       this.getDocumentos(this.item);
       this.getCols();
-    }
-  } else {
+    }else {
     this.nuevo = true;
+    this.modoEdicion = false;
+    this.item = new EJGItem();
   }
 }
   getDocumentos(selected) {

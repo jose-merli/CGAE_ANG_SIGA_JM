@@ -13,9 +13,10 @@
             <label class="mr-auto title-ficha">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
-              <label *ngIf="nDocumentos <= 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: <span>{{nDocumentos}}</span></label>
-              <label *ngIf="nDocumentos > 3 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>
-            <i class="fa fa-angle-down float-right"></i>
+              <label *ngIf="nDocumentos > 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: <span>{{nDocumentos}}</span></label>
+              <label *ngIf="nDocumentos <= 3 && nDocumentos > 0 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>
+              <label *ngIf="nDocumentos == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
+              <i class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>

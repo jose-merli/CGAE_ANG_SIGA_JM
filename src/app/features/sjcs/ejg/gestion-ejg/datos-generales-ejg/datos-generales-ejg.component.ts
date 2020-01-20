@@ -14,8 +14,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
   //Resultados de la busqueda
   @Input() datos: EJGItem;
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   @Output() modoEdicionSend = new EventEmitter<any>();
-  permisoEscritura: boolean = true;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -36,12 +36,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
-    if (this.persistenceService.getPermisos() != undefined)
-      // this.permisoEscritura = this.persistenceService.getPermisos()
-      // De momento todo disabled, funcionalidades FAC. Cuando esté todo cambiar Permisos. 
-      this.permisoEscritura = false;
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
+        this.modoEdicion = true;
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -51,15 +47,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.body.fechapresentacion = new Date(this.body.fechapresentacion);
         if (this.body.fechaApertura != undefined)
           this.body.fechaApertura = new Date(this.body.fechaApertura);
-      }
-    } else {
+      }else {
       this.nuevo = true;
-      // this.body = new EJGItem();
+      this.modoEdicion = false;
+       this.body = new EJGItem();
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
-
-
 
   getComboTipoEJG() {
     this.sigaServices.get("filtrosejg_comboTipoEJG").subscribe(

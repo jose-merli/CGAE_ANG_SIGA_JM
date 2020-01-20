@@ -11,8 +11,8 @@ import { CommonsService } from '../../../../../_services/commons.service';
 })
 export class ResolucionComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   openFicha: boolean = false;
-  permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
   [x: string]: any;
@@ -31,16 +31,12 @@ export class ResolucionComponent implements OnInit {
     this.getComboPonente();
     this.getComboOrigen();
     this.getComboResolucion();
-    if (this.persistenceService.getPermisos() != undefined)
-    // this.permisoEscritura = this.persistenceService.getPermisos()
-    // De momento todo disabled, funcionalidades FAC.Cuando esté todo cambiar Permisos. 
-    this.permisoEscritura = false;
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
+        this.modoEdicion = true;
         this.nuevo = false;
         this.body = this.persistenceService.getDatos();
-      }
-    } else {
+      }else {
+      this.modoEdicion = false;
       this.nuevo = true;
       this.body = new EJGItem();
     }

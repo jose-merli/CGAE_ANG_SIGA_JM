@@ -22,14 +22,13 @@ export class FiltrosEjgComponent implements OnInit {
   body: EJGItem = new EJGItem();
   nuevo: boolean = true;
   inst2000: boolean;
-  permisoEscritura: boolean = true;
+  permisoEscritura: boolean = false;
   showdatosIdentificacion: boolean = true;
   showDatosGeneralesEJG: boolean = true;
   showDatosDefensa: boolean = true;
   showCAJG: boolean = true;
   showSolicitante: boolean = true;
   showTramitador: boolean = true;
-  //inicializar los combos
   comboProcedimiento = [];
   comboCalidad = datos_combos.comboCalidad;
   comboPerceptivo = [];
@@ -73,15 +72,11 @@ export class FiltrosEjgComponent implements OnInit {
     private persistenceService: PersistenceService,
     private commonServices: CommonsService) { }
 
-
   ngOnInit() {
-
     this.getCombos();
-
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
       // let prueba = this.persistenceService.getFiltrosAux();
@@ -106,7 +101,6 @@ export class FiltrosEjgComponent implements OnInit {
         this.historico = this.persistenceService.getHistorico();
       }
       this.busqueda.emit(this.historico)
-
     } else {
       this.body = new EJGItem();
     }
@@ -114,7 +108,6 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   getCombos() {
-
     this.getComboProcedimiento();
     // this.getComboCalidad();
     this.getComboDictamen();
@@ -134,7 +127,6 @@ export class FiltrosEjgComponent implements OnInit {
     this.getComboRol();
     this.getComboJuzgado();
     this.getComboColegio();
-
     // this.getComboFundamentosResoluc();
   }
 
@@ -228,10 +220,6 @@ export class FiltrosEjgComponent implements OnInit {
       }
     );
   }
-
-  // getComboCalidad() {
-  //   this.comboCalidad;
-  // }
   getComboPerceptivo() {
     this.sigaServices.get("filtrosejg_comboPreceptivo").subscribe(
       n => {
@@ -280,9 +268,7 @@ export class FiltrosEjgComponent implements OnInit {
       }
     );
   }
-  // getComboFundamentosResoluc() {
 
-  // }
   getComboFundamentoJurid() {
     this.sigaServices
       .getParam(
@@ -631,9 +617,7 @@ export class FiltrosEjgComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  // onChangeColegiado() {
-  //   this.body.idPersona = "";
-  // }
+
   getPersona(idPersona) {
     // if (idPersona != undefined && idPersona != "")
     this.body.idPersona = idPersona;

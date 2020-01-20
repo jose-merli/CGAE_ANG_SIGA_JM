@@ -10,8 +10,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 })
 export class ExpedientesEconomicosComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   openFicha: boolean = false;
-  permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
   bodyInicial;
@@ -33,20 +33,17 @@ export class ExpedientesEconomicosComponent implements OnInit {
     private persistenceService: PersistenceService, ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined)
-      // this.permisoEscritura = this.persistenceService.getPermisos()
-    // De momento todo disabled, funcionalidades FAC.Cuando esté todo cambiar Permisos. 
-      this.permisoEscritura = false; 
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
+        this.modoEdicion = true;
         this.body = this.persistenceService.getDatos();
         this.item = this.body;
         this.getExpedientesEconomicos(this.item);
         this.getCols();
-      }
-    } else {
+      }else {
       this.nuevo = true;
+      this.modoEdicion = false;
+      this.body = new EJGItem();
     }
   }
   getExpedientesEconomicos(selected) {

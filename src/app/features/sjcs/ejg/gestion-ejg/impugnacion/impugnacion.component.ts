@@ -13,7 +13,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class ImpugnacionComponent implements OnInit {
   @Input() modoEdicion;
-  permisoEscritura: boolean = true;
+  @Input() permisoEscritura;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -30,21 +30,16 @@ export class ImpugnacionComponent implements OnInit {
   ngOnInit() {
    // this.getComboSentidoAuto();
    // this.getComboAutoRes();
-
-    if (this.persistenceService.getPermisos() != undefined)
-    // this.permisoEscritura = this.persistenceService.getPermisos()
-    // De momento todo disabled, funcionalidades FAC.Cuando esté todo cambiar Permisos. 
-    this.permisoEscritura = false;
-  if (this.modoEdicion) {
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
+      this.modoEdicion = true;
       this.item = this.persistenceService.getDatos();
       this.impugnacion = this.persistenceService.getDatos();
 
      // this.getImpugnacion(this.item);
-    }
-  } else {
+    } else {
     this.nuevo = true;
+    this.modoEdicion = false;
     this.impugnacion = new EJGItem();
   }
 }

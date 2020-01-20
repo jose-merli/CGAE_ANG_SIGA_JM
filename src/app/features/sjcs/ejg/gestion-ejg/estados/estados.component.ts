@@ -11,9 +11,9 @@ import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
 })
 export class EstadosComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
 
   openFicha: boolean = false;
-  permisoEscritura: boolean = false;
   nuevo;
   body: EJGItem;
   bodyInicial;
@@ -35,18 +35,17 @@ export class EstadosComponent implements OnInit {
     private persistenceService: PersistenceService, ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined)
-      this.permisoEscritura = false;
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
+        this.modoEdicion = true;
         this.body = this.persistenceService.getDatos();
         this.item = this.body;
         this.getEstados(this.item);
         this.getCols();
-      }
-    } else {
+      }else {
       this.nuevo = true;
+      this.modoEdicion = false;
+      this.item = new EJGItem();
     }
   }
   getEstados(selected) {

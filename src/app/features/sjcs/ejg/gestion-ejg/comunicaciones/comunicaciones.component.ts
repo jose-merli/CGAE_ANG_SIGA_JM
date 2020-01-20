@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ComunicacionesComponent implements OnInit {
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   constructor() { }
 
   ngOnInit() {

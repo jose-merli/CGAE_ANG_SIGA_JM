@@ -28,20 +28,16 @@ export class UnidadFamiliarComponent implements OnInit {
   datosFamiliaresActivos;
 
   @Input() modoEdicion;
+  @Input() permisoEscritura;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
-  permisoEscritura: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService, private router: Router ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined)
-      // this.permisoEscritura = this.persistenceService.getPermisos()
-      // De momento todo disabled, funcionalidades FAC. Cuando esté todo cambiar Permisos. 
-      this.permisoEscritura = false;
-    if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
+        this.modoEdicion = true;
         this.body = this.persistenceService.getDatos();
         this.datosFamiliares = this.persistenceService.getBodyAux();
         let nombresol = this.body.nombreApeSolicitante;
@@ -69,10 +65,13 @@ export class UnidadFamiliarComponent implements OnInit {
           }
         });
         
+      }else{
+        this.nuevo = true;
+        this.modoEdicion = false;
+      // this.body = new EJGItem();
       }
       this.datosFamiliaresActivos = this.datosFamiliares.filter(
         (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
-    }
     this.getCols();
   }
   ngOnChanges() {

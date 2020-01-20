@@ -13,7 +13,7 @@ import { ConfirmationService } from 'primeng/primeng';
 })
 export class InformeCalificacionComponent implements OnInit {
   @Input() modoEdicion;
-  permisoEscritura: boolean = true;
+  @Input() permisoEscritura;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -29,11 +29,6 @@ export class InformeCalificacionComponent implements OnInit {
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
-   
-    if (this.persistenceService.getPermisos() != undefined)
-      // this.permisoEscritura = this.persistenceService.getPermisos()
-      // De momento todo disabled, funcionalidades FAC.Cuando esté todo cambiar Permisos. 
-      this.permisoEscritura = false;
     if (this.modoEdicion) {
       if (this.persistenceService.getDatos()) {
         this.nuevo = false;
