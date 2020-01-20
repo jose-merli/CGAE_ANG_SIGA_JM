@@ -176,7 +176,11 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.modoEdicion = true;
           this.getCols();
           this.body.idGuardia = JSON.parse(data.body).id;
-
+          this.persistenceService.setDatos({
+            idGuardia: this.body.idGuardia,
+            idTurno: this.body.idTurno
+          })
+          this.modoEdicionSend.emit(true);
           this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.guardia.gestion.guardiaCreadaDatosPred"));
         } else this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
@@ -202,16 +206,18 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   save() {
-    this.progressSpinner = true;
-    let url = "";
+    if (this.permisoEscritura && !this.historico) {
+      this.progressSpinner = true;
+      let url = "";
 
-    if (!this.modoEdicion) {
-      url = "busquedaGuardias_createGuardia";
-      this.callSaveService(url);
+      if (!this.modoEdicion && this.permisoEscritura) {
+        url = "busquedaGuardias_createGuardia";
+        this.callSaveService(url);
 
-    } else {
-      url = "busquedaGuardias_updateGuardia";
-      this.callSaveService(url);
+      } else if (this.permisoEscritura) {
+        url = "busquedaGuardias_updateGuardia";
+        this.callSaveService(url);
+      }
     }
   }
 

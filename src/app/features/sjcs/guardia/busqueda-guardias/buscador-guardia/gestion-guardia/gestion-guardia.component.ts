@@ -77,10 +77,10 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   modoEdicionSend(event) {
-    if (event != undefined) {
-      this.modoEdicion = event.modoEdicion;
-      this.datos.idGuardia = event.idGuardia;
-    } else this.search();
+    if (event) {
+      this.search();
+      this.modoEdicion = true;
+    }
   }
 
   getDatosResumen() {

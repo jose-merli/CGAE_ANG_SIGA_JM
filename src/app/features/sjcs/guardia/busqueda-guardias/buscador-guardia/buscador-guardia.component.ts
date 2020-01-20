@@ -54,7 +54,8 @@ export class BuscadorGuardiaComponent implements OnInit {
 
 
   isOpenReceive(event) {
-    this.search(event);
+    if (this.persistenceService.getFiltros())
+      this.search(event);
   }
 
   search(event) {

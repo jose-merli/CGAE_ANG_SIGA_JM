@@ -33,7 +33,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    if (this.persistenceService.getDatos().idGuardia)
+    if (this.persistenceService.getDatos())
       this.getResumenIncompatibilidades();
 
   }

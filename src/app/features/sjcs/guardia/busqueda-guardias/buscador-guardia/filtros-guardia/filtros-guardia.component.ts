@@ -330,8 +330,10 @@ export class FiltrosGuardiaComponent implements OnInit {
 
 
   nuevo() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionGuardias"]);
+    if (this.permisoEscritura) {
+      this.persistenceService.clearDatos();
+      this.router.navigate(["/gestionGuardias"]);
+    }
   }
 
   checkFilters() {

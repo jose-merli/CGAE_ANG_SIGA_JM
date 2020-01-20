@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { DataTable } from '../../../../../../../../node_modules/primeng/primeng';
+import { DataTable, ConfirmationService } from '../../../../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../../_services/siga.service';
@@ -44,7 +44,8 @@ export class TablaGuardiasComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -148,6 +149,7 @@ export class TablaGuardiasComponent implements OnInit {
     }
   }
 
+
   searchHistorical() {
 
     this.historico = !this.historico;
@@ -183,31 +185,32 @@ export class TablaGuardiasComponent implements OnInit {
   }
 
   delete() {
+    if (this.permisoEscritura) {
+      let guardiaDelete = new GuardiaObject();
+      guardiaDelete.guardiaItems = this.selectedDatos;
+      this.sigaServices.post("busquedaGuardias_deleteGuardias", guardiaDelete).subscribe(
 
-    let guardiaDelete = new GuardiaObject();
-    guardiaDelete.guardiaItems = this.selectedDatos;
-    this.sigaServices.post("busquedaGuardias_deleteGuardias", guardiaDelete).subscribe(
+        data => {
 
-      data => {
+          this.selectedDatos = [];
+          this.searchHistoricalSend.emit(false);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+        },
+        err => {
 
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+      );
+    }
   }
 
 
@@ -236,7 +239,33 @@ export class TablaGuardiasComponent implements OnInit {
       }
     );
   }
+  confirmDelete() {
+    if (this.permisoEscritura) {
 
+      let mess = this.translateService.instant(
+        "messages.deleteConfirmation"
+      );
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.delete()
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancel",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    }
+  }
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;

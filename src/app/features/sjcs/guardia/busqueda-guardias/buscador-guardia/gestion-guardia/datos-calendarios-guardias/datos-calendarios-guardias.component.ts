@@ -23,6 +23,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   historico = false;
   laborables;
   festividades;
+  laborablesInicial;
+  festividadesInicial;
   bodyInicial;
   resumen = {
     duracion: "",
@@ -46,6 +48,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
     this.festividades = this.creaSemana();
     this.laborables = this.creaSemana();
+    this.laborablesInicial = JSON.parse(JSON.stringify(this.laborables));
+    this.festividadesInicial = JSON.parse(JSON.stringify(this.festividades));
     if (this.modoEdicion)
       this.sigaServices.datosRedy$.subscribe(
         n => {
@@ -78,29 +82,9 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
             });
           this.changeFestividades();
           this.changeLaborables();
-          this.resumen.dias = JSON.parse(JSON.stringify(this.infoDiasLab)) + " " + JSON.parse(JSON.stringify(this.infoDiasFes))
-          let tipoDuracion;
-          switch (this.body.tipoDiasGuardia) {
-            case "D":
-              tipoDuracion = " días";
-              break;
-            case "M":
-              tipoDuracion = " meses";
-              break;
-            case "Q":
-              tipoDuracion = " quincenas";
-              break;
-            case "S":
-              tipoDuracion = " semanas";
-              break;
-            default:
-              tipoDuracion = " días"
-              break;
-          }
-          this.resumen.duracion = this.body.diasGuardia + tipoDuracion;
-          this.resumen.diasSeparacion = this.body.diasSeparacionGuardias;
-          this.resumen.separarGuardia = this.body.separarGuardia;
+          this.actualizaResumen();
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
 
         });
     if (this.persistenceService.getHistorico())
@@ -216,17 +200,19 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     return semana;
   }
   save() {
-    this.body.seleccionFestivos = "";
-    this.body.seleccionLaborables = "";
-    this.festividades.forEach(element => {
-      if (element.value)
-        this.body.seleccionFestivos += element.label;
-    })
-    this.laborables.forEach(element => {
-      if (element.value)
-        this.body.seleccionLaborables += element.label;
-    });
-    this.callSaveService();
+    if (this.permisoEscritura && !this.historico) {
+      this.body.seleccionFestivos = "";
+      this.body.seleccionLaborables = "";
+      this.festividades.forEach(element => {
+        if (element.value)
+          this.body.seleccionFestivos += element.label;
+      })
+      this.laborables.forEach(element => {
+        if (element.value)
+          this.body.seleccionLaborables += element.label;
+      });
+      this.callSaveService();
+    }
   }
 
   callSaveService() {
@@ -239,7 +225,9 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-        this.progressSpinner = false;
+        this.laborablesInicial = JSON.parse(JSON.stringify(this.laborables));
+        this.festividadesInicial = JSON.parse(JSON.stringify(this.festividades));
+        this.actualizaResumen();
       },
       err => {
 
@@ -261,12 +249,26 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.historico && (this.body.diasSeparacionGuardias && this.body.diasSeparacionGuardias.trim())
-      && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
-
-
-
+    let boolLaborable = false;
+    let boolFestivo = false;// Comprobamos si los checks de la semana han cambiado
+    if (this.laborables && this.laborablesInicial && this.festividades && this.festividadesInicial) {
+      this.laborables.forEach(it => {
+        if (it.value != this.laborablesInicial.filter(element => it.label == element.label)[0].value)
+          boolLaborable = true;
+      });
+      this.festividades.forEach(it => {
+        if (it.value != this.festividadesInicial.filter(element => it.label == element.label)[0].value)
+          boolFestivo = true;
+      });
     }
+    //Comprobamos todo
+    if (!this.historico && this.permisoEscritura && this.body.diasSeparacionGuardias && this.body.diasGuardia && this.body.tipoDiasGuardia
+      && !(this.body.requeridaValidacion && !this.body.diasPeriodo) &&
+      !(this.body.diasPeriodo && !this.body.tipoDiasPeriodo) && !(!this.body.diasPeriodo && this.body.tipoDiasPeriodo)
+      && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) || boolFestivo || boolLaborable)) {
+      return false;
+    }
+    return true;
   }
   rellenaDias() {
     if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
@@ -274,26 +276,53 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
         it.value = false;
         return it;
       })
-    this.body.seleccionFestivos.split("").forEach(element => {
-      this.festividades.forEach(it => {
-        if (it.label == element)
-          it.value = true;
-      })
-    });
+    if (this.body.seleccionFestivos)
+      this.body.seleccionFestivos.split("").forEach(element => {
+        this.festividades.forEach(it => {
+          if (it.label == element)
+            it.value = true;
+        })
+      });
     if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
       this.laborables = this.laborables.map(it => {
         it.value = false;
         return it;
       })
-    this.body.seleccionLaborables.split("").forEach(element => {
-      this.laborables.forEach(it => {
-        if (it.label == element)
-          it.value = true;
-      })
-    });
+    if (this.body.seleccionLaborables)
+      this.body.seleccionLaborables.split("").forEach(element => {
+        this.laborables.forEach(it => {
+          if (it.label == element)
+            it.value = true;
+        })
+      });
 
     this.changeFestividades();
     this.changeLaborables();
+  }
+
+  actualizaResumen() {
+    this.resumen.dias = JSON.parse(JSON.stringify(this.infoDiasLab)) + " " + JSON.parse(JSON.stringify(this.infoDiasFes))
+    let tipoDuracion;
+    switch (this.body.tipoDiasGuardia) {
+      case "D":
+        tipoDuracion = " días";
+        break;
+      case "M":
+        tipoDuracion = " meses";
+        break;
+      case "Q":
+        tipoDuracion = " quincenas";
+        break;
+      case "S":
+        tipoDuracion = " semanas";
+        break;
+      default:
+        tipoDuracion = " días"
+        break;
+    }
+    this.resumen.duracion = this.body.diasGuardia + tipoDuracion;
+    this.resumen.diasSeparacion = this.body.diasSeparacionGuardias;
+    this.resumen.separarGuardia = this.body.separarGuardia;
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -303,7 +332,16 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
       detail: msg
     });
   }
+  numberOnly(event): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    else {
+      return false;
 
+    }
+  }
   clear() {
     this.msgs = [];
   }

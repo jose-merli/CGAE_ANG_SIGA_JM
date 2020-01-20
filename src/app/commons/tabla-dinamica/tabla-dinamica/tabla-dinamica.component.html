@@ -1,8 +1,9 @@
 <div class="form-row p-0">
   <!-- TABLA RESULTADOS -->
   <div class="col-11" style="padding-left: 4px;">
-    <p-table [value]="datos" [columns]="cols" [paginator]="true" datakey="numeroGrupo" paginatorPosition="both" [selectionMode]="selectionMode"
-      [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table class="tabla-listado" [rows]="selectedItem">
+    <p-table [value]="datos" [columns]="cols" [paginator]="true" [first]="page" datakey="numeroGrupo" paginatorPosition="both"
+      [selectionMode]="selectionMode" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #tabla class="tabla-listado"
+      [rows]="selectedItem">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -15,7 +16,7 @@
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
               type="text" (input)="
-                table.filter($event.target.value, col.field, 'contains')
+                tabla.filter($event.target.value, col.field, 'contains')
               " />
           </th>
         </tr>
@@ -44,6 +45,8 @@
       </ng-template>
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{tabla.first + 1}} al {{tabla.first
+            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{tabla.totalRecords}}</label>
           <label>{{"general.message.mostrar" | translate}}</label>
           <div class="ml-3">
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">

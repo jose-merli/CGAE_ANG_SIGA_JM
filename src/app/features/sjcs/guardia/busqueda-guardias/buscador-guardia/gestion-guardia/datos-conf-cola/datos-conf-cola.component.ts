@@ -93,7 +93,7 @@ export class DatosConfColaComponent implements OnInit {
           data = JSON.parse(data.body);
         this.numeroletradosguardia = data.letradosIns;
         this.ordenacion = data.idOrdenacionColas;
-        if (this.ordenacion.split(",").length > 4)
+        if (this.ordenacion && this.ordenacion.split(",").length > 4)
           this.ordenacion = this.ordenacion.substring(0, this.ordenacion.lastIndexOf(","));
       },
         err => {
@@ -218,24 +218,7 @@ export class DatosConfColaComponent implements OnInit {
     let pesosFiltrados = Object.assign([], this.pesosExistentes);
     this.pesosSeleccionados = [];
 
-    // if (this.body.porGrupos) {
-    //   let existe = this.pesosSeleccionados.findIndex(it => it.por_filas == ordManual);
-    //   if (existe == -1)
-    //     this.pesosSeleccionados.push({
-    //       numero: "5",
-    //       por_filas: ordManual,
-    //       orden: ""
-    //     });
-    // }
-    // else {
-    //   let existe = this.pesosExistentes.findIndex(it => it.por_filas == ordManual);
-    //   if (existe == -1)
-    //     this.pesosExistentes.push({
-    //       numero: "0",
-    //       por_filas: ordManual,
-    //       orden: ""
-    //     });
-    // }
+
     pesosFiltrados.forEach(element => {
       if (element.numero > 0) {
         this.pesosSeleccionados.push(element);
@@ -323,42 +306,43 @@ export class DatosConfColaComponent implements OnInit {
     // }
   }
   save() {
-    let montag = [0, 0, 0, 0, 0];
-    console.log(this.pesosSeleccionados);
-    this.pesosSeleccionados.forEach(element => {
-      if (element.por_filas == "Apellidos y nombre") {
-        montag[0] = element.numero;
-        if (element.orden == desc) montag[0] = -montag[0];
-      }
-      else if (element.por_filas == "Antigüedad en la cola") {
-        montag[3] = element.numero;
-        if (element.orden == desc) montag[3] = -montag[3];
-      }
-      else if (element.por_filas == "Nº Colegiado") {
-        montag[2] = element.numero;
-        if (element.orden == desc) montag[2] = -montag[2];
-      }
-      else if (element.por_filas == "Edad Colegiado") {
-        montag[1] = element.numero;
-        if (element.orden == desc) montag[1] = -montag[1];
-      } else {
-        montag[4] = element.numero;
-      }
-    });
-    console.log(this.pesosSeleccionados);
-    this.body.filtros = montag.toString();
-    this.callSaveService();
+    if (this.permisoEscritura && !this.historico) {
+      let montag = [0, 0, 0, 0, 0];
+      console.log(this.pesosSeleccionados);
+      this.pesosSeleccionados.forEach(element => {
+        if (element.por_filas == "Apellidos y nombre") {
+          montag[0] = element.numero;
+          if (element.orden == desc) montag[0] = -montag[0];
+        }
+        else if (element.por_filas == "Antigüedad en la cola") {
+          montag[3] = element.numero;
+          if (element.orden == desc) montag[3] = -montag[3];
+        }
+        else if (element.por_filas == "Nº Colegiado") {
+          montag[2] = element.numero;
+          if (element.orden == desc) montag[2] = -montag[2];
+        }
+        else if (element.por_filas == "Edad Colegiado") {
+          montag[1] = element.numero;
+          if (element.orden == desc) montag[1] = -montag[1];
+        } else {
+          montag[4] = element.numero;
+        }
+      });
+      this.body.filtros = montag.toString();
+      this.callSaveService();
+    }
   }
 
   callSaveService() {
-    this.progressSpinner = true
+    this.progressSpinner = true;
     this.sigaServices.post("busquedaGuardias_updateGuardia", this.body).subscribe(
       data => {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.pesosExistentesInicial = JSON.parse(JSON.stringify(this.pesosExistentes));
         this.pesosSeleccionadosInicial = JSON.parse(JSON.stringify(this.pesosSeleccionados));
 
-        this.modoEdicionSend.emit(undefined);
+        this.modoEdicionSend.emit(true);
         this.modoEdicion = true;
         this.progressSpinner = false;
       },

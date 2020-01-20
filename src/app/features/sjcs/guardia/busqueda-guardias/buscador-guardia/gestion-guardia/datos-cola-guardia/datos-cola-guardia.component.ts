@@ -82,79 +82,80 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   disabledSave() {
-    if (!this.permisoEscritura || !this.updateInscripciones || this.updateInscripciones.length == 0) {
+    if (!this.permisoEscritura || this.historico || !this.updateInscripciones || this.updateInscripciones.length == 0) {
       return true;
     } else return false;
   }
   save() {
-    this.progressSpinner = true;
+    if (this.permisoEscritura && !this.historico) {
+      this.progressSpinner = true;
 
-    if (!this.body.porGrupos && this.body.ordenacionManual) {
-      let repes = []
-      this.datos.forEach(it => {
-        if (repes.length <= 1)
-          repes = this.datos.filter(element => {
-            if (element.numeroGrupo == it.numeroGrupo)
-              return true;
-            return false;
-          });
-      });
-      if (repes.length > 1)
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
-      else {
-        this.datos = this.datos.map(it => {
-          it.orden = 1;
-          return it;
-        });
-        this.callSaveService();
-
-      }
-    } else {
-      let repes = [];
-      let mismoGrupo = []
-      let grupoUltimo = this.datos.filter(it => this.body.idPersonaUltimo == it.idPersona);
-      let nuevoUltimo;
-
-
-      this.datos.forEach(it => {
-        if (mismoGrupo.length <= 1 && repes.length <= 1) {
-          if (!it.numeroGrupo && it.orden || it.numeroGrupo && !it.orden) {
-            mismoGrupo.push("Habia un campo vacio");
-            mismoGrupo.push("Habia un campo vacio");
-          } else {
-            mismoGrupo = this.datos.filter(element => {
-              if (element.numeroGrupo == it.numeroGrupo && element.idPersona == it.idPersona)
+      if (!this.body.porGrupos && this.body.ordenacionManual) {
+        let repes = []
+        this.datos.forEach(it => {
+          if (repes.length <= 1)
+            repes = this.datos.filter(element => {
+              if (element.numeroGrupo == it.numeroGrupo)
                 return true;
               return false;
             });
-            repes = this.datos.filter(element => {
-              if (element.numeroGrupo == it.numeroGrupo && element.orden == it.orden)
-                return true;
-              return false;
-            })
+        });
+        if (repes.length > 1)
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
+        else {
+          this.datos = this.datos.map(it => {
+            it.orden = 1;
+            return it;
+          });
+          this.callSaveService();
+
+        }
+      } else {
+        let repes = [];
+        let mismoGrupo = []
+        let grupoUltimo = this.datos.filter(it => this.body.idPersonaUltimo == it.idPersona);
+        let nuevoUltimo;
+
+
+        this.datos.forEach(it => {
+          if (mismoGrupo.length <= 1 && repes.length <= 1) {
+            if (!it.numeroGrupo && it.orden || it.numeroGrupo && !it.orden) {
+              mismoGrupo.push("Habia un campo vacio");
+              mismoGrupo.push("Habia un campo vacio");
+            } else {
+              mismoGrupo = this.datos.filter(element => {
+                if (element.numeroGrupo == it.numeroGrupo && element.idPersona == it.idPersona)
+                  return true;
+                return false;
+              });
+              repes = this.datos.filter(element => {
+                if (element.numeroGrupo == it.numeroGrupo && element.orden == it.orden)
+                  return true;
+                return false;
+              })
+            }
           }
-        }
-      });
-      if (mismoGrupo.length > 1 || repes.length > 1)
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
-      else {
-        if (grupoUltimo.length > 0) {
-          nuevoUltimo = grupoUltimo[0];
-          grupoUltimo = this.datos.filter(it => it.numeroGrupo == grupoUltimo[0].numeroGrupo);
-          grupoUltimo.forEach(it => {
-            if (it.orden > nuevoUltimo.orden)
-              nuevoUltimo = it;
-          })
-          if (this.updateInscripciones.filter(it => nuevoUltimo.idPersona == it.idPersona).length > 0)
-            this.ultimo(nuevoUltimo)
-        }
-        this.callSaveService();
+        });
+        if (mismoGrupo.length > 1 || repes.length > 1)
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
+        else {
+          if (grupoUltimo.length > 0) {
+            nuevoUltimo = grupoUltimo[0];
+            grupoUltimo = this.datos.filter(it => it.numeroGrupo == grupoUltimo[0].numeroGrupo);
+            grupoUltimo.forEach(it => {
+              if (it.orden > nuevoUltimo.orden)
+                nuevoUltimo = it;
+            })
+            if (this.updateInscripciones.filter(it => nuevoUltimo.idPersona == it.idPersona).length > 0)
+              this.ultimo(nuevoUltimo)
+          }
+          this.callSaveService();
 
+        }
       }
+
+      this.progressSpinner = false;
     }
-
-    this.progressSpinner = false;
-
   }
   callSaveService() {
     this.progressSpinner = true;
@@ -242,6 +243,8 @@ export class DatosColaGuardiaComponent implements OnInit {
           if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
               + " ... " + this.datos.length, " inscritos");
+          else
+            this.resumenColaGuardia = "0 inscritos";
           this.rest();
           this.progressSpinner = false;
 

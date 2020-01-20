@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { SigaServices } from '../../_services/siga.service';
 
 @Component({
@@ -24,13 +24,13 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   @Input() porGrupos: boolean = false;
   @Input() selectionMode: string = "single";
   @Output() updateInscripciones = new EventEmitter<any>();
-  @ViewChild("table") table;
+  @ViewChild("tabla") tabla;
 
   progressSpinner: boolean = false;
 
 
 
-  constructor() { }
+  constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.getCols()
@@ -218,6 +218,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
         value: 40
       }
     ];
+    this.onChangeRowsPerPages(this.rowsPerPage[0]);
   }
 
 
@@ -232,10 +233,10 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
     }
   }
   disabledBotones() {
-    if (this.table) {
+    if (this.tabla) {
       let grupo = this.datos.filter(it => this.selectedDatos.numeroGrupo == it.numeroGrupo && this.idUltimo == it.idPersona);
       let filtros = this.buscadores.filter(it => it.length > 0);
-      if (this.table.sortField || grupo.length == 1 || this.selectedDatos.idPersona == this.idUltimo || filtros.length > 0)
+      if (this.tabla.sortField || grupo.length == 1 || this.selectedDatos.idPersona == this.idUltimo || filtros.length > 0)
         return true;
       return false;
     }
@@ -245,7 +246,11 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
     this.botActivos = false;
     this.updateInscripciones.emit(event)
   }
-  onChangeRowsPerPages(event) { }
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tabla.reset();
+  }
 }
 
 

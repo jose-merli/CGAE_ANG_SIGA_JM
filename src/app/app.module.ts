@@ -7,39 +7,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { CookieService } from 'ngx-cookie-service';
-<<<<<<< HEAD
 import { ConfirmationService } from "primeng/api";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ButtonModule } from "primeng/button";
+//import { EditorModule } from "primeng/editor";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
 import { ChipsModule } from "primeng/chips";
-=======
-// prueba
-import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.service';
-import { AuthenticationService } from './_services/authentication.service';
-import { JwtInterceptor } from './_interceptor/jwt.interceptor';
-
-
-// Componentes comunes
-import { routing } from './app.routing';
-import { environment } from '../environments/environment';
-import { AppComponent } from './app.component';
-import { HeaderComponent } from './commons/header/header.component';
-import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
-import { MenuComponent } from './commons/menu/menu.component';
-import { HomeComponent } from './features/home/home.component';
-import { LoginComponent } from './commons/login/login.component';
-import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
-import { ImagePipe } from './commons/image-pipe/image.pipe';
-import { Message } from 'primeng/components/common/api';
->>>>>>> Fase3
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DataTableModule } from "primeng/datatable";
 import { DialogModule } from "primeng/dialog";
-import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
-
 //PRIMENG
 import { DropdownModule } from "primeng/dropdown";
 import { FileUploadModule } from "primeng/fileupload";
@@ -50,17 +28,8 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 import { ListboxModule } from "primeng/listbox";
 import { MenubarModule } from 'primeng/menubar';
 import { MultiSelectModule } from "primeng/multiselect";
-<<<<<<< HEAD
 import { PanelMenuModule } from 'primeng/panelmenu';
-//import { EditorModule } from "primeng/editor";
-=======
-import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { CalendarModule } from "primeng/calendar";
-import { AutoCompleteModule } from "primeng/autocomplete";
-import { TooltipModule } from "primeng/tooltip";
-import { ChipsModule } from "primeng/chips";
 // import { EditorModule } from "primeng/editor";
->>>>>>> Fase3
 import { PickListModule } from "primeng/picklist";
 import { ColorPickerModule, SelectButtonModule } from 'primeng/primeng';
 import { ProgressSpinnerModule } from "primeng/progressspinner";
@@ -75,15 +44,25 @@ import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 // Componentes comunes
 import { routing } from './app.routing';
-import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
+import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
+import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
+import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
+import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
+import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
+import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
+import { DialogoModule } from './commons/dialog/dialogo.module';
 import { ErrorAccesoComponent } from './commons/error/error-acceso/error-acceso.component';
+import { FechaModule } from './commons/fecha/fecha.module';
 import { HeaderComponent } from './commons/header/header.component';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
 import { LoginComponent } from './commons/login/login.component';
 import { MenuComponent } from './commons/menu/menu.component';
 import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
+import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
+import { PrecioModule } from './commons/precio/precio.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { TreeTableComponent } from './commons/tree-table/tree-table.component';
 import { TrimPipePipe } from './commons/trim-pipe/trim-pipe.pipe';
 import { ValidationModule } from './commons/validation/validation.module';
 import { AuditoriaUsuarios } from './features/administracion/auditoria/usuarios/auditoria-usuarios.component';
@@ -317,16 +296,17 @@ import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/manteni
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
-import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
-import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
 import { BajasTemporalesComponent } from './features/sjcs/oficio/bajas-temporales/bajas-temporales.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
+import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
+import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { SjcsModule } from './features/sjcs/sjcs.module';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 /***NEW modules censo***/
 import { BusquedaColegiadosComponentNew } from './new-features/censo/busqueda-colegiados/busqueda-colegiados.component';
 import { AuthGuard } from './_guards/auth.guards';
+// import { AuthGuard } from './_guards/auth.guards';
 import { JwtInterceptor } from './_interceptor/jwt.interceptor';
 import { AuthenticationService } from './_services/authentication.service';
 import { cardService } from './_services/cardSearch.service';
@@ -334,9 +314,9 @@ import { CommonsService } from './_services/commons.service';
 // prueba
 import { HeaderGestionEntidadService } from './_services/headerGestionEntidad.service';
 import { OldSigaServices } from './_services/oldSiga.service';
+import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
-import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
-import { TreeTableComponent } from './commons/tree-table/tree-table.component';
+
 
 
 
@@ -360,17 +340,6 @@ import { TreeTableComponent } from './commons/tree-table/tree-table.component';
 registerLocaleData(es);
 
 
-import { TranslateService } from './commons/translate/translation.service';
-import { PersistenceService } from './_services/persistence.service';
-import { FechaModule } from './commons/fecha/fecha.module';
-import { PrecioModule } from './commons/precio/precio.module';
-import { DialogoModule } from './commons/dialog/dialogo.module';
-import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/buscador-procuradores.component';
-import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
-import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
-import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
-import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 
 
 
