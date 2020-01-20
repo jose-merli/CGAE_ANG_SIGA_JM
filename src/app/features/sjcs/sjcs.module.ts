@@ -22,16 +22,19 @@ import { TranslatePipe } from '../../commons/translate';
 import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
 import { JusticiablesModule } from './justiciables/justiciables.module';
 import { EJGModule } from './ejg/ejg.module';
-
+import { OficioModule } from './oficio/oficio.module';
+import { FacturacionSJCSModule } from './facturacionSJCS/facturacionsjcs.module';
+    
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
     MaestrosModule,
+    OficioModule,
     JusticiablesModule,
     routingSjcs,
-    EJGModule
-
+    EJGModule,
+    FacturacionSJCSModule
   ],
   providers: []
 })

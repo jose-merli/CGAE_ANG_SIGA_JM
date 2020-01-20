@@ -298,7 +298,6 @@ export class GestionJusticiablesComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearFiltrosAux();
-
     //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
     if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {
       this.checkedViewRepresentante = false;

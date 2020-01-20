@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, ViewChild, Output, HostListener } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, ViewChild, Output, HostListener, OnDestroy } from '@angular/core';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../commons/translate';
@@ -13,13 +13,11 @@ import { Location } from "@angular/common";
   templateUrl: './filtros-generalSJCS.component.html',
   styleUrls: ['./filtros-generalSJCS.component.scss']
 })
-export class FiltrosGeneralSJCSComponent implements OnInit {
-
+export class FiltrosGeneralSJCSComponent implements OnInit, OnDestroy {
+ 
   showDatosGenerales: boolean = true;
   msgs = [];
 
-  filtroAux: any;
-  historico: boolean = false;
   textSelected: String = "{0} perfiles seleccionados";
 
   filtros: BusquedaGeneralSJCSItem = new BusquedaGeneralSJCSItem();
@@ -30,7 +28,6 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
   comboEstadoColegial: any[];
 
   permisoEscritura: boolean = true;
-  @ViewChild("prueba") prueba;
   textFilter = "Elegir";
 
   comboProvincias = [];
@@ -50,12 +47,9 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
   ngOnInit() {
     this.filtros = new BusquedaGeneralSJCSItem();
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      if (this.persistenceService.getHistorico() != undefined) {
-        this.historico = this.persistenceService.getHistorico();
-      }
-      this.isOpen.emit(this.historico)
+    if (this.persistenceService.getFiltrosBusquedaGeneralSJCS() != undefined) {
+      this.filtros = this.persistenceService.getFiltrosBusquedaGeneralSJCS();
+      this.isOpen.emit(false)
 
     } else {
       this.filtros = new BusquedaGeneralSJCSItem();
@@ -144,9 +138,8 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
   search() {
 
     if (this.checkFilters()) {
-      this.persistenceService.setFiltros(this.filtros);
-      this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux();
+      this.persistenceService.setFiltrosBusquedaGeneralSJCS(this.filtros);
+      // this.filtros = this.persistenceService.getFiltrosAux();
       this.isOpen.emit(false)
     }
 
@@ -249,5 +242,11 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
       this.search();
     }
   }
+
+  ngOnDestroy(): void {
+    this.persistenceService.clearFiltrosBusquedaGeneralSJCS();
+  }
+
+
 
 }

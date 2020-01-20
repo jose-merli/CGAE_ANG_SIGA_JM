@@ -222,6 +222,8 @@ import { AuthGuard } from './_guards/auth.guards';
 import { DefinirTipoPlantillaComponent } from './features/comunicaciones/definir-tipo-plantilla/definir-tipo-plantilla.component';
 import { BandejaSalidaComponent } from './features/comunicaciones/bandeja-salida/bandeja-salida.component';
 import { BandejaEntradaComponent } from './features/comunicaciones/bandeja-entrada/bandeja-entrada.component';
+import { BusquedaGeneralSJCSComponent } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.component';
+
 
 
 const appRoutes: Routes = [
@@ -796,6 +798,14 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'facturacionesYPagos',
+		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+	},
+	{
+		path: '	cartaFacturacionPago',
+		loadChildren: './features/sjcs/sjcs.module#SjcsModule'
+	},
+	{
 		path: 'definirListasGuardias',
 		component: DefinirListasGuardiasComponent,
 		canActivate: [AuthGuard]
@@ -1284,6 +1294,12 @@ const appRoutes: Routes = [
 		component: DialogoComunicacionesComponent,
 		canActivate: [AuthGuard]
 	},
+	{
+		path: 'busquedaGeneralSJCS',
+		component: BusquedaGeneralSJCSComponent,
+		canActivate: [AuthGuard]
+	},
+
 
 	{ path: ' ', redirectTo: 'home' }
 ];

@@ -344,9 +344,11 @@ import { BuscadorProcuradoresComponent } from './commons/buscador-procuradores/b
 import { FiltroBuscadorProcuradorComponent } from './commons/buscador-procuradores/filtro/filtro.component';
 import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradores/tabla/tabla.component';
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
+
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 import { OficioModule } from './features/sjcs/oficio/oficio.module';
 import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
+
 
 
 
@@ -468,6 +470,7 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		SolicitudesTurnosGuardiasComponent,
 		SaltosYCompensacionesComponent,
 		GuardiasSolicitudesTurnosComponent,
+		TurnosComponent,
 		GuardiasIncompatibilidadesComponent,
 		ProgramacionCalendariosComponent,
 		GuardiasBajasTemporalesComponent,
@@ -697,7 +700,6 @@ import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component'
 		ColorPickerModule,
 		// BusquedaAsuntosModule,
 		EditorModule,
-
 		SjcsModule,
 		OficioModule,
 		BusquedaAsuntosModule

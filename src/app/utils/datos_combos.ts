@@ -58,6 +58,6 @@ export const datos_combos: any = {
             label: "Letrado Designas",
             value: "D"
         },
-
     ],
+
 }

@@ -1,0 +1,12 @@
+
+// :host{
+//     ::ng-deep .ui-dropdown-panel{
+//     max-width: 50% !important;
+//     }
+// } 
+
+:host{
+    ::ng-deep .ui-dropdown-panel{
+        max-width: 50% !important;
+    } 
+}

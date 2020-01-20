@@ -25,7 +25,10 @@ import { endpoints_justiciables } from "../utils/endpoints_justiciables";
 import { endpoints_oficio } from "../utils/endpoints_oficio";
 import { endpoints_componentes } from "../utils/endpoints_components";
 import { endpoints_EJG } from "../utils/endpoints_EJG";
+import { endpoints_facturacionsjcs } from "../utils/endpoints_facturacionsjcs";
 import { endpoints_generales } from "../utils/endpoints_generales";
+
+
 
 
 @Injectable()
@@ -567,6 +570,7 @@ export class SigaServices {
     fichaDatosGenerales_etiquetasPersona:
       "fichaDatosGenerales/etiquetasPersona",
     getLetrado: "/getLetrado",
+    isColegiado: "/isColegiado",
     fichaDatosCurriculares_solicitudUpdate:
       "fichaDatosCurriculares/solicitudUpdate",
     fichaDatosDirecciones_solicitudCreate:
@@ -717,18 +721,18 @@ export class SigaServices {
     dialogo_tipoEnvios: "dialogoComunicacion/tipoEnvios",
     dialogo_enviar: "dialogoComunicacion/enviar",
     dialogo_descargar: "dialogoComunicacion/descargar",
-    ...endpoints_EJG,
-    dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
-    ...endpoints_componentes,
-    dialogo_keys: "dialogoComunicacion/keys",
-    ...endpoints_generales,
-    dialogo_obtenerCamposDinamicos:
-      "dialogoComunicacion/obtenerCamposDinamicos",
+	dialogo_generarEnvios: "dialogoComunicacion/generarEnvios",
+	dialogo_keys: "dialogoComunicacion/keys",
+    dialogo_obtenerCamposDinamicos: "dialogoComunicacion/obtenerCamposDinamicos",
     dialogo_envioTest: "dialogoComunicacion/envioTest",
+	dialogo_maxModelos: "dialogoComunicacion/maxModelos",
+    ...endpoints_EJG,
+    ...endpoints_facturacionsjcs,
+    ...endpoints_componentes,
+    ...endpoints_generales,
     ...endpoints_justiciables,
     ...endpoints_oficio,
-    dialogo_maxModelos: "dialogoComunicacion/maxModelos",
-    ...endpoints_maestros
+    ...endpoints_maestros,
   };
 
   private menuToggled = new Subject<any>();
@@ -759,6 +763,7 @@ export class SigaServices {
   guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
   private createJusticiable = new Subject<any>();
   createJusticiable$ = this.createJusticiable.asObservable();
+
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
@@ -1030,6 +1035,22 @@ export class SigaServices {
   notifyGuardarDatosSolicitudJusticiable(data) {
     this.guardarDatosSolicitudJusticiable.next(data);
   }
+  notifyCreateJusticiable(data) {
+    this.createJusticiable.next(data);
+  }
+
+  notifyGuardarDatosGeneralesRepresentante(data) {
+    this.guardarDatosGeneralesRepresentante.next(data);
+  }
+
+  notifyGuardarDatosGeneralesJusticiable(data) {
+    this.guardarDatosGeneralesJusticiable.next(data);
+  }
+
+  notifyGuardarDatosSolicitudJusticiable(data) {
+    this.guardarDatosSolicitudJusticiable.next(data);
+  }
+
   notifyCreateJusticiable(data) {
     this.createJusticiable.next(data);
   }
