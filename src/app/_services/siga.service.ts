@@ -1038,23 +1038,6 @@ export class SigaServices {
   notifyCreateJusticiable(data) {
     this.createJusticiable.next(data);
   }
-
-  notifyGuardarDatosGeneralesRepresentante(data) {
-    this.guardarDatosGeneralesRepresentante.next(data);
-  }
-
-  notifyGuardarDatosGeneralesJusticiable(data) {
-    this.guardarDatosGeneralesJusticiable.next(data);
-  }
-
-  notifyGuardarDatosSolicitudJusticiable(data) {
-    this.guardarDatosSolicitudJusticiable.next(data);
-  }
-
-  notifyCreateJusticiable(data) {
-    this.createJusticiable.next(data);
-  }
-
   notifysendFechaBaja(fecha) {
     this.sendFechaBaja.next(fecha);
   }
