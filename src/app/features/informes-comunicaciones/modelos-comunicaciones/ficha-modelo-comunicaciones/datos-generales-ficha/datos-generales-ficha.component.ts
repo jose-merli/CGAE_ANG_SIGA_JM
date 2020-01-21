@@ -385,7 +385,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   getPlantillas(idClaseComunicacion) {
     this.progressSpinner = true;
     this.sigaServices.getParam(
-      "modelos_detalle_plantillasComunicacion",
+      "modelos_detalle_plantillasComunicacionByIdClase",
       "?idClase=" +
       idClaseComunicacion
     ).subscribe(
