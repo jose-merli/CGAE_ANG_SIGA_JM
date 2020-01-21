@@ -180,6 +180,7 @@ export class SigaServices {
     busquedaColegiados_provincias: "busquedaColegiados/provincias",
     busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
     busquedaColegiados_searchColegiado: "/busquedaColegiado/searchColegiado",
+    busquedaColegiados_searchColegiadoFicha: "/busquedaColegiado/searchColegiadoFicha",
     busquedaColegiado_etiquetas: "/busquedaColegiado/etiquetas",
     busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
     busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
