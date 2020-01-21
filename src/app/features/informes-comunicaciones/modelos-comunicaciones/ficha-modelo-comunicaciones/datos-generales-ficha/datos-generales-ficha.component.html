@@ -43,7 +43,8 @@
               <label>{{ "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones" | translate }} (*)
               </label>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-                [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form" [disabled]='soloLectura || isEdicion'>
+                [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion" class="select-form" [disabled]='soloLectura || isEdicion'
+                (onChange)="onChangeClaseComunicaciones($event)">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -97,8 +98,9 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "enviosMasivos.literal.plantillasEnvio" | translate }}</label>
-              <p-dropdown [filter]="true" [showClear]="true" filterBy="label" [disabled]='soloLectura' [(ngModel)]="body.idPlantillaEnvio"
-                [options]="plantillas" class="select-form" (onChange)="onChangePlantilla($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}"></p-dropdown>
+              <p-dropdown [filter]="true" [showClear]="true" filterBy="label" [disabled]='soloLectura || !selectedClaseCom'
+               [(ngModel)]="body.idPlantillaEnvio" [options]="plantillas" class="select-form" 
+                (onChange)="onChangePlantilla($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "enviosMasivos.literal.tipoEnvio" | translate }}</label>
@@ -119,5 +121,9 @@
   </div>
   <!--END DATOS GENERALES-->
   <app-dialog></app-dialog>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+      <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+      <div class="loader"></div>
+  </div>
 
 </div>
