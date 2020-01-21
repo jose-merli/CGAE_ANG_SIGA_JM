@@ -133,7 +133,7 @@
           <div class="col-6" style="margin-top: 20px">
             <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]='body.idGuardiaPrincipal'
               [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="comboGuardia" [disabled]="historico || !permisoEscritura || isDisabledGuardia"
-              disabled="true" [showClear]="true"></p-dropdown>
+              [showClear]="true"></p-dropdown>
           </div>
 
           <!--TABLA-->

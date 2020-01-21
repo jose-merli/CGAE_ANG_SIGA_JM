@@ -50,43 +50,42 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     this.laborables = this.creaSemana();
     this.laborablesInicial = JSON.parse(JSON.stringify(this.laborables));
     this.festividadesInicial = JSON.parse(JSON.stringify(this.festividades));
-    if (this.modoEdicion)
-      this.sigaServices.datosRedy$.subscribe(
-        n => {
-          n = JSON.parse(n.body)
+    this.sigaServices.datosRedy$.subscribe(
+      n => {
+        n = JSON.parse(n.body)
 
-          this.body.diasSeparacionGuardias = n.diasSeparacionGuardias;
-          this.body.tipoDiasPeriodo = n.tipoDiasPeriodo;
-          this.body.tipoDiasGuardia = n.tipoDiasGuardia;
-          this.body.diasPeriodo = n.diasPeriodo;
-          this.body.diasGuardia = n.diasGuardia;
-          this.body.idGuardia = n.idGuardia;
-          this.body.idTurno = n.idTurno;
-          this.body.separarGuardia = n.separarGuardia;
-          this.body.requeridaValidacion = n.requeridaValidacion;
-          this.body.seleccionFestivos = n.seleccionFestivos;
-          this.body.seleccionLaborables = n.seleccionLaborables;
-          if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
-            this.body.seleccionFestivos.split("").forEach(element => {
-              this.festividades.forEach(it => {
-                if (it.label == element)
-                  it.value = true;
-              })
-            });
-          if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
-            this.body.seleccionLaborables.split("").forEach(element => {
-              this.laborables.forEach(it => {
-                if (it.label == element)
-                  it.value = true;
-              })
-            });
-          this.changeFestividades();
-          this.changeLaborables();
-          this.actualizaResumen();
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.body.diasSeparacionGuardias = n.diasSeparacionGuardias;
+        this.body.tipoDiasPeriodo = n.tipoDiasPeriodo;
+        this.body.tipoDiasGuardia = n.tipoDiasGuardia;
+        this.body.diasPeriodo = n.diasPeriodo;
+        this.body.diasGuardia = n.diasGuardia;
+        this.body.idGuardia = n.idGuardia;
+        this.body.idTurno = n.idTurno;
+        this.body.separarGuardia = n.separarGuardia;
+        this.body.requeridaValidacion = n.requeridaValidacion;
+        this.body.seleccionFestivos = n.seleccionFestivos;
+        this.body.seleccionLaborables = n.seleccionLaborables;
+        if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
+          this.body.seleccionFestivos.split("").forEach(element => {
+            this.festividades.forEach(it => {
+              if (it.label == element)
+                it.value = true;
+            })
+          });
+        if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
+          this.body.seleccionLaborables.split("").forEach(element => {
+            this.laborables.forEach(it => {
+              if (it.label == element)
+                it.value = true;
+            })
+          });
+        this.changeFestividades();
+        this.changeLaborables();
+        this.actualizaResumen();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
 
-        });
+      });
     if (this.persistenceService.getHistorico())
       this.historico = this.persistenceService.getHistorico();
   }

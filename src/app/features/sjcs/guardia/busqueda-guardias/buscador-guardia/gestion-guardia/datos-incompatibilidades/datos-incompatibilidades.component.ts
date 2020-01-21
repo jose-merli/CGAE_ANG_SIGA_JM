@@ -35,7 +35,12 @@ export class DatosIncompatibilidadesComponent implements OnInit {
     this.getCols();
     if (this.persistenceService.getDatos())
       this.getResumenIncompatibilidades();
-
+    else
+      this.sigaServices.datosRedy$.subscribe(
+        n => {
+          this.persistenceService.getDatos();
+          this.getResumenIncompatibilidades();
+        });
   }
 
   getResumenIncompatibilidades() {
@@ -96,7 +101,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   }
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
 
     if (this.tabla) this.tabla.reset();
   }

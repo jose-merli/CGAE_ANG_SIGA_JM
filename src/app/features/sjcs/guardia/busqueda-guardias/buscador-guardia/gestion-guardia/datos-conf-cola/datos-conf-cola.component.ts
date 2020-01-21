@@ -32,8 +32,6 @@ export class DatosConfColaComponent implements OnInit {
   pesosExistentesInicial: any[];
   pesosSeleccionados: any[];
   pesosSeleccionadosInicial: any[];
-  idGuardia;
-  idTurno;
   openFicha: boolean = false;
   historico: boolean = false;
   ordenacion = "";
@@ -48,11 +46,6 @@ export class DatosConfColaComponent implements OnInit {
 
   ngOnInit() {
     this.historico = this.persistenceService.getHistorico();
-    if (this.persistenceService.getDatos()) {
-      this.idGuardia = this.persistenceService.getDatos().idGuardia;
-      this.idTurno = this.persistenceService.getDatos().idTurno;
-    }
-
     this.sigaServices.datosRedy$.subscribe(
       data => {
         if (data.body)
@@ -62,8 +55,8 @@ export class DatosConfColaComponent implements OnInit {
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
         this.body.rotarComponentes = data.rotarComponentes;
-        this.body.idGuardia = this.idGuardia;
-        this.body.idTurno = this.idTurno;
+        this.body.idGuardia = data.idGuardia;
+        this.body.idTurno = data.idTurno;
         this.getPerfilesSeleccionados();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         if (this.modoEdicion) this.getResumen();

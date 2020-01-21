@@ -59,6 +59,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
         this.body.idPersonaUltimo = data.idPersonaUltimo;
+        this.body.idGrupoUltimo = data.idGrupoUltimo;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
         if (this.body.porGrupos) {
           this.body.ordenacionManual = true;
@@ -113,7 +114,7 @@ export class DatosColaGuardiaComponent implements OnInit {
       } else {
         let repes = [];
         let mismoGrupo = []
-        let grupoUltimo = this.datos.filter(it => this.body.idPersonaUltimo == it.idPersona);
+        let grupoUltimo = this.datos.filter(it => this.datos[this.datos.length - 1].numeroGrupo == it.numeroGrupo);
         let nuevoUltimo;
 
 
@@ -129,7 +130,8 @@ export class DatosColaGuardiaComponent implements OnInit {
                 return false;
               });
               repes = this.datos.filter(element => {
-                if (element.numeroGrupo == it.numeroGrupo && element.orden == it.orden)
+                if (element.numeroGrupo == it.numeroGrupo && element.orden == it.orden &&
+                  element.numeroGrupo && it.numeroGrupo && element.idGrupoGuardiaColegiado != it.idGrupoGuardiaColegiado)
                   return true;
                 return false;
               })
@@ -141,12 +143,11 @@ export class DatosColaGuardiaComponent implements OnInit {
         else {
           if (grupoUltimo.length > 0) {
             nuevoUltimo = grupoUltimo[0];
-            grupoUltimo = this.datos.filter(it => it.numeroGrupo == grupoUltimo[0].numeroGrupo);
             grupoUltimo.forEach(it => {
               if (it.orden > nuevoUltimo.orden)
                 nuevoUltimo = it;
             })
-            if (this.updateInscripciones.filter(it => nuevoUltimo.idPersona == it.idPersona).length > 0)
+            if (this.updateInscripciones.filter(it => nuevoUltimo.idGrupoGuardiaColegiado == it.idGrupoGuardiaColegiado).length > 0)
               this.ultimo(nuevoUltimo)
           }
           this.callSaveService();
@@ -245,6 +246,8 @@ export class DatosColaGuardiaComponent implements OnInit {
               + " ... " + this.datos.length, " inscritos");
           else
             this.resumenColaGuardia = "0 inscritos";
+          if (this.body.idPersonaUltimo && this.datos.length > 0)
+            this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
           this.rest();
           this.progressSpinner = false;
 
@@ -264,6 +267,20 @@ export class DatosColaGuardiaComponent implements OnInit {
     if (this.permisoEscritura && !this.historico && selected) {
       this.progressSpinner = true;
       this.body.idPersonaUltimo = selected.idPersona;
+      this.body.idGrupoUltimo = selected.idGrupoUltimo;
+      let grupo = this.datos.filter(it => selected.idGrupoGuardia == it.idGrupoGuardia);
+      if (grupo.length > 1) {
+        this.datos.forEach(it => {
+          if (it.orden > selected.orden) {
+            selected.orden = it.orden;
+            this.updateInscripciones.pop();
+            this.updateInscripciones.push(selected)
+          }
+        });
+        if (this.updateInscripciones.length > 0)
+          this.save();
+      }
+
       this.sigaService.post(
         "busquedaGuardias_getUltimo", this.body).subscribe(
           data => {
@@ -313,11 +330,11 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   rest() {
-    if (this.datosInicial && this.datos && this.tabla && this.tabla.table) {
+    if (this.datosInicial && this.datos && this.tabla && this.tabla.tabla) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.tabla.table.reset();
-      this.tabla.table.sortOrder = 0;
-      this.tabla.table.sortField = '';
+      this.tabla.tabla.reset();
+      this.tabla.tabla.sortOrder = 0;
+      this.tabla.tabla.sortField = '';
       this.tabla.selectedDatos = null;
       this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
 

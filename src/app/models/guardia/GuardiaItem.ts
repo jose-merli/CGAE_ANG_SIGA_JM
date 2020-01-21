@@ -49,6 +49,8 @@ export class GuardiaItem {
     requeridaValidacion;
     separarGuardia;
     historico: boolean;
+    idGrupoUltimo;
+    idGrupoGuardia;
     constructor() { }
 
 }
