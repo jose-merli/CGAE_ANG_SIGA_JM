@@ -75,6 +75,8 @@ export class TarjetaInscripcion implements OnInit {
   @Input() datos: InscripcionesItems;
   @Input() modoEdicion;
   @Input() idPersona;
+  @Output() seleccionadosSend = new EventEmitter<any>();
+
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;
@@ -462,14 +464,14 @@ export class TarjetaInscripcion implements OnInit {
     });
   }
 
-  onRowSelect(event) {
-    if (event != null) {
-      let send = {
-        event
-      }
-      this.sigaServices.notifysendSelectedDatos(send);
-    }
-  }
+  // onRowSelect(event) {
+  //   if (event != null) {     
+  //     let send = {
+  //        prueba: this.selectedDatos,
+  //     }
+  //    this.seleccionadosSend.emit(send);
+  //   }
+  // }
 
   getCols() {
 
@@ -618,6 +620,7 @@ export class TarjetaInscripcion implements OnInit {
             si viene a true: 
                 - se debe de añadir a selecteddatos.
     */
+   this.selectedDatos = [];
     if (event == true) {
       rowData.selectedBoolean = true;
       if(rowData.tipoguardias == "Todas o ninguna"){
@@ -652,10 +655,14 @@ export class TarjetaInscripcion implements OnInit {
         }
       }
     }
-
+    let send = {
+      prueba: this.selectedDatos,
+   }
+    this.seleccionadosSend.emit(send);
   }
 
   seleccionarPadre(rowData, event) {
+    this.selectedDatos = [];
     if (event == true) {
       if (rowData.tipoguardias == "Obligatorias") {
         this.disabledGuardias = true;
@@ -674,6 +681,7 @@ export class TarjetaInscripcion implements OnInit {
       if(rowData.tipoguardias == "A elegir"){
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
+        this.selectedDatos.push(rowData);
       }
     } else {
       this.disabledGuardias = true;
@@ -689,5 +697,9 @@ export class TarjetaInscripcion implements OnInit {
       });
 
     }
+    let send = {
+      prueba: this.selectedDatos,
+   }
+    this.seleccionadosSend.emit(send);
   }
 }

@@ -395,6 +395,7 @@ export class TablaInscripcionesComponent implements OnInit {
   }
   
   validar(selectedDatos) {
+      this.progressSpinner = true;
       this.body = new InscripcionesObject();
       this.body.inscripcionesItem = selectedDatos
       this.body.inscripcionesItem.forEach(element => {
@@ -428,6 +429,7 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
   cambiarFecha(selectedDatos) {
+    this.progressSpinner = true;
     this.body = new InscripcionesObject();
     this.body.inscripcionesItem = selectedDatos
     this.body.inscripcionesItem.forEach(element => {
@@ -461,6 +463,7 @@ export class TablaInscripcionesComponent implements OnInit {
 }
 
   denegar(selectedDatos) {
+    this.progressSpinner = true;
     this.body = new InscripcionesObject();
     this.body.inscripcionesItem = selectedDatos
     this.body.inscripcionesItem.forEach(element => {
@@ -494,6 +497,7 @@ export class TablaInscripcionesComponent implements OnInit {
 }
 
   solicitarBaja(selectedDatos) {
+    this.progressSpinner = true;
     this.fechaDeHoy = new Date();
     let fechaHoy =this.datepipe.transform(this.fechaDeHoy, 'dd/MM/yyyy');
     let fechaActual2 = this.datepipe.transform(this.datos.fechaActual,'dd/MM/yyyy')

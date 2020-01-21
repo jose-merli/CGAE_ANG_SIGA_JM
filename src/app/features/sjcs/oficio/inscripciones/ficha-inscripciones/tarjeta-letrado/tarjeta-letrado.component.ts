@@ -270,6 +270,14 @@ export class TarjetaLetradoComponent implements OnInit {
             },
           ]
           this.datosSend2.emit(this.datos3);
+        }else{
+          this.datos3 = [
+            {
+              label:"Sin información disponible",
+              value:""
+            }
+          ]
+          this.datosSend2.emit(this.datos3);
         }
       }
     );

@@ -745,12 +745,13 @@ export class SigaServices {
   private desHabilitarDocs = new Subject<any>();
   private sendFechaBaja = new Subject<any>();
   private sendSelectedDatos = new Subject<any>();
-  sendSelectedDatos$ = this.sendSelectedDatos.asObservable();
+ 
 
   menuToggled$ = this.menuToggled.asObservable();
   iframeRemove$ = this.iframeRemove.asObservable();
   consultasRefresh$ = this.consultasRefresh.asObservable();
   updateCombo$ = this.updateCombo.asObservable();
+  sendSelectedDatos$ = this.sendSelectedDatos.asObservable();
   newIdOrdenacion$ = this.newIdOrdenacion.asObservable();
   deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
   perfilesRefresh$ = this.perfilesRefresh.asObservable();

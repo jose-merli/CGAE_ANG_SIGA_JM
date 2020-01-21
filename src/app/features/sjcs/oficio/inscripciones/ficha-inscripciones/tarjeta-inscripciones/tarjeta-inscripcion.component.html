@@ -16,7 +16,8 @@
             class="mr-auto title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
         </div>
 
-        <p-table #table class="tabla-listado"  [(selection)]="selectedDatos" (onRowSelect)="onRowSelect($event)" [value]="inscripcionesItem" dataKey="nombre_turno" [columns]="cols" [rows]="selectedItem">
+        <p-table #table class="tabla-listado" [responsive]="true" [(selection)]="selectedDatos" [selectionMode]="selectionMode" 
+        [value]="inscripcionesItem" dataKey="nombre_turno" [columns]="cols" [rows]="selectedItem">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">

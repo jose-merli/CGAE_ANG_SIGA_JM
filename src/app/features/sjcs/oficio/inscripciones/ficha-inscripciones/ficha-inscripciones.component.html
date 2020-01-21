@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="consultas-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -15,7 +16,7 @@
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-tarjeta-letrado [datos]="datos" (datosSend2)="datosSend2($event)" (datosSend)="datosSend($event)"
       (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'"></app-tarjeta-letrado>
-    <app-tarjeta-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
+    <app-tarjeta-inscripcion [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"  [modoEdicion]="modoEdicion"
       *ngSwitchCase="'inscripcion'"></app-tarjeta-inscripcion>
     <app-tarjeta-gestion-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
       *ngSwitchCase="'gestioninscripcion'"></app-tarjeta-gestion-inscripcion>
@@ -29,7 +30,7 @@
         <label>
           {{"censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}
         </label>
-        <app-fecha [(value)]="datos.fechaActual" *ngIf="!historico" [disabledDelete]="true"
+        <app-fecha [(value)]="datosSelected.fechaActual" *ngIf="!historico" [disabledDelete]="true"
           (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
       </div>
 
@@ -37,7 +38,7 @@
         <label>
           {{"gratuita.mantenimientoLG.literal.observaciones" | translate}}
         </label>
-        <textarea [(ngModel)]="datos.observaciones" class="textareains" name="observaciones"
+        <textarea [(ngModel)]="datosSelected.observaciones" class="textareains" name="observaciones"
           [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
           maxLength="1024"></textarea>
       </div>
@@ -45,7 +46,7 @@
         <label>
         </label>
         <button *ngIf="!historico" pButton
-          [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)"
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledValidar || !isLetrado)"
           (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.validar' | translate}}"></button>
 
@@ -54,7 +55,7 @@
         <label>
         </label>
         <button *ngIf="!historico" pButton
-          [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)"
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledDenegar || !isLetrado)"
           (click)="denegar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.denegar' | translate}}"></button>
       </div>
@@ -62,7 +63,7 @@
         <label>
         </label>
         <button *ngIf="!historico" pButton
-          [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledSolicitarBaja)"
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledSolicitarBaja)"
           (click)="solicitarBaja(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
       </div>
@@ -70,7 +71,7 @@
         <label>
         </label>
         <button *ngIf="!historico" pButton
-          [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+          [disabled]="!permisos || (selectedDatos.length == 0)"
           (click)="cambiarFecha(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
 
