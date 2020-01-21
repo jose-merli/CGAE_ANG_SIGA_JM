@@ -246,6 +246,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 			idConsulta: "",
 			nombre: "",
 			finalidad: "",
+			idClaseComunicacion: "",
 			asociada: false
 		};
 
@@ -359,6 +360,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 				comboConsultas.forEach(element => {
 					if (continua && element.value == id) {
 						dato.idInstitucion = element.idInstitucion;
+						dato.idClaseComunicacion = element.idClaseComunicacion;
 						continua = false;
 					}
 				});
@@ -372,7 +374,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 			idConsulta: this.datos[0].idConsulta,
 			idTipoEnvios: this.body.idTipoEnvios,
 			idPlantillaEnvios: this.body.idPlantillaEnvios,
-			idInstitucion: this.datos[0].idInstitucion
+			idInstitucion: this.datos[0].idInstitucion,
+			idClaseComunicacion: this.datos[0].idClaseComunicacion
 		};
 
 		this.sigaServices
@@ -389,11 +392,17 @@ export class ConsultasPlantillasComponent implements OnInit {
 				err => {
 					console.log(err);
 					this.progressSpinner = false;
-					this.showFail(
-						this.translateService.instant(
-							"informesycomunicaciones.plantillasenvio.ficha.errorAsociar"
-						)
-					);
+
+					if (err.error != undefined && err.error != undefined && JSON.parse(err.error).message != undefined) {
+						this.showFail(this.translateService.instant(JSON.parse(err.error).message));
+					} else {
+						this.showFail(
+							this.translateService.instant(
+								"informesycomunicaciones.plantillasenvio.ficha.errorAsociar"
+							)
+						);
+					}
+
 				},
 				() => {
 					this.getResultados();

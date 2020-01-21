@@ -3,8 +3,8 @@
     <i class="fa fa-square"></i>
     <p>
       {{ "menu.informesYcomunicaciones" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.plantillasEnvio" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.plantillasenvio.ficha.plantillaEnvio" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.plantillasEnvio" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "informesycomunicaciones.plantillasenvio.ficha.plantillaEnvio" | translate }}
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">

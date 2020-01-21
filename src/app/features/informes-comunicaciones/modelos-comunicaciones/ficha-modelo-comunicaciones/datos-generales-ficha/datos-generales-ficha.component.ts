@@ -34,6 +34,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
   editar: boolean = true;
   plantillas: any = [];
   isEdicion: boolean = false;
+  selectedClaseCom: boolean = false;
+  progressSpinner: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -70,8 +72,12 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.getClasesComunicaciones();
 
-    this.getPlantillas();
-
+    if(this.body.idClaseComunicacion != null && this.body.idClaseComunicacion != undefined){
+      this.selectedClaseCom = true;
+      this.getPlantillas(this.body.idClaseComunicacion);
+    }else{
+      this.selectedClaseCom = false;
+    }
 
   }
 
@@ -128,6 +134,12 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      if(this.body.idClaseComunicacion != null && this.body.idClaseComunicacion != undefined){
+        this.selectedClaseCom = true;
+        this.getPlantillas(this.body.idClaseComunicacion);
+      }else{
+        this.selectedClaseCom = false;
+      }
       this.habilitarBotones();
       this.isEdicion = true;
     } else {
@@ -370,18 +382,43 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-  getPlantillas() {
-    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
+  getPlantillas(idClaseComunicacion) {
+    this.progressSpinner = true;
+    this.sigaServices.getParam(
+      "modelos_detalle_plantillasComunicacion",
+      "?idClase=" +
+      idClaseComunicacion
+    ).subscribe(
       data => {
+        
         this.plantillas = data.combooItems;
+        this.progressSpinner = false;
+
         // this.plantillas.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+
       },
       () => { }
     );
   };
+
+
+  onChangeClaseComunicaciones(e){
+    let idClaseComunicacion = e.value; 
+    if (idClaseComunicacion != "" && idClaseComunicacion != null && idClaseComunicacion != undefined) {
+      this.selectedClaseCom = true;
+      this.body.idPlantillaEnvio = undefined;
+      this.body.tipoEnvio = undefined;
+      this.getPlantillas(idClaseComunicacion);
+    }else{
+      this.selectedClaseCom = false;
+      this.body.tipoEnvio = undefined;
+      this.body.idPlantillaEnvio = undefined;
+    }
+  }
 
   onChangePlantilla(e) {
     let idPlantillaEnvios = e.value;
