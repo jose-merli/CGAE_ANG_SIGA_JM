@@ -2463,7 +2463,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   itemAInscrito() {
-    if (this.colegialesBody.situacionResidente != undefined) {
+    if (this.colegialesBody.situacionResidente != undefined && this.colegialesBody.comunitario != undefined) {
       this.inscritoSeleccionado = this.colegialesBody.comunitario.toString();
     }
 

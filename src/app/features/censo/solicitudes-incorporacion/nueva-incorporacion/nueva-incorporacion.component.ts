@@ -1164,7 +1164,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
     this.sigaServices
       .postPaginado(
-        "busquedaColegiados_searchColegiado",
+        "busquedaColegiados_searchColegiadoFicha",
         "?numPagina=1",
         this.body
       )
