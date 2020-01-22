@@ -8,8 +8,8 @@
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-datos-generales-plantilla *ngSwitchCase="'generales'"></app-datos-generales-plantilla>
-    <app-consultas-plantillas *ngSwitchCase="'consultas'"></app-consultas-plantillas>
+    <app-datos-generales-plantilla *ngSwitchCase="'generales'" [claseComunicacion]="claseComunicacion"></app-datos-generales-plantilla>
+    <app-consultas-plantillas *ngSwitchCase="'consultas'" (emitClaseComunicacion)="emitClaseComunicacion($event)"></app-consultas-plantillas>
     <app-remitente-plantilla *ngSwitchCase="'remitente'"></app-remitente-plantilla>
   </div>
 </div>

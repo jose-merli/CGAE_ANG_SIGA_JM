@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter } from "@angular/core";
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
@@ -43,8 +43,10 @@ export class ConsultasPlantillasComponent implements OnInit {
 	consultaBuscada;
 	// resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
 	resultadosConsultas = "formacion.busquedaCursos.controlFiltros.minimoCaracteres";
+	claseComunicacion;
 
 	@ViewChild("table") table: DataTable;
+	@Output() emitClaseComunicacion = new EventEmitter<String>(); 
 	selectedDatos;
 
 	fichasPosibles = [
@@ -361,6 +363,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 					if (continua && element.value == id) {
 						dato.idInstitucion = element.idInstitucion;
 						dato.idClaseComunicacion = element.idClaseComunicacion;
+						dato.claseComunicacion = element.claseComunicacion;
 						continua = false;
 					}
 				});
@@ -388,6 +391,12 @@ export class ConsultasPlantillasComponent implements OnInit {
 							"informesycomunicaciones.plantillasenvio.ficha.correctAsociar"
 						)
 					);
+
+					if(this.datos[0].claseComunicacion != undefined && this.datos[0].claseComunicacion != null){
+						this.claseComunicacion = this.datos[0].claseComunicacion
+						this.emitClaseComunicacion.emit(this.claseComunicacion);
+					}
+
 				},
 				err => {
 					console.log(err);
@@ -466,6 +475,12 @@ export class ConsultasPlantillasComponent implements OnInit {
 							"informesycomunicaciones.plantillasenvio.ficha.correctDesasociar"
 						)
 					);
+
+					//Desde el back viene indicado en la descripcion si es una plantilla con clase o sin clase, si viene a null significa que no tiene clase
+					if(JSON.parse(data.body).description == undefined || JSON.parse(data.body).description == null){
+						this.emitClaseComunicacion.emit(undefined);
+					}
+					
 
 					this.selectMultiple = false;
 				},
