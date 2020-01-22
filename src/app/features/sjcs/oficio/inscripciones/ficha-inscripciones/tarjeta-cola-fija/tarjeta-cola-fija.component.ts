@@ -15,12 +15,15 @@ export class TarjetaColaFijaComponent implements OnInit {
   @Input() datos;
   permisosTarjeta: boolean = true;
   iconClass;
-
+  datosVacio: String;
   constructor(
     private commonsService: CommonsService,
   ) { }
 
-  ngOnInit() {   
+  ngOnInit() {
+    if(this.datos == undefined){
+     this.datosVacio = "Sin información disponible "
+    }
     this.iconClass = `fas fa-${this.icono} icon-ficha`;
   }
 

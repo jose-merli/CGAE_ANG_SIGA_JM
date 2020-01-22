@@ -49,7 +49,7 @@ export class InscripcionesComponent implements OnInit {
 
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_oficio.turnos)
+    this.commonsService.checkAcceso(procesos_oficio.inscripciones)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
 

@@ -7,4 +7,14 @@ export const procesos_oficio: any = {
     tarjetaResumen: "92M",
     tarjetaListadoInscripciones: "93M",
     tarjetaPosicionCola:"9S5",
+    //FIN TURNOS
+
+
+    inscripciones:"96M",
+    tarjetaLetrado:"96P",
+    tarjetaInscripcion:"97P",
+    tarjetaGestionInscripcion:"98P",
+    tarjetaResumenInscripciones:"99P",
+    tarjetaResumenCola:"93P",
+    //FIN INSCRIPCIONES TURNO
 }

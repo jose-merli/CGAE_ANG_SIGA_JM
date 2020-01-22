@@ -16,6 +16,7 @@ import { GuardiaObject } from '../../../../../../models/sjcs/GuardiaObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '@angular/router';
 @Component({
   selector: "app-tarjeta-inscripciones",
   templateUrl: "./tarjeta-inscripciones.component.html",
@@ -88,7 +89,7 @@ export class TarjetaInscripciones implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService,private router: Router, private confirmationService: ConfirmationService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -97,7 +98,7 @@ export class TarjetaInscripciones implements OnInit {
         this.turnosItem.fechaActual = new Date();
         this.body = this.turnosItem;
         this.turnosItem.idturno = this.idTurno;
-        this.getColaOficio();
+        // this.getColaOficio();
         if (this.body.idturno == undefined) {
           this.modoEdicion = false;
         } else {
@@ -161,7 +162,7 @@ export class TarjetaInscripciones implements OnInit {
   }
   fillFechaDesdeCalendar(event) {
     this.turnosItem.fechaActual = this.transformaFecha(event);
-    this.getColaOficio();
+    // this.getColaOficio();
   }
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -170,343 +171,20 @@ export class TarjetaInscripciones implements OnInit {
   searchHistorical() {
     this.historico = !this.historico;
     this.persistenceService.setHistorico(this.historico);
-    this.getColaOficio();
+    // this.getColaOficio();
     this.selectAll = false
   }
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     return fichaPosible.activa;
   }
-  getColaOficio() {
-    this.turnosItem.historico = this.historico;
-    this.progressSpinner = true;
-    this.mostrarDatos = false;
-    this.mostrarNumero = false;
-    this.sigaServices.post("turnos_busquedaGuardias", this.turnosItem).subscribe(
-      n => {
-        this.datos = JSON.parse(n.body).guardiaItems;
-        // this.datos.forEach(element => {
-        //   element.orden = +element.orden;
-        // });
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        if (this.datos != undefined && this.datos.length > 1) {
-          this.mostrarNumero = true;
-          this.numeroGuardias = this.datos.length;
-        }
-        else if (this.datos != undefined && this.datos.length == 1) {
-          this.mostrarDatos = true;
-          this.nombreGuardia = this.datos[0].nombre;
-          this.duracionGuardias = this.datos[0].duracion;
-          this.nletradosGuardias = this.datos[0].letradosGuardia;
-        }
-        if (this.datos != undefined && this.datos.length == 0) {
-          this.mostrarVacio = true;
-          this.numeroGuardias = this.datos.length;
-        }
-        this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        this.progressSpinner = false;
-      }
-    );
+
+
+  navigateToInscripciones(){
+          sessionStorage.setItem("idTurno",this.idTurno);
+          this.router.navigate(["/inscripciones"]);
   }
-
-
-  validateHistorical() {
-    // if (this.datos != undefined && this.datos.length > 0) {
-
-    //   if (this.datos[0].fechabaja != null) {
-    //     this.historico = true;
-    //   } else {
-    //     this.historico = false;
-    //   }
-
-    //   this.persistenceService.setHistorico(this.historico);
-
-    // }
-  }
-
-  save() {
-    this.progressSpinner = true;
-    let url = "";
-
-    if (this.nuevo) {
-      url = "fichaAreas_createMaterias";
-      this.validatenewMateria(url);
-
-    } else {
-      url = "fichaAreas_updateMaterias";
-      this.body = new TurnosObject();
-      this.body.areasItems = this.updateAreas;
-      this.callSaveService(url);
-    }
-
-  }
-
-  callSaveService(url) {
-
-    this.sigaServices.post(url, this.body).subscribe(
-      data => {
-
-        if (this.nuevo) {
-          this.nuevo = false;
-          this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-        }
-
-        this.getColaOficio();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.selectedDatos = [];
-        this.updateAreas = [];
-        this.progressSpinner = false;
-      }
-    );
-
-  }
-
-  newMateria() {
-    this.nuevo = true;
-    this.seleccion = false;
-    this.table.sortOrder = 0;
-    this.table.sortField = '';
-    this.table.reset();
-    if (this.datosInicial != undefined && this.datosInicial != null) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
-    }
-
-    let materia = {
-      nombreMateria: "",
-      contenido: "",
-      jurisdicciones: "",
-      jurisdiccion: "",
-      idArea: this.idTurno,
-      areaNueva: true
-    };
-
-    if (this.datos.length == 0) {
-      this.datos.push(materia);
-    } else {
-      this.datos = [materia, ...this.datos];
-    }
-
-  }
-
-  validateArea(e) {
-
-    if (!this.nuevo) {
-      let datoId = this.datos.findIndex(item => item.idMateria === this.selectedDatos[0].idMateria);
-
-      let findDato = this.datos.filter(item => this.upperCasePipe.transform(item.nombreMateria) === this.upperCasePipe.transform(e.srcElement.value.trim()));
-
-      if (findDato.length > 1) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
-        this.progressSpinner = false;
-        this.datos[datoId].nombreMateria = this.selectedDatos[0].nombreMateria;
-      } else {
-        let dato = this.datos[datoId];
-        // this.editarMateria(dato);
-      }
-
-      // this.seleccion = false;
-    }
-  }
-
-  validatenewMateria(url) {
-    let materia = this.datos[0];
-
-    let findDato = this.datosInicial.find(item => item.idArea === materia.idArea && item.nombreMateria === materia.nombreMateria);
-
-    let jurisdiccionesString = "";
-    for (let i in materia.jurisdiccionesReal) {
-      jurisdiccionesString += ";" + materia.jurisdiccionesReal[i].value;
-    }
-
-    materia.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
-    materia.jurisdicciones = "";
-
-    if (findDato != undefined) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.censo.nombreExiste"));
-      this.progressSpinner = false;
-    } else {
-      this.body = materia;
-      this.callSaveService(url);
-    }
-
-  }
-
-  disabledSave() {
-
-    if (this.selectMultiple || this.selectAll) {
-      return true;
-    }
-    if (this.nuevo) {
-      if (this.datos[0].nombreMateria != undefined && this.datos[0].nombreMateria != "") {
-        return false;
-      } else {
-        return true;
-      }
-
-    } else {
-
-      if ((this.updateAreas != undefined && this.updateAreas.length > 0)) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
-
-  editAreas(evento) {
-
-    if (this.nuevo) {
-      this.seleccion = false;
-    } else {
-
-      if (!this.selectAll && !this.selectMultiple) {
-
-        this.datos.forEach(element => {
-          element.editable = false;
-          element.overlayVisible = false;
-        });
-
-        evento.data.editable = true;
-
-        this.selectedDatos = [];
-        this.selectedDatos.push(evento.data);
-
-        this.seleccion = true;
-
-      }
-
-    }
-  }
-
-  editarMateria(dato) {
-
-    let findDato = this.datosInicial.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-
-    if (findDato != undefined) {
-      if ((dato.nombreMateria != findDato.nombreMateria) || (dato.contenido != findDato.contenido)) {
-
-        let findUpdate = this.updateAreas.find(item => item.idMateria == dato.idMateria && item.idArea == dato.idArea);
-
-        if (findUpdate == undefined) {
-          let dato2 = dato;
-          dato2.jurisdicciones = "";
-          this.updateAreas.push(dato2);
-        }
-      }
-    }
-
-  }
-
-  editJurisdicciones(dato) {
-
-    if (!this.nuevo) {
-
-      // if (dato.jurisdicciones.length == 0) {
-      //   this.showMessage("info", "Informacion", "Debe seleccionar al menos un partido judicial");
-      //   let findUpdate = this.updateZonas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-
-      //   if (findUpdate != undefined) {
-      //     this.updateZonas.splice(findUpdate);
-      //   }
-
-      // } else {
-      let findUpdate = this.updateAreas.find(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-
-      if (findUpdate == undefined) {
-        let dato2 = dato;
-        let jurisdiccionesString = "";
-        for (let i in dato2.jurisdiccionesReal) {
-          jurisdiccionesString += ";" + dato2.jurisdiccionesReal[i].value;
-        }
-
-        dato2.jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
-        dato2.jurisdicciones = "";
-        this.updateAreas.push(dato2);
-      } else {
-        let updateFind = this.updateAreas.findIndex(item => item.idArea === dato.idArea && item.idMateria === dato.idMateria);
-        let jurisdiccionesString = "";
-        for (let i in findUpdate.jurisdiccionesReal) {
-          jurisdiccionesString += ";" + dato.jurisdiccionesReal[i].value;
-        }
-        this.updateAreas[updateFind].jurisdiccionesReal = dato.jurisdiccionesReal;
-        this.updateAreas[updateFind].jurisdiccion = jurisdiccionesString.substring(1, jurisdiccionesString.length);
-        this.updateAreas[updateFind].jurisdicciones = "";
-      }
-      // }
-    } else {
-      this.selectedDatos = [];
-    }
-  }
-
-  delete(selectedDatos) {
-    this.body = new GuardiaObject();
-    this.body.guardiaItems = this.selectedDatos;
-
-    this.sigaServices.post("turnos_eliminateGuardia", this.body).subscribe(
-      data => {
-
-        this.nuevo = false;
-        this.selectedDatos = [];
-        this.getColaOficio();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          if (JSON.parse(err.error).error.description == "areasmaterias.materias.ficha.materiaEnUso") {
-            this.showMessage("warn", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          }
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        let send = {
-          buscar: true,
-        }
-        this.sigaServices.notifyupdateCombo(send);
-        this.progressSpinner = false;
-        this.selectAll = false;
-      }
-    );
-  }
-
-  rest() {
-    if (this.datosInicial != undefined) {
-      this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-    } else {
-      this.datos = [];
-    }
-
-    this.selectedDatos = [];
-    this.updateAreas = [];
-    this.nuevo = false;
-    this.table.sortOrder = 0;
-    this.table.sortField = '';
-    this.table.reset();
-  }
+  
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

@@ -11,8 +11,8 @@
   <app-tarjeta-resumen-fija *ngIf="permisosTarjetaResumen" chincheta="true" icono="far fa-file-alt"
     titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datos2"></app-tarjeta-resumen-fija>
 
-  <app-tarjeta-cola-fija *ngIf="permisosTarjeta" chincheta="true" icono="far fa-file-alt"
-    titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datos3"></app-tarjeta-cola-fija>
+  <app-tarjeta-cola-fija *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt"
+    titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola-fija>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-tarjeta-letrado [datos]="datos" (datosSend2)="datosSend2($event)" (datosSend)="datosSend($event)"
       (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'"></app-tarjeta-letrado>

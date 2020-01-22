@@ -124,7 +124,7 @@ export class TarjetaGestionInscripcion implements OnInit {
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
-    this.commonsService.checkAcceso(procesos_oficio.tarjetaListadoInscripciones)
+    this.commonsService.checkAcceso(procesos_oficio.tarjetaGestionInscripcion)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
         if (this.permisosTarjeta != true) {

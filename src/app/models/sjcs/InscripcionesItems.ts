@@ -46,5 +46,8 @@ export class InscripcionesItems {
   orden:String;
   observacionestabla:String;
   fechatabla:Date;
+  nifcif:String;
+  telefono:String;
+  movil:String;
   constructor() { }
 }

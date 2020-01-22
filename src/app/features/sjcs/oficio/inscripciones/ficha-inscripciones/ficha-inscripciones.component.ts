@@ -42,7 +42,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	disabledSolicitarBaja: boolean = false;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
-	permisosTarjeta: boolean = true;
+	permisosTarjetaCola: boolean = true;
 
 	constructor(private translateService: TranslateService, private route: ActivatedRoute, private sigaServices: SigaServices, private datepipe: DatePipe, private location: Location, private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
@@ -64,7 +64,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.permisos = false;
 		}
 
-		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
+		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumenInscripciones)
 			.then(respuesta => {
 				this.permisosTarjetaResumen = respuesta;
 				if (this.permisosTarjetaResumen != true) {
@@ -74,13 +74,13 @@ export class FichaInscripcionesComponent implements OnInit {
 				}
 			}).catch(error => console.error(error));
 
-		this.commonsService.checkAcceso(procesos_oficio.tarjetaPosicionCola)
+		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumenCola)
 			.then(respuesta => {
-				this.permisosTarjeta = respuesta;
-				if (this.permisosTarjeta != true) {
-					this.permisosTarjeta = false;
+				this.permisosTarjetaCola = respuesta;
+				if (this.permisosTarjetaCola != true) {
+					this.permisosTarjetaCola = false;
 				} else {
-					this.permisosTarjeta = true;
+					this.permisosTarjetaCola = true;
 				}
 			}).catch(error => console.error(error));
 		// this.route.queryParams

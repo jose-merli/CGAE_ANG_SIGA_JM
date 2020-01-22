@@ -51,7 +51,7 @@ export class FiltrosInscripciones implements OnInit {
     private translateService: TranslateService,
     private persistenceService: PersistenceService) { }
 
-  ngOnInit() {
+  ngOnInit() {   
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -73,6 +73,14 @@ export class FiltrosInscripciones implements OnInit {
       },
       err => {
         console.log(err);
+      },()=>{
+        if (sessionStorage.getItem("idTurno") != undefined) {
+          this.filtros.idturno = JSON.parse(
+            sessionStorage.getItem("idTurno")
+          );
+          this.isBuscar();
+          sessionStorage.setItem("idTurno",undefined);
+        }
       }
     );
 

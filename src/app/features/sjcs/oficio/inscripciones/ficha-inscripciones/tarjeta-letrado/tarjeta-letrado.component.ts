@@ -115,7 +115,7 @@ export class TarjetaLetradoComponent implements OnInit {
     this.openFicha = !this.openFicha;
   }
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+    this.commonsService.checkAcceso(procesos_oficio.tarjetaLetrado)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
         if (this.permisosTarjeta != true) {
@@ -271,13 +271,12 @@ export class TarjetaLetradoComponent implements OnInit {
           ]
           this.datosSend2.emit(this.datos3);
         }else{
-          this.datos3 = [
-            {
-              label:"Sin información disponible",
-              value:""
-            }
-          ]
-          this.datosSend2.emit(this.datos3);
+          // this.datos3 = [
+          //   {
+          //     value:"Sin información disponible",
+          //   }
+          // ]
+          // this.datosSend2.emit(this.datos3);
         }
       }
     );
