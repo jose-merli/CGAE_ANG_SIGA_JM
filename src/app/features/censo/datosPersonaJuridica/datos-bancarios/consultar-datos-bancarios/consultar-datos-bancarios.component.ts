@@ -220,7 +220,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.idPersona = this.usuarioBody.idPersona;
     }
     this.idCuenta = sessionStorage.getItem("idCuenta");
+    sessionStorage.removeItem("idCuenta");
+
     this.bic = sessionStorage.getItem("bic");
+    sessionStorage.removeItem("bic");
 
     this.registroEditable = sessionStorage.getItem("editar");
 
@@ -228,7 +231,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       // editar
       this.cargarModoEdicion();
     } else {
-      sessionStorage.removeItem("bic");
       // nuevo
       this.cargarModoNuevoRegistro();
     }

@@ -1088,36 +1088,47 @@ export class FichaColegialComponent implements OnInit {
 
 
   arreglarFecha(fecha) {
-    let jsonDate = JSON.stringify(fecha);
-    let rawDate = jsonDate.slice(1, -1);
-    if (rawDate.length < 14) {
-      let splitDate = rawDate.split("/");
-      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
-      fecha = new Date((arrayDate += "T00:00:00.001Z"));
-    } else {
-      fecha = new Date(rawDate);
-    }
 
+    if(fecha != undefined && fecha != null){
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(rawDate);
+      }
+    }
     return fecha;
   }
 
   arreglarFechaRegtel(fecha) {
-    let jsonDate = JSON.stringify(fecha);
-    let rawDate = jsonDate.slice(3, -17);
-    let splitDate = rawDate.split("-");
-    let arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
-    // fecha = new Date((arrayDate += "T00:00:00.001Z"));
-    // fecha = new Date(rawDate);
+    let arrayDate;
+
+    if(fecha != undefined && fecha != null){
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(3, -17);
+      let splitDate = rawDate.split("-");
+      arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+      // fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      // fecha = new Date(rawDate);
+    }
     return arrayDate;
   }
 
   arreglarFechaColegial(fecha) {
+    let arrayDate;
+
+    if(fecha != undefined && fecha != null){
     let jsonDate = JSON.stringify(fecha);
     let rawDate = jsonDate.slice(3, -15);
     let splitDate = rawDate.split("-");
-    let arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+    arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
     // fecha = new Date((arrayDate += "T00:00:00.001Z"));
     // fecha = new Date(rawDate);
+    }
+
     return arrayDate;
   }
 
@@ -2463,7 +2474,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   itemAInscrito() {
-    if (this.colegialesBody.situacionResidente != undefined) {
+    if (this.colegialesBody.situacionResidente != undefined && this.colegialesBody.comunitario != undefined) {
       this.inscritoSeleccionado = this.colegialesBody.comunitario.toString();
     }
 
@@ -2599,18 +2610,19 @@ export class FichaColegialComponent implements OnInit {
   }
 
   pasarFechas() {
-    this.colegialesBody.incorporacionDate = this.arreglarFecha(
-      this.colegialesBody.incorporacion
-    );
-    this.colegialesBody.fechapresentacionDate = this.arreglarFecha(
-      this.colegialesBody.fechapresentacion
-    );
-    this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(
-      this.colegialesBody.fechaTitulacion
-    );
-    this.colegialesBody.fechaJuraDate = this.arreglarFecha(
-      this.colegialesBody.fechaJura
-    );
+    
+      this.colegialesBody.incorporacionDate = this.arreglarFecha(
+        this.colegialesBody.incorporacion
+      );
+      this.colegialesBody.fechapresentacionDate = this.arreglarFecha(
+        this.colegialesBody.fechapresentacion
+      );
+      this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(
+        this.colegialesBody.fechaTitulacion
+      );
+      this.colegialesBody.fechaJuraDate = this.arreglarFecha(
+        this.colegialesBody.fechaJura
+      );
 
     // Tabla de colegiales
     if (this.isCrearColegial == true) {

@@ -70,18 +70,19 @@ export class PlantillasEnvioComponent implements OnInit {
 		this.getTipoEnvios();
 		this.getInstitucion();
 
+		if (sessionStorage.getItem('filtrosPlantillas') != null) {
+			this.bodySearch = JSON.parse(sessionStorage.getItem('filtrosPlantillas'));
+			if (this.bodySearch != null && (this.bodySearch.nombre != undefined || this.bodySearch.idTipoEnvios)) {
+				this.buscar();
+			} else {
+				this.bodySearch = new PlantillaEnvioSearchItem();
+			}
+		}
 		// this.comboTipoEnvio = [{ label: '', value: '' }, { label: 'SMS', value: '1' }, { label: 'email', value: '2' }, { label: 'carta', value: '3' }]
 	}
 
 	ngAfterViewInit() {
-		if (sessionStorage.getItem('filtrosPlantillas') != null) {
-			this.bodySearch = JSON.parse(sessionStorage.getItem('filtrosPlantillas'));
-			if (this.bodySearch == null) {
-				this.bodySearch = new PlantillaEnvioSearchItem();
-			} else {
-				this.buscar();
-			}
-		}
+	
 	}
 
 	getInstitucion() {

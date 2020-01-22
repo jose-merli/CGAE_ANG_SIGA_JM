@@ -248,15 +248,32 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
       // orden es, fallecido, colegiado, de baja, no colegiado
       this.getSituacion(id);
-      sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
 
-      // if (id[0].situacion == 30) {
-      //   sessionStorage.setItem("disabledAction", "true");
-      // } else {
-      sessionStorage.setItem("disabledAction", "false");
-      // }
+      this.sigaServices
+        .post("busquedaColegiados_searchColegiadoFicha", id[0])
+        .subscribe(
+          data => {
+            // this.colegiadoItem = datosColegiadosItem = new DatosColegiadosItem();
+            let colegiadoItem = JSON.parse(data.body);
+            sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
 
-      this.router.navigate(["/fichaColegial"]);
+            // if (id[0].situacion == 30) {
+            //   sessionStorage.setItem("disabledAction", "true");
+            // } else {
+            sessionStorage.setItem("disabledAction", "false");
+            // }
+
+            this.router.navigate(["/fichaColegial"]);
+          },
+          err => {
+            console.log(err);
+          },
+
+      );
+
+
+
+
     } else {
       this.actualizaSeleccionados(this.selectedDatos);
     }

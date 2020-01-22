@@ -229,7 +229,8 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
         this.direccion.idPersona = this.body.idPersona;
       }
       this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-      if (this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
+      if (this.body != undefined && this.body != null && 
+        this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
         if (
           sessionStorage.getItem("soloLectura") != null &&
           sessionStorage.getItem("soloLectura") != undefined &&

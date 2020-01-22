@@ -9,6 +9,7 @@ export class DatosGeneralesPlantillaItem {
   cuerpo: String;
   idPlantillaEnvios: String;
   idInstitucionDir: String;
+  claseComunicacion:string;
 
   constructor() { }
 }

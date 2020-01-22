@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { DatosGeneralesPlantillaItem } from "../../../../../models/DatosGeneralesPlantillaItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -22,6 +22,8 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   nuevo: boolean = false;
   soloLectura: boolean = false;
   apiKey: string = "";
+
+  @Input() claseComunicacion;
 
   institucionActual: any;
   editorConfig: any = {
@@ -92,7 +94,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       this.institucionActual = n.value;
 
       this.bodyPlantilla = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-      if (this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
+      if (this.bodyPlantilla != undefined && this.bodyPlantilla != null && this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
         if (
           sessionStorage.getItem("soloLectura") != null &&
           sessionStorage.getItem("soloLectura") != undefined &&
@@ -151,6 +153,13 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
       console.log(this.body);
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+      if(this.body.claseComunicacion != undefined){
+        this.claseComunicacion = this.body.claseComunicacion;
+      }else{
+        this.claseComunicacion = "";
+      }
+
       this.editar = true;
     } else {
       this.editar = false;

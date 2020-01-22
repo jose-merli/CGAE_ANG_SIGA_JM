@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter } from "@angular/core";
 import { DataTable } from "primeng/datatable";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
@@ -43,8 +43,10 @@ export class ConsultasPlantillasComponent implements OnInit {
 	consultaBuscada;
 	// resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
 	resultadosConsultas = "formacion.busquedaCursos.controlFiltros.minimoCaracteres";
+	claseComunicacion;
 
 	@ViewChild("table") table: DataTable;
+	@Output() emitClaseComunicacion = new EventEmitter<String>(); 
 	selectedDatos;
 
 	fichasPosibles = [
@@ -180,7 +182,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 			this.institucionActual = n.value;
 
 			this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-			if (this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
+			if (this.body != undefined && this.body != null && this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
 				if (
 					sessionStorage.getItem("soloLectura") != null &&
 					sessionStorage.getItem("soloLectura") != undefined &&
@@ -246,6 +248,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 			idConsulta: "",
 			nombre: "",
 			finalidad: "",
+			idClaseComunicacion: "",
 			asociada: false
 		};
 
@@ -359,6 +362,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 				comboConsultas.forEach(element => {
 					if (continua && element.value == id) {
 						dato.idInstitucion = element.idInstitucion;
+						dato.idClaseComunicacion = element.idClaseComunicacion;
+						dato.claseComunicacion = element.claseComunicacion;
 						continua = false;
 					}
 				});
@@ -372,7 +377,8 @@ export class ConsultasPlantillasComponent implements OnInit {
 			idConsulta: this.datos[0].idConsulta,
 			idTipoEnvios: this.body.idTipoEnvios,
 			idPlantillaEnvios: this.body.idPlantillaEnvios,
-			idInstitucion: this.datos[0].idInstitucion
+			idInstitucion: this.datos[0].idInstitucion,
+			idClaseComunicacion: this.datos[0].idClaseComunicacion
 		};
 
 		this.sigaServices
@@ -385,15 +391,27 @@ export class ConsultasPlantillasComponent implements OnInit {
 							"informesycomunicaciones.plantillasenvio.ficha.correctAsociar"
 						)
 					);
+
+					if(this.datos[0].claseComunicacion != undefined && this.datos[0].claseComunicacion != null){
+						this.claseComunicacion = this.datos[0].claseComunicacion
+						this.emitClaseComunicacion.emit(this.claseComunicacion);
+					}
+
 				},
 				err => {
 					console.log(err);
 					this.progressSpinner = false;
-					this.showFail(
-						this.translateService.instant(
-							"informesycomunicaciones.plantillasenvio.ficha.errorAsociar"
-						)
-					);
+
+					if (err.error != undefined && err.error != undefined && JSON.parse(err.error).message != undefined) {
+						this.showFail(this.translateService.instant(JSON.parse(err.error).message));
+					} else {
+						this.showFail(
+							this.translateService.instant(
+								"informesycomunicaciones.plantillasenvio.ficha.errorAsociar"
+							)
+						);
+					}
+
 				},
 				() => {
 					this.getResultados();
@@ -457,6 +475,12 @@ export class ConsultasPlantillasComponent implements OnInit {
 							"informesycomunicaciones.plantillasenvio.ficha.correctDesasociar"
 						)
 					);
+
+					//Desde el back viene indicado en la descripcion si es una plantilla con clase o sin clase, si viene a null significa que no tiene clase
+					if(JSON.parse(data.body).description == undefined || JSON.parse(data.body).description == null){
+						this.emitClaseComunicacion.emit(undefined);
+					}
+					
 
 					this.selectMultiple = false;
 				},

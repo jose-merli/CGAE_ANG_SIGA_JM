@@ -180,6 +180,7 @@ export class SigaServices {
     busquedaColegiados_provincias: "busquedaColegiados/provincias",
     busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
     busquedaColegiados_searchColegiado: "/busquedaColegiado/searchColegiado",
+    busquedaColegiados_searchColegiadoFicha: "/busquedaColegiado/searchColegiadoFicha",
     busquedaColegiado_etiquetas: "/busquedaColegiado/etiquetas",
     busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
     busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
@@ -669,8 +670,8 @@ export class SigaServices {
     modelos_detalle_borrarPlantilla: "modelos/detalle/borrarPlantillaEnvio",
     modelos_detalle_guardarPlantilla: "modelos/detalle/guardarPlantillaEnvio",
     modelos_colegio: "modelos/colegiosModelo",
-    modelos_detalle_plantillasComunicacion:
-      "modelos/detalle/plantillasComunicacion",
+    modelos_detalle_plantillasComunicacion:"modelos/detalle/plantillasComunicacion",
+    modelos_detalle_plantillasComunicacionByIdClase:"modelos/detalle/plantillasComunicacionByIdClase",
     modelos_detalle_tipoEnvioPlantilla: "modelos/detalle/tipoEnvioPlantilla",
 
     plantillasEnvio_consultas: "plantillasEnvio/consultasPlantillas",

@@ -11,6 +11,7 @@ export class DetallePlantillaEnvioComponent implements OnInit {
   idPlantilla: string;
   fichasPosibles: any[];
   filtrosPlantillas;
+  claseComunicacion;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -40,6 +41,15 @@ export class DetallePlantillaEnvioComponent implements OnInit {
         activa: false
       }
     ];
+  }
+  
+  emitClaseComunicacion(event){
+
+    if(event != undefined){
+      this.claseComunicacion = event;
+    }else{
+      this.claseComunicacion = "";
+    }
   }
 
   backTo() {
