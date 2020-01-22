@@ -20,8 +20,12 @@ export class DatosTurnoGuardiasComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-    if (this.modoEdicion)
-      this.getResumen();
+    this.sigaServices.datosRedy$.subscribe(
+      data => {
+        this.modoEdicion = true;
+        this.getResumen();
+
+      });
   }
 
   getResumen() {

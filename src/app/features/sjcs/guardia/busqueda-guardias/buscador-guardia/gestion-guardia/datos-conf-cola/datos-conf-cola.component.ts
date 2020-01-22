@@ -301,7 +301,6 @@ export class DatosConfColaComponent implements OnInit {
   save() {
     if (this.permisoEscritura && !this.historico) {
       let montag = [0, 0, 0, 0, 0];
-      console.log(this.pesosSeleccionados);
       this.pesosSeleccionados.forEach(element => {
         if (element.por_filas == "Apellidos y nombre") {
           montag[0] = element.numero;

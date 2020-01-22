@@ -109,6 +109,7 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   obtenerPermisos() {
+    this.progressSpinner = true
     this.commonService.checkAcceso(procesos_guardia.resumen)
       .then(respuesta => {
 
@@ -288,7 +289,7 @@ export class GestionGuardiaComponent implements OnInit {
         this.permisoEscrituraDatosGenerales = respuesta;
 
         this.persistenceService.setPermisos(this.permisoEscrituraDatosGenerales);
-
+        this.progressSpinner = false;
         // if (this.permisoEscrituraDatosGenerales == undefined) {
         //   sessionStorage.setItem("codError", "403");
         //   sessionStorage.setItem(
@@ -299,7 +300,10 @@ export class GestionGuardiaComponent implements OnInit {
         // }
 
       }
-      ).catch(error => console.error(error));
+      ).catch(error => {
+        console.error(error);
+        this.progressSpinner = false
+      });
   }
 
 }

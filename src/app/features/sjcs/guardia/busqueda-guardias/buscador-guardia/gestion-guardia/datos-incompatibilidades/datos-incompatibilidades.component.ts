@@ -100,10 +100,11 @@ export class DatosIncompatibilidadesComponent implements OnInit {
     ];
   }
   onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    // this.changeDetectorRef.detectChanges();
-
-    if (this.tabla) this.tabla.reset();
+    if (this.tabla) {
+      this.selectedItem = event.value;
+      this.changeDetectorRef.detectChanges();
+      this.tabla.reset();
+    }
   }
 
   getDatosIncompatibilidades() {

@@ -90,7 +90,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
           if (this.datos[this.datos.length - 1].numeroGrupo == "1") {
             this.datos[0].numeroGrupo = "2";
             if (this.datos[1].numeroGrupo = "2")
-              this.datos[1].numeroGrupo = "3"
+              this.datos[1].numeroGrupo = "3";
           } else {
             this.datos[0].numeroGrupo = "1";
             if (this.datos[1].numeroGrupo == "1")

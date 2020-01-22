@@ -85,7 +85,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   disabledSave() {
     if (this.permisoEscritura)
       if (!this.historico && (this.body.nombre && this.body.nombre.trim())
-        && (this.body.descripcion && this.body.descripcion.trim())
+        && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
         && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
         return false;
       } else return true;

@@ -40,7 +40,12 @@ export class DatosBaremosComponent implements OnInit {
 
   ngOnInit() {
 
-    if (this.modoEdicion) this.getBaremos()
+    this.sigaServices.datosRedy$.subscribe(
+      data => {
+        this.modoEdicion = true;
+        this.getBaremos();
+
+      });
   }
 
   setItalic(dato) {

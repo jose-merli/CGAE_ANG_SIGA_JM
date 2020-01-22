@@ -61,18 +61,21 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.idPersonaUltimo = data.idPersonaUltimo;
         this.body.idGrupoUltimo = data.idGrupoUltimo;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
+        this.body.letradosIns = new Date();
+
         if (this.body.porGrupos) {
           this.body.ordenacionManual = true;
           this.editable = true;
           this.botActivos = true;
+
+          this.getColaGuardia();
+
         }
         else {
           this.body.ordenacionManual = false;
           this.isOrdenacionManual();
         }
 
-        this.body.letradosIns = new Date();
-        this.getColaGuardia();
       });
 
   }
@@ -90,13 +93,22 @@ export class DatosColaGuardiaComponent implements OnInit {
   save() {
     if (this.permisoEscritura && !this.historico) {
       this.progressSpinner = true;
-
+      this.updateInscripciones = this.updateInscripciones.filter(it => {
+        if (it.ordenCola < 1 && (!it.orden || !it.numeroGrupo))
+          return false;
+        return true;    //Aqui quitamos todas las inscripciones duplicadas a las que le falten datos.
+      });               //Estas inscripciones simplemente no se guardaran.
+      this.datos = this.datos.filter(it => {
+        if (it.ordenCola < 1 && (!it.orden || !it.numeroGrupo))
+          return false;
+        return true;
+      });
       if (!this.body.porGrupos && this.body.ordenacionManual) {
         let repes = []
         this.datos.forEach(it => {
           if (repes.length <= 1)
             repes = this.datos.filter(element => {
-              if (element.numeroGrupo == it.numeroGrupo)
+              if (element.numeroGrupo == it.numeroGrupo && it.numeroGrupo)
                 return true;
               return false;
             });
@@ -119,26 +131,27 @@ export class DatosColaGuardiaComponent implements OnInit {
 
 
         this.datos.forEach(it => {
-          if (mismoGrupo.length <= 1 && repes.length <= 1) {
+          if (mismoGrupo.length <= 1 && repes.length < 1) {
             if (!it.numeroGrupo && it.orden || it.numeroGrupo && !it.orden) {
               mismoGrupo.push("Habia un campo vacio");
               mismoGrupo.push("Habia un campo vacio");
             } else {
               mismoGrupo = this.datos.filter(element => {
-                if (element.numeroGrupo == it.numeroGrupo && element.idPersona == it.idPersona)
+                if (element.numeroGrupo == it.numeroGrupo && element.idPersona == it.idPersona && it.numeroGrupo)
                   return true;
                 return false;
               });
               repes = this.datos.filter(element => {
                 if (element.numeroGrupo == it.numeroGrupo && element.orden == it.orden &&
-                  element.numeroGrupo && it.numeroGrupo && element.idGrupoGuardiaColegiado != it.idGrupoGuardiaColegiado)
+                  element.numeroGrupo && it.numeroGrupo && element.idGrupoGuardiaColegiado != it.idGrupoGuardiaColegiado
+                  && it.numeroGrupo)
                   return true;
                 return false;
               })
             }
           }
         });
-        if (mismoGrupo.length > 1 || repes.length > 1)
+        if (mismoGrupo.length > 1 || repes.length >= 1)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
         else {
           if (grupoUltimo.length > 0) {
@@ -159,37 +172,41 @@ export class DatosColaGuardiaComponent implements OnInit {
     }
   }
   callSaveService() {
-    this.progressSpinner = true;
-    this.sigaService.post(
-      "gestionGuardias_guardarCola", this.updateInscripciones).subscribe(
-        data => {
-          this.getColaGuardia();
-          this.updateInscripciones = [];
-          this.progressSpinner = false;
+    if (this.updateInscripciones && this.updateInscripciones.length > 0) {
+      this.progressSpinner = true;
+      this.sigaService.post(
+        "gestionGuardias_guardarCola", this.updateInscripciones).subscribe(
+          data => {
+            this.getColaGuardia();
+            this.updateInscripciones = [];
+            this.progressSpinner = false;
 
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
 
-        }
-      );
+          }
+        );
+    }
   }
 
   changeGrupo(dato) {
+    let findDato;
+    if (dato.ordenCola > 0) {
+      findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona &&
+        item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+        dato.ordenCola == item.ordenCola);
 
-    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
-      dato.ordenCola == dato.ordenCola);
-    if (dato.descripcion != undefined)
-      dato.numeroGrupo = dato.numeroGrupo;
-    if (findDato != undefined) {
-      if (dato.numeroGrupo != findDato.numeroGrupo) {
+      if (findDato != undefined) {
+        if (dato.numeroGrupo != findDato.numeroGrupo) {
 
-        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
-          dato.ordenCola == dato.ordenCola);
+          let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+            dato.ordenCola == item.ordenCola);
 
-        if (findUpdate == undefined) {
-          this.updateInscripciones.push(dato);
+          if (findUpdate == undefined) {
+            this.updateInscripciones.push(dato);
+          }
         }
       }
     }
@@ -197,19 +214,20 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   changeOrden(dato) {
+    let findDato;
+    if (dato.ordenCola > 0) {
+      findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+        dato.ordenCola == item.ordenCola);
 
-    let findDato = this.datosInicial.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
-      dato.ordenCola == dato.ordenCola);
-    if (dato.orden != undefined)
-      dato.orden = dato.orden;
-    if (findDato != undefined) {
-      if (dato.orden != findDato.orden) {
+      if (findDato != undefined) {
+        if (dato.orden != findDato.orden) {
 
-        let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
-          dato.ordenCola == dato.ordenCola);
+          let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+            dato.ordenCola == item.ordenCola);
 
-        if (findUpdate == undefined) {
-          this.updateInscripciones.push(dato);
+          if (findUpdate == undefined) {
+            this.updateInscripciones.push(dato);
+          }
         }
       }
     }
@@ -264,7 +282,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     this.getColaGuardia();
   }
   ultimo(selected) {
-    if (this.permisoEscritura && !this.historico && selected) {
+    if (this.permisoEscritura && !this.historico && selected.ordenCola > 0) {
       this.progressSpinner = true;
       this.body.idPersonaUltimo = selected.idPersona;
       this.body.idGrupoUltimo = selected.idGrupoUltimo;
@@ -312,10 +330,17 @@ export class DatosColaGuardiaComponent implements OnInit {
             this.botActivos = true;
             this.editable = true;
           }
+
+          this.getColaGuardia();
+
         });
   }
 
   duplicar() {
+    this.tabla.tabla.sortOrder = 0;
+    this.tabla.tabla.sortField = '';
+    this.tabla.tabla.reset();
+
     this.datos = [JSON.parse(JSON.stringify(this.tabla.selectedDatos)), ...this.datos];
     this.datos[0].numeroGrupo = "";
     this.datos[0].orden = "";
@@ -326,6 +351,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         menorOrdenCola = +element.ordenCola - 1;
     });
     this.datos[0].ordenCola = menorOrdenCola;
+    this.updateInscripciones.push(this.datos[0]);
     this.botActivos = false;
   }
 
