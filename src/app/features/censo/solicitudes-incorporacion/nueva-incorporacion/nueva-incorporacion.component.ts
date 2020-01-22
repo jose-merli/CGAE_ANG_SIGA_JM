@@ -354,16 +354,16 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.sigaServices.get("fichaPersona_tipoIdentificacionCombo").subscribe(
       result => {
         this.tipoIdentificacion = result.combooItems;
-        // 1: {label: "CIF", value: "20"}
-        // 2: {label: "NIE", value: "40"}
-        // 3: {label: "NIF", value: "10"}
-        // 4: {label: "Otro", value: "50"}
-        // 5: {label: "Pasaporte", value: "30"}
+        // 0: {label: "CIF", value: "20"}
+        // 1: {label: "NIE", value: "40"}
+        // 2: {label: "NIF", value: "10"}
+        // 3: {label: "Otro", value: "50"}
+        // 4: {label: "Pasaporte", value: "30"}
         this.arregloTildesCombo(this.tipoIdentificacion);
-        this.tipoIdentificacion[5].label =
-          this.tipoIdentificacion[5].label +
+        this.tipoIdentificacion[4].label =
+          this.tipoIdentificacion[4].label +
           " / " +
-          this.tipoIdentificacion[4].label;
+          this.tipoIdentificacion[3].label;
       },
       error => {
         console.log(error);
