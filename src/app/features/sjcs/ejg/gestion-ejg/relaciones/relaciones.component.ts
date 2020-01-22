@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
 
 @Component({
   selector: 'app-relaciones',
@@ -26,7 +27,7 @@ export class RelacionesComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
-  relaciones: EJGItem;
+  relaciones: EstadoEJGItem; //cambiar item
   nRelaciones;
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService, ) { }
@@ -44,20 +45,21 @@ export class RelacionesComponent implements OnInit {
     this.getCols();
   }
   getRelaciones(selected) {
-    this.relaciones = this.body;
-    // this.progressSpinner = true;
-    // this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
-    //   n => {
-    //     this.expedientesEcon = JSON.parse(n.body).expEconItems;
-    //     this.nExpedientes = this.expedientesEcon.length;
-    //     // this.persistenceService.setFiltrosAux(this.expedientesEcon);
-    //     // this.router.navigate(['/gestionEjg']);
-    //     this.progressSpinner = false;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   }
-    // );
+    //ojo esta a estados para probar a espera de back relaciones
+    this.relaciones = this.persistenceService.getDatos();
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
+      n => {
+        this.relaciones = JSON.parse(n.body).estadoEjgItems;
+        // this.nExpedientes = this.expedientesEcon.length;
+        // this.persistenceService.setFiltrosAux(this.expedientesEcon);
+        // this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
@@ -79,13 +81,12 @@ export class RelacionesComponent implements OnInit {
   }
   getCols() {
     this.cols = [
-      { field: "SJCS", header: "menu.justiciaGratuita", width: "40%" },
-      { field: "annioNum", header: "justiciaGratuita.ejg.datosGenerales.annioNum", width: "10%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "10%" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
       { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "letrado", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "10%" },
-      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesado", width: "10%" },
-      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "10%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
+      { field: "interesado", header: "justiciaGratuita.justiciables.literal.interesados", width: "20%" },
+      { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
     ];
     this.cols.forEach(it => this.buscadores.push(""));
 
@@ -122,11 +123,7 @@ export class RelacionesComponent implements OnInit {
       }
     }
   }
-  onChangeRowsPerPages(event) {
-    this.selectedItem = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
-  }
+
   onChangeSelectAll() {
     if (this.permisoEscritura) {
       if (!this.historico) {
@@ -159,18 +156,6 @@ export class RelacionesComponent implements OnInit {
     this.seleccion = false;
   }
 
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
-
-  clear() {
-    this.msgs = [];
-  }
   confirmDelete() {
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
@@ -205,4 +190,22 @@ export class RelacionesComponent implements OnInit {
     this.openFicha = !this.openFicha;
   }
 
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 }

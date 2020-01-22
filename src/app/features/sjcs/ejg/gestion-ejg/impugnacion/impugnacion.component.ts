@@ -22,49 +22,78 @@ export class ImpugnacionComponent implements OnInit {
   msgs = [];
   [x: string]: any;
   nuevo;
-  comboSentidoAuto = [];
-  comboAutoRes = [];
+  comboFundamentoImpug = [];
+  comboImpugnacion = [];
+  checkmodificable: boolean = false;
+  checkmodificableRT: boolean = false;
+  impugnacionDesc: String;
+  fundImpugnacionDesc: String;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
    // this.getComboSentidoAuto();
-   // this.getComboAutoRes();
     if (this.persistenceService.getDatos()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.item = this.persistenceService.getDatos();
       this.impugnacion = this.persistenceService.getDatos();
-
-     // this.getImpugnacion(this.item);
+      if (this.impugnacion.fechaAuto != undefined)
+        this.impugnacion.fechaAuto = new Date(this.impugnacion.fechaAuto);
+      if (this.impugnacion.fechaPublicacion != undefined)
+        this.impugnacion.fechaPublicacion = new Date(this.impugnacion.fechaPublicacion);
     } else {
     this.nuevo = true;
     this.modoEdicion = false;
     this.impugnacion = new EJGItem();
   }
+  this.getComboImpugnacion();
+  this.getComboFundamentoImpug();
 }
-getComboSentidoAuto() {
-  this.sigaServices.get("busquedaFundamentosCalificacion_comboSentidoAuto").subscribe(
+
+getComboImpugnacion() {
+  this.sigaServices.get("filtrosejg_comboImpugnacion").subscribe(
     n => {
-      this.comboSentidoAuto = n.combooItems;
-      this.commonServices.arregloTildesCombo(this.comboSentidoAuto);
+      this.comboImpugnacion = n.combooItems;
+      this.commonServices.arregloTildesCombo(this.comboImpugnacion);
+      let impug = this.comboImpugnacion.find(
+        item => item.value == this.impugnacion.autoResolutorio
+      );
+      if(impug != undefined)
+        this.impugnacionDesc = impug.label;
     },
     err => {
       console.log(err);
     }
   );
 }
-getComboAutoRes() {
-  this.sigaServices.get("busquedaFundamentosCalificacion_comboAutoRes").subscribe(
+onChangeImpugnacion() {
+  this.comboFundamentoImpug = [];
+  if (this.impugnacion.autoResolutorio != undefined) {
+    this.isDisabledFundamentoImpug = false;
+    this.getComboFundamentoImpug();
+  } else {
+    this.isDisabledFundamentoImpug = true;
+    this.impugnacion.sentidoAuto = "";
+  }
+}
+getComboFundamentoImpug() {
+  this.sigaServices.get("filtrosejg_comboFundamentoImpug").subscribe(
     n => {
-      this.comboAutoRes = n.combooItems;
-      this.commonServices.arregloTildesCombo(this.comboAutoRes);
+      this.comboFundamentoImpug = n.combooItems;
+      this.commonServices.arregloTildesCombo(this.comboFundamentoImpug);
+      let fundImpug = this.comboFundamentoImpug.find(
+        item => item.value == this.impugnacion.sentidoAuto
+      );
+      if(fundImpug != undefined)
+        this.fundImpugnacionDesc = fundImpug.label;
     },
     err => {
       console.log(err);
     }
   );
 }
+
 abreCierraFicha() {
     this.openFicha = !this.openFicha;
 }
@@ -117,7 +146,6 @@ save(){
     });
   }
   rest(){
-
   }
   checkPermisosSave(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
@@ -133,14 +161,14 @@ save(){
   }
   disabledSave() {
     if (this.nuevo) {
-      if (this.body.fechaApertura != undefined) {
+      if (this.impugnacion.fechaAuto != undefined) {
         return false;
       } else {
         return true;
       }
     } else {
       if (this.permisoEscritura) {
-        if (this.body.fechaApertura != undefined) {
+        if (this.impugnacion.fechaAuto != undefined) {
           return false;
         } else {
           return true;
@@ -150,10 +178,16 @@ save(){
       }
     }
   }
-  fillFechaAuto(event){
-    this.imugnacion.fechaDictamenDesd = event; //ojo
+  fillFechaAuto(event){ 
+    this.impugnacion.fechaAuto = event;
   }
   fillFechaPublicacion(event){
-    this.impugnacion.fechaDictamenDesd = event; //ojo
+    this.impugnacion.fechaPublicacion = event;
+  }
+  onChangeCheckBis(event) {
+    this.this.impugnacion.bis = event;
+  }
+  onChangeCheckRT(event) {
+    this.impugnacion.requiereTurn = event;
   }
 }

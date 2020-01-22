@@ -90,6 +90,7 @@ export class EJGComponent implements OnInit {
     this.sigaServices.post("filtrosejg_busquedaEJG", this.filtros.body).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
+        let error = JSON.parse(n.body).error;
         this.buscar = true;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
@@ -99,6 +100,9 @@ export class EJGComponent implements OnInit {
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
         this.progressSpinner = false;
+        if (error != null && error.description != null) {
+          this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -113,6 +117,14 @@ export class EJGComponent implements OnInit {
       severity: event.severity,
       summary: event.summary,
       detail: event.msg
+    });
+  }
+  showMessageError(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
 

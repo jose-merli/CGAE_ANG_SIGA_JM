@@ -79,5 +79,14 @@ export class EJGItem {
     historico: boolean;
     observacionesDictamen: String;
     iddictamen: String;
+
+    requiereTurn: boolean;
+    bis: boolean;
+    fechaPublicacion: Date;
+    nImpugnacion: String;
+    observacionesImpugnacion: String;
+    sentidoAuto: String;
+    autoResolutorio: String;
+    fechaAuto: Date;
     constructor() { }
 }

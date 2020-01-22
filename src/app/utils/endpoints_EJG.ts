@@ -36,5 +36,7 @@ export let endpoints_EJG: any = {
     gestionejg_getEstados: "ejg/gestion-ejg/getEstados",
     gestionejg_getDocumentos: "ejg/gestion-ejg/getDocumentos",
     gestionejg_getDictamen: "ejg/gestion-ejg/getDictamen",
-    gestionejg_comboOrigen: "ejg/gestion-ejg/comboOrigen"
+    gestionejg_comboOrigen: "ejg/gestion-ejg/comboOrigen",
+    gestionejg_comboActaAnnio: "ejg/gestion-ejg/comboActaAnnio",
+    gestionejg_getResolucion: "ejg/gestion-ejg/getResolucion"
 }
