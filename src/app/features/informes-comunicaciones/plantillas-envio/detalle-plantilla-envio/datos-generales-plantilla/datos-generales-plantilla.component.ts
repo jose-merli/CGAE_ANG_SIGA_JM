@@ -94,7 +94,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       this.institucionActual = n.value;
 
       this.bodyPlantilla = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-      if (this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
+      if (this.bodyPlantilla != undefined && this.bodyPlantilla != null && this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
         if (
           sessionStorage.getItem("soloLectura") != null &&
           sessionStorage.getItem("soloLectura") != undefined &&

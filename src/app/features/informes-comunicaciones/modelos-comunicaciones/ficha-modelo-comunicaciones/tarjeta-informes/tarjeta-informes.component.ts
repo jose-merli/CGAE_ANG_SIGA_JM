@@ -123,7 +123,7 @@ export class TarjetaInformesComponent implements OnInit {
         this.soloLectura = true;
       } else {
         this.modelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.modelo.porDefecto == 'SI' && this.institucionActual != 2000) {
+        if (this.modelo != undefined && this.modelo != null && this.modelo.porDefecto == 'SI' && this.institucionActual != 2000) {
           if (
             sessionStorage.getItem("soloLectura") != null &&
             sessionStorage.getItem("soloLectura") != undefined &&
