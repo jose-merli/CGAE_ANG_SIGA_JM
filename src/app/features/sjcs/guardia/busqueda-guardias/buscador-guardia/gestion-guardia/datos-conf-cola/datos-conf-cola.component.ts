@@ -337,6 +337,8 @@ export class DatosConfColaComponent implements OnInit {
         this.modoEdicionSend.emit(true);
         this.modoEdicion = true;
         this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
       },
       err => {
 
@@ -371,5 +373,7 @@ export class DatosConfColaComponent implements OnInit {
       detail: msg
     });
   }
-  clear() { }
+  clear() {
+    this.msgs = [];
+  }
 }

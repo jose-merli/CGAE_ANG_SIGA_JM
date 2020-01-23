@@ -5,8 +5,8 @@
     <!-- TABLA RESULTADOS -->
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="compruebaHistorico($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -26,13 +26,14 @@
       </ng-template>
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-          <td class="text-center" *ngFor="let col of columns">
+          <td class="text-center" *ngFor="let col of columns" (click)="openTab(dato,col.field)">
             <div *ngIf="setItalic(dato)">
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
             <div *ngIf="!setItalic(dato)">
               <span>{{dato[col.field]}}</span>
             </div>
+
           </td>
 
         </tr>

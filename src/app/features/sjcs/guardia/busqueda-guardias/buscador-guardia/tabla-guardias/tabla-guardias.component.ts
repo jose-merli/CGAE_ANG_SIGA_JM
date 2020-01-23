@@ -27,7 +27,7 @@ export class TablaGuardiasComponent implements OnInit {
   historico: boolean = false;
   buscadores = []
   message;
-
+  mode = 'single';
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -68,9 +68,11 @@ export class TablaGuardiasComponent implements OnInit {
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.mode = 'single';
       } else {
         this.selectedDatos = [];
         this.numSelected = 0;
+        this.mode = 'multiple';
       }
     }
   }
@@ -82,7 +84,10 @@ export class TablaGuardiasComponent implements OnInit {
     this.table.reset();
   }
 
-
+  compruebaHistorico(event) {
+    if (this.historico && event.data.fechabaja == undefined)
+      this.selectedDatos.pop();
+  }
   getCols() {
 
     this.cols = [
@@ -161,26 +166,21 @@ export class TablaGuardiasComponent implements OnInit {
     }
 
   }
-  openTab(evento) {
-
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
-    if (!this.selectAll && !this.selectMultiple) {
-      this.progressSpinner = true;
-      this.datos = new GuardiaItem();
-      this.datos.idGuardia = evento.data.idGuardia;
-      this.datos.idTurno = evento.data.idTurno;
-      this.persistenceService.setDatos(this.datos);
-      this.persistenceService.setHistorico(evento.data.fechabaja ? true : false);
-      this.router.navigate(["/gestionGuardias"]);
-    } else {
-
-      if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
+  openTab(evento, columna) {
+    if (columna == 'nombre') {
+      if (this.persistenceService.getPermisos() != undefined) {
+        this.permisoEscritura = this.persistenceService.getPermisos();
       }
 
+      if (!this.selectAll && !this.selectMultiple) {
+        this.progressSpinner = true;
+        this.datos = new GuardiaItem();
+        this.datos.idGuardia = evento.idGuardia;
+        this.datos.idTurno = evento.idTurno;
+        this.persistenceService.setDatos(this.datos);
+        this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+        this.router.navigate(["/gestionGuardias"]);
+      }
     }
   }
 

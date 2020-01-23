@@ -20,6 +20,10 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  tipoGuardiaResumen = {
+    label: "",
+    value: "",
+  };
   openFicha: boolean = true;
   historico: boolean = false;
   isDisabledGuardia: boolean = true;
@@ -55,7 +59,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.body.idTurno = data.idTurno;
         this.body.nombre = data.nombre;
         this.body.envioCentralita = data.envioCentralita;
-
         //Informamos de la guardia de la que hereda si existe.
         if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
           this.datos.push({
@@ -114,6 +117,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.comboTipoGuardia = n.combooItems;
 
         this.commonServices.arregloTildesCombo(this.comboTipoGuardia);
+        this.resumenTipoGuardiaResumen();
+
       },
       err => {
         console.log(err);
@@ -183,7 +188,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.guardia.gestion.guardiaCreadaDatosPred"));
         } else this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-
+        this.resumenTipoGuardiaResumen();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
         this.progressSpinner = false;
@@ -229,10 +234,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     });
   }
 
-  tipoGuardiaResumen() {
-    let tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0]
-    if (tipoGuardiaResumen)
-      return tipoGuardiaResumen.label;
+  resumenTipoGuardiaResumen() {
+    this.tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0]
   }
 
   clear() {

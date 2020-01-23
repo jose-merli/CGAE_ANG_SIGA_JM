@@ -93,6 +93,11 @@ export class DatosColaGuardiaComponent implements OnInit {
   save() {
     if (this.permisoEscritura && !this.historico) {
       this.progressSpinner = true;
+      this.updateInscripciones = this.updateInscripciones.map(it => {
+        it.orden = it.orden + "";
+        it.numeroGrupo = it.numeroGrupo + "";
+        return it;
+      })
       this.updateInscripciones = this.updateInscripciones.filter(it => {
         if (it.ordenCola < 1 && (!it.orden || !it.numeroGrupo))
           return false;
@@ -128,10 +133,10 @@ export class DatosColaGuardiaComponent implements OnInit {
         let mismoGrupo = []
         let grupoUltimo = this.datos.filter(it => this.datos[this.datos.length - 1].numeroGrupo == it.numeroGrupo);
         let nuevoUltimo;
-
+        let ceros: boolean = false;
 
         this.datos.forEach(it => {
-          if (mismoGrupo.length <= 1 && repes.length < 1) {
+          if (mismoGrupo.length <= 1 && repes.length < 1 && !ceros) {
             if (!it.numeroGrupo && it.orden || it.numeroGrupo && !it.orden) {
               mismoGrupo.push("Habia un campo vacio");
               mismoGrupo.push("Habia un campo vacio");
@@ -148,11 +153,20 @@ export class DatosColaGuardiaComponent implements OnInit {
                   return true;
                 return false;
               })
+              if (it.numeroGrupo == 0 || it.orden == 0)
+                ceros = true;
             }
           }
         });
-        if (mismoGrupo.length > 1 || repes.length >= 1)
+
+        if (mismoGrupo.length > 1 || repes.length >= 1 || ceros) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.guardia.gestion.errorRepiteGrupo"));
+          this.updateInscripciones = this.updateInscripciones.map(it => {
+            it.orden = +it.orden;
+            it.numeroGrupo = +it.numeroGrupo;
+            return it;
+          })
+        }
         else {
           if (grupoUltimo.length > 0) {
             nuevoUltimo = grupoUltimo[0];
@@ -174,16 +188,24 @@ export class DatosColaGuardiaComponent implements OnInit {
   callSaveService() {
     if (this.updateInscripciones && this.updateInscripciones.length > 0) {
       this.progressSpinner = true;
+
       this.sigaService.post(
         "gestionGuardias_guardarCola", this.updateInscripciones).subscribe(
           data => {
             this.getColaGuardia();
             this.updateInscripciones = [];
             this.progressSpinner = false;
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           },
           err => {
             console.log(err);
+
+            if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
             this.progressSpinner = false;
 
           }
@@ -253,6 +275,9 @@ export class DatosColaGuardiaComponent implements OnInit {
             if (!this.body.porGrupos && !this.body.ordenacionManual) {
               it.numeroGrupo = "";
               it.orden = "";
+            } else {
+              it.numeroGrupo = +it.numeroGrupo
+              it.order = +it.order
             }
             return it;
           });
@@ -290,7 +315,7 @@ export class DatosColaGuardiaComponent implements OnInit {
       if (grupo.length > 1) {
         this.datos.forEach(it => {
           if (it.orden > selected.orden) {
-            selected.orden = it.orden;
+            selected.orden = it.orden + 1;
             this.updateInscripciones.pop();
             this.updateInscripciones.push(selected)
           }
@@ -369,7 +394,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     }
   }
   disabledBotones() {
-    if (!this.botActivos || !this.tabla || (!this.tabla.selectedDatos || this.tabla.selectedDatos.length == 0))
+    if (!this.botActivos || !this.tabla || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tabla.selectedDatos || this.tabla.selectedDatos.length == 0))
       return false;
     return true;
   }
@@ -383,7 +408,10 @@ export class DatosColaGuardiaComponent implements OnInit {
     }
     return true;
   }
-  clear() { }
+
+  clear() {
+    this.msgs = [];
+  }
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

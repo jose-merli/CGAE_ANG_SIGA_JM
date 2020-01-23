@@ -48,8 +48,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
     this.festividades = this.creaSemana();
     this.laborables = this.creaSemana();
-    this.laborablesInicial = JSON.parse(JSON.stringify(this.laborables));
-    this.festividadesInicial = JSON.parse(JSON.stringify(this.festividades));
+
     this.sigaServices.datosRedy$.subscribe(
       n => {
         n = JSON.parse(n.body)
@@ -79,6 +78,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
                 it.value = true;
             })
           });
+        this.laborablesInicial = JSON.parse(JSON.stringify(this.laborables));
+        this.festividadesInicial = JSON.parse(JSON.stringify(this.festividades));
         this.changeFestividades();
         this.changeLaborables();
         this.actualizaResumen();
@@ -270,11 +271,11 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     return true;
   }
   rellenaDias() {
-    if (this.body.seleccionFestivos && this.body.seleccionFestivos.length > 0)
-      this.festividades = this.festividades.map(it => {
-        it.value = false;
-        return it;
-      })
+    //Conf de festivos
+    this.festividades = this.festividades.map(it => {
+      it.value = false;
+      return it;
+    })
     if (this.body.seleccionFestivos)
       this.body.seleccionFestivos.split("").forEach(element => {
         this.festividades.forEach(it => {
@@ -282,11 +283,13 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
             it.value = true;
         })
       });
-    if (this.body.seleccionLaborables && this.body.seleccionLaborables.length > 0)
-      this.laborables = this.laborables.map(it => {
-        it.value = false;
-        return it;
-      })
+
+
+    //Conf de laborables
+    this.laborables = this.laborables.map(it => {
+      it.value = false;
+      return it;
+    })
     if (this.body.seleccionLaborables)
       this.body.seleccionLaborables.split("").forEach(element => {
         this.laborables.forEach(it => {
@@ -294,6 +297,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
             it.value = true;
         })
       });
+
 
     this.changeFestividades();
     this.changeLaborables();
