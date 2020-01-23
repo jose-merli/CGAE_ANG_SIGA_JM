@@ -8,6 +8,7 @@ import { GestionTurnosModule } from './turnos/turnos.module';
 import { GestionInscripcionesModule } from './inscripciones/inscripciones.module';
 // import { GestionTurnosModule } from '../oficio/turnos/turnos.module';
 import { OficioRoutingModule } from './oficio-routing.module';
+import { GestionBajasTemporalesModule } from './bajas-temporales/bajas-temporales.module';
 
 @NgModule({
         declarations: [],
@@ -17,6 +18,7 @@ import { OficioRoutingModule } from './oficio-routing.module';
                 routingOficio,
                 GestionTurnosModule,
                 GestionInscripcionesModule,
+                GestionBajasTemporalesModule,
         ],
 
         providers: []

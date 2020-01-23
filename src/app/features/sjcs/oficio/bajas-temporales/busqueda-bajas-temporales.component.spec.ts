@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BajasTemporalesComponent } from './bajas-temporales.component';
+import { BajasTemporalesComponent } from './busqueda-bajas-temporales.component';
 
 describe('BajasTemporalesComponent', () => {
   let component: BajasTemporalesComponent;
@@ -12,6 +12,7 @@ describe('BajasTemporalesComponent', () => {
     })
       .compileComponents();
   }));
+  
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BajasTemporalesComponent);
