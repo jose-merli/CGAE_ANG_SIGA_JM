@@ -7,12 +7,14 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ConfiguracionFicherosComponent implements OnInit {
   showFicha: boolean = false;
+  progressSpinnerConfiguracionFic: boolean = false;
 
   @Input() permisos;
 
   constructor() { }
 
   ngOnInit() {
+    this.progressSpinnerConfiguracionFic=false;
   }
 
   onHideFicha() {

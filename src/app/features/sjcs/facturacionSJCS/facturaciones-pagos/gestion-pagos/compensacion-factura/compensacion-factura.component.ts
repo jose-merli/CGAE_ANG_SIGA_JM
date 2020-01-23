@@ -15,6 +15,7 @@ export class CompensacionFacturaComponent implements OnInit {
   seleccion: boolean = false;
   showFicha: boolean = false;
   selectAll: boolean = false;
+  progressSpinnerCompensacion: boolean = false;
 
   selectionMode: String = "single";
 
@@ -27,6 +28,7 @@ export class CompensacionFacturaComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.progressSpinnerCompensacion=false;
     this.getCols();
   }
 

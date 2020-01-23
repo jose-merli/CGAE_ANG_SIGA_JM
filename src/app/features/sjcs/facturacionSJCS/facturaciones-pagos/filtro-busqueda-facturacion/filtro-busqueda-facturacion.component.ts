@@ -136,6 +136,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			datos = this.filtrosFacturacion;  
 			datos.selectedValue=this.selectedValue;
   
+			this.persistenceService.clearDatos();
 			this.persistenceService.setFiltros(datos);
 		
 			this.router.navigate(["/fichaFacturacion"]);
@@ -143,6 +144,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			datos = this.filtrosPagos;
 			datos.selectedValue=this.selectedValue;
 
+			this.persistenceService.clearDatos();
 			this.persistenceService.setFiltros(datos);
 
 			this.router.navigate(["/fichaPagos"]);

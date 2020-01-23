@@ -7,6 +7,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular
 })
 export class CriteriosFacturacionComponent implements OnInit {
   showFichaCriterios: boolean = false;
+  progressSpinnerCriterios: boolean = false;
   
   selectedItem: number = 10;
   rowsPerPage: any = [];
@@ -21,6 +22,7 @@ export class CriteriosFacturacionComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.progressSpinnerCriterios=false;
     this.getCols();
   }
 

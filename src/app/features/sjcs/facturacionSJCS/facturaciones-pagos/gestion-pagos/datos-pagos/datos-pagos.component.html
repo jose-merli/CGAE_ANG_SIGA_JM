@@ -2,7 +2,7 @@
 
 <div class="card">
   <div class="card-header header-ficha">
-    <div *ngIf="!showDatosPagos" class="form-row" (click)="onHideDatosGenerales()">
+    <div *ngIf="!showFicha" class="form-row" (click)="onHideDatosGenerales()">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
           <i class="fas fa-cog icon-ficha"></i>
@@ -10,54 +10,45 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
-          <label class="mr-auto title-ficha">Datos de Pagos
+          <label class="mr-auto title-ficha">{{ 'general.message.datos.generales' | translate }}  
           </label>
         </div>
         <div class="d-flex justify-content-between">
-          <label>Facturacion:
-            <span>asdfasdfas df</span>
-            <!--<span>{{ body.nombre }}</span>-->
-          </label>
           <label>Nombre:
-            <span>asdfasdfas df</span>
-            <!--<span>{{ body.nombre }}</span>-->
+            <span>{{ body.nombre }}</span>
           </label>
-          <label>Abono:
-            <span>asdfasdfas df</span>
-            <!--<span>{{ body.nombre }}</span>-->
-          </label>
-          <i *ngIf="!showDatosPagos" class="fa fa-angle-down float-right"></i>
+          <i *ngIf="!showFicha" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
     </div>
-    <div *ngIf="showDatosPagos" class="header-ficha-open d-flex justify-content-start align-items-center" (click)="onHideDatosGenerales()">
+    <div *ngIf="showFicha" class="header-ficha-open d-flex justify-content-start align-items-center" (click)="onHideDatosGenerales()">
       <div class="img-colegiado">
         <i class="fas fa-cog icon-ficha"></i>
       </div>
-      <label class="title-ficha">Datos Generales<!--{{ 'facturacionSJCS.facturacionesYPagos.datosFacturacion' | translate }}--></label>
+      <label class="title-ficha">{{ 'general.message.datos.generales' | translate }}  </label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
-  <div *ngIf="showDatosPagos" class="card-body">
+  <div *ngIf="showFicha" class="card-body">
     <div class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
           <div>
-            <label>Facturación (*)</label>
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" [showClear]="true" [(disabled)]='!permisos'></p-dropdown>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate }} (*)</label>
+            <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [(disabled)]='cerrada || !permisos' [(ngModel)]='body.idFacturacion' [options]="facturaciones"></p-dropdown>
             <!--<p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria' [options]="partidaPresupuestaria"
               [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
               [showClear]="true" [(disabled)]='cerrada || !permisos'></p-dropdown>-->
           </div>
           <div style="margin-top: 1em; margin-bottom: 1em;">
-            <label>Nombre (*)</label>
-            <input type="text" maxlength="95" name="nombre" class="form-control" [(disabled)]='!permisos' pInputText />
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate }} (*)</label>
+            <input pInputText class="form-control" type="text" maxlength="95" name="nombre" [(disabled)]='cerrada || !permisos' [(ngModel)]='body.nombre' />
             <!--<input type="text" maxlength="95" name="nombre" class="form-control" [(disabled)]='cerrada || !permisos'
               [(ngModel)]='body.nombre' pInputText />-->
           </div>
           <div>
-            <label>Abono (*)</label>
-            <input type="text" maxlength="95" name="nombreAbono" class="form-control" [(disabled)]='!permisos' pInputText />
+            <label>Abono (*) {{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.abono' | translate }} (*)</label>
+            <input pInputText class="form-control" type="text" maxlength="95" name="nombreAbono" [(disabled)]='cerrada || !permisos' />
           </div>
         </div>
         <div class="form-group col-lg-6 col-md-6">
@@ -105,19 +96,16 @@
       </div>
     </div>
   </div>
-  <div class="card-footer" *ngIf="showDatosPagos">
+  <div class="card-footer" *ngIf="showFicha">
     <div class="text-right main-button">
-      <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
-      <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
-      <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
-      <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
-      <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
-      <button [disabled]="!permisos" pButton type="button" icon="fa fa-play-circle" iconPos="left"></button>
+      <button pButton type="button" iconPos="left" icon="fa fa-play" [disabled]="disabledEjecutar() || !permisos" label="{{ 'general.boton.ejecutar' | translate }}"></button>
+      <button pButton type="button" iconPos="left" icon="fa fa-close" [disabled]="disabledCerrar() || !permisos" label="Cerrar y Abonar (*){{ 'facturacionSJCS.facturacionesYPagos.cerrarAbonar' | translate }}"></button>
+      <button pButton type="button" iconPos="left" icon="fa fa-lock-open" [disabled]='disabledReabrir() || !permisos' label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}"></button>
+      <button pButton type="button" iconPos="left" icon="fa fa-send" disabled label="{{ 'general.boton.comunicar' | translate }}"></button>
+      <button pButton type="button" iconPos="left" icon="fa fa-undo" [disabled]="disabledRestablecer() || !permisos" (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+      <button pButton type="button" iconPos="left" icon="fa fa-save" [disabled]="disabledSave() || !permisos" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
-    <!--
-      <button (click)="simular()" [disabled]="disabledSimular()  || !permisos" pButton type="button"
-        icon="fa fa-play-circle" iconPos="left"
-        label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
+    <!--      
       <button (click)="ejecutar()" [disabled]='disabledEjecutar() || !permisos' pButton type="button" icon="fa fa-play"
         iconPos="left"
         label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>

@@ -28,7 +28,6 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit {
   msgs;
   insertConcept;
   numCriterios;
-  psBaremos;
 
   @ViewChild(PagosComponent) pagos;
   @ViewChild(BaremosComponent) baremos;

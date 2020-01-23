@@ -7,6 +7,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 })
 export class DetallePagoComponent implements OnInit {
   numPagos: number = 0;
+  progressSpinnerDetallePagos: boolean = false;
 
   @ViewChild("tabla") tabla;
   
@@ -15,6 +16,7 @@ export class DetallePagoComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.progressSpinnerDetallePagos=false;
   }
 
 }
