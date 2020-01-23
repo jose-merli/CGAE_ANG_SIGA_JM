@@ -1,6 +1,5 @@
 export class PagosjgItem {
-	idInstitucion: String;
-	idPagosJG: String;
+	idPagosjg: String;
 	idFacturacion: String;
 	nombre: String;
 	importeEJG: String;
@@ -13,6 +12,15 @@ export class PagosjgItem {
 	desEstado: String;	
 	desConcepto: String;
 	porcentaje: String;
+	idEstado: String;
+	idPartidaPresupuestaria: String;
+	idConcepto: String;
+	idGrupo: String;
+	descGrupo: String;
+	fechaDesde: Date;
+	fechaHasta: Date;
+	abreviatura: String;
+	cantidad: String;
 	
   	constructor() {}
 }  

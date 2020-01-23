@@ -5,6 +5,7 @@ import { FacturacionesYPagosComponent } from './facturaciones-pagos/facturacione
 import { GestionFacturacionComponent } from './facturaciones-pagos/gestion-facturacion/gestion-facturacion.component';
 import { CartasFacturacionPagoComponent } from './cartas-facturacion-pago/cartas-facturacion-pago.component';
 import { BusquedaGeneralSJCSComponent } from '../../../commons/busqueda-generalSJCS/busqueda-generalSJCS.component';
+import { GestionPagosComponent } from './facturaciones-pagos/gestion-pagos/gestion-pagos.component';
 
 const routesFacturacionsjcs: Routes = [
   {
@@ -15,6 +16,11 @@ const routesFacturacionsjcs: Routes = [
   {
     path: "fichaFacturacion",
     component: GestionFacturacionComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaPagos",
+    component: GestionPagosComponent,
     canActivate: [AuthGuard]
   },
   {

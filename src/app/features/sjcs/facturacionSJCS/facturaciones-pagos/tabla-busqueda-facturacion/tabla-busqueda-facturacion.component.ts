@@ -17,18 +17,21 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   msgs;
   buscadores = [];
   selectedItem: number = 10;
+  selectionMode: String= "single";
  
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
+  selectAll: boolean = false;
 
   message;
-  permisos: boolean = false;
   first = 0;
   initDatos;
 
   @Input() datos;
+  @Input() filtroSeleccionado;
+  @Input() permisos;
 
   @Output() delete = new EventEmitter<String>();
   
@@ -42,7 +45,6 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     private confirmationService: ConfirmationService) {}
 
   ngOnInit() {
-
     if (this.persistenceService.getPaginacion() != undefined) {
       let paginacion = this.persistenceService.getPaginacion();
       this.persistenceService.clearPaginacion();
@@ -52,14 +54,20 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
     }
 
     this.getCols();
+
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    if (this.persistenceService.getPermisos()) {
-      this.permisos = true;
-    } else {
-      this.permisos = false;
-    }
+    
+    this.selectionMode="single";
   }
 
+  desSeleccionaFila() {
+    if(this.filtroSeleccionado=='facturacion'){
+      this.numSelected=0;
+    }else if(this.filtroSeleccionado=='pagos'){
+      this.numSelected = this.selectedDatos.length;
+    }
+  }
+  
   seleccionaFila(evento) {
     if (!this.selectMultiple) {
 
@@ -69,9 +77,25 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
       };
 
       this.persistenceService.setPaginacion(paginacion);
-  
-      this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/fichaFacturacion"]);
+      
+      let datos = evento.data;
+      datos.filtroSeleccionado=this.filtroSeleccionado;
+
+      this.persistenceService.setDatos(datos);
+
+      if(this.filtroSeleccionado=="facturacion"){
+        this.router.navigate(["/fichaFacturacion"]);
+      }
+      
+      if(this.filtroSeleccionado=="pagos"){
+        this.router.navigate(["/fichaPagos"]);
+      }
+    }else{
+      if(this.filtroSeleccionado=='facturacion'){
+        this.numSelected=1;
+      }else if(this.filtroSeleccionado=='pagos'){
+        this.numSelected = this.selectedDatos.length;
+      }
     } 
   }
 
@@ -84,13 +108,32 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   isSelectMultiple() {
     if (this.permisos) {
       this.selectMultiple = !this.selectMultiple;
+      this.selectAll=false;
+      this.numSelected = 0;
+      this.selectAll = false;
+      this.selectedDatos = [];
+
       if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
+        this.selectionMode="single";
       } else {
-        this.selectedDatos = [];
-        this.numSelected = 0;
+        if(this.filtroSeleccionado=='facturacion'){
+          this.selectionMode="single";
+        }else if(this.filtroSeleccionado=='pagos'){
+          this.selectionMode="multiple";
+        }
       }
+    }
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+      this.selectMultiple=false;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
     }
   }
 
@@ -129,17 +172,31 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   getCols() {
-    this.cols = [
-      { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde", width: "10%" },
-      { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "10%" },
-      { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "20%" },
-      { field: "regularizacion", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizacion", width: "10%" },
-      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" },
-      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente", width: "10%" },
-      { field: "importePagado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pagado", width: "10%" },
-      { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado", width: "10%" },
-      { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "10%" }
-    ];
+    if(this.filtroSeleccionado=="facturacion"){
+      this.cols = [
+        { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde", width: "10%" },
+        { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "10%" },
+        { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "20%" },
+        { field: "regularizacion", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizacion", width: "10%" },
+        { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" },
+        { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente", width: "10%" },
+        { field: "importePagado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pagado", width: "10%" },
+        { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado", width: "10%" },
+        { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "10%" }
+      ];
+    }else if(this.filtroSeleccionado=="pagos"){
+      this.cols = [
+        { field: "fechaDesde", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde", width: "10%" },
+        { field: "fechaHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "10%" },
+        { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "20%" },
+        { field: "abreviatura", header: "facturacionSJCS.facturacionesYPagos.conceptos", width: "15%" },
+        { field: "porcentaje", header: "facturacionSJCS.facturacionesYPagos.porcentaje", width: "10%" },
+        { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%" },
+        { field: "fechaEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado", width: "10%" },
+        { field: "desEstado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "15%" }
+      ];
+    }
+    
     this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
       {
@@ -202,7 +259,7 @@ export class TablaBusquedaFacturacionComponent implements OnInit {
   }
 
   disabledEliminar(){
-    if(!this.selectMultiple || this.selectedDatos.length == 0){
+    if(undefined!=this.selectedDatos && (!this.selectMultiple || this.selectedDatos.length == 0)){
       return true;
     }else{
       return false;

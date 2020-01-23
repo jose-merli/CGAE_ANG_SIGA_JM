@@ -1,5 +1,6 @@
 export let endpoints_facturacionsjcs: any = {
     combo_comboFactEstados: "combo/comboFactEstados",
+    combo_comboPagoEstados: "combo/comboPagoEstados",
     combo_partidasPresupuestarias: "combo/partidasPresupuestarias",
     combo_grupoFacturacion: "combo/grupoFacturacion",
     combo_comboFactConceptos: "combo/comboFactConceptos",
@@ -21,5 +22,6 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosFac",
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosFac",
     facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
-    facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes"
+    facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes",
+    facturacionsjcs_buscarPagos: "facturacionsjcs/buscarPagos"
 }

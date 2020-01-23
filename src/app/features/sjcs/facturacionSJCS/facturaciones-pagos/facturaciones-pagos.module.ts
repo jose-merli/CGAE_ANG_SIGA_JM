@@ -12,10 +12,16 @@ import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.mo
 import { GestionFacturacionComponent } from './gestion-facturacion/gestion-facturacion.component';
 import { DatosFacturacionComponent } from './gestion-facturacion/datos-facturacion/datos-facturacion.component';
 import { ConceptosFacturacionComponent } from './gestion-facturacion/conceptos-facturacion/conceptos-facturacion.component';
+import { CriteriosFacturacionComponent } from './gestion-pagos/criterios-facturacion/criterios-facturacion.component';
 import { BaremosComponent } from './gestion-facturacion/baremos/baremos.component';
 import { PagosComponent } from './gestion-facturacion/pagos/pagos.component';
 import { CartasFacturacionComponent } from './gestion-facturacion/cartas-facturacion/cartas-facturacion.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { GestionPagosComponent } from './gestion-pagos/gestion-pagos.component';
+import { DatosPagosComponent } from './gestion-pagos/datos-pagos/datos-pagos.component';
+import { ConfiguracionFicherosComponent } from './gestion-pagos/configuracion-ficheros/configuracion-ficheros.component';
+import { DetallePagoComponent } from './gestion-pagos/detalle-pago/detalle-pago.component';
+import { CompensacionFacturaComponent } from './gestion-pagos/compensacion-factura/compensacion-factura.component';
 
 @NgModule({
   imports: [
@@ -36,7 +42,7 @@ import { TooltipModule } from 'primeng/tooltip';
     TableModule,
     FechaModule
   ],
-  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent, BaremosComponent, PagosComponent, CartasFacturacionComponent],
+  declarations: [FacturacionesYPagosComponent, FiltroBusquedaFacturacionComponent, TablaBusquedaFacturacionComponent, GestionFacturacionComponent, DatosFacturacionComponent, ConceptosFacturacionComponent, BaremosComponent, PagosComponent, CartasFacturacionComponent, GestionPagosComponent, DatosPagosComponent, ConfiguracionFicherosComponent, DetallePagoComponent, CriteriosFacturacionComponent, CompensacionFacturaComponent],
   exports: [FacturacionesYPagosComponent]
 })
 export class FacturacionesYPagosModule {}

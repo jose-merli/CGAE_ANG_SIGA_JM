@@ -1,0 +1,26 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="datos-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaFacturacion' | translate}}</p>
+  </div>
+  
+  <app-datos-pagos [permisos]="permisos"></app-datos-pagos>
+  
+  <app-criterios-facturacion [permisos]="permisos"></app-criterios-facturacion>
+  
+  <app-configuracion-ficheros [permisos]="permisos"></app-configuracion-ficheros>
+  
+  <app-detalle-pago [permisos]="permisos"></app-detalle-pago>
+  
+  <app-compensacion-factura></app-compensacion-factura>
+
+  <div class="text-right main-button">
+    <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner || spinnerGlobal()" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
