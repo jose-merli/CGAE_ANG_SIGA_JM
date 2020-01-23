@@ -136,7 +136,8 @@ export class ServiciosTramitacionComponent implements OnInit {
           } else if (persona && persona.noColegiadoItem) {
             this.destinatario = persona.noColegiadoItem[0];
           }
-          this.body.apellidosYNombre = this.destinatario.apellidos1 + " " + this.destinatario.apellidos2 + ", " + this.destinatario.soloNombre;
+          if(this.destinatario)
+            this.body.apellidosYNombre = this.destinatario.apellidos1 + " " + this.destinatario.apellidos2 + ", " + this.destinatario.soloNombre;
           this.progressSpinner = false;
         },
         err => {
@@ -184,7 +185,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     }
   }
   rest(){
-
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
   disabledSave() {
     if (this.nuevo) {

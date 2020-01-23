@@ -35,8 +35,7 @@
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{ "censo.busquedaClientes.literal.datosIdentificacion" | translate}} </label>
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}
-              </label>
+              <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}*</label>
               <app-fecha [(value)]="body.fechaApertura" (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaApertura($event)"></app-fecha>
             </div>
             <div class="form-row col-lg-3 col-md-3 pr-0">
@@ -97,7 +96,7 @@
                   maxLength="4" pInputText>
               </div>
               <div class="form-group col-lg-9 col-md-9 pr-0">
-                <label>Número de Expediente</label>
+                <label>{{ 'justiciaGratuita.ejg.datosGenerales.NumExpediente' | translate}}</label>
                 <input type="text" [(ngModel)]="body.numeroexpediente" [disabled]="true" class="form-control" (keypress)="numberOnly($event)"
                   maxLength="10" pInputText>
               </div>

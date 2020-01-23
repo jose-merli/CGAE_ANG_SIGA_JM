@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -8,7 +8,8 @@ import { CommonsService } from '../../../../../_services/commons.service';
 @Component({
   selector: 'app-datos-generales-ejg',
   templateUrl: './datos-generales-ejg.component.html',
-  styleUrls: ['./datos-generales-ejg.component.scss']
+  styleUrls: ['./datos-generales-ejg.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesEjgComponent implements OnInit {
   //Resultados de la busqueda
