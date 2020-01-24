@@ -55,6 +55,7 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   search() {
+    this.progressSpinner = true;
     this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {

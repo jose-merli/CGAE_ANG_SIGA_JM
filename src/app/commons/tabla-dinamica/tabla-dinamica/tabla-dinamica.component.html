@@ -24,8 +24,7 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-
-            <span *ngIf="(dato != selectedDatos || !col.editable) && (col.field != 'ordenCola' || +dato[col.field] > 0 ) || (!editable) ||(col.field == 'orden' && !porGrupos)">{{dato[col.field]}}</span>
+            <span *ngIf="(dato != selectedDatos || !col.editable) && !(col.field == 'numeroGrupo' && dato.numeroGrupo == 0) && (col.field != 'ordenCola' || +dato[col.field] > 0 ) || (!editable) ||(col.field == 'orden' && !porGrupos)">{{dato[col.field]}}</span>
             <span *ngIf="col.field == 'ordenCola' && +dato[col.field] <= 0"></span>
             <div *ngIf="col.editable && dato == selectedDatos && (col.editable && editable) && ( (!porGrupos && col.field != 'orden')||(porGrupos && col.editable))">
               <input class="form-control paddingInput" (onBlur)="cambiaInput(dato)" (input)="cambiaInput(dato)" (ngModelChange)="cambiaInput(dato)"
@@ -33,7 +32,6 @@
               />
             </div>
           </td>
-
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage" let-columns>

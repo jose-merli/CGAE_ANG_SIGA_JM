@@ -27,7 +27,7 @@ export class TablaGuardiasComponent implements OnInit {
   historico: boolean = false;
   buscadores = []
   message;
-  mode = 'single';
+
   initDatos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
@@ -62,17 +62,21 @@ export class TablaGuardiasComponent implements OnInit {
 
   }
 
+  aaaaaaaaaaaaaaaa(evento) {
+    if (evento.data.fechabaja == undefined && this.historico)
+      this.selectedDatos.pop();
+  }
+
+
   isSelectMultiple() {
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.mode = 'single';
       } else {
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.mode = 'multiple';
       }
     }
   }
@@ -84,10 +88,7 @@ export class TablaGuardiasComponent implements OnInit {
     this.table.reset();
   }
 
-  compruebaHistorico(event) {
-    if (this.historico && event.data.fechabaja == undefined)
-      this.selectedDatos.pop();
-  }
+
   getCols() {
 
     this.cols = [
@@ -166,22 +167,27 @@ export class TablaGuardiasComponent implements OnInit {
     }
 
   }
-  openTab(evento, columna) {
-    if (columna == 'nombre') {
-      if (this.persistenceService.getPermisos() != undefined) {
-        this.permisoEscritura = this.persistenceService.getPermisos();
-      }
+  openTab(evento) {
 
-      if (!this.selectAll && !this.selectMultiple) {
-        this.progressSpinner = true;
-        this.datos = new GuardiaItem();
-        this.datos.idGuardia = evento.idGuardia;
-        this.datos.idTurno = evento.idTurno;
-        this.persistenceService.setDatos(this.datos);
-        this.persistenceService.setHistorico(evento.fechabaja ? true : false);
-        this.router.navigate(["/gestionGuardias"]);
-      }
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
     }
+
+    if (!this.selectAll && !this.selectMultiple) {
+      this.progressSpinner = true;
+      this.datos = new GuardiaItem();
+      this.datos.idGuardia = evento.idGuardia;
+      this.datos.idTurno = evento.idTurno;
+      this.persistenceService.setDatos(this.datos);
+      this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+      this.router.navigate(["/gestionGuardias"]);
+    }
+    //  else {
+
+    //   if (evento.fechabaja == undefined && this.historico) {
+    //     this.selectedDatos.pop();
+    //   }
+    // }
   }
 
   delete() {

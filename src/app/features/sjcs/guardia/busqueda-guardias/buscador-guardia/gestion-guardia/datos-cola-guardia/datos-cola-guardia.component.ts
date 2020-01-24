@@ -332,7 +332,6 @@ export class DatosColaGuardiaComponent implements OnInit {
           err => {
             console.log(err);
             this.progressSpinner = false;
-
           }
         );
     }
