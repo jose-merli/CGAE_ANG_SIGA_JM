@@ -296,7 +296,7 @@ export class FichaColegialComponent implements OnInit {
   selectedItem: number = 10;
 
   selectedDatosRegtel: DocushareItem;
-  desactivarVolver: Boolean;
+  desactivarVolver: boolean = true;
 
   comboTopics: any[] = [];
   comboService: any[] = [];
