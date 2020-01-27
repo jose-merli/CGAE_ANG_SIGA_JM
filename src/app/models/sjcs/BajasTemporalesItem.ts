@@ -5,6 +5,14 @@ export class BajasTemporalesItem {
   fechahasta: Date;
   fechasolicituddesde:Date;
   fechasolicitudhasta:Date;
+  descripcion:String;
+  idpersona:String;
+  ncolegiado:String;
+  nombre:String;
+  apellidos1:String;
+  apellidos2:String;
+  validado:String;
+  fechaalta:Date;
   historico:boolean;
   constructor() { }
 }

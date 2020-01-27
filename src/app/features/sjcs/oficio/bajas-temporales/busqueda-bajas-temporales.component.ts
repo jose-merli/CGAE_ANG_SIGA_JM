@@ -82,9 +82,22 @@ export class BajasTemporalesComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("bajasTemporales_busquedaBajasTemporales", this.filtros.filtroAux).subscribe(
       n => {
-        this.datos = JSON.parse(n.body).inscripcionesItem;
+        this.datos = JSON.parse(n.body).bajasTemporalesItem;
         this.datos.forEach(element => {
+          if(element.tipo == "V"){
+            element.tiponombre = "Vacaciones";
+          }
+          if(element.tipo == "M"){
+            element.tiponombre = "Maternidad";
+          }
+          if(element.tipo == "B"){
+            element.tiponombre = "Baja";
+          }
+          if(element.tipo == "S"){
+            element.tiponombre = "Suspensión por sanción";
+          }
           element.ncolegiado = +element.ncolegiado;
+
         });
         this.buscar = true;
         this.progressSpinner = false;

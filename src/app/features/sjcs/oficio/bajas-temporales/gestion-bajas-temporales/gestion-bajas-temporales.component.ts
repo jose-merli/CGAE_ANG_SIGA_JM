@@ -40,7 +40,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
   disabledDenegar: boolean = false;
   body;
   partidasJudiciales: any[] = [];
-
+  updateBajasTemporales = [];
   selectedItem: number = 10;
   selectAll;
   selectedDatos: any[] = [];
@@ -59,6 +59,12 @@ export class TablaBajasTemporalesComponent implements OnInit {
   progressSpinner: boolean = false;
   selectionMode: string = "single";
   first = 0;
+  comboTipo = [
+    { label: "Vacaciones", value: "V" },
+    { label: "Maternidad", value: "M" },
+    { label: "Baja", value: "B" },
+    { label: "Suspensión por sanción", value: "S" }
+  ];
   //Resultados de la busqueda
   @Input() datos;
 
@@ -145,8 +151,12 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
-
-        let findDato = this.datosInicial.find(item => item.nombrepartida === this.selectedDatos[0].nombrepartida && item.descripcion === this.selectedDatos[0].descripcion && item.importepartida === this.selectedDatos[0].importepartida);
+      
+        this.selectedDatos.forEach(element => {
+          element.fechadesde = new Date(element.fechadesde);
+          element.fechahasta = new Date(element.fechahasta);
+        });
+        let findDato = this.datosInicial.find(item => item.tiponombre === this.selectedDatos[0].tiponombre);
 
         this.selectedBefore = findDato;
       } else {
@@ -589,19 +599,20 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
 
   setItalic(dato) {
-    // if (dato.fechabaja == null) return false;
-    // else return true;
+    if (dato.fechabaja == null) return false;
+    else return true;
   }
 
   getCols() {
 
     this.cols = [
       { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
-      { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "abreviatura", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "fechasolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
-      { field: "estadonombre", header: "censo.fichaIntegrantes.literal.estado" },
-
+      { field: "nombre", header: "busquedaSanciones.detalleSancion.letrado.literal" },
+      { field: "tiponombre", header: "dato.jgr.guardia.guardias.turno" },
+      { field: "descripcion", header: "administracion.auditoriaUsuarios.literal.motivo" },
+      { field: "fechadesde", header: "facturacion.seriesFacturacion.literal.fInicio" },
+      { field: "fechahasta", header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" },
+      { field: "fechaalta", header: "formacion.busquedaInscripcion.fechaSolicitud" },
     ];
     this.cols.forEach(element => {
       this.buscadores.push("");
@@ -663,6 +674,22 @@ export class TablaBajasTemporalesComponent implements OnInit {
     }
   }
 
+  changeDescripcion(dato) {
+
+    let findDato = this.datosInicial.find(item => item.idpersona === dato.idpersona && item.descripcion === dato.descripcion);
+
+    if (findDato != undefined) {
+      if (dato.descripcion != findDato.descripcion) {
+
+        let findUpdate = this.updateBajasTemporales.find(item => item.idpersona === dato.idpersona && item.descripcion === dato.descripcion);
+
+        if (findUpdate == undefined) {
+          this.updateBajasTemporales.push(dato);
+        }
+      }
+    }
+
+  }
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -705,27 +732,16 @@ export class TablaBajasTemporalesComponent implements OnInit {
 
   actualizaSeleccionados(selectedDatos) {
     if (this.selectedDatos == undefined) {
-      this.selectedDatos = []
+      this.selectedDatos = [];
+      this.datos.forEach(element => {
+        // element.editable = false
+        element.overlayVisible = false;
+      });
     }
     if (selectedDatos != undefined) {
       this.numSelected = selectedDatos.length;
-      let findDato = this.selectedDatos.find(item => item.estado != 1);
-      if(findDato != null){
-        this.disabledSolicitarBaja = true;
-      }
-      else{
-        this.disabledSolicitarBaja = false;
-      }
-      let findDato2 = this.selectedDatos.find(item => item.estado != 2 && item.estado != 0);
-      if(findDato2 != null){
-        this.disabledValidar = true;
-        this.disabledDenegar = true;
-      }
-      else{
-        this.disabledValidar = false;
-        this.disabledDenegar = false;
-      }
     }
+    
   }
 
   showMessage(severity, summary, msg) {

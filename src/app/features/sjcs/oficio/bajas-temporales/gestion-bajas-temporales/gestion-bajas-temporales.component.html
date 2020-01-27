@@ -6,7 +6,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
       [responsive]="true" [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -31,11 +31,46 @@
               <span
                 [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field =='fechasolicitud'">
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='nombre'">
+              <span>{{dato.apellidos1}} {{dato.apellidos2}}, {{dato[col.field] }}</span>
+            </div>
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field =='nombre'">
+              <span>{{dato.apellidos1}} {{dato.apellidos2}}, {{dato[col.field] }}</span>
+            </div>
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='fechaalta'">
+              <span>{{dato[col.field]}}</span>
+            </div>
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field !='nombre' && col.field !='tiponombre' && col.field !='fechadesde' && col.field !='fechahasta' && col.field !='descripcion' && col.field !='fechaalta'">
+              <span>{{dato[col.field]}}</span>
+            </div>
+            <div *ngIf="dato.editable && !setItalic(dato) && col.field =='fechaalta'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field !='fechasolicitud'">
-              <span>{{dato[col.field]}}</span>
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechadesde'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechahasta'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="!dato.editable && !setItalic(dato) && col.field =='fechaalta'">
+              <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+
+            <div *ngIf="dato.editable && col.field=='tiponombre'">
+              <p-dropdown class="select-form" [(ngModel)]='dato.tipo' placeholder="Seleccionar" [options]="comboTipo"
+              [filter]="true" [disabled]="disabledestado" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+            
+            <div *ngIf="dato.editable && col.field=='fechadesde'">
+              <app-fecha [(value)]='dato.fechadesde' (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+            </div>
+            <div *ngIf="dato.editable && col.field=='fechahasta'">
+              <app-fecha [(value)]='dato.fechahasta' (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+            </div>
+            <div *ngIf="dato.editable && col.field=='descripcion'">
+              <input class="form-control paddingInput " [(ngModel)]="dato.descripcion" name="descripcion " type="text
+              " maxLength="58 " on-focusout="changeDescripcion(dato) " [(disabled)]="!permisos " (onBlur)="changeDescripcion(dato)
+              " (input)="changeDescripcion(dato)" />
             </div>
           </td>
         </tr>
@@ -80,7 +115,7 @@
 
   </div>
   <div class="card-footer">
-    <div class="main-button">
+    <!-- <div class="main-button">
       <div class="form-row">
         <div class="form-group offset-0 col-lg-3 col-md-3">
           <label>
@@ -132,7 +167,7 @@
         </div>
       </div>
 
-    </div>
+    </div> -->
   </div>
 </div>
 
