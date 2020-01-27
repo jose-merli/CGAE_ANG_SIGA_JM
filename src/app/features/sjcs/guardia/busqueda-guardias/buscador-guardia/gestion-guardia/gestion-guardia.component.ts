@@ -110,6 +110,9 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   obtenerPermisos() {
+    // Aqui obtenemos todos los permisos de las distintas fichas.
+    // Estos permisos nos diran si estaran las fichas desbilitadaso no apareceran.
+
     this.progressSpinner = true
     this.commonService.checkAcceso(procesos_guardia.resumen)
       .then(respuesta => {

@@ -5,7 +5,7 @@ import { SigaServices } from '../../_services/siga.service';
   selector: 'app-tabla-dinamica-cola-guardia',
   templateUrl: '../tabla-dinamica/tabla-dinamica/tabla-dinamica.component.html',
   styleUrls: ['./tabla-dinamica-cola-guardia.component.scss']
-})
+})// Usamos el front de otro componente. 
 export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
   rowsPerPage: any = [];
@@ -34,7 +34,6 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
 
   ngOnInit() {
     this.getCols()
-
   }
 
 
@@ -160,7 +159,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
         if (this.datos[index + 1].idPersona != this.idUltimo) {
 
           [this.datos[index], this.datos[index + 1]] = [this.datos[index + 1], this.datos[index]];
-          //Esto es en caso que se quiera mover a un primer puesto
+          //Esto es en caso que se quiera desde un primer puesto
           if (index == 0) {
             if (this.datos[this.datos.length - 1].numeroGrupo == "1") {
               this.datos[0].numeroGrupo = "2";

@@ -130,7 +130,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         }
       } else {
         let repes = [];
-        let mismoGrupo = []
+        let mismoGrupo = [];
         let grupoUltimo = this.datos.filter(it => this.datos[this.datos.length - 1].numeroGrupo == it.numeroGrupo);
         let nuevoUltimo;
         let ceros: boolean = false;
@@ -169,7 +169,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         }
         else {
           if (grupoUltimo.length > 0) {
-            nuevoUltimo = grupoUltimo[0];
+            nuevoUltimo = grupoUltimo[0]; // Por si uno del mmismo grupo que el ultimo tiene un orden mayor que el ultimo
             grupoUltimo.forEach(it => {
               if (it.orden > nuevoUltimo.orden)
                 nuevoUltimo = it;
@@ -223,7 +223,8 @@ export class DatosColaGuardiaComponent implements OnInit {
       if (findDato != undefined) {
         if (dato.numeroGrupo != findDato.numeroGrupo) {
 
-          let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona && item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
+          let findUpdate = this.updateInscripciones.find(item => item.idPersona === dato.idPersona &&
+            item.idGrupoGuardiaColegiado === dato.idGrupoGuardiaColegiado ||
             dato.ordenCola == item.ordenCola);
 
           if (findUpdate == undefined) {
@@ -306,6 +307,7 @@ export class DatosColaGuardiaComponent implements OnInit {
     this.body.letradosIns = event;
     this.getColaGuardia();
   }
+
   ultimo(selected) {
     if (this.permisoEscritura && !this.historico && selected.ordenCola > 0) {
       this.progressSpinner = true;
@@ -338,6 +340,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   isOrdenacionManual() {
+    this.progressSpinner = true;
     this.sigaService
       .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
       .subscribe(
@@ -356,15 +359,21 @@ export class DatosColaGuardiaComponent implements OnInit {
           }
 
           this.getColaGuardia();
-
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
         });
+
   }
 
   duplicar() {
     this.tabla.tabla.sortOrder = 0;
     this.tabla.tabla.sortField = '';
     this.tabla.tabla.reset();
-
+    // Creamos uno igual menos porque no tendra idGrupoguardiacolegiado. Eso y que el orden sera
+    // menor o igual que 0 es como se diferencian los duplicados. Al menos hasta que se guarden.
     this.datos = [JSON.parse(JSON.stringify(this.tabla.selectedDatos)), ...this.datos];
     this.datos[0].numeroGrupo = "";
     this.datos[0].orden = "";
