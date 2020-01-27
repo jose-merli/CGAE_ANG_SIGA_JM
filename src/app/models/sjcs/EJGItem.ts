@@ -74,6 +74,7 @@ export class EJGItem {
     turnoDes: string;
     anioexpediente: string;
     numeroexpediente: string;
+    idTipoExpediente: string;
     fechapresentacion: Date;
     fechalimitepresentacion: Date;
     historico: boolean;

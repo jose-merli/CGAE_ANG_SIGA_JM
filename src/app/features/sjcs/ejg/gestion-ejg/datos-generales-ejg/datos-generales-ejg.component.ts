@@ -29,6 +29,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboTipoEJG = [];
   comboTipoEJGColegio = [];
   comboPrestaciones = [];
+  comboTipoExpediente = [];
+  tipoExpedienteDes: string;
+  showTipoExp: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService) { }
@@ -37,6 +40,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
+    this.getComboTipoExpediente();
       if (this.persistenceService.getDatos()) {
         this.modoEdicion = true;
         this.nuevo = false;
@@ -48,10 +52,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.body.fechapresentacion = new Date(this.body.fechapresentacion);
         if (this.body.fechaApertura != undefined)
           this.body.fechaApertura = new Date(this.body.fechaApertura);
+        if (this.body.idTipoExpediente != undefined)
+          this.showTipoExp = true;
       }else {
       this.nuevo = true;
       this.modoEdicion = false;
        this.body = new EJGItem();
+       this.showTipoExp = false;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
@@ -79,6 +86,22 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     );
   }
+  getComboTipoExpediente(){
+    this.sigaServices.get("gestionejg_comboTipoExpediente").subscribe(
+      n => {
+        this.comboTipoExpediente = n.combooItems;
+        this.commonsServices.arregloTildesCombo(this.comboTipoExpediente);
+        let tipoExp = this.comboTipoExpediente.find(
+          item => item.value == this.body.idTipoExpediente
+        );
+        if(tipoExp != undefined)
+          this.tipoExpedienteDes = tipoExp.label;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    }
   getComboPrestaciones() {
     this.sigaServices.get("filtrosejg_comboPrestaciones").subscribe(
       n => {
