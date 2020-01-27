@@ -669,11 +669,16 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.progressSpinner = false;
+            let error = JSON.parse(data["body"]).error;
             this.colegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.colegiadoSearch.colegiadoItem;
             this.convertirStringADate(this.datos);
             // this.table.paginator = true;
             this.body.fechaIncorporacion = [];
+            if (error != null && error.description != null) {
+              this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
+    
           },
           err => {
             console.log(err);
@@ -1018,5 +1023,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   fillFechaNacimientoHasta(event) {
     this.fechaNacimientoHastaSelect = event;
   }
-
+  showMessageError(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 }
