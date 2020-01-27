@@ -10,7 +10,8 @@ import {
   AfterContentChecked,
   AfterViewInit,
   AfterViewChecked,
-  ElementRef
+  ElementRef,
+  Renderer2
 } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
@@ -272,7 +273,8 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private renderer: Renderer2
   ) {
 
     window.scrollTo(0, 0);
@@ -514,10 +516,13 @@ export class FichaCursoComponent implements OnInit {
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
-    this.focusNombre(this.inputNombre);
+   
 
   }
-
+  ngAfterViewInit() {
+    this.focusNombre(this.inputNombre);
+    
+  }
 
   focusNombre(inputNombre: ElementRef) {
     const input: HTMLInputElement = inputNombre.nativeElement as HTMLInputElement;
@@ -567,6 +572,7 @@ export class FichaCursoComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
         this.compruebaInstitucionCurso();
+       
       }
     );
   }
@@ -3355,7 +3361,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   backTo() {
-    sessionStorage.removeItem("filtrosBusquedaCursos");
+    // sessionStorage.removeItem("filtrosBusquedaCursos");
 
     if (this.persistenciaFichaCurso != undefined) {
       sessionStorage.setItem(

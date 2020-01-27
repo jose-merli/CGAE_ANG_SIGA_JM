@@ -67,7 +67,7 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-              <input type="text" #nombre class="form-control" autofocus pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
+              <input type="text" #nombre id='inputNombre' class="form-control" autofocus pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
               />
             </div>
             <div class="col-lg-6 col-md-6">

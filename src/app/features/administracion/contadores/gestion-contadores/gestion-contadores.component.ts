@@ -112,7 +112,21 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.body.fechareconfiguracion = this.arreglarDate(this.fechareconfiguracion);
     this.comparacion =
       JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
-    if (this.editar == true && !this.comparacion) {
+    if (this.editar == true && !this.comparacion ) {
+      return false;
+    } else {
+      if(this.body.modo != undefined){
+        return true;
+      }
+      return true;
+    }
+  }
+
+  checkEditarGuardar() {
+    this.body.fechareconfiguracion = this.arreglarDate(this.fechareconfiguracion);
+    this.comparacion =
+      JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
+    if (this.editar == true && !this.comparacion && this.body.modo != undefined) {
       return false;
     } else {
       return true;

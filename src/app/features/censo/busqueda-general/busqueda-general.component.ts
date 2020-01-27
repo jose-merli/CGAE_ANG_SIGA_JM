@@ -1180,7 +1180,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   getTipo(event) {
     this.selectedTipo = event;
-    this.bodyJuridica.tipo = this.selectedTipo.value;
+    if(this.selectedTipo != undefined){
+      this.bodyJuridica.tipo = this.selectedTipo.value;
+    }else{
+      this.bodyJuridica.tipo = undefined;
+    }
+    
   }
 
   navigateComunicar(dato) {

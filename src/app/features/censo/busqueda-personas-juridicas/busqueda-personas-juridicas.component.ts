@@ -316,9 +316,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.selectedDatos = "";
     this.progressSpinner = true;
     this.selectAll = false;
-    if (this.body.tipo == undefined) {
-      this.body.tipo = "";
-    }
+    // if (this.body.tipo == undefined) {
+    //   this.body.tipo = "";
+    // }
     if (
       this.body.sociedadesProfesionales == undefined ||
       this.body.sociedadesProfesionales == false
@@ -368,9 +368,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.selectMultiple = false;
     this.selectedDatos = "";
     // this.body.grupos = this.etiquetasSelected;
-    if (this.body.tipo == undefined) {
-      this.body.tipo = "";
-    }
+    // if (this.body.tipo == undefined) {
+    //   this.body.tipo = "";
+    // }
     if (
       this.body.sociedadesProfesionales == undefined ||
       this.body.sociedadesProfesionales == false
