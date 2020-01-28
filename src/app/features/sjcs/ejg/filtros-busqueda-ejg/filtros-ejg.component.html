@@ -264,7 +264,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.numCAJG' | translate}}</label>
-              <input type="text" class="form-control" maxLength="20" pInputText [(ngModel)]="body.numCAJG">
+              <input type="text" class="form-control" maxLength="20" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numCAJG">
             </div>
           </div>
           <div class="fcol-lg-3 form-row col-md-3">
@@ -274,7 +274,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.numActa' | translate}}</label>
-              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numActa">
+              <input type="text" class="form-control" maxLength="10" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numActa">
             </div>
           </div>
           <div class="col-lg-3 col-md-3">
@@ -299,17 +299,17 @@
           <div class="col-lg-3 form-row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.numRegistroRemesa' | translate}}</label>
-              <input type="text" class="form-control" maxLength="8" pInputText [(ngModel)]="body.numRegRemesa1">
+              <input type="text" class="form-control" maxLength="8" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numRegRemesa1">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{" "}}</label>
-              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numRegRemesa2">
+              <input type="text" class="form-control" maxLength="10" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numRegRemesa2">
             </div>
           </div>
           <div class=" col-lg-3 form-row col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{' '}}</label>
-              <input type="text" class="form-control" maxLength="8" pInputText [(ngModel)]="body.numRegRemesa3">
+              <input type="text" class="form-control" maxLength="8" (keypress)="numberOnly($event)" pInputText [(ngModel)]="body.numRegRemesa3">
             </div>
           </div>
         </div>
