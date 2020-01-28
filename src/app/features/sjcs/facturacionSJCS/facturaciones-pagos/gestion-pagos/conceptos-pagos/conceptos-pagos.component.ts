@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-criterios-facturacion',
-  templateUrl: './criterios-facturacion.component.html',
-  styleUrls: ['./criterios-facturacion.component.scss']
+  selector: 'app-conceptos-pagos',
+  templateUrl: './conceptos-pagos.component.html',
+  styleUrls: ['./conceptos-pagos.component.scss']
 })
-export class CriteriosFacturacionComponent implements OnInit {
+export class ConceptosPagosComponent implements OnInit {
   showFichaCriterios: boolean = false;
   progressSpinnerCriterios: boolean = false;
   
@@ -14,6 +14,7 @@ export class CriteriosFacturacionComponent implements OnInit {
   buscadores = [];
   
   cols;  
+  msgs;
 
   @ViewChild("tabla") tabla;
 
@@ -62,5 +63,18 @@ export class CriteriosFacturacionComponent implements OnInit {
 
   onHideDatosGenerales() {
     this.showFichaCriterios = !this.showFichaCriterios;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

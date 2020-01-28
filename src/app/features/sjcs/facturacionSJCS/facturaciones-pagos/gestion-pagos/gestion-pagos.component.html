@@ -3,12 +3,12 @@
 <div class="datos-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>SJCS<i class="fa fa-angle-right"></i>Ficha Pago(*){{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}</p>
+    <p>SJCS <i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}</p>
   </div>
   
   <app-datos-pagos [numCriterios]="numCriterios" [cerrada]="cerrada" [idEstadoPago]="idEstadoPago" [idPago]="idPago" [modoEdicion]="modoEdicion" [permisos]="permisos"></app-datos-pagos>
   
-  <app-criterios-facturacion [permisos]="permisos"></app-criterios-facturacion>
+  <app-conceptos-pagos [permisos]="permisos"></app-conceptos-pagos>
   
   <app-configuracion-ficheros [permisos]="permisos"></app-configuracion-ficheros>
   

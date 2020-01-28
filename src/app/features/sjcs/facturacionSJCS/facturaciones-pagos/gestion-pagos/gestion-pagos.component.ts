@@ -7,9 +7,9 @@ import { Location } from "@angular/common";
 import { CompensacionFacturaComponent } from './compensacion-factura/compensacion-factura.component';
 import { ConfiguracionFicherosComponent } from './configuracion-ficheros/configuracion-ficheros.component';
 import { DatosPagosComponent } from './datos-pagos/datos-pagos.component';
-import { CriteriosFacturacionComponent } from './criterios-facturacion/criterios-facturacion.component';
 import { DetallePagoComponent } from './detalle-pago/detalle-pago.component';
 import { PagosjgItem } from '../../../../../models/sjcs/PagosjgItem';
+import { ConceptosPagosComponent } from './conceptos-pagos/conceptos-pagos.component';
 
 @Component({
   selector: 'app-gestion-pagos',
@@ -32,7 +32,7 @@ export class GestionPagosComponent extends SigaWrapper  implements OnInit {
   @ViewChild(CompensacionFacturaComponent) compensacion;
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic;
   @ViewChild(DatosPagosComponent) datosPagos;
-  @ViewChild(CriteriosFacturacionComponent) criterios;
+  @ViewChild(ConceptosPagosComponent) conceptos;
   @ViewChild(DetallePagoComponent) detallePagos;
 
   constructor(private location: Location, private persistenceService: PersistenceService) { 
@@ -74,8 +74,8 @@ export class GestionPagosComponent extends SigaWrapper  implements OnInit {
 
   spinnerGlobal(){    
     if(this.modoEdicion){
-      if(this.criterios != undefined || this.compensacion != undefined || this.configuracionFic != undefined || this.datosPagos != undefined || this.detallePagos!=undefined){
-        if(this.criterios.progressSpinnerCriterios|| this.compensacion.progressSpinnerCompensacion || this.configuracionFic.progressSpinnerConfiguracionFic || this.datosPagos.progressSpinnerDatosPagos || this.detallePagos.progressSpinnerDetallePagos){
+      if(this.conceptos != undefined || this.compensacion != undefined || this.configuracionFic != undefined || this.datosPagos != undefined || this.detallePagos!=undefined){
+        if(this.conceptos.progressSpinnerCriterios|| this.compensacion.progressSpinnerCompensacion || this.configuracionFic.progressSpinnerConfiguracionFic || this.datosPagos.progressSpinnerDatosPagos || this.detallePagos.progressSpinnerDetallePagos){
           return true;
         }else{
           return false;

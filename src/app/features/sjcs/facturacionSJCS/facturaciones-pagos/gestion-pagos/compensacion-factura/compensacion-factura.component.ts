@@ -20,6 +20,7 @@ export class CompensacionFacturaComponent implements OnInit {
   selectionMode: String = "single";
 
   cols; 
+  msgs;
 
   @ViewChild("tabla") tabla;
 
@@ -97,5 +98,18 @@ export class CompensacionFacturaComponent implements OnInit {
 
   onHideFicha() {
     this.showFicha = !this.showFicha;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

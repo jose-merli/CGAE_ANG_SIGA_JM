@@ -9,6 +9,8 @@ export class ConfiguracionFicherosComponent implements OnInit {
   showFicha: boolean = false;
   progressSpinnerConfiguracionFic: boolean = false;
 
+  msgs;
+
   @Input() permisos;
 
   constructor() { }
@@ -19,5 +21,18 @@ export class ConfiguracionFicherosComponent implements OnInit {
 
   onHideFicha() {
     this.showFicha = !this.showFicha;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

@@ -21,6 +21,7 @@ export class PagosjgItem {
 	fechaHasta: Date;
 	abreviatura: String;
 	cantidad: String;
+	codBanco: String;
 	
   	constructor() {}
 }  

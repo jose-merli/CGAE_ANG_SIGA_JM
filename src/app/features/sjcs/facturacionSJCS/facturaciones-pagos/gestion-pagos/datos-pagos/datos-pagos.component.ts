@@ -2,6 +2,8 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
 import { ComboItem } from '../../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-pagos',
@@ -29,9 +31,12 @@ export class DatosPagosComponent implements OnInit {
   @Input() idPago;
   @Input() modoEdicion;
 
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslateService, private sigaService: SigaServices, 
+    private commonsService: CommonsService) { }
 
   ngOnInit() {    
+    this.comboFacturacion();
+
     if (undefined == this.idPago) {
       this.body = new PagosjgItem();
       this.bodyAux = new PagosjgItem();
@@ -44,117 +49,90 @@ export class DatosPagosComponent implements OnInit {
     this.getCols();
   }
 
-  cargaDatos(){
-    /*this.progressSpinnerDatos = true;
+  comboFacturacion(){
+    this.progressSpinnerDatosPagos = true;
 
-    //datos de la facturación
-    this.sigaService.getParam("facturacionsjcs_datosfacturacion", "?idFacturacion=" + this.idFacturacion).subscribe(
+    this.sigaService.get("combo_comboFacturaciones").subscribe(
       data => {
-        this.body = new FacturacionItem();
-
-        if (undefined != data.facturacionItem && data.facturacionItem.length > 0) {
-          let datos = data.facturacionItem[0];
-          this.body = JSON.parse(JSON.stringify(datos));
-
-          if (undefined != data.facturacionItem[0].fechaDesde) {
-            this.body.fechaDesde = new Date(data.facturacionItem[0].fechaDesde);
-          }
-
-          if (undefined != data.facturacionItem[0].fechaHasta) {
-            this.body.fechaHasta = new Date(data.facturacionItem[0].fechaHasta);
-            this.minDate = new Date(data.facturacionItem[0].fechaDesde);
-          }
-
-          if (undefined != data.facturacionItem[0].fechaEstado) {
-            this.body.fechaEstado = new Date(data.facturacionItem[0].fechaEstado);
-          }
-
-          if (undefined != data.facturacionItem[0].regularizacion) {
-            if (data.facturacionItem[0].regularizacion == '1') {
-              this.checkRegularizar = true;
-              this.checkRegularizarInicial = true;
-            } else {
-              this.checkRegularizar = false;
-              this.checkRegularizarInicial = false;
-            }
-          }
-
-          if (undefined != data.facturacionItem[0].visible) {
-            if (data.facturacionItem[0].visible == '1') {
-              this.checkVisible = true;
-              this.checkVisibleInicial = true;
-            } else {
-              this.checkVisible = false;
-              this.checkVisibleInicial = false;
-            }
-          }
-
-          this.bodyAux = new FacturacionItem();
-          this.bodyAux = JSON.parse(JSON.stringify(datos));
-
-          if (undefined != data.facturacionItem[0].fechaDesde) {
-            this.bodyAux.fechaDesde = new Date(data.facturacionItem[0].fechaDesde);
-          }
-
-          if (undefined != data.facturacionItem[0].fechaHasta) {
-            this.bodyAux.fechaHasta = new Date(data.facturacionItem[0].fechaHasta);
-            this.minDate = new Date(data.facturacionItem[0].fechaDesde);
-          }
-
-          if (undefined != data.facturacionItem[0].fechaEstado) {
-            this.bodyAux.fechaEstado = new Date(data.facturacionItem[0].fechaEstado);
-          }
-        }
-        this.progressSpinnerDatos = false;
+        this.facturaciones = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.facturaciones);
+				this.progressSpinnerDatosPagos = false;
       },
       err => {
         if (null != err.error) {
           console.log(err.error);
         }
-        this.progressSpinnerDatos = false;
+        this.progressSpinnerDatosPagos = false;
       }
     );
-
-    this.historicoEstados();*/
   }
 
-  historicoEstados() {
-    /*let idFac;
+  cargaDatos(){
+      if(undefined!=this.idPago){
+      this.progressSpinnerDatosPagos = true;
 
-    if (this.modoEdicion) {
-      idFac = this.idFacturacion;
-    } else if (!this.modoEdicion && undefined != this.body.idFacturacion) {
-      idFac = this.body.idFacturacion;
-    }
-
-    if (undefined != idFac) {
-      this.progressSpinnerDatos = true;
-
-      this.sigaService.getParam("facturacionsjcs_historicofacturacion", "?idFacturacion=" + idFac).subscribe(
+      //datos de la facturación
+      this.sigaService.getParam("facturacionsjcs_datosGeneralesPago", "?idPago=" + this.idPago).subscribe(
         data => {
-          this.estadosFacturacion = data.facturacionItem;
-          this.progressSpinnerDatos = false;
+          this.body = new PagosjgItem();
+
+          if (undefined != data) {
+            this.body = JSON.parse(JSON.stringify(data));
+
+            this.bodyAux = new PagosjgItem();
+            this.bodyAux = JSON.parse(JSON.stringify(data));
+          }
+
+          this.progressSpinnerDatosPagos = false;
         },
         err => {
           if (null != err.error) {
             console.log(err.error);
           }
-          this.progressSpinnerDatos = false;
+          this.progressSpinnerDatosPagos = false;
+        }
+      );
+
+      //this.historicoEstados();
+    }
+  }
+
+  historicoEstados() {
+    let idPago;
+
+    if (this.modoEdicion) {
+      idPago = this.idPago;
+    } else if (!this.modoEdicion && undefined != this.body.idPagosjg) {
+      idPago = this.body.idFacturacion;
+    }
+
+    if (undefined != idPago) {
+      this.progressSpinnerDatosPagos = true;
+
+      this.sigaService.getParam("facturacionsjcs_historicoPago", "?idPago=" + idPago).subscribe(
+        data => {
+          this.histEstados = data.facturacionItem;
+          this.progressSpinnerDatosPagos = false;
+        },
+        err => {
+          if (null != err.error) {
+            console.log(err.error);
+          }
+          this.progressSpinnerDatosPagos = false;
         }
       );
     }
-  }*/
   }
   
   disabledSave() {
     if (this.modoEdicion) {
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) && (undefined != this.body.nombre && this.body.nombre.trim() != "") /*&& (undefined != this.body.abono && this.body.abono.trim() != "") */ && (undefined != this.body.idFacturacion) && (this.idEstadoPago == "10")){
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux)) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.codBanco && this.body.codBanco.trim() != "") && (undefined != this.body.idFacturacion) && (this.idEstadoPago == "10")){
         return false;
       } else {
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idFacturacion) /*&& (undefined != this.body.abono && this.body.abono.trim() != "") */) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idFacturacion) && (undefined != this.body.codBanco && this.body.codBanco.trim() != "")) {
         return false;
       } else {
         return true;
@@ -174,7 +152,7 @@ export class DatosPagosComponent implements OnInit {
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") || (undefined != this.body.idFacturacion) /*|| (undefined != this.body.abono && this.body.abono.trim() != "") */) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") || (undefined != this.body.idFacturacion) || (undefined != this.body.codBanco && this.body.codBanco.trim() != "")) {
         return false;
       } else {
         return true;
