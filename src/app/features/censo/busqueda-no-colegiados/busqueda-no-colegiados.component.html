@@ -149,8 +149,16 @@
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                     [filter]="true" filterMatchMode="contains">
 
-                    <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
-                        <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                    <ng-template let-dato="rowData" pTemplate="body">
+                        <div *ngIf="col.field == 'fechaNacimientoDate'">
+                            <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                        </div>
+                        <div *ngIf="col.field != 'fechaNacimientoDate' && col.field != 'nombre'">
+                            <label>{{ dato[col.field]}}</label>
+                        </div>
+                        <div *ngIf="col.field == 'nombre'">
+                            <a [routerLink]="" (click)="irEditarNoColegiado(dato)" class="enlace">{{dato[col.field]}}</a>
+                        </div>
                     </ng-template>
                 </p-column>
                 <ng-template pTemplate="paginatorLeft">
@@ -201,12 +209,18 @@
 
 
                     <ng-template let-datoH="rowData" pTemplate="body">
-                        <div *ngIf="setItalic(datoH)">
+                        <div *ngIf="setItalic(datoH) && col.field != 'nombre'">
                             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
                         </div>
-                        <div *ngIf="!setItalic(datoH)">
+                        <div *ngIf="!setItalic(datoH) && col.field != 'nombre'">
                             <span>{{datoH[col.field]}}</span>
                         </div>
+                        <!-- <div *ngIf="setItalic(datoH) && col.field == 'nombre'">
+                            <a [routerLink]="" (click)="irEditarNoColegiado(datoH)" [ngStyle]="{'font-style': 'italic','color':'#0000EE !important', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</a>
+                        </div>
+                        <div *ngIf="!setItalic(datoH) && col.field == 'nombre'">
+                            <a [routerLink]="" (click)="irEditarNoColegiado(datoH)" [ngStyle]="{'color': '#0000EE !important'}">{{datoH[col.field]}}</a>
+                        </div> -->
                     </ng-template>
 
 
@@ -234,8 +248,8 @@
                             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                                 name="groupname"></p-checkbox>
                         </div>
-                        <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                        <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
                     </div>
                 </ng-template>
 

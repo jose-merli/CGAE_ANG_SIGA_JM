@@ -202,9 +202,9 @@
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable styleClass="inheritTable" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarColegiado(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-                pageLinks="4" [responsive]="true" dataKey="idPersona" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-                [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+                [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" pageLinks="4" [responsive]="true"
+                dataKey="idPersona" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO"
+                [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
 
                 <p-column [sortable]="true" [style]="{'width': '5%'}" field="colegioResultado" [header]="'censo.busquedaClientesAvanzada.literal.colegio' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
@@ -221,7 +221,7 @@
                 <p-column [sortable]="true" [style]="{'width': '15%'}" field="nombre" [header]="'administracion.parametrosGenerales.literal.nombre' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
+                        <a [routerLink]="" class="enlace" (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
                     </ng-template>
                 </p-column>
                 <p-column [sortable]="true" [style]="{'width': '7%'}" field="numberColegiado" [header]="'censo.busquedaClientesAvanzada.literal.nColegiado' | translate"
@@ -255,7 +255,7 @@
                 <p-column [sortable]="true" [style]="{'width': '13%'}" field="correo" [header]="'censo.datosDireccion.literal.correo' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
+                        <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
                     </ng-template>
                 </p-column>
                 <p-column [sortable]="true" [style]="{'width': '6%'}" field="telefono" [header]="'censo.ws.literal.telefono' | translate"
@@ -320,8 +320,8 @@
                             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                                 name="groupname"></p-checkbox>
                         </div>
-                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                        <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
 
                     </div>
                 </ng-template>

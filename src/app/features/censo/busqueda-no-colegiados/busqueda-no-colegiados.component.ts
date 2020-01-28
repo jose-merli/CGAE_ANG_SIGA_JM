@@ -767,25 +767,23 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   irEditarNoColegiado(id) {
-    if (id.length >= 1 && this.selectMultiple == false) {
+    if (id) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem(
         "filtrosBusquedaNoColegiados",
         JSON.stringify(this.body)
       );
       sessionStorage.setItem("esColegiado", "false");
-      sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
+      sessionStorage.setItem("personaBody", JSON.stringify(id));
       console.log(id);
 
-      if (id[0].fechaBaja != null) {
+      if (id.fechaBaja != null) {
         sessionStorage.setItem("disabledAction", "true");
       } else {
         sessionStorage.setItem("disabledAction", "false");
       }
 
       this.router.navigate(["/fichaColegial"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
     }
   }
 
