@@ -13,6 +13,7 @@ import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesOb
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { InscripcionesObject } from '../../../../../models/sjcs/InscripcionesObject';
 import { InscripcionesItems } from '../../../../../models/sjcs/InscripcionesItems';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
   selectedItem: number = 10;
   selectAll;
   selectedDatos: any[] = [];
+  selectedDatosCopy: any[] = [];
   numSelected = 0;
   isLetrado:boolean = false;
   selectMultiple: boolean = false;
@@ -82,7 +84,8 @@ export class TablaBajasTemporalesComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -152,9 +155,8 @@ export class TablaBajasTemporalesComponent implements OnInit {
         this.selectedDatos = [];
         this.selectedDatos.push(evento.data);
       
-        this.selectedDatos.forEach(element => {
+        this.datos.forEach(element => {
           element.fechadesde = new Date(element.fechadesde);
-          element.fechahasta = new Date(element.fechahasta);
         });
         let findDato = this.datosInicial.find(item => item.tiponombre === this.selectedDatos[0].tiponombre);
 
@@ -162,7 +164,6 @@ export class TablaBajasTemporalesComponent implements OnInit {
       } else {
         if ((evento.data.fechabaja == null || evento.data.fechabaja == undefined) && this.historico) {
           if (this.selectedDatos[0] != undefined) {
-            this.selectedDatos.pop();
           } else {
             this.selectedDatos = [];
           }
@@ -668,7 +669,7 @@ export class TablaBajasTemporalesComponent implements OnInit {
         this.disabledDenegar = false;
       }
       if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
+        // this.selectedDatos.pop();
       }
 
     }
@@ -730,18 +731,48 @@ export class TablaBajasTemporalesComponent implements OnInit {
   }
 
 
-  actualizaSeleccionados(selectedDatos) {
+  actualizaSeleccionados(event,selectedDatos) {
+    this.selectedDatosCopy = [];
+    if(event != undefined){
+      this.selectedDatosCopy.push(event.data);
+    }
     if (this.selectedDatos == undefined) {
       this.selectedDatos = [];
-      this.datos.forEach(element => {
-        // element.editable = false
-        element.overlayVisible = false;
-      });
     }
     if (selectedDatos != undefined) {
       this.numSelected = selectedDatos.length;
     }
     
+  }
+
+  fillFechaDesdeCalendar(event) {
+    if(this.selectedDatos.length > 0){
+      let findDato = this.datos.find(item => item.editable === this.selectedDatos[0].editable);
+      if(findDato != undefined){
+        this.datos.forEach(element => {
+          if(element == findDato){
+            element.fechadesde = this.transformaFecha(event);
+            // this.selectedDatos.push(element);
+          }
+        });
+      }
+    }else{
+     let dato = this.datos.find(item => item.editable == this.selectedDatosCopy[0].editable);
+     if(dato != undefined){
+       this.datos.forEach(element => {
+         if(element == dato){
+           element.fechadesde = this.transformaFecha(event);
+           this.selectedDatos.push(element);
+         }
+       });
+     }
+    }
+  }
+
+  fillFechaHastaSolicitudCalendar(event) {
+    this.selectedDatos.forEach(element => {
+      element.fechahasta = this.transformaFecha(event);
+    });
   }
 
   showMessage(severity, summary, msg) {
@@ -760,4 +791,13 @@ export class TablaBajasTemporalesComponent implements OnInit {
     return dato.nombrepartidosjudiciales;
   }
 
+  checkPermisosRest() {
+    let msg = this.commonsService.checkPermisos(this.permisos, this.historico);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.rest();
+    }
+  }
 }

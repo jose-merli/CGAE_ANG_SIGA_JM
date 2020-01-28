@@ -6,7 +6,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
       [responsive]="true" [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      (onRowSelect)="edit($event)" (onRowUnselect)="actualizaSeleccionados($event, selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -62,13 +62,13 @@
             </div>
             
             <div *ngIf="dato.editable && col.field=='fechadesde'">
-              <app-fecha [(value)]='dato.fechadesde' (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+              <app-fecha [(value)]='dato.fechadesde' (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
             </div>
             <div *ngIf="dato.editable && col.field=='fechahasta'">
-              <app-fecha [(value)]='dato.fechahasta' (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
+              <app-fecha (valueChangeInput)="fillFechaHastaSolicitudCalendar($event)" (valueChangeSelected)="fillFechaHastaSolicitudCalendar($event)"></app-fecha>
             </div>
             <div *ngIf="dato.editable && col.field=='descripcion'">
-              <input class="form-control paddingInput " [(ngModel)]="dato.descripcion" name="descripcion " type="text
+              <input class="form-control paddingInput" [(ngModel)]="dato.descripcion" name="descripcion " type="text
               " maxLength="58 " on-focusout="changeDescripcion(dato) " [(disabled)]="!permisos " (onBlur)="changeDescripcion(dato)
               " (input)="changeDescripcion(dato)" />
             </div>
@@ -115,59 +115,28 @@
 
   </div>
   <div class="card-footer">
-    <!-- <div class="main-button">
-      <div class="form-row">
-        <div class="form-group offset-0 col-lg-3 col-md-3">
-          <label>
-            {{"censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}
-          </label>
-          <app-fecha [(value)]="datos.fechaActual" *ngIf="!historico" [disabledDelete]="true" (valueChangeInput)="fillFechaCalendar($event)"
-            (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
-        </div>
-        <div class="form-group col-4">
-            <label>
-                {{"gratuita.mantenimientoLG.literal.observaciones" | translate}}
-              </label>
-        <textarea [(ngModel)]="datos.observaciones" class="textareains" name="observaciones" [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
-                 maxLength="1024"></textarea>
-        </div>
-        <div class="form-group prueba">
-          <label>
-          </label>
-          <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" (click)="validar(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.validar' | translate}}"></button>
+    <div class="text-right main-button">
+      <button [disabled]="nuevo || editMode" *ngIf="!historico" (click)="checkPermisosSearchPartida(); selectedDatos = []" pButton
+        type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
-        </div>
-        <div class="form-group">
-          <label>
-          </label>
-          <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledDenegar || !isLetrado)" (click)="denegar(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.denegar' | translate}}"></button>
-        </div>
-        <div class="form-group">
-          <label>
-          </label>
-          <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledSolicitarBaja)" (click)="solicitarBaja(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
-        </div>
-        <div class="form-group">
-          <label>
-          </label>
-          <button *ngIf="!historico" pButton
-            [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)" (click)="cambiarFecha(selectedDatos)"
-            type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
+      <button [disabled]="nuevo" *ngIf="historico" (click)="checkPermisosSearchPartida(); selectedDatos = []" pButton type="button"
+        icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-        </div>
-      </div>
+      <button [disabled]="historico || !permisos" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-    </div> -->
+      <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple && !selectAll) || selectedDatos.length == 0"
+        (click)="checkPermisosDelete(selectedDatos);" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+
+      <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
+        (click)="checkPermisosActivate(selectedDatos)" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+
+      <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
+
+      <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="checkPermisosNewPartidaPresupuestaria()"
+        type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
   </div>
 </div>
 
