@@ -2,7 +2,7 @@
 <div class="busqueda-container">
   <!--DATOS REGISTRALES-->
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('registrales')">
+    <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('registrales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -11,7 +11,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
+            <label (click)="abreCierraFicha('registrales')" class="mr-auto title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"censo.general.literal.FechaConstitucion" | translate}}
@@ -28,7 +28,7 @@
               <!--<span>{{body.numRegistro}}</span>-->
               <span>{{body.prefijoNumsspp}} {{body.contadorNumsspp}} {{body.sufijoNumsspp}}</span>
             </label>
-            <i *ngIf="!esFichaActiva('registrales')" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('registrales')" *ngIf="!esFichaActiva('registrales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -36,8 +36,8 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha('registrales')" class="title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
+        <i (click)="abreCierraFicha('registrales')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos colegiales-->

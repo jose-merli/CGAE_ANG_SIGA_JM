@@ -8,9 +8,10 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <p (click)="onHideCard()" class="title-module">{{'censo.solicitudincorporacion' | translate}}
-            <i *ngIf="showCard" class="fa fa-angle-up float-right"></i>
-            <i *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
+        <p class="title-module">
+            <span (click)="onHideCard()">{{'censo.solicitudincorporacion' | translate}}</span>
+            <i (click)="onHideCard()" *ngIf="showCard" class="fa fa-angle-up float-right"></i>
+            <i (click)="onHideCard()" *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
         </p>
         <div *ngIf="showCard" class="module vista-simple">
             <div class="form-row">

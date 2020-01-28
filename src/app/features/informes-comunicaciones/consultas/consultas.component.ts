@@ -52,7 +52,7 @@ export class ConsultasComponent implements OnInit {
   selectedInstitucion: any;
   institucionActual: any;
   eliminar: boolean = false;
-  fichaBusqueda: boolean = false;
+  fichaBusqueda: boolean = true;
   comboGenerica: any = [];
 
   valores: CampoDinamicoItem[];

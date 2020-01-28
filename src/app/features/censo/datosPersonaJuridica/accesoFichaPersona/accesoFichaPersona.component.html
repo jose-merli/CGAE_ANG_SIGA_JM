@@ -2,7 +2,7 @@
 
     <!--DATOS GENERALES-->
     <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
-        <div class="card-header header-ficha" (click)="abrirFicha()">
+        <div class="card-header header-ficha">
             <div *ngIf="!openFicha" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{"censo.datosRegistrales.literal.titulo3" | translate}}</label>
+                        <label (click)="abrirFicha()" class="mr-auto title-ficha">{{"censo.datosRegistrales.literal.titulo3" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
                         <label>{{"administracion.usuarios.literal.NIF" | translate}}
@@ -24,7 +24,7 @@
 
                         <div>
                             <!-- <i class="fa fa-rotate-right redirect"></i> -->
-                            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+                            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
                         </div>
 
                     </div>
@@ -34,10 +34,10 @@
                 <div class="img-colegiado">
                     <i class=" fa fa-user   icon-ficha"></i>
                 </div>
-                <label class="title-ficha">{{"censo.datosRegistrales.literal.titulo3" | translate}}</label>
+                <label (click)="abrirFicha()" class="title-ficha">{{"censo.datosRegistrales.literal.titulo3" | translate}}</label>
                 <div class="ml-auto">
                     <!-- <i class="fa fa-rotate-right redirect"></i> -->
-                    <i class="fa fa-angle-up "></i>
+                    <i (click)="abrirFicha()" class="fa fa-angle-up "></i>
                 </div>
             </div>
         </div>

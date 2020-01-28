@@ -2,7 +2,7 @@
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -11,12 +11,12 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
+            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}: {{body.fechaProgramada | date: 'dd/MM/yyyy, H:mm '}}
             </label>
-            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -24,8 +24,8 @@
         <div class="img-colegiado">
           <i class="fas fa-calendar-plus icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha()" class="title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
+        <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->

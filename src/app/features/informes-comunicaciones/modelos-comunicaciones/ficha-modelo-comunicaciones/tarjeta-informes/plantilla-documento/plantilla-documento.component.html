@@ -11,7 +11,7 @@
     </p>
   </div>
   <div class="card">
-    <div class="card-header header-ficha" (click)="onShowDatosGenerales()">
+    <div class="card-header header-ficha">
       <div *ngIf="!showDatosGenerales" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -261,7 +261,7 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header header-ficha" (click)="onShowConsultas()">
+    <div class="card-header header-ficha">
 
       <div *ngIf="!showConsultas" class="form-row">
         <div class="col-lg-1 col-md-2">
@@ -271,14 +271,14 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'menu.consultas' | translate }}</label>
+            <label (click)="onShowConsultas()" class="mr-auto title-ficha">{{ 'menu.consultas' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Nº {{ 'menu.consultas' | translate }}:
               <span *ngIf="datos">{{datos.length}}</span>
             </label>
 
-            <i *ngIf="!showConsultas" class="fa fa-angle-down float-right"></i>
+            <i (click)="onShowConsultas()" *ngIf="!showConsultas" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -286,8 +286,8 @@
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ 'menu.consultas' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="onShowConsultas()" class="title-ficha">{{ 'menu.consultas' | translate }}</label>
+        <i (click)="onShowConsultas()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 

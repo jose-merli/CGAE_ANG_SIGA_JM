@@ -8,7 +8,8 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <p class="title-module">{{ "general.message.datos.generales" | translate}}
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{ "general.message.datos.generales" | translate}}</span>
         <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>

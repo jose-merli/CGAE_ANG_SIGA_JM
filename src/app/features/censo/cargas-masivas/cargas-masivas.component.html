@@ -9,9 +9,10 @@
 </div>
 <div class="card">
   <div class="card-body">
-    <p class="title-module" (click)="onHideCargasMasivas()">{{ 'censo.cargasMasivas.literal' | translate }}
-      <i *ngIf="!showCargasMasivas" class="fa fa-angle-up float-right"></i>
-      <i *ngIf="showCargasMasivas" class="fa fa-angle-down float-right"></i>
+    <p class="title-module">
+      <span (click)="onHideCargasMasivas()">{{ 'censo.cargasMasivas.literal' | translate }}</span>
+      <i (click)="onHideCargasMasivas()" *ngIf="!showCargasMasivas" class="fa fa-angle-up float-right"></i>
+      <i (click)="onHideCargasMasivas()" *ngIf="showCargasMasivas" class="fa fa-angle-down float-right"></i>
     </p>
     <div *ngIf="showCargasMasivas" class="module vista-simple">
       <div class="row">

@@ -12,7 +12,8 @@
 
   <div class="card">
     <div class="card-body">
-      <p class="title-module">{{"administracion.contador.titulo" | translate}}
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{"administracion.contador.titulo" | translate}}</span>
         <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
@@ -70,7 +71,8 @@
 
 
     <div class="card-body">
-      <p class="title-module">{{"administracion.contador.reconfigurar" | translate}}
+      <p class="title-module">
+        <span (click)="onHideReconfiguracion()">{{"administracion.contador.reconfigurar" | translate}}</span>
         <i (click)="onHideReconfiguracion()" *ngIf="showReconfiguracion" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideReconfiguracion()" *ngIf="!showReconfiguracion" class="fa fa-angle-down float-right"></i>
       </p>

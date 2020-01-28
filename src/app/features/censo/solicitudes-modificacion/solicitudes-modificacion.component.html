@@ -12,10 +12,10 @@
 
   <div class="card">
     <div class="card-body">
-      <p (click)="onHideCard()" class="title-module">
-        {{ "censo.solicitudModificacion.literal.titulo" | translate }}
-        <i *ngIf="showCard" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+       <span (click)="onHideCard()">{{ "censo.solicitudModificacion.literal.titulo" | translate }}</span>
+        <i (click)="onHideCard()" *ngIf="showCard" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideCard()" *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showCard" class="module vista-avanzada">

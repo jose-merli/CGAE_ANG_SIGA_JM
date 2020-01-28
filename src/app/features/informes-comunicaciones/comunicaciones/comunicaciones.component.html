@@ -11,10 +11,12 @@
   <!--DATOS GENERALES-->
   <div class="card">
     <div class="card-body">
-      <p class="title-module"> {{'general.message.datos.generales' | translate }}
+      <p class="title-module">
+        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span> 
         <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
         <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
+      <div *ngIf="fichaBusqueda" class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
@@ -47,10 +49,10 @@
             [options]="estados" [(ngModel)]="bodySearch.idEstado" class="select-form"></p-dropdown>
         </div>
       </div>
-      <p (click)="onHideDatosDestinatarios()" class="title-module">
-        {{ "informesycomunicaciones.comunicaciones.busqueda.destinatario" | translate }}
-        <i *ngIf="showDatosDestinatarios" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosDestinatarios" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+       <span (click)="onHideDatosDestinatarios()">{{ "informesycomunicaciones.comunicaciones.busqueda.destinatario" | translate }}</span> 
+        <i (click)="onHideDatosDestinatarios()" *ngIf="showDatosDestinatarios" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosDestinatarios()" *ngIf="!showDatosDestinatarios" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosDestinatarios" class="module vista-avanzada">
         <div class="form-row">
@@ -87,6 +89,7 @@
         </div>
       </div>
     </div>
+  </div>
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="limpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{
