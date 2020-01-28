@@ -24,6 +24,8 @@ export class DatosColegiadosItem {
   categoria: string;
   residencia: string;
   situacion: string;
+  situaciones: string[];
+
   situacionResidente: string;
   situacionresidente: ComboItemColegiado;
   inscrito: string;
