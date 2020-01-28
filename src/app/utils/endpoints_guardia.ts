@@ -1,4 +1,6 @@
 export let endpoints_guardia: any = {
+
+
     busquedaGuardia_grupoZona: "combo/zonas",
     busquedaGuardia_zonas: "combo/subzonas",
     busquedaGuardia_jurisdicciones: "combo/jurisdicciones",
@@ -10,6 +12,9 @@ export let endpoints_guardia: any = {
     busquedaGuardia_tipoTurno: "combo/tipoTurno",
     busquedaGuardia_tiposGuardia: "combo/tipoGuardia",
     busquedaGuardia_guardia: "combo/guardias",
+
+
+    // Guardias
 
     busquedaGuardias_searchGuardias: "guardia/busquedaGuardia/searchGuardias",
     busquedaGuardias_deleteGuardias: "guardia/busquedaGuardia/deleteGuardias",
@@ -29,4 +34,9 @@ export let endpoints_guardia: any = {
     gestionGuardias_resumenIncompatibilidades: "guardia/gestionGuardia/resumenIncompatibilidades",
     gestionGuardias_resumenTurno: "guardia/gestionGuardia/resumenTurno",
     gestionGuardias_guardarCola: "guardia/gestionGuardia/guardarCola",
+
+
+    // Saltos y compensaciones Guardia
+    busquedaSaltosCompG_searchSaltosYComp: "/busquedaSaltosCompG/searchSaltosYCompensaciones",
+
 }

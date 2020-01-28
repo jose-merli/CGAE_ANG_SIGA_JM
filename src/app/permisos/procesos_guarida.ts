@@ -12,4 +12,6 @@ export const procesos_guardia: any = {
     baremos: "92J",
     incompatibilidades: "919",
     calendario: "92K",
+    saltos_compensaciones: "76S",
+
 }
