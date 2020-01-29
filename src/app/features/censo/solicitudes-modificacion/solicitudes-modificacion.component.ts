@@ -162,31 +162,38 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.cols = [
       {
         field: "estado",
-        header: "censo.busquedaSolicitudesModificacion.literal.estado"
+        header: "censo.busquedaSolicitudesModificacion.literal.estado",
+        width: "10%"
       },
       {
         field: "numIdSolicitud",
-        header: "censo.resultadosSolicitudesModificacion.literal.idSolicitud"
+        header: "censo.resultadosSolicitudesModificacion.literal.idSolicitud",
+        width: "10%"
       },
       {
         field: "tipoModificacion",
-        header: "censo.resultadosSolicitudesTextoLibre.literal.tipoModificacion"
+        header: "censo.resultadosSolicitudesTextoLibre.literal.tipoModificacion",
+        width: "10%"
       },
       {
         field: "numColegiado",
-        header: "censo.resultadosSolicitudesModificacion.literal.nColegiado"
+        header: "censo.resultadosSolicitudesModificacion.literal.nColegiado",
+        width: "10%"
       },
       {
         field: "nombre",
-        header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
+        header: "censo.resultadosSolicitudesModificacion.literal.Nombre",
+        width: "10%"
       },
       {
         field: "fechaAlta",
-        header: "censo.resultadosSolicitudesModificacion.literal.fecha"
+        header: "censo.resultadosSolicitudesModificacion.literal.fecha",
+        width: "10%"
       },
       {
         field: "motivo",
-        header: "censo.resultadosSolicitudesModificacion.literal.descripcion"
+        header: "censo.resultadosSolicitudesModificacion.literal.descripcion",
+        width: "40%"
       }
     ];
 

@@ -3,8 +3,8 @@
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p>{{'menu.administracion' | translate}}
-            <!-- <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma' | translate}} -->
-            <i class="pl-1 fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma.catalogos' | translate}}</p>
+            <!-- <i class="fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma' | translate}} -->
+            <i class="fa fa-angle-right"></i>{{'menu.administracion.gestionMultiidioma.catalogos' | translate}}</p>
     </div>
     <div class="card">
         <div class="card-body">
@@ -15,15 +15,15 @@
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-4 col-md-4">
+                    <div class="form-group-interlineado col-lg-4 col-md-4">
                         <label>{{'menu.administracion.gestionMultiidioma.catalogo' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedEntidad' [options]="entidad" [filter]="true" filterBy="label" (onChange)="datos($event)"></p-dropdown> &nbsp;&nbsp;
                     </div>
-                    <div class="form-group col-lg-4 col-md-4">
+                    <div class="form-group-interlineado col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
-                    <div class="form-group col-lg-4 col-md-4">
+                    <div class="form-group-interlineado col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.idiomaATraducir' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>

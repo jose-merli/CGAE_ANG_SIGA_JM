@@ -61,23 +61,23 @@
             </p>
             <div *ngIf="persona=='f'" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.usuarios.literal.NIFCIF" | translate}}</label>
                         <input type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]='bodyFisica.nif'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.nombre'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientes.literal.apellido1" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.primerApellido'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.segundoApellido'>
                     </div>
-                    <div class="form-group col-lg-6 col-md-6">
+                    <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                         <!--<p-multiSelect [filter]="true" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
                             styleClass="widthAll" [(ngModel)]='colegios_seleccionados' maxSelectedLabels="1" [panelStyle]="{width:'100%'}"></p-multiSelect>-->
@@ -87,7 +87,7 @@
                         <input [disabled]="true" *ngIf="colegioDisabled" type="text" class="form-control" pInputText [(ngModel)]='labelRemitente'>
 
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.resultadoDuplicados.numeroColegiado" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyFisica.numeroColegiado'>
                     </div>
@@ -96,26 +96,26 @@
 
             <div *ngIf="persona=='j'" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.tipoPersonaJuridica" | translate}}</label>
                         <!-- <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.tipo'> -->
                         <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
                         [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" 
                         ></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.nif'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.denominacion'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='bodyJuridica.abreviatura'>
                     </div>
-                    <div class="form-group col-lg-6 col-md-6">
+                    <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                         <p-multiSelect *ngIf="!colegioDisabled" filterBy="label" [options]="colegios_rol" optionLabel="label" [defaultLabel]="textFilter"
                             styleClass="widthAll" [(ngModel)]='colegios_seleccionados' [selectedItemsLabel]="textSelected" maxSelectedLabels="1"

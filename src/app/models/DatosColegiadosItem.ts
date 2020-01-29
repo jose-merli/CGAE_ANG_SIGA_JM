@@ -17,6 +17,7 @@ export class DatosColegiadosItem {
   tipoDireccion: string;
   numberColegiado: number;
   sexo: string;
+  incorporacionDate:Date;
   estadoCivil: string;
   estadoColegial: string;
   fechaIncorporacion: Date[];
@@ -46,7 +47,7 @@ export class DatosColegiadosItem {
   asientoContable: string;
   nMutualista: string;
   idTiposSeguro: string;
-  incorporacion: Date;
+  incorporacion: String;
   fechaJura: Date;
   fechaTitulacion: Date;
   comisiones: string;

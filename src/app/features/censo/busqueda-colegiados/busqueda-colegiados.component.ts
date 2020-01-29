@@ -699,7 +699,20 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         element.fechaNacimientoDate = new Date(year, month - 1, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
+      if (element.incorporacion == "" || element.incorporacion == null) {
+        element.incorporacion = null;
+      } else {
+        var posIni = element.incorporacion.indexOf("/");
+        var posFin = element.incorporacion.lastIndexOf("/");
+        var year = element.incorporacion.substring(posFin + 1);
+        var day = element.incorporacion.substring(0, posIni);
+        var month = element.incorporacion.substring(posIni + 1, posFin);
+        element.incorporacionDate = new Date(year, month - 1, day);
+        element.incorporacion = day + "/" + month + "/" + year;
+      }
+
     });
+
   }
 
   isLimpiar() {
@@ -779,8 +792,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.busquedaClientes.noResidente"
       },
       {
-        field: "fechaNacimientoDate",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+        field: "incorporacionDate",
+        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion"
       },
       {
         field: "correo",

@@ -138,6 +138,7 @@ export class FichaColegialComponent implements OnInit {
   numSelectedCurriculares: number = 0;
   numSelectedColegiales: number = 0;
   activacionEditar: boolean = true;
+  activacionTarjeta: boolean = false;
   situacionPersona: String;
   camposDesactivados: boolean = false;
   datos: any[] = [];
@@ -617,12 +618,14 @@ export class FichaColegialComponent implements OnInit {
       this.activacionEditar = false;
       this.emptyLoadFichaColegial = false;
       this.desactivarVolver = false;
+      this.activacionTarjeta = false;
 
       sessionStorage.removeItem("esNuevoNoColegiado");
       this.onInitGenerales();
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;
+      this.activacionTarjeta = true;
     }
 
     if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
@@ -948,7 +951,16 @@ export class FichaColegialComponent implements OnInit {
     ) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
-    } else if (
+    } 
+    if (this.activacionTarjeta) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+  }
+
+  abreCierraRegtel(key){
+    let ficha= this.getFichaPosibleByKey(key);
+   if (
       key == "regtel"
     ) {
 
@@ -958,11 +970,10 @@ export class FichaColegialComponent implements OnInit {
         this.activacionEditar = false;
         this.callConfirmationServiceRegtel();
       }
-    }
-
-    if (this.activacionEditar) {
-      fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
+      if (this.activacionEditar) {
+        ficha.activa = !ficha.activa;
+        this.openFicha = !this.openFicha;
+      }
     }
   }
   callConfirmationServiceRegtel() {
@@ -1747,6 +1758,7 @@ export class FichaColegialComponent implements OnInit {
             this.progressSpinner = false;
             this.showSuccess();
             this.activacionEditar = true;
+            this.activacionTarjeta = true;
           },
           error => {
             console.log(error);

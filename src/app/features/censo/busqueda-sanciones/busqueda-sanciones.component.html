@@ -18,19 +18,19 @@
             </p>
             <div *ngIf="showBusquedaLetrado" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}}</label>
                         <input type="text" name="nif" class="form-control" [(ngModel)]='body.nif' pInputText>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ 'censo.busquedaClientes.literal.apellido1' | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.primerApellido">
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ 'censo.busquedaClientes.literal.apellido2' | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.segundoApellido">
                     </div>
@@ -46,19 +46,19 @@
 
             <div *ngIf="showBusquedaColegio" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-6 col-md-6">
+                    <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                         <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios" [disabled]="disabledColegio"
                             optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
                             [panelStyle]="{width:'100%'}"></p-multiSelect>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.RefConsejo.literal" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.refConsejo">
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.refColegio">
                     </div>
@@ -75,35 +75,35 @@
             <div *ngIf="showBusquedaSanciones" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "busquedaSanciones.tipoFecha.literal" | translate}}</label>
                         <p-dropdown [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [options]="datesType"
                             [(ngModel)]="body.tipoFecha"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate}}</label>
                         <app-fecha [(value)]="body.fechaDesdeDate" [utc]="false" (valueChangeSelected)="fillFechaDesdeDate($event)" (valueChangeInput)="fillFechaDesdeDate($event)"></app-fecha>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate}}</label>
                         <app-fecha [(value)]="body.fechaHastaDate" [utc]="false" [(minDate)]="body.fechaDesdeDate" (valueChangeSelected)="fillFechaHastaDate($event)"
                             (valueChangeInput)="fillFechaHastaDate($event)"></app-fecha>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label class="d-block pb-2">{{"menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal" | translate}}</label>
                         <p-checkbox name="chkRehabilitado" [(ngModel)]="body.chkRehabilitado" binary="true"></p-checkbox>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate}}</label>
                         <p-dropdown class="select-form" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="tipoSancion"
                             [(ngModel)]="body.tipoSancion"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-3"></div>
+                    <div class="form-group-interlineado col-lg-3 col-md-3"></div>
                 </div>
             </div>
         </div>
