@@ -4163,6 +4163,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   redireccionarDireccion(dato) {
+    dato = [dato]; // Esto es una guarreria pero evita que haya que reescribir parte del metodo y un componente entero.
     if (this.camposDesactivados != true) {
       if (!this.selectMultipleDirecciones) {
         if (dato[0].fechaBaja != null) {

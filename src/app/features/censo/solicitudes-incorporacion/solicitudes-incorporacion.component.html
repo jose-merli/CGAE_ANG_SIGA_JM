@@ -61,15 +61,18 @@
     <div class="card-body p-0">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-            [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="irDetalleSolicitud(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-            paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
+            [sortOrder]="1" [paginator]="activarPaginacion()" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" paginatorPosition="both"
+            [rows]="selectedItem" pageLinks="4">
             <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
                 [filter]="true" filterMatchMode="contains">
                 <ng-template let-datoH="rowData" pTemplate="body">
                     <div>
-                        <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' ">{{datoH[col.field]}}</span>
+                        <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' && col.field != 'apeNom'">{{datoH[col.field]}}</span>
                         <span *ngIf="(col.field == 'fechaEstado' && col.field.fechaEstado !==null) || (col.field == 'fechaSolicitud' && col.field.fechaSolicitud !==null)">{{datoH[col.field] | date: 'dd/MM/yyyy'}}
                         </span>
+                        <div *ngIf="col.field == 'apeNom'">
+                            <a [routerLink]="" (click)="irDetalleSolicitud(datoH)" class="enlace">{{datoH[col.field]}}</a>
+                        </div>
                     </div>
                 </ng-template>
             </p-column>

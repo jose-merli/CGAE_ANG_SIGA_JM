@@ -64,11 +64,19 @@
   <!-- cuerpo datos -->
   <div *ngIf="isSearch" class="card mt-3">
     <div class="card-body p-0">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [paginator]="enablePagination()" (onRowSelect)="onSelectRow(selectedDatos)"
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [paginator]="enablePagination()" (onRowSelect)="procesar(selectedDatos)"
         selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado" [value]="data"
         [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
+          <ng-template let-datoH="rowData" pTemplate="body">
+            <div>
+              <span *ngIf="col.field != 'numIdSolicitud'">{{datoH[col.field]}}</span>
+              <div *ngIf="col.field == 'numIdSolicitud'">
+                <a [routerLink]="" (click)="onSelectRow([datoH])" class="enlace">{{datoH[col.field]}}</a>
+              </div>
+            </div>
+          </ng-template>
         </p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
@@ -85,8 +93,8 @@
               <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
           </div>
         </ng-template>
       </p-dataTable>

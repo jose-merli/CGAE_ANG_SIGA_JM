@@ -577,6 +577,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   irEditarPersona(id) {
+    id = [id] //Se hizo en una actualizacion para evitar cambiar mucho codigo
     if (!this.selectMultiple) {
       var ir = null;
       if (id && id.length > 0) {

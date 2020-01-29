@@ -209,7 +209,7 @@ export class DatosDireccionesComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     // si no se esta creando una nueva sociedad
     if (sessionStorage.getItem("nuevoRegistro") == null) {
-    fichaPosible.activa = !fichaPosible.activa;
+      fichaPosible.activa = !fichaPosible.activa;
     }
   }
 
@@ -279,6 +279,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   redireccionar(dato) {
+    dato = [dato]
     if (this.camposDesactivados != true) {
       if (!this.selectMultiple) {
         if (dato[0].fechaBaja != null) {

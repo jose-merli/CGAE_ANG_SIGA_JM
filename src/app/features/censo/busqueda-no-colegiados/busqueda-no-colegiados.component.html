@@ -142,9 +142,8 @@
     <div *ngIf="!historico && buscar" class="card mt-3">
         <div class="card-body p-0">
             <p-dataTable styleClass="inheritTable" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif"
-                [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO"
-                [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+                [(selection)]="selectedDatos" pageLinks="4" dataKey="nif" [responsive]="true" selectionMode="multiple" #table
+                class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
                 <!-- <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"  [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column> -->
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                     [filter]="true" filterMatchMode="contains">
@@ -153,11 +152,14 @@
                         <div *ngIf="col.field == 'fechaNacimientoDate'">
                             <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
                         </div>
-                        <div *ngIf="col.field != 'fechaNacimientoDate' && col.field != 'nombre'">
+                        <div *ngIf="col.field != 'fechaNacimientoDate' && col.field != 'nombre' && col.field != 'correo'">
                             <label>{{ dato[col.field]}}</label>
                         </div>
                         <div *ngIf="col.field == 'nombre'">
                             <a [routerLink]="" (click)="irEditarNoColegiado(dato)" class="enlace">{{dato[col.field]}}</a>
+                        </div>
+                        <div *ngIf="col.field == 'correo'">
+                            <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
                         </div>
                     </ng-template>
                 </p-column>
@@ -175,8 +177,8 @@
                             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                                 name="groupname"></p-checkbox>
                         </div>
-                        <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                        <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
                     </div>
                 </ng-template>
 
@@ -199,9 +201,8 @@
         <div class="card-body p-0">
 
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarNoColegiado(selectedDatos)" pageLinks="4" dataKey="nif"
-                [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO"
-                [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+                [(selection)]="selectedDatos" pageLinks="4" dataKey="nif" [responsive]="true" selectionMode="multiple" #table
+                class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
 
                 <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                     [filter]="true" filterMatchMode="contains">
@@ -209,29 +210,35 @@
 
 
                     <ng-template let-datoH="rowData" pTemplate="body">
-                        <div *ngIf="setItalic(datoH) && col.field != 'nombre'">
+                        <div *ngIf="setItalic(datoH) && col.field != 'nombre' && col.field != 'correo' && col.field != 'fechaNacimientoDate'">
                             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
                         </div>
-                        <div *ngIf="!setItalic(datoH) && col.field != 'nombre'">
+                        <div *ngIf="!setItalic(datoH) && col.field != 'nombre' && col.field != 'correo' && col.field != 'fechaNacimientoDate'">
                             <span>{{datoH[col.field]}}</span>
                         </div>
-                        <!-- <div *ngIf="setItalic(datoH) && col.field == 'nombre'">
-                            <a [routerLink]="" (click)="irEditarNoColegiado(datoH)" [ngStyle]="{'font-style': 'italic','color':'#0000EE !important', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</a>
+                        <div *ngIf="setItalic(datoH) && col.field == 'nombre'">
+                            <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="irEditarNoColegiado(datoH)"
+                                class="enlace">{{datoH[col.field]}}</a>
                         </div>
                         <div *ngIf="!setItalic(datoH) && col.field == 'nombre'">
-                            <a [routerLink]="" (click)="irEditarNoColegiado(datoH)" [ngStyle]="{'color': '#0000EE !important'}">{{datoH[col.field]}}</a>
-                        </div> -->
+                            <a [routerLink]="" (click)="irEditarNoColegiado(datoH)" class="enlace">{{datoH[col.field]}}</a>
+                        </div>
+                        <div *ngIf="setItalic(datoH) && col.field == 'correo'">
+                            <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [href]="'mailto:'+datoH[col.field]"
+                                class="enlace" target="_blank">{{datoH[col.field]}}</a>
+                        </div>
+                        <div *ngIf="!setItalic(datoH) && col.field == 'correo'">
+                            <a [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{datoH[col.field]}}</a>
+                        </div>
+                        <div *ngIf="setItalic(datoH) && col.field == 'fechaNacimientoDate'">
+                            <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                        </div>
+                        <div *ngIf="!setItalic(datoH) && col.field == 'fechaNacimientoDate'">
+                            <label>{{ datoH.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                        </div>
                     </ng-template>
 
 
-                    <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
-                        <div *ngIf="setItalic(dato)">
-                            <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
-                        </div>
-                        <div *ngIf="!setItalic(dato)">
-                            <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
-                        </div>
-                    </ng-template>
                 </p-column>
 
                 <ng-template pTemplate="paginatorLeft">

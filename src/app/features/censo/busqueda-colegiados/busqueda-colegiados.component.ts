@@ -202,8 +202,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
+    id = [id]
     sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
-    if (id) {
+    if (id.length >= 1) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
       sessionStorage.setItem(
@@ -250,7 +251,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.getSituacion(id);
 
       this.sigaServices
-        .post("busquedaColegiados_searchColegiadoFicha", id)
+        .post("busquedaColegiados_searchColegiadoFicha", id[0])
         .subscribe(
           data => {
             // this.colegiadoItem = datosColegiadosItem = new DatosColegiadosItem();
@@ -280,14 +281,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     });
 
     if (idSituacionValues.indexOf("60") != -1) {
-      id.situacion = "60";
+      id[0].situacion = "60";
     } else {
       if (idSituacionValues.indexOf("20") != -1) {
-        id.situacion = "20";
+        id[0].situacion = "20";
       } else {
         if (idSituacionValues.indexOf("30") == -1 || idSituacionValues.indexOf("40") == -1 || idSituacionValues.indexOf("50") == -1) {
           if (idSituacionValues.indexOf("10") != -1) {
-            id.situacion = "10";
+            id[0].situacion = "10";
           }
         }
       }

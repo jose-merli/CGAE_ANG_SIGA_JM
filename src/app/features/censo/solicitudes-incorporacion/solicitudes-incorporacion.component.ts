@@ -81,8 +81,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     this.cargarCombos();
     this.cols = [
       { field: "numeroIdentificacion", header: "Nº Identificación" },
-      { field: "apellidos", header: "Apellidos" },
-      { field: "nombre", header: "Nombre" },
+      { field: "apeNom", header: "Apellidos y Nombre" },
       { field: "numColegiado", header: "Nº colegiado previsto" },
       { field: "tipoSolicitud", header: "Tipo Solicitud" },
       { field: "fechaSolicitud", header: "Fecha Solicitud" },
@@ -181,6 +180,10 @@ export class SolicitudesIncorporacionComponent implements OnInit {
             element.fechaSolicitud = new Date(element.fechaSolicitud);
             element.fechaEstado = new Date(element.fechaEstado);
           });
+          this.datos = this.datos.map(it => {
+            it.apeNom = it.apellidos + " " + it.nombre;
+            return it;
+          });
           this.progressSpinner = false;
         },
         error => {
@@ -212,6 +215,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   }
 
   irDetalleSolicitud(item) {
+    item = [item] // Cambio para actualizar acceso a gestion de las tablas.
     if (item && item.length > 0) {
       var enviarDatos = null;
       enviarDatos = item[0];

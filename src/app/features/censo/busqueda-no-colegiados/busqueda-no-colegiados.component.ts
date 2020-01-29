@@ -767,17 +767,18 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   irEditarNoColegiado(id) {
-    if (id) {
+    id = [id];
+    if (id.length >= 1) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem(
         "filtrosBusquedaNoColegiados",
         JSON.stringify(this.body)
       );
       sessionStorage.setItem("esColegiado", "false");
-      sessionStorage.setItem("personaBody", JSON.stringify(id));
+      sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
       console.log(id);
 
-      if (id.fechaBaja != null) {
+      if (id[0].fechaBaja != null) {
         sessionStorage.setItem("disabledAction", "true");
       } else {
         sessionStorage.setItem("disabledAction", "false");
