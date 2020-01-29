@@ -659,7 +659,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else if (idFindTipoDirEmail != -1 && (this.body.correoElectronico == undefined || this.body.correoElectronico == "")) {
       this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.preferenteEmail"));
       return false;
-    } else if (idFindTipoDirTel != -1 && (this.body.telefono == undefined || this.body.telefono == "")) {
+    } else if (idFindTipoDirTel != -1 && (this.body.telefono == undefined || this.body.telefono == "") && (this.body.movil == undefined || this.body.movil == "")) {
       this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.guardia"));
       return false;
     } else if (idFindTipoDirCenso != -1 || idFindTipoDirFact != -1 || idFindTipoDirDes != -1 || idFindTipoDirTras != -1 || idFindTipoDirGuia != -1 || idFindTipoDirCorreo != -1) {
