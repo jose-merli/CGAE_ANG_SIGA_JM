@@ -243,6 +243,8 @@ export class FichaColegialComponent implements OnInit {
   disableNumColegiado: boolean = true;
   information: boolean = false;
   keyConfirmation: string;
+  datosTarjetaResumen;
+  iconoTarjetaResumen = "clipboard";
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -571,6 +573,25 @@ export class FichaColegialComponent implements OnInit {
       this.onInitOtrasColegiaciones();
       this.searchSanciones();
       this.searchCertificados();
+      this.datosTarjetaResumen = [
+        {
+          label: "Apellidos y Nombre",
+          value: this.generalBody.nombre
+        },
+        {
+          label: "Identificación",
+          value: this.generalBody.nif
+        },
+    
+        {
+          label: "Número de Colegiado",
+          value: this.generalBody.numColegiado
+        },
+        {
+          label: "Situación Ejercicio Actual",
+          value: this.situacionPersona
+        },
+      ];
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));

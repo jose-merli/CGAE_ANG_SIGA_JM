@@ -32,6 +32,13 @@
       <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaNoColegial" | translate }}
     </p>
   </div>
+  <!-- TARJETA RESUMEN FIJA -->
+  <div>
+    <app-tarjeta-resumen-fija *ngIf="esColegiado" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen"
+        (modoEdicionSend)="modoEdicionSend($event)"></app-tarjeta-resumen-fija>
+  </div>
+  <!-- FIN TARJETA RESUMEN FIJA -->
+
   <!-- SERVICIOS INTERES -->
   <div *ngIf="activacionEditar">
     <div *ngIf="tarjetaInteres == '3' || tarjetaInteres == '2'" class="card">
