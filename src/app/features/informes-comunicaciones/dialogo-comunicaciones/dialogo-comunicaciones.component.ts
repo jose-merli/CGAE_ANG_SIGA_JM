@@ -82,7 +82,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 		this.getMaxNumeroModelos();
 		this.getFechaProgramada();
-		this.getPlantillas();
 		this.currentDate = new Date();
 
 		this.valores = [];
@@ -154,6 +153,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			(data) => {
 				this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
 				this.getModelosComunicacion();
+				this.getPlantillas();
 			},
 			(err) => {
 				console.log(err);
@@ -617,7 +617,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	getPlantillas() {
-		this.sigaServices.get('modelos_detalle_plantillasComunicacion').subscribe(
+		this.sigaServices.getParam(
+			"modelos_detalle_plantillasComunicacionByIdClase",
+			"?idClase=" +
+			this.idClaseComunicacion
+		  ).subscribe(
 			(data) => {
 				this.plantillas = data.combooItems;
 				this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });

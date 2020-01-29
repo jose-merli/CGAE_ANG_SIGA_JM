@@ -296,7 +296,7 @@ export class FichaColegialComponent implements OnInit {
   selectedItem: number = 10;
 
   selectedDatosRegtel: DocushareItem;
-  desactivarVolver: Boolean;
+  desactivarVolver: boolean = true;
 
   comboTopics: any[] = [];
   comboService: any[] = [];
@@ -531,8 +531,8 @@ export class FichaColegialComponent implements OnInit {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-     if(this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-     if(this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
       this.idPersona = this.generalBody.idPersona;
@@ -1089,7 +1089,7 @@ export class FichaColegialComponent implements OnInit {
 
   arreglarFecha(fecha) {
 
-    if(fecha != undefined && fecha != null){
+    if (fecha != undefined && fecha != null) {
       let jsonDate = JSON.stringify(fecha);
       let rawDate = jsonDate.slice(1, -1);
       if (rawDate.length < 14) {
@@ -1106,7 +1106,7 @@ export class FichaColegialComponent implements OnInit {
   arreglarFechaRegtel(fecha) {
     let arrayDate;
 
-    if(fecha != undefined && fecha != null){
+    if (fecha != undefined && fecha != null) {
       let jsonDate = JSON.stringify(fecha);
       let rawDate = jsonDate.slice(3, -17);
       let splitDate = rawDate.split("-");
@@ -1120,13 +1120,13 @@ export class FichaColegialComponent implements OnInit {
   arreglarFechaColegial(fecha) {
     let arrayDate;
 
-    if(fecha != undefined && fecha != null){
-    let jsonDate = JSON.stringify(fecha);
-    let rawDate = jsonDate.slice(3, -15);
-    let splitDate = rawDate.split("-");
-    arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
-    // fecha = new Date((arrayDate += "T00:00:00.001Z"));
-    // fecha = new Date(rawDate);
+    if (fecha != undefined && fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(3, -15);
+      let splitDate = rawDate.split("-");
+      arrayDate = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+      // fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      // fecha = new Date(rawDate);
     }
 
     return arrayDate;
@@ -2530,8 +2530,8 @@ export class FichaColegialComponent implements OnInit {
   }
 
   activacionGuardarColegiales() {
-    if(this.colegialesBody.situacionResidente == undefined && this.datosColegiales[0].situacionResidente != undefined ) 
-    this.colegialesBody.situacionResidente = this.datosColegiales[0].situacionResidente 
+    if (this.colegialesBody.situacionResidente == undefined && this.datosColegiales[0].situacionResidente != undefined)
+      this.colegialesBody.situacionResidente = this.datosColegiales[0].situacionResidente
     this.inscritoAItem();
     this.mostrarFechas();
     if (
@@ -2540,11 +2540,11 @@ export class FichaColegialComponent implements OnInit {
       this.colegialesBody.numColegiado != "" &&
       this.colegialesBody.situacionResidente != "" &&
       this.colegialesBody.situacionResidente != undefined &&
-      this.colegialesBody.situacionResidente != "0" &&      
-      this.datosColegiales[0].idEstado != "" &&   
+      this.colegialesBody.situacionResidente != "0" &&
+      this.datosColegiales[0].idEstado != "" &&
       this.datosColegiales[0].idEstado != null &&
       this.colegialesBody.residenteInscrito != "" &&
-      this.colegialesBody.incorporacion != null &&      
+      this.colegialesBody.incorporacion != null &&
       this.datosColegiales[0].fechaEstadoStr != null &&
       this.colegialesBody.fechapresentacion != null) {
 
@@ -2569,18 +2569,18 @@ export class FichaColegialComponent implements OnInit {
       if (this.isCrearColegial == false) {
         let colegialesSinEditar = JSON.parse(JSON.stringify(this.datosColegiales));
         colegialesSinEditar.forEach(element => {
-        element.habilitarObs = false;
-    });
-        if (JSON.stringify(colegialesSinEditar) != JSON.stringify(this.checkDatosColegiales) &&  this.datosColegiales[0].fechaEstadoStr != null && this.datosColegiales[0].idEstado != "" && this.datosColegiales[0].idEstado != null && this.colegialesBody.situacionResidente != "0" && 
-        this.colegialesBody.situacionResidente != undefined &&this.colegialesBody.situacionResidente != "") {
+          element.habilitarObs = false;
+        });
+        if (JSON.stringify(colegialesSinEditar) != JSON.stringify(this.checkDatosColegiales) && this.datosColegiales[0].fechaEstadoStr != null && this.datosColegiales[0].idEstado != "" && this.datosColegiales[0].idEstado != null && this.colegialesBody.situacionResidente != "0" &&
+          this.colegialesBody.situacionResidente != undefined && this.colegialesBody.situacionResidente != "") {
           this.activarGuardarColegiales = true;
         } else {
           this.activarGuardarColegiales = false;
         }
       } else if (this.colegialesBody.numColegiado != "" &&
-      this.colegialesBody.situacionResidente != "" &&
-      this.colegialesBody.situacionResidente != undefined &&
-      this.colegialesBody.situacionResidente != "0" &&
+        this.colegialesBody.situacionResidente != "" &&
+        this.colegialesBody.situacionResidente != undefined &&
+        this.colegialesBody.situacionResidente != "0" &&
         this.colegialesBody.residenteInscrito != "" &&
         this.colegialesBody.incorporacion != null &&
         this.colegialesBody.fechapresentacion != null &&
@@ -2610,19 +2610,19 @@ export class FichaColegialComponent implements OnInit {
   }
 
   pasarFechas() {
-    
-      this.colegialesBody.incorporacionDate = this.arreglarFecha(
-        this.colegialesBody.incorporacion
-      );
-      this.colegialesBody.fechapresentacionDate = this.arreglarFecha(
-        this.colegialesBody.fechapresentacion
-      );
-      this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(
-        this.colegialesBody.fechaTitulacion
-      );
-      this.colegialesBody.fechaJuraDate = this.arreglarFecha(
-        this.colegialesBody.fechaJura
-      );
+
+    this.colegialesBody.incorporacionDate = this.arreglarFecha(
+      this.colegialesBody.incorporacion
+    );
+    this.colegialesBody.fechapresentacionDate = this.arreglarFecha(
+      this.colegialesBody.fechapresentacion
+    );
+    this.colegialesBody.fechaTitulacionDate = this.arreglarFecha(
+      this.colegialesBody.fechaTitulacion
+    );
+    this.colegialesBody.fechaJuraDate = this.arreglarFecha(
+      this.colegialesBody.fechaJura
+    );
 
     // Tabla de colegiales
     if (this.isCrearColegial == true) {
@@ -2669,7 +2669,7 @@ export class FichaColegialComponent implements OnInit {
               }
 
               this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].situacion).label;
-              
+
               if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
                 this.residente = "Si";
               } else {
@@ -2693,7 +2693,7 @@ export class FichaColegialComponent implements OnInit {
   comprobarDirecciones() {
     //Si es un nuevo estado
     if (this.isCrearColegial == true) {
-      
+
       this.colegialesBody.situacionResidente = this.nuevoEstadoColegial.situacionResidente;
       this.colegialesBody.fechaEstado = this.arreglarFecha(this.nuevoEstadoColegial.fechaEstadoStr);
       this.colegialesBody.fechaEstadoStr = JSON.stringify(this.nuevoEstadoColegial.fechaEstadoStr);
@@ -2767,7 +2767,7 @@ export class FichaColegialComponent implements OnInit {
         this.callServiceGuardarColegiales();
       }
     }
-    if (this.nuevoEstadoColegial.situacionResidente == "1"  || this.nuevoEstadoColegial.situacionResidente == "Si") {
+    if (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si") {
       this.residente = "Si";
     } else {
       this.residente = "No";
@@ -2931,7 +2931,7 @@ export class FichaColegialComponent implements OnInit {
           // Siempre realizaremos el update de los registros de la tabla, tanto del registro editable como de los registros que solo se pueden modificar las observaciones
           this.datosColegiales[0].idInstitucion = this.colegialesBody.idInstitucion;
           this.datosColegiales[0].idPersona = this.colegialesBody.idPersona;
-          if(this.datosColegiales[0].observaciones == undefined) this.datosColegiales[0].observaciones = "";
+          if (this.datosColegiales[0].observaciones == undefined) this.datosColegiales[0].observaciones = "";
           this.sigaServices
             .post("fichaDatosColegiales_datosColegialesUpdateEstados", this.datosColegiales)
             .subscribe(
@@ -2944,7 +2944,7 @@ export class FichaColegialComponent implements OnInit {
                   this.nuevoEstadoColegial.idPersona = this.colegialesBody.idPersona;
                   this.nuevoEstadoColegial.fechaEstado = estadoCol.fechaEstado;
                   this.nuevoEstadoColegial.observaciones = estadoCol.observaciones;
-                  if(this.nuevoEstadoColegial.observaciones == undefined) this.nuevoEstadoColegial.observaciones = "";
+                  if (this.nuevoEstadoColegial.observaciones == undefined) this.nuevoEstadoColegial.observaciones = "";
                   this.nuevoEstadoColegial.situacion = estadoCol.situacion;
                   this.nuevoEstadoColegial.situacionResidente = estadoCol.situacionResidente;
 
@@ -3135,14 +3135,14 @@ export class FichaColegialComponent implements OnInit {
           // this.datosColegiales = JSON.parse(data["body"]);
           this.colegialesObject = JSON.parse(data["body"]);
           this.datosColegiales = this.colegialesObject.colegiadoItem;
-          
-     this.datosColegiales.forEach(element => {
-      if (element.situacionResidente == "0") {
-        element.situacionResidente = "No";
-      }else if(element.situacionResidente == "1"){
-        element.situacionResidente == "Si";
-      }
-    });
+
+          this.datosColegiales.forEach(element => {
+            if (element.situacionResidente == "0") {
+              element.situacionResidente = "No";
+            } else if (element.situacionResidente == "1") {
+              element.situacionResidente == "Si";
+            }
+          });
           this.datosColegialesInit = JSON.parse(JSON.stringify(this.datosColegiales));
 
           if (this.datosColegiales.length > 0) {
@@ -3172,9 +3172,9 @@ export class FichaColegialComponent implements OnInit {
 
           }
 
-            this.datosColegiales.forEach(element => {
-      element.habilitarObs = false;
-    });
+          this.datosColegiales.forEach(element => {
+            element.habilitarObs = false;
+          });
           this.checkDatosColegiales = JSON.parse(JSON.stringify(this.datosColegiales));
         },
         err => {
@@ -3299,7 +3299,7 @@ export class FichaColegialComponent implements OnInit {
     this.datosColegiales.forEach(element => {
       element.habilitarObs = false;
     });
-  
+
   }
 
 
@@ -3407,7 +3407,7 @@ export class FichaColegialComponent implements OnInit {
           this.numSelectedColegiales = 0;
         }
       );
-      this.isRestablecer = false;
+    this.isRestablecer = false;
   }
 
   eliminarEstadoColegial(selectedItem) {

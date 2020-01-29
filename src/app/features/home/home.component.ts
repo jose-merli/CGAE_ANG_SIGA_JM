@@ -17,7 +17,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
-	styleUrls: [ './home.component.scss' ]
+	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices, handler: HttpBackend) {
@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
 		this.generalBody.searchLoggedUser = true;
 
 		this.sigaServices
-			.postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+			.postPaginado('busquedaColegiados_searchColegiadoFicha', '?numPagina=1', this.generalBody)
 			.subscribe(
 				(data) => {
 					let busqueda = JSON.parse(data['body']);
@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit {
 
 	getMantenerSesion() {
 		setInterval(() => {
-			this.oldSigaMantener().subscribe((response) => {}, (error) => {});
+			this.oldSigaMantener().subscribe((response) => { }, (error) => { });
 		}, 300000);
 	}
 
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
 	oldSigaMantener(): Observable<any> {
 		let oldSigaRquest = this.oldSigaMantenerSesion();
 
-		return forkJoin([ oldSigaRquest ]).map((response) => {
+		return forkJoin([oldSigaRquest]).map((response) => {
 			let oldSigaResponse = response[0].status;
 			if (oldSigaResponse == 200) {
 				return true;
