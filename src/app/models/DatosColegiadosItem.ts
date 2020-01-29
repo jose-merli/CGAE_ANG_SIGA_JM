@@ -52,6 +52,7 @@ export class DatosColegiadosItem {
   comisiones: string;
   partidoJudicial: string;
   subtipoCV: string[];
+  domicilio: string;
 
   idEstadoCivil: string;
 

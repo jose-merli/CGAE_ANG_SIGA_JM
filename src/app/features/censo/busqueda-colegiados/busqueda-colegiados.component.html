@@ -149,8 +149,11 @@
 
             <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
-
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{'censo.consultaDirecciones.literal.direccion' | translate}}</label>
+                        <input type="text" name="direccion" class="form-control" [maxLength]="95" [(ngModel)]='body.domicilio' pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
                         <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='body.codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
                     </div>
