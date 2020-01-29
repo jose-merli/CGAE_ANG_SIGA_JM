@@ -62,7 +62,7 @@
   </div>
 
   <!-- cuerpo datos -->
-  <div *ngIf="isSearch" class="card mt-3">
+  <div *ngIf="isSearch" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [paginator]="enablePagination()" (onRowSelect)="onSelectRow(selectedDatos)"
         selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado" [value]="data"

@@ -18,6 +18,7 @@ import { Message } from "primeng/components/common/api";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
 import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -70,6 +71,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -407,6 +409,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

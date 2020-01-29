@@ -24,6 +24,7 @@ import { esCalendar } from "../../../utils/calendar";
 import { SigaWrapper } from "../../../wrapper/wrapper.class";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { SigaServices } from "../../../_services/siga.service";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -95,6 +96,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     private authenticationService: AuthenticationService,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) {
     super(USER_VALIDATIONS);
@@ -446,6 +448,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }

@@ -12,6 +12,7 @@ import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { TranslateService } from "../../../commons/translate";
 import { ConfirmationService } from "../../../../../node_modules/primeng/primeng";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -62,6 +63,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -212,6 +214,12 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           err => {
             console.log(err);
             this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
 
@@ -246,6 +254,12 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

@@ -101,4 +101,11 @@ export class CommonsService {
     }
   }
 
+  scrollTablaFoco(idFoco) {
+    let top = document.getElementById(idFoco);
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  } 
 }

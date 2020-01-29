@@ -25,6 +25,7 @@ import { esCalendar } from "./../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -118,6 +119,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -637,7 +639,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.filtrosTrim();
       this.progressSpinner = true;
       this.buscar = true;
-
+      
       this.body.fechaIncorporacion = [];
       this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
       this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
@@ -681,6 +683,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }

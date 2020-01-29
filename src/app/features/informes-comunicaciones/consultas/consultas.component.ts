@@ -16,6 +16,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -79,6 +80,7 @@ export class ConsultasComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -443,6 +445,9 @@ export class ConsultasComponent implements OnInit {
         },
         () => {
           this.table.reset();
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -564,6 +569,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   navigateTo(dato) {
+    dato.pop();
     let id = dato[0].id;
     console.log(dato);
     this.selectedInstitucion = dato[0].idInstitucion;

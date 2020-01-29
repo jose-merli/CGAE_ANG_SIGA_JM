@@ -39,7 +39,7 @@
         </div>
     </div>
     <!--FIN CARD-->
-    <div *ngIf="buscarSeleccionado == true" class="card mt-3">
+    <div *ngIf="buscarSeleccionado == true" class="card mt-3" id="tablaFoco">
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosTraduccion" [editable]="true" [responsive]="true"
                 #table class="tabla-listado" [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">

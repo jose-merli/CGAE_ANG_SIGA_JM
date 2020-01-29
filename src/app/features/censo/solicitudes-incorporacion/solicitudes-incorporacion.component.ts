@@ -18,6 +18,7 @@ import { TranslateService } from "../../../commons/translate";
 import { SolicitudIncorporacionObject } from "../../../models/SolicitudIncorporacionObject";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
 import { Message } from "primeng/components/common/api";
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -59,6 +60,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     private sigaServices: SigaServices,
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
+    private commonsService: CommonsService,
     private router: Router
   ) {
     this.formBusqueda = this.formBuilder.group({
@@ -185,6 +187,12 @@ export class SolicitudesIncorporacionComponent implements OnInit {
         },
         error => {
           console.log(error);
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
 

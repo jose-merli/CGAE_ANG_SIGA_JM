@@ -5,6 +5,7 @@ import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { SigaServices } from "../../../_services/siga.service";
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -50,6 +51,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -302,6 +304,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         () => {
           this.table.reset();
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

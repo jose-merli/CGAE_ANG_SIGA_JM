@@ -19,6 +19,7 @@ import { Router } from "@angular/router";
 import { SolicitudesModificacionObject } from "../../../models/SolicitudesModificacionObject";
 import { ComboItem } from "../../../models/ComboItem";
 import { StringObject } from "../../../models/StringObject";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -80,6 +81,7 @@ export class SolicitudesModificacionComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -326,6 +328,12 @@ export class SolicitudesModificacionComponent implements OnInit {
       err => {
         console.log(err);
         this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(()=>{
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       }
     );
   }

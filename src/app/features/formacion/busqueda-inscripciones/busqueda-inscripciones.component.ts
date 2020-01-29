@@ -26,6 +26,7 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { Location } from "@angular/common";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -123,6 +124,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     private translateService: TranslateService,
     private location: Location,
     private router: Router,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) {
     super(USER_VALIDATIONS);
@@ -627,6 +629,9 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }
