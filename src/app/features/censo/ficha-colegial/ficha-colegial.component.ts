@@ -183,7 +183,8 @@ export class FichaColegialComponent implements OnInit {
   archivoDisponible: boolean = false;
   existeImagen: boolean = false;
   showGuardarAuditoria: boolean = false;
-  etiquetasPersonaJuridicaSelecionados: ComboEtiquetasItem[] = [];
+  // etiquetasPersonaJuridicaSelecionados: ComboEtiquetasItem[] = [];
+  etiquetasPersonaJuridicaSelecionados: any[] = [];
   imagenPersona: any;
   partidoJudicialObject: DatosDireccionesObject = new DatosDireccionesObject();
   partidoJudicialItem: DatosDireccionesItem = new DatosDireccionesItem();
@@ -207,7 +208,7 @@ export class FichaColegialComponent implements OnInit {
   isClose: boolean = false;
   emptyLoadFichaColegial: boolean = false;
   disabledAction: boolean = false;
-  comboEtiquetas: any[];
+  comboEtiquetas: any[] = [];
   inscritoSeleccionado: String = "00";
   inscritoDisabled: boolean = false;
   tratamientoDesc: String;
@@ -432,6 +433,8 @@ export class FichaColegialComponent implements OnInit {
   residente: String;
   displayDelete: boolean;
 
+  textFilter = 'Etiquetas';
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -452,6 +455,7 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.OnInit();
     }
+    console.log(this.etiquetasPersonaJuridicaSelecionados);
   }
 
   returnHome() {
@@ -666,6 +670,8 @@ export class FichaColegialComponent implements OnInit {
     if (!this.esNewColegiado) {
       this.compruebaDNI();
     }
+
+    this.filterLabelsMultiple();
 
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
@@ -1882,6 +1888,7 @@ export class FichaColegialComponent implements OnInit {
 
     this.comisionesAString();
     this.getInscritoInit();
+    this.sortOptions();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
 
     if (JSON.parse(JSON.stringify(this.resultsTopics)) != undefined && JSON.parse(JSON.stringify(this.resultsTopics)) != null && JSON.parse(JSON.stringify(this.resultsTopics)).length > 0) {
@@ -2116,7 +2123,7 @@ export class FichaColegialComponent implements OnInit {
 
   // ETIQUETAS
 
-  filterLabelsMultiple(event) {
+  filterLabelsMultiple() {
     let etiquetasPuestas = [];
     if (this.etiquetasPersonaJuridicaSelecionados) {
       etiquetasPuestas = this.etiquetasPersonaJuridicaSelecionados;
@@ -2124,24 +2131,25 @@ export class FichaColegialComponent implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         // coger todas las etiquetas
-        let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
+        // let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
 
         // this.comboEtiquetas = this.comboEtiquetas.filter(function(item) {
         //   return !etiquetasPuestas.includes(item);
         // });
 
-        if (etiquetasPuestas.length > 0) {
-          this.comboEtiquetas = [];
+        // if (etiquetasPuestas.length > 0) {
+        //   this.comboEtiquetas = [];
 
-          etiquetasSugerencias.forEach(element => {
-            let find = etiquetasPuestas.find(x => x.label === element.label);
-            if (find == undefined) {
-              this.comboEtiquetas.push(element);
-            }
-          });
-        } else {
-          this.comboEtiquetas = etiquetasSugerencias;
-        }
+        //   etiquetasSugerencias.forEach(element => {
+        //     let find = etiquetasPuestas.find(x => x.label === element.label);
+        //     if (find == undefined) {
+        //       this.comboEtiquetas.push(element);
+        //     }
+        //   });
+        // } else {
+          this.comboEtiquetas = n.comboItems;
+          this.sortOptions();
+        // }
       },
       err => {
         console.log(err);
@@ -2383,7 +2391,8 @@ export class FichaColegialComponent implements OnInit {
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-            this.etiquetasPersonaJuridicaSelecionados.push(value);
+            value.value = value.idGrupo;
+            this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
             // this.generalBody.
           });
 
@@ -2397,6 +2406,8 @@ export class FichaColegialComponent implements OnInit {
 
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
           this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.etiquetasPersonaJuridicaSelecionados));
+          
+          this.sortOptions();
         },
         err => {
           console.log(err);
@@ -2405,6 +2416,22 @@ export class FichaColegialComponent implements OnInit {
     // this.generalBody.etiquetas = new ComboEtiquetasItem();
 
     // this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados;
+  }
+
+  private sortOptions() {
+    if (this.comboEtiquetas && this.etiquetasPersonaJuridicaSelecionados) {
+      this.comboEtiquetas.sort((a, b) => {
+        const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a.value);
+        const includeB = this.etiquetasPersonaJuridicaSelecionados.includes(b.value);
+        if (includeA && !includeB) {
+          return -1;
+        }
+        else if (!includeA && includeB) {
+          return 1;
+        }
+        return a.label.localeCompare(b.label);
+      });
+    }
   }
 
   cargarImagen(idPersona: String) {

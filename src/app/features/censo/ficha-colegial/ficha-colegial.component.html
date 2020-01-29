@@ -282,25 +282,13 @@
               </label>
 
               <br />
-              <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                [minLength]="1" field="label" [multiple]="true" (ngModelChange)="activacionGuardarGenerales()" (onKeyUp)="onKeyUp($event)"
-                (onBlur)="onBlur($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)" [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction"
-                [style]="{ width: '100%' }" [inputStyle]="{ width: '100%' }" (click)="disabledAutocomplete()">
-                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
-                  <div *ngIf="
-                      etiquetasPersonaJuridicaSelecionados.backgroundColor != ''
-                    " class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
-                    [ngStyle]="{
-                      background:
-                        etiquetasPersonaJuridicaSelecionados.backgroundColor
-                    }">
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == 'white'" style="color:black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != 'white'"
-                      style="color:white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined" style="color:black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                  </div>
-                </ng-template>
-              </p-autoComplete>
+              <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="etiquetasPersonaJuridicaSelecionados"
+                                [options]="comboEtiquetas"
+                                [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction"
+                                styleClass="widthAll" [panelStyle]="{width:'100%'}"
+                                (ngModelChange)="activacionGuardarGenerales()"
+                                (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
+                                (click)="disabledAutocomplete()"></p-multiSelect>
             </div>
           </div>
         </div>
