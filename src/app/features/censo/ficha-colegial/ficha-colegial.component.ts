@@ -455,7 +455,6 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.OnInit();
     }
-    console.log(this.etiquetasPersonaJuridicaSelecionados);
   }
 
   returnHome() {
@@ -1606,14 +1605,22 @@ export class FichaColegialComponent implements OnInit {
     this.generalBody.temasCombo = this.resultsTopics;
     // this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados.values;
     for (let i in this.etiquetasPersonaJuridicaSelecionados) {
-      this.generalBody.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
+      const encEtiqueta = this.comboEtiquetas.find(item => item.value == this.etiquetasPersonaJuridicaSelecionados[i]);
+      if(encEtiqueta){
+        let etiCopia : ComboEtiquetasItem = new ComboEtiquetasItem();
+        Object.assign(etiCopia, encEtiqueta);
+        etiCopia.idGrupo = etiCopia.value;
+        this.generalBody.etiquetas[i] = etiCopia;  
+      }
+      /*this.generalBody.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
         i
-      ];
+      ];*/
 
-      if (this.generalBody.etiquetas[i].value != "" && this.generalBody.etiquetas[i].value != null &&
+      // Ya no se permite el crear nuevas etiquetas
+      /*if (this.generalBody.etiquetas[i].value != "" && this.generalBody.etiquetas[i].value != null &&
         this.generalBody.etiquetas[i].value != undefined) {
         this.generalBody.etiquetas[i].idGrupo = this.generalBody.etiquetas[i].value
-      }
+      }*/
     }
 
     // fichaDatosGenerales_CreateNoColegiado
@@ -2301,7 +2308,7 @@ export class FichaColegialComponent implements OnInit {
 
       } else {
         // Si existe en el array, lo borramos para que no queden registros duplicados
-        for (
+        /*for (
           let i = 0;
           i < this.etiquetasPersonaJuridicaSelecionados.length;
           i++
@@ -2325,7 +2332,7 @@ export class FichaColegialComponent implements OnInit {
               this.onUnselect(event);
             }
           }
-        }
+        }*/
         if (
           this.updateItems.size >
           this.etiquetasPersonaJuridicaSelecionados.length
@@ -2391,7 +2398,6 @@ export class FichaColegialComponent implements OnInit {
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-            value.value = value.idGrupo;
             this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
             // this.generalBody.
           });
