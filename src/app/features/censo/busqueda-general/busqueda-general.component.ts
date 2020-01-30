@@ -616,6 +616,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
               }
             }
+
             setTimeout(()=>{
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
@@ -691,6 +692,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
                   sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
                 }
               }
+              setTimeout(()=>{
+                this.commonsService.scrollTablaFoco('tablaFoco');
+              }, 5);
             }
           );
       }
