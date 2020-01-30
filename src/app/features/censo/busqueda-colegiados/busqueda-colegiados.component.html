@@ -242,14 +242,14 @@
                     </ng-template>
                 </p-column>
             
-                <p-column [sortable]="true" [style]="{'width': '8%'}" field="incorporacionDate" [header]="'censo.consultaDatosGenerales.literal.fechaIncorporacion' | translate"
+                <p-column [sortable]="true" [style]="{'width': '10%'}" field="incorporacionDate" [header]="'censo.consultaDatosGenerales.literal.fechaIncorporacion' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
                     <ng-template let-col let-dato="rowData" pTemplate="body">
                         <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                     </ng-template>
                 </p-column>
-                
+
                 <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidente" [header]="'censo.busquedaClientes.noResidente' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
@@ -258,7 +258,7 @@
                     </ng-template>
                 </p-column>
 
-                <p-column [sortable]="true" [style]="{'width': '13%'}" field="correo" [header]="'censo.datosDireccion.literal.correo' | translate"
+                <!-- <p-column [sortable]="true" [style]="{'width': '13%'}" field="correo" [header]="'censo.datosDireccion.literal.correo' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
                         <label>{{ dato[col.field] }}</label>
@@ -275,43 +275,20 @@
                     <ng-template let-col let-dato="rowData" pTemplate="body">
                         <label>{{ dato[col.field] }}</label>
                     </ng-template>
-                </p-column>
+                </p-column> -->
                 <p-column [sortable]="true" [style]="{'width': '5%'}" field="noAparecerRedAbogaciaFilter" [header]="'censo.busquedaColegial.lopd' | translate"
                     [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body" #textAlignCenter>
                         <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
                         </label>
+                        <label (click)="displayBoolean=true; show($event,dato)">
+                            <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png">
+                        </label>
                         <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
                             <img src="./assets/images/icons/warning.png">
                         </label>
                     </ng-template>
                 </p-column>
-
-                <!-- <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-                    [filter]="true" filterMatchMode="contains" [ngStyle]="{'text-align': col.align}">
-
-                    <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
-                        <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
-                    </ng-template>
-
-                    <ng-template *ngIf="col.field == 'noAparecerRedAbogacia2'" let-dato="rowData" pTemplate="body" #textAlignCenter>
-                        <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
-                        </label>
-                        <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
-                            <img src="./assets/images/icons/warning.png">
-                        </label>
-                    </ng-template>
-
-                    <ng-template *ngIf="col.field == 'estadoColegial'" let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato.estadoColegial}}</label>
-                        <label *ngIf="dato.comunitario == '1'">{{dato.estadoColegial}} (Inscrito)</label>
-                    </ng-template>
-
-                    <ng-template *ngIf="col.field == 'situacionResidente'" let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.situacionResidente == undefined || dato.situacionResidente == null || dato.situacionResidente == '0'">No</label>
-                        <label *ngIf="dato.situacionResidente == '1'">Si</label>
-                    </ng-template>
-                </p-column> -->
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar d-flex text-right justify-content-end">
@@ -356,7 +333,58 @@
     <!--FIN DE PRINCIPAL-->
     <app-dialog></app-dialog>
 </div>
-
+<p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true" [showCloseIcon]="true" #op>
+    <div class="info-limit" *ngIf="publicarDatosContacto" >
+        <img src="./assets/images/icons/warning.png">
+        <div class="d-inline-block">
+          <div>
+            <span class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+          </div> 
+        </div>
+    </div>
+    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="false" #table class="tabla-listado"
+    [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"
+    selectionMode="multiple">
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col *ngFor="let col of colsDirecciones" [style.width]="col.width">
+      </colgroup>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          {{ col.header | translate }}
+          <p-sortIcon [field]="col.field"></p-sortIcon>
+          <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                  col.field, 'contains')">
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+        <td class="text-center" *ngFor="let col of columns">
+          <span> {{dato[col.field]}}</span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+      <tr>
+        <td [attr.colspan]="columns.length">
+          {{ 'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}.
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+      <div class="mostrar d-flex text-right justify-content-end">
+        <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
+          + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+        <!-- <label>{{"general.message.mostrar" | translate}}</label> -->
+        <!-- <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown> -->
+        <!-- <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label> -->
+      </div>
+    </ng-template>
+  </p-table>        
+</p-overlayPanel>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
 </div>

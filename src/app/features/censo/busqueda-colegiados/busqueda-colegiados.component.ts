@@ -25,6 +25,9 @@ import { esCalendar } from "./../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
+import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
+import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
+import { OverlayPanelModule, OverlayPanel } from 'primeng/primeng';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -45,7 +48,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-
+  datosDirecciones: DatosDireccionesItem[] = [];
+  datosDireccionesHist = new DatosDireccionesObject();
   formBusqueda: FormGroup;
   numSelected: number = 0;
   datos: any[];
@@ -59,10 +63,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   buscar: boolean = false;
 
   es: any = esCalendar;
-
+  publicarDatosContacto: boolean;
   editar: boolean = true;
   noResultsSubtipos: boolean = true;
-
+  displayBoolean: boolean = false;
+  display: boolean = false;
   comboEtiquetas: any[];
   comboSituacion: any[];
   comboResidencia: any[] = [];
@@ -76,6 +81,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboTiposDireccion: any[];
   comboTipoCV: any[];
   comboColegios: any[];
+  colsDirecciones: any = [];
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
@@ -128,6 +134,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       numeroColegiado: new FormControl(null, Validators.minLength(3))
     });
   }
+  @ViewChild("op")
+  op: OverlayPanel;
 
   @ViewChild("table")
   table: DataTable;
@@ -183,6 +191,46 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.getComboSubtipoCurricular(this.body.tipoCV);
       this.getComboTipoCurricular(this.body.tipoCV);
     }
+    this.colsDirecciones = [
+      {
+        field: "tipoDireccion",
+        header: "censo.datosDireccion.literal.tipo.direccion",
+        width:"25%"
+      },
+      {
+        field: "domicilioLista",
+        header: "censo.consultaDirecciones.literal.direccion",
+      },
+      {
+        field: "codigoPostal",
+        header: "censo.ws.literal.codigopostal",
+        width:"8%"
+      },
+      {
+        field: "nombrePoblacion",
+        header: "censo.consultaDirecciones.literal.poblacion",
+        width:"8%"
+      },
+      {
+        field: "nombreProvincia",
+        header: "censo.datosDireccion.literal.provincia",
+        width:"8%"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono",
+        width:"7%"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil",
+        width:"7%"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo"
+      }
+    ];
   }
 
   onHideDatosGenerales() {
@@ -202,6 +250,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
+    if(this.displayBoolean){
+      this.searchHistoricoDatosDirecciones(id);
+    }else{
+
     sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
     if (id.length >= 1 && this.selectMultiple == false) {
       sessionStorage.removeItem("personaBody");
@@ -274,9 +326,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
 
 
-    } else {
+    } 
+ 
+    else {
       this.actualizaSeleccionados(this.selectedDatos);
     }
+  }
   }
 
   getSituacion(id) {
@@ -795,18 +850,18 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         field: "incorporacionDate",
         header: "censo.consultaDatosGenerales.literal.fechaIncorporacion"
       },
-      {
-        field: "correo",
-        header: "censo.datosDireccion.literal.correo"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
-      },
+      // {
+      //   field: "correo",
+      //   header: "censo.datosDireccion.literal.correo"
+      // },
+      // {
+      //   field: "telefono",
+      //   header: "censo.ws.literal.telefono"
+      // },
+      // {
+      //   field: "movil",
+      //   header: "censo.datosDireccion.literal.movil"
+      // },
       {
         field: "noAparecerRedAbogacia2",
         header: "censo.busquedaColegial.lopd",
@@ -1032,4 +1087,50 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaNacimientoHastaSelect = event;
   }
 
+  showDialog(){
+    this.displayBoolean = true;
+    // this.display = true;
+  }
+
+  searchHistoricoDatosDirecciones(selectedDatos) {
+    // this.bodyDirecciones.historico = true;
+    this.progressSpinner = true;
+    // this.historico = true;
+    let searchObject = new DatosDireccionesItem();
+    searchObject.idPersona = selectedDatos[0].idPersona;
+    searchObject.historico = true;
+    // this.buscar = false;
+    this.selectMultiple = false;
+    // this.selectedDatosDirecciones = "";
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.datosDireccionesHist = JSON.parse(data["body"]);
+          this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
+          // this.tableDirecciones.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.display = true;
+         }
+      );
+  }
+ show(event,dato){
+     this.op.toggle(event);
+     if(dato.noAparecerRedAbogacia2 == '1'){
+       this.publicarDatosContacto = true;
+     }
+     else{
+      this.publicarDatosContacto = false;
+     }
+ }
+ hideOverlay(event){
+   this.displayBoolean = false;
+ }
 }
