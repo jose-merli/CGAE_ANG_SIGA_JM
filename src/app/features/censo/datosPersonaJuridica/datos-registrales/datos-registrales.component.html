@@ -52,11 +52,11 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
               <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.objetoSocial" type="text" class="form-control"
-                (input)="habilitarCheck()" pInputText>
+                pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
-              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena" (input)="habilitarCheck()"
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena"
                 type="text" class="form-control" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -107,26 +107,29 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}} (*)</label>
               <input [(ngModel)]="body.numRegistro" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" type="text" class="form-control"
-                (input)="habilitarCheck()" [maxLength]="20" pInputText>
+                 [maxLength]="20" pInputText>
             </div>
             <div class="form-row p-1 col-lg-6 col-md-6">
-              <div class="col-lg-12 col-md-12">
+              <div *ngIf="!sociedadProfesional" class="col-lg-12 col-md-12">
+                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}}</label>
+              </div>
+              <div *ngIf="sociedadProfesional" class="col-lg-12 col-md-12">
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}} (*)</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
-                  type="text" maxlength="8" class="form-control" [(disabled)]="prefijoBlock" pInputText>
+                <input [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
+                  type="text" maxlength="8" class="form-control" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
-                  type="text" class="form-control" (ngModelChange)="compruebaRegistro()" [attr.maxlength]="longitudcontador"
+                <input [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
+                  type="text" class="form-control" (ngModelChange)="compruebaRegistro()" [maxlength]="longitudcontador"
                   pInputText>
                 <div *ngIf="contadorNoCorrecto == true">
                   <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                 </div>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [disabled]="noEditable || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
+                <input [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
                   type="text" maxlength="8" class="form-control" pInputText>
               </div>
             </div>
@@ -134,7 +137,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
               <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
-                class="form-control" (ngModelChange)="habilitarCheck()" [maxLength]="10" pInputText>
+                class="form-control" [maxLength]="10" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
@@ -150,7 +153,7 @@
             <div class="form-check col-lg-6 col-md-6">
               <br>
               <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
-              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" [disabled]="tarjeta == '2' || !habilitarCheck()"></p-checkbox>
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" [disabled]="tarjeta == '2'"></p-checkbox>
             </div>
           </div>
         </div>
@@ -161,7 +164,7 @@
 
         <button (click)="search()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton type="button " icon="fa fa-undo "
           iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="desactivadoGuardar() || disabledAction" (click)="guardar()" pButton type="button " icon="far fa-save "
+        <button (click)="guardar()" pButton type="button " icon="far fa-save "
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

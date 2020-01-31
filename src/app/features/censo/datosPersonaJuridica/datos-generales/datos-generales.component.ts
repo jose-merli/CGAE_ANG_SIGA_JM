@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
@@ -230,6 +230,7 @@ export class DatosGenerales implements OnInit {
         this.editar = true;
         this.datosGeneralesSearch();
         this.cargarImagen(this.body.idPersona);
+
       }
       this.textFilter = "Elegir";
 
@@ -369,7 +370,6 @@ export class DatosGenerales implements OnInit {
           // si esta en modo edicion y guarda => rellenar tipo
           if (this.editar) {
             this.comboTipo = [];
-
             if (this.body.tipo != undefined) {
               let newTipo = this.comboIdentificacion.find(
                 item => item.value == this.body.tipo
@@ -441,6 +441,7 @@ export class DatosGenerales implements OnInit {
             data => {
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
+
             },
             error => {
 

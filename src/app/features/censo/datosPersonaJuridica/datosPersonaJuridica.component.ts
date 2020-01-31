@@ -25,6 +25,7 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   fichasPosibles: any[] = [];
   generales: boolean = false;
   migaPan: string = "";
+  modoEdicion: boolean = false;
 
   constructor(
     public sigaServices: OldSigaServices,
@@ -99,4 +100,5 @@ export class DatosPersonaJuridicaComponent implements OnInit {
   getFichasPosibles() {
     return this.fichasPosibles;
   }
+
 }

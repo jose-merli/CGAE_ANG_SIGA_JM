@@ -25,6 +25,7 @@ import { esCalendar } from "./../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
+import { saveAs } from 'file-saver/FileSaver';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -269,7 +270,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             console.log(err);
           },
 
-      );
+        );
 
 
 
@@ -1017,6 +1018,53 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   fillFechaNacimientoHasta(event) {
     this.fechaNacimientoHastaSelect = event;
+  }
+
+  generarExcels() {
+
+    this.progressSpinner = true;
+
+    this.body.fechaIncorporacion = [];
+    this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
+    this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
+
+    this.body.fechaNacimientoRango = [];
+    this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
+    this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
+
+    this.sigaServices
+      .postDownloadFiles("busquedaColegiados_generarExcel", this.body)
+      .subscribe(data => {
+        this.progressSpinner = false;
+        if (data == null) {
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+        } else {
+          saveAs(data, "ResultadoConsulta.xlsx");
+        }
+      }, error => {
+        console.log(error);
+        this.progressSpinner = false;
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
+      }, () => {
+        this.progressSpinner = false;
+      });
+
+  }
+
+  // Mensajes
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
 
 }
