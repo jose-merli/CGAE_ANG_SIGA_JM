@@ -58,38 +58,31 @@ export class LoginDevelopComponent implements OnInit {
 			}
 		);
 		this.sigaServices.getBackend('validaUsuario').subscribe(
-			(response) => {
-				this.service.autenticate().subscribe(
 					(response) => {
-						this.progressSpinner = false;
-						this.ocultar = true;
+								this.progressSpinner = false;
+								this.ocultar = true;
 					},
-					(err) => {
-						console.log(err);
-						this.progressSpinner = false;
+					(error) => {
+						console.log('ERROR', error);
+						if (error.status == 403) {
+							let codError = error.status;
+
+							sessionStorage.setItem('codError', codError);
+							sessionStorage.setItem('descError', 'Usuario no válido');
+							this.router.navigate([ '/errorAcceso' ]);
+							this.progressSpinner = false;
+						}
+						if (error.status == 500) {
+							let codError = error.status;
+
+							sessionStorage.setItem('codError', codError);
+							sessionStorage.setItem('descError', 'Usuario no válido');
+							this.router.navigate([ '/errorAcceso' ]);
+							this.progressSpinner = false;
+						}
 					}
 				);
-			},
-			(error) => {
-				console.log('ERROR', error);
-				if (error.status == 403) {
-					let codError = error.status;
 
-					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Usuario no válido');
-					this.router.navigate([ '/errorAcceso' ]);
-					this.progressSpinner = false;
-				}
-				if (error.status == 500) {
-					let codError = error.status;
-
-					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Usuario no válido');
-					this.router.navigate([ '/errorAcceso' ]);
-					this.progressSpinner = false;
-				}
-			}
-		);
 		this.sigaServices.getBackend('instituciones').subscribe((n) => {
 			this.instituciones = n.combooItems;
 
