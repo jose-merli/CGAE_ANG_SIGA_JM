@@ -57,6 +57,7 @@ import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricul
 import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
 import * as moment from 'moment';
 import { findIndex } from 'rxjs/operators';
+import { DatosGenerales } from '../datosPersonaJuridica/datos-generales/datos-generales.component';
 
 @Component({
   selector: "app-ficha-colegial",
@@ -244,6 +245,7 @@ export class FichaColegialComponent implements OnInit {
   information: boolean = false;
   keyConfirmation: string;
   datosTarjetaResumen;
+  enlacesTarjetaResumen;
   iconoTarjetaResumen = "clipboard";
 
   @ViewChild("autocompleteTopics")
@@ -443,16 +445,77 @@ export class FichaColegialComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private router: Router,
+
     private datepipe: DatePipe
   ) { }
 
 
   ngOnInit() {
-
     if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.getColegiadoLogeado();
     } else {
       this.OnInit();
+     
+        this.enlacesTarjetaResumen = [
+          {
+            label: "facturacion.tarjetas.literal.serviciosInteres",
+            value: document.getElementById("sInteres"),
+            nombre: "tarjetaInteres",
+          },
+          {
+            label: "general.message.datos.generales",
+            value: document.getElementById("datosGen"),
+            nombre: "tarjetaGenerales",
+
+          },
+          {
+            label: "censo.consultaDatosColegiales.literal.cabecera",
+            value: document.getElementById("datosCol"),
+            nombre: "tarjetaColegiales",
+          },
+          {
+            label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
+            value: document.getElementById("otrasColegiaciones"),
+            nombre: "tarjetaOtrasColegiaciones",
+
+          },
+          {
+            label: "menu.certificados",
+            value: document.getElementById("certif"),
+            nombre: "tarjetaCertificados",
+
+          },
+          {
+            label: "censo.consultaDatosCV.cabecera",
+            value: document.getElementById("datosCurriculares"),
+            nombre: "tarjetaCurriculares",
+
+          },
+          {
+            label: "censo.fichaCliente.datosDirecciones.cabecera",
+            value: document.getElementById("direcciones"),
+            nombre: "tarjetaDirecciones",
+
+          }, {
+            label: "censo.consultaDatosBancarios.cabecera",
+            value: document.getElementById("datosBanc"),
+            nombre: "tarjetaBancarios",
+          }, {
+            label: "censo.regtel.literal.titulo",
+            value: document.getElementById("regtel"),
+            nombre: "tarjetaRegtel",
+          },{
+            label: "censo.alterMutua.titulo",
+            value: document.getElementById("alterMutua"),
+            nombre: "tarjetaAlterMutua",
+          },
+           {
+            label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+            value: document.getElementById("mutualidad"),
+            nombre: "tarjetaMutualidad",
+
+          },
+        ];
     }
   }
 
@@ -592,6 +655,7 @@ export class FichaColegialComponent implements OnInit {
           value: this.situacionPersona
         },
       ];
+     
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -4596,7 +4660,6 @@ export class FichaColegialComponent implements OnInit {
   irTurnoOficio() {
     let idInstitucion = this.authenticationService.getInstitucionSession();
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
-
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
 
     if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
@@ -5931,6 +5994,7 @@ export class FichaColegialComponent implements OnInit {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjetaInteresNum = permisosArray[0].derechoacceso;
+        
       },
       err => {
         console.log(err);

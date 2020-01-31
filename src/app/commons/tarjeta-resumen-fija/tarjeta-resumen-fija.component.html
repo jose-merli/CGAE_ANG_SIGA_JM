@@ -1,4 +1,4 @@
-<div class="card" #pabloCabezon id="cabeza">
+<div class="card" id="cabeza">
   <div class="card-header header-ficha">
     <div class="form-row">
       <div class="col-lg-1 col-md-2">
@@ -21,9 +21,20 @@
           <label name>
             <b>{{dato.label}}: </b>{{dato.value}}</label>
         </div>
-        <i (click)="goDown()" class="fa fa-angle-down ml-auto"></i>
-        <i (click)="goTop()" class="fa fa-angle-up"></i>
       </div>
+      <div class="col-1"></div>
+      <div class="col-11 form-row pt-2">
+        <div class="d-flex flex-wrap" *ngFor="let enlace of enlaces">
+          <label name>
+            <a (click)="goToCard(enlace.value)">
+              <span style="color: blue; text-decoration: underline"> {{enlace.label | translate }}
+              </span>
+            </a>
+          </label>
+      </div>
+      <i (click)="goDown()" class="fa fa-angle-down ml-auto pr-3"></i>
+      <i (click)="goTop()" class="fa fa-angle-up"></i>
     </div>
   </div>
+</div>
 </div>

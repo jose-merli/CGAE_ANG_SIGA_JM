@@ -33,11 +33,12 @@
     </p>
   </div>
   <!-- TARJETA RESUMEN FIJA -->
-    <app-tarjeta-resumen-fija *ngIf="esColegiado" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen"
+    <app-tarjeta-resumen-fija class="pb-50" *ngIf="esColegiado" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
         (modoEdicionSend)="modoEdicionSend($event)"></app-tarjeta-resumen-fija>
   <!-- FIN TARJETA RESUMEN FIJA -->
 
   <!-- SERVICIOS INTERES -->
+  <div id="sInteres">
   <div *ngIf="activacionEditar">
     <div *ngIf="tarjetaInteres == '3' || tarjetaInteres == '2'" class="card">
       <div class="card-header header-ficha">
@@ -109,8 +110,11 @@
       </div>
     </div>
   </div>
+  </div>
   <!-- FIN TARJETA SERVICIOS INTERES -->
+  
   <!-- FICHA DATOS GENERALES -->
+  <div id="datosGen">
   <div *ngIf="tarjetaGenerales == '3' || tarjetaGenerales == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('generales')">
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
@@ -415,9 +419,9 @@
       </div>
     </div>
   </div>
-
+</div>
   <!-- END DATOS GENERALES -->
-
+<div id= "datosCol">
   <!-- FICHA DATOS COLEGIALES -->
   <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('colegiales')">
@@ -743,7 +747,8 @@
     </div>
   </div>
   <!-- END DATOS COLEGIALES -->
-
+</div>
+<div id = "otrasColegiaciones">
   <!-- FICHA OTRAS COLEGIACIONES -->
   <div *ngIf="(tarjetaOtrasColegiaciones == '3' || tarjetaOtrasColegiaciones == '2') && esColegiado" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('colegiaciones')">
@@ -818,10 +823,11 @@
 
     <div *ngIf="esFichaActiva('colegiaciones')" class="card-footer "></div>
   </div>
-
+</div>
   <!-- END FICHA OTRAS COLEGIACIONES -->
 
   <!-- FICHA CERTIFICADOS -->
+  <div id="certif">
   <div *ngIf="tarjetaCertificados == '3' || tarjetaCertificados == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('certificados')">
       <div *ngIf="!esFichaActiva('certificados')" class="form-row">
@@ -895,8 +901,7 @@
     </div>
     <div *ngIf="esFichaActiva('certificados')" class="card-footer "></div>
   </div>
-
-
+</div>
   <!-- END FICHA CERTIFICADOS -->
 
   <!-- FICHA SANCIONES -->
@@ -1034,8 +1039,8 @@
     </div>
   </div>
   <!-- END FICHA SOCIEDADES -->
-
   <!-- FICHA DATOS CURRICULARES -->
+  <div id = "datosCurriculares">
   <div *ngIf="tarjetaCurriculares == '3' || tarjetaCurriculares == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('curriculares')">
       <div *ngIf="!esFichaActiva('curriculares')" class="form-row">
@@ -1143,9 +1148,9 @@
       </div>
     </div>
   </div>
-
+</div>
   <!-- END FICHA DATOS CURRICULARES -->
-
+  <div id = "direcciones">
   <!-- INICIO FICHA DATOS DIRECCIONES -->
   <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('direcciones')">
@@ -1267,10 +1272,11 @@
       </div>
     </div>
   </div>
-
+</div>
   <!-- END FICHA DATOS DIRECCIONES -->
 
   <!-- INICIO FICHA DATOS BANCARIOS -->
+  <div id = "datosBanc">
   <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('bancarios')">
       <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
@@ -1366,9 +1372,11 @@
       </div>
     </div>
   </div>
+  </div>
   <!-- END FICHA DATOS BANCARIOS -->
 
   <!-- INICIO FICHA REGTEL -->
+  <div id = "regtel">
   <div *ngIf="esRegtel">
     <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
       <div class="card-header header-ficha" (click)="abreCierraFicha('regtel')">
@@ -1464,11 +1472,10 @@
       </div>
     </div>
   </div>
-
+</div>
   <!-- END FICHA REGTEL-->
-
-
   <!--FICHA DATOS ALTER MUTUA-->
+  <div id = "alterMutua">
   <div *ngIf="tarjetaAlterMutua == '3' || tarjetaAlterMutua == '2'" class="card">
     <div class="card-header header-ficha">
       <div *ngIf="!fichaMutua" class="form-row">
@@ -1499,8 +1506,8 @@
       </div>
     </div>
   </div>
-
-
+</div>
+<div id="mutualidad">
   <!--MUTUALIDAD DE LA ABOGACÍA-->
   <div *ngIf="tarjetaMutualidad == '3' || tarjetaMutualidad == '2'" class="card" id="down">
     <div class="card-header header-ficha">
@@ -1531,7 +1538,7 @@
       </div>
     </div>
   </div>
-
+</div>
   <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
