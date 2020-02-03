@@ -280,12 +280,14 @@ export class FichaCursoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.progressSpinner2 = true;
+    this.progressSpinner = true;
+
     sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
-    this.progressSpinner2 = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
     this.getCombosFormadores();
@@ -514,8 +516,11 @@ export class FichaCursoComponent implements OnInit {
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
-    this.focusNombre(this.inputNombre);
 
+  }
+
+  ngAfterViewInit(): void {
+    this.focusNombre(this.inputNombre);
   }
 
 
