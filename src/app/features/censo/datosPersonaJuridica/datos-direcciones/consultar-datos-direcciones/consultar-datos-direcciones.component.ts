@@ -7,7 +7,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 
 import { DatosDireccionesItem } from "./../../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDireccionesObject";
-import { DropdownModule, Dropdown } from "primeng/dropdown";
+import { Dropdown } from "primeng/dropdown";
 
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
@@ -103,6 +103,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   faxValido: boolean = true;
   mvlValido: boolean = true;
 
+  resaltadoDatos: boolean = false
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -122,7 +124,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("mailto")
   mailto;
   ngOnInit() {
-
+    this.resaltadoDatos=false;
     this.migaPan = sessionStorage.getItem("migaPan");
 
     if (JSON.parse(sessionStorage.getItem("situacionColegialesBody")) == "20") {
@@ -907,6 +909,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   serviceSaveDirection() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
 
     // modo edicion
     if (this.registroEditable) {
@@ -1081,6 +1084,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   guardarLetrado() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
+
     // modo edicion
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
@@ -1188,6 +1193,34 @@ para poder filtrar el dato con o sin estos caracteres*/
       )
     });
   }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.isLetrado){
+      if(!this.desactivaGuardar()){
+        this.comprobarAuditoria('noletrado');
+      }else{
+        this.muestraCamposObligatorios();
+      }
+    }else if(this.isLetrado){
+      if(!this.desactivaGuardar()){
+        this.comprobarAuditoria('letrado');
+      }else{
+        this.muestraCamposObligatorios();
+      }
+    }
+  }
+
   comprobarAuditoria(tipoCambio) {
     // modo edicion
 
@@ -1279,6 +1312,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.mvlValido = true;
     this.tlfValido = true;
     this.webValido = true;
+    this.resaltadoDatos=false;
 
     this.body.idPersona = this.usuarioBody[0].idPersona;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
