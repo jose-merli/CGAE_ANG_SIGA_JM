@@ -1421,3 +1421,15 @@ p-footer .main-button{
   width: 100%;
   height: 100%;
 }
+
+.camposObligatorios{
+  border-color: red;
+}
+
+.camposObligatorios > div{
+   border-color: red;
+}
+
+.camposObligatorios > input{
+  border-color: red;
+}

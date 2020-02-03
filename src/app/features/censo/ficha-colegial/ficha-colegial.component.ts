@@ -3,10 +3,9 @@ import {
   OnInit,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewInit,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from "@angular/core";
-import { AutoComplete, Dialog, Calendar } from "primeng/primeng";
+import { AutoComplete, Dialog, Calendar, Dropdown } from 'primeng/primeng';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../utils/calendar';
 import { Location } from "@angular/common";
 import { DatePipe } from "@angular/common";
@@ -19,23 +18,14 @@ import { AuthenticationService } from "../../../_services/authentication.service
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
-import { DatosGeneralesComponent } from "./../../../new-features/censo/ficha-colegial/datos-generales/datos-generales.component";
 // IMPORT PANTALLA EDICION
-import { EdicionCurricularesComponent } from "./edicionDatosCurriculares/edicionCurriculares.component";
 // BODYS IMPORT
 import { FichaColegialGeneralesItem } from "./../../../../app/models/FichaColegialGeneralesItem";
 import { FichaColegialGeneralesObject } from "./../../../../app/models/FichaColegialGeneralesObject";
 import { FichaColegialColegialesItem } from "./../../../../app/models/FichaColegialColegialesItem";
 import { FichaColegialColegialesObject } from "./../../../../app/models/FichaColegialColegialesObject";
-import { FichaColegialColegiacionesItem } from "./../../../../app/models/FichaColegialColegiacionesItem";
-import { FichaColegialColegiacionesObject } from "./../../../../app/models/FichaColegialColegiacionesObject";
-import { FichaColegialCertificadosItem } from "./../../../../app/models/FichaColegialCertificadosItem";
 import { FichaColegialCertificadosObject } from "./../../../../app/models/FichaColegialCertificadosObject";
 import { SolicitudIncorporacionItem } from "../../../models/SolicitudIncorporacionItem";
-import { FichaColegialSociedadesItem } from "./../../../../app/models/FichaColegialSociedadesItem";
-import { FichaColegialSociedadesObject } from "./../../../../app/models/FichaColegialSociedadesObject";
-import { FichaColegialEdicionCurricularesItem } from "./../../../models/FichaColegialEdicionCurricularesItem";
-import { FichaColegialEdicionCurricularesObject } from "./../../../models/FichaColegialEdicionCurricularesObject";
 import { DatosDireccionesItem } from "./../../../models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../models/DatosDireccionesObject";
 import { DatosBancariosItem } from "./../../../models/DatosBancariosItem";
@@ -43,10 +33,8 @@ import { DatosBancariosObject } from "./../../../models/DatosBancariosObject";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { DatosGeneralesItem } from "../../../models/DatosGeneralesItem";
 import { DatosColegiadosObject } from "../../../models/DatosColegiadosObject";
-import { PersonaJuridicaItem } from "../../../models/PersonaJuridicaItem";
 import { PersonaJuridicaObject } from "../../../models/PersonaJuridicaObject";
 import { ComboEtiquetasItem } from "./../../../models/ComboEtiquetasItem";
-import { ComboItem } from "../../administracion/parametros/parametros-generales/parametros-generales.component";
 import { DatosColegiadosItem } from "../../../models/DatosColegiadosItem";
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
@@ -56,7 +44,6 @@ import { DocushareItem } from "../../../models/DocushareItem";
 import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricularesObject";
 import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
 import * as moment from 'moment';
-import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: "app-ficha-colegial",
@@ -243,6 +230,9 @@ export class FichaColegialComponent implements OnInit {
   disableNumColegiado: boolean = true;
   information: boolean = false;
   keyConfirmation: string;
+
+  resaltadoDatosGenerales: boolean = false;
+  resaltadoDatosColegiales: boolean = false;
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -440,8 +430,7 @@ export class FichaColegialComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe
+    private router: Router
   ) { }
 
 
@@ -1610,6 +1599,7 @@ export class FichaColegialComponent implements OnInit {
     this.comisionesAString();
     this.generalBody.etiquetas = [];
     this.generalBody.temasCombo = this.resultsTopics;
+    this.resaltadoDatosGenerales=false;
     // this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados.values;
     for (let i in this.etiquetasPersonaJuridicaSelecionados) {
       this.generalBody.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
@@ -1890,6 +1880,24 @@ export class FichaColegialComponent implements OnInit {
     return fecha;
   }
 
+  checkDatosGenerales(datos){
+    if (this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&
+    this.generalBody.idTipoIdentificacion != undefined && this.generalBody.soloNombre != undefined && this.generalBody.apellidos1 != undefined &&
+    this.generalBody.soloNombre != "" && this.generalBody.apellidos1 != "" && this.generalBody.idTratamiento != null &&
+    this.generalBody.idLenguaje != "" && this.generalBody.idLenguaje != undefined) {        
+        
+      this.resaltadoDatosGenerales=false;
+      if(datos=="guardarDatosGenerales"){
+      this.comprobarAuditoria('guardarDatosGenerales');
+      }else{
+        this.comprobarAuditoria('solicitudModificacion');
+      }
+    }else{
+      this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+      this.resaltadoDatosGenerales=true;
+    }
+  }
+
   activacionGuardarGenerales() {
 
     this.comisionesAString();
@@ -1900,33 +1908,10 @@ export class FichaColegialComponent implements OnInit {
       this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
     }
 
-    if (
-      (JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)) || this.file != undefined
-    ) {
-      if (
-        this.generalBody.nif != "" &&
-        this.generalBody.nif != undefined &&
-        this.generalBody.idTipoIdentificacion != "" &&
-        this.generalBody.idTipoIdentificacion != undefined &&
-        this.generalBody.soloNombre != undefined &&
-        this.generalBody.apellidos1 != undefined &&
-        this.generalBody.soloNombre != "" &&
-        this.generalBody.apellidos1 != "" &&
-        this.generalBody.idTratamiento != null &&
-        this.generalBody.idLenguaje != "" &&
-        this.generalBody.idLenguaje != undefined
-      ) {
-        this.activarGuardarGenerales = true;
-      } else {
-        this.activarGuardarGenerales = false;
-      }
-    } else {
-      this.activarGuardarGenerales = false;
-    }
+    this.activarGuardarGenerales=true;
 
     return this.activarGuardarGenerales;
   }
-
   activacionRestablecerGenerales() {
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
     if (
@@ -2024,6 +2009,8 @@ export class FichaColegialComponent implements OnInit {
       this.activacionGuardarGenerales();
       this.resultsTopics = JSON.parse(JSON.stringify(this.checkGeneralBody.temasCombo));
     }
+
+    this.resaltadoDatosGenerales=false;
   }
 
   //FOTOGRAFIA
@@ -2527,6 +2514,43 @@ export class FichaColegialComponent implements OnInit {
     // datePipePresentacion: boolean = false;
     // datePipeFechaJura: boolean = false;
     // datePipeFechaTitulacion
+  }
+  
+  styleObligatorio(resaltado, evento){
+    if((evento == null || evento == undefined || evento == "") && resaltado=="datosGenerales" && this.resaltadoDatosGenerales){
+        return "camposObligatorios";
+    }    
+    
+    if((evento == null || evento == undefined || evento == "") && resaltado=="datosColegiales" && this.resaltadoDatosColegiales){
+        return "camposObligatorios";
+    }
+  }
+
+  compruebaDatosColegiales(){    
+    if (this.colegialesBody.numColegiado != "" && this.colegialesBody.incorporacion != undefined &&
+    this.colegialesBody.fechapresentacion != undefined && this.colegialesBody.residenteInscrito!=undefined){
+      
+      if(!this.inscritoChange){
+        if(!this.activarGuardarColegiales || this.disabledAction || this.tarjetaColegiales=='2' || this.isLetrado){
+          this.comprobarAuditoria('guardarDatosColegiales');
+        }else{
+          this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+          this.resaltadoDatosColegiales=true;
+        }
+      }
+
+      if(this.inscritoChange){
+        if(this.isLetrado){
+          this.comprobarAuditoria('guardarDatosColegiales');
+        }else{
+          this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+          this.resaltadoDatosColegiales=true;
+        }
+      }
+    }else{
+      this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+      this.resaltadoDatosColegiales=true;
+    }
   }
 
   activacionGuardarColegiales() {
