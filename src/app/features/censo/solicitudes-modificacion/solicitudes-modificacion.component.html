@@ -100,7 +100,7 @@
       </p-dataTable>
     </div>
     <div class="card-footer">
-      <div *ngIf="(selectMultiple || selectAll) && selectedDatos.length > 0" class="text-right main-button ">
+      <div *ngIf="selectedDatos.length > 0" class="text-right main-button ">
         <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{'modificacionDatos.boton.procesarSolicitudes' | translate}}"
           [(disabled)]="isLetrado"></button>
         <button (click)="denyMultipleRequest(selectedDatos)" pButton type="button" icon="fa fa-times" iconPos="left" label="{{ 'general.boton.denegarSolicitudes' | translate}}"

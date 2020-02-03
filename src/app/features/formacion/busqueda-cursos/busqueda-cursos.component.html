@@ -134,25 +134,32 @@
   <div *ngIf="buscar" class="card mt-3">
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarCurso(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="4" dataKey="idCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable"
-        [value]="datos" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" pageLinks="4" dataKey="idCurso"
+        [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable" [value]="datos" [sortOrder]="sortO"
+        [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
 
           <ng-template let-dato="rowData" pTemplate="body">
-            <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
+            <div *ngIf="col.field !='precioCurso' && col.field != 'nombreCurso'">
+              <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
+            </div>
+
+            <div *ngIf="col.field == 'nombreCurso'">
+              <a [routerLink]="" [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}" (click)="irEditarCurso([dato])" class="enlace">{{ dato[col.field]}}</a>
+            </div>
+
+            <div *ngIf="col.field =='precioCurso'">
+              <span [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.value1] | number:'1.2-2'}} € - {{dato[col.value2] | number:'1.2-2'}} €</span>
+            </div>
+
           </ng-template>
-
-
-            <ng-template *ngIf="col.field =='precioCurso'" let-datoH="rowData" pTemplate="body">
-                <span>{{datoH[col.value1] | number:'1.2-2'}} € - {{datoH[col.value2] | number:'1.2-2'}} €</span>
-            </ng-template> 
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
             <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true"></p-dropdown>
@@ -161,9 +168,8 @@
               <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
           </div>
         </ng-template>
 

@@ -2491,7 +2491,6 @@ export class FichaCursoComponent implements OnInit {
 
   disabledDuplicate() {
     if (
-      this.selectMultipleSessions &&
       (this.selectedDatosSessions != null &&
         this.selectedDatosSessions.length == 1)
     )

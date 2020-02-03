@@ -1042,12 +1042,25 @@
     <div class="row">
 
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleSessions }"
-        [(selection)]="selectedDatosSessions" (onRowSelect)="irEditarSession(selectedDatosSessions)" (onRowUnselect)="actualizaSeleccionadosSessions(selectedDatosSessions)"
-        pageLinks="4" dataKey="idEvento" [responsive]="true" selectionMode="multiple" #tableSessions class="tabla-listado"
-        [value]="datosSessions" [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedSessions">
+        [(selection)]="selectedDatosSessions" (onRowUnselect)="actualizaSeleccionadosSessions(selectedDatosSessions)" pageLinks="4"
+        dataKey="idEvento" [responsive]="true" selectionMode="multiple" #tableSessions class="tabla-listado" [value]="datosSessions"
+        [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedSessions">
+
         <p-column *ngFor="let col of colsSessions" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
+
+          <ng-template let-dato="rowData" pTemplate="body">
+            <div *ngIf="col.field !='fechaHoraInicio'">
+              <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
+            </div>
+
+            <div *ngIf="col.field == 'fechaHoraInicio'">
+              <a [routerLink]="" (click)="irEditarSession([dato])" class="enlace">{{ dato[col.field]}}</a>
+            </div>
+          </ng-template>
         </p-column>
+
+
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableSessions.first + 1
@@ -1062,10 +1075,10 @@
               <p-checkbox (onChange)="onChangeSelectAllSessions()" [(ngModel)]="selectAllSessions" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultipleSessions }" (click)="
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{ 'seleccion-multiple': selectMultipleSessions }" (click)="
                   isSelectMultipleSessions(); selectedDatosSessions = false
                 ">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label>
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label> -->
           </div>
         </ng-template>
       </p-dataTable>

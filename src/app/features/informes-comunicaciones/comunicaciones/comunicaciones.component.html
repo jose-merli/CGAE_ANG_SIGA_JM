@@ -98,8 +98,8 @@
   <div class="card" *ngIf="showResultados">
     <div class="card-body p-0">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-        paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
+        [paginator]="true" [rows]="selectedItem" [first]="first" (onRowSelect)="fila(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+        selectionMode="multiple" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -118,12 +118,13 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'"> {{dato[col.field]}}</span>
+              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada' && col.field != 'destinatario'"> {{dato[col.field]}}</span>
               <span *ngIf="
                 col.field=='fechaProgramada' || col.field=='fechaCreacion'">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}
               </span>
-              <span *ngIf="
-                dato[col.field]==null || dato[col.field]==''">-</span>
+              <span *ngIf="dato[col.field]==null || dato[col.field]==''">-</span>
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field == 'destinatario'">{{dato[col.field]}}</a>
+
             </td>
 
           </tr>

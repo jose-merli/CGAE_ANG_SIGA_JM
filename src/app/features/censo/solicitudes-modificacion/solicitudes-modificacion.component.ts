@@ -65,7 +65,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   @ViewChild("table")
   table;
-  selectedDatos;
+  selectedDatos = [];
   cols: any = [];
   rowsPerPage: any = [];
   data: any[] = [];

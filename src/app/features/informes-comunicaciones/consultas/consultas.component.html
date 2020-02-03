@@ -64,7 +64,7 @@
     <div class="card-body p-0">
       <p-table dataKey="idConsulta" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple"
-        paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)">
+        paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -83,10 +83,12 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='preseleccionado'"> {{dato[col.field]}}</span>
-              <span *ngIf="col.field=='preseleccionado'">
+              <span *ngIf="col.field !='preseleccionado' && col.field != 'nombre'"> {{dato[col.field]}}</span>
+
+              <span *ngIf="col.field == 'preseleccionado'">
                 <i class="fa fa-check"></i>
               </span>
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field == 'nombre'">{{dato[col.field]}}</a>
             </td>
           </tr>
         </ng-template>
@@ -110,8 +112,8 @@
               <p-checkbox (onChange)="SelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
           </div>
         </ng-template>
       </p-table>

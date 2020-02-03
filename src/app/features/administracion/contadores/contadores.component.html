@@ -56,11 +56,19 @@
   <div *ngIf="buscar == true" class="card mt-3">
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [ngClass]="{ customCursor: selectMultiple }"
-        [(selection)]="selectedDatos" (onRowSelect)="irEditarContador(selectedDatos)" dataKey="idcontador" [responsive]="true"
-        selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem"
-        [paginator]="activarPaginacion()">
+        [(selection)]="selectedDatos" dataKey="idcontador" [responsive]="true" selectionMode="single" #table class="tabla-listado"
+        [value]="datos" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [paginator]="activarPaginacion()">
         <p-column [style]="{ width: col.width }" *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"
           filterPlaceholder="{{ 'general.boton.search' | translate }}" [filter]="true" filterMatchMode="contains">
+          <ng-template let-datoH="rowData" pTemplate="body">
+
+            <div *ngIf="col.field == 'nombre'">
+              <a [routerLink]="" (click)="irEditarContador(datoH)" class="enlace">{{ datoH[col.field]}}</a>
+            </div>
+            <div *ngIf="col.field != 'nombre'">
+              <span>{{ datoH[col.field]}}</span>
+            </div>
+          </ng-template>
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
