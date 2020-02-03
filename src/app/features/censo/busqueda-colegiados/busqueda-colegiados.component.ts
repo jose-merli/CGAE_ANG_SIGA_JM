@@ -49,7 +49,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   formBusqueda: FormGroup;
   numSelected: number = 0;
-  datos: any[];
+  datos: any[] = [];
   sortO: number = 1;
   selectedItem: number = 10;
   cols: any = [];

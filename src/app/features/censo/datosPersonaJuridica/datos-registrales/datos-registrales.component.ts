@@ -800,7 +800,7 @@ export class DatosRegistralesComponent implements OnInit {
     this.comprobarValidacion();
     if (this.isNuevo && this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
-      if (this.modo == "0") {
+      // if (this.modo == "0") {
         this.body.contadorNumsspp = String(
           this.fillWithCeros(this.contador,
             Number(this.longitudcontador)
@@ -809,12 +809,12 @@ export class DatosRegistralesComponent implements OnInit {
 
         this.body.prefijoNumsspp = this.prefijo;
         this.body.sufijoNumsspp = this.sufijo;
-        this.noEditable = true;
-      } else {
-        this.body.prefijoNumsspp = this.prefijo;
-        this.body.sufijoNumsspp = this.sufijo;
-        this.noEditable = false;
-      }
+
+      // } else {
+      //   this.body.prefijoNumsspp = this.prefijo;
+      //   this.body.sufijoNumsspp = this.sufijo;
+      //   this.noEditable = false;
+      // }
     } else if (this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
 
