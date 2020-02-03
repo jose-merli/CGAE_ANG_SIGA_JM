@@ -4577,21 +4577,32 @@ export class FichaColegialComponent implements OnInit {
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
 
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
-
+    let us = undefined;
     if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       sessionStorage.setItem("tipollamada", "busquedaNoColegiado");
-    } else if (sessionStorage.getItem("fichaColegialByMenu")) {
-      sessionStorage.setItem("tipollamada", "fichaColegial");
-    } else {
-      sessionStorage.setItem("tipollamada", "busquedaColegiados");
-    }
-    let us =
+      us =
       this.sigaServices.getOldSigaUrl() +
       "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD=" +
       this.generalBody.idPersona +
       "%2C" +
       idInstitucion +
       "%2CNINGUNO%2C1&filaSelD=1";
+    } else if (sessionStorage.getItem("fichaColegialByMenu")) {
+      sessionStorage.setItem("tipollamada", "fichaColegial");
+       us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_FichaColegial.do";
+    } else {
+      sessionStorage.setItem("tipollamada", "busquedaColegiados");
+       us =
+      this.sigaServices.getOldSigaUrl() +
+      "CEN_BusquedaClientes.do?modo=Editar&seleccionarTodos=&colegiado=1&avanzada=&actionModal=&verFichaLetrado=&tablaDatosDinamicosD=" +
+      this.generalBody.idPersona +
+      "%2C" +
+      idInstitucion +
+      "%2CNINGUNO%2C1&filaSelD=1";
+    }
+ 
     sessionStorage.setItem("url", JSON.stringify(us));
     sessionStorage.removeItem("reload");
     sessionStorage.setItem("reload", "si");

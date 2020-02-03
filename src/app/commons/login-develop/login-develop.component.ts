@@ -55,6 +55,14 @@ export class LoginDevelopComponent implements OnInit {
 					this.router.navigate([ '/errorAcceso' ]);
 					this.progressSpinner = false;
 				}
+				if (error.status == 500) {
+					let codError = error.status;
+
+					sessionStorage.setItem('codError', codError);
+					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					this.router.navigate([ '/errorAcceso' ]);
+					this.progressSpinner = false;
+				}
 			}
 		);
 		this.sigaServices.getBackend('validaUsuario').subscribe(
