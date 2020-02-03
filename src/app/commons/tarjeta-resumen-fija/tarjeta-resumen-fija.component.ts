@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { isProtractorLocator } from 'protractor/built/locators';
 import { getParentRenderElement } from '@angular/core/src/view/util';
 import { TranslateService } from '../translate/translation.service';
@@ -15,6 +15,7 @@ export class TarjetaResumenFijaComponent implements OnInit {
   @Input() titulo;
   @Input() datos;
   @Input() enlaces;
+  @Output() isOpen = new EventEmitter<any>();
   iconClass;
   constructor(private translateService: TranslateService) { }
 
@@ -37,15 +38,15 @@ export class TarjetaResumenFijaComponent implements OnInit {
       down= null;
         }
   }
-  goToCard(enlace){
+  goToCard(enlace, nombre){
      if (enlace) {
       //let pos = enlace.pageYOffset;
      // enlace.scrollTo(0, pos - 100); 
     // let pos = enlace.scrollTop;
    enlace.scrollIntoView({block: "start", behavior: 'smooth'});
+   this.isOpen.emit(nombre);
    // window.parent.scrollBy(0, enlace.offsetTop+300);
   //  parent.window.scrollBy(0, enlace.offsetTop+300);
-   // enlace.scrollBy(0, 200);
    // this.windowPatern.scrollTo(0, enlace.offsetTop+300);
     enlace= null;
     }

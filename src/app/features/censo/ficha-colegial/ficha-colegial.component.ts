@@ -465,45 +465,45 @@ export class FichaColegialComponent implements OnInit {
           {
             label: "general.message.datos.generales",
             value: document.getElementById("datosGen"),
-            nombre: "tarjetaGenerales",
+            nombre: "generales",
 
           },
           {
             label: "censo.consultaDatosColegiales.literal.cabecera",
             value: document.getElementById("datosCol"),
-            nombre: "tarjetaColegiales",
+            nombre: "colegiales",
           },
           {
             label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
             value: document.getElementById("otrasColegiaciones"),
-            nombre: "tarjetaOtrasColegiaciones",
+            nombre: "colegiaciones",
 
           },
           {
             label: "menu.certificados",
             value: document.getElementById("certif"),
-            nombre: "tarjetaCertificados",
+            nombre: "certificados",
 
           },
           {
             label: "censo.consultaDatosCV.cabecera",
             value: document.getElementById("datosCurriculares"),
-            nombre: "tarjetaCurriculares",
+            nombre: "curriculares",
 
           },
           {
             label: "censo.fichaCliente.datosDirecciones.cabecera",
             value: document.getElementById("direcciones"),
-            nombre: "tarjetaDirecciones",
+            nombre: "direcciones",
 
           }, {
             label: "censo.consultaDatosBancarios.cabecera",
             value: document.getElementById("datosBanc"),
-            nombre: "tarjetaBancarios",
+            nombre: "bancarios",
           }, {
             label: "censo.regtel.literal.titulo",
             value: document.getElementById("regtel"),
-            nombre: "tarjetaRegtel",
+            nombre: "regtel",
           },{
             label: "censo.alterMutua.titulo",
             value: document.getElementById("alterMutua"),
@@ -6348,5 +6348,7 @@ export class FichaColegialComponent implements OnInit {
       }
     });
   }
-
+  isOpenReceive(event) {
+    this.abreCierraFicha(event);
+   }
 }
