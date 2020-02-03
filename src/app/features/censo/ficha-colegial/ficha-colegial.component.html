@@ -1071,7 +1071,7 @@
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCurriculares" pageLinks="4"
           [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }" selectionMode="multiple" #tableCurriculares
           class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"
-          [rows]="selectedItemCurriculares" (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)" (onRowUnselect)="
+          [rows]="selectedItemCurriculares" (onRowUnselect)="
             actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
           ">
 
@@ -1083,15 +1083,23 @@
                 <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
               </div>
 
-              <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'">
+              <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin' && col.field != 'categoriaCurricular'">
                 <div *ngIf="setItalic(datoH)">
                   <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
                 </div>
-
                 <div *ngIf="!setItalic(datoH)">
+
                   <span>{{datoH[col.field]}}</span>
                 </div>
+
               </div>
+              <div *ngIf="col.field == 'categoriaCurricular'">
+                <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="redireccionarCurriculares([datoH])"
+                  class="enlace" *ngIf="setItalic(datoH)">{{datoH[col.field]}}</a>
+                <a [routerLink]="" *ngIf="!setItalic(datoH)" (click)="redireccionarCurriculares([datoH])" class="enlace">{{datoH[col.field]}}</a>
+
+              </div>
+
 
             </ng-template>
           </p-column>
@@ -1114,8 +1122,8 @@
                   name="groupname"></p-checkbox>
               </div>
 
-              <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleCurriculares}" (click)="isSelectMultipleCurriculares()">
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleCurriculares}" (click)="isSelectMultipleCurriculares()">
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
 
             </div>
           </ng-template>
@@ -1326,22 +1334,31 @@
       <div class="row">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleBancarios }"
           [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
-          class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
-          (onRowUnselect)="
+          class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
             actualizaSeleccionadosBancarios(selectedDatosBancarios)
           " paginatorPosition="both" [rows]="selectedItemBancarios" pageLinks="4">
           <p-column *ngFor="let col of colsBancarios" [sortable]="true" [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
             <ng-template let-datoH="rowData" pTemplate="body">
-              <div *ngIf="setItalic(datoH)">
+              <div *ngIf="setItalic(datoH) && col.field != 'titular'">
                 <span [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
               </div>
-              <div *ngIf="!setItalic(datoH)">
+              <div *ngIf="col.field != 'titular' && !setItalic(datoH)">
                 <span>{{ datoH[col.field] }}</span>
+              </div>
+              <div *ngIf="col.field == 'titular' && !setItalic(datoH)">
+                <a [routerLink]="" (click)="redireccionarDatosBancarios([datoH])" class="enlace">{{datoH[col.field]}}</a>
+              </div>
+              <div *ngIf="col.field == 'titular' && setItalic(datoH)">
+                <a [routerLink]="" [ngStyle]="{
+                  'font-style': 'italic',
+                  'font-weight': 'bold',
+                  'text-decoration': 'line-through'
+                }" (click)="redireccionarDatosBancarios([datoH])" class="enlace">{{datoH[col.field]}}</a>
               </div>
             </ng-template>
           </p-column>
@@ -1360,10 +1377,10 @@
                 <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
-              <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleBancarios }" (click)="
+              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleBancarios }" (click)="
                   isSelectMultipleBancarios(); selectedDatosBancarios = false
                 ">
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label>
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label> -->
             </div>
           </ng-template>
         </p-dataTable>
