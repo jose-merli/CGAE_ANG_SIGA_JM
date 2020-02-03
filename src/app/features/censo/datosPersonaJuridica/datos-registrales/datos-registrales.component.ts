@@ -104,6 +104,10 @@ export class DatosRegistralesComponent implements OnInit {
   isValidate: boolean;
   isNuevo: boolean;
 
+  prefijoSSPPInicial;
+  sufijoSSPPInicial;
+  contadorSSPPInicial;
+
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
 
@@ -358,6 +362,10 @@ export class DatosRegistralesComponent implements OnInit {
             } else if (this.body.sociedadProfesional == "0") {
               this.sociedadProfesional = false;
             }
+
+            this.contadorSSPPInicial = this.body.contadorNumsspp;
+            this.prefijoSSPPInicial = this.body.prefijoNumsspp;
+            this.sufijoSSPPInicial = this.body.sufijoNumsspp;
 
             this.getNumsspp();
 
@@ -614,7 +622,7 @@ export class DatosRegistralesComponent implements OnInit {
       this.noEditable = false;
     }
 
-    if(this.noEditable && this.sociedadProfesional){
+    if(this.sociedadProfesional){
       if (this.body.contadorNumsspp != undefined && this.body.contadorNumsspp != null && this.body.contadorNumsspp != "") {
 
         this.body.contadorNumsspp = this.fillWithCeros(
@@ -809,7 +817,16 @@ export class DatosRegistralesComponent implements OnInit {
       }
     } else if (this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
-      this.getNumsspp();
+
+      if(this.contadorSSPPInicial != null && this.contadorSSPPInicial != undefined){
+        this.body.contadorNumsspp = this.contadorSSPPInicial;
+        this.body.prefijoNumsspp = this.prefijoSSPPInicial;
+        this.body.sufijoNumsspp = this.sufijoSSPPInicial;
+
+      }else{
+        this.getNumsspp();
+      }
+
     } else if(!this.sociedadProfesional){
       this.body.sociedadProfesional = "0";
       this.body.prefijoNumsspp = undefined;
