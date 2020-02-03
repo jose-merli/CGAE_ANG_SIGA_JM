@@ -832,11 +832,17 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
+              <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
+                <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
+              </label>
+
+              <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
+                <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
+              </label>
+              
               <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
                 <span>{{ datosCertificados.length }}</span>
               </label>
-            </div>
             <i (click)="abreCierraFicha('certificados')" *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -911,11 +917,25 @@
               <!-- <label class="registros-ficha">(0 registros)</label> -->
             </div>
             <div class="d-flex justify-content-between">
-              <div class="d-flex justify-content-between">
+              <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
+              </label>
+
+              <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
+              </label>
+
+              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
+              </label>
+
+              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
+              </label>
+
                 <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
                   <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
                 </label>
-              </div>
               <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
             </div>
           </div>
@@ -980,11 +1000,26 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
+
+            <label>{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.nif }}</span>
+            </label>
+
+            <label>{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.tipoSociedad }}</span>
+            </label>
+
+            <label>{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.denominacion }}</span>
+            </label>
+
+            <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
+            </label>
+
               <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
                 <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
               </label>
-            </div>
             <i (click)="abreCierraFicha('sociedades')" *ngIf="!esFichaActiva('sociedades')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
@@ -1046,15 +1081,25 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}:
+                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.categoriaCurricular }}</span>
+              </label>
+
+              <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}:
+                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.tipoSubtipo }}</span>
+              </label>
+
+              <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}:
+                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde}}</span>
+              </label>
+
               <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
                 <span>{{ datosCurriculares.length }}</span>
-              </label>
-            </div>
+              </label>                       
             <i (click)="abreCierraFicha('curriculares')" *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
-          </div>
         </div>
       </div>
+    </div>
       <div *ngIf="esFichaActiva('curriculares')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-paperclip icon-ficha"></i>
@@ -1064,6 +1109,7 @@
         <i (click)="abreCierraFicha('curriculares')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
+   
     <!-- cuerpo -->
 
     <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
@@ -1138,7 +1184,6 @@
       </div>
     </div>
   </div>
-
   <!-- END FICHA DATOS CURRICULARES -->
 
   <!-- INICIO FICHA DATOS DIRECCIONES -->
@@ -1156,26 +1201,43 @@
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex justify-content-between">
+            <!-- <div class="d-flex justify-content-between"> -->
+              <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.domicilioLista }}</span>
+              </label>
+
+              <label>{{ "censo.ws.literal.codigopostal" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.codigoPostal }}</span>
+              </label>
+
+              <label>{{ "censo.datosDireccion.literal.provincia" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.nombrePoblacion }}</span>
+              </label>
+
+              <label>{{ "censo.datosDireccion.literal.correo" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.correoElectronico }}</span>
+              </label>
+
+              <label>{{ "censo.ws.literal.telefono" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.telefono }}</span>
+              </label>
+
+              <label>{{ "censo.datosDireccion.literal.movil" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
+              </label>
+
                 <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
                   <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}
                   </span>
                 </label>
-              </div>
-              <br />
-              <!--
-                <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('direcciones'), 'fa fa-angle-down': ! esFichaActiva('direcciones')} "></i>
-              -->
+                <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
+                  'fa fa-angle-up': esFichaActiva('direcciones'),
+                  'fa fa-angle-down': !esFichaActiva('direcciones')
+                }"></i>
             </div>
-            <br />
-            <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
-                'fa fa-angle-up': esFichaActiva('direcciones'),
-                'fa fa-angle-down': !esFichaActiva('direcciones')
-              }"></i>
           </div>
         </div>
-      </div>
+
       <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-map-marker icon-ficha"> </i>
@@ -1262,7 +1324,6 @@
       </div>
     </div>
   </div>
-
   <!-- END FICHA DATOS DIRECCIONES -->
 
   <!-- INICIO FICHA DATOS BANCARIOS -->
@@ -1280,6 +1341,14 @@
             </label>
           </div>
           <div class="d-flex justify-content-between">
+            <label>{{ "censo.mutualidad.literal.iban" | translate }}:
+              <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.iban }}</span>
+            </label>
+
+            <label>{{ "facturacion.cuentasBancarias.uso" | translate }}:
+              <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
+            </label>
+
             <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
               <span>{{ datosBancarios.length }}</span>
             </label>
