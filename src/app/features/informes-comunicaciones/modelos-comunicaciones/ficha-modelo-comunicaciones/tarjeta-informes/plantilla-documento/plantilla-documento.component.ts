@@ -88,6 +88,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   nombreCompletoArchivo:string;
   extensionArchivo:string;
 
+  disabledGuardar: boolean = true;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -110,6 +112,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   ngOnInit() {
     this.commonsService.scrollTop();
+    this.checkCamposDatosSalida();
     this.getInstitucionActual();
 
     //sessionStorage.removeItem('esPorDefecto');
@@ -447,6 +450,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   restablecerDatosGenerales() {
+    this.disabledGuardar = true;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
     this.selectedSufijos = JSON.parse(
@@ -691,51 +695,67 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
+  checkCamposDatosSalida(){
+
+    if(this.body.nombreFicheroSalida != undefined && this.body.nombreFicheroSalida != null && this.body.nombreFicheroSalida != "" &&
+    this.body.idFormatoSalida != undefined && this.body.idFormatoSalida != null ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   guardarDatosSalida(){
-    
-    this.progressSpinner = true;
-    this.body.sufijos = [];
-    let orden: number = 1;
-    this.selectedSufijos.forEach(element => {
-      let ordenString = orden.toString();
-      let objSufijo = {
-        idSufijo: element.idSufijo,
-        orden: ordenString,
-        nombreSufijo: element.nombreSufijo
-      };
-      this.body.sufijos.push(objSufijo);
-      orden = orden + 1;
-    });
 
-    this.sigaServices.post("plantillasDoc_guardar_datosSalida", this.body).subscribe(
-      data => {
-        this.showSuccess("Guardar datos de salida correctos");
-        this.body.idInforme = JSON.parse(data["body"]).data;
-        this.getDocumentos();
-        sessionStorage.setItem(
-          "modelosInformesSearch",
-          JSON.stringify(this.body)
-        );
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
-        this.selectedSufijosInicial = JSON.parse(
-          JSON.stringify(this.selectedSufijos)
-        );
+    if(this.checkCamposDatosSalida()){
+      this.progressSpinner = true;
+      this.body.sufijos = [];
+      let orden: number = 1;
+      this.selectedSufijos.forEach(element => {
+        let ordenString = orden.toString();
+        let objSufijo = {
+          idSufijo: element.idSufijo,
+          orden: ordenString,
+          nombreSufijo: element.nombreSufijo
+        };
+        this.body.sufijos.push(objSufijo);
+        orden = orden + 1;
+      });
+  
+      this.sigaServices.post("plantillasDoc_guardar_datosSalida", this.body).subscribe(
+        data => {
+          this.showSuccess("Guardar datos de salida correctos");
+          this.body.idInforme = JSON.parse(data["body"]).data;
+          this.getDocumentos();
+          sessionStorage.setItem(
+            "modelosInformesSearch",
+            JSON.stringify(this.body)
+          );
 
-        this.progressSpinner = false;
+          sessionStorage.removeItem("crearNuevaPlantillaDocumento");
 
-      },
-      err => {
-        this.showFail("Error guardar datos Salida");
-        console.log(err);
-        this.progressSpinner = false;
-
-      },
-      () => {
-        this.progressSpinner = false;
-
-      }
-    );
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+          this.selectedSufijosInicial = JSON.parse(
+            JSON.stringify(this.selectedSufijos)
+          );
+  
+          this.progressSpinner = false;
+  
+        },
+        err => {
+          this.showFail("Error guardar datos Salida");
+          console.log(err);
+          this.progressSpinner = false;
+  
+        },
+        () => {
+          this.progressSpinner = false;
+  
+        }
+      );
+    }
+  
   }
 
   guardarDatosGenerales() {
@@ -841,6 +861,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       .subscribe(
         data => {
           this.showInfo(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.plantillaCargada"));
+          this.disabledGuardar = false;
           plantilla.idPlantillaDocumento = JSON.parse(
             data["body"]
           ).idPlantillaDocumento;
