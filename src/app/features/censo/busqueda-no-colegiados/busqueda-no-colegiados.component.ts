@@ -275,9 +275,12 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
-  clickFila(selectedDatos) {
-    if (selectedDatos)
+  clickFila(event) {
+    if (event.data && event.data.fechaBaja)
       this.selectedDatos.pop();
+  }
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
 
   //Funcion que carga combo del campo curricular
@@ -493,7 +496,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       }
 
       this.selectMultiple = false;
-      this.selectedDatos = "";
+      this.selectedDatos = [];
       this.getColsResults();
       this.filtrosTrim();
 
