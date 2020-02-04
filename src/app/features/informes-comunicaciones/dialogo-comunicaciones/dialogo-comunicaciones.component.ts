@@ -268,7 +268,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 								let find = this.valores.find(x => x.campo == campo.campo);
 
-								if(campo.tipoDato == "MV" && campo.valores != undefined && campo.valores != null && campo.valores.length > 0){
+								if(campo.valores != undefined && campo.valores != null && campo.valores.length > 0){
 									campo.valor = campo.valores[0].ID;
 								}
 
@@ -470,6 +470,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 							if (find.valor != null && typeof find.valor == 'object') {
 								if (find.valor.ID != null && find.valor.ID != undefined) {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
+								}else{
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
 								}
 							}else{
 								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
