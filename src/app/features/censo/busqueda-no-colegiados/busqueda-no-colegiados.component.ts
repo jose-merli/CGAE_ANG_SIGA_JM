@@ -275,6 +275,11 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  clickFila(selectedDatos) {
+    if (selectedDatos)
+      this.selectedDatos.pop();
+  }
+
   //Funcion que carga combo del campo curricular
   getComboCategoriaCurricular() {
     this.sigaServices.get("busquedaNoColegiados_categoriaCurricular").subscribe(
@@ -533,7 +538,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.body.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
-    this.selectedDatos = "";
+    this.selectedDatos = [];
     this.progressSpinner = true;
     this.filtrosTrim();
     this.selectAll = false;

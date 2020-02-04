@@ -227,8 +227,8 @@
         <div class="card-body p-0">
 
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4" dataKey="nif" [responsive]="true"
-                selectionMode="multiple" #table class="tabla-listado" [value]="datos" [paginator]="true" paginatorPosition="both"
-                [rows]="selectedItem" [columns]="cols">
+                selectionMode="multiple" #table class="tabla-listado" (onRowSelect)="clickFila(selectedDatos)" [value]="datos"
+                [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [columns]="cols">
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
                         <col *ngFor="let col of columns" [style.width]="col.width">

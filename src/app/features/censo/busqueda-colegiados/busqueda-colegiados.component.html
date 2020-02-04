@@ -265,80 +265,6 @@
                     </tr>
                 </ng-template>
 
-                <!-- <p-column [sortable]="true" [style]="{'width': '5%'}" field="colegioResultado" [header]="'censo.busquedaClientesAvanzada.literal.colegio' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '8%'}" field="nif" [header]="'censo.consultaDatosColegiacion.literal.numIden' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '15%'}" field="nombre" [header]="'administracion.parametrosGenerales.literal.nombre' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <a [routerLink]="" class="enlace" (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="numberColegiado" [header]="'censo.busquedaClientesAvanzada.literal.nColegiado' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="estadoColegial" [header]="'censo.fichaCliente.situacion.cabecera' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato[col.field]}}</label>
-                        <label *ngIf="dato.comunitario == '1'">{{dato[col.field]}} (Inscrito)</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidente" [header]="'censo.busquedaClientes.noResidente' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.situacionResidente == undefined || dato.situacionResidente == null || dato.situacionResidente == '0'">No</label>
-                        <label *ngIf="dato.situacionResidente == '1'">Si</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '8%'}" field="fechaNacimientoDate" [header]="'censo.consultaDatosColegiacion.literal.fechaNac' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-                    </ng-template>
-
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '13%'}" field="correo" [header]="'censo.datosDireccion.literal.correo' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '6%'}" field="telefono" [header]="'censo.ws.literal.telefono' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '6%'}" field="movil" [header]="'censo.datosDireccion.literal.movil' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '5%'}" field="noAparecerRedAbogaciaFilter" [header]="'censo.busquedaColegial.lopd' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body" #textAlignCenter>
-                        <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
-                        </label>
-                        <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
-                            <img src="./assets/images/icons/warning.png">
-                        </label>
-                    </ng-template>
-                </p-column> -->
                 <ng-template pTemplate="emptymessage" let-columns>
                     <tr>
                         <td [attr.colspan]="cols.length">
@@ -346,31 +272,7 @@
                         </td>
                     </tr>
                 </ng-template>
-                <!-- <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-                    [filter]="true" filterMatchMode="contains" [ngStyle]="{'text-align': col.align}">
-
-                    <ng-template *ngIf="col.field == 'fechaNacimientoDate'" let-dato="rowData" pTemplate="body">
-                        <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
-                    </ng-template>
-
-                    <ng-template *ngIf="col.field == 'noAparecerRedAbogacia2'" let-dato="rowData" pTemplate="body" #textAlignCenter>
-                        <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
-                        </label>
-                        <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
-                            <img src="./assets/images/icons/warning.png">
-                        </label>
-                    </ng-template>
-
-                    <ng-template *ngIf="col.field == 'estadoColegial'" let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato.estadoColegial}}</label>
-                        <label *ngIf="dato.comunitario == '1'">{{dato.estadoColegial}} (Inscrito)</label>
-                    </ng-template>
-
-                    <ng-template *ngIf="col.field == 'situacionResidente'" let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.situacionResidente == undefined || dato.situacionResidente == null || dato.situacionResidente == '0'">No</label>
-                        <label *ngIf="dato.situacionResidente == '1'">Si</label>
-                    </ng-template>
-                </p-column> -->
+                
 
                 <ng-template pTemplate="paginatorleft">
                     <div class="mostrar d-flex text-right justify-content-end">
