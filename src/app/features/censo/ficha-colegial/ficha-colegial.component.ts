@@ -484,12 +484,15 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
+      this.desactivarVolver = false;
     } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
+      this.desactivarVolver = false;
+
     } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
