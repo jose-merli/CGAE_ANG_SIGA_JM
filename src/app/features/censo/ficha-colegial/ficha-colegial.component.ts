@@ -484,12 +484,15 @@ export class FichaColegialComponent implements OnInit {
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
+      this.desactivarVolver = false;
     } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
       sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
+      this.desactivarVolver = false;
+
     } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
@@ -1542,11 +1545,23 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
+  comprobarCamposColegiales(){ 
+    // if(this.inscritoChange && this.activarGuardarColegiales){
+    //   this.comprobarAuditoria('guardarDatosColegiales');
+    // }else{
+      if(!this.activarGuardarColegiales || this.inscritoSeleccionado == undefined){
+        this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+        this.resaltadoDatosColegiales=true;
+      }else{
+        this.comprobarAuditoria('guardarDatosColegiales');
+      }
+    // }
+  }
   comprobarAuditoria(tipoCambio) {
     // modo creación
 
     if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales') {
-
+      this.resaltadoDatosColegiales=false;
       if (!this.isCrearColegial) {
         this.datosColegiales[0].cambioEstado = true;
       }
@@ -2515,7 +2530,7 @@ export class FichaColegialComponent implements OnInit {
     // datePipeFechaJura: boolean = false;
     // datePipeFechaTitulacion
   }
-  
+
   styleObligatorio(resaltado, evento){
     if((evento == null || evento == undefined || evento == "") && resaltado=="datosGenerales" && this.resaltadoDatosGenerales){
         return "camposObligatorios";
@@ -2595,8 +2610,11 @@ export class FichaColegialComponent implements OnInit {
         colegialesSinEditar.forEach(element => {
           element.habilitarObs = false;
         });
-        if (JSON.stringify(colegialesSinEditar) != JSON.stringify(this.checkDatosColegiales) && this.datosColegiales[0].fechaEstadoStr != null && this.datosColegiales[0].idEstado != "" && this.datosColegiales[0].idEstado != null && this.colegialesBody.situacionResidente != "0" &&
-          this.colegialesBody.situacionResidente != undefined && this.colegialesBody.situacionResidente != "") {
+        if (this.datosColegiales[0].fechaEstadoStr != null && this.datosColegiales[0].idEstado != "" && this.datosColegiales[0].idEstado != null && this.colegialesBody.situacionResidente != "0" &&
+          this.colegialesBody.situacionResidente != undefined && this.colegialesBody.situacionResidente != "" && this.inscritoSeleccionado != undefined
+          &&                  this.colegialesBody.incorporacion != null &&
+          this.colegialesBody.fechapresentacion != null
+          ) {
           this.activarGuardarColegiales = true;
         } else {
           this.activarGuardarColegiales = false;
@@ -2672,6 +2690,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   guardarColegiales() {
+    this.resaltadoDatosColegiales = false;
     // Meter datos colegiales aquí para guardar y probar.
     this.progressSpinner = true;
     this.inscritoAItem();
@@ -3122,6 +3141,7 @@ export class FichaColegialComponent implements OnInit {
   }
 
   restablecerColegiales() {
+    this.resaltadoDatosColegiales = false;
     this.selectedDatosColegiales = '';
     this.showMessageInscripcion = false;
     this.colegialesBody = JSON.parse(JSON.stringify(this.checkColegialesBody));
