@@ -90,7 +90,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   noEsColegiado: boolean = false;
   body;
   solicitante;
-
+  resaltadoDatos: boolean;
   editarExt: boolean = false;
   iban: String;
   ibanValido: boolean = true;
@@ -1637,19 +1637,24 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.solicitudEditar.bic != undefined &&
             this.solicitudEditar.titular != "" &&
             this.solicitudEditar.titular != undefined && this.solicitudEditar.titular.trim() != "")) {
-          return true;
-
+          
+              this.resaltadoDatos = true;
+              return true;
         } else {
           if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
+            this.resaltadoDatos = true;
             return true;
           } else {
+            this.resaltadoDatos = false;
             return false;
           }
         }
       } else {
+        this.resaltadoDatos = false;
         return false;
       }
     } else {
+      this.resaltadoDatos = false;
       return false;
     }
   }
@@ -1948,6 +1953,12 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   changeFax2() {
     this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos){
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
 }
