@@ -749,50 +749,60 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "colegioResultado",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-
+        header: "censo.busquedaClientesAvanzada.literal.colegio",
+        width: "5%"
       },
       {
         field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
-      },
-      {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        header: "censo.consultaDatosColegiacion.literal.numIden",
+        width: "8%"
 
       },
       {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre",
+        width: "15%"
+      },
+      {
         field: "numberColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado",
+        width: "7%"
       },
       {
         field: "estadoColegial",
-        header: "censo.fichaCliente.situacion.cabecera"
+        header: "censo.fichaCliente.situacion.cabecera",
+        width: "7%"
       },
       {
         field: "situacionResidente",
-        header: "censo.busquedaClientes.noResidente"
+        header: "censo.busquedaClientes.noResidente",
+        width: "7%"
       },
       {
         field: "fechaNacimientoDate",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+        header: "censo.consultaDatosColegiacion.literal.fechaNac",
+        width: "8%"
       },
       {
         field: "correo",
-        header: "censo.datosDireccion.literal.correo"
+        header: "censo.datosDireccion.literal.correo",
+        width: "13%"
       },
       {
         field: "telefono",
-        header: "censo.ws.literal.telefono"
+        header: "censo.ws.literal.telefono",
+        width: "6%"
       },
       {
         field: "movil",
-        header: "censo.datosDireccion.literal.movil"
+        header: "censo.datosDireccion.literal.movil",
+        width: "6%"
       },
       {
         field: "noAparecerRedAbogacia2",
         header: "censo.busquedaColegial.lopd",
-        filter: "noAparecerRedAbogaciaFilter"
+        filter: "noAparecerRedAbogaciaFilter",
+        width: "5%"
       }
     ];
 

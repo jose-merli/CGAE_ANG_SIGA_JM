@@ -658,6 +658,7 @@ import { CommonsService } from './_services/commons.service';
 		DropdownModule,
 		ButtonModule,
 		DataTableModule,
+		TableModule,
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,
