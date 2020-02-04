@@ -214,7 +214,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	onChangePlantillaEnvio(dato) {
-		this.getTipoEnvios(dato);
+		if(dato.idPlantillaEnvio != undefined && dato.idPlantillaEnvio != null){
+			this.getTipoEnvios(dato);
+		}else{
+			dato.tipoEnvio = "";
+		}
 	}
 
 	getTipoEnvios(dato) {
@@ -644,7 +648,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		  ).subscribe(
 			(data) => {
 				this.plantillas = data.combooItems;
-				this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
+				// this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
 			},
 			(err) => {
 				console.log(err);

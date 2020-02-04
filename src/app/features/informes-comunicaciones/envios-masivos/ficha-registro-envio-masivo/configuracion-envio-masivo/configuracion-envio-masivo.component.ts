@@ -1,19 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { ConfigEnviosMasivosItem } from '../../../../../models/ConfiguracionEnviosMasivosItem';
+import { Component, OnInit } from "@angular/core";
+import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnviosMasivosItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { truncate } from 'fs';
-
+import { truncate } from "fs";
 
 @Component({
-  selector: 'app-configuracion-envio-masivo',
-  templateUrl: './configuracion-envio-masivo.component.html',
-  styleUrls: ['./configuracion-envio-masivo.component.scss']
+  selector: "app-configuracion-envio-masivo",
+  templateUrl: "./configuracion-envio-masivo.component.html",
+  styleUrls: ["./configuracion-envio-masivo.component.scss"]
 })
 export class ConfiguracionEnvioMasivoComponent implements OnInit {
-
-
   openFicha: boolean = true;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
@@ -28,19 +25,20 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   apiKey: string = "";
 
   editorConfig: any = {
-    selector: 'textarea',
-    plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
-    toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
+    selector: "textarea",
+    plugins:
+      "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
+    toolbar:
+      "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
     menubar: false,
     autoresize_on_init: true,
     statusbar: false,
     paste_data_images: true,
-    images_upload_handler: function (blobInfo, success, failure) {
+    images_upload_handler: function(blobInfo, success, failure) {
       // no upload, just return the blobInfo.blob() as base64 data
       success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
     }
   };
-
 
   fichasPosibles = [
     {
@@ -65,27 +63,20 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     }
   ];
 
-
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService
-  ) {
-
-
-
-  }
+  ) {}
 
   ngOnInit() {
-
     if (sessionStorage.getItem("tinyApiKey") != null) {
-      this.apiKey = sessionStorage.getItem("tinyApiKey")
+      this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
 
     this.editar = false;
     this.getDatos();
     this.getTipoEnvios();
-
   }
 
   // Mensajes
@@ -109,29 +100,37 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
-
-    if (this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '7') {
-      let datosPlantilla = {
-        idPlantillaEnvios: event.value,
-        idTipoEnvios: this.body.idTipoEnvios
+    if (event != undefined) {
+      if (
+        this.body.idTipoEnvios == "1" ||
+        this.body.idTipoEnvios == "4" ||
+        this.body.idTipoEnvios == "5" ||
+        this.body.idTipoEnvios == "7"
+      ) {
+        let datosPlantilla = {
+          idPlantillaEnvios: event.value,
+          idTipoEnvios: this.body.idTipoEnvios
+        };
+        this.sigaServices
+          .post("enviosMasivos_detallePlantilla", datosPlantilla)
+          .subscribe(data => {
+            let datos = JSON.parse(data["body"]);
+            this.body.asunto = datos.asunto;
+            this.body.cuerpo = datos.cuerpo;
+          });
       }
-      this.sigaServices.post("enviosMasivos_detallePlantilla", datosPlantilla).subscribe(data => {
-        let datos = JSON.parse(data["body"]);
-        this.body.asunto = datos.asunto;
-        this.body.cuerpo = datos.cuerpo;
-      });
     }
   }
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        this.tipoEnvios.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
+        // this.tipoEnvios.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
         this.tipoEnvios.map(e => {
           if (this.body.idTipoEnvios == e.value) {
             this.tipoEnvio = e.label;
           }
-        })
+        });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tipoEnvios.map(e => {
@@ -148,13 +147,11 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           }
         });
-
       },
       err => {
         console.log(err);
       },
-      () => {
-      }
+      () => {}
     );
   }
 
@@ -162,10 +159,10 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (e != null) {
       this.body.tipoEnvio = e.originalEvent.currentTarget.innerText;
     }
-    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != '')
+    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != "")
       this.getPlantillas();
 
-    if (this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '2') {
+    if (this.body.idTipoEnvios == "1" || this.body.idTipoEnvios == "2") {
       this.sigaServices.notifyHabilitarDocumentos();
     } else {
       this.sigaServices.notifyDesHabilitarDocumentos();
@@ -173,31 +170,29 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getPlantillas() {
-    this.sigaServices.post("enviosMasivos_plantillas", this.body.idTipoEnvios).subscribe(
-      data => {
-        let comboPlantillas = JSON.parse(data["body"]);
-        this.plantillas = comboPlantillas.combooItems;
-        this.progressSpinner = false;
+    this.body.idPlantillaEnvios = "";
+    this.sigaServices
+      .post("enviosMasivos_plantillas", this.body.idTipoEnvios)
+      .subscribe(
+        data => {
+          let comboPlantillas = JSON.parse(data["body"]);
+          this.plantillas = comboPlantillas.combooItems;
+          this.progressSpinner = false;
 
-        if (this.editar) {
-          this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
-        }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-
-      },
-      () => {
-      }
-    );
+          if (this.editar) {
+            this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
+          }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {}
+      );
   }
-
-
 
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
-
   }
 
   esFichaActiva(key) {
@@ -215,29 +210,29 @@ para poder filtrar el dato con o sin estos caracteres*/
     return {};
   }
 
-
-
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
       this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.editarPlantilla = true;
-      if (this.bodyInicial.idEstado != '1' && this.bodyInicial.idEstado != '4') {
+      if (
+        this.bodyInicial.idEstado != "1" &&
+        this.bodyInicial.idEstado != "4"
+      ) {
         this.editar = true;
       }
     } else {
       this.editar = false;
     }
-
   }
 
-
   cancelar() {
-
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
-      message: this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.seguroCancelarEnvio"),
+      message: this.translateService.instant(
+        "informesycomunicaciones.comunicaciones.mensaje.seguroCancelarEnvio"
+      ),
       icon: "fa fa-trash-alt",
       accept: () => {
         this.confirmarCancelar();
@@ -256,7 +251,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
   }
 
-
   confirmarCancelar() {
     this.eliminarArray = [];
     let objCancelar = {
@@ -265,25 +259,32 @@ para poder filtrar el dato con o sin estos caracteres*/
       fechaProgramacion: new Date(this.body.fechaProgramada)
     };
     this.eliminarArray.push(objCancelar);
-    this.sigaServices.post("enviosMasivos_cancelar", this.eliminarArray).subscribe(
-      data => {
-        this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.cancelCorrect"));
-      },
-      err => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"));
-        console.log(err);
-      },
-      () => {
-
-      }
-    );
+    this.sigaServices
+      .post("enviosMasivos_cancelar", this.eliminarArray)
+      .subscribe(
+        data => {
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.enviosMasivos.cancelCorrect"
+            )
+          );
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"
+            )
+          );
+          console.log(err);
+        },
+        () => {}
+      );
   }
 
   guardar() {
-
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
-        this.body.idEstado = '4';
+        this.body.idEstado = "4";
         let result = JSON.parse(data["body"]);
         this.body.idEnvio = result.description;
 
@@ -293,35 +294,44 @@ para poder filtrar el dato con o sin estos caracteres*/
         console.log(this.body.fechaCreacion);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevoEnvio");
-        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));
-        this.showSuccess(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioCorrect"));
+        sessionStorage.setItem(
+          "enviosMasivosSearch",
+          JSON.stringify(this.body)
+        );
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.enviosMasivos.ficha.envioCorrect"
+          )
+        );
         this.editarPlantilla = true;
       },
       err => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioError"));
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.enviosMasivos.ficha.envioError"
+          )
+        );
         console.log(err);
       },
-      () => {
-
-      }
+      () => {}
     );
-
-
   }
-
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
-
   isGuardarDisabled() {
-
-    if (this.body.idTipoEnvios != '' && this.body.idTipoEnvios != null && this.body.idPlantillaEnvios != ''
-      && this.body.idPlantillaEnvios != null && this.body.descripcion != '' && this.body.descripcion != null) {
+    if (
+      this.body.idTipoEnvios != "" &&
+      this.body.idTipoEnvios != null &&
+      this.body.idPlantillaEnvios != "" &&
+      this.body.idPlantillaEnvios != null &&
+      this.body.descripcion != "" &&
+      this.body.descripcion != null
+    ) {
       return false;
     }
     return true;
   }
-
 }
