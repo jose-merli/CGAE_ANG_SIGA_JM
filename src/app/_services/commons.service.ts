@@ -101,4 +101,15 @@ export class CommonsService {
     }
   }
 
+  scrollTop() {
+
+    let top = document.getElementById('mainContainer');
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+    
+
 }

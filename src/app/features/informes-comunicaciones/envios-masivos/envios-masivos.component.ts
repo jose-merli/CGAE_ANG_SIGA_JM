@@ -66,7 +66,7 @@ export class EnviosMasivosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     sessionStorage.removeItem("crearNuevoEnvio");
@@ -74,8 +74,13 @@ export class EnviosMasivosComponent implements OnInit {
       this.buscar();
       sessionStorage.removeItem("ComunicacionDuplicada");
     }
-    if (sessionStorage.getItem("filtrosEnvioMasivo") != null && sessionStorage.getItem("filtrosEnvioMasivo") != "{}") {
-      this.bodySearch = JSON.parse(sessionStorage.getItem("filtrosEnvioMasivo"));
+    if (
+      sessionStorage.getItem("filtrosEnvioMasivo") != null &&
+      sessionStorage.getItem("filtrosEnvioMasivo") != "{}"
+    ) {
+      this.bodySearch = JSON.parse(
+        sessionStorage.getItem("filtrosEnvioMasivo")
+      );
 
       if (this.bodySearch == null) {
         this.bodySearch = new EnviosMasivosSearchItem();
@@ -227,7 +232,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.selectedDatos.length > 0) {
       this.estado = this.selectedDatos[0].idEstado;
       for (let i in this.selectedDatos) {
-        if (this.selectedDatos[i].idEstado == 2 || this.selectedDatos[i].idEstado == 3 || this.selectedDatos[i].idEstado == 6) {
+        if (
+          this.selectedDatos[i].idEstado == 2 ||
+          this.selectedDatos[i].idEstado == 3 ||
+          this.selectedDatos[i].idEstado == 6
+        ) {
           this.estado = this.selectedDatos[i].idEstado;
         }
       }
@@ -258,7 +267,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   getResultados() {
     this.sigaServices
-      .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
+      .postPaginado(
+        "enviosMasivos_searchBusqueda",
+        "?numPagina=1",
+        this.bodySearch
+      )
       .subscribe(
         data => {
           this.progressSpinner = false;
@@ -275,7 +288,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
   getResultadosComunicacionDuplicada() {
@@ -297,7 +310,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {}
       );
   }
 
@@ -314,8 +327,10 @@ para poder filtrar el dato con o sin estos caracteres*/
       message:
         this.translateService.instant(
           "informesycomunicaciones.consultas.mensajeSeguroCancelar"
-        ) + " " +
-        dato.length + " " +
+        ) +
+        " " +
+        dato.length +
+        " " +
         this.translateService.instant(
           "informesycomunicaciones.consultas.enviosSeleccionados"
         ),
@@ -355,34 +370,42 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
 
     if (!tieneDestiantarios) {
-      this.showInfo(this.translateService.instant(
-        "informesycomunicaciones.enviosMasivos.sinDestinatarios"
-      ));
-
-    } else if (!estadoInvalido) {
-      this.sigaServices.post("enviosMasivos_enviar", this.enviosArray).subscribe(
-        data => {
-          this.showSuccess(this.translateService.instant(
-            "informesycomunicaciones.enviosMasivos.envioRealizado"
-          ));
-          this.selectedDatos = [];
-          this.buscar();
-          this.table.reset();
-        },
-        err => {
-          this.showFail(this.translateService.instant(
-            "informesycomunicaciones.enviosMasivos.errorProcesar"
-          ));
-          console.log(err);
-        },
-        () => { }
+      this.showInfo(
+        this.translateService.instant(
+          "informesycomunicaciones.enviosMasivos.sinDestinatarios"
+        )
       );
+    } else if (!estadoInvalido) {
+      this.sigaServices
+        .post("enviosMasivos_enviar", this.enviosArray)
+        .subscribe(
+          data => {
+            this.showSuccess(
+              this.translateService.instant(
+                "informesycomunicaciones.enviosMasivos.envioRealizado"
+              )
+            );
+            this.selectedDatos = [];
+            this.buscar();
+            this.table.reset();
+          },
+          err => {
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.enviosMasivos.errorProcesar"
+              )
+            );
+            console.log(err);
+          },
+          () => {}
+        );
     } else {
-      this.showInfo(this.translateService.instant(
-        "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
-      ));
+      this.showInfo(
+        this.translateService.instant(
+          "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
+        )
+      );
     }
-
   }
 
   confirmarCancelar(dato) {
@@ -401,7 +424,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     });
 
     if (!estadoInvalido) {
-
       this.sigaServices
         .post("enviosMasivos_cancelar", this.eliminarArray)
         .subscribe(
@@ -426,11 +448,12 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         );
     } else {
-      this.showInfo(this.translateService.instant(
-        "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
-      ));
+      this.showInfo(
+        this.translateService.instant(
+          "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
+        )
+      );
     }
-
   }
 
   //búsqueda con enter
@@ -450,7 +473,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.estado = 1;
       for (let i in datos) {
-        if (datos[i].idEstado == 2 || datos[i].idEstado == 3 || datos[i].idEstado == 6) {
+        if (
+          datos[i].idEstado == 2 ||
+          datos[i].idEstado == 3 ||
+          datos[i].idEstado == 6
+        ) {
           this.estado = datos[i].idEstado;
         }
       }
@@ -462,11 +489,39 @@ para poder filtrar el dato con o sin estos caracteres*/
     console.log(dato);
     if (!this.selectMultiple && this.estado != 5) {
       // this.body.estado = dato[0].estado;
-      sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(dato[0]));
-      sessionStorage.setItem("filtrosEnvioMasivo", JSON.stringify(this.bodySearch));
-      this.router.navigate(["/fichaRegistroEnvioMasivo"]);
+      this.progressSpinner = true;
+      this.bodySearch.idEnvio = dato[0].idEnvio;
+      this.sigaServices
+        .postPaginado("enviosMasivos_search", "?numPagina=1", this.bodySearch)
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.searchEnviosMasivos = JSON.parse(data["body"]);
+            let datos = this.searchEnviosMasivos.enviosMasivosItem;
+            sessionStorage.setItem(
+              "enviosMasivosSearch",
+              JSON.stringify(datos[0])
+            );
+            this.bodySearch.idEnvio = "";
+            sessionStorage.setItem(
+              "filtrosEnvioMasivo",
+              JSON.stringify(this.bodySearch)
+            );
+            this.router.navigate(["/fichaRegistroEnvioMasivo"]);
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {}
+        );
     } else if (!this.selectMultiple && this.estado == 5) {
-      this.showInfo(this.translateService.instant("informesycomunicaciones.enviosMasivos.envioProcess"));
+      this.progressSpinner = false;
+      this.showInfo(
+        this.translateService.instant(
+          "informesycomunicaciones.enviosMasivos.envioProcess"
+        )
+      );
       this.selectedDatos = [];
     }
   }
@@ -494,10 +549,17 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices.post("enviosMasivos_programar", dato).subscribe(
         data => {
           this.showSuccess(
-            this.translateService.instant("informesycomunicaciones.enviosMasivos.programCorrect"));
+            this.translateService.instant(
+              "informesycomunicaciones.enviosMasivos.programCorrect"
+            )
+          );
         },
         err => {
-          this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEnvio"));
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.errorEnvio"
+            )
+          );
           console.log(err);
         },
         () => {
@@ -506,16 +568,22 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       );
     } else {
-      this.showInfo(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEstado"));
+      this.showInfo(
+        this.translateService.instant(
+          "informesycomunicaciones.modelosdecomunicacion.errorEstado"
+        )
+      );
     }
   }
 
   addEnvio() {
     sessionStorage.removeItem("enviosMasivosSearch");
     sessionStorage.setItem("crearNuevoEnvio", JSON.stringify("true"));
-    sessionStorage.setItem("filtrosEnvioMasivo", JSON.stringify(this.bodySearch));
+    sessionStorage.setItem(
+      "filtrosEnvioMasivo",
+      JSON.stringify(this.bodySearch)
+    );
     this.router.navigate(["/fichaRegistroEnvioMasivo"]);
-
   }
 
   /*
@@ -544,11 +612,15 @@ para poder filtrar el dato con o sin estos caracteres*/
       idEnvio: dato[0].idEnvio,
       idTipoEnvios: dato[0].idTipoEnvios,
       idPlantillaEnvios: dato[0].idPlantillaEnvios
-    }
+    };
 
     this.sigaServices.post("enviosMasivos_duplicar", datoDuplicar).subscribe(
       data => {
-        this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.correctDuplicado"));
+        this.showSuccess(
+          this.translateService.instant(
+            "informesycomunicaciones.modelosdecomunicacion.correctDuplicado"
+          )
+        );
 
         let datoDuplicado = JSON.parse(data["body"]).enviosMasivosItem;
         datoDuplicado.forEach(element => {
@@ -559,11 +631,21 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
 
         this.router.navigate(["/fichaRegistroEnvioMasivo"]);
-        sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(datoDuplicado[0]));
-        sessionStorage.setItem("filtrosEnvioMasivo", JSON.stringify(this.bodySearch));
+        sessionStorage.setItem(
+          "enviosMasivosSearch",
+          JSON.stringify(datoDuplicado[0])
+        );
+        sessionStorage.setItem(
+          "filtrosEnvioMasivo",
+          JSON.stringify(this.bodySearch)
+        );
       },
       err => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
+        this.showFail(
+          this.translateService.instant(
+            "informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"
+          )
+        );
         console.log(err);
       }
     );
@@ -579,5 +661,4 @@ para poder filtrar el dato con o sin estos caracteres*/
   fillFechaProgramada(event) {
     this.bodyProgramar.fechaProgramada = event;
   }
-
 }

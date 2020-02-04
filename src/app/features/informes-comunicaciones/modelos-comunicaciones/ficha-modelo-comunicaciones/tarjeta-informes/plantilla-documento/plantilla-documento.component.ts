@@ -18,6 +18,7 @@ import { TranslateService } from "../../../../../../commons/translate/translatio
 import { MenuItem } from "primeng/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: "app-plantilla-documento",
@@ -63,6 +64,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   progressSpinner: boolean = false;
   finalidad: string;
   showDatosGenerales: boolean = true;
+  showDatosSalida: boolean = true;
   showConsultas: boolean = false;
   file: any;
   eliminarDisabled: boolean = false;
@@ -83,6 +85,10 @@ export class PlantillaDocumentoComponent implements OnInit {
   esPorDefecto: boolean = false;
   label1: string;
   controlSelectionMode: string;
+  nombreCompletoArchivo:string;
+  extensionArchivo:string;
+
+  disabledGuardar: boolean = true;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -90,16 +96,23 @@ export class PlantillaDocumentoComponent implements OnInit {
   @ViewChild("tableDocs") tableDocs: DataTable;
   selectedDocs;
 
+  VALOR_FORMATO_XLS:string = "1";
+  VALOR_FORMATO_DOC:string = "2";
+  VALOR_FORMATO_PDF:string = "3";
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+    this.commonsService.scrollTop();
+    this.checkCamposDatosSalida();
     this.getInstitucionActual();
 
     //sessionStorage.removeItem('esPorDefecto');
@@ -437,6 +450,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   restablecerDatosGenerales() {
+    this.disabledGuardar = true;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
     this.selectedSufijos = JSON.parse(
@@ -446,6 +460,16 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.body.consultas = this.datos;
     this.nuevoDocumento = false;
+  }
+
+  restablecerDatosSalida() {
+    let body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.formatoSalida = body.formatoSalida;
+    this.body.nombreFicheroSalida = body.nombreFicheroSalida;
+    this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
+    this.selectedSufijos = JSON.parse(
+      JSON.stringify(this.selectedSufijosInicial)
+    );
   }
 
   getResultados() {
@@ -587,11 +611,13 @@ export class PlantillaDocumentoComponent implements OnInit {
     let fileList: FileList = event.files;
     this.file = fileList[0];
 
-    let nombreCompletoArchivo = fileList[0].name;
-    let extensionArchivo = nombreCompletoArchivo.substring(
-      nombreCompletoArchivo.lastIndexOf("."),
-      nombreCompletoArchivo.length
+    this.nombreCompletoArchivo = fileList[0].name;
+    this.extensionArchivo = this.nombreCompletoArchivo.substring(
+      this.nombreCompletoArchivo.lastIndexOf("."),
+      this.nombreCompletoArchivo.length
     );
+
+    
 
     // if (
     //   extensionArchivo == null ||
@@ -668,23 +694,140 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
       );
   }
+
+  checkCamposDatosSalida(){
+
+    if(this.body.nombreFicheroSalida != undefined && this.body.nombreFicheroSalida != null && this.body.nombreFicheroSalida != "" &&
+    this.body.idFormatoSalida != undefined && this.body.idFormatoSalida != null ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  guardarDatosSalida(){
+
+    if(this.checkCamposDatosSalida()){
+      this.progressSpinner = true;
+      this.body.sufijos = [];
+      let orden: number = 1;
+      this.selectedSufijos.forEach(element => {
+        let ordenString = orden.toString();
+        let objSufijo = {
+          idSufijo: element.idSufijo,
+          orden: ordenString,
+          nombreSufijo: element.nombreSufijo
+        };
+        this.body.sufijos.push(objSufijo);
+        orden = orden + 1;
+      });
+  
+      this.sigaServices.post("plantillasDoc_guardar_datosSalida", this.body).subscribe(
+        data => {
+          this.showSuccess("Guardar datos de salida correctos");
+          this.body.idInforme = JSON.parse(data["body"]).data;
+          this.getDocumentos();
+          sessionStorage.setItem(
+            "modelosInformesSearch",
+            JSON.stringify(this.body)
+          );
+
+          sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+          this.selectedSufijosInicial = JSON.parse(
+            JSON.stringify(this.selectedSufijos)
+          );
+  
+          this.progressSpinner = false;
+  
+        },
+        err => {
+          this.showFail("Error guardar datos Salida");
+          console.log(err);
+          this.progressSpinner = false;
+  
+        },
+        () => {
+          this.progressSpinner = false;
+  
+        }
+      );
+    }
+  
+  }
+
   guardarDatosGenerales() {
     this.progressSpinner = true;
-    this.body.sufijos = [];
-    let orden: number = 1;
-    this.selectedSufijos.forEach(element => {
-      let ordenString = orden.toString();
-      let objSufijo = {
-        idSufijo: element.idSufijo,
-        orden: ordenString,
-        nombreSufijo: element.nombreSufijo
-      };
-      this.body.sufijos.push(objSufijo);
-      orden = orden + 1;
-    });
+    // this.body.sufijos = [];
+    // let orden: number = 1;
+    // this.selectedSufijos.forEach(element => {
+    //   let ordenString = orden.toString();
+    //   let objSufijo = {
+    //     idSufijo: element.idSufijo,
+    //     orden: ordenString,
+    //     nombreSufijo: element.nombreSufijo
+    //   };
+    //   this.body.sufijos.push(objSufijo);
+    //   orden = orden + 1;
+    // });
+
+    if(this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida.trim() == ""){
+
+      if(this.nombreCompletoArchivo != null && this.nombreCompletoArchivo != undefined && this.nombreCompletoArchivo.trim() != ""){
+      
+        let nombreFichero = this.nombreCompletoArchivo.split(".");
+
+        if(nombreFichero.length > 2){
+
+          nombreFichero.pop();
+          let nombreFicheroCompleto = "";
+
+         for (let index = 0; index < nombreFichero.length; index++) {
+          
+          if(nombreFichero.length-1 == index){
+            nombreFicheroCompleto += nombreFichero[index];
+
+          }else{
+            nombreFicheroCompleto += nombreFichero[index] + ".";
+
+          }
+           
+         }
+
+         this.body.nombreFicheroSalida = nombreFicheroCompleto;
+
+        }else{
+          this.body.nombreFicheroSalida = nombreFichero[0];
+
+        }
+
+      }
+      
+    }
+
+    if(this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined){
+
+      if (
+        this.extensionArchivo != null &&
+        this.extensionArchivo.trim() != ""){
+          
+          if (/\.(xls)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+            this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
+          }else if(/\.(doc)$/i.test(this.extensionArchivo.trim().toUpperCase())){
+            this.body.idFormatoSalida = this.VALOR_FORMATO_DOC;
+          }else if(/\.(pdf)$/i.test(this.extensionArchivo.trim().toUpperCase())){
+            this.body.idFormatoSalida = this.VALOR_FORMATO_PDF;
+          }else{
+            this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
+          }
+        }
+    }
 
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
+
         this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"));
         this.nuevoDocumento = false;
         this.body.idInforme = JSON.parse(data["body"]).data;
@@ -695,14 +838,15 @@ export class PlantillaDocumentoComponent implements OnInit {
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
-        this.selectedSufijosInicial = JSON.parse(
-          JSON.stringify(this.selectedSufijos)
-        );
+        // this.selectedSufijosInicial = JSON.parse(
+        //   JSON.stringify(this.selectedSufijos)
+        // );
         this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"));
         console.log(err);
+        this.progressSpinner = false;
       },
       () => {
         this.getDocumentos();
@@ -717,6 +861,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       .subscribe(
         data => {
           this.showInfo(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.plantillaCargada"));
+          this.disabledGuardar = false;
           plantilla.idPlantillaDocumento = JSON.parse(
             data["body"]
           ).idPlantillaDocumento;
@@ -870,6 +1015,10 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   onShowDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  onShowDatosSalida() {
+    this.showDatosSalida = !this.showDatosSalida;
   }
 
   onShowConsultas() {
@@ -1092,10 +1241,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   isGuardarDisabled() {
     if (
-      this.body.idFormatoSalida != "" &&
-      this.body.idFormatoSalida != null &&
-      this.body.nombreFicheroSalida != "" &&
-      this.body.nombreFicheroSalida != null &&
       this.documentos &&
       this.documentos.length > 0 && (!this.esPorDefecto && (this.institucionActual != 2000 || this.institucionActual == 2000))
     ) {
@@ -1253,4 +1398,5 @@ export class PlantillaDocumentoComponent implements OnInit {
           this.progressSpinner = false
         });
   }
+
 }

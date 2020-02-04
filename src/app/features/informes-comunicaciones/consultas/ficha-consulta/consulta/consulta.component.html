@@ -74,17 +74,17 @@
         <label class="mr-2">{{dato.campo}} </label>
       </div>
       <div class="form-group col-lg-3 col-md-3">
-        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="dato.operacion != 'OPERADOR'"
           *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
-          class="select-form"></p-dropdown>
-        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+          class="select-form" ></p-dropdown>
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="dato.operacion != 'OPERADOR'"
           *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
       </div>
       <div class="form-group col-lg-6 col-md-6">
         <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
         <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="dato.valor" (valueChangeSelected)="fillFechaValor($event, dato)"
           (valueChangeInput)="fillFechaValor($event, dato)"></app-fecha>
-        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
           *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
           optionLabel="DESCRIPCION"></p-dropdown>
       </div>
