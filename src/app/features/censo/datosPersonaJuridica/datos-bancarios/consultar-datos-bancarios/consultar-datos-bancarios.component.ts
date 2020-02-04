@@ -15,7 +15,6 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Router } from '@angular/router';
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
-import { IfObservable } from "../../../../../../../node_modules/rxjs/observable/IfObservable";
 
 @Component({
   selector: "app-consultar-datos-bancarios",

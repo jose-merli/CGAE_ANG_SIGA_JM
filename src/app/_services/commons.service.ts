@@ -103,9 +103,15 @@ export class CommonsService {
 
   scrollTablaFoco(idFoco) {
     let top = document.getElementById(idFoco);
-    if (top !== null) {
-      top.scrollIntoView();
-      top = null;
-    }
-  } 
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  } 
+
+  styleObligatorio(evento){
+    if(evento == null || evento == undefined || evento == ""){
+      return "camposObligatorios";
+    }    
+  }
 }

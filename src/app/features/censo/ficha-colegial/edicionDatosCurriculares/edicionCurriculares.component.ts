@@ -4,13 +4,13 @@ import { SigaServices } from "./../../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
-import { Location, DatePipe } from "@angular/common";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 
 import { FichaColegialEdicionCurricularesItem } from "../../../../models/FichaColegialEdicionCurricularesItem";
 import { FichaColegialEdicionCurricularesObject } from "../../../../models/FichaColegialEdicionCurricularesObject";
 import { TipoCurricularItem } from "../../../../models/TipoCurricularItem";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
+import { CommonsService } from '../../../../_services/commons.service';
 /*** COMPONENTES ***/
 
 @Component({
@@ -76,9 +76,12 @@ export class EdicionCurricularesComponent implements OnInit {
   tipoCVSelected;
   subtipoCVSelected;
 
+  resaltadoDatos:boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
+    private commonService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -89,6 +92,7 @@ export class EdicionCurricularesComponent implements OnInit {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
     if (sessionStorage.getItem("nuevoCurriculo")) {
       this.body = new FichaColegialEdicionCurricularesItem();
       this.body.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
@@ -315,6 +319,8 @@ export class EdicionCurricularesComponent implements OnInit {
 
   solicitudGuardarCv() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
+
     this.certificadoToBoolean();
     this.body.dateFechaInicio = this.arreglarFecha(this.body.fechaDesde);
     this.body.dateFechaFin = this.arreglarFecha(this.body.fechaHasta);
@@ -464,6 +470,7 @@ export class EdicionCurricularesComponent implements OnInit {
           () => { }
         );
     }
+    this.resaltadoDatos=false;
   }
 
   showFail() {
@@ -514,8 +521,11 @@ export class EdicionCurricularesComponent implements OnInit {
       detail: this.translateService.instant("general.message.accion.realizada")
     });
   }
+  
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos=false;
+
     if (this.nuevo == false) {
       this.getComboSubtipoCurricular(this.body.idTipoCv);
       this.getComboTipoCurricular(this.body.idTipoCv);
@@ -739,5 +749,38 @@ export class EdicionCurricularesComponent implements OnInit {
 
   fillFechaMovimiento(event) {
     this.body.fechaMovimiento = event;
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos){
+      return this.commonService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.isLetrado){
+      if(this.activateGuardar()){
+        this.guardarCv();
+      }else{
+        this.muestraCamposObligatorios();
+      }
+    }else if(this.solicitaModificacion()){
+      if(this.activateGuardar()){
+        this.comprobarAuditoria()
+      }else{
+        this.muestraCamposObligatorios();
+      }
+    }else if(this.solicitaCreacion()){
+      if(this.activateGuardar()){
+        this.comprobarAuditoria();
+      }else{
+        this.muestraCamposObligatorios();
+      }
+    }
   }
 }
