@@ -1196,78 +1196,95 @@
 
     <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
-          [ngClass]="{ customCursor: selectMultipleDirecciones }" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
-          #tableDirecciones class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"
-          paginatorPosition="both" [rows]="selectedItemDirecciones" (onRowUnselect)="
+        <p-table [columns]="colsDirecciones" [(selection)]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
+          dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableDirecciones class="tabla-listado" [value]="datosDirecciones"
+          [sortOrder]="1" [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItemDirecciones"
+          (onRowUnselect)="
             actualizaSeleccionadosDirecciones(selectedDatosDirecciones)
           ">
-          <p-column *ngFor="let col of colsDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true" filterMatchMode="contains">
-            <ng-template let-datoH="rowData" pTemplate="body">
-              <div *ngIf="setItalic(datoH) && col.field != 'correoElectronico' && col.field != 'tipoDireccion'">
-                <span [ngStyle]="{
+
+          <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div *ngIf="setItalic(datoH) && col.field != 'correoElectronico' && col.field != 'tipoDireccion'">
+                  <span [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
-              </div>
-              <div *ngIf="!setItalic(datoH) && col.field != 'correoElectronico'&& col.field != 'tipoDireccion'">
-                <span>{{ datoH[col.field] }}</span>
-              </div>
-              <div *ngIf="setItalic(datoH) && col.field == 'correoElectronico'">
-                <a [ngStyle]="{
+                </div>
+                <div *ngIf="!setItalic(datoH) && col.field != 'correoElectronico'&& col.field != 'tipoDireccion'">
+                  <span>{{ datoH[col.field] }}</span>
+                </div>
+                <div *ngIf="setItalic(datoH) && col.field == 'correoElectronico'">
+                  <a [ngStyle]="{
                   'font-style': 'italic',
                   'font-weight': 'bold',
                   'text-decoration': 'line-through'
                 }" [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{ datoH[col.field] }}</a>
-              </div>
-              <div *ngIf="!setItalic(datoH)  && col.field == 'correoElectronico'">
-                <a [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{datoH[col.field]}}</a>
-              </div>
-              <div *ngIf="setItalic(datoH) && col.field == 'tipoDireccion'">
-                <a [ngStyle]="{
+                </div>
+                <div *ngIf="!setItalic(datoH)  && col.field == 'correoElectronico'">
+                  <a [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{datoH[col.field]}}</a>
+                </div>
+                <div *ngIf="setItalic(datoH) && col.field == 'tipoDireccion'">
+                  <a [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }" [routerLink]="" class="enlace" (click)="redireccionarDireccion(datoH)">{{ datoH[col.field] }}</a>
-              </div>
-              <div *ngIf="!setItalic(datoH)  && col.field == 'tipoDireccion'">
-                <a [routerLink]="" class="enlace" (click)="redireccionarDireccion(datoH)">{{datoH[col.field]}}</a>
-              </div>
-            </ng-template>
+                </div>
+                <div *ngIf="!setItalic(datoH)  && col.field == 'tipoDireccion'">
+                  <a [routerLink]="" class="enlace" (click)="redireccionarDireccion(datoH)">{{datoH[col.field]}}</a>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
 
-
-
-          </p-column>
-
-          <ng-template pTemplate="paginatorLeft">
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{col.header | translate}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableDirecciones.filter($event.target.value,
+                                col.field, 'contains')">
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableDirecciones.first
-                + 1 }} al {{ tableDirecciones.first + tableDirecciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                | translate }} {{ tableDirecciones.totalRecords }}</label>
-              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedDirecciones
-                }}
+              <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{tableDirecciones.first
+                + 1}} al {{tableDirecciones.first + tableDirecciones.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{tableDirecciones.totalRecords}}
               </label>
-              <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItemDirecciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesDirecciones($event)"></p-dropdown>
-              <label class="pl-1">
-                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
               </label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="
-                    onChangeSelectAllDirecciones()
-                  " [(ngModel)]="selectAllDirecciones" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
-              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleDirecciones }" (click)="
-                  isSelectMultipleDirecciones();
-                  selectedDatosDirecciones = false
-                ">
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label> -->
+              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
             </div>
           </ng-template>
-        </p-dataTable>
+        </p-table>
       </div>
       <br />
     </div>
@@ -1332,58 +1349,83 @@
 
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
       <div class="row">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleBancarios }"
-          [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
-          class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
+        <p-table [columns]="colsBancarios" [ngClass]="{ customCursor: selectMultipleBancarios }" [(selection)]="selectedDatosBancarios"
+          [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios class="tabla-listado" [value]="datosBancarios"
+          [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
             actualizaSeleccionadosBancarios(selectedDatosBancarios)
           " paginatorPosition="both" [rows]="selectedItemBancarios" pageLinks="4">
-          <p-column *ngFor="let col of colsBancarios" [sortable]="true" [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true" filterMatchMode="contains">
-            <ng-template let-datoH="rowData" pTemplate="body">
-              <div *ngIf="setItalic(datoH) && col.field != 'titular'">
-                <span [ngStyle]="{
+
+          <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div *ngIf="setItalic(datoH) && col.field != 'titular'">
+                  <span [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
-              </div>
-              <div *ngIf="col.field != 'titular' && !setItalic(datoH)">
-                <span>{{ datoH[col.field] }}</span>
-              </div>
-              <div *ngIf="col.field == 'titular' && !setItalic(datoH)">
-                <a [routerLink]="" (click)="redireccionarDatosBancarios([datoH])" class="enlace">{{datoH[col.field]}}</a>
-              </div>
-              <div *ngIf="col.field == 'titular' && setItalic(datoH)">
-                <a [routerLink]="" [ngStyle]="{
+                </div>
+                <div *ngIf="col.field != 'titular' && !setItalic(datoH)">
+                  <span>{{ datoH[col.field] }}</span>
+                </div>
+                <div *ngIf="col.field == 'titular' && !setItalic(datoH)">
+                  <a [routerLink]="" (click)="redireccionarDatosBancarios([datoH])" class="enlace">{{datoH[col.field]}}</a>
+                </div>
+                <div *ngIf="col.field == 'titular' && setItalic(datoH)">
+                  <a [routerLink]="" [ngStyle]="{
                   'font-style': 'italic',
                   'font-weight': 'bold',
                   'text-decoration': 'line-through'
                 }" (click)="redireccionarDatosBancarios([datoH])" class="enlace">{{datoH[col.field]}}</a>
-              </div>
-            </ng-template>
-          </p-column>
-          <ng-template pTemplate="paginatorLeft">
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableBancarios.filter($event.target.value,
+                                  col.field, 'contains')">
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableBancarios.first
-                + 1 }} al {{ tableBancarios.first + tableBancarios.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                | translate }} {{ tableBancarios.totalRecords }}</label>
-              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedBancarios }}</label>
-              <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItemBancarios" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesBancarios($event)"></p-dropdown>
-              <label class="pl-1">
-                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+              <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{tableBancarios.first
+                + 1}} al {{tableBancarios.first + tableBancarios.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                | translate }} {{tableBancarios.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
               </label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
-              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleBancarios }" (click)="
-                  isSelectMultipleBancarios(); selectedDatosBancarios = false
-                ">
-                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label> -->
+              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                      <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
             </div>
           </ng-template>
-        </p-dataTable>
+
+        </p-table>
       </div>
       <br />
     </div>

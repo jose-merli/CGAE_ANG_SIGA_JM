@@ -832,6 +832,10 @@ export class SolicitudesModificacionComponent implements OnInit {
     }
   }
 
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({

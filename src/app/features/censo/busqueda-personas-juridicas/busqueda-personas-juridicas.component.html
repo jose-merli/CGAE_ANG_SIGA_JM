@@ -136,7 +136,7 @@
           </div>
         </ng-template>
       </p-table>
-      <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
+      <div class="card-footer">
         <div class="text-right main-button">
           <button (click)="toHistorico()" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
           <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
@@ -149,67 +149,91 @@
   <div *ngIf="historico == true" class="card mt-3">
     <div class="card-body p-0">
 
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" pageLinks="4" dataKey="nif" [responsive]="true"
-        selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="sortO" [paginator]="activarPaginacion()"
-        paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains">
+      <p-table [columns]="cols" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+        pageLinks="4" dataKey="nif" [responsive]="true" (onRowSelect)="clickFila($event)" selectionMode="multiple" #table class="tabla-listado"
+        [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of columns" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{col.header | translate}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                              col.field, 'contains')">
+            </th>
+          </tr>
+        </ng-template>
 
-          <ng-template let-datoH="rowData" pTemplate="body">
 
-            <div *ngIf="setItalic(datoH) && col.field == 'fechaConstitucion'">
-              <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
-            </div>
-            <div *ngIf="!setItalic(datoH) && col.field == 'fechaConstitucion'">
-              <label>{{ datoH.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
-            </div>
-            <div class="input-group" *ngIf="col.field == 'numeroIntegrantes'" [pTooltip]="obtenerNombreIntegrantes(datoH)" tooltipPosition="top">
-              <button pButton type="button" [label]="obtenerIntegrantes(datoH)"></button> &nbsp;&nbsp;
-            </div>
-            <div *ngIf="setItalic(datoH) && col.field =='denominacion'">
-              <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="irEditarPersona(datoH)"
-                class="enlace">{{ datoH[col.field]}}</a>
-            </div>
-            <div *ngIf="!setItalic(datoH) && col.field =='denominacion'">
-              <a [routerLink]="" (click)="irEditarPersona(datoH)" class="enlace">{{ datoH[col.field]}}</a>
-            </div>
-            <div *ngIf="setItalic(datoH) && col.field != 'fechaConstitucion' && col.field != 'numeroIntegrantes' && col.field != 'denominacion'">
-              <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field]}}</label>
-            </div>
+        <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div *ngIf="setItalic(datoH) && col.field == 'fechaConstitucion'">
+                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
+              </div>
+              <div *ngIf="!setItalic(datoH) && col.field == 'fechaConstitucion'">
+                <label>{{ datoH.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
+              </div>
+              <div class="input-group" *ngIf="col.field == 'numeroIntegrantes'" [pTooltip]="obtenerNombreIntegrantes(datoH)" tooltipPosition="top">
+                <button pButton type="button" [label]="obtenerIntegrantes(datoH)"></button> &nbsp;&nbsp;
+              </div>
+              <div *ngIf="setItalic(datoH) && col.field =='denominacion'">
+                <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="irEditarPersona(datoH)"
+                  class="enlace">{{ datoH[col.field]}}</a>
+              </div>
+              <div *ngIf="!setItalic(datoH) && col.field =='denominacion'">
+                <a [routerLink]="" (click)="irEditarPersona(datoH)" class="enlace">{{ datoH[col.field]}}</a>
+              </div>
+              <div *ngIf="setItalic(datoH) && col.field != 'fechaConstitucion' && col.field != 'numeroIntegrantes' && col.field != 'denominacion'">
+                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field]}}</label>
+              </div>
 
-            <div *ngIf="!setItalic(datoH) && col.field != 'fechaConstitucion' && col.field != 'numeroIntegrantes' && col.field != 'denominacion'">
-              <label>{{ datoH[col.field]}}</label>
-            </div>
-          </ng-template>
-        </p-column>
+              <div *ngIf="!setItalic(datoH) && col.field != 'fechaConstitucion' && col.field != 'numeroIntegrantes' && col.field != 'denominacion'">
+                <label>{{ datoH[col.field]}}</label>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
 
-        <ng-template pTemplate="paginatorLeft">
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+            <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
               + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+            </label>
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
               <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
-            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
           </div>
         </ng-template>
-
-        <p-footer>
-          <div class="text-right main-button">
-            <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
-            <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
-              disabled></button>
-          </div>
-        </p-footer>
-      </p-dataTable>
-
+      </p-table>
+      <div class="card-footer">
+        <div class="text-right main-button">
+          <button (click)="isBuscar()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          <button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
+            disabled></button>
+        </div>
+      </div>
     </div>
   </div>
   <!--FIN DE PRINCIPAL-->

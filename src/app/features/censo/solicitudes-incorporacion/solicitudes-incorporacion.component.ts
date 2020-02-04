@@ -29,6 +29,7 @@ export enum KEY_CODE {
 })
 export class SolicitudesIncorporacionComponent implements OnInit {
   showCard: boolean = true;
+  selectMultipleAux = [];
   es: any;
   formBusqueda: FormGroup;
   body: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();

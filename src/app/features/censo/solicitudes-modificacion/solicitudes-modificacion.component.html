@@ -64,9 +64,9 @@
   <!-- cuerpo datos -->
   <div *ngIf="isSearch" class="card mt-3">
     <div class="card-body p-0">
-      <p-table [paginator]="enablePagination()" (onRowSelect)="procesar(selectedDatos)" selectionMode="multiple" [(selection)]="selectedDatos"
-        [responsive]="true" #table class="tabla-listado" [value]="data" [sortOrder]="1" [columns]="cols" [paginator]="true"
-        paginatorPosition="both" [rows]="selectedItem">
+      <p-table [value]="data" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado" [paginator]="true"
+        [rows]="selectedItem" (onRowSelect)="procesar(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+        [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
 
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -83,13 +83,13 @@
             </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <span *ngIf="col.field != 'numIdSolicitud'">{{datoH[col.field]}}</span>
+                <span *ngIf="col.field != 'numIdSolicitud'">{{dato[col.field]}}</span>
                 <div *ngIf="col.field == 'numIdSolicitud'">
-                  <a [routerLink]="" (click)="onSelectRow([datoH])" class="enlace">{{datoH[col.field]}}</a>
+                  <a [routerLink]="" (click)="onSelectRow([dato])" class="enlace">{{dato[col.field]}}</a>
                 </div>
               </div>
             </td>

@@ -245,34 +245,34 @@
                     </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
+                <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
                     <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                         <td class="text-center" *ngFor="let col of columns">
-                            <div *ngIf="setItalic(datoH) && col.field != 'nombre' && col.field != 'correo' && col.field != 'fechaNacimientoDate'">
-                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                            <div *ngIf="setItalic(dato) && col.field != 'nombre' && col.field != 'correo' && col.field != 'fechaNacimientoDate'">
+                                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                             </div>
-                            <div *ngIf="!setItalic(datoH) && col.field != 'nombre' && col.field != 'correo' && col.field != 'fechaNacimientoDate'">
-                                <span>{{datoH[col.field]}}</span>
+                            <div *ngIf="!setItalic(dato) && col.field != 'nombre' && col.field != 'correo' && col.field != 'fechaNacimientoDate'">
+                                <span>{{dato[col.field]}}</span>
                             </div>
-                            <div *ngIf="setItalic(datoH) && col.field == 'nombre'">
-                                <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="irEditarNoColegiado(datoH)"
-                                    class="enlace">{{datoH[col.field]}}</a>
+                            <div *ngIf="setItalic(dato) && col.field == 'nombre'">
+                                <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="irEditarNoColegiado(dato)"
+                                    class="enlace">{{dato[col.field]}}</a>
                             </div>
-                            <div *ngIf="!setItalic(datoH) && col.field == 'nombre'">
-                                <a [routerLink]="" (click)="irEditarNoColegiado(datoH)" class="enlace">{{datoH[col.field]}}</a>
+                            <div *ngIf="!setItalic(dato) && col.field == 'nombre'">
+                                <a [routerLink]="" (click)="irEditarNoColegiado(dato)" class="enlace">{{dato[col.field]}}</a>
                             </div>
-                            <div *ngIf="setItalic(datoH) && col.field == 'correo'">
-                                <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [href]="'mailto:'+datoH[col.field]"
-                                    class="enlace" target="_blank">{{datoH[col.field]}}</a>
+                            <div *ngIf="setItalic(dato) && col.field == 'correo'">
+                                <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [href]="'mailto:'+dato[col.field]"
+                                    class="enlace" target="_blank">{{dato[col.field]}}</a>
                             </div>
-                            <div *ngIf="!setItalic(datoH) && col.field == 'correo'">
-                                <a [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{datoH[col.field]}}</a>
+                            <div *ngIf="!setItalic(dato) && col.field == 'correo'">
+                                <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
                             </div>
-                            <div *ngIf="setItalic(datoH) && col.field == 'fechaNacimientoDate'">
-                                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                            <div *ngIf="setItalic(dato) && col.field == 'fechaNacimientoDate'">
+                                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
                             </div>
-                            <div *ngIf="!setItalic(datoH) && col.field == 'fechaNacimientoDate'">
-                                <label>{{ datoH.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
+                            <div *ngIf="!setItalic(dato) && col.field == 'fechaNacimientoDate'">
+                                <label>{{ dato.fechaNacimientoDate | date: 'dd/MM/yyyy'}}</label>
                             </div>
                         </td>
                     </tr>

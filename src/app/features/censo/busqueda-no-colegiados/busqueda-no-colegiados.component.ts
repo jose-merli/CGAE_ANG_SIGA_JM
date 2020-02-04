@@ -276,7 +276,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   clickFila(event) {
-    if (event.data && event.data.fechaBaja)
+    if (event.data && !event.data.fechaBaja && this.historico)
       this.selectedDatos.pop();
   }
   actualizaSeleccionados(selectedDatos) {
@@ -426,13 +426,25 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   //Opción tabla de seleccionar todas las filas
   onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.noColegiadoSearch.noColegiadoItem;
-      this.numSelected = this.noColegiadoSearch.noColegiadoItem.length;
+    if (!this.historico) {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.noColegiadoSearch.noColegiadoItem;
+        this.numSelected = this.noColegiadoSearch.noColegiadoItem.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.noColegiadoSearch.noColegiadoItem.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
     }
   }
 

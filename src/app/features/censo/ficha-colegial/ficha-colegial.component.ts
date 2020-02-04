@@ -144,7 +144,7 @@ export class FichaColegialComponent implements OnInit {
   datosCurriculares: any[] = [];
   sortF: any;
   sortO: any;
-  bodyDirecciones: DatosDireccionesItem;
+  bodyDirecciones: DatosDireccionesItem = new DatosDireccionesItem();
   bodyDatosBancarios: DatosBancariosItem;
   datosDirecciones: DatosDireccionesItem[] = [];
   datosDireccionesHist = new DatosDireccionesObject();
