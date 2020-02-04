@@ -228,8 +228,15 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
 				(data) => {
 					let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
-					dato.tipoEnvio = tipoEnvio.tipoEnvio;
-					dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
+
+					if(tipoEnvio != undefined && tipoEnvio != null){
+						dato.tipoEnvio = tipoEnvio.tipoEnvio;
+						dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
+					}else{
+						dato.tipoEnvio = undefined;
+						dato.idTipoEnvio = undefined;
+					}
+					
 				},
 				(err) => {
 					console.log(err);
