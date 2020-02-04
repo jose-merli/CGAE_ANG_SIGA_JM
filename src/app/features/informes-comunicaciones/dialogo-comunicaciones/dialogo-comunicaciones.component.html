@@ -98,9 +98,9 @@
                 <input [disabled]="true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [disabled]="dato.operacion != 'OPERADOR'"
+                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [disabled]="dato.operadorDefecto"
                     [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" [disabled]="dato.operacion != 'OPERADOR'"
+                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" [disabled]="dato.operadorDefecto"
                     class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
