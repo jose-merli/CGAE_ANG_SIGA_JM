@@ -220,7 +220,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.cargaComboClaseCom(null);
     } else {
       this.clasesComunicaciones = [];
-      this.clasesComunicaciones.unshift({ label: msg, value: '' });
     }
   }
 
@@ -236,7 +235,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: '', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {
@@ -292,7 +290,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);

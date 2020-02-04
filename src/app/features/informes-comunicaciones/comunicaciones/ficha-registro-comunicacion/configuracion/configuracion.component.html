@@ -48,7 +48,7 @@
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicaciones' | translate
                 }}
               </label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()" [disabled]="true" [options]="clasesComunicaciones"
+              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeClase()" [showClear]="true" [disabled]="true" [options]="clasesComunicaciones"
                 [(ngModel)]="body.idClaseComunicacion" class="select-form">
               </p-dropdown>
             </div>
@@ -59,12 +59,12 @@
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.tipoEnvio' | translate }} (*)</label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [disabled]="true" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios"
+              <p-dropdown  [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [disabled]="true" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios"
                 class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.plantillasEnvio' | translate }} (*)</label>
-              <p-dropdown [disabled]="true" [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios" class="select-form"></p-dropdown>
+              <p-dropdown  [disabled]="true" [filter]="true" [options]="plantillas" [showClear]="true" [(ngModel)]="body.idPlantillaEnvios" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.descripcion' | translate }} (*)</label>

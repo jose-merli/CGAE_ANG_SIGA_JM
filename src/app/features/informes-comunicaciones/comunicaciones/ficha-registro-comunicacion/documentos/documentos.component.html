@@ -119,6 +119,7 @@
             >
 
             <p-dropdown
+              [showClear]="true"
               [(ngModel)]="selectedItem"
               [options]="rowsPerPage"
               (onChange)="onChangeRowsPerPages($event)"

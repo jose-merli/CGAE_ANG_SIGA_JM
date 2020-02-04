@@ -32,12 +32,12 @@
 
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
-          <p-dropdown [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
+          <p-dropdown [showClear]="true" [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
             class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
-          <p-dropdown [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
+          <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
             [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">

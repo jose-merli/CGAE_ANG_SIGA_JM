@@ -24,7 +24,7 @@
             <label>{{ "censo.solicitudTextoLibre.literal.tipoModificacion" | translate }}
             </label>
             <br />
-            <p-dropdown class="select-form" [options]="tipo" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+            <p-dropdown class="select-form" [filter]="true" [options]="tipo" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]="body.tipoModificacion"></p-dropdown>
           </div>
 
@@ -32,7 +32,7 @@
             <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate }}
             </label>
             <br />
-            <p-dropdown class="select-form" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="estado"
+            <p-dropdown class="select-form" [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="estado"
               [(ngModel)]="body.estado"></p-dropdown>
           </div>
 
