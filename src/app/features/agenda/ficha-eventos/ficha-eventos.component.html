@@ -63,7 +63,7 @@
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }} (*)</label>
-              <p-dropdown class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
+              <p-dropdown [ngClass]="styleObligatorio('', newEvent.idTipoCalendario)" class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
                 name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"
                 [showClear]="true"></p-dropdown>
             </div>
@@ -76,7 +76,7 @@
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}} (*)</label>
-              <input type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
+              <input [ngClass]="styleObligatorio('', newEvent.title)" type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
             </div>
             <div *ngIf="!selectedTipoLaboral" class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
@@ -87,19 +87,19 @@
           <div class="row mb-3">
             <div *ngIf="modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [showTime]="true" [disabledToday]="disabledToday"
+              <app-fecha [inputStyleClass]="styleObligatorio('', newEvent.start)" #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStart($event)" [showTime]="true" [disabledToday]="disabledToday"
                 [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStart($event)" [utc]="false">
               </app-fecha>
             </div>
             <div *ngIf="!modoEdicionEventoByAgenda" class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-              <app-fecha #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEventInput($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
+              <app-fecha [inputStyleClass]="styleObligatorio('', newEvent.start)" #fechaIni [(value)]="newEvent.start" (valueChangeInput)="fillStartEventInput($event)" [showTime]="true" [minDate]="invalidDateMinEditionMode"
                 [maxDate]="invalidDateMaxEditionMode" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillStartEvent($event)"
                 [disabledToday]="disabledToday" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-              <app-fecha #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEndInput($event)" [showTime]="true" [minDate]="invalidDateMin"
+              <app-fecha [inputStyleClass]="styleObligatorio('', newEvent.end)" #fechaFi [(value)]="newEvent.end" (valueChangeInput)="fillEndInput($event)" [showTime]="true" [minDate]="invalidDateMin"
                 [maxDate]="invalidDateMax" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado" (valueChangeSelected)="fillEnd($event)"
                 [disabledToday]="true" [disabledDelete]="true" [utc]="false"></app-fecha>
             </div>
@@ -137,13 +137,13 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-              <app-fecha [(value)]="newEvent.fechaInicioRepeticion" (valueChangeInput)="isCheckFechaInicioRepeticion($event)" [minDate]="newEvent.start"
+              <app-fecha [inputStyleClass]="styleObligatorio('opcional', newEvent.fechaInicioRepeticion)" [(value)]="newEvent.fechaInicioRepeticion" (valueChangeInput)="isCheckFechaInicioRepeticion($event)" [minDate]="newEvent.start"
                 [maxDate]="newEvent.fechaFinRepeticion" [disabled]="tipoAccesoLectura || selectedTipoLaboral || tipoInscripcionEvento || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaInicioRepeticion($event)" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-              <app-fecha [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
+              <app-fecha [inputStyleClass]="styleObligatorio('opcional', newEvent.fechaFinRepeticion)" [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
                 [disabled]="tipoInscripcionEvento || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaFinRepeticion($event)" [utc]="false"></app-fecha>
             </div>
@@ -155,7 +155,7 @@
                   <label>{{'agenda.fichaEventos.datosGenerales.repetirCada' | translate}}: (*)</label>
                 </div>
                 <div class="col-lg-8 col-md-8">
-                  <p-dropdown (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}"
+                  <p-dropdown [ngClass]="styleObligatorio('opcional', newEvent.tipoRepeticion)" (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}"
                     [disabled]="tipoInscripcionEvento || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                     [showClear]="true"></p-dropdown>
                 </div>
@@ -197,8 +197,8 @@
       <div class="text-right main-button">
         <button pButton (click)="restEvent()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}"
           [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
-        <button pButton (click)="saveEvent()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]="validateForm() || tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
+        <button pButton (click)="checkDatos()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
+          [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado"></button>
         <button pButton (click)="deleteEvent()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"
           [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado || !modoEdicionEvento"></button>
       </div>

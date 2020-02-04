@@ -29,6 +29,7 @@ import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObje
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { FechaComponent } from "../../../commons/fecha/fecha.component";
 import { find } from "../../../../../node_modules/rxjs/operators";
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-eventos",
@@ -54,6 +55,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   disabledIsLetrado;
   filaEditable: boolean = false;
   progressSpinner2: boolean = false;
+
+  resaltadoDatos: boolean = false;
 
   tipoInscripcionEvento: boolean = false;
 
@@ -179,6 +182,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -1244,7 +1248,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.newEvent.start = e;
       this.validatorDates(e);
     } else if (e == null) {
-      this.newEvent.start = fecha;
+      this.newEvent.start = undefined;
+      this.newEvent.end = undefined;
       this.validatorDates(e);
     } else if (!this.createEvent) {
       this.newEvent.start = e;
@@ -1369,6 +1374,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.newEvent.idTipoCalendario == undefined ||
         this.newEvent.title == null ||
         this.newEvent.title == undefined ||
+        this.newEvent.title == "" ||
         this.newEvent.start == null ||
         this.newEvent.start == undefined ||
         this.newEvent.end == undefined ||
@@ -2760,4 +2766,28 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     return fecha;
   }
 
+  styleObligatorio(opcional, evento){
+    if(opcional=='opcional'){
+      if(!(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado) && this.resaltadoDatos){
+        return this.commonsService.styleObligatorio(evento);
+      }
+    }else{
+      if(this.resaltadoDatos){
+        return this.commonsService.styleObligatorio(evento);
+      }
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.validateForm()){
+      this.muestraCamposObligatorios();
+    }else{
+      this.saveEvent();
+    }
+  }
 }

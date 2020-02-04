@@ -67,12 +67,12 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-              <input type="text" #nombre class="form-control" autofocus pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
+              <input [ngClass]="styleObligatorio(curso.nombreCurso)" type="text" #nombre class="form-control" autofocus pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
               />
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }} (*)</label>
-              <input type="text" class="form-control" pInputText name="codigo" [disabled]="fieldNoEditable || !activacionEditar" [(ngModel)]="curso.codigoCurso"
+              <input [ngClass]="styleObligatorio(curso.codigoCurso)" type="text" class="form-control" pInputText name="codigo" [disabled]="fieldNoEditable || !activacionEditar" [(ngModel)]="curso.codigoCurso"
               />
 
             </div>
@@ -80,14 +80,14 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCursos.datosGenerales.visibilidad' | translate}} (*)</label>
-              <p-dropdown class="select-form" [disabled]="!activacionEditar" [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad"
+              <p-dropdown [ngClass]="styleObligatorio(curso.idVisibilidad)" class="select-form" [disabled]="!activacionEditar" [(ngModel)]='curso.idVisibilidad' [options]="comboVisibilidad"
                 [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectVisibilidad($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}} (*)</label>
-              <p-dropdown #colegio [disabled]="fieldNoEditable || !activacionEditar" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown [ngClass]="styleObligatorio(curso.colegio)" #colegio [disabled]="fieldNoEditable || !activacionEditar" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]='curso.colegio' [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeSelectColegio($event) "
                 placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
 
@@ -108,12 +108,12 @@
                 </ng-template>  
               </p-autoComplete> -->
 
-              <p-dropdown [disabled]="!activacionEditar" class="select-form" [(ngModel)]="curso.tipoServicios" [options]="comboService"
+              <p-dropdown [ngClass]="styleObligatorio(curso.tipoServicios)" [disabled]="!activacionEditar" class="select-form" [(ngModel)]="curso.tipoServicios" [options]="comboService"
                 [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}} (*)</label>
-              <p-dropdown placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde"
+              <p-dropdown [ngClass]="styleObligatorio(curso.idEstado)" placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde"
                 [disabled]="fieldNoEditable || !activacionEditar">
               </p-dropdown>
             </div>
@@ -121,7 +121,7 @@
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12">
               <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}} (*)</label>
-              <editor #editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado"></editor>
+              <editor [ngClass]="styleObligatorio(curso.descripcionEstado)" #editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado"></editor>
             </div>
           </div>
         </div>
@@ -134,12 +134,12 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioInscripcion' | translate }} (*)</label>
-              <app-fecha #fechaInicioInscripcion [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate"
+              <app-fecha [inputStyleClass]="styleObligatorio(curso.fechaInscripcionDesdeDate)"  #fechaInicioInscripcion [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate"
                 [disabled]="!activacionEditar" (valueFocus)="showMessageEditInitInscriptionEvent($event)" (click)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinInscripcion' | translate }} (*)</label>
-              <app-fecha #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueFocus)="showMessageEditEndInscriptionEvent($event)"
+              <app-fecha [inputStyleClass]="styleObligatorio(curso.fechaInscripcionHastaDate)" #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueFocus)="showMessageEditEndInscriptionEvent($event)"
                 (click)="showMessageEditEndInscriptionEvent($event)" [disabled]="!activacionEditar"></app-fecha>
 
             </div>
@@ -291,8 +291,7 @@
           [disabled]="!controlBotonesEstado('Inscripcion')" (click)="irInscripcion()"></button>
 
         <!-- Botón guardar -->
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"
-          [disabled]="validateCourse() || !activacionEditar"></button>
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="checkDatos()" [disabled]="!activacionEditar"></button>
       </div>
     </div>
   </div>

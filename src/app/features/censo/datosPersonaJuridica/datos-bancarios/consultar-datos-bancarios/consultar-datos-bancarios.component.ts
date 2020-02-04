@@ -15,6 +15,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Router } from '@angular/router';
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-consultar-datos-bancarios",
@@ -139,6 +140,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   migaPan;
   progressSpinner2: boolean = true;
 
+  resaltadoDatosBancarios: boolean = false;
+  resaltadoFirma:boolean = false;
+  resaltadoNuevo:boolean = false;
+  
   @ViewChild("fubauto") fubauto;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
@@ -149,12 +154,16 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
+    private commonService: CommonsService,
     private router: Router
 
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
+    this.resaltadoDatosBancarios=false;
+    this.resaltadoFirma=false;
+    this.resaltadoNuevo=false;
     this.migaPan = sessionStorage.getItem("migaPan");
     this.currentRoute = this.router.url;
     sessionStorage.removeItem('consultasSearch');
@@ -428,7 +437,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   // busquedaPerJuridica_datosBancariosInsert
   guardarRegistro() {
     this.progressSpinner = true;
-
+    this.resaltadoDatosBancarios= false;
+    this.resaltadoFirma=false;
+    this.resaltadoNuevo=false;
     this.body.revisionCuentas = this.revisionCuentas;
     this.body.idPersona = this.idPersona;
 
@@ -501,7 +512,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   solicitarGuardarRegistro() {
     this.progressSpinner = true;
-
+    this.resaltadoDatosBancarios= false;
+    this.resaltadoFirma=false;
+    this.resaltadoNuevo=false;
     this.body.revisionCuentas = this.revisionCuentas;
     this.body.idPersona = this.idPersona;
 
@@ -579,7 +592,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.solicitarGuardarRegistro();
       } else {
         this.progressSpinner = true;
-
+        this.resaltadoDatosBancarios= false;
+        this.resaltadoFirma=false;
+        this.resaltadoNuevo=false;
         this.body.revisionCuentas = this.revisionCuentas;
         this.body.idPersona = this.idPersona;
 
@@ -649,7 +664,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       accept: () => {
         this.activarCamposMandatos();
         this.cargarDatosCuentaBancaria();
-
+        this.resaltadoDatosBancarios=false;
+        this.resaltadoFirma=false;
+        this.resaltadoNuevo=false;
         //this.activarRestablecer = true;
       }
     });
@@ -722,6 +739,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.nuevo = true;
         this.editar = false;
         this.checkBody = JSON.parse(JSON.stringify(this.body));
+        this.resaltadoDatosBancarios=false;
+        this.resaltadoFirma=false;
+        this.resaltadoNuevo=false;
       }
     });
   }
@@ -971,7 +991,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   validarTitular(): boolean {
-    if (this.body.titular.trim() != "" && this.body.titular != undefined) {
+    if (this.body.titular != undefined && this.body.titular.trim() != "") {
       this.titularValido = true;
       return true;
     } else {
@@ -1656,6 +1676,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.progressSpinner = false;
     this.bodyDatosBancariosAnexo.idPersona = this.idPersona;
     this.bodyDatosBancariosAnexo.idCuenta = this.idCuenta;
+    this.resaltadoFirma=false;
 
     this.sigaServices
       .postPaginado(
@@ -1868,6 +1889,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.firmaFechaDate = this.datosPrevios.firmaFechaDate;
     this.file = undefined;
     this.checkFirma = true;
+    this.resaltadoFirma=false;
+    this.resaltadoNuevo=false;
   }
 
   validarFirma(): boolean {
@@ -1956,6 +1979,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       data => {
         this.progressSpinner = false;
         this.bodyDatosBancariosAnexo.status = data.status;
+        this.resaltadoFirma=false;
 
         if (this.file != undefined) {
           this.progressSpinner = true;
@@ -2270,5 +2294,67 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   detectFechaUsoInput(event) {
     this.datefechaUso = event;
+  }
+
+  styleObligatorio(ficha, evento){
+    if((evento == null || evento == undefined || evento == "") && ficha=="datosBancarios" && this.resaltadoDatosBancarios){
+      return "camposObligatorios";
+    }    
+
+    if((evento == null || evento == undefined || evento == "") && ficha=="firma" && this.resaltadoFirma){
+      return "camposObligatorios";
+    }   
+    
+    if((evento == null || evento == undefined || evento == "" || evento.value=="") && ficha=="nuevo" && this.resaltadoNuevo){
+      return "camposObligatorios";
+    } 
+  }
+
+  muestraCamposObligatorios(ficha){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    
+    if(ficha=="datosBancarios"){
+      this.resaltadoDatosBancarios=true;
+    }
+
+    if(ficha=="firma"){
+      this.resaltadoFirma=true;
+    }
+
+    if(ficha=="nuevo"){
+      this.resaltadoNuevo=true;
+    }
+  }
+
+  checkDatos(ficha){
+    if(ficha=='datosBancarios'){
+      if(!this.igualInicio() || !this.condiciones()){      
+        if(this.selectedTipo  == undefined || this.selectedTipo.length==0 || this.iban=='' || this.bic == '' || this.body.titular==''){
+          this.muestraCamposObligatorios(ficha);
+        }else{
+          this.validarFormulario();
+        }      
+      }else{
+        if(ficha=='datosBancarios'){
+          this.muestraCamposObligatorios(ficha);
+        }
+      }
+    }
+
+    if(ficha=='firma'){
+      if(!this.validarFirma() || this.firmaLugar=='' || this.firmaFechaDate==undefined){
+        this.muestraCamposObligatorios(ficha);
+      }else{  
+        this.firmarFicheroAnexo();
+      }
+    }
+
+    if(ficha=='nuevo'){
+      if(!this.validarInsertarAnexo() || this.datefechaUso==undefined || this.selectedProductoServicio.length==0){
+        this.muestraCamposObligatorios(ficha);
+      }else{
+        this.limpiarDatosAnexo();
+      }
+    }
   }
 }

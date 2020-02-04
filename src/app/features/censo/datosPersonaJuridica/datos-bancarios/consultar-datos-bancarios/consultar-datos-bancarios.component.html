@@ -12,9 +12,8 @@
 
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'menu.censo' | translate}}
-      <i class="fa fa-angle-right"></i>{{ migaPan }}
-      <i class="fa fa-angle-right"></i>
+    <p>{{ 'menu.censo' | translate}} <i class="fa fa-angle-right"></i>
+      {{ migaPan }} <i class="fa fa-angle-right"></i>
       {{"censo.consultaDatosBancarios.cabecera" | translate}}</p>
   </div>
   <!-- Datos cuenta bancaria -->
@@ -59,8 +58,8 @@
           <div class="bloque col-lg-12 col-md-12">
             <div class="row">
               <div class="form-group col-lg-3 col-md-6">
-                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
-                <input type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="body.titular" pInputText>
+                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}} (*)</label>
+                <input [ngClass]="styleObligatorio('datosBancarios', body.titular)" type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="body.titular" pInputText>
                 <div *ngIf="titularValido == false">
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
@@ -74,7 +73,7 @@
               </div>-->
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
-                <input type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()"
+                <input [ngClass]="styleObligatorio('datosBancarios', iban)" type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()"
                   pInputText>
                 <div *ngIf="ibanValido == false">
                   <label class="labelError">{{ "censo.datosBancarios.mensaje.control.ibanIncorrecto" | translate }}</label>
@@ -84,7 +83,7 @@
 
                 <!-- (ngModelChange)="recuperarBicBanco()" -->
                 <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate }} (*)</label>
-                <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="body.banco!='BANCO EXTRANJERO' ||!editar || !permisos || disabledAction"
+                <input [ngClass]="styleObligatorio('datosBancarios', body.bic)" [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="body.banco!='BANCO EXTRANJERO' ||!editar || !permisos || disabledAction"
                   [attr.maxlength]="11" [attr.minlength]="8" pInputText>
                 <div *ngIf="bicValido == false">
                   <label class="labelError">{{"censo.datosBancarios.mensaje.control.bicIncorrecto" | translate }}</label>
@@ -96,7 +95,7 @@
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.datosCuentaBancaria.literal.tipoCuenta" | translate}} (*)</label>
-                <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(disabled)]="!permisos || disabledAction" [(ngModel)]='selectedTipo'
+                <p-multiSelect [ngClass]="styleObligatorio('datosBancarios', selectedTipo)" [defaultLabel]="textFilter" styleClass="widthAll" [(disabled)]="!permisos || disabledAction" [(ngModel)]='selectedTipo'
                   [options]="tipoCuenta" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
                   maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
                 <div *ngIf="tipoCuentaSeleccionado == false">
@@ -119,9 +118,10 @@
             icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
           <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" [disabled]="igualInicio() || !permisos || disabledAction"
             icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="!isLetrado" (click)="validarFormulario()" [disabled]="igualInicio() || condiciones() || !permisos || disabledAction"
+          <button *ngIf="!isLetrado" (click)="checkDatos('datosBancarios')" [disabled]="!permisos || disabledAction"
             pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button *ngIf="isLetrado" (click)="validarFormulario()" [disabled]="igualInicio() || condiciones() || !permisos || disabledAction"
+          
+            <button *ngIf="isLetrado" (click)="checkDatos('datosBancarios')" [disabled]="!permisos || disabledAction"
             pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
           <!-- <button *ngIf="isLetrado && nuevo"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
             label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->
@@ -427,8 +427,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada" | translate}} (*)</label>
-          <app-fecha [(value)]="firmaFechaDate" [utc]="false" [disabled]="!permisos || disabledAction  || disabledFirma" (valueChangeSelected)="fillFechaFirmada($event)"
-            (valueChangeInput)="detectFechaFirmadaInput($event)"></app-fecha>
+          <app-fecha [inputStyleClass]="styleObligatorio('firma', firmaFechaDate)" [(value)]="firmaFechaDate" [utc]="false" [disabled]="!permisos || disabledAction  || disabledFirma" (valueChangeSelected)="fillFechaFirmada($event)" (valueChangeInput)="detectFechaFirmadaInput($event)"></app-fecha>
 
           <!-- <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [(disabled)]="!permisos || disabledAction"
             showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar> -->
@@ -437,8 +436,7 @@
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.lugarFirma" | translate}} (*)</label>
-          <input type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control"
-            pInputText>
+          <input [ngClass]="styleObligatorio('firma', firmaLugar)" type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control" pInputText />
         </div>
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
@@ -452,7 +450,7 @@
       <div class="text-right main-button ">
         <button (click)="restablecerDatosFirma()" [(disabled)]="!permisos" pButton type="button" icon="fa fa-repeat" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="firmarFicheroAnexo()" [disabled]="!validarFirma() || !permisos || disabledAction" pButton type="button"
+        <button (click)="checkDatos('firma')" [disabled]="!permisos || disabledAction" pButton type="button"
           icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </p-footer>
@@ -471,12 +469,11 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
           <br>
-          <p-dropdown [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [(disabled)]="!permisos" styleClass="widthAll"
-            (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
+          <p-dropdown [ngClass]="styleObligatorio('nuevo', selectedProductoServicio)" [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [(disabled)]="!permisos" styleClass="widthAll" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
-          <app-fecha [(value)]="datefechaUso" [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
+          <app-fecha [ngClass]="styleObligatorio('nuevo', datefechaUso)" [(value)]="datefechaUso" [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
 
           <!-- <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" [(disabled)]="!permisos" icon="far fa-calendar-alt" showIcon="true"
             [required]="true"></p-calendar> -->
@@ -492,8 +489,8 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="limpiarDatosAnexo()" pButton type="button" [(disabled)]="!permisos" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo() || !permisos" pButton type="button" icon="far fa-save"
+        <button pButton type="button" [(disabled)]="!permisos" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkDatos('firma')" [disabled]="!permisos" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </p-footer>
