@@ -1039,7 +1039,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         if (data == null) {
           this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
         } else {
-          saveAs(data, "ResultadoConsulta.xlsx");
+          let nombre = this.translateService.instant("censo.nombre.fichero.generarexcel") + new Date().getTime() + ".xlsx";
+          saveAs(data, nombre);
         }
       }, error => {
         console.log(error);

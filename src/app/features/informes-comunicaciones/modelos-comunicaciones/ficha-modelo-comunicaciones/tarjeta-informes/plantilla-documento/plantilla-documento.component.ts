@@ -19,6 +19,7 @@ import { MenuItem } from "primeng/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { Identifiers } from '@angular/compiler';
 
 @Component({
   selector: "app-plantilla-documento",
@@ -85,8 +86,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   esPorDefecto: boolean = false;
   label1: string;
   controlSelectionMode: string;
-  nombreCompletoArchivo:string;
-  extensionArchivo:string;
+  nombreCompletoArchivo: string;
+  extensionArchivo: string;
+  selectionMode: string = "single";
 
   disabledGuardar: boolean = true;
 
@@ -96,9 +98,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   @ViewChild("tableDocs") tableDocs: DataTable;
   selectedDocs;
 
-  VALOR_FORMATO_XLS:string = "1";
-  VALOR_FORMATO_DOC:string = "2";
-  VALOR_FORMATO_PDF:string = "3";
+  VALOR_FORMATO_XLS: string = "1";
+  VALOR_FORMATO_DOC: string = "2";
+  VALOR_FORMATO_PDF: string = "3";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -182,6 +184,9 @@ export class PlantillaDocumentoComponent implements OnInit {
       { consulta: "", finalidad: "", objetivo: "Datos", idObjetivo: "4" }
     ];
     // this.body.idConsulta = this.consultas[1].value;
+
+    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+
   }
 
   busquedaIdioma() {
@@ -207,9 +212,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
+        this.selectionMode = "single";
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {
+        this.selectionMode = "multiple";
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
@@ -260,29 +267,64 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
   }
 
+  onChangeSelectAllConsultas() {
+    if (this.selectAll) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+
+      this.eliminarDisabled = false;
+
+      this.datos.forEach(element => {
+
+        if ((element.idConsulta == "" ||
+          element.idConsulta == null ||
+          element.idConsulta == undefined ||
+          element.nombre == null ||
+          element.nombre == undefined)) {
+          this.eliminarDisabled = true;
+        }
+      });
+
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
   onSelectConsulta(event, dato) {
     console.log(dato);
     if (!this.esPorDefecto) {
       if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1
       ) {
-        this.navigateTo(dato);
-      } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
-        this.eliminarDisabled = true;
+        if (dato.nombre != undefined && dato.nombre != null) {
+          this.navigateTo(dato);
+        }
+        this.numSelected = 1;
+
       } else if (
-        this.selectMultiple &&
-        dato[0].idObjetivo == "4" &&
-        dato[0].idConsulta != "" &&
-        dato[0].idConsulta != null
-      ) {
+        this.selectMultiple) {
         this.eliminarDisabled = false;
-      } else if (
-        this.selectMultiple &&
-        dato[0].idObjetivo == "4" &&
-        (dato[0].idConsulta == "" || dato[0].idConsulta == null)
-      ) {
-        this.eliminarDisabled = true;
+
+        dato.forEach(element => {
+
+          if ((element.idConsulta == "" ||
+            element.idConsulta == null ||
+            element.idConsulta == undefined ||
+            element.nombre == null ||
+            element.nombre == undefined)) {
+            this.eliminarDisabled = true;
+          }
+
+        });
+
+        this.numSelected = this.selectedDatos.length;
+
       }
+
     }
+
+
   }
 
   onRowSelect(dato) {
@@ -292,6 +334,38 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
 
   }
+
+  actualizaSeleccionados(selectedDatos) {
+
+    if (this.selectMultiple) {
+
+      if(selectedDatos != undefined && selectedDatos != null && selectedDatos.length > 0){
+        this.eliminarDisabled = false;
+
+        selectedDatos.forEach(element => {
+  
+          if ((element.idConsulta == "" ||
+            element.idConsulta == null ||
+            element.idConsulta == undefined ||
+            element.nombre == null ||
+            element.nombre == undefined)) {
+            this.eliminarDisabled = true;
+          }
+  
+        });
+      }
+
+      this.numSelected = selectedDatos.length;
+    } else {
+
+      if (selectedDatos != null && selectedDatos != undefined) {
+        this.numSelected = 1;
+      } else {
+        this.numSelected = 0;
+      }
+    }
+  }
+
   addDocumento() {
     let obj = {
       plantilla: "",
@@ -309,7 +383,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       consulta: null,
       finalidad: null,
       objetivo: "DATOS",
-      idObjetivo: 4,
+      idObjetivo: "4",
       idInstitucion: ""
     };
     this.datos.push(obj);
@@ -580,9 +654,9 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
 
         this.datos.sort(function (a, b) {
-          if (a.idObjetivo == 3) {
+          if (a.idObjetivo == "3") {
             return -1;
-          } else if (a.idObjetivo == 4) {
+          } else if (a.idObjetivo == "4") {
             return 1;
           } else {
             if (a.idObjetivo > b.idObjetivo) {
@@ -617,7 +691,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.nombreCompletoArchivo.length
     );
 
-    
+
 
     // if (
     //   extensionArchivo == null ||
@@ -695,19 +769,19 @@ export class PlantillaDocumentoComponent implements OnInit {
       );
   }
 
-  checkCamposDatosSalida(){
+  checkCamposDatosSalida() {
 
-    if(this.body.nombreFicheroSalida != undefined && this.body.nombreFicheroSalida != null && this.body.nombreFicheroSalida != "" &&
-    this.body.idFormatoSalida != undefined && this.body.idFormatoSalida != null ){
+    if (this.body.nombreFicheroSalida != undefined && this.body.nombreFicheroSalida != null && this.body.nombreFicheroSalida != "" &&
+      this.body.idFormatoSalida != undefined && this.body.idFormatoSalida != null) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  guardarDatosSalida(){
+  guardarDatosSalida() {
 
-    if(this.checkCamposDatosSalida()){
+    if (this.checkCamposDatosSalida()) {
       this.progressSpinner = true;
       this.body.sufijos = [];
       let orden: number = 1;
@@ -721,7 +795,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.body.sufijos.push(objSufijo);
         orden = orden + 1;
       });
-  
+
       this.sigaServices.post("plantillasDoc_guardar_datosSalida", this.body).subscribe(
         data => {
           this.showSuccess("Guardar datos de salida correctos");
@@ -739,23 +813,23 @@ export class PlantillaDocumentoComponent implements OnInit {
           this.selectedSufijosInicial = JSON.parse(
             JSON.stringify(this.selectedSufijos)
           );
-  
+
           this.progressSpinner = false;
-  
+
         },
         err => {
           this.showFail("Error guardar datos Salida");
           console.log(err);
           this.progressSpinner = false;
-  
+
         },
         () => {
           this.progressSpinner = false;
-  
+
         }
       );
     }
-  
+
   }
 
   guardarDatosGenerales() {
@@ -773,56 +847,56 @@ export class PlantillaDocumentoComponent implements OnInit {
     //   orden = orden + 1;
     // });
 
-    if(this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida.trim() == ""){
+    if (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida.trim() == "") {
 
-      if(this.nombreCompletoArchivo != null && this.nombreCompletoArchivo != undefined && this.nombreCompletoArchivo.trim() != ""){
-      
+      if (this.nombreCompletoArchivo != null && this.nombreCompletoArchivo != undefined && this.nombreCompletoArchivo.trim() != "") {
+
         let nombreFichero = this.nombreCompletoArchivo.split(".");
 
-        if(nombreFichero.length > 2){
+        if (nombreFichero.length > 2) {
 
           nombreFichero.pop();
           let nombreFicheroCompleto = "";
 
-         for (let index = 0; index < nombreFichero.length; index++) {
-          
-          if(nombreFichero.length-1 == index){
-            nombreFicheroCompleto += nombreFichero[index];
+          for (let index = 0; index < nombreFichero.length; index++) {
 
-          }else{
-            nombreFicheroCompleto += nombreFichero[index] + ".";
+            if (nombreFichero.length - 1 == index) {
+              nombreFicheroCompleto += nombreFichero[index];
+
+            } else {
+              nombreFicheroCompleto += nombreFichero[index] + ".";
+
+            }
 
           }
-           
-         }
 
-         this.body.nombreFicheroSalida = nombreFicheroCompleto;
+          this.body.nombreFicheroSalida = nombreFicheroCompleto;
 
-        }else{
+        } else {
           this.body.nombreFicheroSalida = nombreFichero[0];
 
         }
 
       }
-      
+
     }
 
-    if(this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined){
+    if (this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined) {
 
       if (
         this.extensionArchivo != null &&
-        this.extensionArchivo.trim() != ""){
-          
-          if (/\.(xls)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
-            this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
-          }else if(/\.(doc)$/i.test(this.extensionArchivo.trim().toUpperCase())){
-            this.body.idFormatoSalida = this.VALOR_FORMATO_DOC;
-          }else if(/\.(pdf)$/i.test(this.extensionArchivo.trim().toUpperCase())){
-            this.body.idFormatoSalida = this.VALOR_FORMATO_PDF;
-          }else{
-            this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
-          }
+        this.extensionArchivo.trim() != "") {
+
+        if (/\.(xls)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
+        } else if (/\.(doc)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_DOC;
+        } else if (/\.(pdf)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_PDF;
+        } else {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
         }
+      }
     }
 
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
@@ -895,6 +969,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   guardarConsultasOk() {
+
+    this.progressSpinner = true;
     this.body.consultas = [];
     this.datos.map(e => {
       let obj = {
@@ -914,12 +990,16 @@ export class PlantillaDocumentoComponent implements OnInit {
         data => {
           this.showSuccess(this.translateService.instant("informesycomunicaciones.consultas.ficha.correctGuardadoConsulta"));
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+          this.progressSpinner = false;
+
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.ficha.errorGuardadoConsulta"));
+          this.progressSpinner = false;
           console.log(err);
         },
         () => {
+          this.progressSpinner = false;
           this.getResultados();
           this.consultasGuardadas = true;
         }
@@ -1069,6 +1149,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         data => {
           this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctConsultaEliminado"));
           this.selectedDatos = [];
+          this.numSelected = 0;
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.errorEliminarConsulta"));
@@ -1286,22 +1367,22 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   confirmarNavegar(dato) {
-    let idConsulta = dato[0].idConsulta;
+    let idConsulta = dato.idConsulta;
     console.log(dato);
     if (!this.selectMultiple && idConsulta) {
-      if (!dato[0].sentencia || dato[0].sentencia == null || dato[0].sentencia == "") {
+      if (!dato.sentencia || dato.sentencia == null || dato.sentencia == "") {
         // Obtenemos la consulta para ir a ella
-        this.getConsulta(dato[0]);
+        this.getConsulta(dato);
       } else {
         if (
-          dato[0].generica == "No" ||
-          (this.institucionActual == 2000 && dato[0].generica == "Si")
+          dato.generica == "No" ||
+          (this.institucionActual == 2000 && dato.generica == "Si")
         ) {
           sessionStorage.setItem("consultaEditable", "S");
         } else {
           sessionStorage.setItem("consultaEditable", "N");
         }
-        sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
+        sessionStorage.setItem("consultasSearch", JSON.stringify(dato));
         this.router.navigate(["/fichaConsulta"]);
       }
     }
@@ -1389,6 +1470,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           saveAs(data, dato[0].nombreDocumento);
         }
         this.selectedDatos = [];
+        this.numSelected = 0;
       },
         err => {
           console.log(err);

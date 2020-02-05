@@ -372,9 +372,10 @@
 
     <div *ngIf="showConsultas && !esPorDefecto" class="card-body p-0 py-2">
       <p-steps [model]="steps" [readonly]="false" [(activeIndex)]="activeStep"></p-steps>
-      <p-table [value]="datos" [columns]="cols" dataKey="idConsulta" [(selection)]="selectedDatos" [responsive]="true"
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}
-            " paginatorPosition="both" selectionMode="multiple" (onRowSelect)="onSelectConsulta($event,selectedDatos)">
+            " paginatorPosition="both" [selectionMode]="selectionMode" (onRowSelect)="onSelectConsulta($event,selectedDatos)"
+            (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -437,7 +438,7 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
+              <p-checkbox (onChange)="onChangeSelectAllConsultas()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
                 todo" name="groupname"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultiple}"
@@ -551,7 +552,7 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
+              <p-checkbox (onChange)="onChangeSelectAllConsultas()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
                 todo" name="groupname" [disabled]="esPorDefecto"></p-checkbox>
             </div>
             <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultiple}"
