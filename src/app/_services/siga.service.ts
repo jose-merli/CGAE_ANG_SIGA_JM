@@ -586,6 +586,8 @@ export class SigaServices {
       "/fichaDatosColegiales/datosColegialesUpdateEstados",
     fichaDatosColegiales_datosColegialesDeleteEstado:
       "/fichaDatosColegiales/datosColegialesDeleteEstado",
+    fichaDatosColegiales_searchTurnosGuardias:
+    "/fichaDatosColegiales/searchTurnosGuardias",
     fichaColegialRegTel_permisos: "fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",

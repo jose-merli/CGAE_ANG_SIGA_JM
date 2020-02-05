@@ -115,6 +115,7 @@ export class FichaColegialComponent implements OnInit {
   msgs: Message[];
   displayColegiado: boolean = false;
   showMessageInscripcion: boolean = false;
+  tieneTurnosGuardias: boolean = false;
 
   colsColegiales: any = [];
   colsColegiaciones: any = [];
@@ -1555,8 +1556,7 @@ export class FichaColegialComponent implements OnInit {
 
   comprobarAuditoria(tipoCambio) {
     // modo creación
-
-    if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales') {
+    if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales' && this.tieneTurnosGuardias) {
 
       if (!this.isCrearColegial) {
         this.datosColegiales[0].cambioEstado = true;
@@ -1598,6 +1598,34 @@ export class FichaColegialComponent implements OnInit {
       //   this.displayAuditoria = true;
       // }
 
+    }
+  }
+  comprobarTurnosGuardias(tipoCambio): void {
+    //Si el cambio de estado es de ejerciente a no ejerciente
+    if(this.nuevoEstadoColegial.situacion != "20" && this.datosColegiales[1].idEstado == "20"){
+      //Comprobamos si tiene turnos o guardias
+        this.sigaServices
+              .post("fichaDatosColegiales_searchTurnosGuardias", this.colegialesBody)
+              .subscribe(
+                data => {
+                  let resultado = JSON.parse(data["body"]);
+                  if (resultado.valor == "0") {
+                    this.tieneTurnosGuardias = false;
+                  } else {
+                    this.tieneTurnosGuardias = true;
+                  }
+                },
+                error => {
+                  let resultado = JSON.parse(error["error"]);
+                  this.tieneTurnosGuardias = false;
+                  this.progressSpinner = false;
+                },
+                () => {
+                  this.comprobarAuditoria(tipoCambio);
+                }
+
+
+              );
     }
   }
 
