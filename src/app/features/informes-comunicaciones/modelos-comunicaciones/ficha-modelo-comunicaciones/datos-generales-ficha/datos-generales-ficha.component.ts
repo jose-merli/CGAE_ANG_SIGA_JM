@@ -394,7 +394,20 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.plantillas = data.combooItems;
         this.progressSpinner = false;
 
-        // this.plantillas.unshift({ label: "Seleccionar", value: "" });
+        this.plantillas.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
@@ -422,8 +435,10 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onChangePlantilla(e) {
     let idPlantillaEnvios = e.value;
-    if (idPlantillaEnvios != "") {
+    if (idPlantillaEnvios != undefined) {
       this.getTipoEnvios(idPlantillaEnvios);
+    }else{
+      this.body.tipoEnvio = "";
     }
   }
 

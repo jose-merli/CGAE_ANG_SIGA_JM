@@ -144,11 +144,11 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.isBuscar(false);
     }
 
-    // if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
-    //   this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
-    //   sessionStorage.removeItem("filtrosBusquedaCursos");
-    //   this.isBuscar(false);
-    // }
+    if (sessionStorage.getItem("filtrosBusquedaCursos") != null) {
+      this.body = JSON.parse(sessionStorage.getItem("filtrosBusquedaCursos"));
+      sessionStorage.removeItem("filtrosBusquedaCursos");
+      this.isBuscar(false);
+    }
     this.getColsResults();
     this.filtrosTrim();
     this.selectedDatos = [];
@@ -251,14 +251,13 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
       this.body.colegio = this.authenticationService.getInstitucionSession();
     } else {
       this.deshabilitarCombCol = false;
+      this.body.colegio = undefined;
     }
   }
 
   onChangeSelectColegio(event) {
-    if (
-      event.value != "" &&
-      event.value != this.authenticationService.getInstitucionSession()
-    ) {
+    if (event.value != undefined &&
+      event.value != this.authenticationService.getInstitucionSession()) {
       //Si elige un colegio que no es el propio, se deshabilita el combo de visibilidad y se selecciona 'Público' por defecto ya que los privados no deben mostrarse
       this.deshabilitarCombVis = true;
       this.body.idVisibilidad = "0"; //Visibilidad pública
@@ -508,6 +507,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   crearCurso() {
     sessionStorage.setItem("modoEdicionCurso", "false");
+    sessionStorage.setItem(
+      "filtrosBusquedaCursos",
+      JSON.stringify(this.body)
+    );
     this.router.navigate(["fichaCurso"]);
   }
 

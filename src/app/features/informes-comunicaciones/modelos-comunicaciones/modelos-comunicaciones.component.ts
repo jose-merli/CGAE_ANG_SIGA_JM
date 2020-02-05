@@ -56,7 +56,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   ngOnInit() {
     sessionStorage.removeItem("esPorDefecto");
     this.bodySearch.visible = 1;
-    this.bodySearch.preseleccionar = "";
+    // this.bodySearch.preseleccionar = "";
     sessionStorage.removeItem("crearNuevoModelo");
     sessionStorage.removeItem("soloLectura");
 

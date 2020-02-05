@@ -54,9 +54,9 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown *ngIf="col.field=='idPlantillaEnvios' && !dato.fechaBaja" [(ngModel)]="dato[col.field]" [options]="plantillas"
+              <p-dropdown [filter]="true" [showClear]="true" *ngIf="col.field=='idPlantillaEnvios' && !dato.fechaBaja" [(ngModel)]="dato[col.field]" [options]="plantillas"
                 class="select-form" (onChange)="onChangePlantilla($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}"></p-dropdown>
-              <p-dropdown *ngIf="col.field=='idPlantillaEnvios' && dato.fechaBaja" [(ngModel)]="dato[col.field]" [options]="plantillas"
+              <p-dropdown [filter]="true" [showClear]="true" *ngIf="col.field=='idPlantillaEnvios' && dato.fechaBaja" [(ngModel)]="dato[col.field]" [options]="plantillas"
                 class="select-form" [disabled]="true" (onChange)="onChangePlantilla($event)"></p-dropdown>
               <span *ngIf="col.field=='tipoEnvio' && dato.fechaBaja" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               <span *ngIf="col.field=='tipoEnvio' && !dato.fechaBaja ">{{dato[col.field]}}</span>

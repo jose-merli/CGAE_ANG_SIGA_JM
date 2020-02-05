@@ -214,7 +214,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	onChangePlantillaEnvio(dato) {
-		this.getTipoEnvios(dato);
+		if(dato.idPlantillaEnvio != undefined && dato.idPlantillaEnvio != null){
+			this.getTipoEnvios(dato);
+		}else{
+			dato.tipoEnvio = "";
+		}
 	}
 
 	getTipoEnvios(dato) {
@@ -224,8 +228,15 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
 				(data) => {
 					let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
-					dato.tipoEnvio = tipoEnvio.tipoEnvio;
-					dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
+
+					if(tipoEnvio != undefined && tipoEnvio != null){
+						dato.tipoEnvio = tipoEnvio.tipoEnvio;
+						dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
+					}else{
+						dato.tipoEnvio = undefined;
+						dato.idTipoEnvio = undefined;
+					}
+					
 				},
 				(err) => {
 					console.log(err);
@@ -267,8 +278,20 @@ export class DialogoComunicacionesComponent implements OnInit {
 							element.camposDinamicos.forEach((campo) => {
 
 								let find = this.valores.find(x => x.campo == campo.campo);
+
+								if(campo.valores != undefined && campo.valores != null && campo.valores.length > 0){
+									campo.valor = campo.valores[0].ID;
+								}
+
+								if(campo.operacion == "OPERADOR"){
+									campo.operadorDefecto = false;
+									campo.operacion = "=";
+								}else{
+									campo.operadorDefecto = true;
+								}
+
 								if (find == undefined) {
-									this.valores.push(campo);
+									this.valores.push(JSON.parse(JSON.stringify(campo)));
 								}
 							});
 						}
@@ -428,23 +451,23 @@ export class DialogoComunicacionesComponent implements OnInit {
 	descargarComunicacion() {
 		this.progressSpinner = true;
 
-		this.valores.forEach((element) => {
-			if (element.valor != null && typeof element.valor == 'object') {
-				if (element.valor.ID != null && element.valor.ID != undefined) {
-					element.valor = element.valor.ID;
-				}
-			}
-			if (element.valores != undefined && element.valores != null) {
-				let empty = {
-					ID: 0,
-					DESCRIPCION: 'Seleccione una opción...'
-				};
-				element.valores.unshift(empty);
-			}
-			if (element.operacion == 'OPERADOR') {
-				element.operacion = this.operadoresNumero[0].value;
-			}
-		});
+		// this.valores.forEach((element) => {
+			// if (element.valor != null && typeof element.valor == 'object') {
+			// 	if (element.valor.ID != null && element.valor.ID != undefined) {
+			// 		element.valor = element.valor.ID;
+			// 	}
+			// }
+			// if (element.valores != undefined && element.valores != null) {
+			// 	let empty = {
+			// 		ID: 0,
+			// 		DESCRIPCION: 'Seleccione una opción...'
+			// 	};
+			// 	element.valores.unshift(empty);
+			// }
+		// 	if (element.operacion == 'OPERADOR') {
+		// 		element.operacion = this.operadoresNumero[0].value;
+		// 	}
+		// });
 
 		if (this.listaConsultas != null) {
 			for (let i = 0; this.listaConsultas.length > i; i++) {
@@ -454,7 +477,17 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 						let find = this.valores.find(x => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
 						if (find != undefined) {
-							this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+
+							if (find.valor != null && typeof find.valor == 'object') {
+								if (find.valor.ID != null && find.valor.ID != undefined) {
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
+								}else{
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+								}
+							}else{
+								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+							}
+							
 							this.listaConsultas[i].camposDinamicos[j].operacion = find.operacion;
 						}
 					}
@@ -624,7 +657,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		  ).subscribe(
 			(data) => {
 				this.plantillas = data.combooItems;
-				this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
+				// this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
 			},
 			(err) => {
 				console.log(err);

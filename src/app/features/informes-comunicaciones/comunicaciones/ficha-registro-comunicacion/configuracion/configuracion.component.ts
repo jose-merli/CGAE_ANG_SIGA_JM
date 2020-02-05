@@ -105,7 +105,7 @@ export class ConfiguracionComponent implements OnInit {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
         this.tipoEnvios = data.combooItems;
-        this.tipoEnvios.unshift({ label: "Seleccionar", value: "" });
+        // this.tipoEnvios.unshift({ label: "Seleccionar", value: "" });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
         this.tipoEnvios.map(e => {

@@ -77,7 +77,7 @@
 
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "busquedaSanciones.tipoFecha.literal" | translate}}</label>
-                        <p-dropdown [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [options]="datesType"
+                        <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [options]="datesType"
                             [(ngModel)]="body.tipoFecha"></p-dropdown>
                     </div>
 
@@ -99,7 +99,7 @@
 
                     <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate}}</label>
-                        <p-dropdown class="select-form" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="tipoSancion"
+                        <p-dropdown [filter]="true" class="select-form" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="tipoSancion"
                             [(ngModel)]="body.tipoSancion"></p-dropdown>
                     </div>
 

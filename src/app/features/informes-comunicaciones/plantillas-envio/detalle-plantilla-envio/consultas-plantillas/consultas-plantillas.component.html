@@ -53,7 +53,7 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns" pEditableColumn>
-              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" [filter]="true" filterBy="label"
+              <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"
                 *ngIf="col.field=='nombre' && !dato.asociada" [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form"
                 (onChange)="onChangeConsultas($event)" dataKey="label" emptyFilterMessage="{{ resultadosConsultas | translate}}"
                 (input)="buscarConsultas($event)"></p-dropdown>

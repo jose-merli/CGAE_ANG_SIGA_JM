@@ -98,7 +98,7 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "enviosMasivos.literal.plantillasEnvio" | translate }}</label>
-              <p-dropdown [filter]="true" [showClear]="true" filterBy="label" [disabled]='soloLectura || !selectedClaseCom'
+              <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]='soloLectura || !selectedClaseCom'
                [(ngModel)]="body.idPlantillaEnvio" [options]="plantillas" class="select-form" 
                 (onChange)="onChangePlantilla($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}"></p-dropdown>
             </div>
