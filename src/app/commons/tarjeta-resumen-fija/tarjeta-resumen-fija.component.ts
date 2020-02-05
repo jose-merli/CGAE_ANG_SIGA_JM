@@ -17,39 +17,48 @@ export class TarjetaResumenFijaComponent implements OnInit {
   @Input() enlaces;
   @Output() isOpen = new EventEmitter<any>();
   iconClass;
+  enlaceAnterior:any[];
   constructor(private translateService: TranslateService) { }
 
   ngOnInit() {
     this.iconClass = `fas fa-${this.icono} icon-ficha`;
+    this.enlaceAnterior = [];
+    console.log(this.enlaces);
   }
-  goTop(){
-    document.children[document.children.length -1]
-     let top = document.getElementById("top");
-     if (top) {
-         top.scrollIntoView();
-         top = null;
-     }
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
 
   }
-  goDown(){
-    let down= document.getElementById("down");
-        if (down) {
+  goDown() {
+    let down = document.getElementById("down");
+    if (down) {
       down.scrollIntoView();
-      down= null;
-        }
-  }
-  goToCard(enlace, nombre){
-     if (enlace) {
-      //let pos = enlace.pageYOffset;
-     // enlace.scrollTo(0, pos - 100); 
-    // let pos = enlace.scrollTop;
-   enlace.scrollIntoView({block: "start", behavior: 'smooth'});
-   this.isOpen.emit(nombre);
-   // window.parent.scrollBy(0, enlace.offsetTop+300);
-  //  parent.window.scrollBy(0, enlace.offsetTop+300);
-   // this.windowPatern.scrollTo(0, enlace.offsetTop+300);
-    enlace= null;
+      down = null;
     }
+  }
+  goToCard(enlace, nombre) {
+    let findDato;
+    if(this.enlaceAnterior != undefined && this.enlaceAnterior.length > 0){
+     this.enlaceAnterior.forEach(element => {
+       if(element == enlace.id){
+         findDato = element;
+       }
+     });
+    }
+    
+    if(findDato == undefined){
+      
+      enlace.scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
+      this.isOpen.emit(nombre);
+      this.enlaceAnterior.push(enlace.id);
+     
+    }
+    
   }
 
 }

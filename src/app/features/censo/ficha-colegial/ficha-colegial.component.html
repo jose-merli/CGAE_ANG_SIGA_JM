@@ -33,10 +33,10 @@
     </p>
   </div>
   <!-- TARJETA RESUMEN FIJA -->
-    <app-tarjeta-resumen-fija class="pb-50" *ngIf="esColegiado" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
         (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)"></app-tarjeta-resumen-fija>
   <!-- FIN TARJETA RESUMEN FIJA -->
-
+  
   <!-- SERVICIOS INTERES -->
   <div id="sInteres">
   <div *ngIf="activacionEditar">
@@ -905,6 +905,7 @@
   <!-- END FICHA CERTIFICADOS -->
 
   <!-- FICHA SANCIONES -->
+  <div id="sancio">
   <div *ngIf="!esNewColegiado">
     <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
       <div class="card-header header-ficha" (click)="abreCierraFicha('sanciones')">
@@ -971,10 +972,11 @@
       <div *ngIf="esFichaActiva('sanciones')" class="card-footer "></div>
     </div>
   </div>
-
+</div>
 
   <!-- END FICHA SANCIONES -->
   <!-- FICHA SOCIEDADES -->
+  <div id="socied">
   <div *ngIf="tarjetaSociedades == '3' || tarjetaSociedades == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('sociedades')">
       <div *ngIf="!esFichaActiva('sociedades')" class="form-row">
@@ -1038,6 +1040,7 @@
       <div class="text-right main-button "></div>
     </div>
   </div>
+</div>
   <!-- END FICHA SOCIEDADES -->
   <!-- FICHA DATOS CURRICULARES -->
   <div id = "datosCurriculares">

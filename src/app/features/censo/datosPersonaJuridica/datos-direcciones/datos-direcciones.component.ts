@@ -4,7 +4,7 @@ import { Message } from "primeng/components/common/api";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
@@ -69,6 +69,8 @@ export class DatosDireccionesComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private sigaServices: SigaServices,
@@ -165,6 +167,13 @@ export class DatosDireccionesComponent implements OnInit {
       this.disabledAction = false;
     }
   }
+  ngOnChanges(changes: SimpleChanges){
+    let fichaPosible = this.esFichaActiva(this.openTarjeta);
+    if(fichaPosible == false){
+      this.abreCierraFicha(this.openTarjeta);
+    }
+    
+  }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
@@ -196,7 +205,13 @@ export class DatosDireccionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => { 
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "direcciones";
+					this.permisosEnlace.emit(permisos);
+				  }
+
+      }
     );
   }
 

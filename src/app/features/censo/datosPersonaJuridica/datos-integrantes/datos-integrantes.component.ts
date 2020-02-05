@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from "./../../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
@@ -71,6 +71,8 @@ export class DatosIntegrantesComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private sigaServices: SigaServices,
@@ -164,6 +166,12 @@ export class DatosIntegrantesComponent implements OnInit {
     }
     sessionStorage.removeItem("editarIntegrante");
   }
+  ngOnChanges(changes: SimpleChanges){
+    if(this.openTarjeta == "integrantes"){
+     this.openFicha = true;
+    }
+    
+  }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
@@ -220,7 +228,12 @@ export class DatosIntegrantesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => {
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "integrantes";
+					this.permisosEnlace.emit(permisos);
+				  }
+       }
     );
   }
 

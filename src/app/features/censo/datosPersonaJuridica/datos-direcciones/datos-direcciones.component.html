@@ -1,4 +1,5 @@
 <div class="busqueda-container">
+  <div id="sdirecciones">
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
     <div class="card-header header-ficha" (click)="abreCierraFicha('direcciones')">
       <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
@@ -82,6 +83,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

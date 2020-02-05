@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -111,6 +111,8 @@ export class DatosRegistralesComponent implements OnInit {
   table;
 
   tarjeta: string;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -202,7 +204,13 @@ export class DatosRegistralesComponent implements OnInit {
       }
     );
   }
-
+  ngOnChanges(changes: SimpleChanges){
+    let fichaPosible = this.esFichaActiva(this.openTarjeta);
+    if(fichaPosible == false){
+      this.abreCierraFicha(this.openTarjeta);
+    }
+    
+  }
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "12a";
@@ -217,6 +225,10 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "registrales";
+					this.permisosEnlace.emit(permisos);
+				  }
       }
     );
   }

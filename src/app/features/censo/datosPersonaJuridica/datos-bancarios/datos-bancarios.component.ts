@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Router } from "@angular/router";
 import { DataTable } from "primeng/datatable";
 
@@ -51,6 +51,8 @@ export class DatosBancariosComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -148,7 +150,12 @@ export class DatosBancariosComponent implements OnInit {
       }
     ];
   }
-
+  ngOnChanges(changes: SimpleChanges){
+    if(this.openTarjeta == "bancarios"){
+     this.openFicha = true;
+    }
+    
+  }
   cargarDatosBancarios() {
     this.historico = false;
 
@@ -181,7 +188,12 @@ export class DatosBancariosComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => { 
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "bancarios";
+					this.permisosEnlace.emit(permisos);
+				  }
+      }
     );
   }
 

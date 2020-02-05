@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { DatePipe } from "@angular/common";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
@@ -114,10 +114,9 @@ export class DatosGenerales implements OnInit {
   historico: boolean = false;
   isClose: boolean = false;
   disabledAction: boolean = false;
-
   etiqueta: String;
   arrayInicial: String[] = [];
-
+  enlaces;
   fechaDesde: Date;
   fechaHasta: Date;
   fechaHoy: Date;
@@ -167,8 +166,15 @@ export class DatosGenerales implements OnInit {
       activa: false
     }
   ];
-
+  datosTarjetaResumen;
+  enlacesTarjetaResumen;
   tarjeta: string;
+  @Output() datosTarjeta = new EventEmitter<any>();
+
+  @Output() enlacesTarjeta = new EventEmitter<any>();
+  @Output() permisosEnlace = new EventEmitter<any>();
+
+  @Input() openTarjeta;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -206,6 +212,14 @@ export class DatosGenerales implements OnInit {
     this.checkAcceso();
 
     this.getComboIdentificacion();
+
+   
+  }
+  ngOnChanges(changes: SimpleChanges){
+    if(this.openTarjeta == "datosGen"){
+     this.openFicha = true;
+    }
+    
   }
   continueOnInit() {
     this.busquedaIdioma();
@@ -381,8 +395,26 @@ export class DatosGenerales implements OnInit {
           this.editar = false;
           // restablece motivo de auditoria
           this.body.motivo = undefined;
+          this.datosTarjetaResumen = [
+            {
+              label: "Identificación",
+              value:  this.body.nif
+            },
+            {
+              label: "Tipo",
+              value: this.tipoPersonaJuridica
+            },
+        
+            {
+              label: "Denominación",
+              value: this.body.denominacion
+            },
+          ];
+          this.datosTarjeta.emit(this.datosTarjetaResumen);
         }
+        
       );
+    
   }
 
   getTipo(event) {
@@ -1248,9 +1280,18 @@ export class DatosGenerales implements OnInit {
         console.log(err);
       },
       () => {
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+          let datosGenerales = "datosGenerales";
+          this.permisosEnlace.emit(datosGenerales);
+        }
         this.continueOnInit();
       }
     );
   }
-
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if(fichaPosible == false){
+      this.abreCierraFicha();
+    }
+   }
 }
