@@ -117,8 +117,8 @@
     <div *ngIf="isSearch" class="card mt-3">
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4" [responsive]="true" selectionMode="multiple"
-                #table class="tabla-listado" [value]="data" [columns]="cols" [paginator]="enablePagination()" paginatorPosition="both"
-                [rows]="selectedItem">
+                #table class="tabla-listado" (onRowSelect)="clickFila($event)" [value]="data" [columns]="cols" [paginator]="enablePagination()"
+                paginatorPosition="both" [rows]="selectedItem">
 
                 <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
                     <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">

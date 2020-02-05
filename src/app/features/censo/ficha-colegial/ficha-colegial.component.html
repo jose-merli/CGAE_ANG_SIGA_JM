@@ -1198,8 +1198,8 @@
       <div class="row">
         <p-table [columns]="colsDirecciones" [(selection)]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
           dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableDirecciones class="tabla-listado" [value]="datosDirecciones"
-          [sortOrder]="1" [paginator]="activarPaginacionDireciones()" paginatorPosition="both" [rows]="selectedItemDirecciones"
-          (onRowUnselect)="
+          (onRowSelect)="clickFilaDirecciones($event)" [paginator]="activarPaginacionDireciones()" paginatorPosition="both"
+          [rows]="selectedItemDirecciones" (onRowUnselect)="
             actualizaSeleccionadosDirecciones(selectedDatosDirecciones)
           ">
 
@@ -1277,7 +1277,7 @@
               </p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                <p-checkbox (onChange)="onChangeSelectAllDirecciones()" [(ngModel)]="selectAllDirecciones" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
               <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
@@ -1350,8 +1350,8 @@
     <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
       <div class="row">
         <p-table [columns]="colsBancarios" [ngClass]="{ customCursor: selectMultipleBancarios }" [(selection)]="selectedDatosBancarios"
-          [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios class="tabla-listado" [value]="datosBancarios"
-          [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
+          (onRowSelect)="clickFilaBancarios($event)" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
+          class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
             actualizaSeleccionadosBancarios(selectedDatosBancarios)
           " paginatorPosition="both" [rows]="selectedItemBancarios" pageLinks="4">
 
@@ -1417,7 +1417,7 @@
               </p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
               <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                <p-checkbox (onChange)="onChangeSelectAllBancario()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                   name="groupname"></p-checkbox>
               </div>
               <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">

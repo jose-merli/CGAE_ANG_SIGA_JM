@@ -464,7 +464,28 @@ export class BusquedaSancionesComponent implements OnInit {
       this.numSelected = 0;
     }
   }
-
+  onChangeSelectAll() {
+    if (!this.isHistory) {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.data;
+        this.numSelected = this.data.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+    } else {
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.data.filter(dato => dato.archivada == 'Sí')
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
+    }
+  }
   updateRegistry(selectedDatos) {
     this.body = new BusquedaSancionesItem();
 
@@ -487,6 +508,10 @@ export class BusquedaSancionesComponent implements OnInit {
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
+  clickFila(event) {
+    if (event.data && event.data.archivada == 'No' && this.isHistory)
+      this.selectedDatos.pop();
+  }
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({

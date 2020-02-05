@@ -145,7 +145,7 @@ export class FichaColegialComponent implements OnInit {
   sortF: any;
   sortO: any;
   bodyDirecciones: DatosDireccionesItem = new DatosDireccionesItem();
-  bodyDatosBancarios: DatosBancariosItem;
+  bodyDatosBancarios: DatosBancariosItem = new DatosBancariosItem();
   datosDirecciones: DatosDireccionesItem[] = [];
   datosDireccionesHist = new DatosDireccionesObject();
   datosBancarios: DatosBancariosItem[] = [];
@@ -3833,7 +3833,50 @@ export class FichaColegialComponent implements OnInit {
       this.numSelectedCurriculares = 0;
     }
   }
-
+  onChangeSelectAllBancario() {
+    if (!this.bodyDatosBancarios.historico) {
+      if (this.selectAllBancarios === true) {
+        this.selectMultiple = false;
+        this.selectedDatosBancarios = this.datosBancarios;
+        this.numSelected = this.datosBancarios.length;
+      } else {
+        this.selectedDatosBancarios = [];
+        this.numSelected = 0;
+      }
+    } else {
+      if (this.selectAllBancarios) {
+        this.selectMultiple = true;
+        this.selectedDatosBancarios = this.datosBancarios.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatosBancarios.length;
+      } else {
+        this.selectedDatosBancarios = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
+    }
+  }
+  onChangeSelectAllDirecciones() {
+    if (!this.bodyDirecciones.historico) {
+      if (this.selectAllDirecciones === true) {
+        this.selectMultiple = false;
+        this.selectedDatosDirecciones = this.datosDirecciones;
+        this.numSelected = this.datosDirecciones.length;
+      } else {
+        this.selectedDatosDirecciones = [];
+        this.numSelected = 0;
+      }
+    } else {
+      if (this.selectAllDirecciones) {
+        this.selectMultiple = true;
+        this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatosDirecciones.length;
+      } else {
+        this.selectedDatosDirecciones = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
+    }
+  }
   cargarDatosCV() {
     this.historicoCV = false;
 
@@ -3886,8 +3929,8 @@ export class FichaColegialComponent implements OnInit {
     searchObject.historico = true;
     // this.buscar = false;
     this.selectMultiple = false;
-    this.selectedDatosDirecciones = "";
-    this.selectAll = false;
+    this.selectedDatosDirecciones = [];
+    this.selectAllDirecciones = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
@@ -3909,6 +3952,8 @@ export class FichaColegialComponent implements OnInit {
     this.bodyDirecciones = new DatosDireccionesItem();
     this.bodyDirecciones.idPersona = this.idPersona;
     this.bodyDirecciones.historico = false;
+    this.selectedDatosDirecciones = [];
+    this.selectAllDirecciones = false;
     this.searchDirecciones();
   }
 
@@ -3924,17 +3969,14 @@ export class FichaColegialComponent implements OnInit {
     }
   }
 
-  onChangeSelectAllDirecciones() {
-    if (this.selectAllDirecciones === true) {
-      this.numSelectedDirecciones = this.datosDirecciones.length;
-      this.selectMultipleDirecciones = false;
-      this.selectedDatosDirecciones = this.datosDirecciones;
-    } else {
-      this.selectedDatosDirecciones = [];
-      this.numSelectedDirecciones = 0;
-    }
+  clickFilaDirecciones(event) {
+    if (event.data && !event.data.fechaBaja && this.bodyDirecciones.historico)
+      this.selectedDatosDirecciones.pop();
   }
-
+  clickFilaBancarios(event) {
+    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico)
+      this.selectedDatosBancarios.pop();
+  }
   borrarSelectedDatos(selectedItem) {
     this.progressSpinner = true;
     let deleteDirecciones = new DatosDireccionesObject();
@@ -4077,7 +4119,7 @@ export class FichaColegialComponent implements OnInit {
 
   searchDirecciones() {
     this.selectMultipleDirecciones = false;
-    this.selectedDatosDirecciones = "";
+    this.selectedDatosDirecciones = [];
     this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
@@ -4259,6 +4301,8 @@ export class FichaColegialComponent implements OnInit {
     this.bodyDatosBancarios = new DatosBancariosItem();
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.bodyDatosBancarios.historico = false;
+    this.selectedDatosBancarios = [];
+    this.selectAllBancarios = false;
     this.searchDatosBancarios();
   }
 
@@ -4491,6 +4535,8 @@ export class FichaColegialComponent implements OnInit {
 
   searchHistoricoDatosBancarios() {
     this.bodyDatosBancarios.historico = true;
+    this.selectAllBancarios = false;
+    this.selectedDatosBancarios = [];
     this.searchDatosBancarios();
   }
 
