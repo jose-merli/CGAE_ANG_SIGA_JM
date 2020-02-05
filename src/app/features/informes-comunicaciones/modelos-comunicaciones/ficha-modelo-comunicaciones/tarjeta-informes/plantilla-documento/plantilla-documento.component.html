@@ -77,7 +77,7 @@
                     <p-dropdown *ngIf="col.field=='idioma' && !dato.guardada"
                       placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
                       filterBy="label,labelSinTilde" class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"
-                      (ngModelChange)="onChangeIdioma($event)" filterBy="label">
+                      (ngModelChange)="onChangeIdioma($event)" >
                     </p-dropdown>
                     <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.idioma}}</span>
                   </td>
@@ -146,7 +146,7 @@
                     <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
                       [showClear]="true" filterBy="label,labelSinTilde" *ngIf="col.field=='idioma' && !dato.guardada"
                       class="select-form" [options]="idiomas" [(ngModel)]="dato.idIdioma"
-                      (ngModelChange)="onChangeIdioma($event)" filterBy="label">
+                      (ngModelChange)="onChangeIdioma($event)">
                     </p-dropdown>
                     <span *ngIf="col.field=='idioma' && dato.guardada">{{dato.idioma}}</span>
                   </td>
@@ -495,24 +495,24 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td *ngFor="let col of columns">
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
-                filterBy="label,labelSinTilde" [filter]="true" filterBy="label"
+                filterBy="label,labelSinTilde" [filter]="true" 
                 (onChange)="onChangeConsultas($event, consultasComboDestinatarios)"
                 *ngIf="col.field=='idConsulta' && dato.idObjetivo == 1 && !dato.fechaBaja" [(ngModel)]="dato[col.field]"
                 [options]="consultasComboDestinatarios" class="select-form " disabled="true"></p-dropdown>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
-                filterBy="label,labelSinTilde" [filter]="true" filterBy="label"
+                filterBy="label,labelSinTilde" [filter]="true"
                 (onChange)="onChangeConsultas($event, consultasComboMulti)"
                 *ngIf="col.field=='idConsulta' && dato.idObjetivo == 2  && !dato.fechaBaja"
                 [(ngModel)]="dato[col.field]" [options]="consultasComboMulti" class="select-form" disabled="true">
               </p-dropdown>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
-                filterBy="label,labelSinTilde" [filter]="true" filterBy="label"
+                filterBy="label,labelSinTilde" [filter]="true"
                 (onChange)="onChangeConsultas($event, consultasComboCondicional)"
                 *ngIf="col.field=='idConsulta' && dato.idObjetivo == 3  && !dato.fechaBaja"
                 [(ngModel)]="dato[col.field]" [options]="consultasComboCondicional" class="select-form" disabled="true">
               </p-dropdown>
               <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
-                filterBy="label,labelSinTilde" [filter]="true" filterBy="label"
+                filterBy="label,labelSinTilde" [filter]="true"
                 (onChange)="onChangeConsultas($event, consultasComboDatos)"
                 *ngIf="col.field=='idConsulta' && dato.idObjetivo == 4  && !dato.fechaBaja"
                 [(ngModel)]="dato[col.field]" [options]="consultasComboDatos" class="select-form" disabled="true">
