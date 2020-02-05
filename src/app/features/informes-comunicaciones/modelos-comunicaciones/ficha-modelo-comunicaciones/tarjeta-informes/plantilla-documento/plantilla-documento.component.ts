@@ -68,7 +68,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   showDatosSalida: boolean = true;
   showConsultas: boolean = false;
   file: any;
-  eliminarDisabled: boolean = false;
+  eliminarDisabled: boolean = true;
   eliminarArray: any = [];
   eliminarArrayPlantillas: any = [];
   nuevoDocumento: boolean = false;
@@ -301,6 +301,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           this.navigateTo(dato);
         }
         this.numSelected = 1;
+        this.eliminarDisabled = true;
 
       } else if (
         this.selectMultiple) {
