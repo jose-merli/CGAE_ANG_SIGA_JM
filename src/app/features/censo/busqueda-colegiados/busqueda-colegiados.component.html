@@ -281,44 +281,44 @@
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
                         <label>{{ dato[col.field] }}</label>
+                    </ng-template> -->
+                </p-column>
+                <p-column [sortable]="true" [style]="{'width': '5%'}" field="noAparecerRedAbogaciaFilter" [header]="'censo.busquedaColegial.lopd' | translate"
+                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+                    <ng-template let-col let-dato="rowData" pTemplate="body" #textAlignCenter>
+                        <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
+                        </label>
+                        <label (click)="displayBoolean=true; show($event,dato)">
+                            <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png">
+                        </label>
+                        <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
+                            <img src="./assets/images/icons/warning.png">
+                        </label>
                     </ng-template>
-                </p-column> -->
-                    <p-column [sortable]="true" [style]="{'width': '5%'}" field="noAparecerRedAbogaciaFilter" [header]="'censo.busquedaColegial.lopd' | translate"
-                        [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                        <ng-template let-col let-dato="rowData" pTemplate="body" #textAlignCenter>
-                            <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
-                            </label>
-                            <label (click)="displayBoolean=true; show($event,dato)">
-                                <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png">
-                            </label>
-                            <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
-                                <img src="./assets/images/icons/warning.png">
-                            </label>
-                        </ng-template>
-                    </p-column>
+                </p-column>
 
-                    <ng-template pTemplate="paginatorLeft">
-                        <div class="mostrar d-flex text-right justify-content-end">
-                            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
-                                + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                                | translate }} {{table.totalRecords}}</label>
-                            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}
-                            </label>
-                            <label>{{ "general.message.mostrar" | translate}}</label>
-                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                            <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                            <div class="ml-3 selectAll">
-                                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                                    name="groupname">
-                                </p-checkbox>
-                            </div>
-                            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                                <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-
+                <ng-template pTemplate="paginatorLeft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}
+                        </label>
+                        <label>{{ "general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                                name="groupname">
+                            </p-checkbox>
                         </div>
-                    </ng-template>
+                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
 
-                    <!-- <p-footer>
+                    </div>
+                </ng-template>
+
+                <!-- <p-footer>
                     <div class="text-right main-button">
                                             </div>
                 </p-footer> -->
