@@ -300,6 +300,22 @@ export class ConsultasPlantillasComponent implements OnInit {
 		this.sigaServices.get("plantillasEnvio_comboConsultas").subscribe(
 			data => {
 				this.consultas = data.consultas;
+				/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+						para poder filtrar el dato con o sin estos caracteres*/
+						this.consultas.map(e => {
+							let accents =
+							"ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+							let accentsOut =
+							"AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+							let i;
+							let x;
+							for (i = 0; i < e.label.length; i++) {
+							if ((x = accents.indexOf(e.label[i])) != -1) {
+								e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+								return e.labelSinTilde;
+							}
+							}
+						});
 				console.log(this.consultas);
 			},
 			err => {
@@ -314,13 +330,30 @@ export class ConsultasPlantillasComponent implements OnInit {
 		this.consultaBuscada = this.getLabelbyFilter(filtro);
 
 		this.sigaServices
-			.getParam("plantillasEnvio_comboConsultas", "?filtro=" + filtro)
+			.getParam("plantillasEnvio_comboConsultas", "?filtro=" + filtro.trim())
 			.subscribe(
 				data => {
 					this.consultas = data.consultas;
 
-					if (this.consultas != undefined || this.consultas.length == 0) {
+					if (this.consultas == undefined || this.consultas.length == 0) {
 						this.resultadosConsultas = "censo.busquedaClientesAvanzada.literal.sinResultados";
+					}else{
+						/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+						para poder filtrar el dato con o sin estos caracteres*/
+						this.consultas.map(e => {
+							let accents =
+							"ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+							let accentsOut =
+							"AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+							let i;
+							let x;
+							for (i = 0; i < e.label.length; i++) {
+							if ((x = accents.indexOf(e.label[i])) != -1) {
+								e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+								return e.labelSinTilde;
+							}
+							}
+						});
 					}
 					console.log(this.consultas);
 				},
