@@ -12,15 +12,15 @@
 
   <div class="card">
     <div class="card-body">
-      <p (click)="onHideCard()" class="title-module">
-        {{ "censo.solicitudModificacion.literal.titulo" | translate }}
-        <i *ngIf="showCard" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+       <span (click)="onHideCard()">{{ "censo.solicitudModificacion.literal.titulo" | translate }}</span>
+        <i (click)="onHideCard()" *ngIf="showCard" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideCard()" *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showCard" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.solicitudTextoLibre.literal.tipoModificacion" | translate }}
             </label>
             <br />
@@ -28,7 +28,7 @@
               [(ngModel)]="body.tipoModificacion"></p-dropdown>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate }}
             </label>
             <br />
@@ -36,14 +36,14 @@
               [(ngModel)]="body.estado"></p-dropdown>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
             </label>
             <app-fecha [(value)]="body.fechaDesde" [maxDate]="getFechaHastaCalendar()" (valueChangeSelected)="fillFechaDesde($event)"
               (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
             </label>
             <app-fecha [(value)]="body.fechaHasta" [minDate]="getFechaDesdeCalendar()" (valueChangeSelected)="fillFechaHasta($event)"
@@ -67,7 +67,7 @@
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [paginator]="enablePagination()" (onRowSelect)="onSelectRow(selectedDatos)"
         selectionMode="multiple" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado" [value]="data"
         [sortOrder]="1" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-        <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+        <p-column [style]="{'width': col.width}" *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
         </p-column>
         <ng-template pTemplate="paginatorLeft">

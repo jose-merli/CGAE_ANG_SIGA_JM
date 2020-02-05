@@ -4,20 +4,21 @@
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p> {{ 'menu.censo' | translate}}
-            <i class="pl-1 fa fa-angle-right"></i>{{ 'censo.tipoCurricular.descripcion.literal' | translate}}</p>
+            <i class="fa fa-angle-right"></i>{{ 'censo.tipoCurricular.descripcion.literal' | translate}}</p>
     </div>
     <div class="card">
         <div class="card-body">
-            <p (click)="onHideTipoCV()" class="title-module">{{ 'censo.tipoCurricular.descripcion.literal' | translate}}
-                <i *ngIf="showTipoCurricular" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showTipoCurricular" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span (click)="onHideTipoCV()">{{ 'censo.tipoCurricular.descripcion.literal' | translate}}</span>
+                <i (click)="onHideTipoCV()" *ngIf="showTipoCurricular" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideTipoCV()" *ngIf="!showTipoCurricular" class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showTipoCurricular" class="module vista-simple">
 
                 <div class="row">
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{'censo.busquedaClientesAvanzada.literal.categoriaCV' | translate}} (*)</label>
                         <br>
                         <p-dropdown class="select-form" [(ngModel)]="body.tipoCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"

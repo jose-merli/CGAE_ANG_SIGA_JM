@@ -4,34 +4,36 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.informesYcomunicaciones' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.informesYcomunicaciones.comunicaciones' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.informesYcomunicaciones.comunicaciones' | translate}}
 
     </p>
   </div>
   <!--DATOS GENERALES-->
   <div class="card">
     <div class="card-body">
-      <p class="title-module"> {{'general.message.datos.generales' | translate }}
+      <p class="title-module">
+        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span> 
         <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
         <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
+      <div *ngIf="fichaBusqueda" class="module vista-avanzada">
       <div class="form-row">
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'administracion.auditoriaUsuarios.fechaDesde' | translate}} (*)</label>
           <app-fecha [(value)]="bodySearch.fechaCreacion" [utc]="false" (valueChangeSelected)="fillFechaCreacion($event)" (valueChangeInput)="fillFechaCreacion($event)"></app-fecha>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
           <app-fecha [(value)]="bodySearch.fechaProgramacion" [utc]="false" (valueChangeSelected)="fillFechaProgramacion($event)" (valueChangeInput)="fillFechaProgramacion($event)"></app-fecha>
         </div>
       </div>
 
       <div class="form-row d-flex align-items-end">
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
           <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion"
             class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
@@ -41,44 +43,44 @@
           <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}</label>
           <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form"></p-dropdown>
         </div> -->
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.estado' | translate}}</label>
           <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
             [options]="estados" [(ngModel)]="bodySearch.idEstado" class="select-form"></p-dropdown>
         </div>
       </div>
-      <p (click)="onHideDatosDestinatarios()" class="title-module">
-        {{ "informesycomunicaciones.comunicaciones.busqueda.destinatario" | translate }}
-        <i *ngIf="showDatosDestinatarios" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosDestinatarios" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+       <span (click)="onHideDatosDestinatarios()">{{ "informesycomunicaciones.comunicaciones.busqueda.destinatario" | translate }}</span> 
+        <i (click)="onHideDatosDestinatarios()" *ngIf="showDatosDestinatarios" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosDestinatarios()" *ngIf="!showDatosDestinatarios" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosDestinatarios" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label>{{ "administracion.usuarios.literal.NIF" | translate }}
             </label>
             <input [disabled]="busquedaDestinatarioDisabled" type="text" class="form-control" [attr.maxlength]="20" pInputText [(ngModel)]="bodySearch.nif"
             />
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
             </label>
             <input [disabled]="busquedaDestinatarioDisabled" type="text" class="form-control" pInputText [(ngModel)]="bodySearch.apellidos"
             />
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
             </label>
             <input [disabled]="busquedaDestinatarioDisabled" type="text" class="form-control" pInputText [(ngModel)]="bodySearch.nombre"
             />
           </div>
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label>{{ "censo.resultadoDuplicados.numeroColegiado" | translate }}
             </label>
             <input [disabled]="busquedaDestinatarioDisabled" type="text" class="form-control" pInputText [(ngModel)]="bodySearch.numColegiado"
             />
           </div>
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
             </label>
             <p-dropdown [disabled]="busquedaDestinatarioDisabled" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
@@ -87,6 +89,7 @@
         </div>
       </div>
     </div>
+  </div>
     <div class="card-footer">
       <div class="text-right main-button">
         <button (click)="limpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{

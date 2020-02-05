@@ -3,7 +3,7 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{"general.boton.edit" | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{"administracion.contador.titulo" | translate}}</p>
+      <i class="fa fa-angle-right"></i>{{"administracion.contador.titulo" | translate}}</p>
   </div>
   <!--<div class="breadCrumb">
     <p>{{"general.boton.edit" | translate}} <i class="fa fa-angle-right"></i> {{ 'menu.administracion.usuarios' | translate}}
@@ -12,7 +12,8 @@
 
   <div class="card">
     <div class="card-body">
-      <p class="title-module">{{"administracion.contador.titulo" | translate}}
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{"administracion.contador.titulo" | translate}}</span>
         <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
@@ -70,7 +71,8 @@
 
 
     <div class="card-body">
-      <p class="title-module">{{"administracion.contador.reconfigurar" | translate}}
+      <p class="title-module">
+        <span (click)="onHideReconfiguracion()">{{"administracion.contador.reconfigurar" | translate}}</span>
         <i (click)="onHideReconfiguracion()" *ngIf="showReconfiguracion" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideReconfiguracion()" *ngIf="!showReconfiguracion" class="fa fa-angle-down float-right"></i>
       </p>

@@ -9,38 +9,40 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <p class="title-module"> {{'general.message.datos.generales' | translate }}
+      <p class="title-module"> 
+        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span>
         <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
         <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
+      <div *ngIf="fichaBusqueda" class="module vista-simple">
       <div class="form-row">
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
           <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
             [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form"></p-dropdown>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
           <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
         </div>
       </div>
       <div class="form-row d-flex align-items-end">
 
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
           <p-dropdown [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
             class="select-form"></p-dropdown>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
           <p-dropdown [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
             [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
         </div>
-        <div class="form-group col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-4 col-md-4">
           <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
           <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
           <p-radioButton name="groupname" value="N" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton> -->
@@ -48,7 +50,7 @@
             class="select-form" [(ngModel)]='bodySearch.generica' [options]="comboGenerica"></p-dropdown>
         </div>
 
-
+      </div>
       </div>
     </div>
     <div class="card-footer">
