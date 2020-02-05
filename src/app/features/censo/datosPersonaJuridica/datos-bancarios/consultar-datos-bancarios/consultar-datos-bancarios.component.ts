@@ -1795,6 +1795,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.bodyDatosBancariosAnexo.descripcion = this.descripcion;
 
     this.progressSpinner = true;
+    this.resaltadoNuevo=false;
 
     this.sigaServices
       .post("anexos_insert", this.bodyDatosBancariosAnexo)
@@ -1827,6 +1828,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.datefechaUso = null;
     this.selectedProductoServicio = [];
     this.comboProductoServicio = [];
+    this.resaltadoNuevo=false;
 
     this.cargarDatosAnexos();
   }
@@ -2353,7 +2355,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       if(!this.validarInsertarAnexo() || this.datefechaUso==undefined || this.selectedProductoServicio.length==0){
         this.muestraCamposObligatorios(ficha);
       }else{
-        this.limpiarDatosAnexo();
+        this.insertarAnexo();
       }
     }
   }

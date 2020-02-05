@@ -26,8 +26,8 @@
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-            <input type="text" name="nombre" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.nombre' (ngModelChange)="onChangeForm()"
+            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)</label>
+            <input [ngClass]="styleObligatorio(body.nombre)" type="text" name="nombre" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.nombre' (ngModelChange)="onChangeForm()"
               pInputText>
           </div>
 
@@ -42,8 +42,8 @@
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modo" | translate}}</label>
-            <p-dropdown class="select-form" [(disabled)]="!editar" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.modo"
+            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modo" | translate}} (*)</label>
+            <p-dropdown [ngClass]="styleObligatorio(body.modo)" class="select-form" [(disabled)]="!editar" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.modo"
               [options]="contadores_modo"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -51,19 +51,17 @@
             <input type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.prefijo' pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.contadorActual" | translate}}</label>
-            <input type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.contador' pInputText>
+            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.contadorActual" | translate}} (*)</label>
+            <input [ngClass]="styleObligatorio(body.contador)" type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.contador' pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.sufijo" | translate}}</label>
             <input type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.sufijo' pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.longitud" | translate}}</label>
-            <input type="text" name="descripcion" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.longitudcontador' pInputText>
+            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.longitud" | translate}} (*)</label>
+            <input [ngClass]="styleObligatorio(body.longitudcontador)" type="text" name="descripcion" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.longitudcontador' pInputText>
           </div>
-
-
         </div>
       </div>
     </div>
@@ -90,8 +88,8 @@
             <input type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.reconfiguracionprefijo' pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
-            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.contadorSiguiente" | translate}}</label>
-            <input type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.reconfiguracioncontador'
+            <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.contadorSiguiente" | translate}} (*)</label>
+            <input [ngClass]="styleObligatorio(body.reconfiguracioncontador)" type="text" name="prefijo" [(disabled)]="!editar" class="form-control" [(ngModel)]='body.reconfiguracioncontador'
               pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -109,8 +107,7 @@
       <div class="text-right main-button ">
         <button (click)="volver();" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
         <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="confirmEdit();" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"
-          [disabled]="checkEditar()"></button>
+        <button (click)="checkDatos()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </div>
     <app-dialog></app-dialog>

@@ -19,6 +19,7 @@ import { BusquedaFisicaItem } from "../../../../models/BusquedaFisicaItem";
 import { AuthenticationService } from "../../../../_services/authentication.service";
 import { NuevaSancionItem } from "../../../../models/NuevaSancionItem";
 import { OnDestroy } from '@angular/core';
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: "app-detalle-sancion",
@@ -60,11 +61,14 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
 
   permisoTarjeta: string;
 
+  resaltadoDatos:boolean = false;
+
   constructor(
     private location: Location,
     private authenticationService: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -73,6 +77,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
     this.controlFechas();
     this.getComboColegios();
     this.getComboTipoSancion();
+    this.resaltadoDatos=false;
 
     if (
       sessionStorage.getItem("rowData") != null &&
@@ -628,6 +633,8 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
       this.bodyToCheckbox();
       // this.deshabilitarFechas();
     }
+
+    this.resaltadoDatos=false;
   }
 
   restoreInsertMode() {
@@ -737,6 +744,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
   insertRecord() {
     // this.progressSpinner = true;
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
     this.sigaServices
       .post("busquedaSanciones_insertSanction", this.body)
       .subscribe(
@@ -758,6 +766,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
 
   editRecord() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
     this.sigaServices
       .post("busquedaSanciones_updateSanction", this.body)
       .subscribe(
@@ -809,6 +818,28 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
       summary: this.translateService.instant("general.message.incorrect"),
       detail: mensaje
     });
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.permisoTarjeta != '2' && !this.disabledGuardar){
+      if((this.body.idColegio==undefined || this.body.idColegio==null || this.body.idColegio=="") || (this.body.tipoSancion==undefined || this.body.tipoSancion==null || this.body.tipoSancion=="") || (this.body.fechaAcuerdoDate==undefined || this.body.fechaAcuerdoDate==null)){
+        this.muestraCamposObligatorios();
+      }else{
+        this.save();
+      }
+    }else{
+      this.muestraCamposObligatorios();
+    }
   }
 
   clear() {

@@ -2768,11 +2768,11 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   styleObligatorio(opcional, evento){
     if(opcional=='opcional'){
-      if(!(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado) && this.resaltadoDatos){
+      if(this.resaltadoDatos && !(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado)){
         return this.commonsService.styleObligatorio(evento);
       }
     }else{
-      if(this.resaltadoDatos){
+      if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
         return this.commonsService.styleObligatorio(evento);
       }
     }

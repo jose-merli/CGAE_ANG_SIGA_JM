@@ -473,7 +473,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
-          <app-fecha [ngClass]="styleObligatorio('nuevo', datefechaUso)" [(value)]="datefechaUso" [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
+          <app-fecha [inputStyleClass]="styleObligatorio('nuevo', datefechaUso)" [(value)]="datefechaUso" [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
 
           <!-- <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" [(disabled)]="!permisos" icon="far fa-calendar-alt" showIcon="true"
             [required]="true"></p-calendar> -->
@@ -489,8 +489,8 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button pButton type="button" [(disabled)]="!permisos" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="checkDatos('firma')" [disabled]="!permisos" pButton type="button" icon="far fa-save"
+        <button (click)="limpiarDatosAnexo()" pButton type="button" [(disabled)]="!permisos" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkDatos('nuevo')" [disabled]="!permisos" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </p-footer>

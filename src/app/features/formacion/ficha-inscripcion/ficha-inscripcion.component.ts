@@ -17,6 +17,7 @@ import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { TranslateService } from "../../../commons/translate";
 import { PersonaObject } from "../../../models/PersonaObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -69,6 +70,8 @@ export class FichaInscripcionComponent implements OnInit {
 
   checkBody: DatosInscripcionItem = new DatosInscripcionItem();
 
+  resaltadoDatos: boolean = false;
+
   //Certificados
   @ViewChild("tableCertificates")
   tableCertificates;
@@ -79,6 +82,7 @@ export class FichaInscripcionComponent implements OnInit {
     private cardService: cardService,
     private router: Router,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
@@ -1280,4 +1284,21 @@ export class FichaInscripcionComponent implements OnInit {
     return arrayDate;
   }
 
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.inscripcion.fechaSolicitud==null || this.inscripcion.fechaSolicitud==undefined){
+      this.muestraCamposObligatorios();
+    }else{
+      this.guardarTODO();
+    }
+  }
 }

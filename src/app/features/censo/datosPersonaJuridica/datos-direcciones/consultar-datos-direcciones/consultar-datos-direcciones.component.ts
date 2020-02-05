@@ -1195,7 +1195,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   styleObligatorio(evento){
-    if(this.resaltadoDatos){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
       return this.commonsService.styleObligatorio(evento);
     }
   }

@@ -752,7 +752,7 @@ export class EdicionCurricularesComponent implements OnInit {
   }
 
   styleObligatorio(evento){
-    if(this.resaltadoDatos){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
       return this.commonService.styleObligatorio(evento);
     }
   }
