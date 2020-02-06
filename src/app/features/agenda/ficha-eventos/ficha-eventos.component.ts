@@ -852,6 +852,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     let url = "";
     this.newEvent.idCurso = this.curso.idCurso;
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
 
     if (this.newEvent.idEstadoEvento == null) {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;

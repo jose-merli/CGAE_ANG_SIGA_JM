@@ -5,6 +5,7 @@ import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-programacion-envio-masivo',
@@ -25,7 +26,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   currentDateInitial: Date;
   estados: any[];
   noEditar: boolean = false;
-
+  resaltadoDatos: boolean = false;
 
   fichasPosibles = [
     {
@@ -57,7 +58,8 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService
   ) {
 
 
@@ -65,7 +67,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.resaltadoDatos=false;
     this.getEstadosEnvios();
 
     this.getDatos();
@@ -150,6 +152,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
 
   restablecer() {
+    this.resaltadoDatos=false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     if (this.body.fechaProgramada != null) {
       this.body.fechaProgramada = new Date(this.body.fechaProgramada)
@@ -158,6 +161,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   guardar() {
+    this.resaltadoDatos=false;
     if (this.currentDate > this.body.fechaProgramada) {
       this.showWarning(this.translateService.instant(
         "informesycomunicaciones.enviosMasivos.errorFechaInferior"
@@ -266,9 +270,29 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
             "message.enviomasivo.log.noexiste"
           ));  
         }
-    );
-
-    
+    );    
+  }
+  
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.isGuardarDisabled()){
+      this.guardar();
+    }else{
+      if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
+  }
 }

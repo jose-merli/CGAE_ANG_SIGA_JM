@@ -5,6 +5,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-configuracion",
@@ -34,6 +35,8 @@ export class ConfiguracionComponent implements OnInit {
   reenviar: boolean = false;
   cancelar: boolean = false;
   apiKey: string = "";
+
+  resaltadoDatos: boolean = false;
 
   editorConfig: any = {
     selector: 'textarea',
@@ -67,10 +70,12 @@ export class ConfiguracionComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatos=false;
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
@@ -263,6 +268,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.resaltadoDatos=false;
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
         this.body.idEstado = '4';
@@ -371,5 +377,32 @@ para poder filtrar el dato con o sin estos caracteres*/
         }, () => {
           this.progressSpinner = false
         });
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.isGuardarDisabled()){
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }else{
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
   }
 }

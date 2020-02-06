@@ -18,6 +18,7 @@ import { TranslateService } from "../../../../../../commons/translate/translatio
 import { MenuItem } from "primeng/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: "app-plantilla-documento",
@@ -83,6 +84,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   esPorDefecto: boolean = false;
   label1: string;
   controlSelectionMode: string;
+  resaltadoDatos: boolean = false;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;
@@ -96,10 +98,13 @@ export class PlantillaDocumentoComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatos=false;
+
     this.getInstitucionActual();
 
     //sessionStorage.removeItem('esPorDefecto');
@@ -437,6 +442,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   restablecerDatosGenerales() {
+    this.resaltadoDatos=false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
     this.selectedSufijos = JSON.parse(
@@ -670,6 +676,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
   guardarDatosGenerales() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
     this.body.sufijos = [];
     let orden: number = 1;
     this.selectedSufijos.forEach(element => {
@@ -1252,5 +1259,35 @@ export class PlantillaDocumentoComponent implements OnInit {
         }, () => {
           this.progressSpinner = false
         });
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.isGuardarDisabled()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idFormatoSalida==null || this.body.idFormatoSalida==undefined || this.body.idFormatoSalida==="") || (this.body.nombreFicheroSalida==null || this.body.nombreFicheroSalida==undefined || this.body.nombreFicheroSalida==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.guardarDatosGenerales();
+        }
+      }
+    }else{
+      if((this.body.idFormatoSalida==null || this.body.idFormatoSalida==undefined || this.body.idFormatoSalida==="") || (this.body.nombreFicheroSalida==null || this.body.nombreFicheroSalida==undefined || this.body.nombreFicheroSalida==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardarDatosGenerales();
+      }
+    }
   }
 }

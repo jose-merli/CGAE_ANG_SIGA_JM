@@ -4,6 +4,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
+import { CommonsService } from "../../../../../_services/commons.service";
 
 @Component({
   selector: "app-datos-generales-plantilla",
@@ -22,6 +23,8 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   nuevo: boolean = false;
   soloLectura: boolean = false;
   apiKey: string = "";
+
+  resaltadoDatos: boolean=false;
 
   @Input() claseComunicacion;
 
@@ -57,6 +60,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -195,6 +199,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.resaltadoDatos=false;
+
     this.sigaServices
       .postPaginado(
         "plantillasEnvio_guardarDatosGenerales",
@@ -246,5 +252,32 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos=false;
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.isGuardarDisabled()){
+      if((this.body.nombre==null || this.body.nombre==undefined || this.body.nombre==="") || (this.body.idTipoEnvios==null || this.body.idTipoEnvios==undefined || this.body.idTipoEnvios==="") || (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }else{
+      if((this.body.nombre==null || this.body.nombre==undefined || this.body.nombre==="") || (this.body.idTipoEnvios==null || this.body.idTipoEnvios==undefined || this.body.idTipoEnvios==="") || (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
   }
 }

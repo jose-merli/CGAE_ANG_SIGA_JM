@@ -277,7 +277,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento==="")){
       return this.commonsService.styleObligatorio(evento);
     }
   }

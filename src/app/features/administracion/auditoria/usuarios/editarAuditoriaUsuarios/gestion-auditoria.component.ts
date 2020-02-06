@@ -12,6 +12,7 @@ import { HistoricoUsuarioUpdateDto } from "./../../../../../../app/models/Histor
 import { HistoricoUsuarioRequestDto } from "./../../../../../../app/models/HistoricoUsuarioRequestDto";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { Location } from "@angular/common";
+import { CommonsService } from '../../../../../_services/commons.service';
 @Component({
   selector: "app-gestion-auditoria",
   templateUrl: "./gestion-auditoria.component.html",
@@ -38,17 +39,21 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   derechoAcceso: any;
   activacionEditar: boolean;
 
+  resaltadoDatos: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router,
+    private commonsService: CommonsService,
     private location: Location
   ) {
     super(USER_VALIDATIONS);
   }
   @ViewChild("table") table;
   ngOnInit() {
+    this.resaltadoDatos=false;
     this.checkAcceso();
     this.itemBody = new HistoricoUsuarioItem();
     this.itemBody = JSON.parse(sessionStorage.getItem("auditoriaUsuarioBody"));
@@ -106,6 +111,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     this.update.idPersona = this.itemBody.idPersona;
     this.update.motivo = this.itemBody.motivo;
     var registroActualizado = false;
+    this.resaltadoDatos=false;
     this.sigaServices.post("auditoriaUsuarios_update", this.update).subscribe(
       data => {
         this.showSuccess();
@@ -225,5 +231,31 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
 
 
     this
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.isHabilitadoGuardarCerrar() || this.formGroup.invalid){
+      if((this.itemBody.fechaEntrada == null || this.itemBody.fechaEntrada==undefined) || (this.itemBody.fechaEfectiva == null || this.itemBody.fechaEfectiva==undefined) || (this.itemBody.motivo == null || this.itemBody.motivo==undefined || this.itemBody.motivo=="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.confirmEdit();
+      }
+    }else{
+      if((this.itemBody.fechaEntrada == null || this.itemBody.fechaEntrada==undefined) || (this.itemBody.fechaEfectiva == null || this.itemBody.fechaEfectiva==undefined) || (this.itemBody.motivo == null || this.itemBody.motivo==undefined || this.itemBody.motivo=="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.confirmEdit();
+      }
+    }
   }
 }

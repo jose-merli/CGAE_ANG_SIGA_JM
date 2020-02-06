@@ -68,7 +68,7 @@
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{ 'enviosMasivos.literal.descripcion' | translate }} (*)</label>
-              <input [disabled]="!activacionEditar" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
+              <input [ngClass]="styleObligatorio(body.descripcion)" [disabled]="!activacionEditar" type="text" class="form-control" [(ngModel)]="body.descripcion" pInputText>
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="guardar()" [disabled]="isGuardarDisabled() || !activacionEditar" pButton type="button" icon="far fa-save"
+        <button (click)="checkDatos()" [disabled]="!activacionEditar" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="onCancelar()" [disabled]="!activacionEditar" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>

@@ -8,6 +8,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { InputMaskModule } from "primeng/inputmask";
 import { isNumber } from "util";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-datos-generales-ficha",
@@ -36,6 +37,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   isEdicion: boolean = false;
   selectedClaseCom: boolean = false;
   progressSpinner: boolean = false;
+  resaltadoDatos: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -54,10 +56,13 @@ export class DatosGeneralesFichaComponent implements OnInit {
   constructor(
     private router: Router,
     private translateService: TranslateService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatos=false;
+
     this.preseleccionar = [
       { label: "No", value: "NO" },
       { label: "Sí", value: "SI" }
@@ -148,6 +153,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
+    this.resaltadoDatos=false;
     if (this.bodyInicial.nombre != this.body.nombre) {
       this.sigaServices
         .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
@@ -350,6 +356,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos=false;
   }
 
   showFail(mensaje: string) {
@@ -439,5 +446,35 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         }
       );
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento==="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.guardar();
+        }
+      }
+    }else{
+      if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
   }
 }
