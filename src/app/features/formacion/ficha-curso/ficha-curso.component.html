@@ -1,6 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <app-dialog></app-dialog>
-<div class="busqueda-container">
+
+<div class="busqueda-container" id="top">
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ "menu.formacion" | translate}}
@@ -8,9 +9,12 @@
     <p> &nbsp;
       <i class="fa fa-angle-right"> </i>{{ 'formacion.fichaCurso.cabecera' | translate }}</p>
   </div>
-
+  <!-- TARJETA RESUMEN FIJA -->
+<app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
+(modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)"></app-tarjeta-resumen-fija>
+<!-- FIN TARJETA RESUMEN FIJA -->
   <!-- TARJETA DATOS GENERALES -->
-  <div class="card">
+  <div class="card" id="datosGen">
     <!-- Cabecera -->
     <div class="card-header header-ficha" >
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
@@ -299,7 +303,7 @@
   </div>
 
   <!-- TARJETA PRECIOS -->
-  <div class="card">
+  <div class="card" id="precios">
     <!-- Cabecera -->
     <div class="card-header header-ficha" >
       <div *ngIf="!esFichaActiva('price')" class="form-row">
@@ -387,7 +391,7 @@
   </div>
 
   <!-- TERJETAS FORMADORES -->
-  <div class="card">
+  <div class="card" id="formadores">
     <!-- Cabecera -->
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('formadores')" class="form-row">
@@ -675,10 +679,10 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <!-- TERJETAS INSCRIPCIONES -->
-<div class="card">
+<div class="card" id="inscripciones">
   <!-- Cabecera -->
   <div *ngIf="!modoEdicion" class="card-header header-ficha">
     <div class="form-row">
@@ -733,7 +737,7 @@
 </div>
 
 <!-- TERJETAS CERTIFICADOS -->
-<div class="card">
+<div class="card" id="certificados">
   <!-- Cabecera -->
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('certificate')" class="form-row">
@@ -993,7 +997,7 @@
 </div>
 
 <!-- TERJETAS SESIONES -->
-<div class="card">
+<div class="card" id="sesiones">
   <!-- Cabecera -->
   <div class="card-header header-ficha" >
     <div *ngIf="!esFichaActiva('session')" class="form-row">
@@ -1085,7 +1089,8 @@
 </div>
 
 <!-- TERJETAS CARGA MASIVA INSCRIPCIONES -->
-<div *ngIf="!isLetrado" class="card">
+<div id="cargainscripciones">
+<div *ngIf="!isLetrado" class="card" >
   <!-- Cabecera -->
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('carga')" class="form-row">
@@ -1194,8 +1199,9 @@
     </div>
   </div>
 </div>
-
-<div class="mt-3 text-right main-button ">
+</div>
+</div>
+<div class="mt-3 text-right main-button" id="down">
   <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 

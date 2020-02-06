@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="sregistrales">
 <div class="busqueda-container">
   <!--DATOS REGISTRALES-->
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
@@ -170,7 +171,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

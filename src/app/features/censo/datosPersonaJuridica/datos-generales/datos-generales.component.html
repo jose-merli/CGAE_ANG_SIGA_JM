@@ -1,6 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
   <!--DATOS GENERALES-->
+  <div id="datosGen">
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
     <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
@@ -20,7 +21,7 @@
               <span>{{body.nif}}</span>
             </label>
             <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}
-              <span>{{body.tipo}}</span>
+              <span>{{tipoPersonaJuridica}}</span>
             </label>
             <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
               <span>{{body.fechaConstitucion}}</span>
@@ -189,7 +190,7 @@
       </div>
     </div>
   </div>
-
+</div>
   <!-- CREAR ETIQUETA -->
   <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header class="title">

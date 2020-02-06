@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -40,9 +40,9 @@ export class DatosRegistralesComponent implements OnInit {
   prefijo: string;
   sufijo: string;
   longitudcontador: string;
-  cadenaContador: string;
-  cadenaPrefijo: string;
-  cadenaSufijo: string;
+  cadenaContador: String;
+  cadenaPrefijo: String;
+  cadenaSufijo: String;
   noEditable: boolean = false;
   prefijoBlock: boolean = false;
   fechaConstitucion: Date;
@@ -116,6 +116,8 @@ export class DatosRegistralesComponent implements OnInit {
 
   tarjeta: string;
   searchDatos: boolean = false;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -187,9 +189,9 @@ export class DatosRegistralesComponent implements OnInit {
         this.modo = data.modo;
         this.contador = data.contador;
         //Se calcula contador + 1
-        let contadorNumber = Number(this.contador); 
+        let contadorNumber = Number(this.contador);
         contadorNumber += 1;
-        this.contador = contadorNumber.toString(); 
+        this.contador = contadorNumber.toString();
         this.prefijo = data.prefijo;
         this.sufijo = data.sufijo;
         this.longitudcontador = data.longitudcontador;
@@ -223,7 +225,13 @@ export class DatosRegistralesComponent implements OnInit {
       }
     );
   }
+  ngOnChanges(changes: SimpleChanges) {
+    let fichaPosible = this.esFichaActiva(this.openTarjeta);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(this.openTarjeta);
+    }
 
+  }
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "12a";
@@ -238,6 +246,10 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "registrales";
+          this.permisosEnlace.emit(permisos);
+        }
       }
     );
   }
@@ -370,7 +382,7 @@ export class DatosRegistralesComponent implements OnInit {
             this.getNumsspp();
 
             //}
-           
+
           } else {
             this.body = new DatosRegistralesItem();
           }
@@ -614,7 +626,7 @@ export class DatosRegistralesComponent implements OnInit {
     }
   }
 
-  getNumsspp(){
+  getNumsspp() {
 
     if (this.modificablecontador == "0" && this.sociedadProfesional) {
       this.noEditable = true;
@@ -622,7 +634,7 @@ export class DatosRegistralesComponent implements OnInit {
       this.noEditable = false;
     }
 
-    if(this.sociedadProfesional){
+    if (this.sociedadProfesional) {
       if (this.body.contadorNumsspp != undefined && this.body.contadorNumsspp != null && this.body.contadorNumsspp != "") {
 
         this.body.contadorNumsspp = this.fillWithCeros(
@@ -801,14 +813,14 @@ export class DatosRegistralesComponent implements OnInit {
     if (this.isNuevo && this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
       // if (this.modo == "0") {
-        this.body.contadorNumsspp = String(
-          this.fillWithCeros(this.contador,
-            Number(this.longitudcontador)
-          )
-        );
+      this.body.contadorNumsspp = String(
+        this.fillWithCeros(this.contador,
+          Number(this.longitudcontador)
+        )
+      );
 
-        this.body.prefijoNumsspp = this.prefijo;
-        this.body.sufijoNumsspp = this.sufijo;
+      this.body.prefijoNumsspp = this.prefijo;
+      this.body.sufijoNumsspp = this.sufijo;
 
       // } else {
       //   this.body.prefijoNumsspp = this.prefijo;
@@ -818,16 +830,16 @@ export class DatosRegistralesComponent implements OnInit {
     } else if (this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
 
-      if(this.contadorSSPPInicial != null && this.contadorSSPPInicial != undefined){
+      if (this.contadorSSPPInicial != null && this.contadorSSPPInicial != undefined) {
         this.body.contadorNumsspp = this.contadorSSPPInicial;
         this.body.prefijoNumsspp = this.prefijoSSPPInicial;
         this.body.sufijoNumsspp = this.sufijoSSPPInicial;
 
-      }else{
+      } else {
         this.getNumsspp();
       }
 
-    } else if(!this.sociedadProfesional){
+    } else if (!this.sociedadProfesional) {
       this.body.sociedadProfesional = "0";
       this.body.prefijoNumsspp = undefined;
       this.body.contadorNumsspp = undefined

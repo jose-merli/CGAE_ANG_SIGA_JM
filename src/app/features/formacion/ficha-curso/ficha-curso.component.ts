@@ -51,7 +51,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
   encapsulation: ViewEncapsulation.None
 })
 export class FichaCursoComponent implements OnInit {
-
+  iconoTarjetaResumen = "clipboard";
   openFicha;
   fichasPosibles;
   msgs;
@@ -171,7 +171,7 @@ export class FichaCursoComponent implements OnInit {
   selectMultiplePrices: boolean = false;
   numSelectedPrices: number = 0;
   comboPrices;
-
+  datosTarjetaResumen
   //Formadores
   colsFormadores;
   selectedItemFormadores;
@@ -224,7 +224,7 @@ export class FichaCursoComponent implements OnInit {
   newCertificate: CertificadoCursoItem;
   comboCalificaciones;
   certificatesUpdate = [];
-
+  enlacesTarjetaResumen;
   //Comunicaciones
   colsNotifications;
   selectedItemNotifications;
@@ -514,10 +514,52 @@ export class FichaCursoComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaCursos")
       );
     }
+    this.enlacesTarjetaResumen = [
+      {
+        label: "general.message.datos.generales",
+        value: document.getElementById("datosGen"),
+        nombre: "generales",
+
+      },
+      {
+        label: "formacion.fichaCurso.tarjetaPrecios.precios",
+        value: document.getElementById("precios"),
+        nombre: "price",
+      },
+      {
+        label: "agenda.fichaEventos.datosFormadores.cabecera",
+        value: document.getElementById("formadores"),
+        nombre: "formadores",
+
+      },
+      {
+        label: "formacion.fichaCurso.inscripciones.cabecera",
+        value: document.getElementById("inscripciones"),
+        nombre: "inscription",
+
+      },
+      {
+        label: "formacion.fichaInscripcion.datosCertificados.cabecera",
+        value: document.getElementById("certificados"),
+        nombre: "certificate",
+
+      },
+      {
+        label: "formacion.fichaCursos.sesiones.cabecera",
+        value: document.getElementById("sesiones"),
+        nombre: "session",
+
+      }, {
+        label: "formacion.fichaCurso.cargaMasivaInscripciones.cabecera",
+        value: document.getElementById("cargainscripciones"),
+        nombre: "carga",
+      },
+    ];
 
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
+    this.focusNombre(this.inputNombre);
 
   }
 
@@ -574,7 +616,7 @@ export class FichaCursoComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
         this.compruebaInstitucionCurso();
-       
+
       }
     );
   }
@@ -1307,7 +1349,21 @@ export class FichaCursoComponent implements OnInit {
         this.compruebaInstitucionCurso();
         this.progressSpinner2 = false;
         window.scrollTo(0, 0);
+        this.datosTarjetaResumen = [
+          {
+            label: "Nombre",
+            value: this.curso.nombreCurso
+          },
+          {
+            label: "Código",
+            value: this.curso.codigoCurso
+          },
 
+          {
+            label: "Estado",
+            value: this.curso.estado
+          },
+        ];
       }
     );
   }
@@ -3593,5 +3649,13 @@ export class FichaCursoComponent implements OnInit {
 
   ngOnDestroy() {
     sessionStorage.removeItem("isCancelado");
+  }
+
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

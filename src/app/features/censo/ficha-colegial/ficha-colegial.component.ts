@@ -57,6 +57,7 @@ import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricul
 import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
 import * as moment from 'moment';
 import { findIndex } from 'rxjs/operators';
+import { DatosGenerales } from '../datosPersonaJuridica/datos-generales/datos-generales.component';
 
 @Component({
   selector: "app-ficha-colegial",
@@ -262,6 +263,9 @@ export class FichaColegialComponent implements OnInit {
   disableNumColegiado: boolean = true;
   information: boolean = false;
   keyConfirmation: string;
+  datosTarjetaResumen;
+  enlacesTarjetaResumen;
+  iconoTarjetaResumen = "clipboard";
 
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
@@ -460,16 +464,140 @@ export class FichaColegialComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private router: Router,
+
     private datepipe: DatePipe
   ) { }
 
 
   ngOnInit() {
-
     if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.getColegiadoLogeado();
     } else {
       this.OnInit();
+      if (this.esColegiado) {
+        this.enlacesTarjetaResumen = [
+          // {
+          //   label: "facturacion.tarjetas.literal.serviciosInteres",
+          //   value: document.getElementById("sInteres"),
+          //   nombre: "tarjetaInteres",
+          // },
+          // {
+          //   label: "general.message.datos.generales",
+          //   value: document.getElementById("datosGen"),
+          //   nombre: "generales",
+
+          // },
+          // {
+          //   label: "censo.consultaDatosColegiales.literal.cabecera",
+          //   value: document.getElementById("datosCol"),
+          //   nombre: "colegiales",
+          // },
+          // {
+          //   label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
+          //   value: document.getElementById("otrasColegiaciones"),
+          //   nombre: "colegiaciones",
+
+          // },
+          // {
+          //   label: "menu.certificados",
+          //   value: document.getElementById("certif"),
+          //   nombre: "certificados",
+
+          // },
+          // {
+          //   label: "censo.consultaDatosCV.cabecera",
+          //   value: document.getElementById("datosCurriculares"),
+          //   nombre: "curriculares",
+
+          // },
+          // {
+          //   label: "censo.fichaCliente.datosDirecciones.cabecera",
+          //   value: document.getElementById("direcciones"),
+          //   nombre: "direcciones",
+
+          // }, {
+          //   label: "censo.consultaDatosBancarios.cabecera",
+          //   value: document.getElementById("datosBanc"),
+          //   nombre: "bancarios",
+          // }, {
+          //   label: "censo.regtel.literal.titulo",
+          //   value: document.getElementById("regtel"),
+          //   nombre: "regtel",
+          // }, {
+          //   label: "censo.alterMutua.titulo",
+          //   value: document.getElementById("alterMutua"),
+          //   nombre: "tarjetaAlterMutua",
+          // },
+          // {
+          //   label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+          //   value: document.getElementById("mutualidad"),
+          //   nombre: "tarjetaMutualidad",
+
+          // },
+        ];
+      } else {
+        this.enlacesTarjetaResumen = [
+          // {
+          //   label: "facturacion.tarjetas.literal.serviciosInteres",
+          //   value: document.getElementById("sInteres"),
+          //   nombre: "tarjetaInteres",
+          // },
+          // {
+          //   label: "general.message.datos.generales",
+          //   value: document.getElementById("datosGen"),
+          //   nombre: "generales",
+
+          // },
+          // {
+          //   label: "censo.consultaDatosColegiales.literal.cabecera",
+          //   value: document.getElementById("datosCol"),
+          //   nombre: "colegiales",
+          // },
+          // {
+          //   label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
+          //   value: document.getElementById("otrasColegiaciones"),
+          //   nombre: "colegiaciones",
+
+          // },
+          // {
+          //   label: "menu.certificados",
+          //   value: document.getElementById("certif"),
+          //   nombre: "certificados",
+
+          // },
+          // {
+          //   label: "censo.consultaDatosCV.cabecera",
+          //   value: document.getElementById("datosCurriculares"),
+          //   nombre: "curriculares",
+
+          // },
+          // {
+          //   label: "censo.fichaCliente.datosDirecciones.cabecera",
+          //   value: document.getElementById("direcciones"),
+          //   nombre: "direcciones",
+
+          // }, {
+          //   label: "censo.consultaDatosBancarios.cabecera",
+          //   value: document.getElementById("datosBanc"),
+          //   nombre: "bancarios",
+          // }, {
+          //   label: "censo.regtel.literal.titulo",
+          //   value: document.getElementById("regtel"),
+          //   nombre: "regtel",
+          // }, {
+          //   label: "censo.alterMutua.titulo",
+          //   value: document.getElementById("alterMutua"),
+          //   nombre: "tarjetaAlterMutua",
+          // },
+          // {
+          //   label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+          //   value: document.getElementById("mutualidad"),
+          //   nombre: "tarjetaMutualidad",
+
+          // },
+        ];
+      }
+
     }
   }
 
@@ -593,6 +721,44 @@ export class FichaColegialComponent implements OnInit {
       this.onInitOtrasColegiaciones();
       this.searchSanciones();
       this.searchCertificados();
+      if (this.esColegiado) {
+        this.datosTarjetaResumen = [
+          {
+            label: "Apellidos y Nombre",
+            value: this.generalBody.nombre
+          },
+          {
+            label: "Identificación",
+            value: this.generalBody.nif
+          },
+
+          {
+            label: "Número de Colegiado",
+            value: this.generalBody.numColegiado
+          },
+          {
+            label: "Situación Ejercicio Actual",
+            value: this.situacionPersona
+          },
+        ];
+      } else {
+        this.datosTarjetaResumen = [
+          {
+            label: "Apellidos y Nombre",
+            value: this.generalBody.nombre
+          },
+          {
+            label: "Identificación",
+            value: this.generalBody.nif
+          },
+          {
+            label: "Situación Ejercicio Actual",
+            value: this.situacionPersona
+          },
+        ];
+      }
+
+
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -952,6 +1118,66 @@ export class FichaColegialComponent implements OnInit {
           console.log(err);
         }
       );
+    this.enlacesTarjetaResumen = [
+      // {
+      //   label: "facturacion.tarjetas.literal.serviciosInteres",
+      //   value: document.getElementById("sInteres"),
+      //   nombre: "tarjetaInteres",
+      // },
+      // {
+      //   label: "general.message.datos.generales",
+      //   value: document.getElementById("datosGen"),
+      //   nombre: "generales",
+
+      // },
+      // {
+      //   label: "censo.consultaDatosColegiales.literal.cabecera",
+      //   value: document.getElementById("datosCol"),
+      //   nombre: "colegiales",
+      // },
+      // {
+      //   label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
+      //   value: document.getElementById("otrasColegiaciones"),
+      //   nombre: "colegiaciones",
+
+      // },
+      // {
+      //   label: "menu.certificados",
+      //   value: document.getElementById("certif"),
+      //   nombre: "certificados",
+
+      // },
+      // {
+      //   label: "censo.consultaDatosCV.cabecera",
+      //   value: document.getElementById("datosCurriculares"),
+      //   nombre: "curriculares",
+
+      // },
+      // {
+      //   label: "censo.fichaCliente.datosDirecciones.cabecera",
+      //   value: document.getElementById("direcciones"),
+      //   nombre: "direcciones",
+
+      // }, {
+      //   label: "censo.consultaDatosBancarios.cabecera",
+      //   value: document.getElementById("datosBanc"),
+      //   nombre: "bancarios",
+      // }, {
+      //   label: "censo.regtel.literal.titulo",
+      //   value: document.getElementById("regtel"),
+      //   nombre: "regtel",
+      // }, {
+      //   label: "censo.alterMutua.titulo",
+      //   value: document.getElementById("alterMutua"),
+      //   nombre: "tarjetaAlterMutua",
+      // },
+      // {
+      //   label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+      //   value: document.getElementById("mutualidad"),
+      //   nombre: "tarjetaMutualidad",
+
+      // },
+    ];
   }
 
   //CONTROL DE PERMISOS
@@ -1827,6 +2053,21 @@ export class FichaColegialComponent implements OnInit {
               "personaBody",
               JSON.stringify(this.generalBody)
             );
+            this.datosTarjetaResumen = [
+              {
+                label: "Apellidos y Nombre",
+                value: this.generalBody.nombre
+              },
+              {
+                label: "Identificación",
+                value: this.generalBody.nif
+              },
+              {
+                label: "Situación Ejercicio Actual",
+                value: this.situacionPersona
+              },
+            ];
+
           }
         );
     }
@@ -4674,7 +4915,6 @@ export class FichaColegialComponent implements OnInit {
   irTurnoOficio() {
     let idInstitucion = this.authenticationService.getInstitucionSession();
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
-
     // let  us = this.sigaServices.getOldSigaUrl() + "JGR_DefinirTurnosLetrado.do?granotmp="+new Date().getMilliseconds()+"&accion=ver&idInstitucionPestanha="+idInstitucion+"&idPersonaPestanha="+this.generalBody.idPersona+"";
     let us = undefined;
     if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
@@ -6013,6 +6253,16 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaGeneralesNum == "3" || this.tarjetaGeneralesNum == "2") {
+          let pruebaTarjeta =
+          {
+            label: "facturacion.tarjetas.literal.serviciosInteres",
+            value: document.getElementById("sInteres"),
+            nombre: "tarjetaInteres",
+          };
+
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
         this.checkAccesoInteres();
       }
     );
@@ -6027,11 +6277,21 @@ export class FichaColegialComponent implements OnInit {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjetaInteresNum = permisosArray[0].derechoacceso;
+
       },
       err => {
         console.log(err);
       },
       () => {
+        if (this.tarjetaInteresNum == "3" || this.tarjetaInteresNum == "2") {
+          let pruebaTarjeta = {
+            label: "general.message.datos.generales",
+            value: document.getElementById("datosGen"),
+            nombre: "generales",
+
+          };
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
         this.checkAccesoDatosColegiales();
       }
     );
@@ -6073,6 +6333,14 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if ((this.tarjetaColegialesNum == "3" || this.tarjetaColegialesNum == "2") && this.esColegiado) {
+          let pruebaTarjeta = {
+            label: "censo.consultaDatosColegiales.literal.cabecera",
+            value: document.getElementById("datosCol"),
+            nombre: "colegiales",
+          };
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
         this.checkAccesoOtrasColegiaciones();
       }
     );
@@ -6092,6 +6360,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if ((this.tarjetaOtrasColegiacionesNum == "3" || this.tarjetaOtrasColegiacionesNum == "2") && this.esColegiado) {
+          let pruebaTarjeta = {
+            label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
+            value: document.getElementById("otrasColegiaciones"),
+            nombre: "colegiaciones",
+          };
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoCertificados();
       }
     );
@@ -6111,6 +6390,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaCertificadosNum == "3" || this.tarjetaOtrasColegiaciones == "2") {
+          let pruebaTarjeta = {
+            label: "menu.certificados",
+            value: document.getElementById("certif"),
+            nombre: "certificados",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoSanciones();
       }
     );
@@ -6130,6 +6420,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaSancionesNum == "3" || this.tarjetaSancionesNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.consultaDatosColegiacion.literal.sancionesLetrado",
+            value: document.getElementById("sancio"),
+            nombre: "sanciones",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoSociedades();
       }
     );
@@ -6149,6 +6450,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaSociedadesNum == "3" || this.tarjetaSociedadesNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.fichaColegial.titulo",
+            value: document.getElementById("socied"),
+            nombre: "sociedades",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoDatosCurriculares();
       }
     );
@@ -6168,6 +6480,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaCurricularesNum == "3" || this.tarjetaCurricularesNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.consultaDatosCV.cabecera",
+            value: document.getElementById("datosCurriculares"),
+            nombre: "curriculares",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoDirecciones();
       }
     );
@@ -6187,6 +6510,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaDireccionesNum == "3" || this.tarjetaDireccionesNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.fichaCliente.datosDirecciones.cabecera",
+            value: document.getElementById("direcciones"),
+            nombre: "direcciones",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoDatosBancarios();
       }
     );
@@ -6206,6 +6540,17 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjetaBancariosNum == "3" || this.tarjetaBancariosNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.consultaDatosBancarios.cabecera",
+            value: document.getElementById("datosBanc"),
+            nombre: "bancarios",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
         this.checkAccesoRegtel();
       }
     );
@@ -6225,7 +6570,18 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.checkAccesoMutualidad();
+        if (this.tarjetaRegtelNum == "3" || this.tarjetaRegtelNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.regtel.literal.titulo",
+            value: document.getElementById("regtel"),
+            nombre: "regtel",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
+        this.checkAccesoAlterMutua();
       }
     );
   }
@@ -6244,7 +6600,18 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.checkAccesoAlterMutua();
+        if (this.tarjetaMutualidadNum == "3" || this.tarjetaMutualidadNum == "2") {
+          let pruebaTarjeta = {
+            label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+            value: document.getElementById("mutualidad"),
+            nombre: "tarjetaMutualidad",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
+        this.asignarPermisosTarjetas();
       }
     );
   }
@@ -6263,7 +6630,18 @@ export class FichaColegialComponent implements OnInit {
         console.log(err);
       },
       () => {
-        this.asignarPermisosTarjetas();
+        if (this.tarjetaAlterMutuaNum == "3" || this.tarjetaAlterMutuaNum == "2") {
+          let pruebaTarjeta = {
+             label: "censo.alterMutua.titulo",
+            value: document.getElementById("alterMutua"),
+            nombre: "tarjetaAlterMutua",
+          }
+          let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+          if (findDato == undefined) {
+            this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          }
+        }
+        this.checkAccesoMutualidad();
       }
     );
   }
@@ -6380,5 +6758,11 @@ export class FichaColegialComponent implements OnInit {
       }
     });
   }
-
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
 }
