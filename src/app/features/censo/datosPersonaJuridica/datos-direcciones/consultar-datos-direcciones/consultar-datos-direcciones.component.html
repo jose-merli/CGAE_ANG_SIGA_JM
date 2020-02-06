@@ -179,8 +179,8 @@
 
                       <div *ngIf="dato.tipo == 'Correo-Electrónico'">
                         <div *ngIf="edicionEmail" class="ui-inputgroup">
-                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" />
-                          <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>
+                          <input  [disabled]="historyDisable || permisoTarjeta == '2'" type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" />
+                          <button  [disabled]="historyDisable || permisoTarjeta == '2'" (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>
                         </div>
                         <div *ngIf="!emailValido">
                           <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
