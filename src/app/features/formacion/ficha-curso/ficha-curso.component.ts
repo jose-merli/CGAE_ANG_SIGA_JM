@@ -1,30 +1,10 @@
 import { Location } from "@angular/common";
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  Input,
-  AfterContentInit,
-  AfterContentChecked,
-  AfterViewInit,
-  AfterViewChecked,
-  ElementRef,
-  Renderer2
-} from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation, ElementRef } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
-import {
-  AutoComplete,
-  Dropdown,
-  Editor,
-  Calendar,
-  Button,
-  InputText
-} from "../../../../../node_modules/primeng/primeng";
+import { AutoComplete, Dropdown } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
@@ -42,7 +22,7 @@ import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
 import { EditorModule } from '@tinymce/tinymce-angular';
-
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-curso",
@@ -265,6 +245,8 @@ export class FichaCursoComponent implements OnInit {
     statusbar: false
   };
 
+  resaltadoDatos:boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -273,8 +255,7 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private domSanitizer: DomSanitizer,
-    private renderer: Renderer2
+    private commonsService: CommonsService
   ) {
 
     window.scrollTo(0, 0);
@@ -282,14 +263,12 @@ export class FichaCursoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progressSpinner2 = true;
-    this.progressSpinner = true;
-
     sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
+    this.progressSpinner2 = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
     this.getCombosFormadores();
@@ -491,7 +470,6 @@ export class FichaCursoComponent implements OnInit {
 
       // this.resultsService = this.curso.tipoServicios;
       this.resultsTopics = this.curso.temasCombo;
-      this.progressSpinner2 = false;
 
       sessionStorage.removeItem("duplicarCurso");
 
@@ -504,7 +482,6 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEstado = this.valorEstadoAbierto;
       let colegio = 1;
       this.onChangeSelectVisibilidadObligate(colegio);
-      this.progressSpinner2 = false;
 
     }
 
@@ -518,11 +495,7 @@ export class FichaCursoComponent implements OnInit {
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
-
-  }
-
-  ngAfterViewInit(): void {
-    this.focusNombre(this.inputNombre);
+    setTimeout(function() {  document.getElementById('nombre').focus(); }, 15);
   }
 
 
@@ -530,6 +503,11 @@ export class FichaCursoComponent implements OnInit {
     const input: HTMLInputElement = inputNombre.nativeElement as HTMLInputElement;
     input.focus();
     input.select();
+  }
+
+  ngAfterViewChecked(){
+    setTimeout(function() {  document.getElementById('nombre').focus(); }, 10);
+    this.progressSpinner2 = false;
   }
 
   // Control Permisos
@@ -574,7 +552,6 @@ export class FichaCursoComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
         this.compruebaInstitucionCurso();
-       
       }
     );
   }
@@ -662,7 +639,6 @@ export class FichaCursoComponent implements OnInit {
       let fecha = this.curso.fechaInscripcionHastaDate;
       this.curso.fechaInscripcionHastaDate = new Date(fecha);
     }
-    this.progressSpinner2 = false;
 
   }
 
@@ -914,7 +890,7 @@ export class FichaCursoComponent implements OnInit {
             this.translateService.instant("formacion.mensaje.modificar.curso.correcto")
           );
           this.modoEdicion = true;
-
+          this.resaltadoDatos=false;
           // if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
           //   this.curso.aviso = "3";
           //   this.notifyAvailablePlaces();
@@ -1305,7 +1281,6 @@ export class FichaCursoComponent implements OnInit {
       () => {
         this.progressSpinner = false;
         this.compruebaInstitucionCurso();
-        this.progressSpinner2 = false;
         window.scrollTo(0, 0);
 
       }
@@ -1576,7 +1551,6 @@ export class FichaCursoComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {
-          this.progressSpinner2 = false;
           this.progressSpinner = false;
         }
       );
