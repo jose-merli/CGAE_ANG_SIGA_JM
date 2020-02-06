@@ -275,7 +275,7 @@
             label="{{
               'modificacionDatos.boton.procesarSolicitud' | translate
             }}"
-            [(disabled)]="disableButton"
+            [(disabled)]="disableButton || disableNew"
           ></button>
           <button
             (click)="denyMultipleRequest(selectedDatos)"
@@ -284,7 +284,7 @@
             icon="fa fa-times"
             iconPos="left"
             label="{{ 'general.boton.denegarSolicitud' | translate }}"
-            [(disabled)]="disableButton"
+            [(disabled)]="disableButton || disableNew"
           ></button>
           <button
             (click)="closeDialog()"
