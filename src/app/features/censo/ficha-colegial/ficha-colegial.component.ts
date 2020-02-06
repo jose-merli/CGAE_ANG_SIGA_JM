@@ -1549,7 +1549,10 @@ export class FichaColegialComponent implements OnInit {
     // if(this.inscritoChange && this.activarGuardarColegiales){
     //   this.comprobarAuditoria('guardarDatosColegiales');
     // }else{
-      if(!this.activarGuardarColegiales || this.inscritoSeleccionado == undefined){
+      if((this.colegialesBody.numColegiado==null || this.colegialesBody.numColegiado==undefined || this.colegialesBody.numColegiado==="") ||
+      (this.colegialesBody.incorporacion==null || this.colegialesBody.incorporacion==undefined) ||
+      (this.colegialesBody.fechapresentacion==null || this.colegialesBody.fechapresentacion==undefined) ||
+      (this.inscritoSeleccionado==null || this.inscritoSeleccionado==undefined || this.inscritoSeleccionado==="")){
         this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
         this.resaltadoDatosColegiales=true;
       }else{

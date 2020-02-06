@@ -1210,13 +1210,27 @@ para poder filtrar el dato con o sin estos caracteres*/
       if(!this.desactivaGuardar()){
         this.comprobarAuditoria('noletrado');
       }else{
-        this.muestraCamposObligatorios();
+        if((this.body.codigoPostal==undefined || this.body.codigoPostal==null || this.body.codigoPostal==="") ||
+        ((this.body.poblacionExtranjera==undefined || this.body.poblacionExtranjera==null || this.body.poblacionExtranjera==="") && this.poblacionExtranjera) ||
+        (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
+          this.muestraCamposObligatorios();
+        }else{
+          this.comprobarAuditoria('noletrado');
+        }
       }
-    }else if(this.isLetrado){
+    }
+    
+    if(this.isLetrado){
       if(!this.desactivaGuardar()){
         this.comprobarAuditoria('letrado');
       }else{
-        this.muestraCamposObligatorios();
+        if((this.body.codigoPostal==undefined || this.body.codigoPostal==null || this.body.codigoPostal==="") ||
+        ((this.body.poblacionExtranjera==undefined || this.body.poblacionExtranjera==null || this.body.poblacionExtranjera==="") && this.poblacionExtranjera) || 
+        (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
+          this.muestraCamposObligatorios();
+        }else{
+          this.comprobarAuditoria('letrado');
+        }
       }
     }
   }

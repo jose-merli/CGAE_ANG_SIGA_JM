@@ -767,19 +767,37 @@ export class EdicionCurricularesComponent implements OnInit {
       if(this.activateGuardar()){
         this.guardarCv();
       }else{
-        this.muestraCamposObligatorios();
+        if((this.body.idTipoCv==null || this.body.idTipoCv==undefined || this.body.idTipoCv==="") || 
+        (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
+        (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.guardarCv();
+        }
       }
     }else if(this.solicitaModificacion()){
       if(this.activateGuardar()){
         this.comprobarAuditoria()
       }else{
-        this.muestraCamposObligatorios();
+        if((this.body.idTipoCv==null || this.body.idTipoCv==undefined || this.body.idTipoCv==="") || 
+        (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
+        (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.comprobarAuditoria();
+        }
       }
     }else if(this.solicitaCreacion()){
       if(this.activateGuardar()){
         this.comprobarAuditoria();
       }else{
-        this.muestraCamposObligatorios();
+        if((this.body.idTipoCv==null || this.body.idTipoCv==undefined || this.body.idTipoCv==="") || 
+        (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
+        (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.comprobarAuditoria();
+        }
       }
     }
   }
