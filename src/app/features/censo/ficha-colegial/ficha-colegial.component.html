@@ -301,33 +301,17 @@
                 </label>
 
                 <br />
-                <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                  [minLength]="1" field="label" [multiple]="true" (ngModelChange)="activacionGuardarGenerales()" (onKeyUp)="onKeyUp($event)"
-                  (onBlur)="onBlur($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)" [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction"
-                  [style]="{ width: '100%' }" [inputStyle]="{ width: '100%' }" (click)="disabledAutocomplete()">
-                  <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
-                    <div *ngIf="
-                      etiquetasPersonaJuridicaSelecionados.backgroundColor != ''
-                    " class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
-                      [ngStyle]="{
-                      background:
-                        etiquetasPersonaJuridicaSelecionados.backgroundColor
-                    }">
-                      <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == 'white'" style="color:black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                      <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != 'white'"
-                        style="color:white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                      <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined" style="color:black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                    </div>
-                  </ng-template>
-                </p-autoComplete>
+                <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [options]="comboEtiquetas"
+                  [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction" styleClass="widthAll"
+                  [panelStyle]="{width:'100%'}" (ngModelChange)="activacionGuardarGenerales()" (onSelect)="onSelect($event)"
+                  (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()"></p-multiSelect>
               </div>
             </div>
-          </div>
-          <!-- info adicional -->
+            <!-- info adicional -->
 
-          <div class="bloque col-lg-4 col-md-4">
-            <div class="form-row">
-              <!-- <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
+            <div class="bloque col-lg-4 col-md-4">
+              <div class="form-row">
+                <!-- <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
               <label>{{
                 "censo.fichaCliente.situacion.cabecera" | translate
               }}</label>
@@ -340,996 +324,999 @@
                 [(ngModel)]="generalBody.situacion"
               ></p-dropdown>
             </div> -->
-              <div class="form-group col-lg-12 col-md-12">
-                <label>{{ "censo.fichaCliente.situacion.cabecera" | translate }}
-                </label>
-                <input type="text " class="form-control " disabled [(ngModel)]="situacionPersona" [maxLength]="19" pInputText />
-              </div>
-              <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
-                <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }} (*)
-                </label>
-                <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" [disabled]="!esNewColegiado || isLetrado || disabledAction"
-                  (valueChangeSelected)="fillFechaAlta($event)" [utc]="false"></app-fecha>
-              </div>
-              <div class="form-group col-lg-12 col-md-12">
-                <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
-                </label>
-                <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                  [showClear]="true" filterBy="label,labelSinTilde" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
-              </div>
-              <div class="form-group col-lg-12 col-md-12">
-                <label>{{ "censo.consultaDatosGenerales.literal.cuentaContable" | translate }}
-                </label>
-                <input type="text " class="form-control " [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" (ngModelChange)="activacionGuardarGenerales()"
-                  [(ngModel)]="generalBody.asientoContable" [maxLength]="19" pInputText />
-              </div>
-              <br />
-              <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
-                <!-- <span> -->
-                <!--
+                <div class="form-group col-lg-12 col-md-12">
+                  <label>{{ "censo.fichaCliente.situacion.cabecera" | translate }}
+                  </label>
+                  <input type="text " class="form-control " disabled [(ngModel)]="situacionPersona" [maxLength]="19" pInputText />
+                </div>
+                <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
+                  <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }} (*)
+                  </label>
+                  <app-fecha [(value)]="fechaAlta" (valueChangeInput)="fillFechaAlta($event)" [disabled]="!esNewColegiado || isLetrado || disabledAction"
+                    (valueChangeSelected)="fillFechaAlta($event)" [utc]="false"></app-fecha>
+                </div>
+                <div class="form-group col-lg-12 col-md-12">
+                  <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
+                  </label>
+                  <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
+                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                    [showClear]="true" filterBy="label,labelSinTilde" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-12 col-md-12">
+                  <label>{{ "censo.consultaDatosGenerales.literal.cuentaContable" | translate }}
+                  </label>
+                  <input type="text " class="form-control " [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" (ngModelChange)="activacionGuardarGenerales()"
+                    [(ngModel)]="generalBody.asientoContable" [maxLength]="19" pInputText />
+                </div>
+                <br />
+                <div class="form-group col-lg-12 col-md-12" [hidden]="!esColegiado">
+                  <!-- <span> -->
+                  <!--
                 <button pButton type="button" disabled [pTooltip]="partidoJudicial" tooltipPosition="top">Provincias</button>
               -->
-                <!--
+                  <!--
                 <input type="text" disabled [pTooltip]="partidoJudicial" tooltipPosition="top" pInputText>
               -->
-                <!-- </span> -->
-                <div class="ayuda-btn">
-                  <label>{{ "menu.justiciaGratuita.maestros.partidosJudiciales" | translate }}
-                  </label>
-                  <i class="fa fa-question" [pTooltip]="partidoJudicial" tooltipPosition="bottom"></i>
+                  <!-- </span> -->
+                  <div class="ayuda-btn">
+                    <label>{{ "menu.justiciaGratuita.maestros.partidosJudiciales" | translate }}
+                    </label>
+                    <i class="fa fa-question" [pTooltip]="partidoJudicial" tooltipPosition="bottom"></i>
+                  </div>
+                  &nbsp;&nbsp;
                 </div>
-                &nbsp;&nbsp;
-              </div>
 
-              <div class="form-group col-lg-12 col-md-12">
-                <div>
-                  <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
-                  <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
-                    [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
-                    [(disabled)]="isLetrado || (tarjetaGenerales == 2)  || disabledAction" (completeMethod)="filterLabelsMultipleTopics($event)"
-                    [(ngModel)]="resultsTopics">
-                    <ng-template let-topicsSelecionados pTemplate="selectedItem">
-                      <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
-                        [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
-                        <span style="color:white">{{ topicsSelecionados.label }}</span>
-                      </div>
-                    </ng-template>
-                  </p-autoComplete>
+                <div class="form-group col-lg-12 col-md-12">
+                  <div>
+                    <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
+                    <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
+                      [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+                      [(disabled)]="isLetrado || (tarjetaGenerales == 2)  || disabledAction" (completeMethod)="filterLabelsMultipleTopics($event)"
+                      [(ngModel)]="resultsTopics">
+                      <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                        <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                          [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
+                          <span style="color:white">{{ topicsSelecionados.label }}</span>
+                        </div>
+                      </ng-template>
+                    </p-autoComplete>
+                  </div>
                 </div>
-              </div>
 
+              </div>
             </div>
           </div>
+          <br />
         </div>
-        <br />
-      </div>
 
-      <div *ngIf="esFichaActiva('generales')" class="card-footer ">
-        <div class="text-right main-button ">
-          <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales() || tarjetaGenerales == '2' || disabledAction"
-            pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="!isLetrado" (click)="comprobarAuditoria('guardarDatosGenerales')" [disabled]="(tarjetaGenerales == 2) || disabledAction || !activacionGuardarGenerales()"
-            pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button *ngIf="isLetrado" (click)="comprobarAuditoria('solicitudModificacion')" [(disabled)]="!activarGuardarGenerales || tarjetaGenerales == '2' || disabledAction"
-            pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
-          <!--
+        <div *ngIf="esFichaActiva('generales')" class="card-footer ">
+          <div class="text-right main-button ">
+            <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales() || tarjetaGenerales == '2' || disabledAction"
+              pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button *ngIf="!isLetrado" (click)="comprobarAuditoria('guardarDatosGenerales')" [disabled]="(tarjetaGenerales == 2) || disabledAction || !activacionGuardarGenerales()"
+              pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button *ngIf="isLetrado" (click)="comprobarAuditoria('solicitudModificacion')" [(disabled)]="!activarGuardarGenerales || tarjetaGenerales == '2' || disabledAction"
+              pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+            <!--
           <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         -->
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- END DATOS GENERALES -->
-  <div id="datosCol">
-    <!-- FICHA DATOS COLEGIALES -->
-    <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="far fa-address-book icon-ficha"></i>
-            </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('colegiales')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
-              </label>
-              <!-- <label class="registros-ficha">(0 registros)</label> -->
-            </div>
-            <div class="d-flex justify-content-between">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
-                <span>{{ colegialesBody.colegioResultado }}</span>
-              </label>
-              <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}
-                <span>{{ colegialesBody.estadoColegial }}</span>
-              </label>
-              <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
-                <span>{{ colegialesBody.numColegiado }}</span>
-              </label>
-              <label>{{ "censo.ws.literal.residente" | translate }}
-                <span>{{ residente }}</span>
-              </label>
-              <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }}
-                <span>{{ inscrito }}</span>
-              </label>
-              <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }}
-                <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
-                <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
-              </label>
-              <i (click)="abreCierraFicha('colegiales')" *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="esFichaActiva('colegiales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha"></i>
-          </div>
-          <label (click)="abreCierraFicha('colegiales')" class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
-          </label>
-          <i (click)="abreCierraFicha('colegiales')" class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
-      <!-- cuerpo -->
-
-      <div *ngIf="esFichaActiva('colegiales')" class="card-body card-body-ficha">
-        <div class="row">
-          <div class="bloque col-lg-12 col-md-12 col-sm-12">
-            <div class="form-row">
-              <!-- <div class="form-group col-lg-3 col-md-3" [hidden]="!esColegiado">
-              <label>{{ "censo.fichaCliente.situacion.cabecera" | translate }} (*)</label>
-              <p-dropdown class="select-form" [options]="comboSituacion" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="colegialesBody.situacion"></p-dropdown>
-            </div> -->
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-                <input [(ngModel)]="colegialesBody.colegioResultado" [disabled]="true" type="text" class="form-control" pInputText />
-              </div>
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }} (*)</label>
-                <input *ngIf="activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="tarjetaColegiales == '2' || disabledAction || disableNumColegiado"
-                  (ngModelChange)="activacionGuardarColegiales()" type="text" class="col-lg-10 col-md-10" [maxLength]="20"
-                  pInputText/>
-                <!-- <label class="form-control col-lg-1 col-md-1">a</label> -->
-                <i *ngIf="!disableNumColegiado && activateNumColegiado" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true"
-                  (click)="disableEnableNumCol()"></i>
-                <i *ngIf="disableNumColegiado && activateNumColegiado" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumCol()"></i>
-                <input *ngIf="!activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" disabled (ngModelChange)="activacionGuardarColegiales()"
-                  type="text" [maxLength]="20" class="form-control" pInputText/>
-                <div *ngIf="identificacionValida == false">
-                  <label class="labelError">{{ "El documento es inválido" }}
-                  </label>
-                </div>
-              </div>
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
-                <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
-                  [(ngModel)]="colegialesBody.idTiposSeguro" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                  [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  [options]="comboTipoSeguro"></p-dropdown>
-              </div>
-              <div class="form-group col-lg-3 col-md-3 form-group-date">
-                <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
-                </label>
-                <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
-                  (ngModelChange)="activacionGuardarColegiales()" [maxLength]="100" pInputText />
-                <div *ngIf="!numMutualistaCheck()">
-                  <label class="labelError">{{ "censo.ws.literal.soloNumeros" | translate }}
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }} (*)</label>
-                <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-                  [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
-                  (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
-                  dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
-                  <p-footer>
-                    <div class="main-button d-flex col-lg-12">
-                      <button (click)="fechaHoyFechaIncorporacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                      <button (click)="borrarFechaIncorporacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
-                    </div>
-                  </p-footer>
-                </p-calendar>
-              </div>
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }} (*)</label>
-                <p-calendar [monthNavigator]="true" #calendarFechaPresentacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-                  (onSelect)="activacionGuardarColegiales(); fechaPresentacionSelected=true" (onInput)="inputFechaPresentacion($event)"
-                  (onBlur)="blurFechaPresentacion($event)" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
-                  [(ngModel)]="colegialesBody.fechapresentacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-                  [utc]="false">
-                  <p-footer>
-                    <div class="main-button d-flex col-lg-12">
-                      <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                      <button (click)="borrarFechaPresentacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
-                    </div>
-                  </p-footer>
-                </p-calendar>
-              </div>
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
-                <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
-                  (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
-                  (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura"
-                  dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
-                  <p-footer>
-                    <div class="main-button d-flex col-lg-12">
-                      <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                      <button (click)="borrarFechaJura()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
-                    </div>
-                  </p-footer>
-                </p-calendar>
-              </div>
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.consultaDatosColegiales.literal.fechaTitulacion" | translate }}
-                </label>
-                <p-calendar [monthNavigator]="true" #calendarFechaTitulacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-                  [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
-                  (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
-                  dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
-                  <p-footer>
-                    <div class="main-button d-flex col-lg-12">
-                      <button (click)="fechaHoyFechaTitulacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                      <button (click)="borrarFechaTitulacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
-                    </div>
-                  </p-footer>
-                </p-calendar>
-              </div>
-              <div class="form-group col-lg-3 col-md-3">
-                <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }} (*)</label>
-                <!--
-                <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
-              -->
-                <p-dropdown class="select-form" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
-                  filterBy="label,labelSinTilde" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)"
-                  [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled || isLetrado" [(ngModel)]="inscritoSeleccionado"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
-              </div>
-            </div>
-          </div>
-        </div>
-        <br />
-
-        <p-dataTable *ngIf="!isLetrado" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
-          (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)" [(selection)]="selectedDatosColegiales"
-          pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
-          [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
-          rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
-
-          <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsColegiales[0].header | translate"
-            [filter]="true" filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-              <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length > 9">{{car[col.field]}}</span>
-              <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
-              <app-fecha *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(value)]="nuevoEstadoColegial.fechaEstadoStr"
-                [minDate]="fechaMinimaEstadoColegial" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
-                (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
-              <app-fecha *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-                [(value)]="car[col.field]" [minDate]="fechaMinimaEstadoColegialMod" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
-                (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
-            </ng-template>
-
-          </p-column>
-
-          <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-              <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
-              <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(ngModel)]="nuevoEstadoColegial.situacion"
-                [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
-                filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-              <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-                [(ngModel)]="datosColegiales[rowIndex].idEstado" [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
-                placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-            </ng-template>
-          </p-column>
-
-          <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-              <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
-              <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') && datosColegiales[rowIndex].isMod == true"
-                [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
-                placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-              <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-                [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
-                placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-            </ng-template>
-          </p-column>
-
-          <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-              <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && !datosColegiales[rowIndex].habilitarObs">{{car[col.field]}}</span>
-              <input *ngIf="datosColegiales[rowIndex].nuevoRegistro" [(ngModel)]="nuevoEstadoColegial.observaciones" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()"
-                pInputText />
-              <input *ngIf="datosColegiales[rowIndex].habilitarObs || (datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable)"
-                [(ngModel)]="car[col.field]" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()" pInputText
-              />
-            </ng-template>
-          </p-column>
-
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first
-                + 1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                | translate }} {{ tableColegiales.totalRecords }}
-              </label>
-
-              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales
-                }}</label>
-
-              <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
-              <label class="pl-1">
-                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-              </label>
-            </div>
-          </ng-template>
-        </p-dataTable>
-
-        <p-dataTable *ngIf="isLetrado" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
-          (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)" [(selection)]="selectedDatosColegiales"
-          pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
-          [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
-          rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
-
-          <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsColegiales[0].header | translate"
-            [filter]="true" filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span *ngIf="car[col.field].length > 9">{{car[col.field]}}</span>
-              <span *ngIf="car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
-            </ng-template>
-
-          </p-column>
-
-          <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span>{{car[col.field]}}</span>
-            </ng-template>
-          </p-column>
-
-          <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span>{{car[col.field]}}</span>
-            </ng-template>
-          </p-column>
-
-          <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-            filterMatchMode="contains">
-            <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-              <span>{{car[col.field]}}</span>
-            </ng-template>
-          </p-column>
-
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first
-                + 1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                | translate }} {{ tableColegiales.totalRecords }}
-              </label>
-
-              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales
-                }}</label>
-
-              <label>{{ "general.message.mostrar" | translate }}</label>
-              <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
-              <label class="pl-1">
-                {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-              </label>
-            </div>
-          </ng-template>
-        </p-dataTable>
-
-      </div>
-
-      <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
-        <div class="text-right main-button ">
-          <button [disabled]="!activarRestablecerColegiales() || isLetrado || !isRestablecer || disabledAction || tarjetaColegiales=='2'"
-            (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button (click)="callConfirmationServiceDelete(selectedDatosColegiales)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2' || isLetrado || datosColegiales.length <= 1"
-            pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button *ngIf="!inscritoChange" (click)="comprobarTurnosGuardias('guardarDatosColegiales')" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2' || isLetrado"
-            pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button *ngIf="inscritoChange" (click)="comprobarTurnosGuardias('guardarDatosColegiales')" pButton type="button" [disabled]="isLetrado"
-            icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button (click)="nuevoColegial()" [disabled]="isCrearColegial || disabledAction || tarjetaColegiales=='2' || isLetrado" pButton
-            type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-        </div>
-      </div>
-    </div>
-    <!-- END DATOS COLEGIALES -->
-  </div>
-  <div id="otrasColegiaciones">
-    <!-- FICHA OTRAS COLEGIACIONES -->
-    <div *ngIf="(tarjetaOtrasColegiaciones == '3' || tarjetaOtrasColegiaciones == '2') && esColegiado" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fa fa-graduation-cap icon-ficha"></i>
-            </div>
-          </div>
-          <div class="col-lg-11 col-md-6">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('colegiaciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
-              </label>
-              <!-- <label class="registros-ficha">(0 registros)</label> -->
-            </div>
-            <div class="d-flex justify-content-between">
-              <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
-                <span>{{ datosColegiaciones.length }}</span>
-              </label>
-              <i (click)="abreCierraFicha('colegiaciones')" *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="esFichaActiva('colegiaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-graduation-cap icon-ficha"></i>
-          </div>
-          <label (click)="abreCierraFicha('colegiaciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
-          </label>
-          <i (click)="abreCierraFicha('colegiaciones')" class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
-      <!-- cuerpo -->
-
-      <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
-        <div class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" dataKey="movil" [responsive]="true"
-            #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
-            paginatorPosition="both" [rows]="selectedItemColegiaciones">
-            <p-column *ngFor="let col of colsColegiaciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <span *ngIf="setItalic(datoH)" [ngStyle]="{
-                  'font-style': 'italic',
-                  'font-weight': 'bold',
-                  'text-decoration': 'line-through'
-                }">{{ datoH[col.field] }}</span>
-                <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
-              </ng-template>
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiaciones.first
-                  + 1 }} al {{ tableColegiaciones.first + tableColegiaciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                  | translate }} {{ tableColegiaciones.totalRecords }}
-                </label>
-                <!--
-                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
-              -->
-                <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItemColegiaciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiaciones($event)"></p-dropdown>
-                <label class="pl-1">
-                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-                </label>
-              </div>
-            </ng-template>
-          </p-dataTable>
-        </div>
-        <br />
-      </div>
-
-      <div *ngIf="esFichaActiva('colegiaciones')" class="card-footer "></div>
-    </div>
-  </div>
-  <!-- END FICHA OTRAS COLEGIACIONES -->
-
-  <!-- FICHA CERTIFICADOS -->
-  <div id="certif">
-    <div *ngIf="tarjetaCertificados == '3' || tarjetaCertificados == '2'" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('certificados')" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fa fa-certificate icon-ficha"></i>
-            </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('certificados')" class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
-              </label>
-              <!-- <label class="registros-ficha">(0 registros)</label> -->
-            </div>
-            <div class="d-flex justify-content-between">
-              <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
-                <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
-              </label>
-
-              <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
-                <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
-              </label>
-
-              <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
-                <span>{{ datosCertificados.length }}</span>
-              </label>
-              <i (click)="abreCierraFicha('certificados')" *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="esFichaActiva('certificados')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-certificate icon-ficha"></i>
-          </div>
-          <label (click)="abreCierraFicha('certificados')" class="title-ficha">{{ "menu.certificados" | translate }}</label>
-          <i (click)="abreCierraFicha('certificados')" class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
-      <!-- cuerpo -->
-
-      <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
-        <div class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCertificados" pageLinks="4"
-            dataKey="idSolicitud" [responsive]="true" selectionMode="multiple" #tableCertificados class="tabla-listado tableCertificados"
-            [value]="datosCertificados" [sortOrder]="1" [paginator]="activarPaginacionCertificados()" paginatorPosition="both"
-            [rows]="selectedItemCertificados">
-            <p-column *ngFor="let col of colsCertificados" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <span *ngIf="setItalic(datoH)" [ngStyle]="{
-                  'font-style': 'italic',
-                  'font-weight': 'bold',
-                  'text-decoration': 'line-through'
-                }">{{ datoH[col.field] }}</span>
-                <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
-              </ng-template>
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCertificados.first
-                  + 1 }} al {{ tableCertificados.first + tableCertificados.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                  | translate }} {{ tableCertificados.totalRecords }}</label>
-                <!--
-                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
-              -->
-                <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItemCertificados" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCertificados($event)"></p-dropdown>
-                <label class="pl-1">
-                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-                </label>
-              </div>
-            </ng-template>
-          </p-dataTable>
-        </div>
-        <br />
-      </div>
-      <div *ngIf="esFichaActiva('certificados')" class="card-footer "></div>
-    </div>
-  </div>
-  <!-- END FICHA CERTIFICADOS -->
-
-  <!-- FICHA SANCIONES -->
-  <div id="sancio">
-    <div *ngIf="!esNewColegiado">
-      <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
+    <!-- END DATOS GENERALES -->
+    <div id="datosCol">
+      <!-- FICHA DATOS COLEGIALES -->
+      <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
         <div class="card-header header-ficha">
-          <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
+          <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
             <div class="col-lg-1 col-md-2">
               <div class="img-colegiado">
-                <i class="fa fa-gavel icon-ficha"></i>
+                <i class="far fa-address-book icon-ficha"></i>
               </div>
             </div>
             <div class="col-lg-11 col-md-10">
               <div class="d-flex justify-content-start mb-1">
-                <label (click)="abreCierraFicha('sanciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+                <label (click)="abreCierraFicha('colegiales')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
                 </label>
                 <!-- <label class="registros-ficha">(0 registros)</label> -->
               </div>
               <div class="d-flex justify-content-between">
-                <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
-                  <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
+                <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+                  <span>{{ colegialesBody.colegioResultado }}</span>
                 </label>
-
-                <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
-                  <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
+                <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}
+                  <span>{{ colegialesBody.estadoColegial }}</span>
                 </label>
-
-                <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
-                  <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
+                <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+                  <span>{{ colegialesBody.numColegiado }}</span>
                 </label>
-
-                <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
-                  <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
+                <label>{{ "censo.ws.literal.residente" | translate }}
+                  <span>{{ residente }}</span>
                 </label>
-
-                <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
-                  <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
+                <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }}
+                  <span>{{ inscrito }}</span>
                 </label>
-                <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
+                <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }}
+                  <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
+                  <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
+                </label>
+                <i (click)="abreCierraFicha('colegiales')" *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
               </div>
             </div>
           </div>
-          <div *ngIf="esFichaActiva('sanciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div *ngIf="esFichaActiva('colegiales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
             <div class="img-colegiado">
-              <i class="fa fa-gavel icon-ficha"></i>
+              <i class="far fa-address-book icon-ficha"></i>
             </div>
-            <label (click)="abreCierraFicha('sanciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
-            <i (click)="abreCierraFicha('sanciones')" class="fa fa-angle-up ml-auto"></i>
+            <label (click)="abreCierraFicha('colegiales')" class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+            </label>
+            <i (click)="abreCierraFicha('colegiales')" class="fa fa-angle-up ml-auto"></i>
           </div>
         </div>
         <!-- cuerpo -->
 
-        <div *ngIf="esFichaActiva('sanciones')" class="card-body card-body-ficha">
+        <div *ngIf="esFichaActiva('colegiales')" class="card-body card-body-ficha">
           <div class="row">
-            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-              [(selection)]="selectedDatosSanciones" pageLinks="4" [responsive]="true" selectionMode="single" #tableSanciones
-              class="tabla-listado" [value]="dataSanciones" [sortOrder]="sortO" [paginator]="enablePagination()" paginatorPosition="both"
-              [rows]="selectedItemSanciones">
-              <p-column *ngFor="let col of colsSanciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+            <div class="bloque col-lg-12 col-md-12 col-sm-12">
+              <div class="form-row">
+                <!-- <div class="form-group col-lg-3 col-md-3" [hidden]="!esColegiado">
+              <label>{{ "censo.fichaCliente.situacion.cabecera" | translate }} (*)</label>
+              <p-dropdown class="select-form" [options]="comboSituacion" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="colegialesBody.situacion"></p-dropdown>
+            </div> -->
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
+                  <input [(ngModel)]="colegialesBody.colegioResultado" [disabled]="true" type="text" class="form-control" pInputText />
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }} (*)</label>
+                  <input *ngIf="activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="tarjetaColegiales == '2' || disabledAction || disableNumColegiado"
+                    (ngModelChange)="activacionGuardarColegiales()" type="text" class="col-lg-10 col-md-10" [maxLength]="20"
+                    pInputText/>
+                  <!-- <label class="form-control col-lg-1 col-md-1">a</label> -->
+                  <i *ngIf="!disableNumColegiado && activateNumColegiado" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true"
+                    (click)="disableEnableNumCol()"></i>
+                  <i *ngIf="disableNumColegiado && activateNumColegiado" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumCol()"></i>
+                  <input *ngIf="!activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" disabled (ngModelChange)="activacionGuardarColegiales()"
+                    type="text" [maxLength]="20" class="form-control" pInputText/>
+                  <div *ngIf="identificacionValida == false">
+                    <label class="labelError">{{ "El documento es inválido" }}
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
+                  <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
+                    [(ngModel)]="colegialesBody.idTiposSeguro" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                    [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+                    [options]="comboTipoSeguro"></p-dropdown>
+                </div>
+                <div class="form-group col-lg-3 col-md-3 form-group-date">
+                  <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
+                  </label>
+                  <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
+                    (ngModelChange)="activacionGuardarColegiales()" [maxLength]="100" pInputText />
+                  <div *ngIf="!numMutualistaCheck()">
+                    <label class="labelError">{{ "censo.ws.literal.soloNumeros" | translate }}
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }} (*)</label>
+                  <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
+                    [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
+                    (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
+                    dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                    <p-footer>
+                      <div class="main-button d-flex col-lg-12">
+                        <button (click)="fechaHoyFechaIncorporacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                        <button (click)="borrarFechaIncorporacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                      </div>
+                    </p-footer>
+                  </p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }} (*)</label>
+                  <p-calendar [monthNavigator]="true" #calendarFechaPresentacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
+                    (onSelect)="activacionGuardarColegiales(); fechaPresentacionSelected=true" (onInput)="inputFechaPresentacion($event)"
+                    (onBlur)="blurFechaPresentacion($event)" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+                    [(ngModel)]="colegialesBody.fechapresentacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
+                    [utc]="false">
+                    <p-footer>
+                      <div class="main-button d-flex col-lg-12">
+                        <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                        <button (click)="borrarFechaPresentacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                      </div>
+                    </p-footer>
+                  </p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
+                  <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+                    (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
+                    (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura"
+                    dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                    <p-footer>
+                      <div class="main-button d-flex col-lg-12">
+                        <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                        <button (click)="borrarFechaJura()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                      </div>
+                    </p-footer>
+                  </p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.consultaDatosColegiales.literal.fechaTitulacion" | translate }}
+                  </label>
+                  <p-calendar [monthNavigator]="true" #calendarFechaTitulacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
+                    [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
+                    (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
+                    dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+                    <p-footer>
+                      <div class="main-button d-flex col-lg-12">
+                        <button (click)="fechaHoyFechaTitulacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                        <button (click)="borrarFechaTitulacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                      </div>
+                    </p-footer>
+                  </p-calendar>
+                </div>
+                <div class="form-group col-lg-3 col-md-3">
+                  <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }} (*)</label>
+                  <!--
+                <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
+              -->
+                  <p-dropdown class="select-form" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+                    filterBy="label,labelSinTilde" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)"
+                    [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled || isLetrado" [(ngModel)]="inscritoSeleccionado"
+                    placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+
+          <p-dataTable *ngIf="!isLetrado" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
+            (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)" [(selection)]="selectedDatosColegiales"
+            pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
+            [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
+            rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
+
+            <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsColegiales[0].header | translate"
+              [filter]="true" filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+                <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length > 9">{{car[col.field]}}</span>
+                <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+                <app-fecha *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(value)]="nuevoEstadoColegial.fechaEstadoStr"
+                  [minDate]="fechaMinimaEstadoColegial" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
+                  (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
+                <app-fecha *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
+                  [(value)]="car[col.field]" [minDate]="fechaMinimaEstadoColegialMod" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
+                  (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
+              </ng-template>
+
+            </p-column>
+
+            <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+                <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
+                <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(ngModel)]="nuevoEstadoColegial.situacion"
+                  [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+                  filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+                <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
+                  [(ngModel)]="datosColegiales[rowIndex].idEstado" [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+              </ng-template>
+            </p-column>
+
+            <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+                <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
+                <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') && datosColegiales[rowIndex].isMod == true"
+                  [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+                <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
+                  [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+              </ng-template>
+            </p-column>
+
+            <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+                <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && !datosColegiales[rowIndex].habilitarObs">{{car[col.field]}}</span>
+                <input *ngIf="datosColegiales[rowIndex].nuevoRegistro" [(ngModel)]="nuevoEstadoColegial.observaciones" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()"
+                  pInputText />
+                <input *ngIf="datosColegiales[rowIndex].habilitarObs || (datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable)"
+                  [(ngModel)]="car[col.field]" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()" pInputText
+                />
+              </ng-template>
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first
+                  + 1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{ tableColegiales.totalRecords }}
+                </label>
+
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales
+                  }}
+                </label>
+
+                <label>{{ "general.message.mostrar" | translate }}</label>
+                <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
+                <label class="pl-1">
+                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                </label>
+              </div>
+            </ng-template>
+          </p-dataTable>
+
+          <p-dataTable *ngIf="isLetrado" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
+            (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)" [(selection)]="selectedDatosColegiales"
+            pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
+            [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
+            rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
+
+            <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsColegiales[0].header | translate"
+              [filter]="true" filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span *ngIf="car[col.field].length > 9">{{car[col.field]}}</span>
+                <span *ngIf="car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </ng-template>
+
+            </p-column>
+
+            <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span>{{car[col.field]}}</span>
+              </ng-template>
+            </p-column>
+
+            <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span>{{car[col.field]}}</span>
+              </ng-template>
+            </p-column>
+
+            <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains">
+              <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                <span>{{car[col.field]}}</span>
+              </ng-template>
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first
+                  + 1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                  | translate }} {{ tableColegiales.totalRecords }}
+                </label>
+
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales
+                  }}
+                </label>
+
+                <label>{{ "general.message.mostrar" | translate }}</label>
+                <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
+                <label class="pl-1">
+                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                </label>
+              </div>
+            </ng-template>
+          </p-dataTable>
+
+        </div>
+
+        <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
+          <div class="text-right main-button ">
+            <button [disabled]="!activarRestablecerColegiales() || isLetrado || !isRestablecer || disabledAction || tarjetaColegiales=='2'"
+              (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+            <button (click)="callConfirmationServiceDelete(selectedDatosColegiales)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2' || isLetrado || datosColegiales.length <= 1"
+              pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+            <button *ngIf="!inscritoChange" (click)="comprobarTurnosGuardias('guardarDatosColegiales')" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2' || isLetrado"
+              pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button *ngIf="inscritoChange" (click)="comprobarTurnosGuardias('guardarDatosColegiales')" pButton type="button" [disabled]="isLetrado"
+              icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button (click)="nuevoColegial()" [disabled]="isCrearColegial || disabledAction || tarjetaColegiales=='2' || isLetrado" pButton
+              type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          </div>
+        </div>
+      </div>
+      <!-- END DATOS COLEGIALES -->
+    </div>
+    <div id="otrasColegiaciones">
+      <!-- FICHA OTRAS COLEGIACIONES -->
+      <div *ngIf="(tarjetaOtrasColegiaciones == '3' || tarjetaOtrasColegiaciones == '2') && esColegiado" class="card">
+        <div class="card-header header-ficha">
+          <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-graduation-cap icon-ficha"></i>
+              </div>
+            </div>
+            <div class="col-lg-11 col-md-6">
+              <div class="d-flex justify-content-start mb-1">
+                <label (click)="abreCierraFicha('colegiaciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+                </label>
+                <!-- <label class="registros-ficha">(0 registros)</label> -->
+              </div>
+              <div class="d-flex justify-content-between">
+                <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
+                  <span>{{ datosColegiaciones.length }}</span>
+                </label>
+                <i (click)="abreCierraFicha('colegiaciones')" *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="esFichaActiva('colegiaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+              <i class="fa fa-graduation-cap icon-ficha"></i>
+            </div>
+            <label (click)="abreCierraFicha('colegiaciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+            </label>
+            <i (click)="abreCierraFicha('colegiaciones')" class="fa fa-angle-up ml-auto"></i>
+          </div>
+        </div>
+        <!-- cuerpo -->
+
+        <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
+          <div class="row">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" dataKey="movil" [responsive]="true"
+              #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
+              paginatorPosition="both" [rows]="selectedItemColegiaciones">
+              <p-column *ngFor="let col of colsColegiaciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <span *ngIf="setItalic(datoH)" [ngStyle]="{
+                  'font-style': 'italic',
+                  'font-weight': 'bold',
+                  'text-decoration': 'line-through'
+                }">{{ datoH[col.field] }}</span>
+                  <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
+                </ng-template>
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiaciones.first
+                    + 1 }} al {{ tableColegiaciones.first + tableColegiaciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                    | translate }} {{ tableColegiaciones.totalRecords }}
+                  </label>
+                  <!--
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
+              -->
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown [(ngModel)]="selectedItemColegiaciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiaciones($event)"></p-dropdown>
+                  <label class="pl-1">
+                    {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                  </label>
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+          <br />
+        </div>
+
+        <div *ngIf="esFichaActiva('colegiaciones')" class="card-footer "></div>
+      </div>
+    </div>
+    <!-- END FICHA OTRAS COLEGIACIONES -->
+
+    <!-- FICHA CERTIFICADOS -->
+    <div id="certif">
+      <div *ngIf="tarjetaCertificados == '3' || tarjetaCertificados == '2'" class="card">
+        <div class="card-header header-ficha">
+          <div *ngIf="!esFichaActiva('certificados')" class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-certificate icon-ficha"></i>
+              </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-start mb-1">
+                <label (click)="abreCierraFicha('certificados')" class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
+                </label>
+                <!-- <label class="registros-ficha">(0 registros)</label> -->
+              </div>
+              <div class="d-flex justify-content-between">
+                <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
+                  <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
+                </label>
+
+                <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
+                  <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
+                </label>
+
+                <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
+                  <span>{{ datosCertificados.length }}</span>
+                </label>
+                <i (click)="abreCierraFicha('certificados')" *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="esFichaActiva('certificados')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+              <i class="fa fa-certificate icon-ficha"></i>
+            </div>
+            <label (click)="abreCierraFicha('certificados')" class="title-ficha">{{ "menu.certificados" | translate }}</label>
+            <i (click)="abreCierraFicha('certificados')" class="fa fa-angle-up ml-auto"></i>
+          </div>
+        </div>
+        <!-- cuerpo -->
+
+        <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
+          <div class="row">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCertificados" pageLinks="4"
+              dataKey="idSolicitud" [responsive]="true" selectionMode="multiple" #tableCertificados class="tabla-listado tableCertificados"
+              [value]="datosCertificados" [sortOrder]="1" [paginator]="activarPaginacionCertificados()" paginatorPosition="both"
+              [rows]="selectedItemCertificados">
+              <p-column *ngFor="let col of colsCertificados" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <span *ngIf="setItalic(datoH)" [ngStyle]="{
+                  'font-style': 'italic',
+                  'font-weight': 'bold',
+                  'text-decoration': 'line-through'
+                }">{{ datoH[col.field] }}</span>
+                  <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
+                </ng-template>
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCertificados.first
+                    + 1 }} al {{ tableCertificados.first + tableCertificados.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                    | translate }} {{ tableCertificados.totalRecords }}</label>
+                  <!--
+                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
+              -->
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown [(ngModel)]="selectedItemCertificados" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCertificados($event)"></p-dropdown>
+                  <label class="pl-1">
+                    {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                  </label>
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+          <br />
+        </div>
+        <div *ngIf="esFichaActiva('certificados')" class="card-footer "></div>
+      </div>
+    </div>
+    <!-- END FICHA CERTIFICADOS -->
+
+    <!-- FICHA SANCIONES -->
+    <div id="sancio">
+      <div *ngIf="!esNewColegiado">
+        <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
+          <div class="card-header header-ficha">
+            <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
+              <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                  <i class="fa fa-gavel icon-ficha"></i>
+                </div>
+              </div>
+              <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                  <label (click)="abreCierraFicha('sanciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+                  </label>
+                  <!-- <label class="registros-ficha">(0 registros)</label> -->
+                </div>
+                <div class="d-flex justify-content-between">
+                  <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
+                    <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
+                  </label>
+
+                  <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
+                    <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
+                  </label>
+
+                  <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
+                    <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
+                  </label>
+
+                  <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
+                    <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
+                  </label>
+
+                  <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+                    <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
+                  </label>
+                  <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="esFichaActiva('sanciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+              <div class="img-colegiado">
+                <i class="fa fa-gavel icon-ficha"></i>
+              </div>
+              <label (click)="abreCierraFicha('sanciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
+              <i (click)="abreCierraFicha('sanciones')" class="fa fa-angle-up ml-auto"></i>
+            </div>
+          </div>
+          <!-- cuerpo -->
+
+          <div *ngIf="esFichaActiva('sanciones')" class="card-body card-body-ficha">
+            <div class="row">
+              <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
+                [(selection)]="selectedDatosSanciones" pageLinks="4" [responsive]="true" selectionMode="single" #tableSanciones
+                class="tabla-listado" [value]="dataSanciones" [sortOrder]="sortO" [paginator]="enablePagination()" paginatorPosition="both"
+                [rows]="selectedItemSanciones">
+                <p-column *ngFor="let col of colsSanciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                  [filter]="true" filterMatchMode="contains">
+                </p-column>
+
+                <ng-template pTemplate="paginatorLeft">
+                  <div class="mostrar d-flex text-right justify-content-end">
+                    <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableSanciones.first
+                      + 1}} al {{tableSanciones.first + tableSanciones.rows}} de un total de {{tableSanciones.totalRecords}}
+                    </label>
+                    <label>{{ "general.message.mostrar" | translate}}</label>
+                    <p-dropdown [(ngModel)]="selectedItemSanciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSanciones($event)"></p-dropdown>
+                    <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                  </div>
+                </ng-template>
+
+
+
+              </p-dataTable>
+
+            </div>
+            <br />
+          </div>
+          <div *ngIf="esFichaActiva('sanciones')" class="card-footer "></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- END FICHA SANCIONES -->
+    <!-- FICHA SOCIEDADES -->
+    <div id="socied">
+      <div *ngIf="tarjetaSociedades == '3' || tarjetaSociedades == '2'" class="card">
+        <div class="card-header header-ficha">
+          <div *ngIf="!esFichaActiva('sociedades')" class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-briefcase icon-ficha"></i>
+              </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-start mb-1">
+                <label (click)="abreCierraFicha('sociedades')" class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+                </label>
+                <!-- <label class="registros-ficha">(0 registros)</label> -->
+              </div>
+              <div class="d-flex justify-content-between">
+
+                <label>{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
+                  <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.nif }}</span>
+                </label>
+
+                <label>{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
+                  <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.tipoSociedad }}</span>
+                </label>
+
+                <label>{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
+                  <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.denominacion }}</span>
+                </label>
+
+                <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
+                  <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
+                </label>
+
+                <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
+                  <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
+                </label>
+                <i (click)="abreCierraFicha('sociedades')" *ngIf="!esFichaActiva('sociedades')" class="fa fa-angle-down float-right"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="esFichaActiva('sociedades')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+              <i class="fa fa-briefcase icon-ficha"></i>
+            </div>
+            <label (click)="abreCierraFicha('sociedades')" class="title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+            </label>
+            <i (click)="abreCierraFicha('sociedades')" class="fa fa-angle-up ml-auto"></i>
+          </div>
+        </div>
+        <div *ngIf="esFichaActiva('sociedades')" class="card-body card-body-ficha">
+          <div class="row">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosSociedades" pageLinks="4"
+              dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableSociedades class="tabla-listado" [value]="datosSociedades"
+              [sortOrder]="1" [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItemSociedades"
+              (onRowSelect)="redireccionarSociedades(selectedDatosSociedades)">
+              <p-column *ngFor="let col of colsSociedades" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
                 [filter]="true" filterMatchMode="contains">
               </p-column>
 
               <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
-                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableSanciones.first
-                    + 1}} al {{tableSanciones.first + tableSanciones.rows}} de un total de {{tableSanciones.totalRecords}}
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableSociedades.first
+                    + 1 }} al {{ tableSociedades.first + tableSociedades.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                    | translate }} {{ tableSociedades.totalRecords }}</label>
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown [(ngModel)]="selectedItemSociedades" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSociedades($event)"></p-dropdown>
+                  <label class="pl-1">
+                    {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
                   </label>
-                  <label>{{ "general.message.mostrar" | translate}}</label>
-                  <p-dropdown [(ngModel)]="selectedItemSanciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSanciones($event)"></p-dropdown>
-                  <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
                 </div>
               </ng-template>
-
-
-
             </p-dataTable>
-
           </div>
           <br />
         </div>
-        <div *ngIf="esFichaActiva('sanciones')" class="card-footer "></div>
+        <div *ngIf="esFichaActiva('sociedades')" class="card-footer">
+          <div class="text-right main-button "></div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- END FICHA SANCIONES -->
-  <!-- FICHA SOCIEDADES -->
-  <div id="socied">
-    <div *ngIf="tarjetaSociedades == '3' || tarjetaSociedades == '2'" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('sociedades')" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fa fa-briefcase icon-ficha"></i>
-            </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('sociedades')" class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
-              </label>
-              <!-- <label class="registros-ficha">(0 registros)</label> -->
-            </div>
-            <div class="d-flex justify-content-between">
-
-              <label>{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
-                <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.nif }}</span>
-              </label>
-
-              <label>{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
-                <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.tipoSociedad }}</span>
-              </label>
-
-              <label>{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
-                <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.denominacion }}</span>
-              </label>
-
-              <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
-                <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
-              </label>
-
-              <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
-                <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
-              </label>
-              <i (click)="abreCierraFicha('sociedades')" *ngIf="!esFichaActiva('sociedades')" class="fa fa-angle-down float-right"></i>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="esFichaActiva('sociedades')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-briefcase icon-ficha"></i>
-          </div>
-          <label (click)="abreCierraFicha('sociedades')" class="title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
-          </label>
-          <i (click)="abreCierraFicha('sociedades')" class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
-      <div *ngIf="esFichaActiva('sociedades')" class="card-body card-body-ficha">
-        <div class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosSociedades" pageLinks="4"
-            dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableSociedades class="tabla-listado" [value]="datosSociedades"
-            [sortOrder]="1" [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItemSociedades"
-            (onRowSelect)="redireccionarSociedades(selectedDatosSociedades)">
-            <p-column *ngFor="let col of colsSociedades" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableSociedades.first
-                  + 1 }} al {{ tableSociedades.first + tableSociedades.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                  | translate }} {{ tableSociedades.totalRecords }}</label>
-                <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItemSociedades" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSociedades($event)"></p-dropdown>
-                <label class="pl-1">
-                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-                </label>
+    <!-- END FICHA SOCIEDADES -->
+    <!-- FICHA DATOS CURRICULARES -->
+    <div id="datosCurriculares">
+      <div *ngIf="tarjetaCurriculares == '3' || tarjetaCurriculares == '2'" class="card">
+        <div class="card-header header-ficha">
+          <div *ngIf="!esFichaActiva('curriculares')" class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-paperclip icon-ficha"></i>
               </div>
-            </ng-template>
-          </p-dataTable>
-        </div>
-        <br />
-      </div>
-      <div *ngIf="esFichaActiva('sociedades')" class="card-footer">
-        <div class="text-right main-button "></div>
-      </div>
-    </div>
-  </div>
-  <!-- END FICHA SOCIEDADES -->
-  <!-- FICHA DATOS CURRICULARES -->
-  <div id="datosCurriculares">
-    <div *ngIf="tarjetaCurriculares == '3' || tarjetaCurriculares == '2'" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('curriculares')" class="form-row">
-          <div class="col-lg-1 col-md-2">
+            </div>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-start mb-1">
+                <label (click)="abreCierraFicha('curriculares')" class="mr-auto title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
+                </label>
+                <!-- <label class="registros-ficha">(0 registros)</label> -->
+              </div>
+              <div class="d-flex justify-content-between">
+                <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}:
+                  <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.categoriaCurricular }}</span>
+                </label>
+
+                <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}:
+                  <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.tipoSubtipo }}</span>
+                </label>
+
+                <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}:
+                  <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde}}</span>
+                </label>
+
+                <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
+                  <span>{{ datosCurriculares.length }}</span>
+                </label>
+                <i (click)="abreCierraFicha('curriculares')" *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="esFichaActiva('curriculares')" class=" header-ficha-open d-flex justify-content-start align-items-center">
             <div class="img-colegiado">
               <i class="fa fa-paperclip icon-ficha"></i>
             </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('curriculares')" class="mr-auto title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
-              </label>
-              <!-- <label class="registros-ficha">(0 registros)</label> -->
-            </div>
-            <div class="d-flex justify-content-between">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}:
-                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.categoriaCurricular }}</span>
-              </label>
-
-              <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}:
-                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.tipoSubtipo }}</span>
-              </label>
-
-              <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}:
-                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde}}</span>
-              </label>
-
-              <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
-                <span>{{ datosCurriculares.length }}</span>
-              </label>
-              <i (click)="abreCierraFicha('curriculares')" *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
-            </div>
+            <label (click)="abreCierraFicha('curriculares')" class="title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
+            </label>
+            <i (click)="abreCierraFicha('curriculares')" class="fa fa-angle-up ml-auto"></i>
           </div>
         </div>
-        <div *ngIf="esFichaActiva('curriculares')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-paperclip icon-ficha"></i>
-          </div>
-          <label (click)="abreCierraFicha('curriculares')" class="title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
-          </label>
-          <i (click)="abreCierraFicha('curriculares')" class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
 
-      <!-- cuerpo -->
+        <!-- cuerpo -->
 
-      <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
-        <div class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCurriculares" pageLinks="4"
-            [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }" selectionMode="multiple" #tableCurriculares
-            class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()"
-            paginatorPosition="both" [rows]="selectedItemCurriculares" (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)"
-            (onRowUnselect)="
+        <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
+          <div class="row">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCurriculares" pageLinks="4"
+              [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }" selectionMode="multiple" #tableCurriculares
+              class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()"
+              paginatorPosition="both" [rows]="selectedItemCurriculares" (onRowSelect)="redireccionarCurriculares(selectedDatosCurriculares)"
+              (onRowUnselect)="
             actualizaSeleccionadosCurriculares(selectedDatosCurriculares)
           ">
 
-            <p-column *ngFor="let col of colsCurriculares" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="col.field == 'dateFechaInicio' || col.field == 'dateFechaFin'">
-                  <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
-                  <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
-                </div>
-
-                <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'">
-                  <div *ngIf="setItalic(datoH)">
-                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+              <p-column *ngFor="let col of colsCurriculares" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <div *ngIf="col.field == 'dateFechaInicio' || col.field == 'dateFechaFin'">
+                    <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+                    <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
                   </div>
 
-                  <div *ngIf="!setItalic(datoH)">
-                    <span>{{datoH[col.field]}}</span>
-                  </div>
-                </div>
+                  <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'">
+                    <div *ngIf="setItalic(datoH)">
+                      <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+                    </div>
 
+                    <div *ngIf="!setItalic(datoH)">
+                      <span>{{datoH[col.field]}}</span>
+                    </div>
+                  </div>
+
+                </ng-template>
+              </p-column>
+
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCurriculares.first
+                    + 1 }} al {{ tableCurriculares.first + tableCurriculares.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                    | translate }} {{ tableCurriculares.totalRecords }}</label>
+
+                  <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelectedCurriculares}}</label>
+
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown [(ngModel)]="selectedItemCurriculares" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCurriculares($event)"></p-dropdown>
+                  <label class="pl-1">
+                    {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                  </label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAllCurriculares()" [(ngModel)]="selectAllCurriculares" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                      name="groupname"></p-checkbox>
+                  </div>
+
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleCurriculares}" (click)="isSelectMultipleCurriculares()">
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+
+                </div>
               </ng-template>
-            </p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableCurriculares.first
-                  + 1 }} al {{ tableCurriculares.first + tableCurriculares.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                  | translate }} {{ tableCurriculares.totalRecords }}</label>
-
-                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelectedCurriculares}}</label>
-
-                <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItemCurriculares" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCurriculares($event)"></p-dropdown>
-                <label class="pl-1">
-                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-                </label>
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAllCurriculares()" [(ngModel)]="selectAllCurriculares" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                    name="groupname"></p-checkbox>
-                </div>
-
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultipleCurriculares}" (click)="isSelectMultipleCurriculares()">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-
-              </div>
-            </ng-template>
-          </p-dataTable>
+            </p-dataTable>
+          </div>
+          <br />
         </div>
-        <br />
-      </div>
 
-      <div *ngIf="esFichaActiva('curriculares')"  class="card-footer">
-        <div class="text-right main-button ">
-          <!--
+        <div *ngIf="esFichaActiva('curriculares')"  class="card-footer">
+          <div class="text-right main-button ">
+            <!--
     <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
     -->
-          <button (click)="cargarDatosCV()"  *ngIf="historicoCV"  pButton type="button" icon="fa fa-undo"  iconPos="left"  label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-          <button (click)="cargarHistorico()"  *ngIf="!historicoCV"  pButton type="button"  icon="fa fa-history"  iconPos="left"  label="{{'general.message.mostrarHistorico' | translate}}"></button>
-          <button  (click)="deleteCurriculares(selectedDatosCurriculares)" pButton type="button" [(disabled)]="!(selectedDatosCurriculares && selectedDatosCurriculares != '') || isLetrado || tarjetaCurriculares == '2' || disabledAction"
-            icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
-          <button (click)="irNuevoCurriculares()" pButton type="button" [(disabled)]="tarjetaCurriculares == '2' || disabledAction || isLetrado"
-            icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            <button (click)="cargarDatosCV()"  *ngIf="historicoCV"  pButton type="button" icon="fa fa-undo"  iconPos="left"  label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+            <button (click)="cargarHistorico()"  *ngIf="!historicoCV"  pButton type="button"  icon="fa fa-history"  iconPos="left"  label="{{'general.message.mostrarHistorico' | translate}}"></button>
+            <button  (click)="deleteCurriculares(selectedDatosCurriculares)" pButton type="button" [(disabled)]="!(selectedDatosCurriculares && selectedDatosCurriculares != '') || isLetrado || tarjetaCurriculares == '2' || disabledAction"
+              icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+            <button (click)="irNuevoCurriculares()" pButton type="button" [(disabled)]="tarjetaCurriculares == '2' || disabledAction || isLetrado"
+              icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- END FICHA DATOS CURRICULARES -->
-  <div id="direcciones">
-    <!-- INICIO FICHA DATOS DIRECCIONES -->
-    <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fa fa-map-marker icon-ficha"></i>
+    <!-- END FICHA DATOS CURRICULARES -->
+    <div id="direcciones">
+      <!-- INICIO FICHA DATOS DIRECCIONES -->
+      <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
+        <div class="card-header header-ficha">
+          <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-map-marker icon-ficha"></i>
+              </div>
             </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('direcciones')" class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
-              </label>
-            </div>
-            <div class="d-flex justify-content-between">
-              <!-- <div class="d-flex justify-content-between"> -->
-              <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
-                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.domicilioLista }}</span>
-              </label>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-start mb-1">
+                <label (click)="abreCierraFicha('direcciones')" class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+                </label>
+              </div>
+              <div class="d-flex justify-content-between">
+                <!-- <div class="d-flex justify-content-between"> -->
+                <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
+                  <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.domicilioLista }}</span>
+                </label>
 
-              <label>{{ "censo.ws.literal.codigopostal" | translate }}:
-                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.codigoPostal }}</span>
-              </label>
+                <label>{{ "censo.ws.literal.codigopostal" | translate }}:
+                  <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.codigoPostal }}</span>
+                </label>
 
-              <label>{{ "censo.datosDireccion.literal.provincia" | translate }}:
-                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.nombrePoblacion }}</span>
-              </label>
+                <label>{{ "censo.datosDireccion.literal.provincia" | translate }}:
+                  <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.nombrePoblacion }}</span>
+                </label>
 
-              <label>{{ "censo.datosDireccion.literal.correo" | translate }}:
-                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.correoElectronico }}</span>
-              </label>
+                <label>{{ "censo.datosDireccion.literal.correo" | translate }}:
+                  <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.correoElectronico }}</span>
+                </label>
 
-              <label>{{ "censo.ws.literal.telefono" | translate }}:
-                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.telefono }}</span>
-              </label>
+                <label>{{ "censo.ws.literal.telefono" | translate }}:
+                  <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.telefono }}</span>
+                </label>
 
-              <label>{{ "censo.datosDireccion.literal.movil" | translate }}:
-                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
-              </label>
+                <label>{{ "censo.datosDireccion.literal.movil" | translate }}:
+                  <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
+                </label>
 
-              <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
-                <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}
-                </span>
-              </label>
-              <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
+                <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
+                  <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}
+                  </span>
+                </label>
+                <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
                   'fa fa-angle-up': esFichaActiva('direcciones'),
                   'fa fa-angle-down': !esFichaActiva('direcciones')
                 }"></i>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-map-marker icon-ficha"> </i>
+          <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado">
+              <i class="fa fa-map-marker icon-ficha"> </i>
+            </div>
+            <label (click)="abreCierraFicha('direcciones')" class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+            </label>
+            <i (click)="abreCierraFicha('direcciones')" class="fa fa-angle-up ml-auto"></i>
           </div>
-          <label (click)="abreCierraFicha('direcciones')" class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
-          </label>
-          <i (click)="abreCierraFicha('direcciones')" class="fa fa-angle-up ml-auto"></i>
         </div>
-      </div>
 
-      <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
-        <div class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
-            [ngClass]="{ customCursor: selectMultipleDirecciones }" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
-            #tableDirecciones class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"
-            paginatorPosition="both" [rows]="selectedItemDirecciones" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)"
-            (onRowUnselect)="
+        <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
+          <div class="row">
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
+              [ngClass]="{ customCursor: selectMultipleDirecciones }" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
+              #tableDirecciones class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"
+              paginatorPosition="both" [rows]="selectedItemDirecciones" (onRowSelect)="redireccionarDireccion(selectedDatosDirecciones)"
+              (onRowUnselect)="
             actualizaSeleccionadosDirecciones(selectedDatosDirecciones)
           ">
-            <p-column *ngFor="let col of colsDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
-                  <span [ngStyle]="{
+              <p-column *ngFor="let col of colsDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                [filter]="true" filterMatchMode="contains">
+                <ng-template let-datoH="rowData" pTemplate="body">
+                  <div *ngIf="setItalic(datoH)">
+                    <span [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
-                </div>
-                <div *ngIf="!setItalic(datoH)">
-                  <span>{{ datoH[col.field] }}</span>
-                </div>
-              </ng-template>
-            </p-column>
+                  </div>
+                  <div *ngIf="!setItalic(datoH)">
+                    <span>{{ datoH[col.field] }}</span>
+                  </div>
+                </ng-template>
+              </p-column>
 
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableDirecciones.first
-                  + 1 }} al {{ tableDirecciones.first + tableDirecciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                  | translate }} {{ tableDirecciones.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedDirecciones
-                  }}
-                </label>
-                <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItemDirecciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesDirecciones($event)"></p-dropdown>
-                <label class="pl-1">
-                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-                </label>
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="
+              <ng-template pTemplate="paginatorLeft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableDirecciones.first
+                    + 1 }} al {{ tableDirecciones.first + tableDirecciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                    | translate }} {{ tableDirecciones.totalRecords }}</label>
+                  <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedDirecciones
+                    }}
+                  </label>
+                  <label>{{ "general.message.mostrar" | translate }}</label>
+                  <p-dropdown [(ngModel)]="selectedItemDirecciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesDirecciones($event)"></p-dropdown>
+                  <label class="pl-1">
+                    {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                  </label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="
                     onChangeSelectAllDirecciones()
                   " [(ngModel)]="selectAllDirecciones" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleDirecciones }" (click)="
+                      name="groupname"></p-checkbox>
+                  </div>
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleDirecciones }" (click)="
                   isSelectMultipleDirecciones();
                   selectedDatosDirecciones = false
                 ">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label>
-              </div>
-            </ng-template>
-          </p-dataTable>
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label>
+                </div>
+              </ng-template>
+            </p-dataTable>
+          </div>
+          <br />
         </div>
-        <br />
-      </div>
-      <div *ngIf="esFichaActiva('direcciones')" class="card-footer">
-        <div class="text-right main-button">
-          <button *ngIf="bodyDirecciones.historico" (click)="onInitDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
-            label="{{ 'general.message.ocultarHistorico' | translate}}" [disabled]="tarjetaDirecciones == '2'"></button>
+        <div *ngIf="esFichaActiva('direcciones')" class="card-footer">
+          <div class="text-right main-button">
+            <button *ngIf="bodyDirecciones.historico" (click)="onInitDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
+              label="{{ 'general.message.ocultarHistorico' | translate}}" [disabled]="tarjetaDirecciones == '2'"></button>
 
-          <button *ngIf="!bodyDirecciones.historico" (click)="searchHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-history"
-            iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}" [disabled]="tarjetaDirecciones == '2'"></button>
+            <button *ngIf="!bodyDirecciones.historico" (click)="searchHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-history"
+              iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}" [disabled]="tarjetaDirecciones == '2'"></button>
 
-          <button [disabled]="!(
+            <button [disabled]="!(
             selectedDatosDirecciones &&
             selectedDatosDirecciones != '' &&
             bodyDirecciones.historico == false) || isLetrado || tarjetaDirecciones == '2' || disabledAction" (click)="
@@ -1337,479 +1324,481 @@
             selectedDatosDirecciones = false
           " pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
 
-          <button (click)="nuevaDireccion()" pButton type="button" [(disabled)]="tarjetaDirecciones == '2' || disabledAction || isLetrado"
-            icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+            <button (click)="nuevaDireccion()" pButton type="button" [(disabled)]="tarjetaDirecciones == '2' || disabledAction || isLetrado"
+              icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- END FICHA DATOS DIRECCIONES -->
+    <!-- END FICHA DATOS DIRECCIONES -->
 
-  <!-- INICIO FICHA DATOS BANCARIOS -->
-  <div id="datosBanc">
-    <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fa fa-bank icon-ficha"></i>
-            </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('bancarios')" class="mr-auto title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
-              </label>
-            </div>
-            <div class="d-flex justify-content-between">
-              <label>{{ "censo.mutualidad.literal.iban" | translate }}:
-                <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.iban }}</span>
-              </label>
-
-              <label>{{ "facturacion.cuentasBancarias.uso" | translate }}:
-                <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
-              </label>
-
-              <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
-                <span>{{ datosBancarios.length }}</span>
-              </label>
-              <i (click)="abreCierraFicha('bancarios')" [ngClass]="{
-                'fa fa-angle-up': esFichaActiva('bancarios'),
-                'fa fa-angle-down': !esFichaActiva('bancarios')
-              }"></i>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="esFichaActiva('bancarios')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado ">
-            <i class="fa fa-bank icon-ficha"></i>
-          </div>
-          <label (click)="abreCierraFicha('bancarios')" class="title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
-          </label>
-          <i (click)="abreCierraFicha('bancarios')" class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
-
-      <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
-        <div class="row">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleBancarios }"
-            [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
-            class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
-            (onRowUnselect)="
-            actualizaSeleccionadosBancarios(selectedDatosBancarios)
-          " paginatorPosition="both" [rows]="selectedItemBancarios" pageLinks="4">
-            <p-column *ngFor="let col of colsBancarios" [sortable]="true" [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
-              [filter]="true" filterMatchMode="contains">
-              <ng-template let-datoH="rowData" pTemplate="body">
-                <div *ngIf="setItalic(datoH)">
-                  <span [ngStyle]="{
-                    'font-style': 'italic',
-                    'font-weight': 'bold',
-                    'text-decoration': 'line-through'
-                  }">{{ datoH[col.field] }}</span>
-                </div>
-                <div *ngIf="!setItalic(datoH)">
-                  <span>{{ datoH[col.field] }}</span>
-                </div>
-              </ng-template>
-            </p-column>
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableBancarios.first
-                  + 1 }} al {{ tableBancarios.first + tableBancarios.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                  | translate }} {{ tableBancarios.totalRecords }}</label>
-                <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedBancarios
-                  }}</label>
-                <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItemBancarios" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesBancarios($event)"></p-dropdown>
-                <label class="pl-1">
-                  {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
-                </label>
-                <div class="ml-3 selectAll">
-                  <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                    name="groupname"></p-checkbox>
-                </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleBancarios }" (click)="
-                  isSelectMultipleBancarios(); selectedDatosBancarios = false
-                ">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label>
-              </div>
-            </ng-template>
-          </p-dataTable>
-        </div>
-        <br />
-      </div>
-      <div *ngIf="esFichaActiva('bancarios')" class="card-footer">
-        <div class="text-right main-button">
-          <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
-            label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-          <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
-            iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-          <button (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!(selectedDatosBancarios && selectedDatosBancarios != '' && !historico) || tarjetaBancarios == '2' || disabledAction || isLetrado"
-            label="{{'general.boton.eliminar'  | translate}}"></button>
-          <button (click)="nuevaCuentaBancaria()" [disabled]="tarjetaBancarios == '2' || disabledAction || isLetrado" pButton type="button"
-            icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- END FICHA DATOS BANCARIOS -->
-
-  <!-- INICIO FICHA REGTEL -->
-  <div id="regtel">
-    <div *ngIf="esRegtel">
-      <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
+    <!-- INICIO FICHA DATOS BANCARIOS -->
+    <div id="datosBanc">
+      <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
         <div class="card-header header-ficha">
-          <div *ngIf="!esFichaActiva('regtel')" class="form-row">
+          <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
             <div class="col-lg-1 col-md-2">
               <div class="img-colegiado">
-                <i class="fas fa-file-alt icon-ficha"></i>
+                <i class="fa fa-bank icon-ficha"></i>
               </div>
             </div>
             <div class="col-lg-11 col-md-10">
               <div class="d-flex justify-content-start mb-1">
-                <label (click)="abreCierraRegtel('regtel')" class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+                <label (click)="abreCierraFicha('bancarios')" class="mr-auto title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
                 </label>
               </div>
               <div class="d-flex justify-content-between">
-                <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
-                  <span>{{ messageRegtel }}</span>
+                <label>{{ "censo.mutualidad.literal.iban" | translate }}:
+                  <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.iban }}</span>
                 </label>
-                <i (click)="abreCierraRegtel('regtel')" [ngClass]="{
-                'fa fa-angle-up': esFichaActiva('regtel'),
-                'fa fa-angle-down': !esFichaActiva('regtel')
+
+                <label>{{ "facturacion.cuentasBancarias.uso" | translate }}:
+                  <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
+                </label>
+
+                <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
+                  <span>{{ datosBancarios.length }}</span>
+                </label>
+                <i (click)="abreCierraFicha('bancarios')" [ngClass]="{
+                'fa fa-angle-up': esFichaActiva('bancarios'),
+                'fa fa-angle-down': !esFichaActiva('bancarios')
               }"></i>
               </div>
             </div>
           </div>
-          <div *ngIf="esFichaActiva('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div *ngIf="esFichaActiva('bancarios')" class=" header-ficha-open d-flex justify-content-start align-items-center">
             <div class="img-colegiado ">
-              <i class="fas fa-file-alt icon-ficha"></i>
+              <i class="fa fa-bank icon-ficha"></i>
             </div>
-            <label (click)="abreCierraRegtel('regtel')" class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+            <label (click)="abreCierraFicha('bancarios')" class="title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
             </label>
-            <i (click)="abreCierraRegtel('regtel')" class="fa fa-angle-up ml-auto"></i>
+            <i (click)="abreCierraFicha('bancarios')" class="fa fa-angle-up ml-auto"></i>
           </div>
         </div>
 
-        <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
+        <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
           <div class="row">
-
-            <p-dataTable emptyMessage="{{ messageRegtel }}" [(selection)]="selectedDatosRegtel" [responsive]="true" selectionMode="single"
-              dataKey="id" #tableRegTel class="tabla-listado" [value]="bodyRegTel" [sortOrder]="0" [sortField]="fechaModificacion"
-              [paginator]="activarPaginacionRegTel()" (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)" (onRowUnselect)=" onRowDesselectedRegTel()"
-              paginatorPosition="both" [rows]="selectedItemRegtel" pageLinks="4">
-              <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+            <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleBancarios }"
+              [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
+              class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"
+              (onRowUnselect)="
+            actualizaSeleccionadosBancarios(selectedDatosBancarios)
+          " paginatorPosition="both" [rows]="selectedItemBancarios" pageLinks="4">
+              <p-column *ngFor="let col of colsBancarios" [sortable]="true" [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
                 [filter]="true" filterMatchMode="contains">
                 <ng-template let-datoH="rowData" pTemplate="body">
-                  <div *ngIf="setItalicRegtel(datoH)">
+                  <div *ngIf="setItalic(datoH)">
                     <span [ngStyle]="{
                     'font-style': 'italic',
-                    'font-weight': 'bold'
+                    'font-weight': 'bold',
+                    'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
                   </div>
-                  <div *ngIf="!setItalicRegtel(datoH)">
+                  <div *ngIf="!setItalic(datoH)">
                     <span>{{ datoH[col.field] }}</span>
                   </div>
-                </ng-template>
-                <ng-template *ngIf="col.field == 'sizeKB'"   let-datoH="rowData" pTemplate="body">
-                  <div *ngIf="!setItalicRegtel(datoH)">
-                    <span>{{ datoH[col.field] }}</span>
-                  </div>
-                </ng-template>
-                <ng-template *ngIf="col.field == 'fechaModificacion'" let-datoH="rowData" pTemplate="body">
-                  <span *ngIf="!setItalicRegtel(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
-                  <span *ngIf="setItalicRegtel(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
                 </ng-template>
               </p-column>
               <ng-template pTemplate="paginatorLeft">
                 <div class="mostrar d-flex text-right justify-content-end">
-                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableRegTel.first
-                    + 1 }} al {{ tableRegTel.first + tableRegTel.rows }} de un total de {{ tableRegTel.totalRecords }}</label>
-                  <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedRegtel
-                    }}</label>
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableBancarios.first
+                    + 1 }} al {{ tableBancarios.first + tableBancarios.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                    | translate }} {{ tableBancarios.totalRecords }}</label>
+                  <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedBancarios
+                    }}
+                  </label>
                   <label>{{ "general.message.mostrar" | translate }}</label>
-                  <p-dropdown [(ngModel)]="selectedItemRegtel" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesRegtel($event)"></p-dropdown>
+                  <p-dropdown [(ngModel)]="selectedItemBancarios" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesBancarios($event)"></p-dropdown>
                   <label class="pl-1">
                     {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
                   </label>
-
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                      name="groupname"></p-checkbox>
+                  </div>
+                  <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultipleBancarios }" (click)="
+                  isSelectMultipleBancarios(); selectedDatosBancarios = false
+                ">
+                    <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}</label>
                 </div>
               </ng-template>
             </p-dataTable>
           </div>
           <br />
         </div>
-        <div *ngIf="esFichaActiva('regtel')" class="card-footer">
+        <div *ngIf="esFichaActiva('bancarios')" class="card-footer">
           <div class="text-right main-button">
-            <button [disabled]="buttonVisibleRegtelAtras || disabledAction" (click)="onClickAtrasRegtel()" pButton type="button" icon="fa fa-undo"
-              iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-            <button [disabled]="buttonVisibleRegtelCarpeta || disabledAction || tarjetaRegtel == '2'" (click)="onClickCarpetaRegTel()"
-              pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
-            <button [disabled]="buttonVisibleRegtelDescargar || disabledAction || tarjetaRegtel == '2'" (click)="onClickDescargarRegTel()"
-              pButton type="button" icon="fa fa-download" iconPos="left" label="{{'formacion.fichaInscripcion.datosCertificados.descargarDocumento'  | translate}}"></button>
-
+            <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
+              label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+            <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
+              iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+            <button (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!(selectedDatosBancarios && selectedDatosBancarios != '' && !historico) || tarjetaBancarios == '2' || disabledAction || isLetrado"
+              label="{{'general.boton.eliminar'  | translate}}"></button>
+            <button (click)="nuevaCuentaBancaria()" [disabled]="tarjetaBancarios == '2' || disabledAction || isLetrado" pButton type="button"
+              icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- END FICHA REGTEL-->
-  <!--FICHA DATOS ALTER MUTUA-->
-  <div id="alterMutua">
-    <div *ngIf="tarjetaAlterMutua == '3' || tarjetaAlterMutua == '2'" class="card">
-      <div class="card-header header-ficha">
-        <div *ngIf="!fichaMutua" class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fa fa-user icon-ficha"></i>
+    <!-- END FICHA DATOS BANCARIOS -->
+
+    <!-- INICIO FICHA REGTEL -->
+    <div id="regtel">
+      <div *ngIf="esRegtel">
+        <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
+          <div class="card-header header-ficha">
+            <div *ngIf="!esFichaActiva('regtel')" class="form-row">
+              <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                  <i class="fas fa-file-alt icon-ficha"></i>
+                </div>
+              </div>
+              <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1">
+                  <label (click)="abreCierraRegtel('regtel')" class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+                  </label>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
+                    <span>{{ messageRegtel }}</span>
+                  </label>
+                  <i (click)="abreCierraRegtel('regtel')" [ngClass]="{
+                'fa fa-angle-up': esFichaActiva('regtel'),
+                'fa fa-angle-down': !esFichaActiva('regtel')
+              }"></i>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="esFichaActiva('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+              <div class="img-colegiado ">
+                <i class="fas fa-file-alt icon-ficha"></i>
+              </div>
+              <label (click)="abreCierraRegtel('regtel')" class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+              </label>
+              <i (click)="abreCierraRegtel('regtel')" class="fa fa-angle-up ml-auto"></i>
             </div>
           </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">Alter Mutua
-              </label>
+
+          <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
+            <div class="row">
+
+              <p-dataTable emptyMessage="{{ messageRegtel }}" [(selection)]="selectedDatosRegtel" [responsive]="true" selectionMode="single"
+                dataKey="id" #tableRegTel class="tabla-listado" [value]="bodyRegTel" [sortOrder]="0" [sortField]="fechaModificacion"
+                [paginator]="activarPaginacionRegTel()" (onRowSelect)="onRowSelectedRegTel(selectedDatosRegtel)" (onRowUnselect)=" onRowDesselectedRegTel()"
+                paginatorPosition="both" [rows]="selectedItemRegtel" pageLinks="4">
+                <p-column *ngFor="let col of colsRegtel" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+                  [filter]="true" filterMatchMode="contains">
+                  <ng-template let-datoH="rowData" pTemplate="body">
+                    <div *ngIf="setItalicRegtel(datoH)">
+                      <span [ngStyle]="{
+                    'font-style': 'italic',
+                    'font-weight': 'bold'
+                  }">{{ datoH[col.field] }}</span>
+                    </div>
+                    <div *ngIf="!setItalicRegtel(datoH)">
+                      <span>{{ datoH[col.field] }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template *ngIf="col.field == 'sizeKB'"   let-datoH="rowData" pTemplate="body">
+                    <div *ngIf="!setItalicRegtel(datoH)">
+                      <span>{{ datoH[col.field] }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template *ngIf="col.field == 'fechaModificacion'" let-datoH="rowData" pTemplate="body">
+                    <span *ngIf="!setItalicRegtel(datoH)">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+                    <span *ngIf="setItalicRegtel(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+                  </ng-template>
+                </p-column>
+                <ng-template pTemplate="paginatorLeft">
+                  <div class="mostrar d-flex text-right justify-content-end">
+                    <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableRegTel.first
+                      + 1 }} al {{ tableRegTel.first + tableRegTel.rows }} de un total de {{ tableRegTel.totalRecords }}</label>
+                    <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedRegtel
+                      }}
+                    </label>
+                    <label>{{ "general.message.mostrar" | translate }}</label>
+                    <p-dropdown [(ngModel)]="selectedItemRegtel" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesRegtel($event)"></p-dropdown>
+                    <label class="pl-1">
+                      {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+                    </label>
+
+                  </div>
+                </ng-template>
+              </p-dataTable>
             </div>
-            <div class="d-flex justify-content-between">
-              <label>
-                <a (click)="irAlterMutuaReta()">
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.alternativa" | translate}}</span>
-                </a>
-              </label>
-              <label>
-                <a (click)="irOfertas()">
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.oferta" | translate}}</span>
-                </a>
-              </label>
-              <i class="float-right"></i>
+            <br />
+          </div>
+          <div *ngIf="esFichaActiva('regtel')" class="card-footer">
+            <div class="text-right main-button">
+              <button [disabled]="buttonVisibleRegtelAtras || disabledAction" (click)="onClickAtrasRegtel()" pButton type="button" icon="fa fa-undo"
+                iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+              <button [disabled]="buttonVisibleRegtelCarpeta || disabledAction || tarjetaRegtel == '2'" (click)="onClickCarpetaRegTel()"
+                pButton type="button" icon="fa fa-history" iconPos="left" label="{{ 'censo.regtel.literal.vercarpeta' | translate}}"></button>
+              <button [disabled]="buttonVisibleRegtelDescargar || disabledAction || tarjetaRegtel == '2'" (click)="onClickDescargarRegTel()"
+                pButton type="button" icon="fa fa-download" iconPos="left" label="{{'formacion.fichaInscripcion.datosCertificados.descargarDocumento'  | translate}}"></button>
+
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div id="mutualidad">
-    <!--MUTUALIDAD DE LA ABOGACÍA-->
-    <div *ngIf="tarjetaMutualidad == '3' || tarjetaMutualidad == '2'" class="card" id="down">
-      <div class="card-header header-ficha">
-        <div class="form-row">
-          <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
-              <i class="fas fa-link icon-ficha"></i>
+    <!-- END FICHA REGTEL-->
+    <!--FICHA DATOS ALTER MUTUA-->
+    <div id="alterMutua">
+      <div *ngIf="tarjetaAlterMutua == '3' || tarjetaAlterMutua == '2'" class="card">
+        <div class="card-header header-ficha">
+          <div *ngIf="!fichaMutua" class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fa fa-user icon-ficha"></i>
+              </div>
             </div>
-          </div>
-          <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{ 'censo.fichaColegial.mutualidadAbogacia.literal.titulo' | translate }}</label>
-            </div>
-            <div class="d-flex justify-content-between">
-              <label>
-                <a (click)="irPlanUniversal()">
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.planProfesional" | translate}}</span>
-                </a>
-              </label>
-              <label>
-                <a (click)="irSegAccidentes()">
-                  <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.seguroUniversal" | translate}}</span>
-                </a>
-              </label>
-              <i class="float-right"></i>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-start mb-1">
+                <label class="mr-auto title-ficha">Alter Mutua
+                </label>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label>
+                  <a (click)="irAlterMutuaReta()">
+                    <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.alternativa" | translate}}</span>
+                  </a>
+                </label>
+                <label>
+                  <a (click)="irOfertas()">
+                    <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.oferta" | translate}}</span>
+                  </a>
+                </label>
+                <i class="float-right"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
-    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-  </div>
-
-  <!-- CREAR ETIQUETA -->
-  <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
-    <p-header class="title">
-      <label>{{ mensaje }}</label>
-    </p-header>
-
-    <div class="bloque col-lg-12 col-md-12">
-      <div class="row">
-        <!-- DESHABILITA EL FOCO -->
-        <span class="ui-helper-hidden-accessible">
-          <input type="text" /> </span>
-
-        <div class="form-group col-lg-6 col-md-6">
-          <label *ngIf="historico">{{ "administracion.auditoriaUsuarios.fechaDesde" | translate }}
-          </label>
-          <label *ngIf="!historico">{{ "administracion.auditoriaUsuarios.fechaDesde" | translate }} (*)
-          </label>
-          <app-fecha [(value)]="item.fechaInicio" (valueChangeInput)="fillFechaInicio($event)" [disabled]="historico" (valueChangeSelected)="fillFechaInicio($event)"></app-fecha>
+    <div id="mutualidad">
+      <!--MUTUALIDAD DE LA ABOGACÍA-->
+      <div *ngIf="tarjetaMutualidad == '3' || tarjetaMutualidad == '2'" class="card" id="down">
+        <div class="card-header header-ficha">
+          <div class="form-row">
+            <div class="col-lg-1 col-md-2">
+              <div class="img-colegiado">
+                <i class="fas fa-link icon-ficha"></i>
+              </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+              <div class="d-flex justify-content-start mb-1">
+                <label class="mr-auto title-ficha">{{ 'censo.fichaColegial.mutualidadAbogacia.literal.titulo' | translate }}</label>
+              </div>
+              <div class="d-flex justify-content-between">
+                <label>
+                  <a (click)="irPlanUniversal()">
+                    <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.planProfesional" | translate}}</span>
+                  </a>
+                </label>
+                <label>
+                  <a (click)="irSegAccidentes()">
+                    <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.seguroUniversal" | translate}}</span>
+                  </a>
+                </label>
+                <i class="float-right"></i>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
+      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    </div>
 
-        <div class="form-group col-lg-6 col-md-6 form-group-date">
-          <label *ngIf="historico">{{ "administracion.auditoriaUsuarios.fechaHasta" | translate }}
-          </label>
-          <label *ngIf="!historico">{{ "administracion.auditoriaUsuarios.fechaHasta" | translate }}
-          </label>
-          <app-fecha [(value)]="item.fechaBaja" (valueChangeInput)="fillFechaBaja($event)" [disabled]="historico" (valueChangeSelected)="fillFechaBaja($event)"
-            [minDate]="fechaHoy"></app-fecha>
-          <!-- <div
+    <!-- CREAR ETIQUETA -->
+    <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+      <p-header class="title">
+        <label>{{ mensaje }}</label>
+      </p-header>
+
+      <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+          <!-- DESHABILITA EL FOCO -->
+          <span class="ui-helper-hidden-accessible">
+            <input type="text" /> </span>
+
+          <div class="form-group col-lg-6 col-md-6">
+            <label *ngIf="historico">{{ "administracion.auditoriaUsuarios.fechaDesde" | translate }}
+            </label>
+            <label *ngIf="!historico">{{ "administracion.auditoriaUsuarios.fechaDesde" | translate }} (*)
+            </label>
+            <app-fecha [(value)]="item.fechaInicio" (valueChangeInput)="fillFechaInicio($event)" [disabled]="historico" (valueChangeSelected)="fillFechaInicio($event)"></app-fecha>
+          </div>
+
+          <div class="form-group col-lg-6 col-md-6 form-group-date">
+            <label *ngIf="historico">{{ "administracion.auditoriaUsuarios.fechaHasta" | translate }}
+            </label>
+            <label *ngIf="!historico">{{ "administracion.auditoriaUsuarios.fechaHasta" | translate }}
+            </label>
+            <app-fecha [(value)]="item.fechaBaja" (valueChangeInput)="fillFechaBaja($event)" [disabled]="historico" (valueChangeSelected)="fillFechaBaja($event)"
+              [minDate]="fechaHoy"></app-fecha>
+            <!-- <div
             *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico"
           >
             <label class="labelError">{{
               "gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate
             }}</label>
           </div> -->
+          </div>
         </div>
       </div>
-    </div>
 
-    <p-footer *ngIf="!historico">
-      <div class="text-right main-button">
-        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
-          [disabled]="!isTrue"></button>
-        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-      </div>
-    </p-footer>
-  </p-dialog>
+      <p-footer *ngIf="!historico">
+        <div class="text-right main-button">
+          <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
+            [disabled]="!isTrue"></button>
+          <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
 
-  <!-- AUDITORIA -->
+    <!-- AUDITORIA -->
 
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
-    <p-header class="title">
-      <label>{{ "general.ventana.cgae" | translate }} -{{ "censo.consultaHistorico.cabecera" | translate }}
-      </label>
-    </p-header>
+    <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+      <p-header class="title">
+        <label>{{ "general.ventana.cgae" | translate }} -{{ "censo.consultaHistorico.cabecera" | translate }}
+        </label>
+      </p-header>
 
-    <div class="bloque col-lg-12 col-md-12">
-      <div class="row">
-        <div class="form-group col-lg-12 col-md-12">
-          <label>{{ "censo.datosHistorico.literal.motivo" | translate }} (*)</label>
-          <textarea pInputTextarea [(ngModel)]="generalBody.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+      <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+          <div class="form-group col-lg-12 col-md-12">
+            <label>{{ "censo.datosHistorico.literal.motivo" | translate }} (*)</label>
+            <textarea pInputTextarea [(ngModel)]="generalBody.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+          </div>
         </div>
       </div>
-    </div>
-    <p-footer>
-      <div class="text-right main-button ">
-        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-        <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      <p-footer>
+        <div class="text-right main-button ">
+          <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+          <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
+            label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
+
+    <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+      <p-header class="title">
+        <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
+        </label>
+      </p-header>
+
+      <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+          <span> {{ "mensaje.informacion.noAcceso.fichaColegial" | translate }} </span>
+        </div>
       </div>
-    </p-footer>
-  </p-dialog>
 
-  <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
-    <p-header class="title">
-      <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
-      </label>
-    </p-header>
+      <p-footer>
+        <div class="text-right main-button ">
+          <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+        </div>
+      </p-footer>
+    </p-dialog>
 
-    <div class="bloque col-lg-12 col-md-12">
-      <div class="row">
-        <span> {{ "mensaje.informacion.noAcceso.fichaColegial" | translate }} </span>
+    <p-dialog [(visible)]="displayDelete" responsive="true" [draggable]="false" modal="modal" resizable="false" [style]="{'max-width':'500px'}">
+      <p-header class="title">
+        <label>{{ 'general.cabecera.confirmacion' | translate}}
+        </label>
+      </p-header>
+
+      <div class="bloque col-lg-12 col-md-12">
+        <div class="row">
+          <span> {{ msgDir }} </span>
+        </div>
       </div>
-    </div>
 
-    <p-footer>
-      <div class="text-right main-button ">
-        <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
-      </div>
-    </p-footer>
-  </p-dialog>
+      <p-footer class="text-right main-button">
+        <button (click)="callServiceEliminarEstadoColegial(selectedItemDelete)" pButton type="button" icon="fa fa-check" iconPos="left"
+          label="{{ 'messages.si' | translate }}"></button>
+        <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.no' | translate }}"></button>
+      </p-footer>
+    </p-dialog>
 
-  <p-dialog [(visible)]="displayDelete" responsive="true" [draggable]="false" modal="modal" resizable="false" [style]="{'max-width':'500px'}">
-    <p-header class="title">
-      <label>{{ 'general.cabecera.confirmacion' | translate}}
-      </label>
-    </p-header>
+    <p-dialog [(visible)]="information" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+      [minWidth]="500">
+      <p-header class="title">
+        <label>
+          <strong>{{"general.message.informacion" | translate}}</strong>
+        </label>
+      </p-header>
 
-    <div class="bloque col-lg-12 col-md-12">
-      <div class="row">
-        <span> {{ msgDir }} </span>
-      </div>
-    </div>
-
-    <p-footer class="text-right main-button">
-      <button (click)="callServiceEliminarEstadoColegial(selectedItemDelete)" pButton type="button" icon="fa fa-check" iconPos="left"
-        label="{{ 'messages.si' | translate }}"></button>
-      <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.no' | translate }}"></button>
-    </p-footer>
-  </p-dialog>
-
-  <p-dialog [(visible)]="information" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="500">
-    <p-header class="title">
-      <label>
-        <strong>{{"general.message.informacion" | translate}}</strong>
-      </label>
-    </p-header>
-
-    {{ msgDir }}
-    <p-footer class="text-right main-button">
-      <button (click)="aceptInformation()" pButton type="button" icon="fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
-    </p-footer>
-  </p-dialog>
+      {{ msgDir }}
+      <p-footer class="text-right main-button">
+        <button (click)="aceptInformation()" pButton type="button" icon="fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+      </p-footer>
+    </p-dialog>
 
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
-    #bajaInscripcionesUpdate>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
+      #bajaInscripcionesUpdate>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
-    #bajaInscripcionesDelete>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
+      #bajaInscripcionesDelete>
+      <p-footer>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
+        <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
 
 
-  <!-- <div class="mainFrameWrapper">
+    <!-- <div class="mainFrameWrapper">
     <iframe
       [src]="url"
       id="mainWorkArea"
@@ -1820,13 +1809,13 @@
     ></iframe>
   </div> -->
 
-  <!-- <div #target *ngIf="progressSpinner" class="overlay-spinner"> -->
-  <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
-    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
-    <div class="loader"></div>
-  </div>
+    <!-- <div #target *ngIf="progressSpinner" class="overlay-spinner"> -->
+    <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+      <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+      <div class="loader"></div>
+    </div>
 
-  <div *ngIf="initSpinner" class="overlay-spinner">
-    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
-    <div class="loader"></div>
-  </div>
+    <div *ngIf="initSpinner" class="overlay-spinner">
+      <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+      <div class="loader"></div>
+    </div>

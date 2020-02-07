@@ -159,20 +159,13 @@
 
               <br>
 
-              <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
-                [minLength]="1" field="label" [multiple]="true" (onBlur)="onBlur($event)" (onKeyUp)="onKeyUp($event)" (onSelect)="onSelect($event)"
-                (onUnselect)="onUnselect($event)" [disabled]="!autocompletar || disabledAction || tarjeta == '2'" (click)="disabledAutocomplete()"
-                [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
-                <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
-                  <div *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != ''" class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
-                    [ngStyle]="{'background': etiquetasPersonaJuridicaSelecionados.backgroundColor}">
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor == undefined || etiquetasPersonaJuridicaSelecionados.backgroundColor == white"
-                      style="color: black">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                    <span *ngIf="etiquetasPersonaJuridicaSelecionados.backgroundColor != undefined && etiquetasPersonaJuridicaSelecionados.backgroundColor != white"
-                      style="color: white">{{ etiquetasPersonaJuridicaSelecionados.label }}</span>
-                  </div>
-                </ng-template>
-              </p-autoComplete>
+              <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="etiquetasPersonaJuridicaSelecionados"
+              [options]="comboEtiquetas"
+              [disabled]="!autocompletar || disabledAction || tarjeta == '2'"
+              styleClass="widthAll" [panelStyle]="{width:'100%'}"
+              (ngModelChange)="onChangeForm()"
+              (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
+              (click)="disabledAutocomplete()"></p-multiSelect>
             </div>
           </div>
         </div>

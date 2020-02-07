@@ -286,6 +286,8 @@ export class DatosGenerales implements OnInit {
           console.log(err);
         }
       );
+
+    this.filterLabelsMultiple();
   }
 
   getComboIdentificacion() {
@@ -317,7 +319,7 @@ export class DatosGenerales implements OnInit {
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-            this.etiquetasPersonaJuridicaSelecionados.push(value);
+            this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
             // this.generalBody.
           });
 
@@ -328,6 +330,8 @@ export class DatosGenerales implements OnInit {
               this.updateItems.set(value.idGrupo, pruebaComboE);
             }
           );
+
+          this.sortOptions();
 
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
         },
@@ -533,9 +537,16 @@ export class DatosGenerales implements OnInit {
       this.body.idioma = this.idiomaPreferenciaSociedad;
 
       for (let i in this.etiquetasPersonaJuridicaSelecionados) {
-        this.body.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
+        const encEtiqueta = this.comboEtiquetas.find(item => item.value == this.etiquetasPersonaJuridicaSelecionados[i]);
+        if (encEtiqueta) {
+          let etiCopia: ComboEtiquetasItem = new ComboEtiquetasItem();
+          Object.assign(etiCopia, encEtiqueta);
+          etiCopia.idGrupo = etiCopia.value;
+          this.body.etiquetas[i] = etiCopia;
+        }
+        /*this.body.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
           i
-        ];
+        ];*/
 
         if (this.body.etiquetas[i].value != "" && this.body.etiquetas[i].value != null &&
           this.body.etiquetas[i].value != undefined) {
@@ -780,7 +791,7 @@ export class DatosGenerales implements OnInit {
     } else {
       this.showGuardar = false;
     }
-
+    this.sortOptions();
     this.comprobarValidacion();
   }
 
@@ -935,7 +946,7 @@ export class DatosGenerales implements OnInit {
 
   // ETIQUETAS
 
-  filterLabelsMultiple(event) {
+  filterLabelsMultiple() {
     let etiquetasPuestas = [];
     if (this.etiquetasPersonaJuridicaSelecionados) {
       etiquetasPuestas = this.etiquetasPersonaJuridicaSelecionados;
@@ -943,7 +954,7 @@ export class DatosGenerales implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         // coger todas las etiquetas
-        let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
+        /*let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
 
         if (etiquetasPuestas.length > 0) {
           this.comboEtiquetas = [];
@@ -956,7 +967,9 @@ export class DatosGenerales implements OnInit {
           });
         } else {
           this.comboEtiquetas = etiquetasSugerencias;
-        }
+        }*/
+        this.comboEtiquetas = n.comboItems;
+        this.sortOptions();
       },
       err => {
         console.log(err);
@@ -1289,10 +1302,19 @@ export class DatosGenerales implements OnInit {
       }
     );
   }
-  isOpenReceive(event) {
-    let fichaPosible = this.esFichaActiva(event);
-    if (fichaPosible == false) {
-      this.abreCierraFicha();
+  private sortOptions() {
+    if (this.comboEtiquetas && this.etiquetasPersonaJuridicaSelecionados) {
+      this.comboEtiquetas.sort((a, b) => {
+        const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a.value);
+        const includeB = this.etiquetasPersonaJuridicaSelecionados.includes(b.value);
+        if (includeA && !includeB) {
+          return -1;
+        }
+        else if (!includeA && includeB) {
+          return 1;
+        }
+        return a.label.localeCompare(b.label);
+      });
     }
   }
 }
