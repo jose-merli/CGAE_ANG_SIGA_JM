@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation, ElementRef } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Renderer, Input } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { Router } from "../../../../../node_modules/@angular/router";
@@ -21,7 +21,7 @@ import { CertificadoCursoObject } from "../../../models/CertificadoCursoObject";
 import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { EditorComponent } from '@tinymce/tinymce-angular';
 import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
@@ -111,10 +111,10 @@ export class FichaCursoComponent implements OnInit {
   fechaFinInscripcion;
 
   @ViewChild("editor")
-  editor: EditorModule;
+  editor: EditorComponent;
 
   @ViewChild("nombre")
-  inputNombre: ElementRef;
+  nombre: any;
 
   persistenciaFichaCurso;
   fechaFinInscripcionSelected: boolean = true;
@@ -232,11 +232,12 @@ export class FichaCursoComponent implements OnInit {
   otraInstitucion: boolean = false;
   file: File = undefined;
   apiKey: string = "";
-  progressSpinner2;
+  progressSpinner2: boolean = true;
   isCursoFinalizado: boolean = false;
   historico: boolean = false;
 
   editorConfig: any = {
+    auto_focus: "nombre",
     selector: 'textarea',
     plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
     toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
@@ -255,7 +256,8 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private elRef: ElementRef, private renderer: Renderer,
   ) {
 
     window.scrollTo(0, 0);
@@ -268,7 +270,6 @@ export class FichaCursoComponent implements OnInit {
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
-    this.progressSpinner2 = true;
     this.getFichasPosibles();
     this.getCombosDatosGenerales();
     this.getCombosFormadores();
@@ -495,21 +496,9 @@ export class FichaCursoComponent implements OnInit {
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
-    setTimeout(function() {  document.getElementById('nombre').focus(); }, 15);
+    this.progressSpinner2 = false; 
   }
-
-
-  focusNombre(inputNombre: ElementRef) {
-    const input: HTMLInputElement = inputNombre.nativeElement as HTMLInputElement;
-    input.focus();
-    input.select();
-  }
-
-  ngAfterViewChecked(){
-    setTimeout(function() {  document.getElementById('nombre').focus(); }, 10);
-    this.progressSpinner2 = false;
-  }
-
+  
   // Control Permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
