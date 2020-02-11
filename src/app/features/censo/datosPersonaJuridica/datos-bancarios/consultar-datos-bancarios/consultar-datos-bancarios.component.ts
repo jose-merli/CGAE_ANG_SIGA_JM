@@ -220,7 +220,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.idPersona = this.usuarioBody.idPersona;
     }
     this.idCuenta = sessionStorage.getItem("idCuenta");
-    sessionStorage.removeItem("idCuenta");
+    // sessionStorage.removeItem("idCuenta");
 
     this.bic = sessionStorage.getItem("bic");
     sessionStorage.removeItem("bic");

@@ -1643,7 +1643,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
             return true;
           } else {
-            return false;
+            return true;
           }
         }
       } else {

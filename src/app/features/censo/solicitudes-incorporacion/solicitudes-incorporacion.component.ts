@@ -360,7 +360,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
   isBuscar() {
     if (
       !this.formBusqueda.invalid &&
-      this.checkIdentificacion(this.body.numeroIdentificacion) && (this.body.fechaDesde != undefined && this.body.fechaDesde != null)
+      (this.body.fechaDesde != undefined && this.body.fechaDesde != null)
     ) {
       return false;
     } else {

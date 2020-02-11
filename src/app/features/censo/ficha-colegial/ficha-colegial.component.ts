@@ -606,7 +606,9 @@ export class FichaColegialComponent implements OnInit {
         }
 
         this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
-        this.compruebaDNI();
+        if(this.generalBody.idTipoIdentificacion == undefined){
+          this.compruebaDNI();
+        }
       } else {
         this.generalBody = new FichaColegialGeneralesItem();
         this.colegialesBody = new FichaColegialColegialesItem();
@@ -668,7 +670,9 @@ export class FichaColegialComponent implements OnInit {
     // this.onInitOtrasColegiaciones();
 
     if (!this.esNewColegiado) {
-      this.compruebaDNI();
+      if(this.generalBody.idTipoIdentificacion == undefined){
+        this.compruebaDNI();
+      }
     }
 
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
