@@ -90,7 +90,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   noEsColegiado: boolean = false;
   body;
   solicitante;
-
+  resaltadoDatos: boolean=false;
+  resaltadoDatosAprobar: boolean=false;
+  resaltadoDatosBancos: boolean=false;
   editarExt: boolean = false;
   iban: String;
   ibanValido: boolean = true;
@@ -119,8 +121,6 @@ export class NuevaIncorporacionComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private location: Location,
-    private formBuilder: FormBuilder,
     private commonsService: CommonsService,
     private router: Router
   ) { }
@@ -129,6 +129,10 @@ export class NuevaIncorporacionComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
+    this.resaltadoDatos=false;
+    this.resaltadoDatosAprobar=false;
+    this.resaltadoDatosBancos=false;
+
     sessionStorage.removeItem("esNuevoNoColegiado");
 
     if (sessionStorage.getItem("isLetrado")) {
@@ -1066,6 +1070,9 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
 
         this.progressSpinner = true;
+        this.resaltadoDatos=false;
+        this.resaltadoDatosAprobar=false;
+        this.resaltadoDatosBancos=false;
 
         this.sigaServices
           .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
@@ -1146,7 +1153,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     } else {
       this.showFail("censo.alterMutua.literal.datosBancariosObligatorios");
-
+      this.muestraCamposObligatoriosBancos();
     }
 
   }
@@ -1191,6 +1198,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   denegarSolicitud() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
+    this.resaltadoDatosAprobar=false;
+    this.resaltadoDatosBancos=false;
 
     this.sigaServices
       .post(
@@ -1273,6 +1283,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   guardar(back) {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
+    this.resaltadoDatosAprobar=false;
+    this.resaltadoDatosBancos=false;
     this.numColegiadoDuplicado = false;
 
     this.solicitudEditar.idEstado = this.estadoSolicitudSelected;
@@ -1578,7 +1591,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
     if (
-      JSON.stringify(this.solicitudEditar) != JSON.stringify(this.bodyInicial) &&
+      
       !this.isLetrado
     ) {
       if (
@@ -1637,19 +1650,24 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.solicitudEditar.bic != undefined &&
             this.solicitudEditar.titular != "" &&
             this.solicitudEditar.titular != undefined && this.solicitudEditar.titular.trim() != "")) {
-          return true;
-
+          
+              this.resaltadoDatos = true;
+              return true;
         } else {
           if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
+            this.resaltadoDatos = true;
             return true;
           } else {
+            this.resaltadoDatos = false;
             return false;
           }
         }
       } else {
+        this.resaltadoDatos = false;
         return false;
       }
     } else {
+      this.resaltadoDatos = false;
       return false;
     }
   }
@@ -1950,4 +1968,69 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
   }
 
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioAprobar(evento){
+    if(this.resaltadoDatosAprobar && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleObligatorioBanco(evento){
+    if(this.resaltadoDatosBancos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  muestraCamposObligatoriosAprobar(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatosAprobar=true;
+  }
+
+  muestraCamposObligatoriosBancos(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatosBancos=true;
+  }
+
+  checkDatos(){
+    if(!this.consulta ){
+      if(this.isGuardar()){
+      this.isSave = true;
+      this.guardar(true); 
+      }else{
+        this.muestraCamposObligatorios();
+      }  
+    }
+  }
+
+  checkDatosAprobar(){
+    if((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')){
+      if(!this.disabledAprobar()){
+        if(this.cargo==true || this.abono==true || this.abonoJCS==true){
+          if((this.solicitudEditar.titular=="" || this.solicitudEditar.titular==undefined) || (this.solicitudEditar.iban=="" || this.solicitudEditar.iban==undefined) || (this.solicitudEditar.bic=="" || this.solicitudEditar.bic==undefined) || (this.solicitudEditar.banco=="" || this.solicitudEditar.banco==undefined)){
+            this.muestraCamposObligatoriosBancos();
+          }
+        }
+
+        if(this.solicitudEditar.fechaIncorporacion==undefined){
+          this.muestraCamposObligatoriosAprobar();
+        }
+
+        if(!this.resaltadoDatosAprobar && !this.resaltadoDatosBancos){
+          this.validateAprobarSolitud();
+        }
+      }else{
+        this.validateAprobarSolitud();
+      }
+    }
+  }
 }

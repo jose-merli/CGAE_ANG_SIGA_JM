@@ -130,13 +130,27 @@ export class CommonsService {
     return labelSinTilde;
   }
 
-  getLabelsSinTilde(array){
+  getLabelsSinTilde(array) {
     // Recorremos un array (combos) y le ponemos el labelSinTilde para los filtros.
-    for (let i in array){
+    for (let i in array) {
       array[i].labelSinTilde = this.getLabelbyFilter(array[i].label);
     }
     return array;
   }
 
 
+
+  scrollTablaFoco(idFoco)  {
+    let top = document.getElementById(idFoco);
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (evento == null || evento == undefined || evento == "") {
+      return "camposObligatorios";
+    }
+  }
 }

@@ -24,6 +24,7 @@ import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { SigaServices } from "../../../_services/siga.service";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -118,6 +119,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) {
     this.formBusqueda = this.formBuilder.group({
@@ -523,6 +525,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }

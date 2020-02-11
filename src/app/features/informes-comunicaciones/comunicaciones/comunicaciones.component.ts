@@ -16,6 +16,7 @@ import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
 import { ProgramarItem } from "../../../models/ProgramarItem";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -70,6 +71,7 @@ export class ComunicacionesComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -363,6 +365,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         () => {
           this.table.reset();
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

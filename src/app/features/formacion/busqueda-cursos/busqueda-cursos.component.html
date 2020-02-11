@@ -132,7 +132,7 @@
     </div>
   </div>
   <!--FIN CARD-->
-  <div *ngIf="buscar" class="card mt-3">
+  <div *ngIf="buscar" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" (onRowSelect)="irEditarCurso(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"

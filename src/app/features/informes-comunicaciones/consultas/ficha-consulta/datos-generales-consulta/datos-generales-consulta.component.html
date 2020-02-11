@@ -39,19 +39,19 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}} (*)</label>
-              <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              <p-dropdown [ngClass]="styleObligatorio(body.idModulo)" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                 [options]="modulos" [(ngModel)]="body.idModulo" class="select-form" (onChange)="cargaComboClaseCom($event)"
                 [disabled]="editMode"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-              <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="editMode" pInputText>
+              <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="editMode" pInputText>
             </div>
           </div>
           <div class="form-row d-flex align-items-start">
             <div class="form-group col-lg-4 col-md-4">
               <label>{{'informesycomunicaciones.consultas.objetivo' | translate}} (*)</label>
-              <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+              <p-dropdown [ngClass]="styleObligatorio(body.idObjetivo)" placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
                 (onChange)="onChangeObjetivo()" [options]="objetivos" [(ngModel)]="body.idObjetivo" class="select-form" [disabled]="editMode"></p-dropdown>
             </div>
             <div class="form-group col-lg-2 col-md-2">
@@ -72,7 +72,7 @@
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
               <label>{{'general.description' | translate}} (*)</label>
-              <textarea pInputTextarea style="height:90px" autoResize="autoResize" [(ngModel)]="body.descripcion" [disabled]="editMode"></textarea>
+              <textarea [ngClass]="styleObligatorio(body.descripcion)" pInputTextarea style="height:90px" autoResize="autoResize" [(ngModel)]="body.descripcion" [disabled]="editMode"></textarea>
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@
       <div class="text-right main-button ">
         <button [disabled]="!editar || !activaRestablecer()" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="!editar || !activaGuardar()" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+        <button [disabled]="!editar" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

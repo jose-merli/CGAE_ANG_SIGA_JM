@@ -1,30 +1,10 @@
 import { Location } from "@angular/common";
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  Input,
-  AfterContentInit,
-  AfterContentChecked,
-  AfterViewInit,
-  AfterViewChecked,
-  ElementRef,
-  Renderer2
-} from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation, ElementRef } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
-import {
-  AutoComplete,
-  Dropdown,
-  Editor,
-  Calendar,
-  Button,
-  InputText
-} from "../../../../../node_modules/primeng/primeng";
+import { AutoComplete, Dropdown } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
@@ -42,7 +22,7 @@ import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
 import { EditorModule } from '@tinymce/tinymce-angular';
-
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-curso",
@@ -265,6 +245,8 @@ export class FichaCursoComponent implements OnInit {
     statusbar: false
   };
 
+  resaltadoDatos: boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -273,8 +255,7 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private domSanitizer: DomSanitizer,
-    private renderer: Renderer2
+    private commonsService: CommonsService
   ) {
 
     window.scrollTo(0, 0);
@@ -956,7 +937,7 @@ export class FichaCursoComponent implements OnInit {
             this.translateService.instant("formacion.mensaje.modificar.curso.correcto")
           );
           this.modoEdicion = true;
-
+          this.resaltadoDatos = false;
           // if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
           //   this.curso.aviso = "3";
           //   this.notifyAvailablePlaces();
@@ -3645,6 +3626,25 @@ export class FichaCursoComponent implements OnInit {
     // fecha = new Date((arrayDate += "T00:00:00.001Z"));
     // fecha = new Date(rawDate);
     return arrayDate;
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (this.validateCourse()) {
+      this.muestraCamposObligatorios();
+    } else {
+      this.saveCourse();
+    }
   }
 
   ngOnDestroy() {

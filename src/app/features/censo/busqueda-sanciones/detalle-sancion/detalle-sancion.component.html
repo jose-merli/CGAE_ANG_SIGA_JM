@@ -52,12 +52,12 @@
             <div class="form-row">
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }} (*)</label>
-                <p-dropdown class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()" [(disabled)]="disabledField"></p-dropdown>
+                <p-dropdown [ngClass]="styleObligatorio(body.idColegio)" class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()" [(disabled)]="disabledField"></p-dropdown>
 
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }} (*)</label>
-                <p-dropdown class="select-form" [options]="tipoSancion" [(ngModel)]="body.tipoSancion" (onChange)="disableFields()" [disabled]="disabledField || permisoTarjeta == '2'"></p-dropdown>
+                <p-dropdown [ngClass]="styleObligatorio(body.tipoSancion)" class="select-form" [options]="tipoSancion" [(ngModel)]="body.tipoSancion" (onChange)="disableFields()" [disabled]="disabledField || permisoTarjeta == '2'"></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal" | translate }}
@@ -71,7 +71,7 @@
             <div class="form-row">
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ "busquedaSanciones.detalleSancion.fechaAcuerdo.literal" | translate }} (*)</label>
-                <app-fecha [(value)]="body.fechaAcuerdoDate" [disabled]="disabledFechaAcuerdo  || permisoTarjeta == '2'" [maxDate]="fechaMaxAcuerdo"
+                <app-fecha [inputStyleClass]="styleObligatorio(body.fechaAcuerdoDate)" [(value)]="body.fechaAcuerdoDate" [disabled]="disabledFechaAcuerdo  || permisoTarjeta == '2'" [maxDate]="fechaMaxAcuerdo"
                   (valueChangeSelected)="fillFechaAcuerdo($event)" (valueChangeInput)="detectFechaAcuerdoInput($event)"></app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6">
@@ -209,8 +209,7 @@
       </div>
       <div class="card-footer">
         <div *ngIf="!disabledField" class="text-right main-button ">
-          <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-            [disabled]="disabledGuardar || permisoTarjeta == '2'"></button>
+          <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
           <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         </div>
       </div>

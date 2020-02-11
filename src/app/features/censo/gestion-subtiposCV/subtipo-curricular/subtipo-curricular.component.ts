@@ -11,6 +11,7 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
 import { SubtipoCurricularObject } from "../../../../models/SubtipoCurricularObject";
+import { CommonsService } from '../../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -74,6 +75,7 @@ export class SubtipoCurricularComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) { }
 
@@ -167,6 +169,12 @@ export class SubtipoCurricularComponent implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

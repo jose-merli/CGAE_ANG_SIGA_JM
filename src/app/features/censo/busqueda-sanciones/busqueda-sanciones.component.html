@@ -117,7 +117,7 @@
         </div>
     </div>
     <!--FIN CARD-->
-    <div *ngIf="isSearch" class="card mt-3">
+    <div *ngIf="isSearch" class="card mt-3" id="tablaFoco">
         <div class="card-body p-0">
             <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
                 [(selection)]="selectedDatos" (onRowSelect)="onRowSelect(selectedDatos)" pageLinks="4" [responsive]="true" selectionMode="multiple"

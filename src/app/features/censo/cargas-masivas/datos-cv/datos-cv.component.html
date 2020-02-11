@@ -41,7 +41,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="buscar" class="card mt-3">
+<div *ngIf="buscar" class="card mt-3" id="tablaFoco">
   <div class="card-body p-0">
     <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table class="tabla-listado"
       [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)" selectionMode="single" [paginator]="activarPaginacion()"

@@ -9,6 +9,7 @@ import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
 import { ContadorItem } from "../../../../../app/models/ContadorItem";
 import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: "app-gestion-contadores",
@@ -41,10 +42,13 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   derechoAcceso: any;
   comparacion: boolean;
 
+  resaltadoDatos:boolean = false;
+
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -52,6 +56,8 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table;
   ngOnInit() {
+    this.resaltadoDatos=false;
+
     console.log(sessionStorage);
     this.checkAcceso();
     this.sigaServices.get("contadores_modo").subscribe(
@@ -136,6 +142,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   isRestablecer() {
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
     this.bodyToModificable();
+    this.resaltadoDatos=false;
   }
 
   bodyToModificable() {
@@ -281,5 +288,40 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
 
   fillFechaReconfiguracion(event) {
     this.fechareconfiguracion = event;
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento==="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.checkEditar()){
+      this.confirmEdit();
+    }else{
+      if((this.body.nombre == undefined || this.body.nombre==null || this.body.nombre=="") ||
+      (this.body.modo == undefined || this.body.modo == null || this.body.modo =="") || 
+      (this.body.contador == undefined || this.body.contador == null || this.body.contador =="") ||
+      (this.body.longitudcontador == undefined || this.body.longitudcontador == null || this.body.longitudcontador =="") ||
+      (this.body.reconfiguracioncontador == undefined || this.body.reconfiguracioncontador == null || this.body.reconfiguracioncontador =="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.confirmEdit();
+      }
+    }
+    /*if(this.permisoTarjeta != '2' && !this.disabledGuardar){
+      if((this.body.idColegio==undefined || this.body.idColegio==null || this.body.idColegio=="") || (this.body.tipoSancion==undefined || this.body.tipoSancion==null || this.body.tipoSancion=="") || (this.body.fechaAcuerdoDate==undefined || this.body.fechaAcuerdoDate==null)){
+        this.muestraCamposObligatorios();
+      }else{
+        this.save();
+      }
+    }else{
+      this.muestraCamposObligatorios();
+    }*/
   }
 }

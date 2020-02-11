@@ -29,6 +29,7 @@ import { saveAs } from 'file-saver/FileSaver';
 import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
 import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
 import { OverlayPanelModule, OverlayPanel } from 'primeng/primeng';
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -125,6 +126,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -742,6 +744,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(() => {
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }
@@ -904,6 +909,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       (this.body.nombre == null ||
         this.body.nombre == null ||
         this.body.nombre.trim().length < 3) &&
+      (this.body.domicilio == null ||
+        this.body.domicilio == null ||
+        this.body.domicilio.trim().length < 3) &&
       (this.body.apellidos == null ||
         this.body.apellidos == null ||
         this.body.apellidos.trim().length < 3) &&
@@ -954,6 +962,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       // quita espacios vacios antes de buscar
       if (this.body.nombre != undefined) {
         this.body.nombre = this.body.nombre.trim();
+      }
+      if (this.body.domicilio != undefined) {
+        this.body.domicilio = this.body.domicilio.trim();
       }
       if (this.body.apellidos != undefined) {
         this.body.apellidos = this.body.apellidos.trim();

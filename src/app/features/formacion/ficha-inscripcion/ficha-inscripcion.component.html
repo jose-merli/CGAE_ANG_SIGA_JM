@@ -92,7 +92,7 @@
       <div class="form-row lg-12 md-12">
         <div class="col-lg-4 col-md-4">
           <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }} (*)</label>
-          <app-fecha [(value)]="inscripcion.fechaSolicitud" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"
+          <app-fecha [inputStyleClass]="styleObligatorio(inscripcion.fechaSolicitud)" [(value)]="inscripcion.fechaSolicitud" [disabled]="modoEdicion || !activacionEditar" [minDate]="minDateFechaSolicitud"
             (valueChangeSelected)="fillFechaSolicitud($event)" (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
         </div>
         <div class="col-lg-4 col-md-4">
@@ -120,7 +120,7 @@
         <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer'| translate }}" [disabled]="!activacionEditar || desactivarBotones"
           (click)="restablecer()"></button>
         <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}" [disabled]="!activacionEditar || desactivarBotones"
-          (click)="guardarTODO()"></button>
+          (click)="checkDatos()"></button>
       </div>
     </div>
   </div>

@@ -3,9 +3,8 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ 'menu.censo' | translate}}
-      <i class="fa fa-angle-right"></i>{{ 'menu.censo.fichaColegial' | translate}}
-      <i class="fa fa-angle-right"></i>
-      {{"general.boton.consultareditar.curriculares" | translate}}</p>
+      <i class="pl-1 fa fa-angle-right"></i> {{ 'menu.censo.fichaColegial' | translate}}
+      <i class="pl-1 fa fa-angle-right"></i> {{"general.boton.consultareditar.curriculares" | translate}}</p>
   </div>
 
   <div class="busqueda-container">
@@ -48,9 +47,10 @@
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}} (*)</label>
                 <br>
-                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" [(ngModel)]='body.idTipoCv'
-                  placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
-                  [filter]="true" filterMatchMode="contains" [options]="categoriaCurricular" [(disabled)]="!permisos" (onChange)="onChangeCategoriaCurricular($event)">
+                <p-dropdown [ngClass]="styleObligatorio(body.idTipoCv)" class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" [(ngModel)]='body.idTipoCv' placeholder="{{'general.boton.seleccionar' | translate}}"
+                  emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}" [filter]="true"
+                  filterMatchMode="contains" [options]="categoriaCurricular" [(disabled)]="!permisos" (onChange)="onChangeCategoriaCurricular($event)">
                 </p-dropdown>
               </div>
               <div class="form-group col-lg-3 col-md-3">
@@ -71,7 +71,8 @@
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-                <app-fecha [(value)]="body.fechaDesde" [disabled]="!permisos" (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
+                <app-fecha [inputStyleClass]="styleObligatorio(body.fechaDesde)" [(value)]="body.fechaDesde" [disabled]="!permisos" (valueChangeSelected)="fillFechaDesde($event)"
+                  (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
@@ -100,7 +101,8 @@
               </div>
               <div class="form-group col-lg-3 col-md-3">
                 <label>{{"general.description" | translate}} (*)</label>
-                <input type="text" class="form-control" [(ngModel)]="body.descripcion" [(disabled)]="!permisos" pInputText>
+                <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [(disabled)]="!permisos"
+                  pInputText>
               </div>
             </div>
           </div>
@@ -114,12 +116,17 @@
             icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!activateRestablecer() || !permisos"
             label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="isLetrado == false" (click)="guardarCv()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!activateGuardar() || !permisos"
+
+          <button *ngIf="isLetrado == false" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!permisos"
             label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button *ngIf="solicitaModificacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left"
-            [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
-          <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left"
-            [disabled]="!activateGuardar() || !permisos" label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
+
+          <button *ngIf="solicitaModificacion()" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!permisos"
+            label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+
+
+          <button *ngIf="solicitaCreacion()" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="!permisos"
+            label="{{ 'general.boton.solicitarNuevo' | translate}}"></button>
+
           <!-- <button *ngIf="solicitaCreacion()" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" disabled label="{{ 'general.boton.solicitarModificacion' | translate}}"></button> -->
         </div>
       </div>

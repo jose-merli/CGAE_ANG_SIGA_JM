@@ -22,6 +22,7 @@ import { AuthenticationService } from '../../../_services/authentication.service
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { PersonaJuridicaItem } from '../../../models/PersonaJuridicaItem';
 import { ArrayType } from '../../../../../node_modules/@angular/compiler/src/output/output_ast';
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -120,6 +121,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private location: Location,
+    private commonsService: CommonsService,
     private authenticationService: AuthenticationService
   ) {
     this.formBusqueda = this.formBuilder.group({
@@ -614,6 +616,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
               }
             }
+
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
       }
@@ -686,6 +692,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
                   sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
                 }
               }
+              setTimeout(()=>{
+                this.commonsService.scrollTablaFoco('tablaFoco');
+              }, 5);
             }
           );
       }

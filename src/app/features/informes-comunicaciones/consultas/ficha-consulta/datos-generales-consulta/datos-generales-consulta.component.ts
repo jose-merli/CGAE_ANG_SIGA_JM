@@ -8,6 +8,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Subject } from "rxjs/Subject";
 import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsultasItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -41,6 +42,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   generica: string;
   listaModelos: any = [];
   progressSpinner: Boolean = false;
+  resaltadoDatos: boolean = false;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -71,11 +73,12 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
   ngOnInit() {
-
+    this.resaltadoDatos=false;
     this.getMode();
     this.getInstitucion();
     this.getDatos();
@@ -407,6 +410,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       icon: icon,
       accept: () => {
         this.progressSpinner = true;
+        this.resaltadoDatos=false;
         this.bodyInicial.generica = this.body.generica;
         this.actualizaGenerica();
       },
@@ -473,6 +477,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
       this.progressSpinner = true;
+      this.resaltadoDatos=false;
 
       this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
         data => {
@@ -502,6 +507,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos=false;
     this.getDatos();
     // this.body.generica = "S";
   }
@@ -537,5 +543,35 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onChangeObjetivo() {
     //sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.guardar();
+        }
+      }
+    }else{
+      if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
   }
 }

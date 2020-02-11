@@ -127,7 +127,7 @@
     </div>
   </div>
   <!--FIN CARD-->
-  <div *ngIf="buscar == true" class="card mt-3">
+  <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
     <!-- <div class="card mt-3"> -->
     <div class="card-body p-0">
       <p-dataTable [editable]="true" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="irEditarInscripcion(selectedDatos)"

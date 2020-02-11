@@ -22,6 +22,7 @@ import { ComboItem } from "./../../../../app/models/ComboItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { esCalendar } from "./../../../utils/calendar";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -84,6 +85,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService,
   ) {
     super(USER_VALIDATIONS);
@@ -552,6 +554,9 @@ para poder filtrar el dato con o sin estos caracteres*/
               }
             });
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }

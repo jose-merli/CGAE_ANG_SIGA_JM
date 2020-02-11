@@ -3,7 +3,9 @@ import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnvi
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { truncate } from "fs";
+import { truncate } from 'fs';
+import { CommonsService } from '../../../../../_services/commons.service';
+
 
 @Component({
   selector: "app-configuracion-envio-masivo",
@@ -24,6 +26,8 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   editarPlantilla: boolean = false;
   apiKey: string = "";
 
+  resaltadoDatos: boolean = false;
+
   editorConfig: any = {
     selector: "textarea",
     plugins:
@@ -34,7 +38,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
     autoresize_on_init: true,
     statusbar: false,
     paste_data_images: true,
-    images_upload_handler: function(blobInfo, success, failure) {
+    images_upload_handler: function (blobInfo, success, failure) {
       // no upload, just return the blobInfo.blob() as base64 data
       success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
     }
@@ -66,10 +70,13 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.resaltadoDatos = false;
+
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
@@ -151,7 +158,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       err => {
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -189,7 +196,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     }
   }
@@ -280,11 +287,12 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
           console.log(err);
         },
-        () => {}
+        () => { }
       );
   }
 
   guardar() {
+    this.resaltadoDatos = false;
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
         this.body.idEstado = "4";
@@ -316,12 +324,13 @@ para poder filtrar el dato con o sin estos caracteres*/
         );
         console.log(err);
       },
-      () => {}
+      () => { }
     );
   }
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
   }
 
   isGuardarDisabled() {
@@ -336,5 +345,27 @@ para poder filtrar el dato con o sin estos caracteres*/
       return false;
     }
     return true;
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (!this.isGuardarDisabled()) {
+      this.guardar();
+    } else {
+      if ((this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.idPlantillaEnvios == null || this.body.idPlantillaEnvios == undefined || this.body.idPlantillaEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardar();
+      }
+    }
   }
 }

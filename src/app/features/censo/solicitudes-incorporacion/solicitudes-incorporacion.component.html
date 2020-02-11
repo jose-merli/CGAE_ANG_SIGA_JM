@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="buscar == true" class="card mt-3">
+<div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos"

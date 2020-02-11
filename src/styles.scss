@@ -662,7 +662,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 
 .ui-dialog  .ui-inputtext {
   background: white !important;
-  border-left: 1px solid #c6c7c8 !important;
+  // border-left: 1px solid #c6c7c8 !important;
 }
 
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
@@ -1446,4 +1446,24 @@ p-footer .main-button{
     height: 150px;
     margin-top: 0.33em;
   }
+
+.camposObligatorios{
+  border-color: red !important;
+}
+
+.camposObligatorios > div{
+   border-color: red !important;
+}
+
+.camposObligatorios > input{
+  border-color: red !important;
+}
+
+.camposObligatorios > div .ui-multiselect{
+  border: 1px solid red !important;
+}
+
+.ui-inputtext .camposObligatorios{
+  border: 1px solid red !important;
+}
 }

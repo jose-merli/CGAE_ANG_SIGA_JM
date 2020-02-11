@@ -14,6 +14,7 @@ import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { AuthenticationService } from "../../../_services/authentication.service";
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-busqueda-sanciones",
@@ -71,6 +72,7 @@ export class BusquedaSancionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -307,6 +309,12 @@ export class BusquedaSancionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }

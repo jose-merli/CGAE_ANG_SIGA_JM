@@ -10,6 +10,7 @@ import { SigaServices } from "../../../_services/siga.service";
 import { TipoCurricularItem } from "../../../models/TipoCurricularItem";
 import { TipoCurricularObject } from "../../../models/TipoCurricularObject";
 import { TranslateService } from "../../../commons/translate/translation.service";
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -74,6 +75,7 @@ export class TipoCurricularComponent {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) { }
 
@@ -214,6 +216,12 @@ export class TipoCurricularComponent {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

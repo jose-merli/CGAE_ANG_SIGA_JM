@@ -7,7 +7,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 
 import { DatosDireccionesItem } from "./../../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../../app/models/DatosDireccionesObject";
-import { DropdownModule, Dropdown } from "primeng/dropdown";
+import { Dropdown } from "primeng/dropdown";
 
 import { DatosDireccionesCodigoPostalItem } from "./../../../../../../app/models/DatosDireccionesCodigoPostalItem";
 import { DatosDireccionesCodigoPostalObject } from "./../../../../../../app/models/DatosDireccionesCodigoPostalObject";
@@ -103,6 +103,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   faxValido: boolean = true;
   mvlValido: boolean = true;
 
+  resaltadoDatos: boolean = false
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -122,7 +124,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   @ViewChild("mailto")
   mailto;
   ngOnInit() {
-
+    this.resaltadoDatos=false;
     this.migaPan = sessionStorage.getItem("migaPan");
 
     if (JSON.parse(sessionStorage.getItem("situacionColegialesBody")) == "20") {
@@ -659,7 +661,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else if (idFindTipoDirEmail != -1 && (this.body.correoElectronico == undefined || this.body.correoElectronico == "")) {
       this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.preferenteEmail"));
       return false;
-    } else if (idFindTipoDirTel != -1 && (this.body.telefono == undefined || this.body.telefono == "")) {
+    } else if (idFindTipoDirTel != -1 && (this.body.telefono == undefined || this.body.telefono == "") && (this.body.movil == undefined || this.body.movil == "")) {
       this.showInfo(this.translateService.instant("message.consultarDirecciones.campoObligatorio.guardia"));
       return false;
     } else if (idFindTipoDirCenso != -1 || idFindTipoDirFact != -1 || idFindTipoDirDes != -1 || idFindTipoDirTras != -1 || idFindTipoDirGuia != -1 || idFindTipoDirCorreo != -1) {
@@ -907,6 +909,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   serviceSaveDirection() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
 
     // modo edicion
     if (this.registroEditable) {
@@ -1081,6 +1084,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   guardarLetrado() {
     this.progressSpinner = true;
+    this.resaltadoDatos=false;
+
     // modo edicion
     this.comprobarTablaDatosContactos();
     this.comprobarCheckProvincia();
@@ -1188,6 +1193,48 @@ para poder filtrar el dato con o sin estos caracteres*/
       )
     });
   }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.isLetrado){
+      if(!this.desactivaGuardar()){
+        this.comprobarAuditoria('noletrado');
+      }else{
+        if((this.body.codigoPostal==undefined || this.body.codigoPostal==null || this.body.codigoPostal==="") ||
+        ((this.body.poblacionExtranjera==undefined || this.body.poblacionExtranjera==null || this.body.poblacionExtranjera==="") && this.poblacionExtranjera) ||
+        (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
+          this.muestraCamposObligatorios();
+        }else{
+          this.comprobarAuditoria('noletrado');
+        }
+      }
+    }
+    
+    if(this.isLetrado){
+      if(!this.desactivaGuardar()){
+        this.comprobarAuditoria('letrado');
+      }else{
+        if((this.body.codigoPostal==undefined || this.body.codigoPostal==null || this.body.codigoPostal==="") ||
+        ((this.body.poblacionExtranjera==undefined || this.body.poblacionExtranjera==null || this.body.poblacionExtranjera==="") && this.poblacionExtranjera) || 
+        (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
+          this.muestraCamposObligatorios();
+        }else{
+          this.comprobarAuditoria('letrado');
+        }
+      }
+    }
+  }
+
   comprobarAuditoria(tipoCambio) {
     // modo edicion
 
@@ -1279,6 +1326,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.mvlValido = true;
     this.tlfValido = true;
     this.webValido = true;
+    this.resaltadoDatos=false;
 
     this.body.idPersona = this.usuarioBody[0].idPersona;
     this.body = JSON.parse(JSON.stringify(this.checkBody));
