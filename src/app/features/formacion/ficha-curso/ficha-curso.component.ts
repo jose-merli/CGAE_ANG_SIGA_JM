@@ -1,30 +1,10 @@
 import { Location } from "@angular/common";
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  Input,
-  AfterContentInit,
-  AfterContentChecked,
-  AfterViewInit,
-  AfterViewChecked,
-  ElementRef,
-  Renderer2
-} from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Renderer, Input } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
 import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
-import {
-  AutoComplete,
-  Dropdown,
-  Editor,
-  Calendar,
-  Button,
-  InputText
-} from "../../../../../node_modules/primeng/primeng";
+import { AutoComplete, Dropdown } from "../../../../../node_modules/primeng/primeng";
 import { TranslateService } from "../../../commons/translate";
 import { CargaMasivaInscripcionObject } from "../../../models/CargaMasivaInscripcionObject";
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
@@ -41,8 +21,8 @@ import { CertificadoCursoObject } from "../../../models/CertificadoCursoObject";
 import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
-import { EditorModule } from '@tinymce/tinymce-angular';
-
+import { EditorComponent } from '@tinymce/tinymce-angular';
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-curso",
@@ -131,10 +111,10 @@ export class FichaCursoComponent implements OnInit {
   fechaFinInscripcion;
 
   @ViewChild("editor")
-  editor: EditorModule;
+  editor: EditorComponent;
 
   @ViewChild("nombre")
-  inputNombre: ElementRef;
+  nombre: any;
 
   persistenciaFichaCurso;
   fechaFinInscripcionSelected: boolean = true;
@@ -252,11 +232,12 @@ export class FichaCursoComponent implements OnInit {
   otraInstitucion: boolean = false;
   file: File = undefined;
   apiKey: string = "";
-  progressSpinner2;
+  progressSpinner2: boolean = true;
   isCursoFinalizado: boolean = false;
   historico: boolean = false;
 
   editorConfig: any = {
+    auto_focus: "nombre",
     selector: 'textarea',
     plugins: "autoresize pagebreak table save charmap media contextmenu paste directionality noneditable visualchars nonbreaking spellchecker template searchreplace lists link image insertdatetime textcolor code hr",
     toolbar: "newdocument | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify formatselect fontselect fontsizeselect | cut copy paste pastetext | searchreplace | bullist numlist | indent blockquote | undo redo | link unlink image code | insertdatetime preview | forecolor backcolor",
@@ -264,6 +245,8 @@ export class FichaCursoComponent implements OnInit {
     autoresize_on_init: true,
     statusbar: false
   };
+
+  resaltadoDatos:boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -273,8 +256,8 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private domSanitizer: DomSanitizer,
-    private renderer: Renderer2
+    private commonsService: CommonsService,
+    private elRef: ElementRef, private renderer: Renderer,
   ) {
 
     window.scrollTo(0, 0);
@@ -282,9 +265,6 @@ export class FichaCursoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.progressSpinner2 = true;
-    this.progressSpinner = true;
-
     sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
     if (sessionStorage.getItem("tinyApiKey") != null) {
@@ -491,7 +471,6 @@ export class FichaCursoComponent implements OnInit {
 
       // this.resultsService = this.curso.tipoServicios;
       this.resultsTopics = this.curso.temasCombo;
-      this.progressSpinner2 = false;
 
       sessionStorage.removeItem("duplicarCurso");
 
@@ -504,7 +483,6 @@ export class FichaCursoComponent implements OnInit {
       this.curso.idEstado = this.valorEstadoAbierto;
       let colegio = 1;
       this.onChangeSelectVisibilidadObligate(colegio);
-      this.progressSpinner2 = false;
 
     }
 
@@ -518,20 +496,9 @@ export class FichaCursoComponent implements OnInit {
     console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
-
+    this.progressSpinner2 = false; 
   }
-
-  ngAfterViewInit(): void {
-    this.focusNombre(this.inputNombre);
-  }
-
-
-  focusNombre(inputNombre: ElementRef) {
-    const input: HTMLInputElement = inputNombre.nativeElement as HTMLInputElement;
-    input.focus();
-    input.select();
-  }
-
+  
   // Control Permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
@@ -574,7 +541,6 @@ export class FichaCursoComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
         this.compruebaInstitucionCurso();
-       
       }
     );
   }
@@ -662,7 +628,6 @@ export class FichaCursoComponent implements OnInit {
       let fecha = this.curso.fechaInscripcionHastaDate;
       this.curso.fechaInscripcionHastaDate = new Date(fecha);
     }
-    this.progressSpinner2 = false;
 
   }
 
@@ -914,7 +879,7 @@ export class FichaCursoComponent implements OnInit {
             this.translateService.instant("formacion.mensaje.modificar.curso.correcto")
           );
           this.modoEdicion = true;
-
+          this.resaltadoDatos=false;
           // if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
           //   this.curso.aviso = "3";
           //   this.notifyAvailablePlaces();
@@ -1305,7 +1270,6 @@ export class FichaCursoComponent implements OnInit {
       () => {
         this.progressSpinner = false;
         this.compruebaInstitucionCurso();
-        this.progressSpinner2 = false;
         window.scrollTo(0, 0);
 
       }
@@ -1576,7 +1540,6 @@ export class FichaCursoComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {
-          this.progressSpinner2 = false;
           this.progressSpinner = false;
         }
       );
