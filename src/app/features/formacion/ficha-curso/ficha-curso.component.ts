@@ -1471,10 +1471,8 @@ export class FichaCursoComponent implements OnInit {
       this.curso.nombreCurso == null ||
       this.curso.idVisibilidad == null ||
       this.curso.idEstado == null ||
-      this.curso.descripcionEstado == null ||
       this.curso.fechaInscripcionDesdeDate == null ||
       this.curso.fechaInscripcionHastaDate == null ||
-      this.curso.descripcionEstado == "" ||
       this.curso.idEstado == "" ||
       this.curso.nombreCurso == "" ||
       this.curso.idVisibilidad == "" ||
@@ -3271,6 +3269,10 @@ export class FichaCursoComponent implements OnInit {
       },
       {
         key: "price",
+        activa: false
+      },
+      {
+        key: "descripcion",
         activa: false
       },
       {
