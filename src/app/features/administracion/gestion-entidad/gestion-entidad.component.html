@@ -14,12 +14,12 @@
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde">
                         </p-dropdown>
                     </div> &nbsp;&nbsp;
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.confInterfaz.logotipo' | translate}}</label>
                         <br>
                         <div class="ui-inputgroup">

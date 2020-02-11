@@ -15,15 +15,15 @@
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group-interlineado col-lg-4 col-md-4">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>{{'menu.administracion.gestionMultiidioma.catalogo' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedEntidad' [options]="entidad" [filter]="true" filterBy="label" (onChange)="datos($event)"></p-dropdown> &nbsp;&nbsp;
                     </div>
-                    <div class="form-group-interlineado col-lg-4 col-md-4">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
-                    <div class="form-group-interlineado col-lg-4 col-md-4">
+                    <div class="form-group col-lg-4 col-md-4">
                         <label>{{'administracion.multidioma.etiquetas.literal.idiomaATraducir' | translate}} (*)</label>
                         <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaTraduccion' [options]="idiomaTraduccion" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown> &nbsp;&nbsp;
                     </div>
@@ -60,7 +60,9 @@
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar">
-                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
                         <label>{{ 'general.message.mostrar' | translate}}</label>
                         <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                         <label>{{ 'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>

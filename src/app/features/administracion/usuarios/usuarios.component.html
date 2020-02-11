@@ -21,13 +21,13 @@
 
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group-interlineado col-lg-3 col-md-3">
+          <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
             <input type="text" name="nombreApellidos" [(disabled)]="editar" class="form-control" [(ngModel)]='body.nombreApellidos' (ngModelChange)="onChangeForm()"
               pInputText>
 
           </div>
-          <div class="form-group-interlineado col-lg-3 col-md-3">
+          <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
             <input type="text" name="NIF" class="form-control" [(disabled)]="editar" [(ngModel)]='body.nif' (ngModelChange)="onChangeForm()"
               pInputText>
@@ -39,7 +39,7 @@
             </div>
 
           </div>
-          <div *ngIf="editar == false" class="form-group-interlineado col-lg-3 col-md-3">
+          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
             <label>{{ "administracion.usuarios.literal.rol" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.rol' [(disabled)]="editar" placeholder="{{ 'general.boton.seleccionar' | translate }}"
               [options]="usuarios_rol" [showClear]="true" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
@@ -49,7 +49,7 @@
               </select>-->
             <!--<img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">-->
           </div>
-          <div class="form-group-interlineado col-lg-3 col-md-3">
+          <div class="form-group col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
             <p-dropdown class="select-form" [showClear]="true" [(ngModel)]='body.grupo' placeholder="{{ 'general.boton.seleccionar' | translate }}"
               [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
@@ -59,7 +59,7 @@
             <p-dropdown class="select-form" [options]="usuarios_activo" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-dropdown>
           </div>-->
 
-          <div *ngIf="editar == true" class="form-group-interlineado col-lg-3 col-md-3">
+          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
             <label>{{"general.codeext" | translate}}</label>
             <input type="text" name="codExterno" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.codigoExterno' (ngModelChange)="onChangeForm()"
               pInputText>
