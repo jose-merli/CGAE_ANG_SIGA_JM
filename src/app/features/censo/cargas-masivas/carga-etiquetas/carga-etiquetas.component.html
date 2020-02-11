@@ -16,12 +16,12 @@
     <div *ngIf="showDatos" class="module vista-simple">
       <div class="row">
 
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+        <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.datosCv.literal.fechaCarga" | translate}}</label>
           <app-fecha [(value)]="fechaCargaSelect" [utc]="false" (valueChangeSelected)="fillFechaCarga($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha>
         </div>
 
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+        <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
           <p-fileUpload #pUploadFile chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" name="file"

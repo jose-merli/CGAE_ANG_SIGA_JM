@@ -21,25 +21,25 @@
                                 [options]="comboColegios" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
                                 styleClass="widthAll" [panelStyle]="{width:'100%'}"></p-multiSelect>
                     </div>-->
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.nif">
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate }}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.apellidos">
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ 'menu.administracion.gestionMultiidioma.etiquetasSociedad' | translate}}</label>
                         <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [options]="comboEtiquetas" [selectedItemsLabel]="textSelected"
                             maxSelectedLabels="1" styleClass="widthAll" [(ngModel)]="body.idgrupo"></p-multiSelect>
@@ -53,36 +53,36 @@
             </p>
             <div *ngIf="showDatosGeneneralesAvanzado" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
                         <p-dropdown class="select-form" [options]="comboSexo" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.sexo"
                             [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
                         <p-dropdown class="select-form" [options]="comboEstadoCivil" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idEstadoCivil"
                             [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoDesde" | translate}}</label>
                         <app-fecha [(value)]="fechaNacimientoDesdeSelect" (valueChangeSelected)="fillFechaNacimientoDesde($event)" (valueChangeInput)="fillFechaNacimientoDesde($event)"></app-fecha>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
                         <app-fecha [(value)]="fechaNacimientoHastaSelect" (valueChangeSelected)="fillFechaNacimientoHasta($event)" (valueChangeInput)="fillFechaNacimientoHasta($event)"></app-fecha>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)" [showClear]="true"></p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [filter]="true" filterBy="label,labelSinTilde" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
                             [disabled]="isDisabledCombos()" [showClear]="true"></p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{'censo.subtipoCurricular.descripcion.literal' | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV2' [options]="comboSubtipoCV" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [filter]="true" filterBy="label,labelSinTilde" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
@@ -97,36 +97,36 @@
             </p>
             <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
                         <input type="text " class="form-control" [maxLength]="5" pInputText [(ngModel)]="body.codigoPostal" (input)="onChangeCodigoPostal($event)">
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.provincia" | translate}}</label>
                         <p-dropdown class="select-form" [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idProvincia"
                             [(disabled)]="isDisabledProvincia" [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
                             [options]="comboPoblacion" (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
                             emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [showClear]="true" filterBy="label,labelSinTilde">
                         </p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.tipo.direccion" | translate}}</label>
                         <p-dropdown class="select-form" [options]="comboTipoDireccion" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [(ngModel)]='body.tipoDireccion' [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.correo" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='body.correo'>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.ws.literal.telefono" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='body.telefono'>
                     </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.movil" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='body.movil'>
                     </div>
