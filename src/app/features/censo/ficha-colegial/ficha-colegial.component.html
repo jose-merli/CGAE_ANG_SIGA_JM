@@ -107,7 +107,7 @@
   <!-- FIN TARJETA SERVICIOS INTERES -->
   <!-- FICHA DATOS GENERALES -->
   <div *ngIf="tarjetaGenerales == '3' || tarjetaGenerales == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('generales')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -415,7 +415,7 @@
 
   <!-- FICHA DATOS COLEGIALES -->
   <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('colegiales')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -741,7 +741,7 @@
 
   <!-- FICHA OTRAS COLEGIACIONES -->
   <div *ngIf="(tarjetaOtrasColegiaciones == '3' || tarjetaOtrasColegiaciones == '2') && esColegiado" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('colegiaciones')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -818,7 +818,7 @@
 
   <!-- FICHA CERTIFICADOS -->
   <div *ngIf="tarjetaCertificados == '3' || tarjetaCertificados == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('certificados')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('certificados')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -903,7 +903,7 @@
   <!-- FICHA SANCIONES -->
   <div *ngIf="!esNewColegiado">
     <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
-      <div class="card-header header-ficha">
+      <div (click)="abreCierraFicha('sanciones')" class="card-header header-ficha">
         <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado">
@@ -986,7 +986,7 @@
   <!-- END FICHA SANCIONES -->
   <!-- FICHA SOCIEDADES -->
   <div *ngIf="tarjetaSociedades == '3' || tarjetaSociedades == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('sociedades')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('sociedades')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1067,7 +1067,7 @@
 
   <!-- FICHA DATOS CURRICULARES -->
   <div *ngIf="tarjetaCurriculares == '3' || tarjetaCurriculares == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('curriculares')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('curriculares')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1188,7 +1188,7 @@
 
   <!-- INICIO FICHA DATOS DIRECCIONES -->
   <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('direcciones')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1328,7 +1328,7 @@
 
   <!-- INICIO FICHA DATOS BANCARIOS -->
   <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('bancarios')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1435,7 +1435,7 @@
   <!-- INICIO FICHA REGTEL -->
   <div *ngIf="esRegtel">
     <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
-      <div class="card-header header-ficha">
+      <div (click)="abreCierraRegtel('regtel')" class="card-header header-ficha">
         <div *ngIf="!esFichaActiva('regtel')" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado">

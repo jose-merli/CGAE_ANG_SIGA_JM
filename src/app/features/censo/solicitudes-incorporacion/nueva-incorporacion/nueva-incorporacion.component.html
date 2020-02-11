@@ -20,7 +20,7 @@
 <div class="busqueda-container">
     <!--FICHA DATOS SOLICITUD-->
     <div class="card">
-        <div class="card-header header-ficha">
+        <div (click)="abreCierraFichaColegiacion()" class="card-header header-ficha">
             <div [hidden]="fichaColegiacion" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -90,7 +90,7 @@
 
     <!--DATOS COLEGIACIÓN-->
     <div class="card">
-        <div class="card-header header-ficha">
+        <div (click)="abreCierraFichaSolicitud()" class="card-header header-ficha">
             <div [hidden]="fichaSolicitud" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -172,7 +172,7 @@
 
     <!--FICHA DATOS PERSONALES-->
     <div class="card">
-        <div class="card-header header-ficha">
+        <div (click)="abreCierraFichaPersonal()" class="card-header header-ficha">
             <div [hidden]="fichaPersonal" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -298,7 +298,7 @@
 
     <!--FICHA DATOS DIRECCIÓN-->
     <div class="card">
-        <div class="card-header header-ficha">
+        <div (click)="abreCierraFichaDireccion()" class="card-header header-ficha">
             <div [hidden]="fichaDireccion" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">
@@ -462,7 +462,7 @@
 
     <!--FICHA DATOS BANCARIOS-->
     <div class="card">
-        <div class="card-header header-ficha" >
+        <div (click)="abreCierraFichaBancaria()" class="card-header header-ficha" >
             <div [hidden]="fichaBancaria" class="form-row">
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado">

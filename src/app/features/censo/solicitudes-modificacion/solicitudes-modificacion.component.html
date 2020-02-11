@@ -11,7 +11,7 @@
   </div>
 
   <div class="card">
-    <div class="card-body">
+    <div (click)="onHideCard()" class="card-body">
       <p class="title-module">
        <span (click)="onHideCard()">{{ "censo.solicitudModificacion.literal.titulo" | translate }}</span>
         <i (click)="onHideCard()" *ngIf="showCard" class="fa fa-angle-up float-right"></i>

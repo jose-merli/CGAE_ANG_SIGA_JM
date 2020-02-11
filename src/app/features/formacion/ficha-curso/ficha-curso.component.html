@@ -12,7 +12,7 @@
   <!-- TARJETA DATOS GENERALES -->
   <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha" >
+    <div (click)="abreCierraFicha('generales')" class="card-header header-ficha" >
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -301,7 +301,7 @@
   <!-- TARJETA PRECIOS -->
   <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha" >
+    <div (click)="abreCierraFicha('price')" class="card-header header-ficha" >
       <div *ngIf="!esFichaActiva('price')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -389,7 +389,7 @@
   <!-- TERJETAS FORMADORES -->
   <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('formadores')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('formadores')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -735,7 +735,7 @@
 <!-- TERJETAS CERTIFICADOS -->
 <div class="card">
   <!-- Cabecera -->
-  <div class="card-header header-ficha">
+  <div (click)="abreCierraFicha('certificate')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('certificate')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -995,7 +995,7 @@
 <!-- TERJETAS SESIONES -->
 <div class="card">
   <!-- Cabecera -->
-  <div class="card-header header-ficha" >
+  <div (click)="abreCierraFicha('session')" class="card-header header-ficha" >
     <div *ngIf="!esFichaActiva('session')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -1087,7 +1087,7 @@
 <!-- TERJETAS CARGA MASIVA INSCRIPCIONES -->
 <div *ngIf="!isLetrado" class="card">
   <!-- Cabecera -->
-  <div class="card-header header-ficha">
+  <div (click)="abreCierraFicha('carga')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('carga')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
