@@ -135,6 +135,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
+    if (sessionStorage.getItem("vuelveForm") != undefined)
+      if (sessionStorage.getItem("vuelveForm") == "false") {
+        this.router.navigate(["/buscarCursos"]);
+      } else {
+        sessionStorage.setItem("vuelveForm", "true");
+      }
 
     if (sessionStorage.getItem('abrirSociedad') != null || sessionStorage.getItem('abrirSociedad') != undefined) {
       this.persona = 'j';
@@ -1180,12 +1186,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   getTipo(event) {
     this.selectedTipo = event;
-    if(this.selectedTipo != undefined){
+    if (this.selectedTipo != undefined) {
       this.bodyJuridica.tipo = this.selectedTipo.value;
-    }else{
+    } else {
       this.bodyJuridica.tipo = undefined;
     }
-    
+
   }
 
   navigateComunicar(dato) {
