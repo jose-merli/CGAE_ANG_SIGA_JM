@@ -453,8 +453,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onConfirmarBorrar(dato) {
     if (!this.selectAll) {
+      this.progressSpinner = true;
       this.sigaServices.post("modelos_borrar", dato).subscribe(
         data => {
+          this.progressSpinner = false;
+
           this.showSuccess(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
@@ -462,12 +465,22 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
         },
         err => {
-          this.showFail(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
-            )
-          );
-          console.log(err);
+          this.progressSpinner = false;
+          let error = JSON.parse(err.error).description;
+          if (error == "ultimo")
+            this.showFail(
+              this.translateService.instant(
+                "censo.modelosComunicaciones.gestion.errorUltimoModelo"
+              )
+            );
+          else {
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
+              )
+            );
+            console.log(err);
+          }
         },
         () => {
           this.getResultados();
@@ -476,13 +489,13 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       //let x = this.datos.indexOf(dato);
       //this.datos.splice(x, 1);
-      this.selectedDatos = [];
-      this.selectMultiple = false;
-      this.showSuccess(
-        this.translateService.instant(
-          "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
-        )
-      );
+      // this.selectedDatos = [];
+      // this.selectMultiple = false;
+      // this.showSuccess(
+      //   this.translateService.instant(
+      //     "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
+      //   )
+      // );
     } else {
       this.selectedDatos = [];
       this.showSuccess(

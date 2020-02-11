@@ -293,8 +293,17 @@ export class TarjetaInformesComponent implements OnInit {
         this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
       },
       err => {
-        this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
-        console.log(err);
+        let error = JSON.parse(err.error).description;
+        if (error == "ultimo")
+          this.showFail(
+            this.translateService.instant(
+              "censo.modelosComunicaciones.gestion.errorUltimaPlantilla"
+            )
+          );
+        else {
+          this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
+          console.log(err);
+        }
       },
       () => {
         this.getInformes();

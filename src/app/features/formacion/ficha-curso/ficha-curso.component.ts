@@ -525,6 +525,12 @@ export class FichaCursoComponent implements OnInit {
             "fichaCursoPermisos",
             JSON.stringify(this.activacionEditar)
           );
+
+          if (sessionStorage.getItem("formador") != undefined) {
+            let x = document.getElementById("fichaFormadores");
+            x.scrollIntoView({ behavior: "smooth" });
+          }
+
         } else if (derechoAcceso == 2) {
           // solo lectura
           this.activacionEditar = false;
@@ -1771,6 +1777,7 @@ export class FichaCursoComponent implements OnInit {
 
   newTrainer() {
     sessionStorage.setItem("abrirFormador", "true");
+    sessionStorage.setItem("vuelveForm", "true");
 
     this.pressNewFormador = true;
     this.modoEdicionFormador = false;
