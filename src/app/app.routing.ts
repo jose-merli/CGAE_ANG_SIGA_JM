@@ -1208,9 +1208,8 @@ const appRoutes: Routes = [
   },
   {
     path: "gestionEntidad",
-    // component: GestionEntidad,
-    // canActivate: [AuthGuard]
-    component: GestionEntidad
+    component: GestionEntidad,
+    canActivate: [AuthGuard]
   },
   {
     path: "permisos",
