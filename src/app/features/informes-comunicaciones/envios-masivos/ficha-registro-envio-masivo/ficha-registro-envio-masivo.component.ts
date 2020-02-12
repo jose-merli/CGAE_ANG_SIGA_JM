@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { TranslateService } from "../../../../commons/translate/translation.service";
-import { Message } from 'primeng/primeng';
+import { Message, ConfirmationService } from "primeng/components/common/api";
 import { ConfigEnviosMasivosItem } from '../../../../models/ConfiguracionEnviosMasivosItem';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -24,6 +24,7 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
   idEstado;
   idTipoEnvio;
   descripcion;
+  asunto;
   msgs: Message[];
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
 
@@ -122,7 +123,12 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
       this.idEstado = event.idEstado;
       this.idTipoEnvio = event.idTipoEnvio;
       this.descripcion = event.descripcion;
+      this.asunto = event.asunto;
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   guardar(event) {
@@ -133,7 +139,7 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
       this.body.idEstado = this.idEstado;
       this.body.idTipoEnvios = this.idTipoEnvio;
       this.body.descripcion = this.descripcion;
-      this.body.asunto = this.cuerpoPlantillas.asunto;
+      this.body.asunto =  this.asunto;
       this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
         data => {
           // this.body.idEstado = "4";

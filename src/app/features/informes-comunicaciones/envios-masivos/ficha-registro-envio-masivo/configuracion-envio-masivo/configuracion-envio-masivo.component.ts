@@ -176,6 +176,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           idEstado: this.body.idEstado,
           idTipoEnvio: this.body.idTipoEnvios,
           descripcion: this.body.descripcion,
+          asunto: this.body.asunto,
         }
         this.guardarDatos.emit(datosGuardar);
        }
@@ -225,10 +226,10 @@ para poder filtrar el dato con o sin estos caracteres*/
               };
               this.emitOpenDescripcion.emit(plantilla);
 
-              let cuerpoPlantilla = {
-                cuerpo: undefined,
-              }
-              this.cuerpoPlantilla.emit(cuerpoPlantilla);
+              // let cuerpoPlantilla = {
+              //   cuerpo: undefined,
+              // }
+              // this.cuerpoPlantilla.emit(cuerpoPlantilla);
 
             }
           }

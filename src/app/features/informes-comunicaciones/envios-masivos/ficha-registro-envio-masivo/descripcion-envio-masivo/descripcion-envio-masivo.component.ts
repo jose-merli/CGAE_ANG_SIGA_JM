@@ -23,7 +23,7 @@ export class DescripcionEnvioMasivoComponent implements OnInit {
   tipoEnvio: string;
   editarPlantilla: boolean = false;
   apiKey: string = "";
-
+  habilitarGuardar:boolean = false;
   editorConfig: any = {
     selector: "textarea",
     plugins:
@@ -64,6 +64,7 @@ export class DescripcionEnvioMasivoComponent implements OnInit {
   ];
   @Input() idPlantillaEnvio;
   @Input() cuerpoPlantillas;
+  @Input() idEnvio;
   @Output() emitCuerpo = new EventEmitter<any>();
   @Output() emitGuardar = new EventEmitter<any>();
 
@@ -78,8 +79,8 @@ export class DescripcionEnvioMasivoComponent implements OnInit {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
 
-    // this.editar = false;
-    // this.getDatos();
+    this.editar = false;
+    this.getDatos();
     // this.getTipoEnvios();
   }
 
@@ -96,13 +97,20 @@ export class DescripcionEnvioMasivoComponent implements OnInit {
     }
     if (this.cuerpoPlantillas != undefined) {
       if(this.cuerpoPlantillas.cuerpo != undefined){
-        this.body.cuerpo = this.cuerpoPlantillas.cuerpo;
+        if(this.body.cuerpo == undefined){
+          this.body.cuerpo = this.cuerpoPlantillas.cuerpo;
+        }
       }
       else{
         this.body.cuerpo = undefined;
       }
     }
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body))
+    if(this.idEnvio != undefined){
+      this.habilitarGuardar = true;
+    }else{
+      this.habilitarGuardar = false;
+    }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
     // this.getTipoEnvios();
   }
@@ -247,7 +255,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      this.getPlantillas();
+      // this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.editarPlantilla = true;
       if (
@@ -316,18 +324,19 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     this.emitGuardar.emit(true);
   }
 
   restablecer() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.cuerpo = JSON.parse(JSON.stringify(this.bodyInicial.cuerpo));
   }
 
   isGuardarDisabled() {
-    if (
-      this.body != JSON.parse(JSON.stringify(this.bodyInicial))
-    ) {
-      return false;
+    if(this.body.cuerpo != undefined){
+      if (this.body.cuerpo != this.bodyInicial.cuerpo) {
+        return false;
+      }
     }
     return true;
   }
