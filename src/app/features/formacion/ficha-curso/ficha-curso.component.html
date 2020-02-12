@@ -332,7 +332,7 @@
       <div class="row">
         <div class="col-lg-12 col-md-12">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
-          <editor #editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado"></editor>
+          <editor #editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="curso.descripcionEstado" [disabled]="!activacionEditar"></editor>
         </div>
       </div>
     </div>
