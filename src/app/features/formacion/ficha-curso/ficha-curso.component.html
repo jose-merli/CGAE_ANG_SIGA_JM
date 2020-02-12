@@ -301,7 +301,7 @@
   <div class="card">
     <!-- Cabecera -->
     <div (click)="abreCierraFicha('descripcion')" class="card-header header-ficha" >
-      <div *ngIf="!esFichaActiva('descripcion')" class="form-row">
+      <div [hidden]="esFichaActiva('descripcion')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
             <i class="fas fa-file icon-ficha"></i>
@@ -319,7 +319,7 @@
         </div>
       </div>
 
-      <div *ngIf="esFichaActiva('descripcion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="header-ficha-open d-flex justify-content-start align-items-center" *ngIf="esFichaActiva('descripcion')">
         <div class="img-colegiado">
           <i class="fas fa-file icon-ficha"></i>
         </div>
@@ -328,7 +328,7 @@
       </div>
     </div>
     <!-- Cuerpo -->
-    <div class="card-body card-body-ficha" *ngIf="esFichaActiva('descripcion')">
+    <div class="card-body card-body-ficha" [hidden]="!esFichaActiva('descripcion')">
       <div class="row">
         <div class="col-lg-12 col-md-12">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
@@ -336,10 +336,10 @@
         </div>
       </div>
     </div>
-    <div class="card-footer" *ngIf="esFichaActiva('descripcion')">
+    <div class="card-footer" [hidden]="!esFichaActiva('descripcion')">
       <div class="text-right main-button">
         <!-- Botón guardar -->
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveCourse()"
+        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}" (click)="saveDescription()"
           [disabled]="!activacionEditar"></button>
       </div>
     </div>
