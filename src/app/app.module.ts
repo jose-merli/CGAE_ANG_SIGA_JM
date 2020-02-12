@@ -340,6 +340,7 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
 import { CommonsService } from './_services/commons.service';
+import { DescripcionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/descripcion-envio-masivo/descripcion-envio-masivo.component';
 
 
 @NgModule({
@@ -613,6 +614,7 @@ import { CommonsService } from './_services/commons.service';
 		EnviosMasivosComponent,
 		FichaRegistroEnvioMasivoComponent,
 		ConfiguracionEnvioMasivoComponent,
+		DescripcionEnvioMasivoComponent,
 		DocumentosEnvioMasivoComponent,
 		DestinatariosEnvioMasivoComponent,
 		ProgramacionEnvioMasivoComponent,

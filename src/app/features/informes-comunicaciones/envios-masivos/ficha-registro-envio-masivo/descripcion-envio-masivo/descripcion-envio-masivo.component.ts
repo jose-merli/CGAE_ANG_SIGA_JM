@@ -1,17 +1,17 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input } from '@angular/core';
 import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnviosMasivosItem";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { SigaServices } from "../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { truncate } from "fs";
 
 @Component({
-  selector: "app-configuracion-envio-masivo",
-  templateUrl: "./configuracion-envio-masivo.component.html",
-  styleUrls: ["./configuracion-envio-masivo.component.scss"]
+  selector: "app-descripcion-envio-masivo",
+  templateUrl: "./descripcion-envio-masivo.component.html",
+  styleUrls: ["./descripcion-envio-masivo.component.scss"]
 })
-export class ConfiguracionEnvioMasivoComponent implements OnInit {
-  openFicha: boolean = true;
+export class DescripcionEnvioMasivoComponent implements OnInit {
+  openFicha: boolean = false;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   editar: boolean = false;
@@ -62,9 +62,8 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       activa: false
     }
   ];
-  @Output() emitOpenDescripcion = new EventEmitter<any>();
-  @Output() cuerpoPlantilla = new EventEmitter<any>();
-
+  @Input() idPlantillaEnvio;
+  @Input() cuerpoPlantillas
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -76,9 +75,23 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
 
-    this.editar = false;
-    this.getDatos();
-    this.getTipoEnvios();
+    // this.editar = false;
+    // this.getDatos();
+    // this.getTipoEnvios();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.body.idTipoEnvios = undefined;
+    if (this.idPlantillaEnvio != undefined) {
+      this.body.idTipoEnvios = this.idPlantillaEnvio.value;
+      this.getPlantillas();
+      this.openFicha = true;
+    }
+    if (this.cuerpoPlantillas.cuerpo != undefined) {
+      this.body.cuerpo = this.cuerpoPlantillas.cuerpo;
+    }
+
+    // this.getTipoEnvios();
   }
 
   // Mensajes
@@ -103,14 +116,12 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
 
   detallePlantilla(event) {
     if (event != undefined) {
-      this.body.cuerpo = "";
       if (
         this.body.idTipoEnvios == "1" ||
         this.body.idTipoEnvios == "4" ||
         this.body.idTipoEnvios == "5" ||
         this.body.idTipoEnvios == "7"
       ) {
-
         let datosPlantilla = {
           idPlantillaEnvios: event.value,
           idTipoEnvios: this.body.idTipoEnvios
@@ -121,20 +132,9 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             let datos = JSON.parse(data["body"]);
             this.body.asunto = datos.asunto;
             this.body.cuerpo = datos.cuerpo;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          }, () => {
-            if (this.body.cuerpo != undefined) {
-              let cuerpoPlantilla = {
-                cuerpo: this.body.cuerpo,
-              }
-              this.cuerpoPlantilla.emit(cuerpoPlantilla);
-            }
-      });
+          });
+      }
     }
-  }
   }
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
@@ -174,9 +174,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (e != null) {
       this.body.tipoEnvio = e.originalEvent.currentTarget.innerText;
     }
-    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != "") {
+    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != "")
       this.getPlantillas();
-    }
 
     if (this.body.idTipoEnvios == "1" || this.body.idTipoEnvios == "2") {
       this.sigaServices.notifyHabilitarDocumentos();
@@ -205,27 +204,16 @@ para poder filtrar el dato con o sin estos caracteres*/
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {
-
-            if (this.body.idTipoEnvios != undefined) {
-              let plantilla = {
-                value: this.body.idTipoEnvios,
-              };
-              this.emitOpenDescripcion.emit(plantilla);
-
-              let cuerpoPlantilla = {
-                cuerpo: undefined,
-              }
-              this.cuerpoPlantilla.emit(cuerpoPlantilla);
-
-            }
-          }
+          () => { }
         );
     }
   }
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.body.idTipoEnvios != undefined) {
+      this.openFicha = !this.openFicha;
+    }
+
   }
 
   esFichaActiva(key) {

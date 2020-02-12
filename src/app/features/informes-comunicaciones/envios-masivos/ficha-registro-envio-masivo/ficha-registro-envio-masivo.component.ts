@@ -14,11 +14,11 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
   fichasPosibles: any[];
   progressSpinner: boolean = false;
   filtrosEnvioMasivo;
-
+  idPlantillaEnvio;
+  cuerpoPlantillas;
   constructor(private activatedRoute: ActivatedRoute, private location: Location, private translateService: TranslateService, ) { }
 
   ngOnInit() {
-
     if (sessionStorage.getItem("filtrosEnvioMasivo")) {
       this.filtrosEnvioMasivo = JSON.parse(sessionStorage.getItem("filtrosEnvioMasivo"));
       sessionStorage.setItem("filtrosEnvioMasivoMasivo", JSON.stringify(this.filtrosEnvioMasivo));
@@ -29,6 +29,10 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
     this.fichasPosibles = [
       {
         key: "configuracion",
+        activa: false
+      },
+      {
+        key: "descripcion",
         activa: false
       },
       {
@@ -74,4 +78,14 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
 
   }
 
+  emitOpenDescripcion(event){
+    if(event != undefined){
+      this.idPlantillaEnvio = event;
+    }
+  }
+  cuerpoPlantilla(event){
+    if(event != undefined){
+      this.cuerpoPlantillas = event;
+    }
+  }
 }
