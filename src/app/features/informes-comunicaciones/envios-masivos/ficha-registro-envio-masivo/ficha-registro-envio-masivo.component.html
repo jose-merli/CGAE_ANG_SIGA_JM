@@ -8,8 +8,8 @@
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-configuracion-envio-masivo *ngSwitchCase="'configuracion'" (emitOpenDescripcion)="emitOpenDescripcion($event)" (cuerpoPlantilla)="cuerpoPlantilla($event)"></app-configuracion-envio-masivo>
-    <app-descripcion-envio-masivo *ngSwitchCase="'descripcion'" [idPlantillaEnvio]="idPlantillaEnvio" [cuerpoPlantillas]="cuerpoPlantillas"></app-descripcion-envio-masivo>
+    <app-configuracion-envio-masivo *ngSwitchCase="'configuracion'" (emitOpenDescripcion)="emitOpenDescripcion($event)" (cuerpoPlantilla)="cuerpoPlantilla($event)" (guardarDatos)="guardarDatos($event)" [nuevoCuerpoPlantilla]="nuevoCuerpoPlantilla"></app-configuracion-envio-masivo>
+    <app-descripcion-envio-masivo *ngSwitchCase="'descripcion'" [idPlantillaEnvio]="idPlantillaEnvio" [cuerpoPlantillas]="cuerpoPlantillas" (emitCuerpo)="emitCuerpo($event)" (emitGuardar)="guardar($event)"></app-descripcion-envio-masivo>
     <app-programacion-envio-masivo *ngSwitchCase="'programacion'"></app-programacion-envio-masivo>
     <app-documentos-envio-masivo *ngSwitchCase="'documentos'"></app-documentos-envio-masivo>
     <app-destinatarios-etiquetas-envio-masivo *ngSwitchCase="'destinatarios'">

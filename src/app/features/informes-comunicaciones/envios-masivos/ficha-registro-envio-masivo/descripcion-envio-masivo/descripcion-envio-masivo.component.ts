@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnviosMasivosItem";
 import { SigaServices } from "../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -63,7 +63,10 @@ export class DescripcionEnvioMasivoComponent implements OnInit {
     }
   ];
   @Input() idPlantillaEnvio;
-  @Input() cuerpoPlantillas
+  @Input() cuerpoPlantillas;
+  @Output() emitCuerpo = new EventEmitter<any>();
+  @Output() emitGuardar = new EventEmitter<any>();
+
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -84,12 +87,22 @@ export class DescripcionEnvioMasivoComponent implements OnInit {
     this.body.idTipoEnvios = undefined;
     if (this.idPlantillaEnvio != undefined) {
       this.body.idTipoEnvios = this.idPlantillaEnvio.value;
-      this.getPlantillas();
-      this.openFicha = true;
+      if(this.body.idTipoEnvios != "2"){
+        this.openFicha = true;
+      }else{
+        this.openFicha = false;
+      }
+     
     }
-    if (this.cuerpoPlantillas.cuerpo != undefined) {
-      this.body.cuerpo = this.cuerpoPlantillas.cuerpo;
+    if (this.cuerpoPlantillas != undefined) {
+      if(this.cuerpoPlantillas.cuerpo != undefined){
+        this.body.cuerpo = this.cuerpoPlantillas.cuerpo;
+      }
+      else{
+        this.body.cuerpo = undefined;
+      }
     }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body))
 
     // this.getTipoEnvios();
   }
@@ -196,9 +209,9 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.plantillas = comboPlantillas.combooItems;
             this.progressSpinner = false;
 
-            if (this.editar) {
-              this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
-            }
+            // if (this.editar) {
+            //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
+            // }
           },
           err => {
             console.log(err);
@@ -210,7 +223,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   abreCierraFicha() {
-    if (this.body.idTipoEnvios != undefined) {
+    if (this.body.idTipoEnvios != undefined && this.body.idTipoEnvios != "2") {
       this.openFicha = !this.openFicha;
     }
 
@@ -303,39 +316,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-    this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
-      data => {
-        this.body.idEstado = "4";
-        let result = JSON.parse(data["body"]);
-        this.body.idEnvio = result.description;
-
-        if (sessionStorage.getItem("crearNuevoEnvio") != null) {
-          this.body.fechaCreacion = new Date();
-        }
-        console.log(this.body.fechaCreacion);
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        sessionStorage.removeItem("crearNuevoEnvio");
-        sessionStorage.setItem(
-          "enviosMasivosSearch",
-          JSON.stringify(this.body)
-        );
-        this.showSuccess(
-          this.translateService.instant(
-            "informesycomunicaciones.enviosMasivos.ficha.envioCorrect"
-          )
-        );
-        this.editarPlantilla = true;
-      },
-      err => {
-        this.showFail(
-          this.translateService.instant(
-            "informesycomunicaciones.enviosMasivos.ficha.envioError"
-          )
-        );
-        console.log(err);
-      },
-      () => { }
-    );
+    this.emitGuardar.emit(true);
   }
 
   restablecer() {
@@ -344,15 +325,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   isGuardarDisabled() {
     if (
-      this.body.idTipoEnvios != "" &&
-      this.body.idTipoEnvios != null &&
-      this.body.idPlantillaEnvios != "" &&
-      this.body.idPlantillaEnvios != null &&
-      this.body.descripcion != "" &&
-      this.body.descripcion != null
+      this.body != JSON.parse(JSON.stringify(this.bodyInicial))
     ) {
       return false;
     }
     return true;
+  }
+
+  onChangeEditor(){
+    this.emitCuerpo.emit(this.body.cuerpo);
   }
 }

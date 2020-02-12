@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { TranslateService } from "../../../../commons/translate/translation.service";
+import { Message } from 'primeng/primeng';
+import { ConfigEnviosMasivosItem } from '../../../../models/ConfiguracionEnviosMasivosItem';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-ficha-registro-envio-masivo',
@@ -16,7 +19,16 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
   filtrosEnvioMasivo;
   idPlantillaEnvio;
   cuerpoPlantillas;
-  constructor(private activatedRoute: ActivatedRoute, private location: Location, private translateService: TranslateService, ) { }
+  nuevoCuerpoPlantilla;
+  idEnvio;
+  idEstado;
+  idTipoEnvio;
+  descripcion;
+  msgs: Message[];
+  body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
+
+
+  constructor(private sigaServices: SigaServices, private activatedRoute: ActivatedRoute, private location: Location, private translateService: TranslateService, ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("filtrosEnvioMasivo")) {
@@ -78,14 +90,75 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
 
   }
 
-  emitOpenDescripcion(event){
-    if(event != undefined){
+  emitOpenDescripcion(event) {
+    if (event != undefined) {
       this.idPlantillaEnvio = event;
     }
   }
-  cuerpoPlantilla(event){
-    if(event != undefined){
+  cuerpoPlantilla(event) {
+    if (event != undefined) {
       this.cuerpoPlantillas = event;
+    }
+  }
+  emitCuerpo(event) {
+    if (event != undefined) {
+      this.nuevoCuerpoPlantilla = event;
+    }
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  guardarDatos(event) {
+    if (event != undefined) {
+      this.idEnvio = event.idEnvio;
+      this.idEstado = event.idEstado;
+      this.idTipoEnvio = event.idTipoEnvio;
+      this.descripcion = event.descripcion;
+    }
+  }
+
+  guardar(event) {
+    if (event == true) {
+      this.body.idEnvio = this.idEnvio;
+      this.body.cuerpo = this.nuevoCuerpoPlantilla;
+      this.body.idPlantillaEnvios = this.idPlantillaEnvio.value;
+      this.body.idEstado = this.idEstado;
+      this.body.idTipoEnvios = this.idTipoEnvio;
+      this.body.descripcion = this.descripcion;
+      this.body.asunto = this.cuerpoPlantillas.asunto;
+      this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
+        data => {
+          // this.body.idEstado = "4";
+          let result = JSON.parse(data["body"]);
+          // this.body.idEnvio = result.description;
+
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.enviosMasivos.ficha.envioCorrect"
+            )
+          );
+          // this.editarPlantilla = true;
+        },
+        err => {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.enviosMasivos.ficha.envioError"
+            )
+          );
+          console.log(err);
+        },
+        () => {
+
+        }
+      );
     }
   }
 }

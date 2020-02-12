@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnviosMasivosItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -64,6 +64,9 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   ];
   @Output() emitOpenDescripcion = new EventEmitter<any>();
   @Output() cuerpoPlantilla = new EventEmitter<any>();
+  @Output() guardarDatos = new EventEmitter<any>();
+
+  @Input() nuevoCuerpoPlantilla;
 
   constructor(
     private sigaServices: SigaServices,
@@ -129,6 +132,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             if (this.body.cuerpo != undefined) {
               let cuerpoPlantilla = {
                 cuerpo: this.body.cuerpo,
+                asunto: this.body.asunto,
               }
               this.cuerpoPlantilla.emit(cuerpoPlantilla);
             }
@@ -166,7 +170,15 @@ para poder filtrar el dato con o sin estos caracteres*/
       err => {
         console.log(err);
       },
-      () => { }
+      () => {
+        let datosGuardar = {
+          idEnvio: this.body.idEnvio,
+          idEstado: this.body.idEstado,
+          idTipoEnvio: this.body.idTipoEnvios,
+          descripcion: this.body.descripcion,
+        }
+        this.guardarDatos.emit(datosGuardar);
+       }
     );
   }
 
@@ -197,9 +209,9 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.plantillas = comboPlantillas.combooItems;
             this.progressSpinner = false;
 
-            if (this.editar) {
-              this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
-            }
+            // if (this.editar) {
+            //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
+            // }
           },
           err => {
             console.log(err);
@@ -255,6 +267,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       ) {
         this.editar = true;
       }
+     
     } else {
       this.editar = false;
     }
@@ -315,6 +328,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    if(this.nuevoCuerpoPlantilla !=undefined){
+      this.body.cuerpo = this.nuevoCuerpoPlantilla
+    }
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
         this.body.idEstado = "4";
@@ -346,7 +362,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         );
         console.log(err);
       },
-      () => { }
+      () => { 
+        let datosGuardar = {
+          idEnvio: this.body.idEnvio,
+        }
+        this.guardarDatos.emit(datosGuardar);
+       }
     );
   }
 
