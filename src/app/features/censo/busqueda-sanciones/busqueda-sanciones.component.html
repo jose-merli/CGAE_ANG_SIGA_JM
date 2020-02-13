@@ -11,9 +11,10 @@
     <div class="card">
         <!-- Búsqueda por letrado -->
         <div class="card-body">
-            <p (click)="onHideBusquedaLetrado()" class="title-module">{{ "menu.expediente.sanciones.busquedaPorLetrado.literal" | translate}}
-                <i *ngIf="showBusquedaLetrado" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showBusquedaLetrado" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span (click)="onHideBusquedaLetrado()">{{ "menu.expediente.sanciones.busquedaPorLetrado.literal" | translate}}</span>
+                <i (click)="onHideBusquedaLetrado()" *ngIf="showBusquedaLetrado" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideBusquedaLetrado()" *ngIf="!showBusquedaLetrado" class="fa fa-angle-down float-right"></i>
             </p>
             <div *ngIf="showBusquedaLetrado" class="module vista-avanzada">
                 <div class="form-row">
@@ -37,9 +38,10 @@
             </div>
 
             <!-- Búsqueda por colegio -->
-            <p (click)="onHideBusquedaColegio()" class="title-module">{{ "menu.expediente.sanciones.busquedaPorColegio.literal" | translate}}
-                <i *ngIf="showBusquedaColegio" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showBusquedaColegio" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span (click)="onHideBusquedaColegio()">{{ "menu.expediente.sanciones.busquedaPorColegio.literal" | translate}}</span>
+                <i (click)="onHideBusquedaColegio()" *ngIf="showBusquedaColegio" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideBusquedaColegio()" *ngIf="!showBusquedaColegio" class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showBusquedaColegio" class="module vista-avanzada">
@@ -64,9 +66,10 @@
                 </div>
             </div>
             <!-- Datos Generales Avanzados -->
-            <p (click)="onHideBusquedaSanciones()" class="title-module">{{ "menu.expedientes.sanciones" | translate}}
-                <i *ngIf="showBusquedaSanciones" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showBusquedaSanciones" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span (click)="onHideBusquedaSanciones()">{{ "menu.expedientes.sanciones" | translate}}</span>
+                <i (click)="onHideBusquedaSanciones()" *ngIf="showBusquedaSanciones" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideBusquedaSanciones()" *ngIf="!showBusquedaSanciones" class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showBusquedaSanciones" class="module vista-avanzada">

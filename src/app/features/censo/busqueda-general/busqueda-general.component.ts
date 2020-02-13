@@ -142,7 +142,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
         sessionStorage.setItem("vuelveForm", "true");
       }
 
-    if (sessionStorage.getItem('abrirSociedad') != null || sessionStorage.getItem('abrirSociedad') != undefined) {
+    if (sessionStorage.getItem('migaPan') != null && sessionStorage.getItem('migaPan') == "Buscar Sociedades") {
       this.persona = 'j';
 
       this.isFormador = true;
@@ -255,6 +255,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   ngOnDestroy() {
     sessionStorage.removeItem('AddDestinatarioIndv');
     sessionStorage.removeItem('abrirRemitente');
+    sessionStorage.removeItem('abrirSociedad');
   }
 
   getInstitucion() {

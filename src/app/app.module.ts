@@ -280,7 +280,7 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
 import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
-import { SelectButtonModule, ColorPickerModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
@@ -340,6 +340,7 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
 import { CommonsService } from './_services/commons.service';
+import { DescripcionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/descripcion-envio-masivo/descripcion-envio-masivo.component';
 
 
 @NgModule({
@@ -613,6 +614,7 @@ import { CommonsService } from './_services/commons.service';
 		EnviosMasivosComponent,
 		FichaRegistroEnvioMasivoComponent,
 		ConfiguracionEnvioMasivoComponent,
+		DescripcionEnvioMasivoComponent,
 		DocumentosEnvioMasivoComponent,
 		DestinatariosEnvioMasivoComponent,
 		ProgramacionEnvioMasivoComponent,
@@ -661,14 +663,14 @@ import { CommonsService } from './_services/commons.service';
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,
-
+		DialogModule,
 		RadioButtonModule,
 		ConfirmDialogModule,
 		ValidationModule,
 		GrowlModule,
 		CommonModule,
 		CalendarModule,
-
+		OverlayPanelModule,
 		ScheduleModule,
 
 		AutoCompleteModule,

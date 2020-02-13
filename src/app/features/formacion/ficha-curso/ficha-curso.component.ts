@@ -855,6 +855,77 @@ export class FichaCursoComponent implements OnInit {
     }
   }
 
+  
+  saveDescription() {
+    let url = "";
+
+    if (this.modoEdicion) {
+      //Enviamos al back todos los formadores editados
+      url = "fichaCursos_updateCourse";
+        let curso = new DatosCursosItem();
+        curso.descripcionEstado = this.curso.descripcionEstado;
+        curso.nombreCurso = this.curso.nombreCurso;
+        curso.idCurso = this.curso.idCurso;
+        curso.idEstado = this.curso.idEstado;
+        this.sigaServices.post(url, curso).subscribe(
+          data => {
+            this.progressSpinner = false;
+    
+            if (!this.modoEdicion) {
+              this.curso.idCurso = JSON.parse(data.body).id;
+              this.curso.codigoCurso = JSON.parse(data.body).status;
+              this.getCountInscriptions();
+              this.getPrices();
+              // this.curso.fechaInscripcionDesde = this.curso.fechaInscripcionDesdeDate.toString();
+              // this.curso.fechaInscripcionHasta = this.curso.fechaInscripcionHastaDate.toString();
+              this.searchCourse(this.curso.idCurso);
+    
+              sessionStorage.setItem("courseCurrent", JSON.stringify(this.curso));
+              sessionStorage.setItem("modoEdicionCurso", "true");
+    
+              this.showMessage(
+                "success",
+                this.translateService.instant("general.message.correct"),
+                this.translateService.instant("formacion.mensaje.guardar.curso.correcto")
+              );
+              this.modoEdicion = true;
+            } else {
+              this.showMessage(
+                "success",
+                this.translateService.instant("general.message.correct"),
+                this.translateService.instant("formacion.mensaje.modificar.curso.correcto")
+              );
+              this.modoEdicion = true;
+              this.resaltadoDatos=false;
+              // if (this.initCurso.plazasDisponibles < this.curso.plazasDisponibles) {
+              //   this.curso.aviso = "3";
+              //   this.notifyAvailablePlaces();
+              // } else {
+              //   this.curso.aviso = undefined;
+              // }
+            }
+            this.configurationInformacionAdicional();
+          },
+          err => {
+            this.progressSpinner = false;
+    
+            if (JSON.parse(err.error).error.description != null) {
+              this.showFail(JSON.parse(err.error).error.description);
+            } else {
+              this.showFail(
+                this.translateService.instant("general.message.error.realiza.accion")
+              );
+            }
+    
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );      
+      
+    } 
+  }
+
   callSaveCourse(url) {
     this.sigaServices.post(url, this.curso).subscribe(
       data => {
@@ -1477,10 +1548,8 @@ export class FichaCursoComponent implements OnInit {
       this.curso.nombreCurso == null ||
       this.curso.idVisibilidad == null ||
       this.curso.idEstado == null ||
-      this.curso.descripcionEstado == null ||
       this.curso.fechaInscripcionDesdeDate == null ||
       this.curso.fechaInscripcionHastaDate == null ||
-      this.curso.descripcionEstado == "" ||
       this.curso.idEstado == "" ||
       this.curso.nombreCurso == "" ||
       this.curso.idVisibilidad == "" ||
@@ -3278,6 +3347,10 @@ export class FichaCursoComponent implements OnInit {
       },
       {
         key: "price",
+        activa: false
+      },
+      {
+        key: "descripcion",
         activa: false
       },
       {

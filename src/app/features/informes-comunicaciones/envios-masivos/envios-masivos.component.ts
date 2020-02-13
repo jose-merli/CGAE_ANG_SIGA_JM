@@ -55,7 +55,7 @@ export class EnviosMasivosComponent implements OnInit {
   currentDate: Date = new Date();
   estado: any;
   loaderEtiquetas: boolean = false;
-  fichaBusqueda: boolean = false;
+  fichaBusqueda: boolean = true;
 
   @ViewChild("table") table: DataTable;
   selectedDatos;

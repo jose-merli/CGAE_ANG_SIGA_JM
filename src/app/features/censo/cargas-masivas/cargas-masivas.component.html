@@ -9,7 +9,8 @@
 </div>
 <div class="card">
   <div class="card-body">
-    <p class="title-module" (click)="onHideCargasMasivas()">{{ 'censo.cargasMasivas.literal' | translate }}
+    <p (click)="onHideCargasMasivas()" class="title-module">
+      <span>{{ 'censo.cargasMasivas.literal' | translate }}</span>
       <i *ngIf="!showCargasMasivas" class="fa fa-angle-up float-right"></i>
       <i *ngIf="showCargasMasivas" class="fa fa-angle-down float-right"></i>
     </p>

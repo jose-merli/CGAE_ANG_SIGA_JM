@@ -54,7 +54,7 @@ export class ComunicacionesComponent implements OnInit {
   estado: number;
   currentDate: Date = new Date();
   loaderEtiquetas: boolean = false;
-  fichaBusqueda: boolean = false;
+  fichaBusqueda: boolean = true;
   showDatosDestinatarios: boolean = true;
   destinatario: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegios: any[] = [];

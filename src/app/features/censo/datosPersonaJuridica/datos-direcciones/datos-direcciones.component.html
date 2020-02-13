@@ -1,6 +1,6 @@
 <div class="busqueda-container">
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('direcciones')">
+    <div (click)="abreCierraFicha('direcciones')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -9,7 +9,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
+            <label (click)="abreCierraFicha('direcciones')" class="mr-auto title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-between">
@@ -19,7 +19,7 @@
 
             </div>
             <br>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i (click)="abreCierraFicha('direcciones')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>
 
@@ -28,8 +28,8 @@
         <div class="img-colegiado">
           <i class="fa fa-map-marker-alt icon-ficha"> </i>
         </div>
-        <label class="title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha('direcciones')" class="title-ficha">{{"censo.fichaCliente.datosDirecciones.cabecera" | translate}}</label>
+        <i (click)="abreCierraFicha('direcciones')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 

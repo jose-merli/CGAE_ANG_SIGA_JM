@@ -1,6 +1,6 @@
 <div class="busqueda-container">
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('integrantes')">
+    <div (click)="abreCierraFicha('integrantes')" class="card-header header-ficha" >
       <div *ngIf="!esFichaActiva('integrantes')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -9,7 +9,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
+            <label (click)="abreCierraFicha('integrantes')" class="mr-auto title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
           </div>
           <div *ngIf="only" class="d-flex justify-content-between">
 
@@ -31,14 +31,14 @@
             <label>{{"censo.fichaIntegrantes.literal.estado" | translate}}
               <span> {{ body.ejerciente }} </span>
             </label>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
+            <i (click)="abreCierraFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length == 0" class="d-flex justify-content-between">
             <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}
               <span>{{ searchIntegrantes.datosIntegrantesItem.length }}</span>
             </label>
 
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
+            <i (click)="abreCierraFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
           <div *ngIf="!only && searchIntegrantes.datosIntegrantesItem.length >3" class="d-flex justify-content-between">
             <label>{{"censo.datosDireccion.literal.numero.integrantes" | translate}}
@@ -51,7 +51,7 @@
             class="d-flex justify-content-between">
             <label *ngFor="let integrante of datos">&nbsp;{{ integrante.nombre }} &nbsp;{{ integrante.apellidos }}</label>
             &nbsp;
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
+            <i (click)="abreCierraFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}" class="pull-right"></i>
           </div>
 
 
@@ -61,16 +61,16 @@
           <div class="img-colegiado">
             <i class="far fa-users icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</label>
-          <i class="fa fa-angle-up ml-auto"></i>
+          <label (click)="abreCierraFicha('integrantes')" class="title-ficha">{{"gratuita.operarEJG.literal.datosIntegrantes" | translate}}</label>
+          <i (click)="abreCierraFicha('integrantes')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <div *ngIf="esFichaActiva( 'integrantes')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-users icon-ficha"> </i>
         </div>
-        <label class="title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha('integrantes')" class="title-ficha">{{"censo.datosRegistrales.literal.integrantes" | translate}}</label>
+        <i (click)="abreCierraFicha('integrantes')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 

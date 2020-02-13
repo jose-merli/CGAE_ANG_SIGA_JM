@@ -8,7 +8,8 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}
+            <p class="title-module" (click)="onHideDatosGenerales()">
+                <span>{{ 'general.message.datos.generales' | translate }}</span>
                 <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
                 <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
             </p>
@@ -45,7 +46,8 @@
                     </div>
                 </div>
             </div>
-            <p (click)="onHideDatosGeneralesAvanzados()" class="title-module">{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}
+            <p class="title-module" (click)="onHideDatosGeneralesAvanzados()">
+                <span>{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}</span>
                 <i *ngIf="showDatosGeneneralesAvanzado" class="fa fa-angle-down float-right"></i>
                 <i *ngIf="!showDatosGeneneralesAvanzado" class="fa fa-angle-up float-right"></i>
             </p>
@@ -61,11 +63,11 @@
                         <p-dropdown class="select-form" [options]="comboEstadoCivil" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idEstadoCivil"
                             [showClear]="true" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
                     </div>
-                    <div class=" form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoDesde" | translate}}</label>
                         <app-fecha [(value)]="fechaNacimientoDesdeSelect" (valueChangeSelected)="fillFechaNacimientoDesde($event)" (valueChangeInput)="fillFechaNacimientoDesde($event)"></app-fecha>
                     </div>
-                    <div class=" form-group col-lg-3 col-md-3">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
                         <app-fecha [(value)]="fechaNacimientoHastaSelect" (valueChangeSelected)="fillFechaNacimientoHasta($event)" (valueChangeInput)="fillFechaNacimientoHasta($event)"></app-fecha>
                     </div>
@@ -88,7 +90,8 @@
                     </div>
                 </div>
             </div>
-            <p (click)="onHideDireccion()" class="title-module">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+            <p class="title-module" (click)="onHideDireccion()">
+                <span (click)="onHideDireccion()">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}</span>
                 <i *ngIf="showDatosDireccion" class="fa fa-angle-down float-right"></i>
                 <i *ngIf="!showDatosDireccion" class="fa fa-angle-up float-right"></i>
             </p>

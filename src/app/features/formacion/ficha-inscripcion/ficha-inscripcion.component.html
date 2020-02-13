@@ -49,7 +49,7 @@
   <!-- FICHA DATOS INSCRIPCION -->
   <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha" (click)="abreCierraFicha('inscripcion')">
+    <div (click)="abreCierraFicha('inscripcion')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('inscripcion')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -58,7 +58,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosInscripcion.cabecera' | translate }}</label>
+            <label (click)="abreCierraFicha('inscripcion')" class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosInscripcion.cabecera' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ 'censo.nuevaSolicitud.fechaSolicitud' | translate }}:
@@ -74,7 +74,7 @@
               <span *ngIf="inscripcion.checkMinimaAsistencia == 0">No</span>
               <span *ngIf="inscripcion.checkMinimaAsistencia == 1">Sí</span>
             </label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('inscripcion')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -82,8 +82,8 @@
         <div class="img-colegiado">
           <i class="fa fa-file-pdf icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'formacion.fichaInscripcion.datosInscripcion.cabecera' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha('inscripcion')" class="title-ficha">{{'formacion.fichaInscripcion.datosInscripcion.cabecera' | translate }}</label>
+        <i (click)="abreCierraFicha('inscripcion')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
@@ -127,7 +127,7 @@
 
   <!-- TERJETAS PERSONAKES-->
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('personales')">
+    <div (click)="abreCierraFicha('personales')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('personales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -136,7 +136,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
+            <label (click)="abreCierraFicha('personales')" class="mr-auto title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}
@@ -145,7 +145,7 @@
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}
               <span>{{ persona.nombre }} {{ persona.apellido1 }} {{ persona.apellido2 }}</span>
             </label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('personales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -153,9 +153,9 @@
         <div class="img-colegiado">
           <i class=" fa fa-user   icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
+        <label (click)="abreCierraFicha('personales')" class="title-ficha">{{"formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
         <div class="ml-auto">
-          <i class="fa fa-angle-up float-right"></i>
+          <i (click)="abreCierraFicha('personales')" class="fa fa-angle-up float-right"></i>
         </div>
       </div>
     </div>
@@ -287,7 +287,7 @@
   <!-- TERJETAS CERTIFICADO-->
   <div class="card">
     <!-- Cabecera -->
-    <div class="card-header header-ficha" (click)="abreCierraFichaPersonal('certificado')">
+    <div (click)="abreCierraFichaPersonal('certificado')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('certificado')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -296,7 +296,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
+            <label (click)="abreCierraFichaPersonal('certificado')" class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between">
             <label>{{ 'menu.certificados' | translate }}:
@@ -308,19 +308,19 @@
             <label>{{ 'formacion.busquedaInscripcion.calificacion' | translate }}:
               <span>{{ datosCertificates[0].calificacion }}</span>
             </label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFichaPersonal('certificado')" class="fa fa-angle-down float-right"></i>
           </div>
           <div *ngIf="datosCertificates.length >= 2" class="d-flex justify-content-between">
             <label>{{ 'formacion.fichaCursos.tarjetaCertificados.resumen.numCertificados' | translate }}:
               <span>{{ datosCertificates.length }}</span>
             </label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFichaPersonal('certificado')" class="fa fa-angle-down float-right"></i>
           </div>
           <div *ngIf="datosCertificates.length == 0" class="d-flex justify-content-between">
             <label>{{ 'formacion.fichaCursos.tarjetaCertificados.resumen.numCertificados' | translate }}:
               <span>0</span>
             </label>
-            <i class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFichaPersonal('certificado')" class="fa fa-angle-down float-right"></i>
           </div>
           <!-- <i *ngIf="inscripcionInsertada || modoEdicion" class="fa fa-angle-down float-right"></i> -->
         </div>
@@ -329,8 +329,8 @@
         <div class="img-colegiado">
           <i class="fa fa-certificate icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFichaPersonal('certificado')" class="title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
+        <i (click)="abreCierraFichaPersonal('certificado')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 

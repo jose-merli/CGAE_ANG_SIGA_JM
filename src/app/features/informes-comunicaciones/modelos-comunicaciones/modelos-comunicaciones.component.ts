@@ -37,7 +37,7 @@ export class ModelosComunicacionesComponent implements OnInit {
   institucionActual: string;
   preseleccionar: any = [];
   visible: any = [];
-  fichaBusqueda: boolean = false;
+  fichaBusqueda: boolean = true;
   labelColegio: any; // = this.translateService.instant("informesYcomunicaciones.plantillasEnvios.modelos.porDefecto");
   isReload: boolean = false;
   anotherPage: boolean = false;

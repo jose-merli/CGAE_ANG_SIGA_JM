@@ -33,7 +33,7 @@
     </p>
   </div>
   <!-- SERVICIOS INTERES -->
-  <div *ngIf="activacionEditar">
+  <div *ngIf="activacionTarjeta">
     <div *ngIf="tarjetaInteres == '3' || tarjetaInteres == '2'" class="card">
       <div class="card-header header-ficha">
         <div class="form-row">
@@ -107,7 +107,7 @@
   <!-- FIN TARJETA SERVICIOS INTERES -->
   <!-- FICHA DATOS GENERALES -->
   <div *ngIf="tarjetaGenerales == '3' || tarjetaGenerales == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('generales')">
+    <div (click)="abreCierraFicha('generales')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -117,7 +117,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+            <label (click)="abreCierraFicha('generales')" class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
@@ -136,7 +136,7 @@
               <span *ngIf="fechaNacCambiada">{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
 
             </label>
-            <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -145,9 +145,9 @@
           <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
           <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
         </div>
-        <label class="title-ficha">{{ "general.message.datos.generales" | translate }}
+        <label (click)="abreCierraFicha('generales')" class="title-ficha">{{ "general.message.datos.generales" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraFicha('generales')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
@@ -415,7 +415,7 @@
 
   <!-- FICHA DATOS COLEGIALES -->
   <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('colegiales')">
+    <div (click)="abreCierraFicha('colegiales')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -424,7 +424,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+            <label (click)="abreCierraFicha('colegiales')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
@@ -448,7 +448,7 @@
               <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
               <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
             </label>
-            <i *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
+            <i  (click)="abreCierraFicha('colegiales')" *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -456,9 +456,9 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
-        </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha('colegiales')" class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+        </label> 
+        <i (click)="abreCierraFicha('colegiales')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!-- cuerpo -->
@@ -739,9 +739,10 @@
   </div>
   <!-- END DATOS COLEGIALES -->
 
+
   <!-- FICHA OTRAS COLEGIACIONES -->
   <div *ngIf="(tarjetaOtrasColegiaciones == '3' || tarjetaOtrasColegiaciones == '2') && esColegiado" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('colegiaciones')">
+    <div (click)="abreCierraFicha('colegiaciones')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -750,7 +751,7 @@
         </div>
         <div class="col-lg-11 col-md-6">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+            <label (click)="abreCierraFicha('colegiaciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
@@ -758,7 +759,7 @@
             <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
               <span>{{ datosColegiaciones.length }}</span>
             </label>
-            <i *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('colegiaciones')" *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -766,9 +767,9 @@
         <div class="img-colegiado">
           <i class="fa fa-graduation-cap icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+        <label (click)="abreCierraFicha('colegiaciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraFicha('colegiaciones')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!-- cuerpo -->
@@ -818,7 +819,7 @@
 
   <!-- FICHA CERTIFICADOS -->
   <div *ngIf="tarjetaCertificados == '3' || tarjetaCertificados == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('certificados')">
+    <div (click)="abreCierraFicha('certificados')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('certificados')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -827,17 +828,23 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
+            <label (click)="abreCierraFicha('certificados')" class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
+              <!-- <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
+                <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
+              </label>
+
+              <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
+                <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
+              </label> -->
+              
               <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
                 <span>{{ datosCertificados.length }}</span>
               </label>
-            </div>
-            <i *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('certificados')" *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -845,8 +852,8 @@
         <div class="img-colegiado">
           <i class="fa fa-certificate icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "menu.certificados" | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha('certificados')" class="title-ficha">{{ "menu.certificados" | translate }}</label>
+        <i (click)="abreCierraFicha('certificados')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!-- cuerpo -->
@@ -897,7 +904,7 @@
   <!-- FICHA SANCIONES -->
   <div *ngIf="!esNewColegiado">
     <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
-      <div class="card-header header-ficha" (click)="abreCierraFicha('sanciones')">
+      <div (click)="abreCierraFicha('sanciones')" class="card-header header-ficha">
         <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado">
@@ -906,17 +913,31 @@
           </div>
           <div class="col-lg-11 col-md-10">
             <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+              <label (click)="abreCierraFicha('sanciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
               </label>
               <!-- <label class="registros-ficha">(0 registros)</label> -->
             </div>
             <div class="d-flex justify-content-between">
-              <div class="d-flex justify-content-between">
+              <!-- <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
+              </label>
+
+              <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
+              </label>
+
+              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
+              </label>
+
+              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
+              </label> -->
+
                 <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
                   <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
                 </label>
-              </div>
-              <i *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
+              <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
             </div>
           </div>
         </div>
@@ -924,8 +945,8 @@
           <div class="img-colegiado">
             <i class="fa fa-gavel icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
-          <i class="fa fa-angle-up ml-auto"></i>
+          <label (click)="abreCierraFicha('sanciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
+          <i (click)="abreCierraFicha('sanciones')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <!-- cuerpo -->
@@ -966,7 +987,7 @@
   <!-- END FICHA SANCIONES -->
   <!-- FICHA SOCIEDADES -->
   <div *ngIf="tarjetaSociedades == '3' || tarjetaSociedades == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('sociedades')">
+    <div (click)="abreCierraFicha('sociedades')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('sociedades')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -975,17 +996,32 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+            <label (click)="abreCierraFicha('sociedades')" class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
+
+            <!-- <label>{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.nif }}</span>
+            </label>
+
+            <label>{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.tipoSociedad }}</span>
+            </label>
+
+            <label>{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.denominacion }}</span>
+            </label>
+
+            <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
+              <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
+            </label> -->
+
               <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
                 <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
               </label>
-            </div>
-            <i *ngIf="!esFichaActiva('sociedades')" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha('sociedades')" *ngIf="!esFichaActiva('sociedades')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -993,9 +1029,9 @@
         <div class="img-colegiado">
           <i class="fa fa-briefcase icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+        <label (click)="abreCierraFicha('sociedades')" class="title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraFicha('sociedades')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <div *ngIf="esFichaActiva('sociedades')" class="card-body card-body-ficha">
@@ -1032,7 +1068,7 @@
 
   <!-- FICHA DATOS CURRICULARES -->
   <div *ngIf="tarjetaCurriculares == '3' || tarjetaCurriculares == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('curriculares')">
+    <div (click)="abreCierraFicha('curriculares')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('curriculares')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1041,29 +1077,40 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
+            <label (click)="abreCierraFicha('curriculares')" class="mr-auto title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
+              <!-- <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}:
+                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.categoriaCurricular }}</span>
+              </label>
+
+              <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}:
+                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.tipoSubtipo }}</span>
+              </label>
+
+              <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}:
+                <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde}}</span>
+              </label> -->
+
               <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
                 <span>{{ datosCurriculares.length }}</span>
-              </label>
-            </div>
-            <i *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
-          </div>
+              </label>                       
+            <i (click)="abreCierraFicha('curriculares')" *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
+    </div>
       <div *ngIf="esFichaActiva('curriculares')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-paperclip icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
+        <label (click)="abreCierraFicha('curriculares')" class="title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraFicha('curriculares')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
+   
     <!-- cuerpo -->
 
     <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
@@ -1138,12 +1185,11 @@
       </div>
     </div>
   </div>
-
   <!-- END FICHA DATOS CURRICULARES -->
 
   <!-- INICIO FICHA DATOS DIRECCIONES -->
   <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('direcciones')">
+    <div (click)="abreCierraFicha('direcciones')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1152,37 +1198,54 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+            <label (click)="abreCierraFicha('direcciones')" class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <div class="d-flex justify-content-between">
-              <div class="d-flex justify-content-between">
+            <!-- <div class="d-flex justify-content-between"> -->
+              <!-- <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.domicilioLista }}</span>
+              </label>
+
+              <label>{{ "censo.ws.literal.codigopostal" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.codigoPostal }}</span>
+              </label>
+
+              <label>{{ "censo.datosDireccion.literal.provincia" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.nombrePoblacion }}</span>
+              </label>
+
+              <label>{{ "censo.datosDireccion.literal.correo" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.correoElectronico }}</span>
+              </label>
+
+              <label>{{ "censo.ws.literal.telefono" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.telefono }}</span>
+              </label>
+
+              <label>{{ "censo.datosDireccion.literal.movil" | translate }}:
+                <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
+              </label> -->
+
                 <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
                   <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}
                   </span>
                 </label>
-              </div>
-              <br />
-              <!--
-                <i [ngClass]="{ 'fa fa-angle-up': esFichaActiva('direcciones'), 'fa fa-angle-down': ! esFichaActiva('direcciones')} "></i>
-              -->
+                <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
+                  'fa fa-angle-up': esFichaActiva('direcciones'),
+                  'fa fa-angle-down': !esFichaActiva('direcciones')
+                }"></i>
             </div>
-            <br />
-            <i [ngClass]="{
-                'fa fa-angle-up': esFichaActiva('direcciones'),
-                'fa fa-angle-down': !esFichaActiva('direcciones')
-              }"></i>
           </div>
         </div>
-      </div>
+
       <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-map-marker icon-ficha"> </i>
         </div>
-        <label class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+        <label (click)="abreCierraFicha('direcciones')" class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraFicha('direcciones')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
@@ -1262,12 +1325,11 @@
       </div>
     </div>
   </div>
-
   <!-- END FICHA DATOS DIRECCIONES -->
 
   <!-- INICIO FICHA DATOS BANCARIOS -->
   <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha('bancarios')">
+    <div (click)="abreCierraFicha('bancarios')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -1276,14 +1338,22 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
+            <label (click)="abreCierraFicha('bancarios')" class="mr-auto title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
+            <!-- <label>{{ "censo.mutualidad.literal.iban" | translate }}:
+              <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.iban }}</span>
+            </label>
+
+            <label>{{ "facturacion.cuentasBancarias.uso" | translate }}:
+              <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
+            </label> -->
+
             <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
               <span>{{ datosBancarios.length }}</span>
             </label>
-            <i [ngClass]="{
+            <i (click)="abreCierraFicha('bancarios')" [ngClass]="{
                 'fa fa-angle-up': esFichaActiva('bancarios'),
                 'fa fa-angle-down': !esFichaActiva('bancarios')
               }"></i>
@@ -1294,9 +1364,9 @@
         <div class="img-colegiado ">
           <i class="fa fa-bank icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
+        <label (click)="abreCierraFicha('bancarios')" class="title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraFicha('bancarios')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
@@ -1366,7 +1436,7 @@
   <!-- INICIO FICHA REGTEL -->
   <div *ngIf="esRegtel">
     <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
-      <div class="card-header header-ficha" (click)="abreCierraFicha('regtel')">
+      <div (click)="abreCierraRegtel('regtel')" class="card-header header-ficha">
         <div *ngIf="!esFichaActiva('regtel')" class="form-row">
           <div class="col-lg-1 col-md-2">
             <div class="img-colegiado">
@@ -1375,14 +1445,14 @@
           </div>
           <div class="col-lg-11 col-md-10">
             <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+              <label (click)="abreCierraRegtel('regtel')" class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
               </label>
             </div>
             <div class="d-flex justify-content-between">
               <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
                 <span>{{ messageRegtel }}</span>
               </label>
-              <i [ngClass]="{
+              <i (click)="abreCierraRegtel('regtel')" [ngClass]="{
                 'fa fa-angle-up': esFichaActiva('regtel'),
                 'fa fa-angle-down': !esFichaActiva('regtel')
               }"></i>
@@ -1393,9 +1463,9 @@
           <div class="img-colegiado ">
             <i class="fas fa-file-alt icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+          <label (click)="abreCierraRegtel('regtel')" class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
           </label>
-          <i class="fa fa-angle-up ml-auto"></i>
+          <i (click)="abreCierraRegtel('regtel')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 

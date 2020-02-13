@@ -356,7 +356,7 @@ const appRoutes: Routes = [
     component: DocumentacionSolicitudesComponent,
     canActivate: [AuthGuard]
   },
-    {
+  {
     path: "modificacionDatos",
     component: ModificacionDatosComponent,
     canActivate: [AuthGuard]
@@ -558,12 +558,12 @@ const appRoutes: Routes = [
     component: FacturacionSociedadesCensoComponent,
     canActivate: [AuthGuard]
   },
-    {
+  {
     path: "comunicacionesSociedades",
     component: ComunicacionSociedadesComponent,
     canActivate: [AuthGuard]
   },
-  
+
   {
     path: "ficherosAdeudos",
     component: FicherosAdeudosComponent,
@@ -1208,9 +1208,8 @@ const appRoutes: Routes = [
   },
   {
     path: "gestionEntidad",
-    // component: GestionEntidad,
-    // canActivate: [AuthGuard]
-    component: GestionEntidad
+    component: GestionEntidad,
+    canActivate: [AuthGuard]
   },
   {
     path: "permisos",
@@ -1263,13 +1262,13 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
 
-    {
+  {
     path: "justificacion",
     component: JustificacionComponent,
     canActivate: [AuthGuard]
   },
 
-    {
+  {
     path: "certificacion",
     component: CertificacionComponent,
     canActivate: [AuthGuard]
@@ -1277,7 +1276,7 @@ const appRoutes: Routes = [
   {
     path: "dialogoComunicaciones",
     component: DialogoComunicacionesComponent,
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
 
   { path: " ", redirectTo: "home" }

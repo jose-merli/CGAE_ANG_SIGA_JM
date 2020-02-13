@@ -26,6 +26,9 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { saveAs } from 'file-saver/FileSaver';
+import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
+import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
+import { OverlayPanelModule, OverlayPanel } from 'primeng/primeng';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -46,7 +49,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-
+  datosDirecciones: DatosDireccionesItem[] = [];
+  datosDireccionesHist = new DatosDireccionesObject();
   formBusqueda: FormGroup;
   numSelected: number = 0;
   datos: any[] = [];
@@ -60,10 +64,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   buscar: boolean = false;
 
   es: any = esCalendar;
-
+  publicarDatosContacto: boolean;
   editar: boolean = true;
   noResultsSubtipos: boolean = true;
-
+  displayBoolean: boolean = false;
+  display: boolean = false;
   comboEtiquetas: any[];
   comboSituacion: any[];
   comboResidencia: any[] = [];
@@ -77,6 +82,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboTiposDireccion: any[];
   comboTipoCV: any[];
   comboColegios: any[];
+  colsDirecciones: any = [];
 
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
@@ -129,6 +135,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       numeroColegiado: new FormControl(null, Validators.minLength(3))
     });
   }
+  @ViewChild("op")
+  op: OverlayPanel;
 
   @ViewChild("table")
   table: DataTable;
@@ -184,6 +192,46 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.getComboSubtipoCurricular(this.body.tipoCV);
       this.getComboTipoCurricular(this.body.tipoCV);
     }
+    this.colsDirecciones = [
+      {
+        field: "tipoDireccion",
+        header: "censo.datosDireccion.literal.tipo.direccion",
+        width: "25%"
+      },
+      {
+        field: "domicilioLista",
+        header: "censo.consultaDirecciones.literal.direccion",
+      },
+      {
+        field: "codigoPostal",
+        header: "censo.ws.literal.codigopostal",
+        width: "8%"
+      },
+      {
+        field: "nombrePoblacion",
+        header: "censo.consultaDirecciones.literal.poblacion",
+        width: "8%"
+      },
+      {
+        field: "nombreProvincia",
+        header: "censo.datosDireccion.literal.provincia",
+        width: "8%"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono",
+        width: "7%"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil",
+        width: "7%"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo"
+      }
+    ];
   }
 
   onHideDatosGenerales() {
@@ -203,80 +251,87 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
-    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
-    if (id.length >= 1 && this.selectMultiple == false) {
-      sessionStorage.removeItem("personaBody");
-      sessionStorage.setItem("esColegiado", "true");
-      sessionStorage.setItem(
-        "filtrosBusquedaColegiados",
-        JSON.stringify(this.body)
-      );
-      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
-      if (
-        this.fechaIncorporacionDesdeSelect != null ||
-        this.fechaIncorporacionDesdeSelect != undefined
-      ) {
-        sessionStorage.setItem(
-          "fechaIncorporacionDesdeSelect",
-          JSON.stringify(this.fechaIncorporacionDesdeSelect)
-        );
-      }
-      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
-      if (
-        this.fechaIncorporacionHastaSelect != null ||
-        this.fechaIncorporacionHastaSelect != undefined
-      ) {
-        sessionStorage.setItem(
-          "fechaIncorporacionHastaSelect",
-          JSON.stringify(this.fechaIncorporacionHastaSelect)
-        );
-      }
-
-      if (this.fechaNacimientoDesdeSelect != null ||
-        this.fechaNacimientoDesdeSelect != undefined) {
-        sessionStorage.setItem(
-          "fechaNacimientoDesdeSelect",
-          JSON.stringify(this.fechaNacimientoDesdeSelect)
-        );
-      }
-      if (this.fechaNacimientoHastaSelect != null ||
-        this.fechaNacimientoHastaSelect != undefined) {
-        sessionStorage.setItem(
-          "fechaNacimientoHastaSelect",
-          JSON.stringify(this.fechaNacimientoHastaSelect)
-        );
-      }
-
-      // orden es, fallecido, colegiado, de baja, no colegiado
-      this.getSituacion(id);
-
-      this.sigaServices
-        .post("busquedaColegiados_searchColegiadoFicha", id[0])
-        .subscribe(
-          data => {
-            // this.colegiadoItem = datosColegiadosItem = new DatosColegiadosItem();
-            let colegiadoItem = JSON.parse(data.body);
-            sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
-
-            // if (id[0].situacion == 30) {
-            //   sessionStorage.setItem("disabledAction", "true");
-            // } else {
-            sessionStorage.setItem("disabledAction", "false");
-            // }
-
-            this.router.navigate(["/fichaColegial"]);
-          },
-          err => {
-            console.log(err);
-          },
-
-        );
-
-
-
-
+    if (this.displayBoolean) {
+      this.searchHistoricoDatosDirecciones(id);
     } else {
-      this.actualizaSeleccionados(this.selectedDatos);
+
+      sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
+      if (id.length >= 1 && this.selectMultiple == false) {
+        sessionStorage.removeItem("personaBody");
+        sessionStorage.setItem("esColegiado", "true");
+        sessionStorage.setItem(
+          "filtrosBusquedaColegiados",
+          JSON.stringify(this.body)
+        );
+        sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+        if (
+          this.fechaIncorporacionDesdeSelect != null ||
+          this.fechaIncorporacionDesdeSelect != undefined
+        ) {
+          sessionStorage.setItem(
+            "fechaIncorporacionDesdeSelect",
+            JSON.stringify(this.fechaIncorporacionDesdeSelect)
+          );
+        }
+        sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+        if (
+          this.fechaIncorporacionHastaSelect != null ||
+          this.fechaIncorporacionHastaSelect != undefined
+        ) {
+          sessionStorage.setItem(
+            "fechaIncorporacionHastaSelect",
+            JSON.stringify(this.fechaIncorporacionHastaSelect)
+          );
+        }
+
+        if (this.fechaNacimientoDesdeSelect != null ||
+          this.fechaNacimientoDesdeSelect != undefined) {
+          sessionStorage.setItem(
+            "fechaNacimientoDesdeSelect",
+            JSON.stringify(this.fechaNacimientoDesdeSelect)
+          );
+        }
+        if (this.fechaNacimientoHastaSelect != null ||
+          this.fechaNacimientoHastaSelect != undefined) {
+          sessionStorage.setItem(
+            "fechaNacimientoHastaSelect",
+            JSON.stringify(this.fechaNacimientoHastaSelect)
+          );
+        }
+
+        // orden es, fallecido, colegiado, de baja, no colegiado
+        this.getSituacion(id);
+
+        this.sigaServices
+          .post("busquedaColegiados_searchColegiadoFicha", id[0])
+          .subscribe(
+            data => {
+              // this.colegiadoItem = datosColegiadosItem = new DatosColegiadosItem();
+              let colegiadoItem = JSON.parse(data.body);
+              sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
+
+              // if (id[0].situacion == 30) {
+              //   sessionStorage.setItem("disabledAction", "true");
+              // } else {
+              sessionStorage.setItem("disabledAction", "false");
+              // }
+
+              this.router.navigate(["/fichaColegial"]);
+            },
+            err => {
+              console.log(err);
+            },
+
+        );
+
+
+
+
+      }
+
+      else {
+        this.actualizaSeleccionados(this.selectedDatos);
+      }
     }
   }
 
@@ -670,11 +725,16 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.progressSpinner = false;
+            let error = JSON.parse(data["body"]).error;
             this.colegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.colegiadoSearch.colegiadoItem;
             this.convertirStringADate(this.datos);
             // this.table.paginator = true;
             this.body.fechaIncorporacion = [];
+            if (error != null && error.description != null) {
+              this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
+
           },
           err => {
             console.log(err);
@@ -700,7 +760,20 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         element.fechaNacimientoDate = new Date(year, month - 1, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
+      if (element.incorporacion == "" || element.incorporacion == null) {
+        element.incorporacion = null;
+      } else {
+        var posIni = element.incorporacion.indexOf("/");
+        var posFin = element.incorporacion.lastIndexOf("/");
+        var year = element.incorporacion.substring(posFin + 1);
+        var day = element.incorporacion.substring(0, posIni);
+        var month = element.incorporacion.substring(posIni + 1, posFin);
+        element.incorporacionDate = new Date(year, month - 1, day);
+        element.incorporacion = day + "/" + month + "/" + year;
+      }
+
     });
+
   }
 
   isLimpiar() {
@@ -780,21 +853,21 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.busquedaClientes.noResidente"
       },
       {
-        field: "fechaNacimientoDate",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac"
+        field: "incorporacionDate",
+        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion"
       },
-      {
-        field: "correo",
-        header: "censo.datosDireccion.literal.correo"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
-      },
+      // {
+      //   field: "correo",
+      //   header: "censo.datosDireccion.literal.correo"
+      // },
+      // {
+      //   field: "telefono",
+      //   header: "censo.ws.literal.telefono"
+      // },
+      // {
+      //   field: "movil",
+      //   header: "censo.datosDireccion.literal.movil"
+      // },
       {
         field: "noAparecerRedAbogacia2",
         header: "censo.busquedaColegial.lopd",
@@ -1020,6 +1093,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaNacimientoHastaSelect = event;
   }
 
+
   generarExcels() {
 
     this.progressSpinner = true;
@@ -1068,4 +1142,59 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
 
+
+  showDialog() {
+    this.displayBoolean = true;
+    // this.display = true;
+  }
+
+  searchHistoricoDatosDirecciones(selectedDatos) {
+    // this.bodyDirecciones.historico = true;
+    this.progressSpinner = true;
+    // this.historico = true;
+    let searchObject = new DatosDireccionesItem();
+    searchObject.idPersona = selectedDatos[0].idPersona;
+    searchObject.historico = true;
+    // this.buscar = false;
+    this.selectMultiple = false;
+    // this.selectedDatosDirecciones = "";
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.datosDireccionesHist = JSON.parse(data["body"]);
+          this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
+          // this.tableDirecciones.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.display = true;
+        }
+      );
+  }
+  show(event, dato) {
+    this.op.toggle(event);
+    if (dato.noAparecerRedAbogacia2 == '1') {
+      this.publicarDatosContacto = true;
+    }
+    else {
+      this.publicarDatosContacto = false;
+    }
+  }
+  hideOverlay(event) {
+    this.displayBoolean = false;
+  }
+  showMessageError(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 }

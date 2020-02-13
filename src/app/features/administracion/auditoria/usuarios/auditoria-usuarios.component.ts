@@ -247,18 +247,23 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   arreglarFechas() {
     this.returnDesde = JSON.stringify(this.bodySearch.fechaDesde);
     this.returnHasta = JSON.stringify(this.bodySearch.fechaHasta);
-    if (this.returnDesde != undefined) this.returnDesde = this.returnDesde.substring(1, 11);
-    if (this.returnHasta != undefined) this.returnHasta = this.returnHasta.substring(1, 11);
-    if (this.returnDesde != undefined) this.arrayDesde = this.returnDesde.split("-");
-    if (this.returnHasta != undefined) this.arrayHasta = this.returnHasta.split("-");
-    if (this.returnDesde != undefined) this.arrayDesde[2] = parseInt(this.arrayDesde[2]) + 1;
-    if (this.returnHasta != undefined) this.arrayHasta[2] = parseInt(this.arrayHasta[2]) + 1;
-    if (this.returnDesde != undefined) this.returnDesde =
-      this.arrayDesde[1] + "/" + this.arrayDesde[2] + "/" + this.arrayDesde[0];
-    if (this.returnHasta != undefined) this.returnHasta =
-      this.arrayHasta[1] + "/" + this.arrayHasta[2] + "/" + this.arrayHasta[0];
-    if (this.returnDesde != undefined) this.fechaDesdeCalendar = new Date(this.returnDesde);
-    if (this.returnHasta != undefined) this.fechaHastaCalendar = new Date(this.returnHasta);
+    
+    this.fechaDesdeCalendar = this.transformaFecha(this.bodySearch.fechaDesde);
+    this.fechaHastaCalendar = this.transformaFecha(this.bodySearch.fechaHasta);
+
+  }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
   }
 
   construirObjetoBodySearch() {

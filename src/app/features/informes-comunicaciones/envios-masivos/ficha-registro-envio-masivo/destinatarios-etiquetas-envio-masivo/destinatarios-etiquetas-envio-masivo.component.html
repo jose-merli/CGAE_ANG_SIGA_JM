@@ -10,7 +10,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'enviosMasivos.literal.etiquetas' | translate}}</label>
+            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{'enviosMasivos.literal.etiquetas' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Nº {{ 'enviosMasivos.literal.etiquetasExistentes' | translate }}:
@@ -19,7 +19,7 @@
             <label>Nº {{ 'enviosMasivos.literal.etiquetasSeleccionadas' | translate }}:
               <span *ngIf="etiquetasSeleccionadas">{{etiquetasSeleccionadas.length}}</span>
             </label>
-            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -27,8 +27,8 @@
         <div class="img-colegiado">
           <i class="fas fa-users icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{'enviosMasivos.literal.etiquetas' | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha()" class="title-ficha">{{'enviosMasivos.literal.etiquetas' | translate}}</label>
+        <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--tarjetas destinatario-->

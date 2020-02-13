@@ -12,6 +12,7 @@ import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 })
 export class DatosGeneralesPlantillaComponent implements OnInit {
   openFicha: boolean = true;
+  openDesc: boolean = true;
   activacionEditar: boolean = true;
   body: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
   bodyInicial: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
@@ -87,6 +88,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
         value: "2"
       }
     ];
+    this.openDesc = false;
   }
 
   getInstitucion() {
@@ -154,9 +156,9 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       console.log(this.body);
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-      if(this.body.claseComunicacion != undefined){
+      if (this.body.claseComunicacion != undefined) {
         this.claseComunicacion = this.body.claseComunicacion;
-      }else{
+      } else {
         this.claseComunicacion = "";
       }
 
@@ -211,6 +213,44 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           sessionStorage.removeItem("crearNuevaPlantilla");
+          this.nuevo = false;
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
+            )
+          );
+        },
+        err => {
+          console.log(err);
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
+            )
+          );
+        },
+        () => { }
+      );
+  }
+
+
+  guardarDesc() {
+    let description = new DatosGeneralesPlantillaItem();
+    description = JSON.parse(JSON.stringify(this.bodyInicial));
+    description.cuerpo = this.body.cuerpo;
+    description.asunto = this.body.asunto;
+    this.sigaServices
+      .postPaginado(
+        "plantillasEnvio_guardarDatosGenerales",
+        "?numPagina=1",
+        description
+      )
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          this.body.idPlantillaEnvios = result.message;
+          this.bodyInicial.cuerpo = JSON.parse(JSON.stringify(this.body.cuerpo));
+          this.bodyInicial.asunto = JSON.parse(JSON.stringify(this.body.asunto));
+          this.bodyInicial.idPlantillaEnvios = JSON.parse(JSON.stringify(this.body.idPlantillaEnvios));
 
           this.showSuccess(
             this.translateService.instant(
@@ -230,6 +270,23 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
+  abreCierraDesc() {
+    if (this.activacionEditar == true && (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '7')) {
+      this.openDesc = !this.openDesc;
+    } else {
+      this.openDesc = false;
+    }
+  }
+
+  cambiaDesc() {
+    this.body.cuerpo = "";
+    this.body.asunto = "";
+    if (this.activacionEditar == true && (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '7')) {
+      this.openDesc = true;
+    } else {
+      this.openDesc = false;
+    }
+  }
   isGuardarDisabled() {
     if (
       this.body.idTipoEnvios != "" &&
@@ -245,6 +302,23 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
+    if (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
+      this.openDesc = false;
+    }
+    let asunto = this.body.asunto;
+    let cuerpo = this.body.cuerpo;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.asunto = asunto;
+    this.body.cuerpo = cuerpo;
+  }
+
+  restablecerDesc() {
+    if (this.nuevo) {
+      this.body.cuerpo = "";
+      this.body.asunto = "";
+    } else {
+      this.body.cuerpo = JSON.parse(JSON.stringify(this.bodyInicial.cuerpo));
+      this.body.asunto = JSON.parse(JSON.stringify(this.bodyInicial.asunto));
+    }
   }
 }

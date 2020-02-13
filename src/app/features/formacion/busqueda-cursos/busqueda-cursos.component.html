@@ -12,7 +12,8 @@
   <div class="card">
     <!-- Datos generales -->
     <div class="card-body">
-      <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
+      <p class="title-module" (click)="onHideDatosGenerales()">
+        <span>{{ "censo.consultaDatosGenerales.cabecera" | translate}}</span>
         <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
         <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
@@ -145,14 +146,15 @@
           </ng-template>
 
 
-            <ng-template *ngIf="col.field =='precioCurso'" let-datoH="rowData" pTemplate="body">
-                <span>{{datoH[col.value1] | number:'1.2-2'}} € - {{datoH[col.value2] | number:'1.2-2'}} €</span>
-            </ng-template> 
+          <ng-template *ngIf="col.field =='precioCurso'"  let-datoH="rowData"  pTemplate="body">
+            <span>{{datoH[col.value1] | number:'1.2-2'}} € - {{datoH[col.value2] | number:'1.2-2'}} €</span>
+          </ng-template>
         </p-column>
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
             <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
             <label>{{ "general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)" [showClear]="true"></p-dropdown>
