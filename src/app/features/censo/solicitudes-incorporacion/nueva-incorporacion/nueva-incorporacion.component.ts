@@ -112,7 +112,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   numColegiadoDuplicado: boolean = false;
   bodyInicial;
   cargarDatos: boolean = false;
-
+  fechaActual: Date = new Date();
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -130,7 +130,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   ngOnInit() {
     sessionStorage.removeItem("esNuevoNoColegiado");
-
+    this.fechaActual = new Date();
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -1152,41 +1152,43 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   searchSolicitante() {
-    this.progressSpinner = true;
+    if (this.solicitudEditar.fechaEstado < this.fechaActual) {
+      this.progressSpinner = true;
 
-    this.body = new DatosColegiadosItem();
-    this.body.nif = this.solicitudEditar.numeroIdentificacion;
-    sessionStorage.setItem("consulta", "true");
+      this.body = new DatosColegiadosItem();
+      this.body.nif = this.solicitudEditar.numeroIdentificacion;
+      sessionStorage.setItem("consulta", "true");
 
-    if (this.solicitudEditar.idEstado == "50") {
-      sessionStorage.setItem("solicitudAprobada", "true");
-    }
+      if (this.solicitudEditar.idEstado == "50") {
+        sessionStorage.setItem("solicitudAprobada", "true");
+      }
 
-    this.sigaServices
-      .postPaginado(
-        "busquedaColegiados_searchColegiadoFicha",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
-          sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
-          sessionStorage.setItem("destinatarioCom", "true");
-          sessionStorage.setItem("esColegiado", "true");
-          sessionStorage.setItem("esNuevoNoColegiado", "false");
-          this.router.navigate(["/fichaColegial"]);
+      this.sigaServices
+        .postPaginado(
+          "busquedaColegiados_searchColegiadoFicha",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
+            sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
+            sessionStorage.setItem("destinatarioCom", "true");
+            sessionStorage.setItem("esColegiado", "true");
+            sessionStorage.setItem("esNuevoNoColegiado", "false");
+            this.router.navigate(["/fichaColegial"]);
 
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    } else this.progressSpinner = false;
   }
 
   denegarSolicitud() {

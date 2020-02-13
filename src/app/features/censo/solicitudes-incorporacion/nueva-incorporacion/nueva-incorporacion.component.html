@@ -198,7 +198,7 @@
                             <span>{{solicitudEditar.apellidos}}</span>
 
                         </label>
-                        <label class="mr-8" *ngIf="solicitudEditar.idEstado == '50'">
+                        <label class="mr-8" *ngIf="solicitudEditar.idEstado == '50'&& solicitudEditar.fechaEstado < fechaActual">
                             <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
                             <a (click)="searchSolicitante();$event.stopPropagation();">
                                 <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
@@ -217,7 +217,7 @@
                 <label class="title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
 
                 <div class="ml-auto">
-                    <label class="mr-3" *ngIf="solicitudEditar.idEstado == '50'">
+                    <label class="mr-3" *ngIf="solicitudEditar.idEstado == '50' && solicitudEditar.fechaEstado < fechaActual">
                         <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
                         <a (click)="searchSolicitante();$event.stopPropagation();">
                             <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
@@ -526,7 +526,7 @@
                     <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
                     <input type="text" class="form-control" [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
                         pInputText>
-                        <div *ngIf="(ibanValido == false || solicitudEditar.banco == '' || solicitudEditar.banco == undefined) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '"> 
+                    <div *ngIf="(ibanValido == false || solicitudEditar.banco == '' || solicitudEditar.banco == undefined) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
                         <small class="input-error">IBAN incorrecto</small>
                     </div>
                 </div>
