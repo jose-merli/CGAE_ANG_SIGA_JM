@@ -62,11 +62,11 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       activa: false
     }
   ];
-  @Output() emitOpenDescripcion = new EventEmitter<any>();
-  @Output() cuerpoPlantilla = new EventEmitter<any>();
-  @Output() guardarDatos = new EventEmitter<any>();
+  // @Output() emitOpenDescripcion = new EventEmitter<any>();
+  // @Output() cuerpoPlantilla = new EventEmitter<any>();
+  // @Output() guardarDatos = new EventEmitter<any>();
 
-  @Input() nuevoCuerpoPlantilla;
+  // @Input() nuevoCuerpoPlantilla;
 
   constructor(
     private sigaServices: SigaServices,
@@ -105,26 +105,26 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
-    if (event != undefined) {
-      this.body.cuerpo = "";
-      if (
-        this.body.idTipoEnvios == "1" ||
-        this.body.idTipoEnvios == "4" ||
-        this.body.idTipoEnvios == "5" ||
-        this.body.idTipoEnvios == "7"
-      ) {
+    // if (event != undefined) {
+    //   this.body.cuerpo = "";
+    if (
+      this.body.idTipoEnvios == "1" ||
+      this.body.idTipoEnvios == "4" ||
+      this.body.idTipoEnvios == "5" ||
+      this.body.idTipoEnvios == "7"
+    ) {
 
-        let datosPlantilla = {
-          idPlantillaEnvios: event.value,
-          idTipoEnvios: this.body.idTipoEnvios
-        };
-        this.sigaServices
-          .post("enviosMasivos_detallePlantilla", datosPlantilla)
-          .subscribe(data => {
-            let datos = JSON.parse(data["body"]);
-            this.body.asunto = datos.asunto;
-            this.body.cuerpo = datos.cuerpo;
-          },
+      let datosPlantilla = {
+        idPlantillaEnvios: event.value,
+        idTipoEnvios: this.body.idTipoEnvios
+      };
+      this.sigaServices
+        .post("enviosMasivos_detallePlantilla", datosPlantilla)
+        .subscribe(data => {
+          let datos = JSON.parse(data["body"]);
+          this.body.asunto = datos.asunto;
+          this.body.cuerpo = datos.cuerpo;
+        },
           err => {
             console.log(err);
             this.progressSpinner = false;
@@ -134,12 +134,12 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
                 cuerpo: this.body.cuerpo,
                 asunto: this.body.asunto,
               }
-              this.cuerpoPlantilla.emit(cuerpoPlantilla);
+              // this.cuerpoPlantilla.emit(cuerpoPlantilla);
             }
-      });
+          });
     }
   }
-  }
+
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
@@ -178,8 +178,8 @@ para poder filtrar el dato con o sin estos caracteres*/
           descripcion: this.body.descripcion,
           asunto: this.body.asunto,
         }
-        this.guardarDatos.emit(datosGuardar);
-       }
+        // this.guardarDatos.emit(datosGuardar);
+      }
     );
   }
 
@@ -199,6 +199,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getPlantillas() {
+    this.body.cuerpo= "";
+    this.body.asunto= "";
     if (this.body.idTipoEnvios == undefined || this.body.idTipoEnvios == "") {
       this.body.idPlantillaEnvios = "";
     } else {
@@ -219,19 +221,20 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.progressSpinner = false;
           },
           () => {
-
-            if (this.body.idTipoEnvios != undefined) {
-              let plantilla = {
-                value: this.body.idTipoEnvios,
-              };
-              this.emitOpenDescripcion.emit(plantilla);
+           
+            // if (this.body.idTipoEnvios != undefined) {
+            //   let plantilla = {
+            //     value: this.body.idTipoEnvios,
+            //   };
+            
+              // this.emitOpenDescripcion.emit(plantilla);
 
               // let cuerpoPlantilla = {
               //   cuerpo: undefined,
               // }
               // this.cuerpoPlantilla.emit(cuerpoPlantilla);
 
-            }
+            // }
           }
         );
     }
@@ -268,7 +271,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       ) {
         this.editar = true;
       }
-     
+
     } else {
       this.editar = false;
     }
@@ -329,9 +332,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-    if(this.nuevoCuerpoPlantilla !=undefined){
-      this.body.cuerpo = this.nuevoCuerpoPlantilla
-    }
+    // if(this.nuevoCuerpoPlantilla !=undefined){
+    //   this.body.cuerpo = this.nuevoCuerpoPlantilla
+    // }
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
         this.body.idEstado = "4";
@@ -363,12 +366,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         );
         console.log(err);
       },
-      () => { 
+      () => {
         let datosGuardar = {
           idEnvio: this.body.idEnvio,
         }
-        this.guardarDatos.emit(datosGuardar);
-       }
+        // this.guardarDatos.emit(datosGuardar);
+      }
     );
   }
 
