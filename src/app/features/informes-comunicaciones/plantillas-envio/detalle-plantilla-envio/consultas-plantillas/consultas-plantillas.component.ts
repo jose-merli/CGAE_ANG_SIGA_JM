@@ -409,6 +409,14 @@ export class ConsultasPlantillasComponent implements OnInit {
     this.datos = [...this.datos];
   }
 
+  disabledSave(){
+    if(this.datos[0].idConsulta==undefined || this.datos[0].idConsulta=="" || this.datos[0].idConsulta==null){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   asociar() {
     let objAsociar = {
       idConsulta: this.datos[0].idConsulta,
