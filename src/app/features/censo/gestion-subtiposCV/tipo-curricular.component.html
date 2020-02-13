@@ -8,10 +8,10 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <p class="title-module">
-                <span (click)="onHideTipoCV()">{{ 'censo.tipoCurricular.descripcion.literal' | translate}}</span>
-                <i (click)="onHideTipoCV()" *ngIf="showTipoCurricular" class="fa fa-angle-up float-right"></i>
-                <i (click)="onHideTipoCV()" *ngIf="!showTipoCurricular" class="fa fa-angle-down float-right"></i>
+            <p (click)="onHideTipoCV()" class="title-module">
+                <span>{{ 'censo.tipoCurricular.descripcion.literal' | translate}}</span>
+                <i *ngIf="showTipoCurricular" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showTipoCurricular" class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showTipoCurricular" class="module vista-simple">

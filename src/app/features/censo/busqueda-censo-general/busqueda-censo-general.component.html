@@ -20,10 +20,10 @@
             [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
         </div>
       </div>
-      <p class="title-module">
-        <span (click)="onHideDatosGenerales()">{{ "censo.consultaDatosGenerales.cabecera" | translate }}</span>
-        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p (click)="onHideDatosGenerales()" class="title-module">
+        <span>{{ "censo.consultaDatosGenerales.cabecera" | translate }}</span>
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosGenerales && modoBusquedaAprox" class="module vista-avanzada">
         <div class="form-row">
