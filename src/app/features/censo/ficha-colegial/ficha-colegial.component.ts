@@ -1633,7 +1633,7 @@ export class FichaColegialComponent implements OnInit {
   }
   comprobarTurnosGuardias(tipoCambio): void {
     //Si el cambio de estado es de ejerciente a no ejerciente
-    if(this.nuevoEstadoColegial.situacion != "20" && this.datosColegiales[1].idEstado == "20"){
+    if((this.nuevoEstadoColegial != undefined && this.nuevoEstadoColegial.situacion != "20") || this.datosColegiales[1].idEstado == "20"){
       //Comprobamos si tiene turnos o guardias
         this.sigaServices
               .post("fichaDatosColegiales_searchTurnosGuardias", this.colegialesBody)
