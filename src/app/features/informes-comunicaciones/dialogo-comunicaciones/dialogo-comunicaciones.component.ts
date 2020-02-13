@@ -435,7 +435,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.valores.forEach((element) => {
 			if (valido) {
 				if (!element.valorNulo) {
-					if (element.valor != undefined && element.valor != null && element.valor != '') {
+					if (element.valor !== undefined && element.valor !== null && element.valor !== '') {
 						valido = true;
 					} else {
 						valido = false;
