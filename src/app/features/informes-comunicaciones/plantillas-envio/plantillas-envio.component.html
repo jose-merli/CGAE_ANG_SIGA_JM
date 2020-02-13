@@ -9,10 +9,10 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <p class="title-module">
-        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span> 
-        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
-        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+      <p class="title-module" (click)="abreCierraFicha()">
+        <span>{{'general.message.datos.generales' | translate }}</span>
+        <i *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-simple">
         <div class="form-row">

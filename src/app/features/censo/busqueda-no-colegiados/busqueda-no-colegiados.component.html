@@ -8,10 +8,10 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <p class="title-module"> 
-                <span (click)="onHideDatosGenerales()">{{ 'general.message.datos.generales' | translate }}</span>
-                <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-                <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+            <p class="title-module" (click)="onHideDatosGenerales()">
+                <span>{{ 'general.message.datos.generales' | translate }}</span>
+                <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-simple">
                 <div class="form-row">
@@ -46,10 +46,10 @@
                     </div>
                 </div>
             </div>
-            <p  class="title-module">
-                <span (click)="onHideDatosGeneralesAvanzados()">{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}</span>
-                <i (click)="onHideDatosGeneralesAvanzados()" *ngIf="showDatosGeneneralesAvanzado" class="fa fa-angle-down float-right"></i>
-                <i (click)="onHideDatosGeneralesAvanzados()" *ngIf="!showDatosGeneneralesAvanzado" class="fa fa-angle-up float-right"></i>
+            <p class="title-module" (click)="onHideDatosGeneralesAvanzados()">
+                <span>{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}</span>
+                <i *ngIf="showDatosGeneneralesAvanzado" class="fa fa-angle-down float-right"></i>
+                <i *ngIf="!showDatosGeneneralesAvanzado" class="fa fa-angle-up float-right"></i>
             </p>
             <div *ngIf="showDatosGeneneralesAvanzado" class="module vista-avanzada">
                 <div class="form-row">
@@ -90,10 +90,10 @@
                     </div>
                 </div>
             </div>
-            <p class="title-module">
+            <p class="title-module" (click)="onHideDireccion()">
                 <span (click)="onHideDireccion()">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}</span>
-                <i (click)="onHideDireccion()" *ngIf="showDatosDireccion" class="fa fa-angle-down float-right"></i>
-                <i (click)="onHideDireccion()" *ngIf="!showDatosDireccion" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="showDatosDireccion" class="fa fa-angle-down float-right"></i>
+                <i *ngIf="!showDatosDireccion" class="fa fa-angle-up float-right"></i>
             </p>
             <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
