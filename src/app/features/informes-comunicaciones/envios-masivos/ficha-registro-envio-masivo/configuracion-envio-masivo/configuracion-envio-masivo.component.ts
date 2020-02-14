@@ -105,38 +105,42 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
-    // if (event != undefined) {
-    //   this.body.cuerpo = "";
-    if (
-      this.body.idTipoEnvios == "1" ||
-      this.body.idTipoEnvios == "4" ||
-      this.body.idTipoEnvios == "5" ||
-      this.body.idTipoEnvios == "7"
-    ) {
+    if (event.value != undefined) {
+      this.body.cuerpo = "";
+      if (
+        this.body.idTipoEnvios == "1" ||
+        this.body.idTipoEnvios == "4" ||
+        this.body.idTipoEnvios == "5" ||
+        this.body.idTipoEnvios == "7"
+      ) {
 
-      let datosPlantilla = {
-        idPlantillaEnvios: event.value,
-        idTipoEnvios: this.body.idTipoEnvios
-      };
-      this.sigaServices
-        .post("enviosMasivos_detallePlantilla", datosPlantilla)
-        .subscribe(data => {
-          let datos = JSON.parse(data["body"]);
-          this.body.asunto = datos.asunto;
-          this.body.cuerpo = datos.cuerpo;
-        },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          }, () => {
-            if (this.body.cuerpo != undefined) {
-              let cuerpoPlantilla = {
-                cuerpo: this.body.cuerpo,
-                asunto: this.body.asunto,
+        let datosPlantilla = {
+          idPlantillaEnvios: event.value,
+          idTipoEnvios: this.body.idTipoEnvios
+        };
+        this.sigaServices
+          .post("enviosMasivos_detallePlantilla", datosPlantilla)
+          .subscribe(data => {
+            let datos = JSON.parse(data["body"]);
+            this.body.asunto = datos.asunto;
+            this.body.cuerpo = datos.cuerpo;
+          },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            }, () => {
+              if (this.body.cuerpo != undefined) {
+                let cuerpoPlantilla = {
+                  cuerpo: this.body.cuerpo,
+                  asunto: this.body.asunto,
+                }
+                // this.cuerpoPlantilla.emit(cuerpoPlantilla);
               }
-              // this.cuerpoPlantilla.emit(cuerpoPlantilla);
-            }
-          });
+            });
+      }
+    }else{
+      this.body.cuerpo = "";
+      this.body.asunto = "";
     }
   }
 
@@ -199,8 +203,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getPlantillas() {
-    this.body.cuerpo= "";
-    this.body.asunto= "";
+    this.body.cuerpo = "";
+    this.body.asunto = "";
     if (this.body.idTipoEnvios == undefined || this.body.idTipoEnvios == "") {
       this.body.idPlantillaEnvios = "";
     } else {
@@ -221,18 +225,18 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.progressSpinner = false;
           },
           () => {
-           
+
             // if (this.body.idTipoEnvios != undefined) {
             //   let plantilla = {
             //     value: this.body.idTipoEnvios,
             //   };
-            
-              // this.emitOpenDescripcion.emit(plantilla);
 
-              // let cuerpoPlantilla = {
-              //   cuerpo: undefined,
-              // }
-              // this.cuerpoPlantilla.emit(cuerpoPlantilla);
+            // this.emitOpenDescripcion.emit(plantilla);
+
+            // let cuerpoPlantilla = {
+            //   cuerpo: undefined,
+            // }
+            // this.cuerpoPlantilla.emit(cuerpoPlantilla);
 
             // }
           }
