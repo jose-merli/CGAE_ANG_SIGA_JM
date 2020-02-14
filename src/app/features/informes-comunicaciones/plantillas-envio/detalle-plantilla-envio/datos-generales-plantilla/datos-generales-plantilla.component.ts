@@ -237,6 +237,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     let description = new DatosGeneralesPlantillaItem();
     description = JSON.parse(JSON.stringify(this.bodyInicial));
     description.cuerpo = this.body.cuerpo;
+    description.asunto = this.body.asunto;
     this.sigaServices
       .postPaginado(
         "plantillasEnvio_guardarDatosGenerales",
@@ -248,6 +249,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           let result = JSON.parse(data["body"]);
           this.body.idPlantillaEnvios = result.message;
           this.bodyInicial.cuerpo = JSON.parse(JSON.stringify(this.body.cuerpo));
+          this.bodyInicial.asunto = JSON.parse(JSON.stringify(this.body.asunto));
           this.bodyInicial.idPlantillaEnvios = JSON.parse(JSON.stringify(this.body.idPlantillaEnvios));
 
           this.showSuccess(
@@ -277,6 +279,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   cambiaDesc() {
+    this.body.cuerpo = "";
+    this.body.asunto = "";
     if (this.activacionEditar == true && (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '7')) {
       this.openDesc = true;
     } else {
@@ -301,14 +305,20 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
       this.openDesc = false;
     }
+    let asunto = this.body.asunto;
+    let cuerpo = this.body.cuerpo;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.asunto = asunto;
+    this.body.cuerpo = cuerpo;
   }
 
   restablecerDesc() {
     if (this.nuevo) {
       this.body.cuerpo = "";
+      this.body.asunto = "";
     } else {
       this.body.cuerpo = JSON.parse(JSON.stringify(this.bodyInicial.cuerpo));
+      this.body.asunto = JSON.parse(JSON.stringify(this.bodyInicial.asunto));
     }
   }
 }
