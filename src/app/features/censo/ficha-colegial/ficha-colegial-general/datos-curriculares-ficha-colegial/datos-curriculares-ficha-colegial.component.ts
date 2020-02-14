@@ -3,6 +3,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
+import { FichaDatosCurricularesObject } from '../../../../../models/FichaDatosCurricularesObject';
 
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',
@@ -11,12 +12,26 @@ import { TranslateService } from '../../../../../commons/translate';
 })
 export class DatosCurricularesFichaColegialComponent implements OnInit {
 
+  selectAllCurriculares: boolean = false;
+
   datosCurriculares: any[] = [];
   sortF: any;
   sortO: any;
-
-
-
+  icon: string;
+  msgs = [];
+  selectedDatosCurriculares;
+  selectMultipleCurriculares: boolean = false;
+  datosCurricularesRemove: FichaDatosCurricularesObject = new FichaDatosCurricularesObject();
+  progressSpinner: boolean = false;
+  editar: boolean = false;
+  numSelectedCurriculares: number = 0;
+  tarjetaCurriculares: string;
+  idPersona: any;
+  historicoCV: boolean = false;
+  mostrarDatosCurriculares: boolean = false;
+  selectAll: boolean = false;
+  selectMultiple: boolean = false;
+  DescripcionDatosCurriculares;
 
   @ViewChild("tableCurriculares")
   tableCurriculares: DataTable;
@@ -136,11 +151,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
   onInitCurriculares() {
     this.searchDatosCurriculares();
     if (sessionStorage.getItem("abrirCurriculares")) {
-      this.abreCierraFicha("curriculares");
+      // this.abreCierraFicha("curriculares");
     }
     sessionStorage.removeItem("abrirCurriculares");
 
-    // this.nuevafecha = new Date();
     let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
     this.changeSort(event);
   }
@@ -222,4 +236,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
   }
 
 
+  showSuccessDetalle(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: this.translateService.instant("general.message.correct"), detail: mensaje });
+  }
 }
