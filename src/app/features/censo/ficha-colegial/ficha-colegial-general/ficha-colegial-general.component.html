@@ -1,13 +1,14 @@
 <div class="busqueda-container">
   <div class="header-title">
-      <i class="fa fa-square"></i>
-      <p>{{ "menu.censo" | translate}}
-          <i class="fa fa-angle-right"></i> {{'menu.censo.fichaColegial' | translate}}</p>
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.censo" | translate}}
+      <i class="fa fa-angle-right"></i> {{'menu.censo.fichaColegial' | translate}}</p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-      <!-- <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes> -->
-      <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'" [generalBody]="generalBody"></app-datos-colegiales-ficha-colegial>
-      <!-- <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
+    <app-datos-generales-ficha-colegial *ngSwitchCase="'generales'"></app-datos-generales-ficha-colegial>
+    <!-- <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes> -->
+    <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'" [generalBody]="generalBody"></app-datos-colegiales-ficha-colegial>
+    <!-- <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
       <app-accesoFichaPersona *ngSwitchCase="'notario'"></app-accesoFichaPersona>
       <app-datos-integrantes *ngSwitchCase="'integrantes'"></app-datos-integrantes>
       <app-datos-bancarios *ngSwitchCase="'bancarios'"></app-datos-bancarios>
@@ -19,7 +20,7 @@
   <!--DATOS RETENCIONES-->
   <!--END DATOS RETENCIONES-->
   <div class="mt-3 text-right main-button ">
-      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
   <app-dialog></app-dialog>
 </div>
