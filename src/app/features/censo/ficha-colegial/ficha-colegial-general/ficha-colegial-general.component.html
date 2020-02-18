@@ -1,8 +1,14 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ "menu.censo" | translate}}
-      <i class="fa fa-angle-right"></i> {{'menu.censo.fichaColegial' | translate}}</p>
+    <p *ngIf="esColegiado">
+      {{ "menu.censo" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaColegial" | translate }}
+    </p>
+    <p *ngIf="!esColegiado">
+      {{ "menu.censo" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaNoColegial" | translate }}
+    </p>
   </div>
   <div>
     <app-servicios-interes-ficha-colegial></app-servicios-interes-ficha-colegial>

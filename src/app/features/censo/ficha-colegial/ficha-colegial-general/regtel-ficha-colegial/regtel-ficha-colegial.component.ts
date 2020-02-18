@@ -51,7 +51,7 @@ export class RegtelFichaColegialComponent implements OnInit {
   openFicha: boolean = false;
   icon
   msgs = [];
-
+  colsRegtel;
 
   constructor(private sigaServices: SigaServices,
     private router: Router,
@@ -74,6 +74,24 @@ export class RegtelFichaColegialComponent implements OnInit {
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.idPersona = this.generalBody.idPersona;
     }
+    this.colsRegtel = [
+      {
+        field: "title",
+        header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
+      },
+      {
+        field: "summary",
+        header: "censo.regtel.literal.resumen"
+      },
+      {
+        field: "fechaModificacion",
+        header: "censo.datosDireccion.literal.fechaModificacion"
+      },
+      {
+        field: "sizeKB",
+        header: "censo.regtel.literal.tamanno"
+      }
+    ];
 
     if (this.esColegiado) {
       this.sigaServices
@@ -180,85 +198,6 @@ export class RegtelFichaColegialComponent implements OnInit {
     this.router.navigate(["/detalleSancion"]);
   }
 
-  searchSanciones() {
-    // Llamada al rest
-
-    this.bodySanciones.chkArchivadas = undefined;
-    this.bodySanciones.idPersona = this.generalBody.idPersona;
-    this.bodySanciones.nif = this.generalBody.nif;
-    this.bodySanciones.tipoFecha = "";
-    this.bodySanciones.chkFirmeza = undefined;
-    // this.bodySanciones.idColegios = [];
-    // this.bodySanciones.idColegios.push(this.generalBody.i.idInstitucion);
-
-    this.transformDates(this.bodySanciones);
-
-    this.sigaServices
-      .postPaginado(
-        "busquedaSanciones_searchBusquedaSanciones",
-        "?numPagina=1",
-        this.bodySanciones
-      )
-      .subscribe(
-        data => {
-          this.bodySearchSanciones = JSON.parse(data["body"]);
-          this.dataSanciones = this.bodySearchSanciones.busquedaSancionesItem;
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-        }, () => {
-          if (this.dataSanciones.length > 0) {
-            this.mostrarDatosSanciones = true;
-            for (let i; i <= this.dataSanciones.length - 1; i++) {
-              this.DescripcionSanciones = this.dataSanciones[i];
-            }
-          }
-        }
-      );
-  }
-
-  transformDates(bodySanciones) {
-    if (
-      bodySanciones.fechaDesdeDate != null &&
-      bodySanciones.fechaDesdeDate != undefined
-    ) {
-      bodySanciones.fechaDesdeDate = new Date(bodySanciones.fechaDesdeDate);
-    } else {
-      bodySanciones.fechaDesdeDate = null;
-    }
-
-    if (
-      bodySanciones.fechaHastaDate != null &&
-      bodySanciones.fechaHastaDate != undefined
-    ) {
-      bodySanciones.fechaHastaDate = new Date(bodySanciones.fechaHastaDate);
-    } else {
-      bodySanciones.fechaHastaDate = null;
-    }
-
-    if (
-      bodySanciones.fechaArchivadaDesdeDate != null &&
-      bodySanciones.fechaArchivadaDesdeDate != undefined
-    ) {
-      bodySanciones.fechaArchivadaDesdeDate = new Date(
-        bodySanciones.fechaArchivadaDesdeDate
-      );
-    } else {
-      bodySanciones.fechaArchivadaDesdeDate = null;
-    }
-
-    if (
-      bodySanciones.fechaArchivadaHastaDate != null &&
-      bodySanciones.fechaArchivadaHastaDate != undefined
-    ) {
-      bodySanciones.fechaArchivadaHastaDate = new Date(
-        bodySanciones.fechaArchivadaHastaDate
-      );
-    } else {
-      bodySanciones.fechaArchivadaHastaDate = null;
-    }
-  }
   comprobarREGTEL() {
     this.esRegtel = false;
     this.messageNoContentRegTel = this.translateService.instant(
