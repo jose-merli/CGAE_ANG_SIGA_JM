@@ -69,5 +69,6 @@ export class DatosColegiadosItem {
   noAparecerRedAbogaciaFilter: string;
   searchCount: boolean;
   count: string;
+  situacionResidenteFilter: string;
   constructor() { }
 }

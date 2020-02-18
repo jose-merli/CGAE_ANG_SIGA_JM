@@ -910,7 +910,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "situacionResidente",
-        header: "censo.busquedaClientes.noResidente"
+        header: "censo.busquedaClientes.noResidente",
+        filter: "situacionResidenteFilter"
       },
       {
         field: "incorporacionDate",
@@ -934,6 +935,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         filter: "noAparecerRedAbogaciaFilter"
       }
     ];
+
 
     this.rowsPerPage = [
       {
