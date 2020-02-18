@@ -291,7 +291,7 @@
                     </ng-template>
                 </p-column>
 
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidente"
+                <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidenteFilter"
                     [header]="'censo.busquedaClientes.noResidente' | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
@@ -401,6 +401,7 @@
             </div>
         </div>
     </div>
+
     <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="false"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">

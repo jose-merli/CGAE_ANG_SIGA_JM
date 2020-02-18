@@ -67,6 +67,6 @@ export class DatosColegiadosItem {
   colegio: string[];
   identificadords: string;
   noAparecerRedAbogaciaFilter: string;
-
+  situacionResidenteFilter: string;
   constructor() { }
 }
