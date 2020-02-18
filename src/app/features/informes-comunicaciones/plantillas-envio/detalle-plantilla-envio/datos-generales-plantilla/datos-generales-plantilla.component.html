@@ -72,8 +72,8 @@
 
   </div>
 
-  <div
-    [hidden]="!(body.idTipoEnvios == '4' || body.idTipoEnvios == '5' || body.idTipoEnvios == '1' || body.idTipoEnvios == '7')"
+  <!-- Detalle -->
+  <div [hidden]="!(body.idTipoEnvios==4 || body.idTipoEnvios == 5 || body.idTipoEnvios == 1 || body.idTipoEnvios == 7)"
     class="card">
     <!-- Cabecera -->
     <div (click)="abreCierraDesc()" class="card-header header-ficha">
