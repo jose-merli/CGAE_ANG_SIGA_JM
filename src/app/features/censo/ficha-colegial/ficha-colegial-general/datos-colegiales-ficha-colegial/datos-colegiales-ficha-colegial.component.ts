@@ -1361,8 +1361,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(JSON.stringify(this.checkColegialesBody));
     this.colegialesBody.incorporacion = this.arreglarFecha(this.colegialesBody.incorporacion);
     this.colegialesBody.fechaJura = this.arreglarFecha(this.colegialesBody.fechaJura);
-    this.colegialesBody.fechaTitulacion = this.arreglarFecha(this.colegialesBody.fechaJura);
-    this.colegialesBody.fechapresentacion = this.arreglarFecha(this.colegialesBody.fechaJura);
+    this.colegialesBody.fechaTitulacion = this.arreglarFecha(this.colegialesBody.fechaTitulacion);
+    this.colegialesBody.fechapresentacion = this.arreglarFecha(this.colegialesBody.fechapresentacion);
 
     this.itemAInscrito();
     this.checkColegialesBody = new FichaColegialColegialesItem();

@@ -5,14 +5,18 @@
       <i class="fa fa-angle-right"></i> {{'menu.censo.fichaColegial' | translate}}</p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-      <!-- <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes> -->
-      <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'"></app-datos-colegiales-ficha-colegial>
+    <app-datos-generales-ficha-colegial *ngSwitchCase="'generales'"></app-datos-generales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'"></app-datos-colegiales-ficha-colegial>
       <app-otras-colegiaciones-ficha-colegial *ngSwitchCase="'colegiaciones'"></app-otras-colegiaciones-ficha-colegial>
       <app-certificados-ficha-colegial *ngSwitchCase="'certificados'"></app-certificados-ficha-colegial>
       <app-sanciones-ficha-colegial *ngSwitchCase="'sanciones'"></app-sanciones-ficha-colegial>
-      <!-- <app-datos-bancarios *ngSwitchCase="'bancarios'"></app-datos-bancarios>
-      <app-datos-retenciones *ngSwitchCase="'retenciones'"></app-datos-retenciones>
-      <app-datos-direcciones *ngSwitchCase="'direcciones'"></app-datos-direcciones> -->
+      <app-direcciones-ficha-colegial *ngSwitchCase="'direcciones'"></app-direcciones-ficha-colegial>
+    <!-- <app-datos-registrales *ngSwitchCase="'registrales'"></app-datos-registrales>
+      <app-accesoFichaPersona *ngSwitchCase="'notario'"></app-accesoFichaPersona>
+      <app-datos-integrantes *ngSwitchCase="'integrantes'"></app-datos-integrantes>
+      <app-datos-bancarios *ngSwitchCase="'bancarios'"></app-datos-bancarios>
+      <app-datos-retenciones *ngSwitchCase="'retenciones'"></app-datos-retenciones> -->
+      
   </div>
   <!--END DATOS GENERALES-->
   <!--DATOS COLEGIALES-->
