@@ -353,6 +353,7 @@ import { DatosBancariosFichaColegialComponent } from './features/censo/ficha-col
 import { RegtelFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/regtel-ficha-colegial/regtel-ficha-colegial.component';
 import { AlterMutuaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/alter-mutua-ficha-colegial/alter-mutua-ficha-colegial.component';
 import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/mutualidad-abogacia-ficha-colegial/mutualidad-abogacia-ficha-colegial.component';
+import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
 
 
 @NgModule({
@@ -670,7 +671,7 @@ import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha
 		AlterMutuaFichaColegialComponent,
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
-
+		OtrasColegiacionesFichaColegialComponent
 		//NUEVA FICHA COLEGIAL
 		// DatosGeneralesFichaColegialComponent,
 	],

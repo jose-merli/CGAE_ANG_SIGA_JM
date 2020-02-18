@@ -340,11 +340,11 @@ export class FichaColegialGeneralComponent implements OnInit {
       activa: false
     },
     {
-      key: "colegiaciones",
+      key: "colegiales",
       activa: false
     },
     {
-      key: "colegiales",
+      key: "colegiaciones",
       activa: false
     },
     {
