@@ -336,6 +336,10 @@ export class FichaColegialGeneralComponent implements OnInit {
 
   fichasPosibles = [
     {
+      key: "interes",
+      activa: false
+    },
+    {
       key: "generales",
       activa: false
     },
@@ -369,10 +373,6 @@ export class FichaColegialGeneralComponent implements OnInit {
     },
     {
       key: "bancarios",
-      activa: false
-    },
-    {
-      key: "interes",
       activa: false
     },
     {
