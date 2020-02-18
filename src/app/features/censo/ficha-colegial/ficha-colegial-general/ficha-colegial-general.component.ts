@@ -381,7 +381,7 @@ export class FichaColegialGeneralComponent implements OnInit {
       activa: false
     },
     {
-      key: "interes",
+      key: "altermutua",
       activa: false
     },
     {
