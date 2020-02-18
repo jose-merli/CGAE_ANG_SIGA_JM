@@ -15,7 +15,7 @@ import * as moment from 'moment';
 import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
 import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
-import { Calendar } from 'primeng/primeng';
+import { Calendar, AutoComplete } from 'primeng/primeng';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
 
 @Component({
@@ -38,6 +38,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
   tarjetaGenerales: string;
   emptyLoadFichaColegial: boolean = false;
   disabledNif: boolean = false;
+  es: any = esCalendar;
+  suggestTopics: any[] = [];
 
   comboTopics: any[] = [];
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -167,6 +169,10 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
 
   @ViewChild("calendarFechaNacimiento") calendarFechaNacimiento: Calendar;
   fechaNacimientoSelected: boolean = true;
+
+  @ViewChild("autocompleteTopics")
+  autocompleteTopics: AutoComplete;
+
 
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -301,6 +307,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
+    this.getLenguage();
+
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
@@ -2359,6 +2367,85 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
   fillFechaBaja(event) {
     this.item.fechaBaja = event;
     this.validateFields();
+  }
+  getLenguage() {
+    this.sigaServices.get("usuario").subscribe(response => {
+      let currentLang = response.usuarioItem[0].idLenguaje;
+
+      switch (currentLang) {
+        case "1":
+          this.es = esCalendar;
+          break;
+        case "2":
+          this.es = catCalendar;
+          break;
+        case "3":
+          this.es = euCalendar;
+          break;
+        case "4":
+          this.es = glCalendar;
+          break;
+        default:
+          this.es = esCalendar;
+          break;
+      }
+    });
+
+  }
+  visiblePanelBlurTopics(event) {
+    if (this.autocompleteTopics.highlightOption != undefined) {
+      this.autocompleteTopics.highlightOption.color = "#024eff";
+      this.resultsTopics.push(this.autocompleteTopics.highlightOption);
+      this.autocompleteTopics.highlightOption = undefined;
+    }
+    this.autocompleteTopics.panelVisible = false;
+    this.activacionGuardarGenerales();
+    event.currentTarget.value = "";
+  }
+  filterTopics(event) {
+    if (
+      this.comboTopics.length > 0 &&
+      this.comboTopics.length != this.resultsTopics.length
+    ) {
+      if (this.resultsTopics.length > 0) {
+        this.suggestTopics = [];
+
+        this.comboTopics.forEach(element => {
+          let findTopic = this.resultsTopics.find(
+            x => x.value === element.value
+          );
+          if (findTopic == undefined) {
+            this.suggestTopics.push(element);
+          }
+        });
+
+        this.resultsTopics.forEach(e => {
+          if (e.color == undefined) {
+            e.color = "#024eff";
+          }
+        });
+
+      } else {
+        this.suggestTopics = JSON.parse(JSON.stringify(this.comboTopics));
+      }
+      this.autocompleteTopics.suggestionsUpdated = true;
+      this.autocompleteTopics.panelVisible = true;
+      this.autocompleteTopics.focusInput();
+    } else {
+      if (this.autocompleteTopics.highlightOption != undefined) {
+        this.resultsTopics.forEach(e => {
+          if (e.color == undefined) {
+            e.color = "#024eff";
+          }
+        });
+      }
+
+      this.autocompleteTopics.panelVisible = false;
+      this.autocompleteTopics.focusInput();
+
+    }
+    this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
+    this.activacionGuardarGenerales();
   }
 }
 
