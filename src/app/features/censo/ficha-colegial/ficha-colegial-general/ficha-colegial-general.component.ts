@@ -170,16 +170,16 @@ export class FichaColegialGeneralComponent implements OnInit {
   displayServicios: boolean = false;
   atrasRegTel: String = "";
   fechaHoy: Date;
-  mostrarDatosCertificados:boolean = false;
-  mostrarDatosSanciones:boolean = false;
+  mostrarDatosCertificados: boolean = false;
+  mostrarDatosSanciones: boolean = false;
 
-  mostrarDatosSociedades:boolean = false;
+  mostrarDatosSociedades: boolean = false;
 
-  mostrarDatosCurriculares:boolean = false;
+  mostrarDatosCurriculares: boolean = false;
 
-  mostrarDatosDireccion:boolean = false;
+  mostrarDatosDireccion: boolean = false;
 
-  mostrarDatosBancarios:boolean = false;
+  mostrarDatosBancarios: boolean = false;
 
 
   // etiquetas
@@ -207,7 +207,7 @@ export class FichaColegialGeneralComponent implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -375,8 +375,17 @@ export class FichaColegialGeneralComponent implements OnInit {
       key: "bancarios",
       activa: false
     },
+
     {
       key: "regtel",
+      activa: false
+    },
+    {
+      key: "interes",
+      activa: false
+    },
+    {
+      key: "mutualidad",
       activa: false
     }
   ];
@@ -435,12 +444,12 @@ export class FichaColegialGeneralComponent implements OnInit {
     private router: Router,
     private datepipe: DatePipe,
     private location: Location,
-    ) { }
+  ) { }
 
   ngOnInit() {
     if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.getColegiadoLogeado();
-      
+
     } else {
       this.OnInit();
     }
