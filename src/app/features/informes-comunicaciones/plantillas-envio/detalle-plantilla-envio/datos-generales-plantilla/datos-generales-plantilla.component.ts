@@ -76,10 +76,6 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
     this.tiposEnvio = [
       {
-        label: "seleccione..",
-        value: null
-      },
-      {
         label: "Email",
         value: "1"
       },
