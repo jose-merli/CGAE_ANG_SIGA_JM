@@ -203,8 +203,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getPlantillas() {
-    this.body.cuerpo = "";
-    this.body.asunto = "";
+  
     if (this.body.idTipoEnvios == undefined || this.body.idTipoEnvios == "") {
       this.body.idPlantillaEnvios = "";
     } else {
