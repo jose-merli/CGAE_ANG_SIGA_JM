@@ -20,13 +20,13 @@ import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesOb
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import * as moment from 'moment';
 import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObject';
-import { FichaColegialCertificadosObject } from '../../../../../models/FichaColegialCertificadosObject';
+
 @Component({
-  selector: 'app-certificados-ficha-colegial',
-  templateUrl: './certificados-ficha-colegial.component.html',
-  styleUrls: ['./certificados-ficha-colegial.component.scss']
+  selector: 'app-otras-colegiaciones-ficha-colegial',
+  templateUrl: './otras-colegiaciones-ficha-colegial.component.html',
+  styleUrls: ['./otras-colegiaciones-ficha-colegial.component.scss']
 })
-export class CertificadosFichaColegialComponent implements OnInit {
+export class OtrasColegiacionesFichaColegialComponent implements OnInit {
   tarjetaOtrasColegiacionesNum: string;
   activacionTarjeta: boolean = false;
   emptyLoadFichaColegial: boolean = false;
@@ -34,14 +34,10 @@ export class CertificadosFichaColegialComponent implements OnInit {
   esNewColegiado: boolean = false;
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
-  colsCertificados;
-  datosCertificados: any[] = [];
-  certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
-  selectedDatosCertificados;
-
+  colsColegiaciones;
   fichasPosibles = [
     {
-      key: "certificados",
+      key: "colegiaciones",
       activa: false
     },
   ];
@@ -56,15 +52,8 @@ export class CertificadosFichaColegialComponent implements OnInit {
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
   isColegiadoEjerciente: boolean = false;
   rowsPerPage;
-  @ViewChild("tableCertificados")
-  tableCertificados: DataTable;
-  tarjetaCertificadosNum: string;
-  tarjetaCertificados: string;
-  mostrarDatosCertificados:boolean = false;
-  DescripcionCertificado;
-  idPersona: any;
-  selectedItemCertificados: number = 10;
-
+  @ViewChild("tableColegiaciones")
+  tableColegiaciones: DataTable;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -77,50 +66,6 @@ export class CertificadosFichaColegialComponent implements OnInit {
     private location: Location,) { }
 
   ngOnInit() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "290";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaCertificados = this.tarjetaCertificadosNum;
-      }
-    );
-    this.colsCertificados = [
-      {
-        field: "descripcion",
-        header: "general.description"
-      },
-      {
-        field: "fechaEmision",
-        header: "facturacion.busquedaAbonos.literal.fecha2"
-      }
-    ];
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -133,7 +78,7 @@ export class CertificadosFichaColegialComponent implements OnInit {
     } else {
       this.esColegiado = true;
     }
-    this.idPersona = this.generalBody.idPersona;
+
     if (this.esColegiado) {
       if (this.colegialesBody.situacion == "20") {
         this.isColegiadoEjerciente = true;
@@ -154,7 +99,9 @@ export class CertificadosFichaColegialComponent implements OnInit {
 
     this.generalBody.colegiado = this.esColegiado;
     this.checkGeneralBody.colegiado = this.esColegiado;
-    this.searchCertificados();
+    // this.checkAcceso();
+    this.onInitOtrasColegiaciones();
+
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -169,59 +116,67 @@ export class CertificadosFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-   
-  }
-  activarPaginacionCertificados() {
-    if (!this.datosCertificados || this.datosCertificados.length == 0)
-      return false;
-    else return true;
+
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "235";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
+      }
+    );
+
+    this.colsColegiaciones = [
+      {
+        field: "institucion",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      {
+        field: "numColegiado",
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+      },
+      {
+        field: "estadoColegial",
+        header: "censo.fichaIntegrantes.literal.estado"
+      },
+      {
+        field: "fechaEstadoStr",
+        header: "censo.nuevaSolicitud.fechaEstado"
+
+      },
+      {
+        field: "residenteInscrito",
+        header: "censo.ws.literal.residente"
+      }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 
-  searchCertificados() {
-    this.sigaServices
-      .postPaginado(
-        "fichaDatosCertificados_datosCertificadosSearch",
-        "?numPagina=1",
-        this.idPersona
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.certificadosBody = JSON.parse(data["body"]);
-          this.datosCertificados = this.certificadosBody.certificadoItem;
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        }, () => {
-          if (this.datosCertificados.length > 0) {
-            this.mostrarDatosCertificados = true;
-            for (let i = 0; i <= this.datosCertificados.length - 1; i++) {
-              this.DescripcionCertificado = this.datosCertificados[i];
-            }
-          }
-        }
-      );
-  }
-  onChangeRowsPerPagesCertificados(event) {
-    this.selectedItemCertificados = event.value;
-    this.changeDetectorRef.detectChanges();
-    this.tableCertificados.reset();
-  }
-  esFichaActiva(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    return fichaPosible.activa;
-  }
-
-  getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
-      return elto.key === key;
-    });
-    if (fichaPosible && fichaPosible.length) {
-      return fichaPosible[0];
-    }
-    return {};
-  }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
@@ -238,8 +193,57 @@ export class CertificadosFichaColegialComponent implements OnInit {
       this.openFicha = !this.openFicha;
     }
   }
-  setItalic(datoH) {
-    if (datoH.fechaBaja == null) return false;
+
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
+  }
+
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
+  }
+  onInitOtrasColegiaciones() {
+    this.searchOtherCollegues();
+  }
+
+  activarPaginacionOtrasColegiaciones() {
+    if (!this.datosColegiaciones || this.datosColegiaciones.length == 0)
+      return false;
     else return true;
   }
+
+  searchOtherCollegues() {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialOtrasColegiaciones_searchOtherCollegues",
+        "?numPagina=1",
+        this.generalBody.nif
+      )
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.otrasColegiacionesBody = JSON.parse(data["body"]);
+          this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  onChangeRowsPerPagesColegiaciones(event) {
+    this.selectedItemColegiaciones = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableColegiaciones.reset();
+  }
+
+
+
 }

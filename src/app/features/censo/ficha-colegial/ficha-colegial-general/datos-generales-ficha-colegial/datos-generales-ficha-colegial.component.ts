@@ -2085,6 +2085,58 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
         tipos.push("Despacho");
       }
     }
+
+    //Comprobamos si falta alguna dirección
+    if (idFindTipoDirCenso == -1) {
+      this.information = true;
+
+      if (isEjerciente) {
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.direccion.pasarColegiado");
+        return false;
+      } else {
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.cambiar.situacion.pasarColegiado");
+        return false;
+      }
+    } else {
+      this.information = false;
+
+      if (isEjerciente) {
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.finalizar.cambio.ejerciente");
+      } else {
+        this.msgDir = this.translateService.instant("censo.consultarDirecciones.mensaje.finalizar.cambio");
+      }
+
+      if (tipos.length == 0) {
+        return true;
+      } else if (tipos.length == 1) {
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.necesaria.direccion");
+        this.msgDir += tipos[0];
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.asignar.automaticamente.tipoDireccion");
+        this.msgDir += tipos[0];
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.actual.censoWeb.deseaContinuar");
+        return false;
+      } else if (tipos.length > 1) {
+
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.necesaria.direccion.plural");
+        let msgTipos = "";
+        for (const key in tipos) {
+          let x = key;
+          if (+x + 1 == + tipos.length) {
+            msgTipos += " y " + tipos[key];
+          } else if (+x + 1 == + tipos.length - 1) {
+            msgTipos += tipos[key] + " ";
+          } else {
+            msgTipos += tipos[key] + ", ";
+          }
+        }
+
+        this.msgDir += msgTipos;
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.asignar.automaticamente.tipoDireccion.plural");
+        this.msgDir += msgTipos;
+        this.msgDir += this.translateService.instant("censo.consultarDirecciones.mensaje.actual.censoWeb.deseaContinuar");
+        return false;
+      }
+    }
   }
   searchDirecciones() {
     this.selectMultipleDirecciones = false;

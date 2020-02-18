@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
   <div (click)="abreCierraFicha('colegiales')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
@@ -320,4 +321,148 @@
         type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
+
+  <p-dialog [(visible)]="information" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
+    <p-header class="title">
+      <label>
+        <strong>{{"general.message.informacion" | translate}}</strong>
+      </label>
+    </p-header>
+
+    {{ msgDir }}
+    <p-footer class="text-right main-button">
+      <button (click)="aceptInformation()" pButton type="button" icon="fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header class="title">
+      <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
+      </label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <span> {{ "mensaje.informacion.noAcceso.fichaColegial" | translate }} </span>
+      </div>
+    </div>
+
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header class="title">
+      <label>{{ "general.ventana.cgae" | translate }} -{{ "censo.consultaHistorico.cabecera" | translate }}
+      </label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>{{ "censo.datosHistorico.literal.motivo" | translate }} (*)</label>
+          <textarea pInputTextarea [(ngModel)]="generalBody.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog [(visible)]="displayDelete" responsive="true" [draggable]="false" modal="modal" resizable="false" [style]="{'max-width':'500px'}">
+    <p-header class="title">
+      <label>{{ 'general.cabecera.confirmacion' | translate}}
+      </label>
+    </p-header>
+
+    <div class="bloque col-lg-12 col-md-12">
+      <div class="row">
+        <span> {{ msgDir }} </span>
+      </div>
+    </div>
+
+    <p-footer class="text-right main-button">
+      <button (click)="callServiceEliminarEstadoColegial(selectedItemDelete)" pButton type="button" icon="fa fa-check" iconPos="left"
+        label="{{ 'messages.si' | translate }}"></button>
+      <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.no' | translate }}"></button>
+    </p-footer>
+  </p-dialog>
 </div>
+
+ <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
+    #bajaInscripcionesUpdate>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
+    #bajaInscripcionesDelete>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+    <div class="loader"></div>
+  </div>
+
+  <div *ngIf="initSpinner" class="overlay-spinner">
+    <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+    <div class="loader"></div>
+  </div>
