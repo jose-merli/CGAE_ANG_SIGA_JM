@@ -5,16 +5,19 @@
       <i class="fa fa-angle-right"></i> {{'menu.censo.fichaColegial' | translate}}</p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-      <!-- <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes> -->
-      <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'"></app-datos-colegiales-ficha-colegial>
-      <app-otras-colegiaciones-ficha-colegial *ngSwitchCase="'colegiaciones'"></app-otras-colegiaciones-ficha-colegial>
-      <app-certificados-ficha-colegial *ngSwitchCase="'certificados'"></app-certificados-ficha-colegial>
-      <app-sanciones-ficha-colegial *ngSwitchCase="'sanciones'"></app-sanciones-ficha-colegial>
-      <!-- <app-datos-bancarios *ngSwitchCase="'bancarios'"></app-datos-bancarios>
+    <!-- <app-servicios-interes *ngSwitchCase="'interes'"></app-servicios-interes> -->
+    <app-datos-generales-ficha-colegial *ngSwitchCase="'generales'"></app-datos-generales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'"></app-datos-colegiales-ficha-colegial>
+    <app-otras-colegiaciones-ficha-colegial *ngSwitchCase="'colegiaciones'"></app-otras-colegiaciones-ficha-colegial>
+    <app-certificados-ficha-colegial *ngSwitchCase="'certificados'"></app-certificados-ficha-colegial>
+    <app-sanciones-ficha-colegial *ngSwitchCase="'sanciones'"></app-sanciones-ficha-colegial>
+    <!-- <app-datos-bancarios *ngSwitchCase="'bancarios'"></app-datos-bancarios>
       <app-datos-retenciones *ngSwitchCase="'retenciones'"></app-datos-retenciones>
       <app-datos-direcciones *ngSwitchCase="'direcciones'"></app-datos-direcciones> -->
     <app-sociedades-ficha-colegial *ngSwitchCase="'sociedades'"></app-sociedades-ficha-colegial>
-
+    <app-regtel-ficha-colegial *ngSwitchCase="'regtel'"></app-regtel-ficha-colegial>
+    <app-alter-mutua-ficha-colegial *ngSwitchCase="'interes'"></app-alter-mutua-ficha-colegial>
+    <app-mutualidad-abogacia-ficha-colegial *ngSwitchCase="'mutualidad'" [datosBancarios]="datosBancarios" [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
   </div>
   <!--END DATOS GENERALES-->
   <!--DATOS COLEGIALES-->
