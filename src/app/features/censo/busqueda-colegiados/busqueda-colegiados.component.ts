@@ -1154,7 +1154,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // this.historico = true;
     let searchObject = new DatosDireccionesItem();
     searchObject.idPersona = selectedDatos[0].idPersona;
-    searchObject.historico = true;
+    searchObject.historico = false;
     // this.buscar = false;
     this.selectMultiple = false;
     // this.selectedDatosDirecciones = "";
