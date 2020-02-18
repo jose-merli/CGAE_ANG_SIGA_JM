@@ -205,6 +205,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
     this.getLetrado();
 
 
+    if (sessionStorage.getItem("solimodifMensaje")) {
+      this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje");
+      sessionStorage.removeItem("solimodifMensaje");
+    }
+
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&

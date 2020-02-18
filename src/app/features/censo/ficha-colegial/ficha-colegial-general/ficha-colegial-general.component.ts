@@ -334,63 +334,6 @@ export class FichaColegialGeneralComponent implements OnInit {
     { label: "Si", value: "1" }
   ];
 
-  fichasPosibles = [
-    {
-      key: "interes",
-      activa: false
-    },
-    {
-      key: "generales",
-      activa: false
-    },
-    {
-      key: "colegiales",
-      activa: false
-    },
-    {
-      key: "colegiaciones",
-      activa: false
-    },
-    {
-      key: "certificados",
-      activa: false
-    },
-    {
-      key: "sanciones",
-      activa: false
-    },
-    {
-      key: "sociedades",
-      activa: false
-    },
-    {
-      key: "curriculares",
-      activa: false
-    },
-    {
-      key: "direcciones",
-      activa: false
-    },
-    {
-      key: "bancarios",
-      activa: false
-    },
-
-    {
-      key: "regtel",
-      activa: false
-    },
-    {
-      key: "altermutua",
-      activa: false
-    },
-    {
-      key: "mutualidad",
-      activa: false
-    }
-  ];
-  private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
-
   tarjetaInteres: string;
   tarjetaGenerales: string;
   tarjetaColegiales: string;
@@ -448,26 +391,15 @@ export class FichaColegialGeneralComponent implements OnInit {
 
   ngOnInit() {
     if (sessionStorage.getItem("fichaColegialByMenu")) {
-      this.getColegiadoLogeado();
-
+      this.getColegiadoLogeado(); // Hay que asegurarse de que esto sirve para algo y funciona correctamente
     } else {
       this.OnInit();
     }
   }
   OnInit() {
-    this.initSpinner = true;
-    // this.getYearRange();
-    // this.getLenguage();
-    // this.checkAccesos();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
-
-    if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
-      this.disabledNif = true;
-    } else {
-      this.disabledNif = false;
-    }
 
     if (sessionStorage.getItem("disabledAction") == "true") {
       // Es estado baja colegial
@@ -481,8 +413,6 @@ export class FichaColegialGeneralComponent implements OnInit {
       sessionStorage.removeItem("solimodifMensaje");
     }
 
-    // Cogemos los datos de la busqueda de Colegiados
-    // this.getLetrado();
     if (sessionStorage.getItem("filtrosBusquedaColegiados")) {
       sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.persistenciaColeg = new DatosColegiadosItem();
@@ -598,9 +528,7 @@ export class FichaColegialGeneralComponent implements OnInit {
           sessionStorage.removeItem("bodyNuevo");
 
         }
-
         this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
-        // this.compruebaDNI();
       } else {
         this.generalBody = new FichaColegialGeneralesItem();
         this.colegialesBody = new FichaColegialColegialesItem();
@@ -622,14 +550,6 @@ export class FichaColegialGeneralComponent implements OnInit {
       this.activacionEditar = true;
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
-    }
-
-    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-      // this.onInitCurriculares();
-      // this.onInitDirecciones();
-      // this.onInitDatosBancarios();
-      // this.comprobarREGTEL();
-
     }
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
@@ -658,253 +578,6 @@ export class FichaColegialGeneralComponent implements OnInit {
           console.log(err);
         }
       );
-
-    // this.onInitSociedades();
-
-    // this.onInitOtrasColegiaciones();
-
-    if (!this.esNewColegiado) {
-      // this.compruebaDNI();
-    }
-
-    // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
-    this.colsColegiales = [
-      {
-        field: "fechaEstado",
-        header: "censo.nuevaSolicitud.fechaEstado"
-      },
-      {
-        field: "estadoColegial",
-        header: "censo.fichaIntegrantes.literal.estado"
-      },
-      {
-        field: "situacionResidente",
-        header: "censo.ws.literal.residente"
-      },
-      {
-        field: "observaciones",
-        header: "gratuita.mantenimientoLG.literal.observaciones"
-      }
-    ];
-
-    this.colsColegiaciones = [
-      {
-        field: "institucion",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
-      {
-        field: "numColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
-      },
-      {
-        field: "estadoColegial",
-        header: "censo.fichaIntegrantes.literal.estado"
-      },
-      {
-        field: "fechaEstadoStr",
-        header: "censo.nuevaSolicitud.fechaEstado"
-
-      },
-      {
-        field: "residenteInscrito",
-        header: "censo.ws.literal.residente"
-      }
-    ];
-
-    this.colsCertificados = [
-      {
-        field: "descripcion",
-        header: "general.description"
-      },
-      {
-        field: "fechaEmision",
-        header: "facturacion.busquedaAbonos.literal.fecha2"
-      }
-    ];
-    this.colsRegtel = [
-      {
-        field: "title",
-        header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
-      },
-      {
-        field: "summary",
-        header: "censo.regtel.literal.resumen"
-      },
-      {
-        field: "fechaModificacion",
-        header: "censo.datosDireccion.literal.fechaModificacion"
-      },
-      {
-        field: "sizeKB",
-        header: "censo.regtel.literal.tamanno"
-      }
-    ];
-
-    this.colsDirecciones = [
-      {
-        field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
-      },
-      {
-        field: "domicilioLista",
-        header: "censo.consultaDirecciones.literal.direccion"
-      },
-      {
-        field: "codigoPostal",
-        header: "censo.ws.literal.codigopostal"
-      },
-      {
-        field: "nombrePoblacion",
-        header: "censo.consultaDirecciones.literal.poblacion"
-      },
-      {
-        field: "nombreProvincia",
-        header: "censo.datosDireccion.literal.provincia"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
-      },
-      {
-        field: "correoElectronico",
-        header: "censo.datosDireccion.literal.correo"
-      }
-    ];
-
-    this.colsSociedades = [
-      {
-        field: "tipo",
-        header: "censo.busquedaClientesAvanzada.literal.tipoCliente"
-      },
-      { field: "nif", header: "administracion.usuarios.literal.NIF" },
-      {
-        field: "denominacion",
-        header: "censo.consultaDatosGenerales.literal.denominacion"
-      },
-      {
-        field: "fechaConstitucion",
-        header: "censo.general.literal.FechaConstitucion"
-      },
-      {
-        field: "abreviatura",
-        header: "gratuita.definirTurnosIndex.literal.abreviatura"
-      },
-      {
-        field: "numeroIntegrantes",
-        header: "censo.general.literal.numeroIntegrantes"
-      }
-    ];
-
-    this.colsCurriculares = [
-      {
-        field: "dateFechaInicio",
-        header: "facturacion.seriesFacturacion.literal.fInicio"
-      },
-      {
-        field: "dateFechaFin",
-        header: "censo.consultaDatos.literal.fechaFin"
-      },
-      {
-        field: "categoriaCurricular",
-        header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
-      },
-      {
-        field: "tipoSubtipo",
-        header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
-      },
-      {
-        field: "descripcion",
-        header: "general.description"
-      }
-    ];
-
-    this.colsBancarios = [
-      {
-        field: "titular",
-        header: "Titular"
-      },
-      {
-        field: "iban",
-        header: "Código de cuenta (IBAN)"
-      },
-      {
-        field: "bic",
-        header: "Banco (BIC)"
-      },
-      {
-        field: "uso",
-        header: "Uso"
-      },
-      {
-        field: "fechaFirmaServicios",
-        header: "Fecha firma del mandato de servicios"
-      },
-      {
-        field: "fechaFirmaProductos",
-        header: "Fecha firma del mandato de productos"
-      }
-    ];
-    this.colsSanciones = [
-      {
-        field: "colegio",
-        header: "busquedaSanciones.colegioSancionador.literal"
-      },
-      {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
-      },
-      {
-        field: "tipoSancion",
-        header:
-          "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal"
-      },
-      {
-        field: "refColegio",
-        header:
-          "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal"
-      },
-      {
-        field: "fechaDesde",
-        header: "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde"
-      },
-      {
-        field: "fechaHasta",
-        header: "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta"
-      },
-      {
-        field: "rehabilitado",
-        header:
-          "menu.expediente.sanciones.busquedaPorColegio.sancionesRehabilitadas.literal"
-      },
-      {
-        field: "firmeza",
-        header: "menu.expediente.sanciones.firmeza.literal"
-      }
-    ];
-
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-
   }
   getColegiadoLogeado() {
     this.generalBody.searchLoggedUser = true;
@@ -927,7 +600,7 @@ export class FichaColegialGeneralComponent implements OnInit {
         }
       );
   }
-
+  // DE MOMENTO VA PERFE 
   backTo() {
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
@@ -959,22 +632,6 @@ export class FichaColegialGeneralComponent implements OnInit {
       this.location.back();
     }
   }
-
-  esFichaActiva(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-    return fichaPosible.activa;
-  }
-
-  getFichaPosibleByKey(key): any {
-    let fichaPosible = this.fichasPosibles.filter(elto => {
-      return elto.key === key;
-    });
-    if (fichaPosible && fichaPosible.length) {
-      return fichaPosible[0];
-    }
-    return {};
-  }
-
 }
 
 

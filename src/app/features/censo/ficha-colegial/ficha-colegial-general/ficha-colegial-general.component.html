@@ -4,21 +4,20 @@
     <p>{{ "menu.censo" | translate}}
       <i class="fa fa-angle-right"></i> {{'menu.censo.fichaColegial' | translate}}</p>
   </div>
-  <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-servicios-interes-ficha-colegial *ngSwitchCase="'interes'"></app-servicios-interes-ficha-colegial>
-    <app-datos-generales-ficha-colegial *ngSwitchCase="'generales'"></app-datos-generales-ficha-colegial>
-    <app-datos-colegiales-ficha-colegial *ngSwitchCase="'colegiales'"></app-datos-colegiales-ficha-colegial>
-    <app-otras-colegiaciones-ficha-colegial *ngSwitchCase="'colegiaciones'"></app-otras-colegiaciones-ficha-colegial>
-    <app-datos-curriculares-ficha-colegial *ngSwitchCase="'curriculares'"></app-datos-curriculares-ficha-colegial>
-    <app-certificados-ficha-colegial *ngSwitchCase="'certificados'"></app-certificados-ficha-colegial>
-    <app-sanciones-ficha-colegial *ngSwitchCase="'sanciones'"></app-sanciones-ficha-colegial>
-    <app-direcciones-ficha-colegial *ngSwitchCase="'direcciones'"></app-direcciones-ficha-colegial>
-    <app-sociedades-ficha-colegial *ngSwitchCase="'sociedades'"></app-sociedades-ficha-colegial>
-    <app-regtel-ficha-colegial *ngSwitchCase="'regtel'"></app-regtel-ficha-colegial>
-    <app-alter-mutua-ficha-colegial *ngSwitchCase="'altermutua'"></app-alter-mutua-ficha-colegial>
-    <app-mutualidad-abogacia-ficha-colegial *ngSwitchCase="'mutualidad'" [datosBancarios]="datosBancarios"
-      [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
-    <app-datos-bancarios-ficha-colegial *ngSwitchCase="'bancarios'"></app-datos-bancarios-ficha-colegial>
+  <div>
+    <app-servicios-interes-ficha-colegial></app-servicios-interes-ficha-colegial>
+    <app-datos-generales-ficha-colegial></app-datos-generales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial></app-datos-colegiales-ficha-colegial>
+    <app-otras-colegiaciones-ficha-colegial></app-otras-colegiaciones-ficha-colegial>
+    <app-datos-curriculares-ficha-colegial></app-datos-curriculares-ficha-colegial>
+    <app-certificados-ficha-colegial></app-certificados-ficha-colegial>
+    <app-sanciones-ficha-colegial></app-sanciones-ficha-colegial>
+    <app-direcciones-ficha-colegial></app-direcciones-ficha-colegial>
+    <app-sociedades-ficha-colegial></app-sociedades-ficha-colegial>
+    <app-regtel-ficha-colegial></app-regtel-ficha-colegial>
+    <app-alter-mutua-ficha-colegial></app-alter-mutua-ficha-colegial>
+    <app-mutualidad-abogacia-ficha-colegial [datosBancarios]="datosBancarios" [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
+    <app-datos-bancarios-ficha-colegial></app-datos-bancarios-ficha-colegial>
 
   </div>
   <!--END DATOS GENERALES-->
@@ -26,8 +25,7 @@
   <!--DATOS RETENCIONES-->
   <!--END DATOS RETENCIONES-->
   <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
-    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
-      label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
   <app-dialog></app-dialog>
 </div>

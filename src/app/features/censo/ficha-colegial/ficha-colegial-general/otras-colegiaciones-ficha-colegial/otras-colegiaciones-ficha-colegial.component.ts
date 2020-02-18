@@ -54,16 +54,11 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit {
   rowsPerPage;
   @ViewChild("tableColegiaciones")
   tableColegiaciones: DataTable;
+
   constructor(private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location,) { }
+  ) { }
 
   ngOnInit() {
     this.generalBody = new FichaColegialGeneralesItem();
