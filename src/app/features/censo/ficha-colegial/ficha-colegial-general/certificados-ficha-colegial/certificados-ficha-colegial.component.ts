@@ -93,34 +93,7 @@ export class CertificadosFichaColegialComponent implements OnInit {
         this.tarjetaCertificados = this.tarjetaCertificadosNum;
       }
     );
-    this.colsCertificados = [
-      {
-        field: "descripcion",
-        header: "general.description"
-      },
-      {
-        field: "fechaEmision",
-        header: "facturacion.busquedaAbonos.literal.fecha2"
-      }
-    ];
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
+    this.getCols();
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -170,6 +143,37 @@ export class CertificadosFichaColegialComponent implements OnInit {
       this.activacionTarjeta = true;
     }
    
+  }
+
+  getCols(){
+    this.colsCertificados = [
+      {
+        field: "descripcion",
+        header: "general.description"
+      },
+      {
+        field: "fechaEmision",
+        header: "facturacion.busquedaAbonos.literal.fecha2"
+      }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
   activarPaginacionCertificados() {
     if (!this.datosCertificados || this.datosCertificados.length == 0)

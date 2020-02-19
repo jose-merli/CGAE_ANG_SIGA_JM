@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -65,10 +65,10 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
   mostrarDatosBancarios: boolean = false;
   DescripcionDatosBancarios;
   camposDesactivados: boolean = false;
-  isLetrado: boolean;
   permisos: boolean = true;
   colsBancarios;
   rowsPerPage;
+  @Input() isLetrado;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -93,7 +93,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
     } else {
       this.esColegiado = true;
     }
-    this.getLetrado();
     if (this.esColegiado) {
       if (this.colegialesBody.situacion == "20") {
         this.isColegiadoEjerciente = true;
@@ -121,6 +120,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
     if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
       this.onInitDatosBancarios(); 
     }
+    this.getCols();
 
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "288";
@@ -138,6 +138,17 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
         this.tarjetaBancarios = this.tarjetaBancariosNum;
       }
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.isLetrado != undefined){
+      this.isLetrado = true
+    }else{
+      this.isLetrado = !this.permisos;
+    }
+  }
+
+  getCols(){
     this.colsBancarios = [
       {
         field: "titular",
@@ -184,7 +195,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
       }
     ];
   }
-
 
   esFichaActiva(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);

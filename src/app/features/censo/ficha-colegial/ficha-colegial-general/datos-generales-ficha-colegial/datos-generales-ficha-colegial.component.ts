@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input } from '@angular/core';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
@@ -158,7 +158,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
 
   resultsTopics: any[] = [];
   displayAuditoria: boolean = false;
-  isLetrado: boolean;
   permisos: boolean = true;
   nuevoEstadoColegial: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -173,6 +172,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
   @ViewChild("autocompleteTopics")
   autocompleteTopics: AutoComplete;
 
+  @Input() isLetrado;
 
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
@@ -201,8 +201,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
     } else {
       this.disabledAction = false;
     }
-
-    this.getLetrado();
 
 
     if (sessionStorage.getItem("solimodifMensaje")) {
@@ -337,7 +335,14 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
     this.onInitGenerales();
   }
 
-
+ngOnChanges(changes: SimpleChanges) {
+  if(this.isLetrado != undefined){
+    this.isLetrado = true
+  }else{
+    this.isLetrado = !this.permisos;
+  }
+  
+}
   onInitGenerales() {
     // this.activacionGuardarGenerales();
     this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
