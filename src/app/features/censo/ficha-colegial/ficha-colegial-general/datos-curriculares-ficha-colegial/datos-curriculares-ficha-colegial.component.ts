@@ -99,10 +99,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
 
     }
-    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-      this.onInitCurriculares();
-    }
-
+    this.checkAcceso();
+    this.getCols();
   }
 
   ngOnChanges() {
@@ -124,7 +122,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
         migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
       }
     }
-    if(this.idPersona != undefined){
+    if (this.idPersona != undefined) {
       this.onInitCurriculares();
     }
   }

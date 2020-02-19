@@ -102,9 +102,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.activacionTarjeta = true;
     }
 
-    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined)
-      this.onInitDatosBancarios();
-
     this.getCols();
     this.checkAcceso();
 
