@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../_services/authentication.service';
@@ -41,7 +41,8 @@ import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
   templateUrl: './ficha-colegial-general.component.html',
   styleUrls: ['./ficha-colegial-general.component.scss']
 })
-export class FichaColegialGeneralComponent implements OnInit {
+export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
+
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   generalError: FichaColegialGeneralesObject = new FichaColegialGeneralesObject();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -379,15 +380,9 @@ export class FichaColegialGeneralComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
     private router: Router,
-    private datepipe: DatePipe,
-    private location: Location,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -451,7 +446,6 @@ export class FichaColegialGeneralComponent implements OnInit {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-      sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -489,33 +483,8 @@ export class FichaColegialGeneralComponent implements OnInit {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
       this.tipoCambioAuditoria = null;
-      // this.checkAcceso();
-      // this.onInitGenerales();
-      // this.onInitCurriculares();
-      // this.onInitColegiales();
-      // this.onInitSociedades();
-      // this.onInitOtrasColegiaciones();
-      // this.searchSanciones();
-      // this.searchCertificados();
-    } 
-      // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
-    
 
-    // if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-    //   this.esNewColegiado = true;
-    //   this.activacionEditar = false;
-    //   this.emptyLoadFichaColegial = false;
-    //   this.desactivarVolver = false;
-    //   this.activacionTarjeta = false;
-
-    //   sessionStorage.removeItem("esNuevoNoColegiado");
-    //   // this.onInitGenerales();
-    // } else {
-    //   this.activacionEditar = true;
-    //   this.esNewColegiado = false;
-    //   this.activacionTarjeta = true;
-    // }
-
+    }
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";
     }
@@ -566,6 +535,10 @@ export class FichaColegialGeneralComponent implements OnInit {
         }
       );
   }
+  ngOnDestroy() {
+    sessionStorage.removeItem("esNuevoNoColegiado");
+
+  }
   // DE MOMENTO VA PERFE 
   backTo() {
     sessionStorage.removeItem("personaBody");
@@ -615,265 +588,33 @@ export class FichaColegialGeneralComponent implements OnInit {
   }
   checkAccesos() {
     this.initSpinner = true;
-    this.checkAccesoDatosGenerales();
-  }
-  checkAccesoDatosGenerales() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "285";
+    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299"];
+    let proceso;
+    procesos = procesos.map(it => {
+      proceso = it;
+      it = new ControlAccesoDto();
+      it.idProceso = proceso;
+      return it
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+    })
+    this.sigaServices.post("acces_controls", procesos).subscribe(
       data => {
         let permisos = JSON.parse(data.body);
         let permisosArray = permisos.permisoItems;
         this.tarjetaGeneralesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoInteres();
-      }
-    );
-  }
-  checkAccesoInteres() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "234";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaInteresNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoDatosColegiales();
-      }
-    );
-  }
-  checkAccesoDatosColegiales() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "286";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoOtrasColegiaciones();
-      }
-    );
-
-    let numColeAcceso = new ControlAccesoDto();
-    numColeAcceso.idProceso = "12P";
-
-    this.sigaServices.post("acces_control", numColeAcceso).subscribe(
-      data => {
-        let permiso = JSON.parse(data.body);
-        let permisoArray = permiso.permisoItems;
-        let numColegiado = permisoArray[0].derechoacceso;
-        if (numColegiado == 3) {
-          this.activateNumColegiado = true;
-        } else {
-          this.activateNumColegiado = false;
-        }
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoOtrasColegiaciones();
-      }
-    );
-  }
-
-  checkAccesoOtrasColegiaciones() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "235";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoCertificados();
-      }
-    );
-  }
-
-  checkAccesoCertificados() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "290";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoSanciones();
-      }
-    );
-  }
-
-  checkAccesoSanciones() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "236";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaSancionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoSociedades();
-      }
-    );
-  }
-
-  checkAccesoSociedades() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "237";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaSociedadesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoDatosCurriculares();
-      }
-    );
-  }
-
-  checkAccesoDatosCurriculares() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "289";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCurricularesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoDirecciones();
-      }
-    );
-  }
-
-  checkAccesoDirecciones() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "287";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaDireccionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoDatosBancarios();
-      }
-    );
-  }
-
-  checkAccesoDatosBancarios() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "288";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaBancariosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoRegtel();
-      }
-    );
-  }
-
-  checkAccesoRegtel() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "291";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaRegtelNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoMutualidad();
-      }
-    );
-  }
-
-  checkAccesoMutualidad() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "298";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaMutualidadNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.checkAccesoAlterMutua();
-      }
-    );
-  }
-
-  checkAccesoAlterMutua() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "299";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaAlterMutuaNum = permisosArray[0].derechoacceso;
+        this.tarjetaInteresNum = permisosArray[1].derechoacceso;
+        this.tarjetaColegialesNum = permisosArray[2].derechoacceso;
+        this.activateNumColegiado = permisosArray[3].derechoacceso == 3 ? true : false;
+        this.tarjetaOtrasColegiacionesNum = permisosArray[4].derechoacceso;
+        this.tarjetaCertificadosNum = permisosArray[5].derechoacceso;
+        this.tarjetaSancionesNum = permisosArray[6].derechoacceso;
+        this.tarjetaSociedadesNum = permisosArray[7].derechoacceso;
+        this.tarjetaCurricularesNum = permisosArray[8].derechoacceso;
+        this.tarjetaDireccionesNum = permisosArray[9].derechoacceso;
+        this.tarjetaBancariosNum = permisosArray[9].derechoacceso;
+        this.tarjetaRegtelNum = permisosArray[10].derechoacceso;
+        this.tarjetaMutualidadNum = permisosArray[11].derechoacceso;
+        this.tarjetaAlterMutuaNum = permisosArray[12].derechoacceso;
       },
       err => {
         console.log(err);
@@ -883,6 +624,8 @@ export class FichaColegialGeneralComponent implements OnInit {
       }
     );
   }
+
+
 
   asignarPermisosTarjetas() {
     this.tarjetaInteres = this.tarjetaInteresNum;

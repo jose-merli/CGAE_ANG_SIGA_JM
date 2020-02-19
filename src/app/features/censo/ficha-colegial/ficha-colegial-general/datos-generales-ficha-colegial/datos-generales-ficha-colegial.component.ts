@@ -213,7 +213,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-      sessionStorage.removeItem("esNuevoNoColegiado");
+      // sessionStorage.removeItem("esNuevoNoColegiado");
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -278,7 +278,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       // this.desactivarVolver = false;
       this.activacionTarjeta = false;
 
-      sessionStorage.removeItem("esNuevoNoColegiado");
+      // sessionStorage.removeItem("esNuevoNoColegiado");
       this.onInitGenerales();
     } else {
       this.activacionEditar = true;
@@ -673,7 +673,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
             this.cerrarAuditoria();
+
             this.showSuccess();
+
           },
           error => {
             console.log(error);
@@ -739,6 +741,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             this.obtenerEtiquetasPersonaJuridicaConcreta();
             this.progressSpinner = false;
             this.showSuccess();
+            sessionStorage.removeItem("esNuevoNoColegiado");
             this.activacionEditar = true;
             this.activacionTarjeta = true;
           },
@@ -1005,6 +1008,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   restablecerGenerales() {
     if (this.esNewColegiado) {
       this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(JSON.stringify(this.colegialesBody));
+      if (this.generalBody.nif != undefined && this.generalBody.nif != "" && this.generalBody != null)
+        this.compruebaDNI();
       this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.stringAComisiones();
@@ -1012,6 +1018,10 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     } else {
       this.cargarImagen(this.idPersona);
       this.generalBody = JSON.parse(JSON.stringify(this.checkGeneralBody));
+      if (this.generalBody.fechaNacimiento != undefined && this.generalBody.fechaNacimiento != null) {
+        this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
+        this.calcularEdad(this.generalBody.fechaNacimiento);
+      }
       this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.stringAComisiones();
@@ -2379,6 +2389,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   borrarFechaNacimiento() {
     this.fechaNacimiento = null;
     this.generalBody.fechaNacimientoDate = undefined;
+    this.generalBody.fechaNacimiento = undefined;
     this.fechaNacimientoSelected = true;
     this.edadCalculada = 0;
     this.calendarFechaNacimiento.onClearButtonClick("");
