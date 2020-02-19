@@ -13,13 +13,14 @@
                     <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.label }}</option>
                 </select>-->
 
-                <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion"
-                    [(ngModel)]="tmpLoginInstitucion" [options]="instituciones" (onChange)="onChange($event)" id="dropdown">
-                    </p-dropdown>
+                <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}"
+                    formControlName="tmpLoginInstitucion" [(ngModel)]="tmpLoginInstitucion" [options]="instituciones"
+                    (onChange)="onChange($event)" id="dropdown">
+                </p-dropdown>
 
             </td>
-            <button [disabled]="isHabilitadoEntrar()" pButton type="button " (click)='submit()' title="Entrar con los datos de los combos"
-                label="Entrar"></button>
+            <button [disabled]="isHabilitadoEntrar()" pButton type="button " (click)='submit()'
+                title="Entrar con los datos de los combos" label="Entrar"></button>
 
         </tr>
         <tr>
@@ -30,7 +31,8 @@
                     <option value=S>SÍ, soy Letrado</option>
                 </select>-->
 
-                <p-dropdown [style]="{'width':'400px'}" formControlName="sLetrado" [options]="letrado" [(ngModel)]="isLetrado" id="dropdown">
+                <p-dropdown [style]="{'width':'400px'}" formControlName="sLetrado" [options]="letrado"
+                    [(ngModel)]="isLetrado" id="dropdown">
 
                 </p-dropdown>
 
@@ -41,10 +43,11 @@
             <td class="labelText">Perfil</td>
             <td colspan="2">
 
-                <p-listbox styleClass="loginSiga" formControlName="tmpLoginPerfil" [options]="perfiles" [(ngModel)]="tmpLoginPerfil" multiple="multiple"
-                    [style]="{'width':'400px'}" [listStyle]="{'height':'400px'}"></p-listbox>
+                <p-listbox styleClass="loginSiga" formControlName="tmpLoginPerfil" [options]="perfiles"
+                    [(ngModel)]="tmpLoginPerfil" multiple="multiple" [style]="{'width':'400px'}"
+                    [listStyle]="{'height':'400px'}"></p-listbox>
 
-                    <!--<select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
+                <!--<select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
                     <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.label }}</option>
                 </select>-->
             </td>
@@ -62,8 +65,14 @@
     <input type="hidden" formControlName="letrado">
     <input type="hidden" formControlName="posMenu">
 
-</form>
 
+</form>
+<div id="paramContainer">
+    <p id="params">{{ "administracion.parametro.entorno" | translate}}: {{environment}} -
+        {{ "administracion.parametro.versionsigaweb" | translate}}: {{sigaWebVersion}} -
+        {{ "administracion.parametro.versionsigafront" | translate}}:
+        {{sigaFrontVersion}}</p>
+</div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
