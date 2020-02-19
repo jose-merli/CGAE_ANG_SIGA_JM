@@ -11,20 +11,25 @@
     </p>
   </div>
   <div>
-    <app-servicios-interes-ficha-colegial [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
-    <app-datos-generales-ficha-colegial [esColegiado]="esColegiado" [isLetrado]="isLetrado"></app-datos-generales-ficha-colegial>
-    <app-datos-colegiales-ficha-colegial [esColegiado]="esColegiado"></app-datos-colegiales-ficha-colegial>
-    <app-otras-colegiaciones-ficha-colegial [esColegiado]="esColegiado"></app-otras-colegiaciones-ficha-colegial>
-    <app-certificados-ficha-colegial [esColegiado]="esColegiado"></app-certificados-ficha-colegial>
-    <app-sanciones-ficha-colegial></app-sanciones-ficha-colegial>
-    <app-sociedades-ficha-colegial [idPersona]="idPersona"></app-sociedades-ficha-colegial>
-    <app-datos-curriculares-ficha-colegial [esColegiado]="esColegiado" [idPersona]="idPersona"></app-datos-curriculares-ficha-colegial>
-    <app-direcciones-ficha-colegial [esColegiado]="esColegiado" [isLetrado]="isLetrado" [idPersona]="idPersona"></app-direcciones-ficha-colegial>
-    <app-datos-bancarios-ficha-colegial [esColegiado]="esColegiado" [isLetrado]="isLetrado" [idPersona]="idPersona"></app-datos-bancarios-ficha-colegial>
-    <app-regtel-ficha-colegial></app-regtel-ficha-colegial>
-    <app-alter-mutua-ficha-colegial></app-alter-mutua-ficha-colegial>
-    <app-mutualidad-abogacia-ficha-colegial [datosBancarios]="datosBancarios" [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
-
+    <app-servicios-interes-ficha-colegial [tarjetaInteres]="tarjetaInteres" *ngIf="tarjetaInteres != undefined" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
+    <app-datos-generales-ficha-colegial [tarjetaGenerales]="tarjetaGenerales" *ngIf="tarjetaGenerales != undefined" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado"></app-datos-generales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial [tarjetaColegiales]="tarjetaColegiales" *ngIf="tarjetaColegiales != undefined" [esColegiado]="esColegiado"></app-datos-colegiales-ficha-colegial>
+    <app-otras-colegiaciones-ficha-colegial [tarjetaOtrasColegiaciones]="tarjetaOtrasColegiaciones" *ngIf="tarjetaOtrasColegiaciones != undefined"
+      [esColegiado]="esColegiado"></app-otras-colegiaciones-ficha-colegial>
+    <app-certificados-ficha-colegial [tarjetaCertificados]="tarjetaCertificados" *ngIf="tarjetaCertificados != undefined" [esColegiado]="esColegiado"></app-certificados-ficha-colegial>
+    <app-sanciones-ficha-colegial [tarjetaSanciones]="tarjetaSanciones" *ngIf="tarjetaSanciones != undefined"></app-sanciones-ficha-colegial>
+    <app-sociedades-ficha-colegial [tarjetaSociedades]="tarjetaSociedades" *ngIf="tarjetaSociedades != undefined" [idPersona]="idPersona"></app-sociedades-ficha-colegial>
+    <app-datos-curriculares-ficha-colegial [tarjetaCurriculares]="tarjetaCurriculares" *ngIf="tarjetaCurriculares != undefined"
+      [esColegiado]="esColegiado" [idPersona]="idPersona"></app-datos-curriculares-ficha-colegial>
+    <app-direcciones-ficha-colegial [tarjetaDirecciones]="tarjetaDirecciones" *ngIf="tarjetaDirecciones != undefined" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado" [idPersona]="idPersona"></app-direcciones-ficha-colegial>
+    <app-datos-bancarios-ficha-colegial [tarjetaBancarios]="tarjetaBancarios" *ngIf="tarjetaBancarios != undefined" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado" [idPersona]="idPersona"></app-datos-bancarios-ficha-colegial>
+    <app-regtel-ficha-colegial [tarjetaRegtel]="tarjetaRegtel" *ngIf="tarjetaRegtel != undefined"></app-regtel-ficha-colegial>
+    <app-alter-mutua-ficha-colegial [tarjetaAlterMutua]="tarjetaAlterMutua" *ngIf="tarjetaAlterMutua != undefined"></app-alter-mutua-ficha-colegial>
+    <app-mutualidad-abogacia-ficha-colegial [tarjetaMutualidad]="tarjetaMutualidad" *ngIf="tarjetaMutualidad != undefined" [datosBancarios]="datosBancarios"
+      [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
 
   </div>
   <!--END DATOS GENERALES-->

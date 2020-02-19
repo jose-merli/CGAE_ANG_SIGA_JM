@@ -35,7 +35,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   DescripcionDatosDireccion;
   searchDireccionIdPersona = new DatosDireccionesObject();
   tarjetaGeneralesNum: string;
-  tarjetaGenerales: string;
+  @Input() tarjetaGenerales: string;
   emptyLoadFichaColegial: boolean = false;
   disabledNif: boolean = false;
   es: any = esCalendar;
@@ -183,7 +183,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.checkAccesoDatosGenerales();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
@@ -340,7 +339,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    
+
   }
   onInitGenerales() {
     // this.activacionGuardarGenerales();
@@ -2339,25 +2338,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           }
         );
     }
-  }
-  checkAccesoDatosGenerales() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "285";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaGeneralesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaGenerales = this.tarjetaGeneralesNum;
-
-      }
-    );
   }
   asignarPermisosTarjetas() {
     this.tarjetaGenerales = this.tarjetaGeneralesNum;

@@ -15,7 +15,7 @@ import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem
   styleUrls: ['./mutualidad-abogacia-ficha-colegial.component.scss']
 })
 export class MutualidadAbogaciaFichaColegialComponent implements OnInit {
-  tarjetaMutualidad;
+  @Input() tarjetaMutualidad;
   msgs = [];
   progressSpinner: boolean = false;
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -34,7 +34,6 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit {
     private translateService: TranslateService) { }
 
   ngOnInit() {
-    this.checkAccesoMutualidad();
 
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -366,22 +365,6 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit {
         JSON.stringify(cuenta)
       );
     }
-  }
-
-  checkAccesoMutualidad() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "298";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaMutualidad = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
 
 

@@ -27,7 +27,6 @@ import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObje
   styleUrls: ['./otras-colegiaciones-ficha-colegial.component.scss']
 })
 export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChanges {
-  tarjetaOtrasColegiacionesNum: string;
   activacionTarjeta: boolean = false;
   emptyLoadFichaColegial: boolean = false;
   openFicha: boolean = false;
@@ -42,7 +41,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
     },
   ];
   selectedItemColegiaciones: number = 10;
-  tarjetaOtrasColegiaciones: string;
+  @Input() tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -64,7 +63,6 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   ngOnInit() {
 
     this.getCols();
-    this.checkAcceso();
 
 
     this.generalBody = new FichaColegialGeneralesItem();
@@ -228,24 +226,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       }
     ];
   }
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "235";
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
-      }
-    );
-  }
 
 
 }

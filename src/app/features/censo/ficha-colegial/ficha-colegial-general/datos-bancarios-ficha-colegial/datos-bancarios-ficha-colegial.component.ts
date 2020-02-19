@@ -49,7 +49,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   selectedItemBancarios: number = 10;
 
   openFicha: boolean = false;
-  tarjetaBancarios: string;
+  @Input() tarjetaBancarios: string;
   tarjetaBancariosNum: string;
   datosBancarios: DatosBancariosItem[] = [];
   numSelectedBancarios: number = 0;
@@ -103,7 +103,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     }
 
     this.getCols();
-    this.checkAcceso();
 
   }
 
@@ -121,9 +120,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
           this.isColegiadoEjerciente = false;
         }
       }
-      if(this.idPersona != undefined){
-        this.onInitDatosBancarios();
-      }
+    if (this.idPersona != undefined) {
+      this.onInitDatosBancarios();
+    }
   }
 
 
@@ -174,25 +173,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         value: 40
       }
     ];
-  }
-
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "288";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaBancariosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaBancarios = this.tarjetaBancariosNum;
-      }
-    );
   }
 
   esFichaActiva(key) {

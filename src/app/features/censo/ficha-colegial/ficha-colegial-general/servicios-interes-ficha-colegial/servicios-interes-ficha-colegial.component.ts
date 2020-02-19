@@ -38,7 +38,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   datosCertificados: any[] = [];
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
-  tarjetaInteres: string;
+  @Input() tarjetaInteres: string;
   tarjetaInteresNum: string;
 
   selectedItemColegiaciones: number = 10;
@@ -69,7 +69,6 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
 
   ngOnInit() {
 
-    this.checkAcceso();
 
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -162,22 +161,5 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/turnoOficioCenso"]);
   }
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "234";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaInteresNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaInteres = this.tarjetaInteresNum;
-      }
-    );
-  }
+ 
 }

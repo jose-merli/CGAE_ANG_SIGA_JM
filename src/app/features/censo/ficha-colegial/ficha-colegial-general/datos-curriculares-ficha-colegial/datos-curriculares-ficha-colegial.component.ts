@@ -30,7 +30,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   progressSpinner: boolean = false;
   editar: boolean = false;
   numSelectedCurriculares: number = 0;
-  tarjetaCurriculares: string;
+  @Input() tarjetaCurriculares: string;
   historicoCV: boolean = false;
   mostrarDatosCurriculares: boolean = false;
   selectAll: boolean = false;
@@ -99,7 +99,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
 
     }
-    this.checkAcceso();
     this.getCols();
   }
 
@@ -126,26 +125,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.onInitCurriculares();
     }
   }
-
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "289";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCurricularesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaCurriculares = this.tarjetaCurricularesNum;
-      }
-    );
-  }
-
   getCols() {
 
     this.colsCurriculares = [

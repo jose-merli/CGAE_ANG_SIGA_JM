@@ -29,7 +29,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   tarjetaColegialesNum: string;
   activateNumColegiado: boolean = false;
   @Input() esColegiado: boolean = null;
-  tarjetaColegiales;
+  @Input() tarjetaColegiales;
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   openFicha: boolean = false;
   checkColegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -175,7 +175,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
     this.getCols();
-    this.checkAccesos();
 
 
     this.tipoCambioAuditoria = null;
@@ -2002,48 +2001,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         value: 40
       }
     ];
-  }
-
-  checkAccesos() {
-
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "286";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.asignarPermisosTarjetas();
-      }
-    );
-
-    let numColeAcceso = new ControlAccesoDto();
-    numColeAcceso.idProceso = "12P";
-
-    this.sigaServices.post("acces_control", numColeAcceso).subscribe(
-      data => {
-        let permiso = JSON.parse(data.body);
-        let permisoArray = permiso.permisoItems;
-        let numColegiado = permisoArray[0].derechoacceso;
-        if (numColegiado == 3) {
-          this.activateNumColegiado = true;
-        } else {
-          this.activateNumColegiado = false;
-        }
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        // this.checkAccesoOtrasColegiaciones();
-      }
-    );
   }
 
 }

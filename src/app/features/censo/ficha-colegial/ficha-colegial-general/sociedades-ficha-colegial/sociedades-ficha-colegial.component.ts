@@ -23,7 +23,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   activacionTarjeta: boolean = false;
   generalBody;
   colsSociedades = [];
-  tarjetaSociedades;
+  @Input() tarjetaSociedades;
   checkGeneralBody;
   openFicha: boolean = false;
   @ViewChild("tableSociedades")
@@ -43,7 +43,6 @@ export class SociedadesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkAccesoSociedades();
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.activacionTarjeta = false;
     } else {
@@ -169,20 +168,5 @@ export class SociedadesFichaColegialComponent implements OnInit {
   }
 
 
-  checkAccesoSociedades() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "237";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaSociedades = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
 
 }

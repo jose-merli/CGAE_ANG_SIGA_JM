@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -12,7 +12,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 })
 export class AlterMutuaFichaColegialComponent implements OnInit {
 
-  tarjetaAlterMutua;
+  @Input() tarjetaAlterMutua;
   solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   tratamientoDesc: String;
@@ -24,7 +24,6 @@ export class AlterMutuaFichaColegialComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.checkAccesoAlterMutua();
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -116,20 +115,6 @@ export class AlterMutuaFichaColegialComponent implements OnInit {
         }
       );
   }
-  checkAccesoAlterMutua() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "299";
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaAlterMutua = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
 
 }

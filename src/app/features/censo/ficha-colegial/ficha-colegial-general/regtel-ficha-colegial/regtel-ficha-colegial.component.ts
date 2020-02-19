@@ -22,9 +22,8 @@ export class RegtelFichaColegialComponent implements OnInit, OnChanges {
   messageRegtel: String;
   numSelectedDatosRegtel: number = 0;
   dataSanciones: any[] = [];
-  tarjetaSanciones: string;
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
-  tarjetaRegtel: string;
+  @Input() tarjetaRegtel: string;
   selectedDatosRegtel: DocushareItem;
   progressSpinner: boolean = false;
   bodyRegTel: any[] = [];
@@ -59,7 +58,6 @@ export class RegtelFichaColegialComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
-    this.checkAccesoRegtel();
     this.getCols();
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -193,16 +191,6 @@ export class RegtelFichaColegialComponent implements OnInit, OnChanges {
   }
   getFichaPosibleByKey(key): any {
     return this.ficha;
-  }
-  onRowSelectSanciones(selectedDatos) {
-    // Guardamos los filtros
-    sessionStorage.setItem("saveFilters", JSON.stringify(this.bodySanciones));
-
-    // Guardamos los datos seleccionados para pasarlos a la otra pantalla
-    sessionStorage.setItem("rowData", JSON.stringify(selectedDatos));
-    sessionStorage.setItem("permisoTarjeta", this.tarjetaSanciones);
-
-    this.router.navigate(["/detalleSancion"]);
   }
 
   comprobarREGTEL() {
@@ -537,21 +525,6 @@ export class RegtelFichaColegialComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-  }
-  checkAccesoRegtel() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "291";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaRegtel = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      }
-    );
   }
 
   abreCierraRegtel(key) {
