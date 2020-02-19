@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -27,7 +27,7 @@ import { BusquedaSancionesObject } from '../../../../../models/BusquedaSanciones
   templateUrl: './direcciones-ficha-colegial.component.html',
   styleUrls: ['./direcciones-ficha-colegial.component.scss']
 })
-export class DireccionesFichaColegialComponent implements OnInit {
+export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   esNewColegiado: boolean = false;
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
@@ -70,14 +70,14 @@ export class DireccionesFichaColegialComponent implements OnInit {
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
-  mostrarDatosSanciones:boolean = false;
+  mostrarDatosSanciones: boolean = false;
   DescripcionSanciones;
   rowsPerPage;
   numSelectedCurriculares: number = 0;
   colsDirecciones;
   bodyDirecciones: DatosDireccionesItem;
   idPersona: any;
-  esColegiado: boolean;
+  @Input() esColegiado: boolean;
   selectMultipleDirecciones: boolean = false;
   numSelectedDirecciones: number = 0;
   selectAllDirecciones: boolean = false;
@@ -113,6 +113,7 @@ export class DireccionesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkAcceso();
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -120,19 +121,9 @@ export class DireccionesFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
     this.idPersona = this.generalBody.idPersona;
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
 
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
-      } else {
-        this.isColegiadoEjerciente = false;
-      }
-    }
+
+
     this.onInitDirecciones();
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -148,9 +139,30 @@ export class DireccionesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-    
+
     this.getCols();
 
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.isLetrado != undefined) {
+      this.isLetrado = true
+    } else {
+      this.isLetrado = !this.permisos;
+    }
+    if (this.esColegiado != null)
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
+  }
+
+
+  checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "287";
 
@@ -168,75 +180,64 @@ export class DireccionesFichaColegialComponent implements OnInit {
       }
     );
   }
+  getCols() {
+    this.colsDirecciones = [
+      {
+        field: "tipoDireccion",
+        header: "censo.datosDireccion.literal.tipo.direccion"
+      },
+      {
+        field: "domicilioLista",
+        header: "censo.consultaDirecciones.literal.direccion"
+      },
+      {
+        field: "codigoPostal",
+        header: "censo.ws.literal.codigopostal"
+      },
+      {
+        field: "nombrePoblacion",
+        header: "censo.consultaDirecciones.literal.poblacion"
+      },
+      {
+        field: "nombreProvincia",
+        header: "censo.datosDireccion.literal.provincia"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo"
+      }
+    ];
 
-  ngOnChanges(changes: SimpleChanges) {
-    if(this.isLetrado != undefined){
-      this.isLetrado = true
-    }else{
-      this.isLetrado = !this.permisos;
-    }
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 
 
-
-getCols(){
-  this.colsDirecciones = [
-    {
-      field: "tipoDireccion",
-      header: "censo.datosDireccion.literal.tipo.direccion"
-    },
-    {
-      field: "domicilioLista",
-      header: "censo.consultaDirecciones.literal.direccion"
-    },
-    {
-      field: "codigoPostal",
-      header: "censo.ws.literal.codigopostal"
-    },
-    {
-      field: "nombrePoblacion",
-      header: "censo.consultaDirecciones.literal.poblacion"
-    },
-    {
-      field: "nombreProvincia",
-      header: "censo.datosDireccion.literal.provincia"
-    },
-    {
-      field: "telefono",
-      header: "censo.ws.literal.telefono"
-    },
-    {
-      field: "movil",
-      header: "censo.datosDireccion.literal.movil"
-    },
-    {
-      field: "correoElectronico",
-      header: "censo.datosDireccion.literal.correo"
-    }
-  ];
-
-   this.rowsPerPage = [
-    {
-      label: 10,
-      value: 10
-    },
-    {
-      label: 20,
-      value: 20
-    },
-    {
-      label: 30,
-      value: 30
-    },
-    {
-      label: 40,
-      value: 40
-    }
-  ];
-}
-
-
- abreCierraFicha(key) {
+  abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
     if (

@@ -53,7 +53,7 @@ export class SancionesFichaColegialComponent implements OnInit {
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
-  mostrarDatosSanciones:boolean = false;
+  mostrarDatosSanciones: boolean = false;
   DescripcionSanciones;
   rowsPerPage;
   @ViewChild("tableSanciones")
@@ -72,28 +72,14 @@ export class SancionesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.checkAcceso();
+    this.getCols();
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
     this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "236";
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaSancionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaSanciones = this.tarjetaSancionesNum;
-
-      }
-    );
 
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -112,6 +98,45 @@ export class SancionesFichaColegialComponent implements OnInit {
 
     this.searchSanciones();
 
+
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "236";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaSancionesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaSanciones = this.tarjetaSancionesNum;
+
+      }
+    );
+  }
+  abreCierraFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+
+    if (
+      key == "generales" &&
+      !this.activacionTarjeta &&
+      !this.emptyLoadFichaColegial
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+  }
+  getCols() {
     this.colsSanciones = [
       {
         field: "colegio",
@@ -169,24 +194,6 @@ export class SancionesFichaColegialComponent implements OnInit {
       }
     ];
   }
-
-  abreCierraFicha(key) {
-    let fichaPosible = this.getFichaPosibleByKey(key);
-
-    if (
-      key == "generales" &&
-      !this.activacionTarjeta &&
-      !this.emptyLoadFichaColegial
-    ) {
-      fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-    if (this.activacionTarjeta) {
-      fichaPosible.activa = !fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-  }
-
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {
       return elto.key === key;
@@ -245,9 +252,9 @@ export class SancionesFichaColegialComponent implements OnInit {
         err => {
           this.progressSpinner = false;
         }, () => {
-          if(this.dataSanciones.length > 0){
+          if (this.dataSanciones.length > 0) {
             this.mostrarDatosSanciones = true;
-            for(let i;i<=this.dataSanciones.length - 1;i++){
+            for (let i; i <= this.dataSanciones.length - 1; i++) {
               this.DescripcionSanciones = this.dataSanciones[i];
             }
           }

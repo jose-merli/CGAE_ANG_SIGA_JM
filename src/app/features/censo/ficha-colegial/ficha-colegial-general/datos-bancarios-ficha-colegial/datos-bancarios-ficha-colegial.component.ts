@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -29,12 +29,12 @@ import { DatosBancariosObject } from '../../../../../models/DatosBancariosObject
   templateUrl: './datos-bancarios-ficha-colegial.component.html',
   styleUrls: ['./datos-bancarios-ficha-colegial.component.scss']
 })
-export class DatosBancariosFichaColegialComponent implements OnInit {
+export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   idPersona: any;
-  esColegiado: boolean;
+  @Input() esColegiado: boolean = null;
   isColegiadoEjerciente: boolean = false;
   esNewColegiado: boolean = false;
   activacionEditar: boolean = true;
@@ -78,7 +78,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
     // private sanitizer: DomSanitizer,
     private router: Router,
     private datepipe: DatePipe,
-    private location: Location,) { }
+    private location: Location, ) { }
 
   ngOnInit() {
     this.generalBody = new FichaColegialGeneralesItem();
@@ -88,18 +88,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
     this.idPersona = this.generalBody.idPersona;
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
-      } else {
-        this.isColegiadoEjerciente = false;
-      }
-    }
+
+
 
 
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -117,38 +107,33 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
       this.activacionTarjeta = true;
     }
 
-    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-      this.onInitDatosBancarios(); 
-    }
+    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined)
+      this.onInitDatosBancarios();
+
     this.getCols();
+    this.checkAcceso();
 
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "288";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaBancariosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaBancarios = this.tarjetaBancariosNum;
-      }
-    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.isLetrado != undefined){
+    if (this.isLetrado != undefined) {
       this.isLetrado = true
-    }else{
+    } else {
       this.isLetrado = !this.permisos;
     }
+    if (this.esColegiado != null)
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
   }
 
-  getCols(){
+
+
+  getCols() {
     this.colsBancarios = [
       {
         field: "titular",
@@ -194,6 +179,25 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "288";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaBancariosNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaBancarios = this.tarjetaBancariosNum;
+      }
+    );
   }
 
   esFichaActiva(key) {
@@ -268,22 +272,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
   }
 
   confirmarEliminar(selectedDatos) {
-    // let cargosBorrados = 0;
-    // let cargosExistentes = 0;
-    // for (let i in selectedDatos) {
-    //   // if (selectedDatos[i].uso != "ABONO/SJCS" && selectedDatos[i].uso != "/SJCS" && selectedDatos[i].uso != "ABONO") {
-    //   cargosBorrados++;
-    //   // }
-    // }
-    // for (let i in this.datosBancarios) {
-    //   for (let i2 in selectedDatos) {
-    //     if (this.datosBancarios[i].uso == selectedDatos[i2].uso) {
-    //       cargosExistentes++;
-    //     }
-    //   }
-
-    // }
-    // if (cargosExistentes <= cargosBorrados) {
     let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
     this.icon = "fa fa-trash-alt";
     let keyConfirmation = "alterMutua";
@@ -310,31 +298,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
         this.selectMultipleBancarios = false;
       }
     });
-    // } else {
-    //   let mess = this.translateService.instant("messages.deleteConfirmation");
-    //   let icon = "fa fa-trash-alt";
-    //   this.confirmationService.confirm({
-    //     message: mess,
-    //     icon: icon,
-    //     accept: () => {
-    //       this.eliminarRegistro(selectedDatos);
-    //     },
-    //     reject: () => {
-    //       this.msgs = [
-    //         {
-    //           severity: "info",
-    //           summary: "info",
-    //           detail: this.translateService.instant(
-    //             "general.message.accion.cancelada"
-    //           )
-    //         }
-    //       ];
-
-    //       this.selectedDatosBancarios = [];
-    //       this.selectMultipleBancarios = false;
-    //     }
-    //   });
-    // }
   }
 
   eliminarRegistro(selectedDatos) {
@@ -499,13 +462,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
       return true;
     } else {
       return this.camposDesactivados;
-    }
-  }
-  getLetrado() {
-    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
-      this.isLetrado = true;
-    } else {
-      this.isLetrado = !this.permisos;
     }
   }
   clear() {
