@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoginCombo } from './login-develop.combo';
 import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
-import { TranslateService } from "../../../commons/translate/translation.service";
+import { TranslateService } from "../../commons/translate/translation.service";
 
 @Component({
 	selector: 'app-login-develop',
