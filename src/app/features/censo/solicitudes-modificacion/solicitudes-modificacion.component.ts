@@ -66,7 +66,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   @ViewChild("table")
   table;
-  selectedDatos;
+  selectedDatos = [];
   cols: any = [];
   rowsPerPage: any = [];
   data: any[] = [];
@@ -607,43 +607,42 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   onSelectRow(selectedDatos) {
-    if (!this.selectMultiple) {
-      if (selectedDatos[0].especifica == "1") {
-        sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
-        sessionStorage.setItem("search", JSON.stringify(this.data));
-        sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
-        sessionStorage.setItem("isLetrado", JSON.stringify(this.isLetrado));
-        this.router.navigate(["/nuevaSolicitudesModificacion"]);
-      } else {
-        // abrir popup MODO CONSULTA
-        this.displayGeneralRequest = true;
-        this.isNew = false;
-        this.disableNew = true;
-
-        // Rellenamos los datos
-        this.tipoModificacionSolGeneral = selectedDatos[0].tipoModificacion;
-        this.tipoSolGeneral = [
-          {
-            label: selectedDatos[0].tipoModificacion,
-            value: selectedDatos[0].idTipoModificacion
-          }
-        ];
-
-        this.motivoSolGeneral = selectedDatos[0].motivo;
-
-        if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
-          this.disableButton = false;
-        } else {
-          this.disableButton = true;
-        }
-      }
+    if (selectedDatos[0].especifica == "1") {
+      sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
+      sessionStorage.setItem("search", JSON.stringify(this.data));
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
+      sessionStorage.setItem("isLetrado", JSON.stringify(this.isLetrado));
+      this.router.navigate(["/nuevaSolicitudesModificacion"]);
     } else {
-      if (
-        // selectedDatos[selectedDatos.length - 1].especifica == "1" ||
-        selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
-      ) {
-        this.selectedDatos.splice(selectedDatos.length - 1, 1);
+      // abrir popup MODO CONSULTA
+      this.displayGeneralRequest = true;
+      this.isNew = false;
+      this.disableNew = true;
+
+      // Rellenamos los datos
+      this.tipoModificacionSolGeneral = selectedDatos[0].tipoModificacion;
+      this.tipoSolGeneral = [
+        {
+          label: selectedDatos[0].tipoModificacion,
+          value: selectedDatos[0].idTipoModificacion
+        }
+      ];
+
+      this.motivoSolGeneral = selectedDatos[0].motivo;
+
+      if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
+        this.disableButton = false;
+      } else {
+        this.disableButton = true;
       }
+    }
+  }
+  procesar(selectedDatos) {
+    if (
+      // selectedDatos[selectedDatos.length - 1].especifica == "1" ||
+      selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
+    ) {
+      this.selectedDatos.splice(selectedDatos.length - 1, 1);
     }
   }
 
@@ -848,6 +847,10 @@ export class SolicitudesModificacionComponent implements OnInit {
     }
   }
 
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({

@@ -257,9 +257,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     if (this.displayBoolean) {
       this.searchHistoricoDatosDirecciones(id);
     } else {
-
+      id = [id]
       sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
-      if (id.length >= 1 && this.selectMultiple == false) {
+      if (id.length >= 1) {
         sessionStorage.removeItem("personaBody");
         sessionStorage.setItem("esColegiado", "true");
         sessionStorage.setItem(
@@ -286,6 +286,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             JSON.stringify(this.fechaIncorporacionHastaSelect)
           );
         }
+
 
         if (this.fechaNacimientoDesdeSelect != null ||
           this.fechaNacimientoDesdeSelect != undefined) {
@@ -325,7 +326,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
               console.log(err);
             },
 
-          );
+        );
 
 
 
@@ -335,6 +336,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       else {
         this.actualizaSeleccionados(this.selectedDatos);
       }
+
     }
   }
 
@@ -893,25 +895,29 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "colegioResultado",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-
+        header: "censo.busquedaClientesAvanzada.literal.colegio",
+        width: "5%"
       },
       {
         field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
-      },
-      {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        header: "censo.consultaDatosColegiacion.literal.numIden",
+        width: "8%"
 
       },
       {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre",
+        width: "15%"
+      },
+      {
         field: "numberColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado",
+        width: "7%"
       },
       {
         field: "estadoColegial",
-        header: "censo.fichaCliente.situacion.cabecera"
+        header: "censo.fichaCliente.situacion.cabecera",
+        width: "7%"
       },
       {
         field: "situacionResidente",
@@ -920,7 +926,28 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "incorporacionDate",
-        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion"
+        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion",
+        width: "7%"
+      },
+      {
+        field: "fechaNacimientoDate",
+        header: "censo.consultaDatosColegiacion.literal.fechaNac",
+        width: "8%"
+      },
+      {
+        field: "correo",
+        header: "censo.datosDireccion.literal.correo",
+        width: "13%"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono",
+        width: "6%"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil",
+        width: "6%"
       },
       // {
       //   field: "correo",
@@ -937,7 +964,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "noAparecerRedAbogacia2",
         header: "censo.busquedaColegial.lopd",
-        filter: "noAparecerRedAbogaciaFilter"
+        filter: "noAparecerRedAbogaciaFilter",
+        width: "5%"
       }
     ];
 

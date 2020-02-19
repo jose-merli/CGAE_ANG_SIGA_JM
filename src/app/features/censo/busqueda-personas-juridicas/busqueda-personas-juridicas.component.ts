@@ -183,13 +183,26 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+    if (!this.historico) {
+
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
     }
   }
 
@@ -228,6 +241,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     );
   }
 
+  clickFila(event) {
+    if (this.historico && !event.data.fechaBaja) {
+      this.selectedDatos.pop();
+    }
+  }
   // arreglarFecha() {
   //   if (this.fechaConstitucion != undefined) {
   //     let fechaString = JSON.stringify(this.fechaConstitucion);
@@ -586,6 +604,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   irEditarPersona(id) {
+    id = [id] //Se hizo en una actualizacion para evitar cambiar mucho codigo
     if (!this.selectMultiple) {
       var ir = null;
       if (id && id.length > 0) {

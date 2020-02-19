@@ -662,6 +662,7 @@ import { DescripcionEnvioMasivoComponent } from './features/informes-comunicacio
 		DropdownModule,
 		ButtonModule,
 		DataTableModule,
+		TableModule,
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,

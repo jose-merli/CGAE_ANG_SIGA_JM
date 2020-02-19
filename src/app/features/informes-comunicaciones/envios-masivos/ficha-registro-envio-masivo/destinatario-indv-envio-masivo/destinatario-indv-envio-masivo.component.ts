@@ -291,6 +291,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+
   }
 
   showSuccess(mensaje: string) {

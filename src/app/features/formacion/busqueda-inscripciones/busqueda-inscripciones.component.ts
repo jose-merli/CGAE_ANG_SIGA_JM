@@ -1083,7 +1083,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   irEditarInscripcion(selectedDatos) {
-    if (selectedDatos.length >= 1 && this.selectMultiple == false) {
+    if (selectedDatos.length >= 1) {
       sessionStorage.setItem("modoEdicionInscripcion", "true");
       sessionStorage.setItem(
         "inscripcionCurrent",
