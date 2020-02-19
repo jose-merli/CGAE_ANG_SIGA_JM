@@ -1,4 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<p-growl [(value)]="msgCount" life="30000"></p-growl>
+
 <div class="busqueda-container">
     <div class="header-title">
         <i class="fa fa-square"></i>
@@ -227,6 +229,8 @@
             <div class="text-right main-button">
                 <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                      label="{{ 'general.boton.clear' | translate}}"></button>
+                <button (click)="isBuscarCount()" pButton type="button" icon="fa fa-search" iconPos="left"
+                    label="{{ 'general.boton.contar' | translate}}"></button>
                 <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
                     label="{{'general.boton.search' | translate}}"></button>
 
@@ -291,7 +295,7 @@
                     </ng-template>
                 </p-column>
 
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidente"
+                <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidenteFilter"
                     [header]="'censo.busquedaClientes.noResidente' | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
                     <ng-template let-col let-dato="rowData" pTemplate="body">
@@ -401,6 +405,7 @@
             </div>
         </div>
     </div>
+
     <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="false"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
