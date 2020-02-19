@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -25,10 +25,10 @@ import * as moment from 'moment';
   templateUrl: './datos-colegiales-ficha-colegial.component.html',
   styleUrls: ['./datos-colegiales-ficha-colegial.component.scss']
 })
-export class DatosColegialesFichaColegialComponent implements OnInit {
+export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges {
   tarjetaColegialesNum: string;
   activateNumColegiado: boolean = false;
-  esColegiado: boolean = false;
+  @Input() esColegiado: boolean = null;
   tarjetaColegiales;
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   openFicha: boolean = false;
@@ -59,7 +59,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
   createItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   ocultarMotivo: boolean = undefined;
 
@@ -178,32 +178,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
 
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
-      } else {
-        this.isColegiadoEjerciente = false;
-      }
-    }
+    this.getCols();
+    this.checkAccesos();
 
-    let migaPan = "";
 
-    if (this.esColegiado) {
-      migaPan = this.translateService.instant("menu.censo.fichaColegial");
-    } else {
-      migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
-    }
-
-    sessionStorage.setItem("migaPan", migaPan);
-
-    this.generalBody.colegiado = this.esColegiado;
-    this.checkGeneralBody.colegiado = this.esColegiado;
     this.tipoCambioAuditoria = null;
     // this.checkAcceso();
     this.onInitGenerales();
@@ -230,82 +209,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit {
       this.activacionTarjeta = true;
     }
 
-
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "286";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.asignarPermisosTarjetas();
-      }
-    );
-
-    let numColeAcceso = new ControlAccesoDto();
-    numColeAcceso.idProceso = "12P";
-
-    this.sigaServices.post("acces_control", numColeAcceso).subscribe(
-      data => {
-        let permiso = JSON.parse(data.body);
-        let permisoArray = permiso.permisoItems;
-        let numColegiado = permisoArray[0].derechoacceso;
-        if (numColegiado == 3) {
-          this.activateNumColegiado = true;
-        } else {
-          this.activateNumColegiado = false;
-        }
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        // this.checkAccesoOtrasColegiaciones();
-      }
-    );
-    this.colsColegiales = [
-      {
-        field: "fechaEstado",
-        header: "censo.nuevaSolicitud.fechaEstado"
-      },
-      {
-        field: "estadoColegial",
-        header: "censo.fichaIntegrantes.literal.estado"
-      },
-      {
-        field: "situacionResidente",
-        header: "censo.ws.literal.residente"
-      },
-      {
-        field: "observaciones",
-        header: "gratuita.mantenimientoLG.literal.observaciones"
-      }
-    ];
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
@@ -328,10 +231,37 @@ export class DatosColegialesFichaColegialComponent implements OnInit {
         }
       );
 
-      if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-        this.onInitDirecciones(); // Direcciones
-      }
+    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+      this.onInitDirecciones(); // Direcciones
+    }
   }
+
+  ngOnChanges() {
+    if (this.esColegiado != null) {
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
+
+      let migaPan = "";
+
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+      }
+
+      sessionStorage.setItem("migaPan", migaPan);
+
+      this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+  }
+
+
   onInitGenerales() {
     // this.activacionGuardarGenerales();
     this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
@@ -2052,5 +1982,85 @@ export class DatosColegialesFichaColegialComponent implements OnInit {
     this.msgs = [];
   }
 
-  
+  getCols() {
+    this.colsColegiales = [
+      {
+        field: "fechaEstado",
+        header: "censo.nuevaSolicitud.fechaEstado"
+      },
+      {
+        field: "estadoColegial",
+        header: "censo.fichaIntegrantes.literal.estado"
+      },
+      {
+        field: "situacionResidente",
+        header: "censo.ws.literal.residente"
+      },
+      {
+        field: "observaciones",
+        header: "gratuita.mantenimientoLG.literal.observaciones"
+      }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  checkAccesos() {
+
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "286";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.asignarPermisosTarjetas();
+      }
+    );
+
+    let numColeAcceso = new ControlAccesoDto();
+    numColeAcceso.idProceso = "12P";
+
+    this.sigaServices.post("acces_control", numColeAcceso).subscribe(
+      data => {
+        let permiso = JSON.parse(data.body);
+        let permisoArray = permiso.permisoItems;
+        let numColegiado = permisoArray[0].derechoacceso;
+        if (numColegiado == 3) {
+          this.activateNumColegiado = true;
+        } else {
+          this.activateNumColegiado = false;
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        // this.checkAccesoOtrasColegiaciones();
+      }
+    );
+  }
+
 }

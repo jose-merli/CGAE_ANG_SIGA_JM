@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -26,7 +26,7 @@ import { FichaColegialCertificadosObject } from '../../../../../models/FichaCole
   templateUrl: './certificados-ficha-colegial.component.html',
   styleUrls: ['./certificados-ficha-colegial.component.scss']
 })
-export class CertificadosFichaColegialComponent implements OnInit {
+export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   tarjetaOtrasColegiacionesNum: string;
   activacionTarjeta: boolean = false;
   emptyLoadFichaColegial: boolean = false;
@@ -47,7 +47,7 @@ export class CertificadosFichaColegialComponent implements OnInit {
   ];
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
-  esColegiado: boolean = false;
+  @Input() esColegiado: boolean = null;
   datosColegiaciones: any[] = [];
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -60,7 +60,7 @@ export class CertificadosFichaColegialComponent implements OnInit {
   tableCertificados: DataTable;
   tarjetaCertificadosNum: string;
   tarjetaCertificados: string;
-  mostrarDatosCertificados:boolean = false;
+  mostrarDatosCertificados: boolean = false;
   DescripcionCertificado;
   idPersona: any;
   selectedItemCertificados: number = 10;
@@ -74,53 +74,12 @@ export class CertificadosFichaColegialComponent implements OnInit {
     // private sanitizer: DomSanitizer,
     private router: Router,
     private datepipe: DatePipe,
-    private location: Location,) { }
+    private location: Location, ) { }
 
   ngOnInit() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "290";
+    this.checkAcceso();
+    this.getCols();
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaCertificados = this.tarjetaCertificadosNum;
-      }
-    );
-    this.colsCertificados = [
-      {
-        field: "descripcion",
-        header: "general.description"
-      },
-      {
-        field: "fechaEmision",
-        header: "facturacion.busquedaAbonos.literal.fecha2"
-      }
-    ];
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -128,32 +87,8 @@ export class CertificadosFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
     this.idPersona = this.generalBody.idPersona;
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
-      } else {
-        this.isColegiadoEjerciente = false;
-      }
-    }
 
-    let migaPan = "";
-
-    if (this.esColegiado) {
-      migaPan = this.translateService.instant("menu.censo.fichaColegial");
-    } else {
-      migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
-    }
-
-    sessionStorage.setItem("migaPan", migaPan);
-
-    this.generalBody.colegiado = this.esColegiado;
-    this.checkGeneralBody.colegiado = this.esColegiado;
     this.searchCertificados();
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -169,8 +104,35 @@ export class CertificadosFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-   
+
   }
+
+  ngOnChanges() {
+
+    if (this.esColegiado != null) {
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
+
+      let migaPan = "";
+
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+      }
+
+      sessionStorage.setItem("migaPan", migaPan);
+
+      this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+  }
+
   activarPaginacionCertificados() {
     if (!this.datosCertificados || this.datosCertificados.length == 0)
       return false;
@@ -241,5 +203,54 @@ export class CertificadosFichaColegialComponent implements OnInit {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "290";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaCertificados = this.tarjetaCertificadosNum;
+      }
+    );
+  }
+  getCols() {
+    this.colsCertificados = [
+      {
+        field: "descripcion",
+        header: "general.description"
+      },
+      {
+        field: "fechaEmision",
+        header: "facturacion.busquedaAbonos.literal.fecha2"
+      }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
   }
 }

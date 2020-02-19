@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -26,7 +26,7 @@ import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObje
   templateUrl: './otras-colegiaciones-ficha-colegial.component.html',
   styleUrls: ['./otras-colegiaciones-ficha-colegial.component.scss']
 })
-export class OtrasColegiacionesFichaColegialComponent implements OnInit {
+export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChanges {
   tarjetaOtrasColegiacionesNum: string;
   activacionTarjeta: boolean = false;
   emptyLoadFichaColegial: boolean = false;
@@ -43,7 +43,6 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit {
   ];
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
-  esColegiado: boolean = false;
   datosColegiaciones: any[] = [];
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -55,12 +54,19 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit {
   @ViewChild("tableColegiaciones")
   tableColegiaciones: DataTable;
 
+  @Input() esColegiado: boolean = null;
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
+
+    this.getCols();
+    this.checkAcceso();
+
+
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -68,33 +74,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
 
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
-      } else {
-        this.isColegiadoEjerciente = false;
-      }
-    }
-
-    let migaPan = "";
-
-    if (this.esColegiado) {
-      migaPan = this.translateService.instant("menu.censo.fichaColegial");
-    } else {
-      migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
-    }
-
-    sessionStorage.setItem("migaPan", migaPan);
-
-    this.generalBody.colegiado = this.esColegiado;
-    this.checkGeneralBody.colegiado = this.esColegiado;
-    // this.checkAcceso();
     this.onInitOtrasColegiaciones();
 
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -112,64 +92,31 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit {
       this.activacionTarjeta = true;
     }
 
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "235";
+  }
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
+  ngOnChanges() {
+    if (this.esColegiado != null) {
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
       }
-    );
 
-    this.colsColegiaciones = [
-      {
-        field: "institucion",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
-      },
-      {
-        field: "numColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
-      },
-      {
-        field: "estadoColegial",
-        header: "censo.fichaIntegrantes.literal.estado"
-      },
-      {
-        field: "fechaEstadoStr",
-        header: "censo.nuevaSolicitud.fechaEstado"
+      let migaPan = "";
 
-      },
-      {
-        field: "residenteInscrito",
-        header: "censo.ws.literal.residente"
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
       }
-    ];
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
+
+      sessionStorage.setItem("migaPan", migaPan);
+
+      this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
+    }
   }
 
   abreCierraFicha(key) {
@@ -238,7 +185,67 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.tableColegiaciones.reset();
   }
+  getCols() {
+    this.colsColegiaciones = [
+      {
+        field: "institucion",
+        header: "censo.busquedaClientesAvanzada.literal.colegio"
+      },
+      {
+        field: "numColegiado",
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+      },
+      {
+        field: "estadoColegial",
+        header: "censo.fichaIntegrantes.literal.estado"
+      },
+      {
+        field: "fechaEstadoStr",
+        header: "censo.nuevaSolicitud.fechaEstado"
 
+      },
+      {
+        field: "residenteInscrito",
+        header: "censo.ws.literal.residente"
+      }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "235";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
+      }
+    );
+  }
 
 
 }

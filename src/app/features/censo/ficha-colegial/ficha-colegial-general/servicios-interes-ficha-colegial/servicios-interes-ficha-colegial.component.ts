@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -26,7 +26,7 @@ import { FichaColegialCertificadosObject } from '../../../../../models/FichaCole
   templateUrl: './servicios-interes-ficha-colegial.component.html',
   styleUrls: ['./servicios-interes-ficha-colegial.component.scss']
 })
-export class ServiciosInteresFichaColegialComponent implements OnInit {
+export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges {
   tarjetaOtrasColegiacionesNum: string;
   activacionTarjeta: boolean = false;
   emptyLoadFichaColegial: boolean = false;
@@ -43,7 +43,6 @@ export class ServiciosInteresFichaColegialComponent implements OnInit {
 
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
-  esColegiado: boolean = false;
   datosColegiaciones: any[] = [];
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -52,43 +51,26 @@ export class ServiciosInteresFichaColegialComponent implements OnInit {
   otrasColegiacionesBody: DatosColegiadosObject = new DatosColegiadosObject();
   isColegiadoEjerciente: boolean = false;
   rowsPerPage;
- 
+
   tarjetaCertificadosNum: string;
   tarjetaCertificados: string;
-  mostrarDatosCertificados:boolean = false;
+  mostrarDatosCertificados: boolean = false;
   DescripcionCertificado;
   idPersona: any;
   selectedItemCertificados: number = 10;
 
+  @Input() esColegiado: boolean = null;
+
+
   constructor(private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location,) { }
+    private router: Router) { }
 
   ngOnInit() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "234";
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaInteresNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaInteres = this.tarjetaInteresNum;
-      }
-    );
-   
+    this.checkAcceso();
+
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -96,32 +78,9 @@ export class ServiciosInteresFichaColegialComponent implements OnInit {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
+
     this.idPersona = this.generalBody.idPersona;
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
-      } else {
-        this.isColegiadoEjerciente = false;
-      }
-    }
 
-    let migaPan = "";
-
-    if (this.esColegiado) {
-      migaPan = this.translateService.instant("menu.censo.fichaColegial");
-    } else {
-      migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
-    }
-
-    sessionStorage.setItem("migaPan", migaPan);
-
-    this.generalBody.colegiado = this.esColegiado;
-    this.checkGeneralBody.colegiado = this.esColegiado;
 
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -129,16 +88,41 @@ export class ServiciosInteresFichaColegialComponent implements OnInit {
       this.emptyLoadFichaColegial = false;
       this.desactivarVolver = false;
       this.activacionTarjeta = false;
-
       sessionStorage.removeItem("esNuevoNoColegiado");
-      // this.onInitGenerales();
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-   
+
   }
+
+  ngOnChanges() {
+    if (this.esColegiado != null) {
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
+
+      let migaPan = "";
+
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+      }
+
+      sessionStorage.setItem("migaPan", migaPan);
+
+      this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
+
+    }
+  }
+
   irTurnoOficio() {
     let idInstitucion = this.authenticationService.getInstitucionSession();
     // let  us = this.sigaServices.getOldSigaUrl() +"SIGA/CEN_BusquedaClientes.do?noReset=true";
@@ -176,5 +160,24 @@ export class ServiciosInteresFichaColegialComponent implements OnInit {
     sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
     sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
     this.router.navigate(["/turnoOficioCenso"]);
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "234";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaInteresNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaInteres = this.tarjetaInteresNum;
+      }
+    );
   }
 }
