@@ -55,14 +55,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   isCrearColegial: boolean = false;
   camposDesactivados: boolean = false;
   permisos: boolean = true;
-  tarjetaDirecciones: string;
+  @Input() tarjetaDirecciones: string;
 
   mostrarDatosDireccion: boolean = false;
   progressSpinner: boolean = false;
   selectedItemSanciones: number = 10;
   colsSanciones;
-  tarjetaSancionesNum: string;
-  tarjetaSanciones: string;
   selectedDatosSanciones;
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   dataSanciones: any[] = [];
@@ -113,7 +111,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.checkAcceso();
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -180,24 +177,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "287";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaDireccionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaDirecciones = this.tarjetaDireccionesNum;
-      }
-    );
-  }
   getCols() {
     this.colsDirecciones = [
       {

@@ -31,6 +31,7 @@ import { FichaDatosCurricularesObject } from '../../../../models/FichaDatosCurri
 import { AutoComplete, DataTable, Calendar } from 'primeng/primeng';
 import { DocushareItem } from '../../../../models/DocushareItem';
 import { Dialog } from 'primeng/dialog';
+import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 
 
 
@@ -401,6 +402,9 @@ export class FichaColegialGeneralComponent implements OnInit {
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
 
+    this.checkAccesos();
+
+
     if (sessionStorage.getItem("disabledAction") == "true") {
       // Es estado baja colegial
       this.disabledAction = true;
@@ -439,11 +443,6 @@ export class FichaColegialGeneralComponent implements OnInit {
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
-      // if (this.emptyLoadFichaColegial) {
-      // this.showFailDetalle(
-      //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
-      // );
-      // }
       this.desactivarVolver = true;
     }
 
@@ -544,6 +543,8 @@ export class FichaColegialGeneralComponent implements OnInit {
         }
       );
   }
+
+
   getColegiadoLogeado() {
     this.generalBody.searchLoggedUser = true;
 
@@ -596,6 +597,309 @@ export class FichaColegialGeneralComponent implements OnInit {
       sessionStorage.removeItem("solicitudAprobada")
       this.location.back();
     }
+  }
+  arreglarFecha(fecha) {
+
+    if (fecha != undefined && fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(rawDate);
+      }
+    }
+    return fecha;
+  }
+  checkAccesos() {
+    this.initSpinner = true;
+    this.checkAccesoDatosGenerales();
+  }
+  checkAccesoDatosGenerales() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "285";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaGeneralesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoInteres();
+      }
+    );
+  }
+  checkAccesoInteres() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "234";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaInteresNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoDatosColegiales();
+      }
+    );
+  }
+  checkAccesoDatosColegiales() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "286";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaColegialesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoOtrasColegiaciones();
+      }
+    );
+
+    let numColeAcceso = new ControlAccesoDto();
+    numColeAcceso.idProceso = "12P";
+
+    this.sigaServices.post("acces_control", numColeAcceso).subscribe(
+      data => {
+        let permiso = JSON.parse(data.body);
+        let permisoArray = permiso.permisoItems;
+        let numColegiado = permisoArray[0].derechoacceso;
+        if (numColegiado == 3) {
+          this.activateNumColegiado = true;
+        } else {
+          this.activateNumColegiado = false;
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoOtrasColegiaciones();
+      }
+    );
+  }
+
+  checkAccesoOtrasColegiaciones() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "235";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaOtrasColegiacionesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoCertificados();
+      }
+    );
+  }
+
+  checkAccesoCertificados() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "290";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoSanciones();
+      }
+    );
+  }
+
+  checkAccesoSanciones() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "236";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaSancionesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoSociedades();
+      }
+    );
+  }
+
+  checkAccesoSociedades() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "237";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaSociedadesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoDatosCurriculares();
+      }
+    );
+  }
+
+  checkAccesoDatosCurriculares() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "289";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaCurricularesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoDirecciones();
+      }
+    );
+  }
+
+  checkAccesoDirecciones() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "287";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaDireccionesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoDatosBancarios();
+      }
+    );
+  }
+
+  checkAccesoDatosBancarios() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "288";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaBancariosNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoRegtel();
+      }
+    );
+  }
+
+  checkAccesoRegtel() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "291";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaRegtelNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoMutualidad();
+      }
+    );
+  }
+
+  checkAccesoMutualidad() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "298";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaMutualidadNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.checkAccesoAlterMutua();
+      }
+    );
+  }
+
+  checkAccesoAlterMutua() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "299";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaAlterMutuaNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.asignarPermisosTarjetas();
+      }
+    );
+  }
+
+  asignarPermisosTarjetas() {
+    this.tarjetaInteres = this.tarjetaInteresNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaColegiales = this.tarjetaColegialesNum;
+    this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
+    this.tarjetaCertificados = this.tarjetaCertificadosNum;
+    this.tarjetaSanciones = this.tarjetaSancionesNum;
+    this.tarjetaSociedades = this.tarjetaSociedadesNum;
+    this.tarjetaCurriculares = this.tarjetaCurricularesNum;
+    this.tarjetaDirecciones = this.tarjetaDireccionesNum;
+    this.tarjetaBancarios = this.tarjetaBancariosNum;
+    this.tarjetaRegtel = this.tarjetaRegtelNum;
+    this.tarjetaMutualidad = this.tarjetaMutualidadNum;
+    this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
+
+    this.initSpinner = false;
   }
 }
 

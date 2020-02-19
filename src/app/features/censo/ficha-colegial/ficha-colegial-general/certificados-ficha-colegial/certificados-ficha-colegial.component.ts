@@ -59,17 +59,16 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   @ViewChild("tableCertificados")
   tableCertificados: DataTable;
   tarjetaCertificadosNum: string;
-  tarjetaCertificados: string;
+  @Input() tarjetaCertificados: string;
   mostrarDatosCertificados: boolean = false;
   DescripcionCertificado;
   selectedItemCertificados: number = 10;
-@Input() idPersona;
+  @Input() idPersona;
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.checkAcceso();
     this.getCols();
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -126,7 +125,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.idPersona != undefined){
+    if (this.idPersona != undefined) {
       this.searchCertificados();
     }
   }
@@ -203,24 +202,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
     else return true;
   }
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "290";
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCertificadosNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaCertificados = this.tarjetaCertificadosNum;
-      }
-    );
-  }
   getCols() {
     this.colsCertificados = [
       {

@@ -45,7 +45,7 @@ export class SancionesFichaColegialComponent implements OnInit {
   selectedItemSanciones: number = 10;
   colsSanciones;
   tarjetaSancionesNum: string;
-  tarjetaSanciones: string;
+  @Input() tarjetaSanciones: string;
   selectedDatosSanciones;
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   dataSanciones: any[] = [];
@@ -72,7 +72,6 @@ export class SancionesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkAcceso();
     this.getCols();
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -106,25 +105,6 @@ export class SancionesFichaColegialComponent implements OnInit {
 
   }
 
-  checkAcceso() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "236";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaSancionesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaSanciones = this.tarjetaSancionesNum;
-
-      }
-    );
-  }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
