@@ -16,6 +16,19 @@
   width: 5%;
  }
 
+ .overlayPanelCount > .ui-overlaypanel{
+//   top: 50% !important;
+//   left: 40% !important;
+  width: 30em !important;
+  height: 5em !important;
+ }
+
+ .overlayPanelCount > .ui-overlaypanel > .ui-overlaypanel-content{
+  text-align: center;
+  // vertical-align: middle;
+  // line-height: 4em;
+ }
+
 .overlayPanelPrueba{
   max-width: 60%;
   max-height: 60%;
@@ -24,6 +37,7 @@
   // margin-left:50%;
   text-align: center;
 }
+
 .ui-overlaypanel{
   left: 5% !important;
   border-radius: 2em;

@@ -49,7 +49,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-  msgCount: any;
   datosDirecciones: DatosDireccionesItem[] = [];
   datosDireccionesHist = new DatosDireccionesObject();
   formBusqueda: FormGroup;
@@ -118,7 +117,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
-
+  count: string = "";
 
   constructor(
     private sigaServices: SigaServices,
@@ -138,6 +137,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("op")
   op: OverlayPanel;
+
+  @ViewChild("opcount")
+  opcount: OverlayPanel;
 
   @ViewChild("table")
   table: DataTable;
@@ -252,6 +254,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
+
     if (this.displayBoolean) {
       this.searchHistoricoDatosDirecciones(id);
     } else {
@@ -681,7 +684,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       );
   }
 
-  isBuscarCount() {
+  isBuscarCount(event) {
+
     this.body.searchCount = true;
     if (this.checkFilters()) {
       this.selectAll = false;
@@ -718,14 +722,16 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             let datos = colegiadoSearch.colegiadoItem;
             this.body.searchCount = false;
             this.progressSpinner = false;
-            this.msgCount = [];
+
             this.msgs = [];
-            this.msgCount = [];
-            this.msgCount.push({
-              severity: "info",
-              summary: this.translateService.instant("general.message.informacion"),
-              detail: this.translateService.instant("general.texto.encontrados") + " " + datos[0].count.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + this.translateService.instant("general.texto.colegiados")
-            });
+            this.count = datos[0].count.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+            this.opcount.toggle(event);
+            // this.msgCount.push({
+            //   severity: "info",
+            //   summary: this.translateService.instant("general.message.informacion"),
+            //   detail: this.translateService.instant("general.texto.encontrados") + " " + datos[0].count.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + this.translateService.instant("general.texto.colegiados")
+            // });
           },
           err => {
             this.body.searchCount = false;
@@ -741,6 +747,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
   //Busca colegiados según los filtros
   isBuscar() {
+    this.opcount.hide();
     this.body.searchCount = false;
     if (this.checkFilters()) {
       this.selectAll = false;
@@ -837,6 +844,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   isLimpiar() {
+    this.opcount.hide();
     this.body = new DatosColegiadosItem();
     this.comboSubtipoCV = [];
     this.fechaIncorporacionDesdeSelect = undefined;
@@ -958,7 +966,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   clear() {
-    this.msgCount = [];
     this.msgs = [];
   }
 
@@ -1032,7 +1039,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   showSearchIncorrect() {
-    this.msgCount = [];
+
     this.msgs = [];
     this.msgs.push({
       severity: "error",
@@ -1192,19 +1199,19 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   // Mensajes
   showFail(mensaje: string) {
-    this.msgCount = [];
+
     this.msgs = [];
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
 
   showSuccess(mensaje: string) {
-    this.msgCount = [];
+
     this.msgs = [];
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
   showInfo(mensaje: string) {
-    this.msgCount = [];
+
     this.msgs = [];
     this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
@@ -1244,6 +1251,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         }
       );
   }
+
+  showCount(event, dato) {
+    this.isBuscarCount(event);
+  }
+
   show(event, dato) {
     this.op.toggle(event);
     if (dato.noAparecerRedAbogacia2 == '1') {
@@ -1257,7 +1269,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.displayBoolean = false;
   }
   showMessageError(severity, summary, msg) {
-    this.msgCount = [];
+
     this.msgs = [];
     this.msgs.push({
       severity: severity,

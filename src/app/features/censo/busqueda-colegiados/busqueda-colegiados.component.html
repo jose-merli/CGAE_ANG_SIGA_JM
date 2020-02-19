@@ -1,5 +1,4 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<p-growl [(value)]="msgCount" life="30000"></p-growl>
 
 <div class="busqueda-container">
     <div class="header-title">
@@ -229,7 +228,7 @@
             <div class="text-right main-button">
                 <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                      label="{{ 'general.boton.clear' | translate}}"></button>
-                <button (click)="isBuscarCount()" pButton type="button" icon="fa fa-search" iconPos="left"
+                <button (click)="showCount($event,dato)" pButton type="button" icon="fa fa-search" iconPos="left"
                     label="{{ 'general.boton.contar' | translate}}"></button>
                 <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
                     label="{{'general.boton.search' | translate}}"></button>
@@ -453,6 +452,17 @@
         </ng-template>
     </p-table>
 </p-overlayPanel>
+
+<!-- DETALLE COUNT BUSQUEDA -->
+<p-overlayPanel class="overlayPanelCount" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
+    [showCloseIcon]="true" #opcount>
+    <p>
+        Número de colegiados encontrados:
+    </p>
+    <p id="numero">{{count}}</p>
+</p-overlayPanel>
+
+
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
 </div>
