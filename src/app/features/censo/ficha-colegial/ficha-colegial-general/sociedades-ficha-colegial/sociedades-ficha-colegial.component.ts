@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersonaJuridicaObject } from '../../../../../models/PersonaJuridicaObject';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -14,7 +14,6 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 })
 export class SociedadesFichaColegialComponent implements OnInit {
   datosSociedades: any[] = [];
-  idPersona: any;
   progressSpinner: boolean = false;
   sociedadesBody: PersonaJuridicaObject = new PersonaJuridicaObject();
   DescripcionSociedades;
@@ -36,7 +35,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   selectedDatosSociedades;
   rowsPerPage = [];
 
-
+  @Input() idPersona;
   constructor(private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
@@ -46,15 +45,8 @@ export class SociedadesFichaColegialComponent implements OnInit {
   ngOnInit() {
     this.checkAccesoSociedades();
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-      // this.esNewColegiado = true;
-      // this.activacionEditar = false;
-      // this.emptyLoadFichaColegial = false;
-      // this.desactivarVolver = false;
       this.activacionTarjeta = false;
-
     } else {
-      // this.activacionEditar = true;
-      // this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
     if (
@@ -64,12 +56,16 @@ export class SociedadesFichaColegialComponent implements OnInit {
     ) {
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-
-      this.idPersona = this.generalBody.idPersona;
     }
 
     this.getCols();
-    this.searchSocieties();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.idPersona != undefined) {
+      this.searchSocieties();
+    }
+
   }
 
   getCols() {

@@ -336,10 +336,12 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
   }
 
 ngOnChanges(changes: SimpleChanges) {
-  if(this.isLetrado != undefined){
-    this.isLetrado = true
-  }else{
-    this.isLetrado = !this.permisos;
+  if (this.isLetrado != undefined) {
+    if (this.isLetrado == true) {
+      this.isLetrado = true
+    } else {
+      this.isLetrado = !this.permisos;
+    }
   }
   
 }

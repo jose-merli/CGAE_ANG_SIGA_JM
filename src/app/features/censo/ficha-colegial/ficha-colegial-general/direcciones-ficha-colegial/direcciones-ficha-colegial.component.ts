@@ -70,13 +70,12 @@ export class DireccionesFichaColegialComponent implements OnInit {
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
-  mostrarDatosSanciones:boolean = false;
+  mostrarDatosSanciones: boolean = false;
   DescripcionSanciones;
   rowsPerPage;
   numSelectedCurriculares: number = 0;
   colsDirecciones;
   bodyDirecciones: DatosDireccionesItem;
-  idPersona: any;
   esColegiado: boolean;
   selectMultipleDirecciones: boolean = false;
   numSelectedDirecciones: number = 0;
@@ -99,6 +98,7 @@ export class DireccionesFichaColegialComponent implements OnInit {
   @ViewChild("tableDirecciones")
   tableDirecciones: DataTable;
   @Input() isLetrado;
+  @Input() idPersona;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -119,7 +119,6 @@ export class DireccionesFichaColegialComponent implements OnInit {
     this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
-    this.idPersona = this.generalBody.idPersona;
     if (sessionStorage.getItem("esColegiado")) {
       this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
     } else {
@@ -133,7 +132,6 @@ export class DireccionesFichaColegialComponent implements OnInit {
         this.isColegiadoEjerciente = false;
       }
     }
-    this.onInitDirecciones();
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -148,7 +146,7 @@ export class DireccionesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-    
+
     this.getCols();
 
     let controlAcceso = new ControlAccesoDto();
@@ -170,73 +168,76 @@ export class DireccionesFichaColegialComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.isLetrado != undefined){
-      this.isLetrado = true
-    }else{
-      this.isLetrado = !this.permisos;
+    if (this.isLetrado != undefined) {
+      if (this.isLetrado == true) {
+        this.isLetrado = true
+      } else {
+        this.isLetrado = !this.permisos;
+      }
+    }
+    if(this.idPersona != undefined){
+      this.onInitDirecciones();
     }
   }
 
+  getCols() {
+    this.colsDirecciones = [
+      {
+        field: "tipoDireccion",
+        header: "censo.datosDireccion.literal.tipo.direccion"
+      },
+      {
+        field: "domicilioLista",
+        header: "censo.consultaDirecciones.literal.direccion"
+      },
+      {
+        field: "codigoPostal",
+        header: "censo.ws.literal.codigopostal"
+      },
+      {
+        field: "nombrePoblacion",
+        header: "censo.consultaDirecciones.literal.poblacion"
+      },
+      {
+        field: "nombreProvincia",
+        header: "censo.datosDireccion.literal.provincia"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
 
 
-getCols(){
-  this.colsDirecciones = [
-    {
-      field: "tipoDireccion",
-      header: "censo.datosDireccion.literal.tipo.direccion"
-    },
-    {
-      field: "domicilioLista",
-      header: "censo.consultaDirecciones.literal.direccion"
-    },
-    {
-      field: "codigoPostal",
-      header: "censo.ws.literal.codigopostal"
-    },
-    {
-      field: "nombrePoblacion",
-      header: "censo.consultaDirecciones.literal.poblacion"
-    },
-    {
-      field: "nombreProvincia",
-      header: "censo.datosDireccion.literal.provincia"
-    },
-    {
-      field: "telefono",
-      header: "censo.ws.literal.telefono"
-    },
-    {
-      field: "movil",
-      header: "censo.datosDireccion.literal.movil"
-    },
-    {
-      field: "correoElectronico",
-      header: "censo.datosDireccion.literal.correo"
-    }
-  ];
-
-   this.rowsPerPage = [
-    {
-      label: 10,
-      value: 10
-    },
-    {
-      label: 20,
-      value: 20
-    },
-    {
-      label: 30,
-      value: 30
-    },
-    {
-      label: 40,
-      value: 40
-    }
-  ];
-}
-
-
- abreCierraFicha(key) {
+  abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
     if (

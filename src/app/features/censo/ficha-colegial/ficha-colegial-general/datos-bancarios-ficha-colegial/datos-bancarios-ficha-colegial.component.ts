@@ -33,7 +33,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
-  idPersona: any;
   esColegiado: boolean;
   isColegiadoEjerciente: boolean = false;
   esNewColegiado: boolean = false;
@@ -69,6 +68,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
   colsBancarios;
   rowsPerPage;
   @Input() isLetrado;
+  @Input() idPersona;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -87,7 +87,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
     this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
-    this.idPersona = this.generalBody.idPersona;
     if (sessionStorage.getItem("esColegiado")) {
       this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
     } else {
@@ -141,10 +140,15 @@ export class DatosBancariosFichaColegialComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.isLetrado != undefined){
-      this.isLetrado = true
-    }else{
-      this.isLetrado = !this.permisos;
+    if (this.isLetrado != undefined) {
+      if (this.isLetrado == true) {
+        this.isLetrado = true
+      } else {
+        this.isLetrado = !this.permisos;
+      }
+    }
+    if(this.idPersona != undefined){
+      this.onInitDatosBancarios(); 
     }
   }
 

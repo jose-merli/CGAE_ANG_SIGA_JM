@@ -62,9 +62,8 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   tarjetaCertificados: string;
   mostrarDatosCertificados: boolean = false;
   DescripcionCertificado;
-  idPersona: any;
   selectedItemCertificados: number = 10;
-
+@Input() idPersona;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -87,9 +86,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
     if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
     if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-    this.idPersona = this.generalBody.idPersona;
 
-    this.searchCertificados();
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -131,41 +128,11 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
+    if(this.idPersona != undefined){
+      this.searchCertificados();
+    }
   }
 
-<<<<<<< HEAD
-=======
-  getCols(){
-    this.colsCertificados = [
-      {
-        field: "descripcion",
-        header: "general.description"
-      },
-      {
-        field: "fechaEmision",
-        header: "facturacion.busquedaAbonos.literal.fecha2"
-      }
-    ];
-    this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
-  }
->>>>>>> 09837e547bae301a33eecb977758003abb6c4cfb
   activarPaginacionCertificados() {
     if (!this.datosCertificados || this.datosCertificados.length == 0)
       return false;
