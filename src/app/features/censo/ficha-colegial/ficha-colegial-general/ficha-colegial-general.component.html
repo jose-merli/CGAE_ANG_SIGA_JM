@@ -12,7 +12,7 @@
   </div>
   <div>
     <app-servicios-interes-ficha-colegial [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
-    <app-datos-generales-ficha-colegial [isLetrado]="isLetrado"></app-datos-generales-ficha-colegial>
+    <app-datos-generales-ficha-colegial [esColegiado]="esColegiado" [isLetrado]="isLetrado"></app-datos-generales-ficha-colegial>
     <app-datos-colegiales-ficha-colegial [esColegiado]="esColegiado"></app-datos-colegiales-ficha-colegial>
     <app-otras-colegiaciones-ficha-colegial [esColegiado]="esColegiado"></app-otras-colegiaciones-ficha-colegial>
     <app-certificados-ficha-colegial [esColegiado]="esColegiado"></app-certificados-ficha-colegial>
@@ -21,6 +21,10 @@
     <app-datos-curriculares-ficha-colegial [idPersona]="idPersona"></app-datos-curriculares-ficha-colegial>
     <app-direcciones-ficha-colegial [isLetrado]="isLetrado" [idPersona]="idPersona"></app-direcciones-ficha-colegial>
     <app-datos-bancarios-ficha-colegial [isLetrado]="isLetrado" [idPersona]="idPersona"></app-datos-bancarios-ficha-colegial>
+    <app-sociedades-ficha-colegial></app-sociedades-ficha-colegial>
+    <app-datos-curriculares-ficha-colegial [esColegiado]="esColegiado"></app-datos-curriculares-ficha-colegial>
+    <app-direcciones-ficha-colegial [esColegiado]="esColegiado" [isLetrado]="isLetrado"></app-direcciones-ficha-colegial>
+    <app-datos-bancarios-ficha-colegial [esColegiado]="esColegiado" [isLetrado]="isLetrado"></app-datos-bancarios-ficha-colegial>
     <app-regtel-ficha-colegial></app-regtel-ficha-colegial>
     <app-alter-mutua-ficha-colegial></app-alter-mutua-ficha-colegial>
     <app-mutualidad-abogacia-ficha-colegial [datosBancarios]="datosBancarios" [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>

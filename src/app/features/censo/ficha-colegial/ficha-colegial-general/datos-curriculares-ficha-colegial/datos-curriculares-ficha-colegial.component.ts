@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
@@ -13,7 +13,7 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
   templateUrl: './datos-curriculares-ficha-colegial.component.html',
   styleUrls: ['./datos-curriculares-ficha-colegial.component.scss']
 })
-export class DatosCurricularesFichaColegialComponent implements OnInit {
+export class DatosCurricularesFichaColegialComponent implements OnInit, OnChanges {
 
   selectAllCurriculares: boolean = false;
   openFicha: boolean = false;
@@ -46,7 +46,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   checkColegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
-  esColegiado: boolean;
+  @Input() esColegiado: boolean = null;
   isColegiadoEjerciente: boolean = false;
   esNewColegiado: boolean = false;
   activacionEditar: boolean = true;
@@ -67,22 +67,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
 
   ngOnInit() {
 
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = "289";
-
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        let permisos = JSON.parse(data.body);
-        let permisosArray = permisos.permisoItems;
-        this.tarjetaCurricularesNum = permisosArray[0].derechoacceso;
-      },
-      err => {
-        console.log(err);
-      },
-      () => {
-        this.tarjetaCurriculares = this.tarjetaCurricularesNum;
-      }
-    );
 
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -99,27 +83,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
-      if (sessionStorage.getItem("esColegiado")) {
-        this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-      } else {
-        this.esColegiado = true;
-      }
-
-      if (this.esColegiado) {
-        if (this.colegialesBody.situacion == "20") {
-          this.isColegiadoEjerciente = true;
-        } else {
-          this.isColegiadoEjerciente = false;
-        }
-      }
-
-      let migaPan = "";
-
-      if (this.esColegiado) {
-        migaPan = this.translateService.instant("menu.censo.fichaColegial");
-      } else {
-        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
-      }
 
       if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
         this.esNewColegiado = true;
@@ -139,6 +102,53 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
     if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
       this.onInitCurriculares();
     }
+
+  }
+
+  ngOnChanges() {
+
+    if (this.esColegiado != null) {
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
+
+      let migaPan = "";
+
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+      }
+    }
+    if(this.idPersona != undefined){
+      this.onInitCurriculares();
+    }
+  }
+
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "289";
+
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjetaCurricularesNum = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        this.tarjetaCurriculares = this.tarjetaCurricularesNum;
+      }
+    );
+  }
+
+  getCols() {
 
     this.colsCurriculares = [
       {
@@ -183,12 +193,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit {
     ];
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.idPersona != undefined) {
-      this.onInitCurriculares();
-    }
 
-  }
   activarPaginacionCurriculares() {
     if (!this.datosCurriculares || this.datosCurriculares.length == 0)
       return false;

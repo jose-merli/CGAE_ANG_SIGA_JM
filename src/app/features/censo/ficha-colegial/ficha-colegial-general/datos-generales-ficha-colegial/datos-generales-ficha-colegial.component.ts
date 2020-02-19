@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges } from '@angular/core';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
@@ -23,7 +23,7 @@ import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../
   templateUrl: './datos-generales-ficha-colegial.component.html',
   styleUrls: ['./datos-generales-ficha-colegial.component.scss']
 })
-export class DatosGeneralesFichaColegialComponent implements OnInit {
+export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -86,7 +86,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
   partidoJudicial: any;
   ocultarMotivo: boolean = undefined;
   esNewColegiado: boolean = false;
-  esColegiado: boolean;
+  @Input() esColegiado: boolean = null;
   archivoDisponible: boolean = false;
   existeImagen: boolean = false;
   showGuardarAuditoria: boolean = false;
@@ -224,32 +224,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
 
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
       this.idPersona = this.generalBody.idPersona;
-      if (sessionStorage.getItem("esColegiado")) {
-        this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-      } else {
-        this.esColegiado = true;
-      }
 
-      if (this.esColegiado) {
-        if (this.colegialesBody.situacion == "20") {
-          this.isColegiadoEjerciente = true;
-        } else {
-          this.isColegiadoEjerciente = false;
-        }
-      }
 
-      let migaPan = "";
-
-      if (this.esColegiado) {
-        migaPan = this.translateService.instant("menu.censo.fichaColegial");
-      } else {
-        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
-      }
-
-      sessionStorage.setItem("migaPan", migaPan);
-
-      this.generalBody.colegiado = this.esColegiado;
-      this.checkGeneralBody.colegiado = this.esColegiado;
       this.tipoCambioAuditoria = null;
       // this.checkAcceso();
       this.onInitGenerales();
@@ -335,16 +311,37 @@ export class DatosGeneralesFichaColegialComponent implements OnInit {
     this.onInitGenerales();
   }
 
-ngOnChanges(changes: SimpleChanges) {
-  if (this.isLetrado != undefined) {
-    if (this.isLetrado == true) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.isLetrado != undefined) {
       this.isLetrado = true
     } else {
       this.isLetrado = !this.permisos;
     }
+
+    if (this.esColegiado != null) {
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
+      }
+
+      let migaPan = "";
+
+      if (this.esColegiado) {
+        migaPan = this.translateService.instant("menu.censo.fichaColegial");
+      } else {
+        migaPan = this.translateService.instant("menu.censo.fichaNoColegial");
+      }
+
+      sessionStorage.setItem("migaPan", migaPan);
+
+      this.generalBody.colegiado = this.esColegiado;
+      this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+    
   }
-  
-}
   onInitGenerales() {
     // this.activacionGuardarGenerales();
     this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
@@ -546,11 +543,7 @@ ngOnChanges(changes: SimpleChanges) {
     } else {
 
       if (this.ocultarMotivo) {
-        // if (tipoCambio == 'solicitudModificacion') {
-        //   this.solicitarModificacionGenerales();
-        // }else if (tipoCambio == 'guardarDatosGenerales') {
-        //   this.generalesGuardar();
-        // }
+
         if (tipoCambio == 'guardarDatosGenerales') {
           this.generalesGuardar();
         }

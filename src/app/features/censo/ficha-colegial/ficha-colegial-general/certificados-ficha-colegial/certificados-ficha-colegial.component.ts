@@ -65,15 +65,8 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   selectedItemCertificados: number = 10;
 @Input() idPersona;
   constructor(private sigaServices: SigaServices,
-    private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location, ) { }
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.checkAcceso();

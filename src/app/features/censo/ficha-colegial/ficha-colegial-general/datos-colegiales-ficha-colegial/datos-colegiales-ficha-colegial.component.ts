@@ -139,6 +139,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     { label: "No", value: "0" },
     { label: "Si", value: "1" }
   ];
+
   datosDirecciones: DatosDireccionesItem[] = [];
   selectedDatosDirecciones;
   mostrarDatosDireccion: boolean = false;
@@ -161,14 +162,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   tableColegiales: DataTable;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location, ) { }
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.generalBody = new FichaColegialGeneralesItem();
@@ -1510,13 +1505,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       // mostrar la auditoria depende de un parámetro que varía según la institución
       this.generalBody.motivo = undefined;
-      // this.showGuardarAuditoria = false;
 
-      // if (!this.isLetrado) {
-      //   this.generalesGuardar();
-      // } else {
-      //   this.displayAuditoria = true;
-      // }
 
     }
   }
