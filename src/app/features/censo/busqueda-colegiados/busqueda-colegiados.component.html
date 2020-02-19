@@ -428,7 +428,9 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                    <span> {{dato[col.field]}}</span>
+                    <span *ngIf="col.field != 'correoElectronico'"> {{dato[col.field]}}</span>
+                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''" style="color: blue;" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
+                    <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
                 </td>
             </tr>
         </ng-template>
