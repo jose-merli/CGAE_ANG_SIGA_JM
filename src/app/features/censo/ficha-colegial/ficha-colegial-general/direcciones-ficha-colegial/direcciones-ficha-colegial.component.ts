@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -41,7 +41,7 @@ export class DireccionesFichaColegialComponent implements OnInit {
   searchDireccionIdPersona = new DatosDireccionesObject();
   DescripcionDatosDireccion;
   datosColegiales: any[] = [];
-  isLetrado: boolean;
+  // isLetrado: boolean;
   tarjetaDireccionesNum: string;
   selectMultiple: boolean = false;
 
@@ -98,6 +98,7 @@ export class DireccionesFichaColegialComponent implements OnInit {
   selectedItemDirecciones: number = 10;
   @ViewChild("tableDirecciones")
   tableDirecciones: DataTable;
+  @Input() isLetrado;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -147,59 +148,8 @@ export class DireccionesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-    this.colsDirecciones = [
-      {
-        field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
-      },
-      {
-        field: "domicilioLista",
-        header: "censo.consultaDirecciones.literal.direccion"
-      },
-      {
-        field: "codigoPostal",
-        header: "censo.ws.literal.codigopostal"
-      },
-      {
-        field: "nombrePoblacion",
-        header: "censo.consultaDirecciones.literal.poblacion"
-      },
-      {
-        field: "nombreProvincia",
-        header: "censo.datosDireccion.literal.provincia"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
-      },
-      {
-        field: "correoElectronico",
-        header: "censo.datosDireccion.literal.correo"
-      }
-    ];
-
-     this.rowsPerPage = [
-      {
-        label: 10,
-        value: 10
-      },
-      {
-        label: 20,
-        value: 20
-      },
-      {
-        label: 30,
-        value: 30
-      },
-      {
-        label: 40,
-        value: 40
-      }
-    ];
+    
+    this.getCols();
 
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "287";
@@ -219,7 +169,71 @@ export class DireccionesFichaColegialComponent implements OnInit {
     );
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.isLetrado != undefined){
+      this.isLetrado = true
+    }else{
+      this.isLetrado = !this.permisos;
+    }
+  }
 
+
+
+getCols(){
+  this.colsDirecciones = [
+    {
+      field: "tipoDireccion",
+      header: "censo.datosDireccion.literal.tipo.direccion"
+    },
+    {
+      field: "domicilioLista",
+      header: "censo.consultaDirecciones.literal.direccion"
+    },
+    {
+      field: "codigoPostal",
+      header: "censo.ws.literal.codigopostal"
+    },
+    {
+      field: "nombrePoblacion",
+      header: "censo.consultaDirecciones.literal.poblacion"
+    },
+    {
+      field: "nombreProvincia",
+      header: "censo.datosDireccion.literal.provincia"
+    },
+    {
+      field: "telefono",
+      header: "censo.ws.literal.telefono"
+    },
+    {
+      field: "movil",
+      header: "censo.datosDireccion.literal.movil"
+    },
+    {
+      field: "correoElectronico",
+      header: "censo.datosDireccion.literal.correo"
+    }
+  ];
+
+   this.rowsPerPage = [
+    {
+      label: 10,
+      value: 10
+    },
+    {
+      label: 20,
+      value: 20
+    },
+    {
+      label: 30,
+      value: 30
+    },
+    {
+      label: 40,
+      value: 40
+    }
+  ];
+}
 
 
  abreCierraFicha(key) {

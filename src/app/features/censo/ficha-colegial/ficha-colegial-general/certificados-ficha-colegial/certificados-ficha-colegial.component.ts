@@ -133,6 +133,39 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
     }
   }
 
+<<<<<<< HEAD
+=======
+  getCols(){
+    this.colsCertificados = [
+      {
+        field: "descripcion",
+        header: "general.description"
+      },
+      {
+        field: "fechaEmision",
+        header: "facturacion.busquedaAbonos.literal.fecha2"
+      }
+    ];
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+>>>>>>> 09837e547bae301a33eecb977758003abb6c4cfb
   activarPaginacionCertificados() {
     if (!this.datosCertificados || this.datosCertificados.length == 0)
       return false;
