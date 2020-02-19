@@ -1737,9 +1737,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   activarPaginacion() {
-    if (
-      !this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem ||
-      this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length == 0
+    if (this.bodyDatosBancariosAnexoSearch != null && this.bodyDatosBancariosAnexoSearch != undefined && 
+      (!this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem ||
+      this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length == 0)
     )
       return false;
     else return true;

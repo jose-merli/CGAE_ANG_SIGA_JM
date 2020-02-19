@@ -2333,6 +2333,10 @@ export class FichaColegialComponent implements OnInit {
   restablecerGenerales() {
     if (this.esNewColegiado) {
       this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(JSON.stringify(this.colegialesBody));
+      if( this.generalBody.nif != undefined &&  this.generalBody.nif != "" &&  this.generalBody != null){
+        this.compruebaDNI();
+      }
       this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.stringAComisiones();
@@ -2340,6 +2344,10 @@ export class FichaColegialComponent implements OnInit {
     } else {
       this.cargarImagen(this.idPersona);
       this.generalBody = JSON.parse(JSON.stringify(this.checkGeneralBody));
+      if(this.generalBody.fechaNacimiento != undefined && this.generalBody.fechaNacimiento != null){
+        this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
+        this.calcularEdad(this.generalBody.fechaNacimiento);
+      }
       this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.stringAComisiones();
@@ -6113,6 +6121,7 @@ export class FichaColegialComponent implements OnInit {
   borrarFechaNacimiento() {
     this.fechaNacimiento = null;
     this.generalBody.fechaNacimientoDate = undefined;
+    this.generalBody.fechaNacimiento = undefined;
     this.fechaNacimientoSelected = true;
     this.edadCalculada = 0;
     this.calendarFechaNacimiento.onClearButtonClick("");
