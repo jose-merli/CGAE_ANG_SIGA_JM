@@ -499,10 +499,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     } else {
       this.datePipeFechaTitulacion = false;
     }
-    //   datePipeIncorporacion: boolean = false;
-    // datePipePresentacion: boolean = false;
-    // datePipeFechaJura: boolean = false;
-    // datePipeFechaTitulacion
   }
 
   activacionGuardarColegiales() {
@@ -724,8 +720,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       if (Number(this.colegialesBody.nMutualista)) {
         return true;
       } else {
-        this.colegialesBody.nMutualista = "";
-        this.checkColegialesBody.nMutualista = "";
         return false;
       }
     } else {
