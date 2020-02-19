@@ -32,6 +32,7 @@ export class SigaServices {
     validaUsuario: "validaUsuario",
     menu: "menu",
     entorno: "getEntorno",
+    environmentInfo: "getEnvParams",
     usuario: "usuario",
     recuperarApiKey: "recuperarApiKey",
     usuario_logeado: "usuario/logeado",
