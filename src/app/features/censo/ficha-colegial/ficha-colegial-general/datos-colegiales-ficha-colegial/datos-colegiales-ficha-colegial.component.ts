@@ -166,6 +166,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    if (
+      sessionStorage.getItem("personaBody") != null &&
+      sessionStorage.getItem("personaBody") != undefined &&
+      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+    ) {
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -188,7 +193,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     this.onInitColegiales();
     this.getYearRange();
     this.getLenguage();
-
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;

@@ -83,21 +83,19 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
+    }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
 
-      if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-        this.esNewColegiado = true;
-        this.activacionEditar = false;
-        this.emptyLoadFichaColegial = false;
-        this.desactivarVolver = false;
-        this.activacionTarjeta = false;
-
-        sessionStorage.removeItem("esNuevoNoColegiado");
-      } else {
-        this.activacionEditar = true;
-        this.esNewColegiado = false;
-        this.activacionTarjeta = true;
-      }
-
+      sessionStorage.removeItem("esNuevoNoColegiado");
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
     }
     this.checkAcceso();
     this.getCols();

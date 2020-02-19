@@ -114,6 +114,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.checkAcceso();
+    if (
+      sessionStorage.getItem("personaBody") != null &&
+      sessionStorage.getItem("personaBody") != undefined &&
+      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+    ) {
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -133,6 +138,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.isColegiadoEjerciente = false;
       }
     }
+  }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;

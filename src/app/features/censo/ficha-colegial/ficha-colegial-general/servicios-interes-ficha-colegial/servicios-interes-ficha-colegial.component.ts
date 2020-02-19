@@ -70,7 +70,11 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   ngOnInit() {
 
     this.checkAcceso();
-
+    if (
+      sessionStorage.getItem("personaBody") != null &&
+      sessionStorage.getItem("personaBody") != undefined &&
+      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+    ) {
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
@@ -81,7 +85,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
 
     this.idPersona = this.generalBody.idPersona;
 
-
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;

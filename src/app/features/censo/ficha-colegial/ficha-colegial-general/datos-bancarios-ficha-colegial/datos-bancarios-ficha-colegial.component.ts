@@ -81,12 +81,17 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     private location: Location, ) { }
 
   ngOnInit() {
+    if (
+      sessionStorage.getItem("personaBody") != null &&
+      sessionStorage.getItem("personaBody") != undefined &&
+      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+    ) {
     this.generalBody = new FichaColegialGeneralesItem();
     this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.checkGeneralBody = new FichaColegialGeneralesItem();
     this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
     this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;

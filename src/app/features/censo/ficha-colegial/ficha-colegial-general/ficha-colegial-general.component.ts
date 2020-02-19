@@ -498,59 +498,24 @@ export class FichaColegialGeneralComponent implements OnInit {
       // this.onInitOtrasColegiaciones();
       // this.searchSanciones();
       // this.searchCertificados();
-    } else {
-      if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
-        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-        this.isLetrado = false;
-        this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      } else if (sessionStorage.getItem("nuevoNoColegiado")) {
-        let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
-        this.generalBody = new FichaColegialGeneralesItem();
-        this.colegialesBody = new FichaColegialColegialesItem();
-        this.generalBody = enviar;
-        this.generalBody.nif = enviar.numeroIdentificacion;
-        this.generalBody.apellidos1 = enviar.apellido1;
-        this.generalBody.soloNombre = enviar.nombre;
-        this.generalBody.idInstitucion = enviar.idInstitucion;
-        this.generalBody.apellidos2 = enviar.apellido2;
-        this.situacionPersona = enviar.idEstado;
-        if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
-          // this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
-        }
-        this.desactivarVolver = false;
-        if (sessionStorage.getItem("nifNuevo") != undefined) {
-          this.generalBody.nif = sessionStorage.getItem("nifNuevo");
-          let bodyNuevo = JSON.parse(sessionStorage.getItem("bodyNuevo"));
-          this.generalBody.soloNombre = bodyNuevo.nombre;
-          this.generalBody.apellidos1 = bodyNuevo.primerApellido;
-          this.generalBody.apellidos2 = bodyNuevo.segundoApellido;
-          sessionStorage.removeItem("nifNuevo");
-          sessionStorage.removeItem("bodyNuevo");
-
-        }
-        this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
-      } else {
-        this.generalBody = new FichaColegialGeneralesItem();
-        this.colegialesBody = new FichaColegialColegialesItem();
-      }
-
+    } 
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
-    }
+    
 
-    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-      this.esNewColegiado = true;
-      this.activacionEditar = false;
-      this.emptyLoadFichaColegial = false;
-      this.desactivarVolver = false;
-      this.activacionTarjeta = false;
+    // if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+    //   this.esNewColegiado = true;
+    //   this.activacionEditar = false;
+    //   this.emptyLoadFichaColegial = false;
+    //   this.desactivarVolver = false;
+    //   this.activacionTarjeta = false;
 
-      sessionStorage.removeItem("esNuevoNoColegiado");
-      // this.onInitGenerales();
-    } else {
-      this.activacionEditar = true;
-      this.esNewColegiado = false;
-      this.activacionTarjeta = true;
-    }
+    //   sessionStorage.removeItem("esNuevoNoColegiado");
+    //   // this.onInitGenerales();
+    // } else {
+    //   this.activacionEditar = true;
+    //   this.esNewColegiado = false;
+    //   this.activacionTarjeta = true;
+    // }
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";

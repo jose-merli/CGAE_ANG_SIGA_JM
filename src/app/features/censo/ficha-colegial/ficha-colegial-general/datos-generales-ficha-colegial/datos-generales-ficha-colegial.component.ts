@@ -155,6 +155,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   progressSpinner: boolean = false;
   idPersona: any;
   isColegiadoEjerciente: boolean = false;
+  yearRange: string;
 
   resultsTopics: any[] = [];
   displayAuditoria: boolean = false;
@@ -203,10 +204,10 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
 
 
-    if (sessionStorage.getItem("solimodifMensaje")) {
-      this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje");
-      sessionStorage.removeItem("solimodifMensaje");
-    }
+    // if (sessionStorage.getItem("solimodifMensaje")) {
+    //   this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje");
+    //   sessionStorage.removeItem("solimodifMensaje");
+    // }
 
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -230,7 +231,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       // this.checkAcceso();
       this.onInitGenerales();
       this.onInitColegiales();
-
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -287,7 +287,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.activacionTarjeta = true;
     }
     this.getLenguage();
-
+    this.getYearRange();
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
@@ -308,7 +308,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           console.log(err);
         }
       );
-    this.onInitGenerales();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -2503,6 +2502,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
     this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
     this.activacionGuardarGenerales();
+  }
+  getYearRange() {
+    let today = new Date();
+    let year = today.getFullYear();
+    this.yearRange = (year - 80) + ":" + (year + 20);
   }
 }
 
