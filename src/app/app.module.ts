@@ -341,6 +341,7 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
 import { CommonsService } from './_services/commons.service';
 import { TarjetaResumenFijaComponent } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.component';
+import { DescripcionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/descripcion-envio-masivo/descripcion-envio-masivo.component';
 
 
 @NgModule({
@@ -615,6 +616,7 @@ import { TarjetaResumenFijaComponent } from './commons/tarjeta-resumen-fija/tarj
 		EnviosMasivosComponent,
 		FichaRegistroEnvioMasivoComponent,
 		ConfiguracionEnvioMasivoComponent,
+		DescripcionEnvioMasivoComponent,
 		DocumentosEnvioMasivoComponent,
 		DestinatariosEnvioMasivoComponent,
 		ProgramacionEnvioMasivoComponent,

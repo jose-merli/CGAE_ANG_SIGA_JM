@@ -177,7 +177,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
 
     sessionStorage.removeItem("nuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiadoGen");
-    sessionStorage.removeItem("solicitudIncorporacion")
+    sessionStorage.removeItem("solicitudIncorporacion");
+    if(sessionStorage.getItem("migaPan") != "Buscar Sociedades")
     sessionStorage.removeItem("migaPan");
   }
 

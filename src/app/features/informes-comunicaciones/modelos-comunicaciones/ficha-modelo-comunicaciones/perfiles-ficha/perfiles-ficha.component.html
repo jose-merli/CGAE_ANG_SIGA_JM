@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha" >
+    <div (click)="abreCierraFicha()" class="card-header header-ficha" >
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">

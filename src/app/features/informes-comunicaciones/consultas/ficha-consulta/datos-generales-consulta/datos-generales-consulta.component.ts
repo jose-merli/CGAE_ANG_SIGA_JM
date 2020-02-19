@@ -279,9 +279,6 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           }
         });
-        if (this.body.idModulo == 'undefined' || this.body.idModulo == null || this.body.idModulo == "") {
-          this.body.idModulo = this.modulos[0].value;
-        }
       },
       err => {
         console.log(err);

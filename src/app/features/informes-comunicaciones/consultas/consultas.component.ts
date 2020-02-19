@@ -242,9 +242,10 @@ export class ConsultasComponent implements OnInit {
         this.buscar(false);
       }
     } else {
-      this.bodySearch.generica = "";
+      this.bodySearch.generica = "N";
     }
   }
+
 
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
@@ -651,6 +652,7 @@ export class ConsultasComponent implements OnInit {
 
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
+    this.bodySearch.generica = "N";
   }
 
   // comboClaseCom() {

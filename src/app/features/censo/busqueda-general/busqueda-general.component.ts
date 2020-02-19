@@ -137,8 +137,14 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
+    if (sessionStorage.getItem("vuelveForm") != undefined)
+      if (sessionStorage.getItem("vuelveForm") == "false") {
+        this.router.navigate(["/buscarCursos"]);
+      } else {
+        sessionStorage.setItem("vuelveForm", "true");
+      }
 
-    if (sessionStorage.getItem('abrirSociedad') != null || sessionStorage.getItem('abrirSociedad') != undefined) {
+    if (sessionStorage.getItem('migaPan') != null && sessionStorage.getItem('migaPan') == "Buscar Sociedades") {
       this.persona = 'j';
 
       this.isFormador = true;
@@ -251,6 +257,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   ngOnDestroy() {
     sessionStorage.removeItem('AddDestinatarioIndv');
     sessionStorage.removeItem('abrirRemitente');
+    sessionStorage.removeItem('abrirSociedad');
   }
 
   getInstitucion() {
@@ -1189,12 +1196,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   getTipo(event) {
     this.selectedTipo = event;
-    if(this.selectedTipo != undefined){
+    if (this.selectedTipo != undefined) {
       this.bodyJuridica.tipo = this.selectedTipo.value;
-    }else{
+    } else {
       this.bodyJuridica.tipo = undefined;
     }
-    
+
   }
 
   navigateComunicar(dato) {

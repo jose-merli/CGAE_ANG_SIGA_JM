@@ -785,7 +785,9 @@ export class FichaColegialComponent implements OnInit {
         }
 
         this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
-        this.compruebaDNI();
+        if (this.generalBody.idTipoIdentificacion == undefined) {
+          this.compruebaDNI();
+        }
       } else {
         this.generalBody = new FichaColegialGeneralesItem();
         this.colegialesBody = new FichaColegialColegialesItem();
@@ -849,7 +851,9 @@ export class FichaColegialComponent implements OnInit {
     // this.onInitOtrasColegiaciones();
 
     if (!this.esNewColegiado) {
-      this.compruebaDNI();
+      if (this.generalBody.idTipoIdentificacion == undefined) {
+        this.compruebaDNI();
+      }
     }
 
     this.filterLabelsMultiple();
@@ -3481,13 +3485,21 @@ export class FichaColegialComponent implements OnInit {
     this.resaltadoDatosColegiales = false;
     this.selectedDatosColegiales = '';
     this.showMessageInscripcion = false;
+
     this.colegialesBody = JSON.parse(JSON.stringify(this.checkColegialesBody));
+
+    this.colegialesBody.incorporacion = this.arreglarFecha(this.colegialesBody.incorporacion);
+    this.colegialesBody.fechapresentacion = this.arreglarFecha(this.colegialesBody.fechapresentacion);
+    this.colegialesBody.fechaJura = this.arreglarFecha(this.colegialesBody.fechaJura);
+    this.colegialesBody.fechaTitulacion = this.arreglarFecha(this.colegialesBody.fechaTitulacion);
+
     // this.colegialesBody = this.colegialesBody[0];
     this.itemAInscrito();
     this.checkColegialesBody = new FichaColegialColegialesItem();
     this.nuevoEstadoColegial = new FichaColegialColegialesItem();
 
     this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
+
     this.isCrearColegial = false;
     this.filaEditable = false;
     this.isEliminarEstadoColegial = false;

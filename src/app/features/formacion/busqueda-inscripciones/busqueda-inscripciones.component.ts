@@ -637,13 +637,15 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     }
   }
 
+  
+
   checkFilters() {
     if (this.body.codigoCurso == undefined) this.body.codigoCurso = "";
     if (
       (this.body.visibilidad == undefined || this.body.visibilidad == "") &&
       (this.body.colegio == undefined || this.body.colegio == "") &&
-      (this.body.codigoCurso == undefined || this.body.codigoCurso == "") &&
-      (this.body.nombreCurso == undefined || this.body.nombreCurso == "") &&
+      (this.body.codigoCurso == undefined || this.body.codigoCurso == "" || this.body.codigoCurso.trim().length < 3) &&
+      (this.body.nombreCurso == undefined || this.body.nombreCurso == "" || this.body.nombreCurso.trim().length < 3) &&
       (this.body.idEstadoInscripcion == undefined || this.body.idEstadoInscripcion == "") &&
       (this.body.idEstadoCurso == undefined || this.body.idEstadoCurso == "") &&
       (this.body.fechaInscripcionDesde == undefined) &&

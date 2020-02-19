@@ -8,20 +8,20 @@
 </div> -->
 <div class="card">
   <div class="card-body">
-    <p class="title-module" >
-      <span (click)="onHideDatosCv()">{{ 'menu.cen.cargaMasivaGruposFijos' | translate }}</span>
-      <i (click)="onHideDatosCv()" *ngIf="!showDatos" class="fa fa-angle-up float-right"></i>
-      <i (click)="onHideDatosCv()" *ngIf="showDatos" class="fa fa-angle-down float-right"></i>
+    <p (click)="onHideDatosCv()" class="title-module" >
+      <span>{{ 'menu.cen.cargaMasivaGruposFijos' | translate }}</span>
+      <i *ngIf="!showDatos" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="showDatos" class="fa fa-angle-down float-right"></i>
     </p>
     <div *ngIf="showDatos" class="module vista-simple">
       <div class="row">
 
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+        <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.datosCv.literal.fechaCarga" | translate}}</label>
           <app-fecha [(value)]="fechaCargaSelect" [utc]="false" (valueChangeSelected)="fillFechaCarga($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha>
         </div>
 
-        <div class="form-group-interlineado col-lg-3 col-md-3">
+        <div class="form-group col-lg-3 col-md-3">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
           <p-fileUpload #pUploadFile chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" name="file"

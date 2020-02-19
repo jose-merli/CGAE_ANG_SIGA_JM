@@ -9,48 +9,48 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <p class="title-module"> 
-        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span>
-        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
-        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+        <span>{{'general.message.datos.generales' | translate }}</span>
+        <i *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-simple">
-      <div class="form-row">
-        <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
-          <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
-            [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form"></p-dropdown>
+        <div class="form-row">
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
+            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
+              [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+            <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
+            <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
+          </div>
         </div>
-        <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
-        </div>
-        <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
-        </div>
-      </div>
-      <div class="form-row d-flex align-items-end">
+        <div class="form-row d-flex align-items-end">
 
-        <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
-          <p-dropdown [showClear]="true" [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
-            class="select-form"></p-dropdown>
-        </div>
-        <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
-          <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
-            [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
-        </div>
-        <div class="form-group-interlineado col-lg-4 col-md-4">
-          <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
-          <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
+            <p-dropdown [showClear]="true" [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
+              class="select-form"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
+            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
+              [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-4 col-md-4">
+            <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
+            <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
           <p-radioButton name="groupname" value="N" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton> -->
-          <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-            class="select-form" [(ngModel)]='bodySearch.generica' [options]="comboGenerica"></p-dropdown>
-        </div>
+            <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+              class="select-form" [(ngModel)]='bodySearch.generica' [options]="comboGenerica"></p-dropdown>
+          </div>
 
-      </div>
+        </div>
       </div>
     </div>
     <div class="card-footer">
@@ -85,7 +85,7 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              
+
 
 
               <div *ngIf="setItalic(dato) && col.field != 'perfiles' && col.field != 'codigoExterno'  && col.field != 'activo' && col.field != 'nif' && col.field != 'nombreApellidos'">
@@ -99,9 +99,9 @@
               <div *ngIf="!setItalic(dato) && col.field != 'perfiles' && col.field != 'codigoExterno'  && col.field != 'activo' && col.field != 'nif' && col.field != 'nombreApellidos'">
                 <span>
                   <span *ngIf="col.field !='preseleccionado'"> {{dato[col.field]}}</span>
-              <span *ngIf="col.field=='preseleccionado'">
-                <i class="fa fa-check"></i>
-              </span>
+                  <span *ngIf="col.field=='preseleccionado'">
+                    <i class="fa fa-check"></i>
+                  </span>
                 </span>
               </div>
 
@@ -136,23 +136,23 @@
       </p-table>
       <div class="card-footer">
         <div class="text-right main-button">
-            <button *ngIf="!historico" (click)="buscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-          
-            <button *ngIf="historico" (click)="buscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+          <button *ngIf="!historico" (click)="buscar(true)" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
 
-            <button *ngIf="!(historico && activacionEditar)" (click)="borrar(selectedDatos)" pButton type=" button" icon="fa fa-trash-alt"
+          <button *ngIf="historico" (click)="buscar(false)" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+          <button *ngIf="!(historico && activacionEditar)" (click)="borrar(selectedDatos)" pButton type=" button" icon="fa fa-trash-alt"
             iconPos="left" label="{{ 'general.boton.eliminar' | translate}}" [disabled]="!eliminar || !selectedDatos  || selectedDatos == ''"></button>
-           
-            <button *ngIf="historico && activacionEditar" (click)="confirmarCancelar(selectedDatos)"
-            pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.activar' | translate}}" [disabled]="!eliminar || !selectedDatos  || selectedDatos == ''"></button>
-           
-            <button [disabled]="historico || !activacionEditar || !(selectedDatos && selectedDatos !='' && selectedDatos.length == 1)" (click)="duplicar(selectedDatos)"
-            pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
-         
-            <button [disabled]="historico || !(selectedDatos && selectedDatos !='' && selectedDatos.length == 1 && selectedDatos[0].idClaseComunicacion == 5)"
+
+          <button *ngIf="historico && activacionEditar" (click)="confirmarCancelar(selectedDatos)" pButton type="button" icon="fa fa-undo"
+            iconPos="left" label="{{ 'general.boton.activar' | translate}}" [disabled]="!eliminar || !selectedDatos  || selectedDatos == ''"></button>
+
+          <button [disabled]="historico || !activacionEditar || !(selectedDatos && selectedDatos !='' && selectedDatos.length == 1)"
+            (click)="duplicar(selectedDatos)" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+
+          <button [disabled]="historico || !(selectedDatos && selectedDatos !='' && selectedDatos.length == 1 && selectedDatos[0].idClaseComunicacion == 5)"
             (click)="navigateComunicar(selectedDatos)" pButton type="button" icon="fas fa-play" iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
-            
-          </div>
+
+        </div>
       </div>
 
     </div>
@@ -170,19 +170,17 @@
         <label class="mr-2">{{dato.campo}} </label>
       </div>
       <div class="form-group col-lg-3 col-md-3">
-        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-          *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
-          class="select-form"></p-dropdown>
-        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-          *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'"
+          [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto"
+          [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
       </div>
       <div class="form-group col-lg-6 col-md-6">
         <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
         <p-calendar *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [locale]="es" [(ngModel)]="dato.valor" dateFormat="dd/mm/yy"
           icon="far fa-calendar-alt" showIcon="true"></p-calendar>
-        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-          *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
-          optionLabel="DESCRIPCION"></p-dropdown>
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'"
+          [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
       </div>
     </div>
   </div>

@@ -90,9 +90,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   noEsColegiado: boolean = false;
   body;
   solicitante;
-  resaltadoDatos: boolean=false;
-  resaltadoDatosAprobar: boolean=false;
-  resaltadoDatosBancos: boolean=false;
+  resaltadoDatos: boolean = false;
+  resaltadoDatosAprobar: boolean = false;
+  resaltadoDatosBancos: boolean = false;
   editarExt: boolean = false;
   iban: String;
   ibanValido: boolean = true;
@@ -114,7 +114,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   numColegiadoDuplicado: boolean = false;
   bodyInicial;
   cargarDatos: boolean = false;
-
+  fechaActual: Date = new Date();
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -129,12 +129,12 @@ export class NuevaIncorporacionComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
-    this.resaltadoDatos=false;
-    this.resaltadoDatosAprobar=false;
-    this.resaltadoDatosBancos=false;
+    this.resaltadoDatos = false;
+    this.resaltadoDatosAprobar = false;
+    this.resaltadoDatosBancos = false;
 
     sessionStorage.removeItem("esNuevoNoColegiado");
-
+    this.fechaActual = new Date();
     if (sessionStorage.getItem("isLetrado")) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -1070,9 +1070,9 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
 
         this.progressSpinner = true;
-        this.resaltadoDatos=false;
-        this.resaltadoDatosAprobar=false;
-        this.resaltadoDatosBancos=false;
+        this.resaltadoDatos = false;
+        this.resaltadoDatosAprobar = false;
+        this.resaltadoDatosBancos = false;
 
         this.sigaServices
           .post("solicitudIncorporacion_searchNumColegiado", this.solicitudEditar)
@@ -1159,48 +1159,50 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   searchSolicitante() {
-    this.progressSpinner = true;
+    if (this.solicitudEditar.fechaEstado < this.fechaActual) {
+      this.progressSpinner = true;
 
-    this.body = new DatosColegiadosItem();
-    this.body.nif = this.solicitudEditar.numeroIdentificacion;
-    sessionStorage.setItem("consulta", "true");
+      this.body = new DatosColegiadosItem();
+      this.body.nif = this.solicitudEditar.numeroIdentificacion;
+      sessionStorage.setItem("consulta", "true");
 
-    if (this.solicitudEditar.idEstado == "50") {
-      sessionStorage.setItem("solicitudAprobada", "true");
-    }
+      if (this.solicitudEditar.idEstado == "50") {
+        sessionStorage.setItem("solicitudAprobada", "true");
+      }
 
-    this.sigaServices
-      .postPaginado(
-        "busquedaColegiados_searchColegiadoFicha",
-        "?numPagina=1",
-        this.body
-      )
-      .subscribe(
-        data => {
-          this.progressSpinner = false;
-          this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
-          sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
-          sessionStorage.setItem("destinatarioCom", "true");
-          sessionStorage.setItem("esColegiado", "true");
-          sessionStorage.setItem("esNuevoNoColegiado", "false");
-          this.router.navigate(["/fichaColegial"]);
+      this.sigaServices
+        .postPaginado(
+          "busquedaColegiados_searchColegiadoFicha",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            this.progressSpinner = false;
+            this.solicitante = JSON.parse(data["body"]).colegiadoItem[0];
+            sessionStorage.setItem("personaBody", JSON.stringify(this.solicitante));
+            sessionStorage.setItem("destinatarioCom", "true");
+            sessionStorage.setItem("esColegiado", "true");
+            sessionStorage.setItem("esNuevoNoColegiado", "false");
+            this.router.navigate(["/fichaColegial"]);
 
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    } else this.progressSpinner = false;
   }
 
   denegarSolicitud() {
     this.progressSpinner = true;
-    this.resaltadoDatos=false;
-    this.resaltadoDatosAprobar=false;
-    this.resaltadoDatosBancos=false;
+    this.resaltadoDatos = false;
+    this.resaltadoDatosAprobar = false;
+    this.resaltadoDatosBancos = false;
 
     this.sigaServices
       .post(
@@ -1283,9 +1285,9 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   guardar(back) {
     this.progressSpinner = true;
-    this.resaltadoDatos=false;
-    this.resaltadoDatosAprobar=false;
-    this.resaltadoDatosBancos=false;
+    this.resaltadoDatos = false;
+    this.resaltadoDatosAprobar = false;
+    this.resaltadoDatosBancos = false;
     this.numColegiadoDuplicado = false;
 
     this.solicitudEditar.idEstado = this.estadoSolicitudSelected;
@@ -1591,7 +1593,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
     if (
-      
+
       !this.isLetrado
     ) {
       if (
@@ -1650,9 +1652,9 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.solicitudEditar.bic != undefined &&
             this.solicitudEditar.titular != "" &&
             this.solicitudEditar.titular != undefined && this.solicitudEditar.titular.trim() != "")) {
-          
-              this.resaltadoDatos = true;
-              return true;
+
+          this.resaltadoDatos = true;
+          return true;
         } else {
           if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
             this.resaltadoDatos = true;
@@ -1968,67 +1970,67 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
   }
 
-  styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
 
-  styleObligatorioAprobar(evento){
-    if(this.resaltadoDatosAprobar && (evento==undefined || evento==null || evento=="")){
+  styleObligatorioAprobar(evento) {
+    if (this.resaltadoDatosAprobar && (evento == undefined || evento == null || evento == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
 
-  styleObligatorioBanco(evento){
-    if(this.resaltadoDatosBancos && (evento==undefined || evento==null || evento=="")){
+  styleObligatorioBanco(evento) {
+    if (this.resaltadoDatosBancos && (evento == undefined || evento == null || evento == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
 
-  muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatos=true;
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
   }
 
-  muestraCamposObligatoriosAprobar(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatosAprobar=true;
+  muestraCamposObligatoriosAprobar() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosAprobar = true;
   }
 
-  muestraCamposObligatoriosBancos(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatosBancos=true;
+  muestraCamposObligatoriosBancos() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosBancos = true;
   }
 
-  checkDatos(){
-    if(!this.consulta ){
-      if(this.isGuardar()){
-      this.isSave = true;
-      this.guardar(true); 
-      }else{
+  checkDatos() {
+    if (!this.consulta) {
+      if (this.isGuardar()) {
+        this.isSave = true;
+        this.guardar(true);
+      } else {
         this.muestraCamposObligatorios();
-      }  
+      }
     }
   }
 
-  checkDatosAprobar(){
-    if((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')){
-      if(!this.disabledAprobar()){
-        if(this.cargo==true || this.abono==true || this.abonoJCS==true){
-          if((this.solicitudEditar.titular=="" || this.solicitudEditar.titular==undefined) || (this.solicitudEditar.iban=="" || this.solicitudEditar.iban==undefined) || (this.solicitudEditar.bic=="" || this.solicitudEditar.bic==undefined) || (this.solicitudEditar.banco=="" || this.solicitudEditar.banco==undefined)){
+  checkDatosAprobar() {
+    if ((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
+      if (!this.disabledAprobar()) {
+        if (this.cargo == true || this.abono == true || this.abonoJCS == true) {
+          if ((this.solicitudEditar.titular == "" || this.solicitudEditar.titular == undefined) || (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) || (this.solicitudEditar.bic == "" || this.solicitudEditar.bic == undefined) || (this.solicitudEditar.banco == "" || this.solicitudEditar.banco == undefined)) {
             this.muestraCamposObligatoriosBancos();
           }
         }
 
-        if(this.solicitudEditar.fechaIncorporacion==undefined){
+        if (this.solicitudEditar.fechaIncorporacion == undefined) {
           this.muestraCamposObligatoriosAprobar();
         }
 
-        if(!this.resaltadoDatosAprobar && !this.resaltadoDatosBancos){
+        if (!this.resaltadoDatosAprobar && !this.resaltadoDatosBancos) {
           this.validateAprobarSolitud();
         }
-      }else{
+      } else {
         this.validateAprobarSolitud();
       }
     }

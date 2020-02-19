@@ -618,11 +618,21 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   duplicateCourse() {
     let curso = this.selectedDatos[0];
     curso.idCurso = undefined;
-    sessionStorage.setItem("duplicarCurso", "true");
-    sessionStorage.setItem("modoEdicionCurso", "false");
-    sessionStorage.setItem("courseCurrent", JSON.stringify(curso));
-    sessionStorage.setItem("filtrosBusquedaCursos", JSON.stringify(this.body));
-    this.router.navigate(["fichaCurso"]);
+
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = this.selectedDatos;
+
+    if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+      this.showMessage(
+        "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+      );
+    }else{ 
+      sessionStorage.setItem("duplicarCurso", "true");
+      sessionStorage.setItem("modoEdicionCurso", "false");
+      sessionStorage.setItem("courseCurrent", JSON.stringify(curso));
+      sessionStorage.setItem("filtrosBusquedaCursos", JSON.stringify(this.body));
+      this.router.navigate(["fichaCurso"]);
+    }
   }
 
   disabledDuplicate() {
@@ -635,6 +645,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   archivarCursos() {
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = this.selectedDatos;
+
     this.progressSpinner = true;
 
     this.sigaServices
@@ -643,17 +656,23 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         data => {
           this.progressSpinner = false;
 
-          if (data != null) {
-            let mensaje: string = "";
+          if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+            this.showMessage(
+              "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+            );
+          }else{ 
+            if (data != null) {
+              let mensaje: string = "";
 
-            if (data.body == 1) {
-              mensaje = "form.busquedaCursos.mensaje.curso.archivado";
-            } else {
-              mensaje = "form.busquedaCursos.mensaje.cursos.archivados";
+              if (data.body == 1) {
+                mensaje = "form.busquedaCursos.mensaje.curso.archivado";
+              } else {
+                mensaje = "form.busquedaCursos.mensaje.cursos.archivados";
+              }
+
+              this.mostrarInfoAccionSobreCursos(data.body, mensaje);
+              this.isBuscar(!this.modoHistorico);
             }
-
-            this.mostrarInfoAccionSobreCursos(data.body, mensaje);
-            this.isBuscar(!this.modoHistorico);
           }
         },
         err => {
@@ -667,6 +686,9 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   desarchivarCursos(selectedDatos) {
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = this.selectedDatos;
+
     this.progressSpinner = true;
 
     this.sigaServices
@@ -675,17 +697,23 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         data => {
           this.progressSpinner = false;
 
-          if (data != null) {
-            let mensaje: string = "";
+          if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+            this.showMessage(
+              "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+            );
+          }else{ 
+            if (data != null) {
+              let mensaje: string = "";
 
-            if (data.body == 1) {
-              mensaje = "form.busquedaCursos.mensaje.curso.desarchivado";
-            } else {
-              mensaje = "form.busquedaCursos.mensaje.cursos.desarchivados";
+              if (data.body == 1) {
+                mensaje = "form.busquedaCursos.mensaje.curso.desarchivado";
+              } else {
+                mensaje = "form.busquedaCursos.mensaje.cursos.desarchivados";
+              }
+
+              this.mostrarInfoAccionSobreCursos(data.body, mensaje);
+              this.isBuscar(!this.modoHistorico);
             }
-
-            this.mostrarInfoAccionSobreCursos(data.body, mensaje);
-            this.isBuscar(!this.modoHistorico);
           }
         },
         err => {
@@ -708,11 +736,17 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.isBuscar(false);
 
         if (JSON.parse(data.body).error.code == null) {
-          this.showMessage(
-            "info",
-            this.translateService.instant("general.message.informacion"),
-            JSON.parse(data.body).error.description
-          );
+          if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+            this.showMessage(
+              "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+            );
+          }else{ 
+            this.showMessage(
+              "info",
+              this.translateService.instant("general.message.informacion"),
+              JSON.parse(data.body).error.description
+            );
+          }
         } else if (JSON.parse(data.body).error.code == 200) {
           this.showMessage(
             "success",
@@ -743,11 +777,17 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.isBuscar(false);
 
         if (JSON.parse(data.body).error.code == null) {
-          this.showMessage(
-            "info",
-            this.translateService.instant("general.message.informacion"),
-            JSON.parse(data.body).error.description
-          );
+          if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+            this.showMessage(
+              "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+            );
+          }else{          
+            this.showMessage(
+              "info",
+              this.translateService.instant("general.message.informacion"),
+              JSON.parse(data.body).error.description
+            );
+          }
         } else if (JSON.parse(data.body).error.code == 200) {
           this.showMessage(
             "success",
@@ -788,11 +828,17 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
             this.isBuscar(false);
 
             if (JSON.parse(data.body).error.code == null) {
-              this.showMessage(
-                "info",
-                this.translateService.instant("general.message.informacion"),
-                JSON.parse(data.body).error.description
-              );
+              if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+                this.showMessage(
+                  "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+                );
+              }else{ 
+                this.showMessage(
+                  "info",
+                  this.translateService.instant("general.message.informacion"),
+                  JSON.parse(data.body).error.description
+                );
+              }
             } else if (JSON.parse(data.body).error.code == 200) {
               this.showMessage(
                 "success",
@@ -828,7 +874,16 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   }
 
   cancelarCursos() {
-    this.callCancelarCursos();
+    let cursoDTO = new DatosCursosObject();
+    cursoDTO.cursoItem = this.selectedDatos;
+    
+    if(cursoDTO.cursoItem[0].idInstitucion!=this.authenticationService.getInstitucionSession()){
+      this.showMessage(
+        "error", "Error", this.translateService.instant("formacion.busquedaCursos.mensaje.otraInstitucion")
+      );
+    }else{ 
+      this.callCancelarCursos();
+    }
     // let mess = "";
 
     // if (this.selectedDatos.length > 1) {
@@ -905,6 +960,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     if (numCursos < 0) {
       numCursos = 0;
     }
+
+    
+
+    
 
     this.msgs = [];
     this.msgs.push({

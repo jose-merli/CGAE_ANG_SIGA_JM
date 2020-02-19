@@ -3,7 +3,7 @@
   <!--DATOS GENERALES-->
   <div id="datosGen">
   <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha()" class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">

@@ -15,10 +15,11 @@ export class AuthGuard implements CanActivate {
         return new Promise(async (resolve, reject) => {
             if (this.authService.isAutenticated()) {
                 if (route.routeConfig.path != 'home') {
+                    let path = route.routeConfig.path;
                     if (route.routeConfig.path.includes('contadores')) {
-                        route.routeConfig.path = 'contadores';
+                        path = 'contadores';
                     }
-                    this.sigaService.post("acces_controlUrl", route.routeConfig.path).toPromise().then(
+                    this.sigaService.post("acces_controlUrl", path).toPromise().then(
                         data => {
                             console.log(data);
                             let permisoItem = JSON.parse(data.body);

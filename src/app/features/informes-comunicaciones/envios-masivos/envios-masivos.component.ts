@@ -360,6 +360,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   enviar(dato) {
+    this.progressSpinner = true;
     this.enviosArray = [];
     let estadoInvalido = false;
     let tieneDestiantarios = true;
@@ -382,6 +383,8 @@ para poder filtrar el dato con o sin estos caracteres*/
           "informesycomunicaciones.enviosMasivos.sinDestinatarios"
         )
       );
+      this.progressSpinner = false;
+
     } else if (!estadoInvalido) {
       this.sigaServices
         .post("enviosMasivos_enviar", this.enviosArray)
@@ -403,15 +406,20 @@ para poder filtrar el dato con o sin estos caracteres*/
               )
             );
             console.log(err);
+            this.progressSpinner = false;
           },
-          () => { }
+          () => {
+            this.progressSpinner = false;
+          }
         );
+
     } else {
       this.showInfo(
         this.translateService.instant(
           "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
         )
       );
+      this.progressSpinner = false;
     }
   }
 

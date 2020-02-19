@@ -1,19 +1,17 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnviosMasivosItem";
-import { SigaServices } from "./../../../../../_services/siga.service";
+import { SigaServices } from "../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { truncate } from 'fs';
-import { CommonsService } from '../../../../../_services/commons.service';
-
+import { truncate } from "fs";
 
 @Component({
-  selector: "app-configuracion-envio-masivo",
-  templateUrl: "./configuracion-envio-masivo.component.html",
-  styleUrls: ["./configuracion-envio-masivo.component.scss"]
+  selector: "app-descripcion-envio-masivo",
+  templateUrl: "./descripcion-envio-masivo.component.html",
+  styleUrls: ["./descripcion-envio-masivo.component.scss"]
 })
-export class ConfiguracionEnvioMasivoComponent implements OnInit {
-  openFicha: boolean = true;
+export class DescripcionEnvioMasivoComponent implements OnInit {
+  openFicha: boolean = false;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   editar: boolean = false;
@@ -25,9 +23,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   tipoEnvio: string;
   editarPlantilla: boolean = false;
   apiKey: string = "";
-
-  resaltadoDatos: boolean = false;
-
+  habilitarGuardar:boolean = false;
   editorConfig: any = {
     selector: "textarea",
     plugins:
@@ -66,29 +62,57 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       activa: false
     }
   ];
-  // @Output() emitOpenDescripcion = new EventEmitter<any>();
-  // @Output() cuerpoPlantilla = new EventEmitter<any>();
-  // @Output() guardarDatos = new EventEmitter<any>();
-
-  // @Input() nuevoCuerpoPlantilla;
+  @Input() idPlantillaEnvio;
+  @Input() cuerpoPlantillas;
+  @Input() idEnvio;
+  @Output() emitCuerpo = new EventEmitter<any>();
+  @Output() emitGuardar = new EventEmitter<any>();
 
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
   ngOnInit() {
-    this.resaltadoDatos = false;
-
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
 
     this.editar = false;
     this.getDatos();
-    this.getTipoEnvios();
+    // this.getTipoEnvios();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.body.idTipoEnvios = undefined;
+    if (this.idPlantillaEnvio != undefined) {
+      this.body.idTipoEnvios = this.idPlantillaEnvio.value;
+      if(this.body.idTipoEnvios != "2"){
+        this.openFicha = true;
+      }else{
+        this.openFicha = false;
+      }
+     
+    }
+    if (this.cuerpoPlantillas != undefined) {
+      if(this.cuerpoPlantillas.cuerpo != undefined){
+        if(this.body.cuerpo == undefined){
+          this.body.cuerpo = this.cuerpoPlantillas.cuerpo;
+        }
+      }
+      else{
+        this.body.cuerpo = undefined;
+      }
+    }
+    if(this.idEnvio != undefined){
+      this.habilitarGuardar = true;
+    }else{
+      this.habilitarGuardar = false;
+    }
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+    // this.getTipoEnvios();
   }
 
   // Mensajes
@@ -112,15 +136,13 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
-    if (event.value != undefined) {
-      this.body.cuerpo = "";
+    if (event != undefined) {
       if (
         this.body.idTipoEnvios == "1" ||
         this.body.idTipoEnvios == "4" ||
         this.body.idTipoEnvios == "5" ||
         this.body.idTipoEnvios == "7"
       ) {
-
         let datosPlantilla = {
           idPlantillaEnvios: event.value,
           idTipoEnvios: this.body.idTipoEnvios
@@ -131,26 +153,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             let datos = JSON.parse(data["body"]);
             this.body.asunto = datos.asunto;
             this.body.cuerpo = datos.cuerpo;
-          },
-            err => {
-              console.log(err);
-              this.progressSpinner = false;
-            }, () => {
-              if (this.body.cuerpo != undefined) {
-                let cuerpoPlantilla = {
-                  cuerpo: this.body.cuerpo,
-                  asunto: this.body.asunto,
-                }
-                // this.cuerpoPlantilla.emit(cuerpoPlantilla);
-              }
-            });
+          });
       }
-    } else {
-      this.body.cuerpo = "";
-      this.body.asunto = "";
     }
   }
-
   getTipoEnvios() {
     this.sigaServices.get("enviosMasivos_tipo").subscribe(
       data => {
@@ -181,16 +187,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       err => {
         console.log(err);
       },
-      () => {
-        let datosGuardar = {
-          idEnvio: this.body.idEnvio,
-          idEstado: this.body.idEstado,
-          idTipoEnvio: this.body.idTipoEnvios,
-          descripcion: this.body.descripcion,
-          asunto: this.body.asunto,
-        }
-        // this.guardarDatos.emit(datosGuardar);
-      }
+      () => { }
     );
   }
 
@@ -198,9 +195,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (e != null) {
       this.body.tipoEnvio = e.originalEvent.currentTarget.innerText;
     }
-    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != "") {
+    if (this.body.idTipoEnvios != null && this.body.idTipoEnvios != "")
       this.getPlantillas();
-    }
 
     if (this.body.idTipoEnvios == "1" || this.body.idTipoEnvios == "2") {
       this.sigaServices.notifyHabilitarDocumentos();
@@ -210,7 +206,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getPlantillas() {
-
     if (this.body.idTipoEnvios == undefined || this.body.idTipoEnvios == "") {
       this.body.idPlantillaEnvios = "";
     } else {
@@ -236,7 +231,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+    if (this.body.idTipoEnvios != undefined && this.body.idTipoEnvios != "2") {
+      this.openFicha = !this.openFicha;
+    }
+
   }
 
   esFichaActiva(key) {
@@ -257,7 +255,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      this.getPlantillas();
+      // this.getPlantillas();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.editarPlantilla = true;
       if (
@@ -266,7 +264,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       ) {
         this.editar = true;
       }
-
     } else {
       this.editar = false;
     }
@@ -327,87 +324,24 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-    // if(this.nuevoCuerpoPlantilla !=undefined){
-    //   this.body.cuerpo = this.nuevoCuerpoPlantilla
-    // }
-    this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
-      data => {
-        this.body.idEstado = "4";
-        let result = JSON.parse(data["body"]);
-        this.body.idEnvio = result.description;
-
-        if (sessionStorage.getItem("crearNuevoEnvio") != null) {
-          this.body.fechaCreacion = new Date();
-        }
-        console.log(this.body.fechaCreacion);
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        sessionStorage.removeItem("crearNuevoEnvio");
-        sessionStorage.setItem(
-          "enviosMasivosSearch",
-          JSON.stringify(this.body)
-        );
-        this.showSuccess(
-          this.translateService.instant(
-            "informesycomunicaciones.enviosMasivos.ficha.envioCorrect"
-          )
-        );
-        this.editarPlantilla = true;
-      },
-      err => {
-        this.showFail(
-          this.translateService.instant(
-            "informesycomunicaciones.enviosMasivos.ficha.envioError"
-          )
-        );
-        console.log(err);
-      },
-      () => {
-        let datosGuardar = {
-          idEnvio: this.body.idEnvio,
-        }
-        // this.guardarDatos.emit(datosGuardar);
-      }
-    );
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.emitGuardar.emit(true);
   }
 
   restablecer() {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.resaltadoDatos = false;
+    this.body.cuerpo = JSON.parse(JSON.stringify(this.bodyInicial.cuerpo));
   }
 
   isGuardarDisabled() {
-    if (
-      this.body.idTipoEnvios != "" &&
-      this.body.idTipoEnvios != null &&
-      this.body.idPlantillaEnvios != "" &&
-      this.body.idPlantillaEnvios != null &&
-      this.body.descripcion != "" &&
-      this.body.descripcion != null
-    ) {
-      return false;
+    if(this.body.cuerpo != undefined){
+      if (this.body.cuerpo != this.bodyInicial.cuerpo) {
+        return false;
+      }
     }
     return true;
   }
 
-  styleObligatorio(evento) {
-    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
-      return this.commonsService.styleObligatorio(evento);
-    }
-  }
-  muestraCamposObligatorios() {
-    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-    this.resaltadoDatos = true;
-  }
-
-  checkDatos() {
-    if (!this.isGuardarDisabled()) {
-      this.guardar();
-    } else {
-      if ((this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.idPlantillaEnvios == null || this.body.idPlantillaEnvios == undefined || this.body.idPlantillaEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
-        this.muestraCamposObligatorios();
-      } else {
-        this.guardar();
-      }
-    }
+  onChangeEditor(){
+    this.emitCuerpo.emit(this.body.cuerpo);
   }
 }

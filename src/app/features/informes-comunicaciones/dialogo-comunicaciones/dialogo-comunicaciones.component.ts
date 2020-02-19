@@ -271,6 +271,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.sigaServices.post('dialogo_obtenerCamposDinamicos', this.bodyComunicacion).subscribe(
 				(data) => {
 					console.log(data);
+					this.progressSpinner = false;
 					this.valores = [];
 					this.listaConsultas = JSON.parse(data['body']).consultaItem;
 					this.listaConsultas.forEach((element) => {
@@ -323,7 +324,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 					);
 				},
 				() => {
-					this.progressSpinner = false;
+					//this.progressSpinner = false;
 				}
 
 			);
@@ -435,7 +436,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.valores.forEach((element) => {
 			if (valido) {
 				if (!element.valorNulo) {
-					if (element.valor != undefined && element.valor != null && element.valor != '') {
+					if (element.valor !== undefined && element.valor !== null && element.valor !== '') {
 						valido = true;
 					} else {
 						valido = false;
@@ -527,8 +528,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 								filename = fileInfo.name;
 							}
 						}
-
-
+						
 						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
 							(data) => {
 								if (data.size != 0) {
@@ -580,6 +580,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 					}
 					this.showFail(mensaje);
 
+				}, () => {
+					this.progressSpinner = false;
 				}
 			);
 

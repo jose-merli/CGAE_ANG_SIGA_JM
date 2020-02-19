@@ -5,7 +5,7 @@
   <!--DATOS GENERALES-->
   <div id="sdatosBancarios">
   <div *ngIf="tarjeta == '2' || tarjeta == '3'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abrirFicha()" class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">

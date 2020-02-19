@@ -8,10 +8,10 @@
 </div> -->
 <div class="card">
   <div class="card-body">
-    <p class="title-module">
-      <span (click)="onHideDatosCv()">{{ 'menu.cen.cargaMasivaDatosCurriculares' | translate }}</span>
-      <i (click)="onHideDatosCv()" *ngIf="!showDatosCv" class="fa fa-angle-up float-right"></i>
-      <i (click)="onHideDatosCv()" *ngIf="showDatosCv" class="fa fa-angle-down float-right"></i>
+    <p (click)="onHideDatosCv()" class="title-module">
+      <span>{{ 'menu.cen.cargaMasivaDatosCurriculares' | translate }}</span>
+      <i *ngIf="!showDatosCv" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="showDatosCv" class="fa fa-angle-down float-right"></i>
     </p>
     <div *ngIf="showDatosCv" class="module vista-simple">
       <div class="row">

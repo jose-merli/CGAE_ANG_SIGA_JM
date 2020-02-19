@@ -183,7 +183,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       this.body.modificablecontador = "0";
     }
   }
-  pInputText;
+  
   isEditar() {
     this.modificableToBody();
     if (this.body.nombre != null) {
