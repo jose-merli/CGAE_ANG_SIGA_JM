@@ -389,6 +389,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   residente: String;
   displayDelete: boolean;
   datosTarjetaResumen;
+  disabledTarjetaResumen:Boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -415,7 +416,11 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
     this.checkAccesos();
 
-
+    if(sessionStorage.getItem("esNuevoNoColegiado")){
+      this.disabledTarjetaResumen = true;
+    }else{
+      this.disabledTarjetaResumen = false;
+    }
     if (sessionStorage.getItem("disabledAction") == "true") {
       // Es estado baja colegial
       this.disabledAction = true;

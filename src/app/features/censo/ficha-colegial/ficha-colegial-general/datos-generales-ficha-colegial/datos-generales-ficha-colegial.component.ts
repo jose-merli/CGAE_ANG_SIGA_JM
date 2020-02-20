@@ -547,7 +547,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   comprobarAuditoria(tipoCambio) {
     // modo creación
     if ((this.generalBody.nif != null && this.generalBody.nif.length > 0) &&
-      (this.generalBody.nombre != null && this.generalBody.nombre.length > 0) &&
+      (this.generalBody.soloNombre != null && this.generalBody.soloNombre.length > 0) &&
       (this.generalBody.apellidos1 != null && this.generalBody.apellidos1.length > 0) &&
       (this.generalBody.idTratamiento != null && this.generalBody.idTratamiento != "") &&
       (this.generalBody.idLenguaje != null && this.generalBody.idLenguaje.length > 0)) {

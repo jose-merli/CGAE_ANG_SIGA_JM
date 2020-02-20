@@ -417,7 +417,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		ServiciosInteresComponent,
 		FacturacionSociedadesCensoComponent,
 		ComunicacionSociedadesComponent,
-		TarjetaResumenFijaComponent,
 
 		//SJRS
 		DesignacionesComponent,
