@@ -55,6 +55,7 @@ export class TarjetaResumenFijaComponent implements OnInit {
       
       enlace.scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
       this.isOpen.emit(nombre);
+      this.enlaceAnterior = [];
       this.enlaceAnterior.push(enlace.id);
      
     }

@@ -66,6 +66,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   textFilter: String = "Elegir";
   sortO: number = 1;
   etiquetasSelected: any[];
+    pInputText;
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -305,7 +306,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.table.reset();
   }
 
-  pInputText;
+
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;

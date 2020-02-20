@@ -500,6 +500,12 @@ export class FichaCursoComponent implements OnInit {
 
       },
       {
+        label: "administracion.parametrosGenerales.literal.descripcion",
+        value: document.getElementById("descripcion"),
+        nombre: "descripcion",
+
+      },
+      {
         label: "formacion.fichaCurso.tarjetaPrecios.precios",
         value: document.getElementById("precios"),
         nombre: "price",
@@ -529,7 +535,7 @@ export class FichaCursoComponent implements OnInit {
 
       }, {
         label: "formacion.fichaCurso.cargaMasivaInscripciones.cabecera",
-        value: document.getElementById("cargainscripciones"),
+        value: document.getElementById("carga"),
         nombre: "carga",
       },
     ];
