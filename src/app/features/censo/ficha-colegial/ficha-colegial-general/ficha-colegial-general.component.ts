@@ -378,7 +378,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   estadoColegial: String;
   residente: String;
   displayDelete: boolean;
-
+  datosTarjetaResumen;
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -649,6 +649,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     if(event != undefined){
       this.idPersona = event;
     }
+  }
+  datosTarjetaResumenEvent(event){
+    this.datosTarjetaResumen = event;
   }
 }
 

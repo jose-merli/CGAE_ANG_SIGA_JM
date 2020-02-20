@@ -355,12 +355,13 @@ import { AlterMutuaFichaColegialComponent } from './features/censo/ficha-colegia
 import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/mutualidad-abogacia-ficha-colegial/mutualidad-abogacia-ficha-colegial.component';
 import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
+import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		TranslatePipe,
 		ImagePipe,
 
 		MyIframeComponent,
@@ -700,7 +701,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		CalendarModule,
 		OverlayPanelModule,
 		ScheduleModule,
-
+		PipeTranslationModule,
 		AutoCompleteModule,
 		TooltipModule,
 		ListboxModule,
@@ -714,7 +715,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		ProgressSpinnerModule,
 		FileUploadModule,
 		DialogModule,
-
+		TarjetaResumenFijaModule,
 		KeyFilterModule,
 		StepsModule,
 
