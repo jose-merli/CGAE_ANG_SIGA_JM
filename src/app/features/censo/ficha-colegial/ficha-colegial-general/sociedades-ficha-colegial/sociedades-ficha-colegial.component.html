@@ -1,0 +1,80 @@
+<div id="socied">
+<div *ngIf="tarjetaSociedades == '3' || tarjetaSociedades == '2'" class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!esFichaActiva()" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class="fa fa-briefcase icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-start mb-1">
+          <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+          </label>
+          <!-- <label class="registros-ficha">(0 registros)</label> -->
+        </div>
+        <div class="d-flex justify-content-between">
+
+          <label>{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
+            <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.nif }}</span>
+          </label>
+
+          <label>{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
+            <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.tipoSociedad }}</span>
+          </label>
+
+          <label>{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
+            <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.denominacion }}</span>
+          </label>
+
+          <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
+            <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
+          </label>
+
+          <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
+            <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
+          </label>
+          <i (click)="abreCierraFicha()" *ngIf="!esFichaActiva()" class="fa fa-angle-down float-right"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado">
+        <i class="fa fa-briefcase icon-ficha"></i>
+      </div>
+      <label (click)="abreCierraFicha()" class="title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+      </label>
+      <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+    <div class="row">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosSociedades" pageLinks="4"
+        dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableSociedades class="tabla-listado" [value]="datosSociedades"
+        [sortOrder]="1" [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItemSociedades"
+        (onRowSelect)="redireccionarSociedades(selectedDatosSociedades)">
+        <p-column *ngFor="let col of colsSociedades" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+          [filter]="true" filterMatchMode="contains">
+        </p-column>
+
+        <ng-template pTemplate="paginatorLeft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableSociedades.first +
+              1 }} al {{ tableSociedades.first + tableSociedades.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{ tableSociedades.totalRecords }}</label>
+            <label>{{ "general.message.mostrar" | translate }}</label>
+            <p-dropdown [(ngModel)]="selectedItemSociedades" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSociedades($event)"></p-dropdown>
+            <label class="pl-1">
+              {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+            </label>
+          </div>
+        </ng-template>
+      </p-dataTable>
+    </div>
+    <br />
+  </div>
+  <div *ngIf="esFichaActiva()" class="card-footer">
+    <div class="text-right main-button "></div>
+  </div>
+</div>
+</div>
