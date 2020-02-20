@@ -676,7 +676,9 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent
+		ServiciosInteresFichaColegialComponent,
+		TarjetaResumenFijaComponent,
+
 	],
 	imports: [
 		BrowserModule,
@@ -718,7 +720,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		ProgressSpinnerModule,
 		FileUploadModule,
 		DialogModule,
-		TarjetaResumenFijaModule,
 		KeyFilterModule,
 		StepsModule,
 

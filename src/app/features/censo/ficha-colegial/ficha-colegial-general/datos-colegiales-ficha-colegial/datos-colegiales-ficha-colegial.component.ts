@@ -263,8 +263,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.openColegia == true){
-      if(this.openFicha == false){
+    if (this.openColegia == true) {
+      if (this.openFicha == false) {
         this.abreCierraFicha('colegiales')
       }
     }
@@ -1503,7 +1503,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatosColegiales = true;
     } else {
-      this.comprobarTurnosGuardias('guardarDatosColegiales');
+      if ((this.nuevoEstadoColegial != undefined && this.nuevoEstadoColegial.situacion != "20") || this.datosColegiales[1].idEstado == "20")
+        this.comprobarTurnosGuardias('guardarDatosColegiales');
+      else
+        this.comprobarAuditoria('guardarDatosColegiales');
+
     }
     // }
   }
@@ -1588,31 +1592,29 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   }
   comprobarTurnosGuardias(tipoCambio): void {
     //Si el cambio de estado es de ejerciente a no ejerciente
-    if ((this.nuevoEstadoColegial != undefined && this.nuevoEstadoColegial.situacion != "20") || this.datosColegiales[1].idEstado == "20") {
-      //Comprobamos si tiene turnos o guardias
-      this.sigaServices
-        .post("fichaDatosColegiales_searchTurnosGuardias", this.colegialesBody)
-        .subscribe(
-          data => {
-            let resultado = JSON.parse(data["body"]);
-            if (resultado.valor == "0") {
-              this.tieneTurnosGuardias = false;
-            } else {
-              this.tieneTurnosGuardias = true;
-            }
-          },
-          error => {
-            let resultado = JSON.parse(error["error"]);
+    //Comprobamos si tiene turnos o guardias
+    this.sigaServices
+      .post("fichaDatosColegiales_searchTurnosGuardias", this.colegialesBody)
+      .subscribe(
+        data => {
+          let resultado = JSON.parse(data["body"]);
+          if (resultado.valor == "0") {
             this.tieneTurnosGuardias = false;
-            this.progressSpinner = false;
-          },
-          () => {
-            this.comprobarAuditoria(tipoCambio);
+          } else {
+            this.tieneTurnosGuardias = true;
           }
+        },
+        error => {
+          let resultado = JSON.parse(error["error"]);
+          this.tieneTurnosGuardias = false;
+          this.progressSpinner = false;
+        },
+        () => {
+          this.comprobarAuditoria('guardarDatosColegiales');
+        }
 
 
-        );
-    }
+      );
   }
   onChangeDropEstadoColegial(event, selectedDatos) {
     if (!this.isCrearColegial && event.value != null && event.value != undefined) {
@@ -2040,7 +2042,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     ];
   }
-isOpenReceive(event) {
+  isOpenReceive(event) {
     let fichaPosible = this.esFichaActiva(event);
     if (fichaPosible == false) {
       this.abreCierraFicha(event);
