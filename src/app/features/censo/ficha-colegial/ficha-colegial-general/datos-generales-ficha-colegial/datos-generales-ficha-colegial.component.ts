@@ -107,6 +107,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   displayServicios: boolean = false;
   atrasRegTel: String = "";
   fechaHoy: Date;
+  datosTarjetaResumen;
+  iconoTarjetaResumen = "clipboard";
+
+
+
   mostrarDatosCertificados: boolean = false;
   mostrarDatosSanciones: boolean = false;
   backgroundColor;
@@ -177,6 +182,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   isLetrado: boolean;
   @Output() idPersonaNuevo = new EventEmitter<any>();
+  @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
@@ -336,8 +342,43 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if (this.tarjetaGenerales != undefined) {
+    if (this.esColegiado) {
+      this.datosTarjetaResumen = [
+        {
+          label: "Apellidos y Nombre",
+          value: this.generalBody.nombre
+        },
+        {
+          label: "Identificación",
+          value: this.generalBody.nif
+        },
 
+        {
+          label: "Número de Colegiado",
+          value: this.generalBody.numColegiado
+        },
+        {
+          label: "Situación Ejercicio Actual",
+          value: this.situacionPersona
+        },
+      ];
+      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+    } else {
+      this.datosTarjetaResumen = [
+        {
+          label: "Apellidos y Nombre",
+          value: this.generalBody.nombre
+        },
+        {
+          label: "Identificación",
+          value: this.generalBody.nif
+        },
+        {
+          label: "Situación Ejercicio Actual",
+          value: this.situacionPersona
+        },
+      ];
+      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
     }
 
   }
