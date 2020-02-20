@@ -40,6 +40,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   disabledNif: boolean = false;
   es: any = esCalendar;
   suggestTopics: any[] = [];
+  resaltadoDatosGenerales: boolean = false;
 
   comboTopics: any[] = [];
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -84,7 +85,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   guiaJudicial: boolean;
   publicidad: boolean;
   partidoJudicial: any;
-  resaltadoDatosGenerales: boolean = false;
   ocultarMotivo: boolean = undefined;
   esNewColegiado: boolean = false;
   @Input() esColegiado: boolean = null;
@@ -336,8 +336,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.tarjetaGenerales != undefined){
-      
+    if (this.tarjetaGenerales != undefined) {
+
     }
 
   }
@@ -483,6 +483,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     return this.partidoJudicial;
   }
 
+
+
+
   // fichaDatosGenerales_partidoJudicialSearch LLAMAR AQUI PARA CONSEGUIR PARTIDO JUDICIAL PARA PONER EN TOOLTIP
   obtenerPartidoJudicial() {
     this.sigaServices
@@ -532,48 +535,56 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   comprobarAuditoria(tipoCambio) {
     // modo creación
-    if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales' && this.tieneTurnosGuardias) {
+    if ((this.generalBody.nif != null && this.generalBody.nif.length > 0) &&
+      (this.generalBody.nombre != null && this.generalBody.nombre.length > 0) &&
+      (this.generalBody.apellidos1 != null && this.generalBody.apellidos1.length > 0) &&
+      (this.generalBody.idTratamiento != null && this.generalBody.idTratamiento != "") &&
+      (this.generalBody.idLenguaje != null && this.generalBody.idLenguaje.length > 0)) {
+      if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales' && this.tieneTurnosGuardias) {
 
-      if (!this.isCrearColegial) {
-        this.datosColegiales[0].cambioEstado = true;
-      }
-      this.callConfirmationServiceUpdate(tipoCambio);
-
-    } else {
-
-      if (this.ocultarMotivo) {
-        if (tipoCambio == 'solicitudModificacion') {
-          this.solicitarModificacionGenerales();
-        } else if (tipoCambio == 'guardarDatosColegiales') {
-          this.datosColegiales[0].cambioEstado = false;
-          this.guardarColegiales();
-        } else if (tipoCambio == 'guardarDatosGenerales') {
-          this.generalesGuardar();
+        if (!this.isCrearColegial) {
+          this.datosColegiales[0].cambioEstado = true;
         }
+        this.callConfirmationServiceUpdate(tipoCambio);
+
       } else {
-        if (!this.esNewColegiado) {
-          this.tipoCambioAuditoria = tipoCambio;
-          this.displayAuditoria = true;
-          this.showGuardarAuditoria = false;
-        } else {
-          if (tipoCambio == 'guardarDatosColegiales') {
+
+        if (this.ocultarMotivo) {
+          if (tipoCambio == 'solicitudModificacion') {
+            this.solicitarModificacionGenerales();
+          } else if (tipoCambio == 'guardarDatosColegiales') {
+            this.datosColegiales[0].cambioEstado = false;
             this.guardarColegiales();
           } else if (tipoCambio == 'guardarDatosGenerales') {
             this.generalesGuardar();
           }
+        } else {
+          if (!this.esNewColegiado) {
+            this.tipoCambioAuditoria = tipoCambio;
+            this.displayAuditoria = true;
+            this.showGuardarAuditoria = false;
+          } else {
+            if (tipoCambio == 'guardarDatosColegiales') {
+              this.guardarColegiales();
+            } else if (tipoCambio == 'guardarDatosGenerales') {
+              this.generalesGuardar();
+            }
+          }
         }
+
+        // mostrar la auditoria depende de un parámetro que varía según la institución
+        this.generalBody.motivo = undefined;
+        // this.showGuardarAuditoria = false;
+
+        // if (!this.isLetrado) {
+        //   this.generalesGuardar();
+        // } else {
+        //   this.displayAuditoria = true;
+        // }
+
       }
-
-      // mostrar la auditoria depende de un parámetro que varía según la institución
-      this.generalBody.motivo = undefined;
-      // this.showGuardarAuditoria = false;
-
-      // if (!this.isLetrado) {
-      //   this.generalesGuardar();
-      // } else {
-      //   this.displayAuditoria = true;
-      // }
-
+    } else {
+      this.showFailDetalle("Faltan datos por rellenar");
     }
   }
   comprobarTurnosGuardias(tipoCambio): void {
@@ -784,7 +795,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               "personaBody",
               JSON.stringify(this.generalBody)
             );
-              this.idPersonaNuevo.emit(this.idPersona);
+            this.idPersonaNuevo.emit(this.idPersona);
           }
         );
     }
@@ -919,29 +930,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
     }
 
-    if (
-      (JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody)) || this.file != undefined
-    ) {
-      if (
-        this.generalBody.nif != "" &&
-        this.generalBody.nif != undefined &&
-        this.generalBody.idTipoIdentificacion != "" &&
-        this.generalBody.idTipoIdentificacion != undefined &&
-        this.generalBody.soloNombre != undefined &&
-        this.generalBody.apellidos1 != undefined &&
-        this.generalBody.soloNombre != "" &&
-        this.generalBody.apellidos1 != "" &&
-        this.generalBody.idTratamiento != null &&
-        this.generalBody.idLenguaje != "" &&
-        this.generalBody.idLenguaje != undefined
-      ) {
-        this.activarGuardarGenerales = true;
-      } else {
-        this.activarGuardarGenerales = false;
-      }
-    } else {
-      this.activarGuardarGenerales = false;
-    }
+    this.activarGuardarGenerales = true;
 
     return this.activarGuardarGenerales;
   }
@@ -1575,6 +1564,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     this.icon = "fa fa-edit";
     let keyConfirmation = "bajaInscripcionesUpdate";
 
+
     this.confirmationService.confirm({
       key: keyConfirmation,
       message: mess,
@@ -1621,6 +1611,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         ];
       }
     });
+
   }
 
   showSuccess() {

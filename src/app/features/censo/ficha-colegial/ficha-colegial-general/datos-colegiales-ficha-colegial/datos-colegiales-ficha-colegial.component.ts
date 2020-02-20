@@ -30,6 +30,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   activateNumColegiado: boolean = false;
   @Input() esColegiado: boolean = null;
   @Input() tarjetaColegiales;
+  resaltadoDatosColegiales: boolean = false;
+
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
   openFicha: boolean = false;
   checkColegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -1473,6 +1475,27 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     this.isRestablecer = true;
     this.activacionGuardarColegiales();
   }
+
+  styleObligatorio(resaltado, evento) {
+    if ((evento == null || evento == undefined || evento == "") && resaltado == "datosColegiales" && this.resaltadoDatosColegiales) {
+      return "camposObligatorios";
+    }
+  }
+  comprobarCamposColegiales() {
+    // if(this.inscritoChange && this.activarGuardarColegiales){
+    //   this.comprobarAuditoria('guardarDatosColegiales');
+    // }else{
+    if ((this.colegialesBody.numColegiado == null || this.colegialesBody.numColegiado == undefined || this.colegialesBody.numColegiado === "") ||
+      (this.colegialesBody.incorporacion == null || this.colegialesBody.incorporacion == undefined) ||
+      (this.colegialesBody.fechapresentacion == null || this.colegialesBody.fechapresentacion == undefined) ||
+      (this.inscritoSeleccionado == null || this.inscritoSeleccionado == undefined || this.inscritoSeleccionado === "")) {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatosColegiales = true;
+    } else {
+      this.comprobarAuditoria('guardarDatosColegiales');
+    }
+    // }
+  }
   comprobarAuditoria(tipoCambio) {
     // modo creación
     if (this.showMessageInscripcion && tipoCambio == 'guardarDatosColegiales' && this.tieneTurnosGuardias) {
@@ -1503,9 +1526,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       // mostrar la auditoria depende de un parámetro que varía según la institución
       this.generalBody.motivo = undefined;
-
-
     }
+
   }
   callConfirmationServiceUpdate(tipoCambio) {
     let mess = this.translateService.instant("message.fichaColegial.informarBajaInscripciones.cambioEstadoColegial");
