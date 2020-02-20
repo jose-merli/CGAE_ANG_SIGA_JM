@@ -494,7 +494,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
 
 
-
+  clear() {
+    this.msgs = []
+  }
   // fichaDatosGenerales_partidoJudicialSearch LLAMAR AQUI PARA CONSEGUIR PARTIDO JUDICIAL PARA PONER EN TOOLTIP
   obtenerPartidoJudicial() {
     this.sigaServices

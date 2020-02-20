@@ -117,26 +117,26 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-    this.generalBody = new FichaColegialGeneralesItem();
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.checkGeneralBody = new FichaColegialGeneralesItem();
-    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
-    } else {
-      this.esColegiado = true;
-    }
-
-    if (this.esColegiado) {
-      if (this.colegialesBody.situacion == "20") {
-        this.isColegiadoEjerciente = true;
+      if (sessionStorage.getItem("esColegiado")) {
+        this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       } else {
-        this.isColegiadoEjerciente = false;
+        this.esColegiado = true;
+      }
+
+      if (this.esColegiado) {
+        if (this.colegialesBody.situacion == "20") {
+          this.isColegiadoEjerciente = true;
+        } else {
+          this.isColegiadoEjerciente = false;
+        }
       }
     }
-  }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -504,6 +504,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       "direcciones",
       JSON.stringify(this.datosDirecciones)
     );
+    this.datosColegiales = JSON.parse(sessionStorage.getItem("datosColDir"));
 
     if (this.datosColegiales.length != 0) {
       if (this.isCrearColegial) {
@@ -536,6 +537,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   redireccionarDireccion(dato) {
     if (this.camposDesactivados != true) {
+      this.datosColegiales = JSON.parse(sessionStorage.getItem("datosColDir"));
+
       if (!this.selectMultipleDirecciones) {
         if (dato[0].fechaBaja != null) {
           sessionStorage.setItem("historicoDir", "true");
@@ -696,4 +699,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     }
     // window.scrollTo(0,0);
   }
+  clickFilaDirecciones(event) {
+    if (event.data && !event.data.fechaBaja && this.bodyDirecciones.historico)
+      this.selectedDatosDirecciones.pop();
+  }
+
 }
