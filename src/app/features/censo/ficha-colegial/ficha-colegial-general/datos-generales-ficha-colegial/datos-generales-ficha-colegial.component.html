@@ -61,7 +61,8 @@
             <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
             </label>
             <input [(ngModel)]="generalBody.nif" type="text" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledNif || disabledAction"
-              class="form-control" (ngModelChange)="compruebaDNI()" pInputText />
+              class="form-control" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)" (ngModelChange)="compruebaDNI()"
+              pInputText />
             <div *ngIf="identificacionValida == false">
               <label class="labelError">{{ "censo.fichaColegial.mensaje.documento.noValido" | translate }}
               </label>
@@ -72,19 +73,22 @@
             </label>
             <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]="generalBody.idTipoIdentificacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-              [showClear]="true" filterBy="label,labelSinTilde" (onChange)="activacionGuardarGenerales()"></p-dropdown>
+              [showClear]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+              (onChange)="activacionGuardarGenerales()"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
             </label>
-            <input [(ngModel)]="generalBody.soloNombre" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" type="text"
-              class="form-control" (ngModelChange)="activacionGuardarGenerales()" [maxLength]="100" pInputText />
+            <input [(ngModel)]="generalBody.soloNombre" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+              [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
+              [maxLength]="100" pInputText />
           </div>
           <div class="form-group col-lg-6 col-md-6 form-group-date">
             <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)
             </label>
-            <input [(ngModel)]="generalBody.apellidos1" type="text" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
-              class="form-control" [maxLength]="100" (ngModelChange)="activacionGuardarGenerales()" pInputText />
+            <input [(ngModel)]="generalBody.apellidos1" type="text" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+              [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" class="form-control" [maxLength]="100"
+              (ngModelChange)="activacionGuardarGenerales()" pInputText />
           </div>
           <div class="form-group col-lg-6 col-md-6 form-group-date">
             <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
@@ -140,8 +144,8 @@
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "censo.consultaDatosGenerales.literal.tratamiento" | translate }} (*)
             </label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="generalTratamiento"
-              [(ngModel)]="generalBody.idTratamiento" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+              [options]="generalTratamiento" [(ngModel)]="generalBody.idTratamiento" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
               [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
               (onChange)="activacionGuardarGenerales()"></p-dropdown>
           </div>
@@ -242,9 +246,10 @@
           <div class="form-group col-lg-12 col-md-12">
             <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
             </label>
-            <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" (onChange)="activacionGuardarGenerales()"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-              [showClear]="true" filterBy="label,labelSinTilde" [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
+            <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+              (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+              placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
+              [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
           </div>
           <div class="form-group col-lg-12 col-md-12">
             <label>{{ "censo.consultaDatosGenerales.literal.cuentaContable" | translate }}
@@ -297,9 +302,9 @@
     <div class="text-right main-button ">
       <button (click)="restablecerGenerales()" [disabled]="!activacionRestablecerGenerales() || tarjetaGenerales == '2' || disabledAction"
         pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-      <button *ngIf="!isLetrado" (click)="comprobarAuditoria('guardarDatosGenerales')" [disabled]="(tarjetaGenerales == 2) || disabledAction || !activacionGuardarGenerales()"
+      <button *ngIf="!isLetrado" (click)="checkDatosGenerales('guardarDatosGenerales')" [disabled]="(tarjetaGenerales == 2) || disabledAction || !activacionGuardarGenerales()"
         pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-      <button *ngIf="isLetrado" (click)="comprobarAuditoria('solicitudModificacion')" [(disabled)]="!activarGuardarGenerales || tarjetaGenerales == '2' || disabledAction"
+      <button *ngIf="isLetrado" (click)="checkDatosGenerales('solicitudModificacion')" [(disabled)]="!activarGuardarGenerales || tarjetaGenerales == '2' || disabledAction"
         pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
       <!--
           <button *ngIf="isLetrado" (click)="comprobarAuditoria()" disabled pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
