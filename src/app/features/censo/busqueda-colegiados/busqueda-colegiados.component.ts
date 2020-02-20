@@ -4,7 +4,8 @@ import {
   HostListener,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ElementRef
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
@@ -118,6 +119,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
   count: string = "";
+  countClicado: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  documentClick(event: MouseEvent) {
+    if (!this.countClicado) {
+      this.opcount.hide();
+      this.countClicado = false;
+    } else {
+      this.countClicado = false;
+    }
+  }
 
   constructor(
     private sigaServices: SigaServices,
@@ -125,7 +137,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private _elementRef: ElementRef
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -1252,6 +1265,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       );
   }
 
+  closeCount() {
+
+  }
+
   showCount(event, dato) {
     this.isBuscarCount(event);
   }
@@ -1277,4 +1294,5 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       detail: msg
     });
   }
+
 }

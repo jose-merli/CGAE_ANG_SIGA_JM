@@ -16,11 +16,13 @@
   width: 5%;
  }
 
- .overlayPanelCount > .ui-overlaypanel{
+ .overlayPanelPrueba > .ui-overlaypanel{
 //   top: 50% !important;
 //   left: 40% !important;
-  width: 30em !important;
-  height: 5em !important;
+  // width: 30em !important;
+  left: 5% !important;
+  // border-radius: 2em;
+  width: 90%;
  }
 
  .overlayPanelCount > .ui-overlaypanel > .ui-overlaypanel-content{
@@ -39,9 +41,9 @@
 }
 
 .ui-overlaypanel{
-  left: 5% !important;
+  // left: 5% !important;
   border-radius: 2em;
-  width: 90%;
+  // width: 90%;
 }
 .imagenEye{
   width: 1.7em;
@@ -52,4 +54,9 @@
   border: 1px solid #d6d6d6 !important;
   background: #ffffff !important;
   color: #555555 !important;
+}
+
+#numero{
+  font-weight: bold;
+  font-size: 1.3em;
 }
