@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
-  <div (click)="abreCierraFicha('bancarios')" class="card-header header-ficha">
+  <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -14,13 +14,13 @@
           </label>
         </div>
         <div class="d-flex justify-content-between">
-          <!-- <label>{{ "censo.mutualidad.literal.iban" | translate }}:
+          <label>{{ "censo.mutualidad.literal.iban" | translate }}:
             <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.iban }}</span>
           </label>
 
           <label>{{ "facturacion.cuentasBancarias.uso" | translate }}:
             <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
-          </label> -->
+          </label>
 
           <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
             <span>{{ datosBancarios.length }}</span>

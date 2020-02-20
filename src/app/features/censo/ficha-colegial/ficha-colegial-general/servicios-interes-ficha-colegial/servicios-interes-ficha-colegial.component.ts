@@ -91,7 +91,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
       this.emptyLoadFichaColegial = false;
       this.desactivarVolver = false;
       this.activacionTarjeta = false;
-      sessionStorage.removeItem("esNuevoNoColegiado");
+      // sessionStorage.removeItem("esNuevoNoColegiado");
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;

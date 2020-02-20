@@ -12,8 +12,7 @@
   </div>
   <div>
     <app-servicios-interes-ficha-colegial [tarjetaInteres]="tarjetaInteres" *ngIf="tarjetaInteres != undefined" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
-    <app-datos-generales-ficha-colegial [tarjetaGenerales]="tarjetaGenerales" *ngIf="tarjetaGenerales != undefined" [esColegiado]="esColegiado"
-      [isLetrado]="isLetrado"></app-datos-generales-ficha-colegial>
+    <app-datos-generales-ficha-colegial [tarjetaGenerales]="tarjetaGenerales" *ngIf="tarjetaGenerales != undefined" [esColegiado]="esColegiado" (idPersonaNuevo)="idPersonaNuevoEvent($event)"></app-datos-generales-ficha-colegial>
     <app-datos-colegiales-ficha-colegial [tarjetaColegiales]="tarjetaColegiales" *ngIf="tarjetaColegiales != undefined" [esColegiado]="esColegiado"></app-datos-colegiales-ficha-colegial>
     <app-otras-colegiaciones-ficha-colegial [tarjetaOtrasColegiaciones]="tarjetaOtrasColegiaciones" *ngIf="tarjetaOtrasColegiaciones != undefined"
       [esColegiado]="esColegiado"></app-otras-colegiaciones-ficha-colegial>

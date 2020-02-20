@@ -91,7 +91,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.desactivarVolver = false;
       this.activacionTarjeta = false;
 
-      sessionStorage.removeItem("esNuevoNoColegiado");
+      // sessionStorage.removeItem("esNuevoNoColegiado");
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;

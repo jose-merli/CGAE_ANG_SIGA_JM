@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
-  <div (click)="abreCierraFicha('colegiales')" class="card-header header-ficha">
+  <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">

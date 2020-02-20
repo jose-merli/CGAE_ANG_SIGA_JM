@@ -57,6 +57,7 @@ export class FichaColegialGeneralComponent implements OnInit {
   solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   bodyRegTel: any[] = [];
   isLetrado: boolean;
+  idPersonaNuevo;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
   publicarDatosContacto: boolean;
@@ -497,24 +498,26 @@ export class FichaColegialGeneralComponent implements OnInit {
       // this.onInitOtrasColegiaciones();
       // this.searchSanciones();
       // this.searchCertificados();
-    } 
+    } else if (sessionStorage.getItem("nuevoNoColegiado")) {
+      this.desactivarVolver = false;
+    }
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     
 
-    // if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-    //   this.esNewColegiado = true;
-    //   this.activacionEditar = false;
-    //   this.emptyLoadFichaColegial = false;
-    //   this.desactivarVolver = false;
-    //   this.activacionTarjeta = false;
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
 
-    //   sessionStorage.removeItem("esNuevoNoColegiado");
-    //   // this.onInitGenerales();
-    // } else {
-    //   this.activacionEditar = true;
-    //   this.esNewColegiado = false;
-    //   this.activacionTarjeta = true;
-    // }
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
+    }
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";
@@ -900,6 +903,11 @@ export class FichaColegialGeneralComponent implements OnInit {
     this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
 
     this.initSpinner = false;
+  }
+  idPersonaNuevoEvent(event){
+    if(event != undefined){
+      this.idPersona = event;
+    }
   }
 }
 

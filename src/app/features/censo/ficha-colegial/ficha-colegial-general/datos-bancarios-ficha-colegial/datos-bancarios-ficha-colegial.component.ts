@@ -99,7 +99,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.desactivarVolver = false;
       this.activacionTarjeta = false;
 
-      sessionStorage.removeItem("esNuevoNoColegiado");
+      // sessionStorage.removeItem("esNuevoNoColegiado");
       // this.onInitGenerales();
     } else {
       this.activacionEditar = true;
