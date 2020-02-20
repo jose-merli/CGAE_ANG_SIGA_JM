@@ -54,7 +54,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   tableColegiaciones: DataTable;
 
   @Input() esColegiado: boolean = null;
-
+  @Input() openOtrasCole;
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -69,15 +69,15 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-    this.generalBody = new FichaColegialGeneralesItem();
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.checkGeneralBody = new FichaColegialGeneralesItem();
-    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-    if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
-    this.onInitOtrasColegiaciones();
+      this.onInitOtrasColegiaciones();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -118,6 +118,11 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+    if (this.openOtrasCole == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('colegiaciones')
+      }
     }
   }
 
@@ -235,5 +240,12 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

@@ -60,6 +60,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   @ViewChild("tableCurriculares")
   tableCurriculares: DataTable;
   @Input() idPersona;
+  @Input() openCurricu;
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -121,6 +122,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     }
     if (this.idPersona != undefined) {
       this.onInitCurriculares();
+    }
+    if (this.openCurricu == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('curriculares')
+      }
     }
   }
   getCols() {
@@ -405,5 +411,12 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

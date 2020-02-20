@@ -69,6 +69,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   rowsPerPage;
   @Input() isLetrado;
   @Input() idPersona;
+  @Input() openBanca;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -127,6 +128,11 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       }
     if (this.idPersona != undefined) {
       this.onInitDatosBancarios();
+    }
+    if (this.openBanca == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('bancarios');
+      }
     }
   }
 
@@ -451,5 +457,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

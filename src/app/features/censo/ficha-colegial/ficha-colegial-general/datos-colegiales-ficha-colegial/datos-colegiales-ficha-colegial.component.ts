@@ -162,6 +162,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   fechaTitulacionSelected: boolean = true;
   @ViewChild("tableColegiales")
   tableColegiales: DataTable;
+  @Input() openColegia;
+
+
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
@@ -259,6 +262,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+    if(this.openColegia == true){
+      if(this.openFicha == false){
+        this.abreCierraFicha('colegiales')
+      }
     }
   }
 
@@ -2029,5 +2037,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     ];
   }
-
+isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
 }

@@ -183,6 +183,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   isLetrado: boolean;
   @Output() idPersonaNuevo = new EventEmitter<any>();
   @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
+  @Input() openGen;
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
@@ -342,45 +343,12 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if (this.esColegiado) {
-      this.datosTarjetaResumen = [
-        {
-          label: "Apellidos y Nombre",
-          value: this.generalBody.nombre
-        },
-        {
-          label: "Identificación",
-          value: this.generalBody.nif
-        },
-
-        {
-          label: "Número de Colegiado",
-          value: this.generalBody.numColegiado
-        },
-        {
-          label: "Situación Ejercicio Actual",
-          value: this.situacionPersona
-        },
-      ];
-      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
-    } else {
-      this.datosTarjetaResumen = [
-        {
-          label: "Apellidos y Nombre",
-          value: this.generalBody.nombre
-        },
-        {
-          label: "Identificación",
-          value: this.generalBody.nif
-        },
-        {
-          label: "Situación Ejercicio Actual",
-          value: this.situacionPersona
-        },
-      ];
-      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+    if(this.openGen == true){
+      if(this.openFicha == false){
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
     }
-
   }
   onInitGenerales() {
     // this.activacionGuardarGenerales();
@@ -468,7 +436,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     } else {
       this.obtenerPartidoJudicial();
     }
-
+   
     this.getComboTemas();
   }
 
@@ -759,6 +727,45 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             } else {
               this.showFail();
             }
+          },()=>{
+            if (this.esColegiado) {
+              this.datosTarjetaResumen = [
+                {
+                  label: "Apellidos y Nombre",
+                  value: this.generalBody.nombre
+                },
+                {
+                  label: "Identificación",
+                  value: this.generalBody.nif
+                },
+        
+                {
+                  label: "Número de Colegiado",
+                  value: this.generalBody.numColegiado
+                },
+                {
+                  label: "Situación Ejercicio Actual",
+                  value: this.situacionPersona
+                },
+              ];
+              this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+            } else {
+              this.datosTarjetaResumen = [
+                {
+                  label: "Apellidos y Nombre",
+                  value: this.generalBody.nombre
+                },
+                {
+                  label: "Identificación",
+                  value: this.generalBody.nif
+                },
+                {
+                  label: "Situación Ejercicio Actual",
+                  value: this.situacionPersona
+                },
+              ];
+              this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+            }
           }
           // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
         );
@@ -837,6 +844,45 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               JSON.stringify(this.generalBody)
             );
             this.idPersonaNuevo.emit(this.idPersona);
+
+            if (this.esColegiado) {
+              this.datosTarjetaResumen = [
+                {
+                  label: "Apellidos y Nombre",
+                  value: this.generalBody.nombre
+                },
+                {
+                  label: "Identificación",
+                  value: this.generalBody.nif
+                },
+        
+                {
+                  label: "Número de Colegiado",
+                  value: this.generalBody.numColegiado
+                },
+                {
+                  label: "Situación Ejercicio Actual",
+                  value: this.situacionPersona
+                },
+              ];
+              this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+            } else {
+              this.datosTarjetaResumen = [
+                {
+                  label: "Apellidos y Nombre",
+                  value: this.generalBody.nombre
+                },
+                {
+                  label: "Identificación",
+                  value: this.generalBody.nif
+                },
+                {
+                  label: "Situación Ejercicio Actual",
+                  value: this.situacionPersona
+                },
+              ];
+              this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+            }
           }
         );
     }
@@ -2236,6 +2282,44 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     } else {
       this.situacionPersona = "No Colegiado";
     }
+    if (this.esColegiado) {
+      this.datosTarjetaResumen = [
+        {
+          label: "Apellidos y Nombre",
+          value: this.generalBody.nombre
+        },
+        {
+          label: "Identificación",
+          value: this.generalBody.nif
+        },
+
+        {
+          label: "Número de Colegiado",
+          value: this.generalBody.numColegiado
+        },
+        {
+          label: "Situación Ejercicio Actual",
+          value: this.situacionPersona
+        },
+      ];
+      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+    } else {
+      this.datosTarjetaResumen = [
+        {
+          label: "Apellidos y Nombre",
+          value: this.generalBody.nombre
+        },
+        {
+          label: "Identificación",
+          value: this.generalBody.nif
+        },
+        {
+          label: "Situación Ejercicio Actual",
+          value: this.situacionPersona
+        },
+      ];
+      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+    }
   }
 
   showFailNumColegiado(mensaje: string) {
@@ -2611,6 +2695,13 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatosGenerales = true;
     }
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }
 

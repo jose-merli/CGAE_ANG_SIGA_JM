@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -58,6 +58,8 @@ export class SancionesFichaColegialComponent implements OnInit {
   rowsPerPage;
   @ViewChild("tableSanciones")
   tableSanciones: DataTable;
+@Input() openSanci;
+
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -105,6 +107,14 @@ export class SancionesFichaColegialComponent implements OnInit {
 
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.openSanci == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('sanciones')
+      }
+    }
+    
+  }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
@@ -293,5 +303,12 @@ export class SancionesFichaColegialComponent implements OnInit {
     this.selectedItemSanciones = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableSanciones.reset();
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

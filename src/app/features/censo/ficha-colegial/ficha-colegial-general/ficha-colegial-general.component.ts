@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../_services/authentication.service';
@@ -85,6 +85,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   activateNumColegiado: boolean = false;
   disabledNif: boolean = false;
   selectedItemDelete;
+  enlacesTarjetaResumen: any[] = [];
   DescripcionCertificado;
   DescripcionSanciones;
   DescripcionSociedades;
@@ -92,12 +93,21 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   DescripcionDatosDireccion;
   DescripcionDatosBancarios;
   // irTurnoOficio: any;
-  // irExpedientes: any;
+  iconoTarjetaResumen = "clipboard";
   msgs: Message[];
   displayColegiado: boolean = false;
   showMessageInscripcion: boolean = false;
   tieneTurnosGuardias: boolean = false;
-
+  openGen: Boolean = false;
+  openColegia: Boolean = false;
+  openOtrasCole: Boolean = false;
+  openCertifi: Boolean = false;
+  openSanci: Boolean = false;
+  openSocie: Boolean = false;
+  openCurricu: Boolean = false;
+  openDirec: Boolean = false;
+  openBanca: Boolean = false;
+  openRegtel: Boolean = false;
   colsColegiales: any = [];
   colsColegiaciones: any = [];
   colsCertificados: any = [];
@@ -210,7 +220,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-    >();
+  >();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -387,12 +397,17 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.datosTarjetaResumen = [];
     if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.getColegiadoLogeado(); // Hay que asegurarse de que esto sirve para algo y funciona correctamente
     } else {
       this.OnInit();
     }
   }
+  ngOnChanges(changes: SimpleChanges) {
+    this.enviarEnlacesTarjeta();
+  }
+
   OnInit() {
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
@@ -644,15 +659,196 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
 
     this.initSpinner = false;
+
+    this.enviarEnlacesTarjeta();
   }
-  idPersonaNuevoEvent(event){
-    if(event != undefined){
+
+  enviarEnlacesTarjeta() {
+    this.enlacesTarjetaResumen = [];
+    if (this.tarjetaGeneralesNum == "3" || this.tarjetaGeneralesNum == "2") {
+      let pruebaTarjeta =
+      {
+        label: "facturacion.tarjetas.literal.serviciosInteres",
+        value: document.getElementById("sInteres"),
+        nombre: "tarjetaInteres",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+    if (this.tarjetaInteresNum == "3" || this.tarjetaInteresNum == "2") {
+      let pruebaTarjeta = {
+        label: "general.message.datos.generales",
+        value: document.getElementById("datosGen"),
+        nombre: "generales",
+
+      };
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+    if ((this.tarjetaColegialesNum == "3" || this.tarjetaColegialesNum == "2") && this.esColegiado) {
+      let pruebaTarjeta = {
+        label: "censo.consultaDatosColegiales.literal.cabecera",
+        value: document.getElementById("datosCol"),
+        nombre: "colegiales",
+      };
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    }
+    if ((this.tarjetaOtrasColegiacionesNum == "3" || this.tarjetaOtrasColegiacionesNum == "2") && this.esColegiado) {
+      let pruebaTarjeta = {
+        label: "censo.consultaDatosColegiacion.literal.otrasColegiaciones",
+        value: document.getElementById("otrasColegiaciones"),
+        nombre: "colegiaciones",
+      };
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaCertificadosNum == "3" || this.tarjetaOtrasColegiaciones == "2") {
+      let pruebaTarjeta = {
+        label: "menu.certificados",
+        value: document.getElementById("certif"),
+        nombre: "certificados",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaSancionesNum == "3" || this.tarjetaSancionesNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.consultaDatosColegiacion.literal.sancionesLetrado",
+        value: document.getElementById("sancio"),
+        nombre: "sanciones",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaSociedadesNum == "3" || this.tarjetaSociedadesNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.fichaColegial.titulo",
+        value: document.getElementById("socied"),
+        nombre: "sociedades",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaCurricularesNum == "3" || this.tarjetaCurricularesNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.consultaDatosCV.cabecera",
+        value: document.getElementById("datosCurriculares"),
+        nombre: "curriculares",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+
+    if (this.tarjetaDireccionesNum == "3" || this.tarjetaDireccionesNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.fichaCliente.datosDirecciones.cabecera",
+        value: document.getElementById("direcciones"),
+        nombre: "direcciones",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaBancariosNum == "3" || this.tarjetaBancariosNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.consultaDatosBancarios.cabecera",
+        value: document.getElementById("datosBanc"),
+        nombre: "bancarios",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaRegtelNum == "3" || this.tarjetaRegtelNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.regtel.literal.titulo",
+        value: document.getElementById("regtel"),
+        nombre: "regtel",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaMutualidadNum == "3" || this.tarjetaMutualidadNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+        value: document.getElementById("mutualidad"),
+        nombre: "tarjetaMutualidad",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    if (this.tarjetaAlterMutuaNum == "3" || this.tarjetaAlterMutuaNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.alterMutua.titulo",
+        value: document.getElementById("alterMutua"),
+        nombre: "tarjetaAlterMutua",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+  }
+  idPersonaNuevoEvent(event) {
+    if (event != undefined) {
       this.idPersona = event;
     }
   }
-  datosTarjetaResumenEvent(event){
-    this.datosTarjetaResumen = event;
+  datosTarjetaResumenEvent(event) {
+    if (event != undefined) {
+      this.datosTarjetaResumen = event;
+    }
+  }
+  isOpenReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "generales":
+          this.openGen = true;
+          break;
+        case "colegiales":
+          this.openColegia = true;
+          break;
+        case "colegiaciones":
+          this.openOtrasCole = true;
+          break;
+        case "certificados":
+          this.openCertifi = true;
+          break;
+        case "sanciones":
+          this.openSanci = true;
+          break;
+        case "sociedades":
+          this.openSocie = true;
+          break;
+        case "curriculares":
+          this.openCurricu = true;
+          break;
+        case "direcciones":
+          this.openDirec = true;
+          break;
+        case "bancarios":
+          this.openBanca = true;
+          break;
+        case "regtel":
+          this.openRegtel = true;
+          break;
+      }
+    }
   }
 }
-
 

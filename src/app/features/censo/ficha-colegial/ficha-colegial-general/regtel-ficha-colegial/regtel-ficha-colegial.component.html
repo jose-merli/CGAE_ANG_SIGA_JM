@@ -1,5 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
+<div id = "regtel">
 <div *ngIf="esRegtel">
   <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
     <div class="card-header header-ficha">
@@ -95,3 +95,11 @@
     </div>
   </div>
 </div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

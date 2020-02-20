@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -51,7 +51,7 @@ export class RegtelFichaColegialComponent implements OnInit {
   icon
   msgs = [];
   colsRegtel;
-
+@Input() openRegtel;
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService) { }
@@ -147,7 +147,14 @@ export class RegtelFichaColegialComponent implements OnInit {
 
   }
 
-
+ngOnChanges(changes: SimpleChanges) {
+  
+  if (this.openRegtel == true) {
+    if (this.openFicha == false) {
+     this.abreCierraRegtel('regtel');
+    }
+  }
+}
   getCols() {
     this.colsRegtel = [
       {

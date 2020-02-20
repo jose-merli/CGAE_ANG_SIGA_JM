@@ -1,5 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
+<div id = "datosBanc">
 <div *ngIf="tarjetaBancarios == '3' || tarjetaBancarios == '2'" class="card">
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('bancarios')" class="form-row">
@@ -103,7 +103,7 @@
     </div>
   </div>
 </div>
-
+</div>
 <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>

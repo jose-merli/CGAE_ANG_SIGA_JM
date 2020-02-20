@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="direcciones">
 <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
@@ -136,8 +137,15 @@
     </div>
   </div>
 </div>
-
+</div>
 <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

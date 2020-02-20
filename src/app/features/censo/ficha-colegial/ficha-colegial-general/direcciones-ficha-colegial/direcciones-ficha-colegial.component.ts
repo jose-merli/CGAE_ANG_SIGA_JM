@@ -97,6 +97,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   tableDirecciones: DataTable;
   @Input() isLetrado;
   @Input() idPersona;
+  @Input() openDirec;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -173,6 +174,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     }
     if (this.idPersona != undefined) {
       this.onInitDirecciones();
+    }
+    if (this.openDirec == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('direcciones');
+      }
     }
   }
 
@@ -682,5 +688,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
         }
       );
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

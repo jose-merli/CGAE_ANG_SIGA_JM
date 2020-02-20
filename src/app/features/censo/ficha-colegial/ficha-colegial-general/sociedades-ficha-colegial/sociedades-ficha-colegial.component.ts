@@ -36,6 +36,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   rowsPerPage = [];
 
   @Input() idPersona;
+  @Input() openSocie;
   constructor(private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
@@ -63,6 +64,11 @@ export class SociedadesFichaColegialComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (this.idPersona != undefined) {
       this.searchSocieties();
+    }
+    if (this.openSocie == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha();
+      }
     }
 
   }
@@ -167,6 +173,12 @@ export class SociedadesFichaColegialComponent implements OnInit {
     return this.fichaPosible.activa;
   }
 
-
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva();
+    if (fichaPosible == false) {
+      this.abreCierraFicha();
+    }
+    // window.scrollTo(0,0);
+  }
 
 }

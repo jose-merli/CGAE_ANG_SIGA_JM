@@ -1,4 +1,5 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id= "datosCol">
 <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
@@ -398,6 +399,7 @@
       <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.no' | translate }}"></button>
     </p-footer>
   </p-dialog>
+</div>
 </div>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
