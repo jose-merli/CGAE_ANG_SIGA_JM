@@ -572,4 +572,5 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     }
   }
 
+  
 }
