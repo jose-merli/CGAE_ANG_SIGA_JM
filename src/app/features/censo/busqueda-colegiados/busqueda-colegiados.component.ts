@@ -189,6 +189,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
       );
+
+      sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
+      
     }
 
     if (this.body.tipoCV != undefined) {
@@ -204,6 +207,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "domicilioLista",
         header: "censo.consultaDirecciones.literal.direccion",
+        width: "20%"
       },
       {
         field: "codigoPostal",
@@ -218,7 +222,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "nombreProvincia",
         header: "censo.datosDireccion.literal.provincia",
-        width: "8%"
+        width: "11%"
       },
       {
         field: "telefono",
@@ -232,7 +236,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "correoElectronico",
-        header: "censo.datosDireccion.literal.correo"
+        header: "censo.datosDireccion.literal.correo",
+        width: "14%"
       }
     ];
   }
@@ -254,9 +259,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
-    if (this.displayBoolean) {
-      this.searchHistoricoDatosDirecciones(id);
-    } else {
       id = [id]
       sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
       if (id.length >= 1) {
@@ -337,7 +339,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.actualizaSeleccionados(this.selectedDatos);
       }
 
-    }
   }
 
   getSituacion(id) {
@@ -498,8 +499,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             // this.arregloTildesCombo(this.comboColegios);
 
             if (
-              sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
-              null
+              this.body != undefined && this.body != null && this.body.colegio != undefined &&
+              this.body.colegio != null
             ) {
               this.body.colegio.forEach(element => {
 
@@ -516,7 +517,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
                 this.progressSpinner = false;
               });
               this.isBuscar();
-              sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
 
             }
             else {
@@ -920,52 +920,21 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         width: "7%"
       },
       {
-        field: "situacionResidente",
-        header: "censo.busquedaClientes.noResidente",
-        filter: "situacionResidenteFilter"
-      },
-      {
         field: "incorporacionDate",
         header: "censo.consultaDatosGenerales.literal.fechaIncorporacion",
-        width: "7%"
-      },
-      {
-        field: "fechaNacimientoDate",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac",
-        width: "8%"
-      },
-      {
-        field: "correo",
-        header: "censo.datosDireccion.literal.correo",
         width: "13%"
       },
       {
-        field: "telefono",
-        header: "censo.ws.literal.telefono",
-        width: "6%"
+        field: "situacionResidente",
+        header: "censo.busquedaClientes.noResidente",
+        filter: "situacionResidenteFilter",
+        width: "7%"
       },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil",
-        width: "6%"
-      },
-      // {
-      //   field: "correo",
-      //   header: "censo.datosDireccion.literal.correo"
-      // },
-      // {
-      //   field: "telefono",
-      //   header: "censo.ws.literal.telefono"
-      // },
-      // {
-      //   field: "movil",
-      //   header: "censo.datosDireccion.literal.movil"
-      // },
       {
         field: "noAparecerRedAbogacia2",
         header: "censo.busquedaColegial.lopd",
         filter: "noAparecerRedAbogaciaFilter",
-        width: "5%"
+        width: "8%"
       }
     ];
 
@@ -1254,12 +1223,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // this.display = true;
   }
 
-  searchHistoricoDatosDirecciones(selectedDatos) {
+  searchHistoricoDatosDirecciones(dato) {
     // this.bodyDirecciones.historico = true;
     this.progressSpinner = true;
     // this.historico = true;
     let searchObject = new DatosDireccionesItem();
-    searchObject.idPersona = selectedDatos[0].idPersona;
+    searchObject.idPersona = dato.idPersona;
     searchObject.historico = false;
     // this.buscar = false;
     this.selectMultiple = false;

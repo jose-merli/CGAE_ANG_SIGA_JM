@@ -1422,8 +1422,13 @@ p-footer .main-button{
   height: 100%;
 }
 
+
 tr:hover {
   background-color: lightsteelblue !important;
+}
+
+.ui-table .ui-table-tbody > tr > td {
+  text-align:left !important;
 }
 
 .form-group-interlineado {
