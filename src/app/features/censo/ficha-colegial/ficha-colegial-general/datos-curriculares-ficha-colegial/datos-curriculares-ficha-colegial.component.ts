@@ -254,6 +254,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       );
   }
 
+  actualizaSeleccionadosCurriculares(selectedDatos) {
+    this.numSelectedCurriculares = selectedDatos.length;
+  }
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultipleCurriculares) {
       // enviarDatos = dato[0];

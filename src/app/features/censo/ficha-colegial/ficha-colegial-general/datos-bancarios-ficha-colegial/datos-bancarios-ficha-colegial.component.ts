@@ -227,7 +227,10 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.bodyDatosBancarios.historico = false;
     this.searchDatosBancarios();
   }
-
+  clickFilaBancarios(event) {
+    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico)
+      this.selectedDatosBancarios.pop();
+  }
   onChangeSelectAllBancarios() {
     if (this.selectAllBancarios === true) {
       this.numSelectedBancarios = this.datosBancarios.length;

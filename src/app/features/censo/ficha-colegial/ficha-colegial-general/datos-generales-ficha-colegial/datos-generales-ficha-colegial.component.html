@@ -61,7 +61,7 @@
             <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
             </label>
             <input [(ngModel)]="generalBody.nif" type="text" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledNif || disabledAction"
-              class="form-control" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)" (ngModelChange)="compruebaDNI()"
+              class="form-control" [ngClass]="styleObligatorio('datosGenerales', generalBody.nif)" (ngModelChange)="compruebaDNI()"
               pInputText />
             <div *ngIf="identificacionValida == false">
               <label class="labelError">{{ "censo.fichaColegial.mensaje.documento.noValido" | translate }}
@@ -73,20 +73,20 @@
             </label>
             <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]="generalBody.idTipoIdentificacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-              [showClear]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+              [showClear]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio('datosGenerales', generalBody.idTipoIdentificacion)"
               (onChange)="activacionGuardarGenerales()"></p-dropdown>
           </div>
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
             </label>
-            <input [(ngModel)]="generalBody.soloNombre" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
-              [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()"
-              [maxLength]="100" pInputText />
+            <input [(ngModel)]="generalBody.soloNombre" [ngClass]="styleObligatorio('datosGenerales', generalBody.soloNombre)" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
+              type="text" class="form-control" (ngModelChange)="activacionGuardarGenerales()" [maxLength]="100" pInputText
+            />
           </div>
           <div class="form-group col-lg-6 col-md-6 form-group-date">
             <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)
             </label>
-            <input [(ngModel)]="generalBody.apellidos1" type="text" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+            <input [(ngModel)]="generalBody.apellidos1" type="text" [ngClass]="styleObligatorio('datosGenerales', generalBody.apellidos1)"
               [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction" class="form-control" [maxLength]="100"
               (ngModelChange)="activacionGuardarGenerales()" pInputText />
           </div>
@@ -144,7 +144,7 @@
           <div class="form-group col-lg-6 col-md-6">
             <label>{{ "censo.consultaDatosGenerales.literal.tratamiento" | translate }} (*)
             </label>
-            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [ngClass]="styleObligatorio('datosGenerales', generalBody.idTratamiento)"
               [options]="generalTratamiento" [(ngModel)]="generalBody.idTratamiento" [(disabled)]="isLetrado || (tarjetaGenerales == 2) || disabledAction"
               [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
               (onChange)="activacionGuardarGenerales()"></p-dropdown>
@@ -246,7 +246,7 @@
           <div class="form-group col-lg-12 col-md-12">
             <label>{{ "censo.fichaCliente.situacion.idiomaPref" | translate }} (*)
             </label>
-            <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" [ngClass]="styleObligatorio('datosColegiales', colegialesBody.numColegiado)"
+            <p-dropdown class="select-form" [options]="generalIdiomas" [(disabled)]="(tarjetaGenerales == 2) || disabledAction" [ngClass]="styleObligatorio('datosGenerales', generalBody.idLenguaje)"
               (onChange)="activacionGuardarGenerales()" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
               placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" filterBy="label,labelSinTilde"
               [(ngModel)]="generalBody.idLenguaje"></p-dropdown>
