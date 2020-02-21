@@ -14,16 +14,18 @@
     <div class="card-body">
       <div class="form-row">
         <div class="col-4">
-          <p-radioButton class="mr-2" name="exacta" value="aprox" label="{{ 'censo.busquedaCensoGeneral.boton.radio.busquedaAproximada' | translate }}"
+          <p-radioButton class="mr-2" name="exacta" value="aprox"
+            label="{{ 'censo.busquedaCensoGeneral.boton.radio.busquedaAproximada' | translate }}"
             [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
-          <p-radioButton class="ml-2" name="aprox" value="exacta" label="{{ 'censo.busquedaCensoGeneral.boton.radio.busquedaExacta' | translate }}"
-            [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+          <p-radioButton class="ml-2" name="aprox" value="exacta"
+            label="{{ 'censo.busquedaCensoGeneral.boton.radio.busquedaExacta' | translate }}" [(ngModel)]='modoBusqueda'
+            (click)="changeFilters()"></p-radioButton>
         </div>
       </div>
-      <p (click)="onHideDatosGenerales()" class="title-module">
-        <span>{{ "censo.consultaDatosGenerales.cabecera" | translate }}</span>
-        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{ "censo.consultaDatosGenerales.cabecera" | translate }}</span>
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosGenerales && modoBusquedaAprox" class="module vista-avanzada">
         <div class="form-row">
@@ -59,8 +61,9 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
             </label>
-            <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="colegios_seleccionados" [options]="colegios" optionLabel="label"
-              [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" [panelStyle]="{ width: '100%' }"></p-multiSelect>
+            <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="colegios_seleccionados"
+              [options]="colegios" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
+              styleClass="widthAll" [panelStyle]="{ width: '100%' }"></p-multiSelect>
           </div>
         </div>
       </div>
@@ -76,8 +79,10 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button">
-        <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
-        <button (click)="isBuscarAprox()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+        <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+           label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="isBuscarAprox()" pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -88,19 +93,24 @@
       <!--<div class="m-3 d-flex justify-content-end">
 
             </div>-->
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
-        [responsive]="true" selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
-        paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
-        <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
-          filterPlaceholder="{{ 'general.boton.search' | translate }}" filterMatchMode="contains"></p-column>
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [(selection)]="selectedDatos"
+        (onRowSelect)="irFichaColegial(selectedDatos)" [responsive]="true" selectionMode="single" #table
+        class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true" paginatorPosition="both"
+        [rows]="selectedItem" pageLinks="4">
+        <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"
+          [filter]="true" filterPlaceholder="{{ 'general.boton.search' | translate }}" filterMatchMode="contains">
+        </p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
-            <label class="mt-2 pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ table.first + 1 }} al {{
+            <label
+              class="mt-2 pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+              {{ table.first + 1 }} al {{
               table.first + table.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{
               table.totalRecords }}
             </label>
             <label>Mostrar</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
             <label> registros</label>
           </div>
         </ng-template>

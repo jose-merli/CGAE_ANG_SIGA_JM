@@ -9,10 +9,10 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <p (click)="onHideDatosGenerales()" class="title-module">
-        <span >{{ "general.message.datos.generales" | translate }}</span>
-        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{ "general.message.datos.generales" | translate }}</span>
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
@@ -20,8 +20,9 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "menu.justiciaGratuita.maestros.procedimientos" | translate }}
             </label>
-            <p-dropdown class="select-form" [(ngModel)]="body.idmodulo" [(disabled)]="editar" [options]="contadores_modo" (ngModelChange)="onChangeForm($event)"
-              [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
+            <p-dropdown class="select-form" [(ngModel)]="body.idmodulo" [(disabled)]="editar"
+              [options]="contadores_modo" (ngModelChange)="onChangeForm($event)" [filter]="true"
+              filterBy="label,labelSinTilde"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "general.boton.code" | translate }}</label>
@@ -34,8 +35,8 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "general.description" | translate }}</label>
-            <input type="text" name="descripcion" value="" class="box" class="form-control" [(ngModel)]="body.descripcion" pInputText
-            />
+            <input type="text" name="descripcion" value="" class="box" class="form-control"
+              [(ngModel)]="body.descripcion" pInputText />
           </div>
         </div>
       </div>
@@ -44,7 +45,8 @@
       <div class="text-right main-button ">
         <div class="row">
           <div class="col-2 offset-10">
-            <button (click)="isBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search " iconPos="left" label="{{'general.boton.search' | translate}}">
+            <button (click)="isBuscar(); selectedDatos = false" pButton type="button " icon="fa fa-search "
+              iconPos="left" label="{{'general.boton.search' | translate}}">
             </button>
 
           </div>
@@ -55,11 +57,13 @@
   <!--FIN CARD-->
   <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [ngClass]="{ customCursor: selectMultiple }"
-        [(selection)]="selectedDatos" dataKey="idcontador" [responsive]="true" selectionMode="single" #table class="tabla-listado"
-        [value]="datos" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [paginator]="activarPaginacion()">
-        <p-column [style]="{ width: col.width }" *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"
-          filterPlaceholder="{{ 'general.boton.search' | translate }}" [filter]="true" filterMatchMode="contains">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}"
+        [ngClass]="{ customCursor: selectMultiple }" [(selection)]="selectedDatos" dataKey="idcontador"
+        [responsive]="true" selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1"
+        paginatorPosition="both" [rows]="selectedItem" [paginator]="activarPaginacion()">
+        <p-column [style]="{ width: col.width }" *ngFor="let col of cols" [sortable]="true" [field]="col.field"
+          [header]="col.header | translate" filterPlaceholder="{{ 'general.boton.search' | translate }}" [filter]="true"
+          filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
 
             <div *ngIf="col.field == 'nombre'">
@@ -73,12 +77,15 @@
 
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ table.first + 1 }} al {{
+            <label
+              class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+              {{ table.first + 1 }} al {{
               table.first + table.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{
               table.totalRecords }}
             </label>
             <label>{{ "general.message.mostrar" | translate }}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
             <label>{{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
             </label>
           </div>
