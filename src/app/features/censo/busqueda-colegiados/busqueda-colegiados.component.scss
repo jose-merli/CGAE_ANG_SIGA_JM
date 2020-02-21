@@ -2,10 +2,7 @@
   table-layout: inherit !important;
 }
 
-.textAlignCenter{
-  text-align: center;
-  width: 50%;
-}
+
 .width20{
  width: 20%;
 }
@@ -59,4 +56,17 @@
 #numero{
   font-weight: bold;
   font-size: 1.3em;
+}
+
+#dirIcon{
+  font-size: 2em;
+}
+
+#lopdColumn{
+  text-align: center;
+  vertical-align: middle;
+}
+
+#imageLOPD{
+  margin-top: -10px;
 }

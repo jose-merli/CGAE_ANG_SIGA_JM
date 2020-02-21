@@ -1274,6 +1274,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   show(event, dato) {
+    this.datosDirecciones = [];
     this.op.toggle(event);
     if (dato.noAparecerRedAbogacia2 == '1') {
       this.publicarDatosContacto = true;

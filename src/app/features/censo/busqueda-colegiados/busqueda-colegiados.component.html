@@ -228,7 +228,7 @@
             <div class="text-right main-button">
                 <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                      label="{{ 'general.boton.clear' | translate}}"></button>
-                <button (click)="showCount($event,dato)" pButton type="button" icon="fa fa-search" iconPos="left"
+                <button (click)="showCount($event,dato)" pButton type="button" icon="fas fa-calculator" iconPos="left"
                     label="{{ 'general.boton.contar' | translate}}"></button>
                 <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
                     label="{{'general.boton.search' | translate}}"></button>
@@ -326,17 +326,20 @@
                 <p-column [sortable]="true" [style]="{'width': '5%'}" field="noAparecerRedAbogaciaFilter"
                     [header]="'censo.busquedaColegial.lopd' | translate" [filter]="true"
                     filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body" #textAlignCenter>
-                        <label
-                            *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
-                        </label>
-                        <label (click)="displayBoolean=true; show($event,dato)">
-                            <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png">
-                        </label>
-                        <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''"
-                            *ngIf="dato.noAparecerRedAbogacia2 == '1'">
-                            <img src="./assets/images/icons/warning.png">
-                        </label>
+                    <ng-template let-col let-dato="rowData" pTemplate="body">
+                        <div id="lopdColumn">
+                            <label
+                                *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
+                            </label>
+                            <label (click)="displayBoolean=true; show($event,dato)">
+                                <!-- <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png"> -->
+                                <i class="fas fa-address-card" id="dirIcon"></i>
+                            </label>
+                            <label *ngIf="dato.noAparecerRedAbogacia2 == '1'">
+                                <img id="imageLOPD" src="./assets/images/icons/warning.png">
+                            </label>
+                        </div>
+
                     </ng-template>
                 </p-column>
 
@@ -428,8 +431,11 @@
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                     <span *ngIf="col.field != 'correoElectronico'"> {{dato[col.field]}}</span>
-                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
-                    <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
+                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''"
+                        [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
+                    <span
+                        *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''"
+                        class="col-11">{{dato[col.field]}}</span>
                 </td>
             </tr>
         </ng-template>
