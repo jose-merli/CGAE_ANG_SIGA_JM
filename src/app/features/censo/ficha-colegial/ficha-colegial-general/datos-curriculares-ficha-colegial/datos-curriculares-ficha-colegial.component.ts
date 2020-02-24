@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
@@ -7,6 +7,7 @@ import { FichaDatosCurricularesObject } from '../../../../../models/FichaDatosCu
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
 import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',
@@ -58,16 +59,39 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   rowsPerPage;
 
   @ViewChild("tableCurriculares")
-  tableCurriculares: DataTable;
+  tableCurriculares:Table;
   @Input() idPersona;
   @Input() openCurricu;
   constructor(private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
 
+    this.colsCurriculares = [
+      {
+        field: "dateFechaInicio",
+        header: "facturacion.seriesFacturacion.literal.fInicio"
+      },
+      {
+        field: "dateFechaFin",
+        header: "censo.consultaDatos.literal.fechaFin"
+      },
+      {
+        field: "categoriaCurricular",
+        header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
+      },
+      {
+        field: "tipoSubtipo",
+        header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
+      },
+      {
+        field: "descripcion",
+        header: "general.description"
+      }
+    ];
 
     if (
       sessionStorage.getItem("personaBody") != null &&
@@ -131,29 +155,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
   getCols() {
 
-    this.colsCurriculares = [
-      {
-        field: "dateFechaInicio",
-        header: "facturacion.seriesFacturacion.literal.fInicio"
-      },
-      {
-        field: "dateFechaFin",
-        header: "censo.consultaDatos.literal.fechaFin"
-      },
-      {
-        field: "categoriaCurricular",
-        header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
-      },
-      {
-        field: "tipoSubtipo",
-        header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
-      },
-      {
-        field: "descripcion",
-        header: "general.description"
-      }
-    ];
-
     this.rowsPerPage = [
       {
         label: 10,
@@ -173,7 +174,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
     ];
   }
-
+  onChangeRowsPerPagesCurriculares(event) {
+    this.selectedItemCurriculares = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableCurriculares.reset();
+  }
 
   activarPaginacionCurriculares() {
     if (!this.datosCurriculares || this.datosCurriculares.length == 0)

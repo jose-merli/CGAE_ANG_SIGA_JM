@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
@@ -21,7 +21,8 @@ import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
   templateUrl: './datos-generales-ficha-colegial.component.html',
-  styleUrls: ['./datos-generales-ficha-colegial.component.scss']
+  styleUrls: ['./datos-generales-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 

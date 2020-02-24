@@ -89,13 +89,23 @@
             <col *ngFor="let col of columns" [style.width]="col.width">
           </colgroup>
         </ng-template>
-        <ng-template pTemplate="header" let-columns>
+        <!-- <ng-template pTemplate="header" let-columns>
           <tr>
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
               <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableCurriculares.filter($event.target.value,
                                   col.field, 'contains')">
+            </th>
+          </tr>
+        </ng-template> -->
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{col.header | translate}}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableCurriculares.filter($event.target.value,
+                                col.field, 'contains')">
             </th>
           </tr>
         </ng-template>
@@ -116,7 +126,7 @@
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
             </label>
             <label>{{"general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesCurriculares($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">

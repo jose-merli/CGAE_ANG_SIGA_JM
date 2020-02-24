@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, 
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { TranslateService } from '../../../../../commons/translate';
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -158,7 +158,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado != undefined) {
+    if (this.isLetrado == true) {
       this.isLetrado = true
     } else {
       this.isLetrado = !this.permisos;
