@@ -216,7 +216,7 @@
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-                [responsive]="true" [columns]="cols" dataKey="idPersona" selectionMode="multiple" #table class="tabla-listado"
+                [responsive]="true" [columns]="cols" dataKey="idPersona" [(selectionMode)]="selection" #table class="tabla-listado"
                 [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
 
                 <ng-template pTemplate="colgroup" let-columns>
@@ -350,7 +350,7 @@
         </div>
     </div>
 
-    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="false" #table
+    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [responsive]="false" #table
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
         paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>

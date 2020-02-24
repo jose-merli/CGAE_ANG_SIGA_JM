@@ -234,8 +234,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
   clickFilaBancarios(event) {
-    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico)
+    if (event.data && event.data.fechaBaja != undefined && this.bodyDatosBancarios.historico){
       this.selectedDatosBancarios.pop();
+    }
   }
   onChangeSelectAllBancarios() {
     if (this.selectAllBancarios === true) {
@@ -263,7 +264,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   confirmarEliminar(selectedDatos) {
     let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
     this.icon = "fa fa-trash-alt";
-    let keyConfirmation = "alterMutua";
+    let keyConfirmation = "deleteBancarios";
 
     this.confirmationService.confirm({
       key: keyConfirmation,

@@ -142,3 +142,10 @@
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteBancarios" icon="icon" width="425" #deleteBancarios>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deleteBancarios.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deleteBancarios.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
