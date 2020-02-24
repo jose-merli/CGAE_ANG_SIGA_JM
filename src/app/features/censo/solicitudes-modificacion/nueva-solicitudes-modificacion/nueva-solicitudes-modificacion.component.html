@@ -10,9 +10,10 @@
   </div>
 
   <div class="card">
-    <div (click)="onHideCard()" class="card-body">
+    <div class="card-body">
       <p class="title-module">
-        <span (click)="onHideCard()">{{ "menu.censo.verSolicitudesModificacion.solicitudesEspecificas" | translate }}</span>
+        <span
+          (click)="onHideCard()">{{ "menu.censo.verSolicitudesModificacion.solicitudesEspecificas" | translate }}</span>
         <i (click)="onHideCard()" *ngIf="showCard" class="fa fa-angle-up float-right"></i>
         <i (click)="onHideCard()" *ngIf="!showCard" class="fa fa-angle-down float-right"></i>
       </p>
@@ -22,50 +23,53 @@
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate }}
             </label>
-            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]="body.estado" [disabled]="true" pInputText
-            />
+            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]="body.estado"
+              [disabled]="true" pInputText />
           </div>
 
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.idSolicitud" | translate }}
             </label>
-            <input type="text" name="idSolicitud" value="" class="box" class="form-control" [(ngModel)]="body.idSolicitud" [disabled]="true"
-              pInputText />
+            <input type="text" name="idSolicitud" value="" class="box" class="form-control"
+              [(ngModel)]="body.idSolicitud" [disabled]="true" pInputText />
           </div>
 
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.resultadosSolicitudesTextoLibre.literal.tipoModificacion" | translate }}
             </label>
-            <input type="text" name="tipoModificacion" value="" class="box" class="form-control" [(ngModel)]="body.tipoModificacion"
-              [disabled]="true" pInputText />
+            <input type="text" name="tipoModificacion" value="" class="box" class="form-control"
+              [(ngModel)]="body.tipoModificacion" [disabled]="true" pInputText />
           </div>
 
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.nColegiado" | translate }}
             </label>
-            <input type="text" name="nColegiado" value="" class="box" class="form-control" [(ngModel)]="body.numColegiado" [disabled]="true"
-              pInputText />
+            <input type="text" name="nColegiado" value="" class="box" class="form-control"
+              [(ngModel)]="body.numColegiado" [disabled]="true" pInputText />
           </div>
 
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.Nombre" | translate }}
             </label>
-            <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText
-            />
+            <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]="body.nombre"
+              [disabled]="true" pInputText />
           </div>
 
           <div class="form-group col-lg-2 col-md-2">
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}
             </label>
-            <app-fecha [(value)]="body.fechaAlta" [disabled]="true" (valueChangeSelected)="fillFechaAlta($event)" (valueChangeInput)="fillFechaAlta($event)"></app-fecha>
+            <app-fecha [(value)]="body.fechaAlta" [disabled]="true" (valueChangeSelected)="fillFechaAlta($event)"
+              (valueChangeInput)="fillFechaAlta($event)"></app-fecha>
           </div>
         </div>
 
         <div *ngIf="!solicitudFoto" class="card-body p-0">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive]="true" #table class="tabla-listado"
-            [value]="data" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem" [paginator]="enablePagination()">
-            <p-column [style]="{ width: col.width }" *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"
-              filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive]="true" #table
+            class="tabla-listado" [value]="data" [sortOrder]="1" paginatorPosition="both" [rows]="selectedItem"
+            [paginator]="enablePagination()">
+            <p-column [style]="{ width: col.width }" *ngFor="let col of cols" [sortable]="true" [field]="col.field"
+              [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+              [filter]="true" filterMatchMode="contains">
               <ng-template *ngIf="col.field == 'texto'" let-dato="rowData " pTemplate="body ">
                 {{ dato.texto | translate }}
               </ng-template>
@@ -73,11 +77,15 @@
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ table.first + 1 }} al {{ table.first + table.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{ table.totalRecords
+                <label
+                  class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+                  {{ table.first + 1 }} al {{ table.first + table.rows }}
+                  {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{ table.totalRecords
                   }}
                 </label>
                 <label>{{ "general.message.mostrar" | translate }}</label>
-                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                  (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label>{{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
                 </label>
               </div>
@@ -88,7 +96,8 @@
           <div *ngIf="solicitudFoto" class="col-lg-4 col-md-4 fotovieja">
             <label>Imagen Actual</label>
             <img *ngIf="imagenAnterior != undefined" [src]="imagenAnterior" class="imagenCentrada1" />
-            <i *ngIf="imagenAnterior == undefined" class="fa fa-user imagenCentrada1" style="font-size:19rem;color:grey"></i>
+            <i *ngIf="imagenAnterior == undefined" class="fa fa-user imagenCentrada1"
+              style="font-size:19rem;color:grey"></i>
           </div>
           <div *ngIf="solicitudFoto" class="col-lg-4 col-md-4 fotonueva">
           </div>
@@ -109,20 +118,21 @@
     </div>
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}"
-          [(disabled)]="disableButton"></button>
-        <button (click)="denyRequest()" pButton type="button" icon="fa fa-times" iconPos="left" label="{{ 'general.boton.denegarSolicitud' | translate}}"
-          [(disabled)]="disableButton"></button>
+        <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left"
+          label="{{'modificacionDatos.boton.procesarSolicitud' | translate}}" [(disabled)]="disableButton"></button>
+        <button (click)="denyRequest()" pButton type="button" icon="fa fa-times" iconPos="left"
+          label="{{ 'general.boton.denegarSolicitud' | translate}}" [(disabled)]="disableButton"></button>
       </div>
     </div>
   </div>
 
   <div class="mt-3 text-right main-button ">
-    <button (click)="return()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="return()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+      label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
 
   <!-- AUDITORIA -->
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false"  
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false"
     [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
@@ -136,13 +146,12 @@
         </div>
       </div>
     </div>
-    <p-footer>
-      <div class="text-right main-button ">
-        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-        <button (click)="processRequest()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
-      </div>
-    </p-footer>
+    <div class="text-right main-button">
+      <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{ 'general.boton.close' | translate}}"></button>
+      <button (click)="processRequest()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save"
+        iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+    </div>
   </p-dialog>
 
   <div *ngIf="progressSpinner" class="overlay-spinner ">

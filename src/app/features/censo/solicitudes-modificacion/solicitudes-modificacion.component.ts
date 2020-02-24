@@ -637,6 +637,7 @@ export class SolicitudesModificacionComponent implements OnInit {
       }
     }
   }
+
   procesar(selectedDatos) {
     if (
       // selectedDatos[selectedDatos.length - 1].especifica == "1" ||

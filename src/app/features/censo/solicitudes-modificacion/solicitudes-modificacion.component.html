@@ -67,7 +67,7 @@
   <div *ngIf="isSearch" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
       <p-table [value]="data" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="procesar(selectedDatos)"
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem"
         (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
 
@@ -81,8 +81,8 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
-                type="text" (input)="table.filter($event.target.value,
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
+                (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
                           col.field, 'contains')">
             </th>
           </tr>
@@ -93,7 +93,7 @@
               <div>
                 <span *ngIf="col.field != 'numIdSolicitud'">{{dato[col.field]}}</span>
                 <div *ngIf="col.field == 'numIdSolicitud'">
-                  <a [routerLink]="" (click)="onSelectRow([dato])" class="enlace">{{dato[col.field]}}</a>
+                  <a (click)="onSelectRow([dato])" class="enlace">{{dato[col.field]}}</a>
                 </div>
               </div>
             </td>

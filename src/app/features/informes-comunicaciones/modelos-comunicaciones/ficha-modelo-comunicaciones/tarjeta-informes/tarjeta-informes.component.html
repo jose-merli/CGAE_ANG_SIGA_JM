@@ -48,7 +48,7 @@
               <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                 {{ col.header | translate}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
-                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
                   type="text" (input)="
                         table.filter($event.target.value, col.field, 'contains')
                       " />
@@ -123,7 +123,7 @@
               <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                 {{ col.header | translate}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
-                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
                   type="text" (input)="
                   table.filter($event.target.value, col.field, 'contains')
                 " />
