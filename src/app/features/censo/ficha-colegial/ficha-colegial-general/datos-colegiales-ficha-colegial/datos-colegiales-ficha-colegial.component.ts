@@ -730,7 +730,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     }
   }
   numMutualistaCheck() {
-    if (this.colegialesBody.nMutualista != "") {
+    if (this.colegialesBody.nMutualista != "" && this.colegialesBody.nMutualista != undefined) {
       this.activacionGuardarColegiales();
       if (Number(this.colegialesBody.nMutualista)) {
         return true;
