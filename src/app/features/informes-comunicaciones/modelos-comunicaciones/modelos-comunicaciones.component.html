@@ -16,24 +16,24 @@
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-4 col-md-4">
             <label>{{'informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones' | translate }}</label>
             <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
               [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
           </div>
-          <div class="form-group col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-4 col-md-4">
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
             <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
           </div>
         </div>
         <div class="form-row d-flex align-items-end">
-          <div class="form-group col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-4 col-md-4">
             <label>{{'censo.busquedaClientesAvanzada.literal.colegio' | translate }}</label>
             <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
               filterBy="label,labelSinTilde" [options]="colegios" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
               [(ngModel)]="bodySearch.idInstitucion" class="select-form"></p-dropdown>
           </div>
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label class="d-block">{{'administracion.informes.literal.preseleccionado' | translate }}</label>
             <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="preseleccionar"
               [(ngModel)]="bodySearch.preseleccionar" class="select-form"></p-dropdown>
@@ -41,7 +41,7 @@
             label="Sí"></p-radioButton>
           <p-radioButton (onClick)="onChangeRadio('n')" name="groupname" value="NO" [(ngModel)]="bodySearch.preseleccionar" label="No"></p-radioButton> -->
           </div>
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label class="d-block">{{'administracion.informes.literal.visible' | translate }}</label>
             <p-dropdown [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="visible" [(ngModel)]="bodySearch.visible"
               class="select-form"></p-dropdown>

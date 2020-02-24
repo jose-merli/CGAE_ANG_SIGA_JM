@@ -16,18 +16,16 @@
     <div *ngIf="showDatos" class="module vista-simple">
       <div class="row">
 
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"censo.datosCv.literal.fechaCarga" | translate}}</label>
-          <app-fecha [(value)]="fechaCargaSelect" [utc]="false" (valueChangeSelected)="fillFechaCarga($event)"
-            (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha>
+          <app-fecha [(value)]="fechaCargaSelect" [utc]="false" (valueChangeSelected)="fillFechaCarga($event)" (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha>
         </div>
 
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <p-fileUpload #pUploadFile chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"
-            name="file" mode="basic" accept=".xls"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)"
-            auto="true"> </p-fileUpload>
+          <p-fileUpload #pUploadFile chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}" name="file"
+            mode="basic" accept=".xls"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true"> </p-fileUpload>
         </div>
 
       </div>
@@ -36,35 +34,29 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button ">
-      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
-        label="{{ 'general.boton.search' | translate}}"></button>
-      <button pButton type="button" [disabled]="uploadFileDisable" (click)="uploadFile($event)" icon="fa fa-upload"
-        iconPos="left" label="{{ 'general.boton.cargarFichero' | translate}}"></button>
-      <button pButton type="button" (click)="downloadFile($event)" icon="fa fa-download" iconPos="left"
-        label="{{ 'general.boton.descargaFicheroModelo' | translate}}"></button>
+      <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+      <button pButton type="button" [disabled]="uploadFileDisable" (click)="uploadFile($event)" icon="fa fa-upload" iconPos="left"
+        label="{{ 'general.boton.cargarFichero' | translate}}"></button>
+      <button pButton type="button" (click)="downloadFile($event)" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargaFicheroModelo' | translate}}"></button>
     </div>
   </div>
 </div>
 <div *ngIf="buscar" class="card mt-3">
   <div class="card-body p-0">
-    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table
-      class="tabla-listado" [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)"
-      selectionMode="single" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
-      [rows]="selectedItem">
-      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
-        filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table class="tabla-listado"
+      [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)" selectionMode="single" [paginator]="activarPaginacion()"
+      [(selection)]="selectedDatos" paginatorPosition="both" [rows]="selectedItem">
+      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+        [filter]="true" filterMatchMode="contains">
       </p-column>
 
       <ng-template pTemplate="paginatorLeft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label
-            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
-            {{table.first + 1}} al {{table.first
-            + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-            {{table.totalRecords}}</label>
-          <label
-            class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-            {{numSelected}}</label>
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+            + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+          </label>
+          <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}
+          </label>
           <label>{{ "general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
@@ -74,12 +66,10 @@
 
       <p-footer>
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''"
-            (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left"
-            label="{{ 'general.boton.descargar.original' | translate}}"></button>
-          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''"
-            (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left"
-            label="{{'general.boton.descargar.informe' | translate}}"></button>
+          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadOriginalFile(selectedDatos)"
+            pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.original' | translate}}"></button>
+          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadLogFile(selectedDatos)"
+            pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
         </div>
       </p-footer>
     </p-dataTable>
@@ -90,17 +80,15 @@
 <div *ngIf="history" class="card mt-3">
   <div class="card-body p-0">
 
-    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table
-      class="tabla-listado" [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)"
-      selectionMode="single" [paginator]="activarPaginacion()" [(selection)]="selectedDatos" paginatorPosition="both"
-      [rows]="selectedItem">
-      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate"
-        filterPlaceholder="{{'general.boton.search' | translate}}" [filter]="true" filterMatchMode="contains">
+    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" [responsive]="true" #table class="tabla-listado"
+      [value]="datos" [sortOrder]="sortO" (onRowSelect)="disabledButtons(selectedDatos)" selectionMode="single" [paginator]="activarPaginacion()"
+      [(selection)]="selectedDatos" paginatorPosition="both" [rows]="selectedItem">
+      <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+        [filter]="true" filterMatchMode="contains">
 
         <ng-template let-datoH="rowData" pTemplate="body">
           <div *ngIf="setItalic(datoH)">
-            <span
-              [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
+            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
           </div>
           <div *ngIf="!setItalic(datoH)">
             <span>{{datoH[col.field]}}</span>
@@ -111,14 +99,11 @@
 
       <ng-template pTemplate="paginatorLeft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label
-            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
-            {{table.first + 1}} al {{table.first
-            + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-            {{table.totalRecords}}</label>
-          <label
-            class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-            {{numSelected}}</label>
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
+            + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+          </label>
+          <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}
+          </label>
           <label>{{ "general.message.mostrar" | translate}}</label>
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
@@ -128,12 +113,10 @@
 
       <p-footer>
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''"
-            (click)="downloadOriginalFile(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left"
-            label="{{'general.boton.descargar.original' | translate}}"></button>
-          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''"
-            (click)="downloadLogFile(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left"
-            label="{{'general.boton.descargar.informe' | translate}}"></button>
+          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadOriginalFile(selectedDatos)"
+            pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.descargar.original' | translate}}"></button>
+          <button *ngIf="selectedDatos != ''" [disabled]="downloadFileDisable || selectedDatos == ''" (click)="downloadLogFile(selectedDatos)"
+            pButton type="button" icon="fa fa-download" iconPos="left" label="{{'general.boton.descargar.informe' | translate}}"></button>
         </div>
       </p-footer>
     </p-dataTable>
