@@ -34,6 +34,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
   colsColegiaciones;
+  mostrarOtrasColegiaciones;
   fichasPosibles = [
     {
       key: "colegiaciones",
@@ -52,7 +53,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   rowsPerPage;
   @ViewChild("tableColegiaciones")
   tableColegiaciones: DataTable;
-
+  DescripcionOtrasColegiaciones;
   @Input() esColegiado: boolean = null;
   @Input() openOtrasCole;
   constructor(private sigaServices: SigaServices,
@@ -183,6 +184,13 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },()=>{
+          if (this.datosColegiaciones.length > 0) {
+            this.mostrarOtrasColegiaciones = true;
+            for (let i = 0; i <= this.datosColegiaciones.length - 1; i++) {
+              this.DescripcionOtrasColegiaciones = this.datosColegiaciones[i];
+            }
+          }
         }
       );
   }
