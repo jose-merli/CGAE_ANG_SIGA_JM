@@ -402,19 +402,10 @@
 </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direccionesColegiado" icon="icon" width="425" #direccionesColegiado>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="direccionesColegiado.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="direccionesColegiado.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
@@ -424,22 +415,6 @@
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
-
-
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
