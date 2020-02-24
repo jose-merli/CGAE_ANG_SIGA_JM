@@ -172,7 +172,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
   textFilter = 'Etiquetas';
 
   @ViewChild("calendarFechaNacimiento") calendarFechaNacimiento: Calendar;
@@ -318,7 +318,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           console.log(err);
         }
       );
-      this.filterLabelsMultiple();
+    this.filterLabelsMultiple();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -344,8 +344,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.openGen == true){
-      if(this.openFicha == false){
+    if (this.openGen == true) {
+      if (this.openFicha == false) {
         this.fichaPosible.activa = !this.fichaPosible.activa;
         this.openFicha = !this.openFicha;
       }
@@ -437,7 +437,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     } else {
       this.obtenerPartidoJudicial();
     }
-   
+
     this.getComboTemas();
   }
 
@@ -730,7 +730,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             } else {
               this.showFail();
             }
-          },()=>{
+          }, () => {
             if (this.esColegiado) {
               let nombreCompleto;
               if(this.generalBody.apellidos2 != undefined){
@@ -748,7 +748,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                   label: "Identificación",
                   value: this.generalBody.nif
                 },
-        
+
                 {
                   label: "Número de Colegiado",
                   value: this.generalBody.numColegiado
@@ -877,7 +877,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                   label: "Identificación",
                   value: this.generalBody.nif
                 },
-        
+
                 {
                   label: "Número de Colegiado",
                   value: this.generalBody.numColegiado
@@ -1285,6 +1285,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         //   });
         // } else {
         this.comboEtiquetas = n.comboItems;
+        this.arregloTildesCombo(this.comboEtiquetas);
         this.sortOptions();
         // }
       },
@@ -1533,41 +1534,41 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
     this.sigaServices
-    .post("fichaDatosGenerales_etiquetasPersona", this.generalBody)
-    .subscribe(
-      n => {
-        // coger etiquetas de una persona juridica
-        this.etiquetasPersonaJuridica = JSON.parse(
-          n["body"]
-        ).comboEtiquetasItems;
+      .post("fichaDatosGenerales_etiquetasPersona", this.generalBody)
+      .subscribe(
+        n => {
+          // coger etiquetas de una persona juridica
+          this.etiquetasPersonaJuridica = JSON.parse(
+            n["body"]
+          ).comboEtiquetasItems;
 
-        // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
-        this.etiquetasPersonaJuridicaSelecionados = [];
-        this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-          this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
-          // this.generalBody.
-        });
+          // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
+          this.etiquetasPersonaJuridicaSelecionados = [];
+          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
+            this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
+            // this.generalBody.
+          });
 
-        this.etiquetasPersonaJuridicaSelecionados.forEach(
-          (value: any, index: number) => {
-            let pruebaComboE: ComboEtiquetasItem = new ComboEtiquetasItem();
-            pruebaComboE = value;
-            this.updateItems.set(value.idGrupo, pruebaComboE);
-          }
-        );
+          this.etiquetasPersonaJuridicaSelecionados.forEach(
+            (value: any, index: number) => {
+              let pruebaComboE: ComboEtiquetasItem = new ComboEtiquetasItem();
+              pruebaComboE = value;
+              this.updateItems.set(value.idGrupo, pruebaComboE);
+            }
+          );
 
-        this.createItems = this.etiquetasPersonaJuridicaSelecionados;
-        this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.etiquetasPersonaJuridicaSelecionados));
+          this.createItems = this.etiquetasPersonaJuridicaSelecionados;
+          this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.etiquetasPersonaJuridicaSelecionados));
 
-        this.sortOptions();
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  // this.generalBody.etiquetas = new ComboEtiquetasItem();
+          this.sortOptions();
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    // this.generalBody.etiquetas = new ComboEtiquetasItem();
 
-  // this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados;
+    // this.generalBody.grupos = this.etiquetasPersonaJuridicaSelecionados;
   }
 
   cargarImagen(idPersona: String) {
@@ -2731,5 +2732,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
     // window.scrollTo(0,0);
   }
+
 }
 

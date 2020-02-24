@@ -877,4 +877,9 @@ export class ConsultasComponent implements OnInit {
     if (dato.fechaBaja == null) return false;
     else return true;
   }
+  clickFila(event) {
+    if (event.data && !event.data.fechaBaja && this.historico) {
+      this.selectedDatos.pop();
+    }
+  }
 }

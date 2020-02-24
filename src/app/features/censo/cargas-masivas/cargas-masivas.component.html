@@ -17,11 +17,11 @@
     <div *ngIf="showCargasMasivas" class="module vista-simple">
       <div class="row">
 
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "censo.cargasMasivas.tipoCarga.literal" | translate }}</label>
           <br>
-          <p-dropdown [options]="cargasMasivas" [showClear]="true" [(ngModel)]="selectedTipoCarga"
-            placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChange($event.value)"></p-dropdown>
+          <p-dropdown [options]="cargasMasivas" [showClear]="true" [(ngModel)]="selectedTipoCarga" placeholder="{{'general.boton.seleccionar' | translate}}"
+            (onChange)="onChange($event.value)"></p-dropdown>
         </div>
 
       </div>

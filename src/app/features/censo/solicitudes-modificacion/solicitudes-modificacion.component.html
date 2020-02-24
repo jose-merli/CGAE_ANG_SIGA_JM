@@ -17,48 +17,45 @@
 
       <div *ngIf="showCard" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.solicitudTextoLibre.literal.tipoModificacion" | translate }}
             </label>
             <br />
-            <p-dropdown class="select-form" [filter]="true" [options]="tipo" [showClear]="true"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.tipoModificacion">
+            <p-dropdown class="select-form" [filter]="true" [options]="tipo" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [(ngModel)]="body.tipoModificacion">
             </p-dropdown>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesModificacion.literal.estado" | translate }}
             </label>
             <br />
-            <p-dropdown class="select-form" [filter]="true" [showClear]="true"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [options]="estado" [(ngModel)]="body.estado">
+            <p-dropdown class="select-form" [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="estado" [(ngModel)]="body.estado">
             </p-dropdown>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
             </label>
-            <app-fecha [(value)]="body.fechaDesde" [maxDate]="getFechaHastaCalendar()"
-              (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
+            <app-fecha [(value)]="body.fechaDesde" [maxDate]="getFechaHastaCalendar()" (valueChangeSelected)="fillFechaDesde($event)"
+              (valueChangeInput)="fillFechaDesde($event)"></app-fecha>
           </div>
 
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
             </label>
-            <app-fecha [(value)]="body.fechaHasta" [minDate]="getFechaDesdeCalendar()"
-              (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
+            <app-fecha [(value)]="body.fechaHasta" [minDate]="getFechaDesdeCalendar()" (valueChangeSelected)="fillFechaHasta($event)"
+              (valueChangeInput)="fillFechaHasta($event)"></app-fecha>
           </div>
         </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="restore()" pButton type="button" icon="fas fa-eraser" iconPos="left"
-          label="{{ 'general.boton.clear' | translate }}"></button>
-        <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.search' | translate }}"></button>
-        <button (click)="newElement()" pButton type="button" icon="fa fa-plus" [disabled]="!isLetrado" iconPos="left"
-          label="{{ 'general.boton.new' | translate }}"></button>
+        <button (click)="restore()" pButton type="button" icon="fas fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"></button>
+        <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
+        <button (click)="newElement()" pButton type="button" icon="fa fa-plus" [disabled]="!isLetrado" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -66,9 +63,8 @@
   <!-- cuerpo datos -->
   <div *ngIf="isSearch" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
-      <p-table [value]="data" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-        (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+      <p-table [value]="data" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado" [paginator]="true"
+        [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
 
         <ng-template pTemplate="colgroup" let-columns>
@@ -81,8 +77,8 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
-                (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field"
+                pInputText type="text" (input)="table.filter($event.target.value,
                           col.field, 'contains')">
             </th>
           </tr>
@@ -108,26 +104,20 @@
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label
-              class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
-              {{table.first + 1}} al {{table.first
-              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-              {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados"
-              *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-              {{selectedDatos.length}}
+            <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
             </label>
-            <label class="pr-3 numSeleccionados"
-              *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-              0
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
             </label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                name="groupname"></p-checkbox>
             </div>
             <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
@@ -137,16 +127,15 @@
     </div>
     <div class="card-footer">
       <div *ngIf="selectedDatos.length > 0" class="text-right main-button ">
-        <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left"
-          label="{{'modificacionDatos.boton.procesarSolicitudes' | translate}}" [(disabled)]="isLetrado"></button>
+        <button (click)="comprobarAuditoria()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{'modificacionDatos.boton.procesarSolicitudes' | translate}}"
+          [(disabled)]="isLetrado"></button>
       </div>
     </div>
   </div>
   <app-dialog></app-dialog>
 
   <!-- DIÁLOGO SOL. MOD. GENERAL -->
-  <p-dialog [(visible)]="displayGeneralRequest" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="500">
+  <p-dialog [(visible)]="displayGeneralRequest" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header class="title">
       <label>{{ "general.ventana.cgae" | translate }} {{ "censo.solicitudModificacion.literal.titulo" | translate }}
       </label>
@@ -154,15 +143,14 @@
 
     <div class="bloque col-lg-12 col-md-12">
       <div class="row">
-        <div class="form-group col-lg-12 col-md-12">
+        <div class="form-group-interlineado col-lg-12 col-md-12">
           <label>{{ "censo.solicitudTextoLibre.literal.tipoModificacion" | translate }}
           </label>
           <br />
-          <p-dropdown class="select-form" [showClear]="true"
-            placeholder="{{ 'tablas.literal.seleccionar' | translate }}" [options]="tipoSolGeneral"
+          <p-dropdown class="select-form" [showClear]="true" placeholder="{{ 'tablas.literal.seleccionar' | translate }}" [options]="tipoSolGeneral"
             [(ngModel)]="tipoModificacionSolGeneral" [(disabled)]="disableNew"></p-dropdown>
         </div>
-        <div class="form-group col-lg-12 col-md-12">
+        <div class="form-group-interlineado col-lg-12 col-md-12">
           <label>{{ "censo.datosHistorico.literal.motivo" | translate }} (*)</label>
           <textarea pInputTextarea [(ngModel)]="motivoSolGeneral" [(disabled)]="disableNew"></textarea>
         </div>
@@ -175,26 +163,22 @@
           <button (click)="processMultipleRequest()" pButton type="button" icon="fa fa-gears" iconPos="left" label="{{
               'modificacionDatos.boton.procesarSolicitud' | translate
             }}" [(disabled)]="disableButton || disableNew"></button>
-          <button (click)="denyMultipleRequest(selectedDatos)" pButton type="button" icon="fa fa-times" iconPos="left"
-            label="{{ 'general.boton.denegarSolicitud' | translate }}"
+          <button (click)="denyMultipleRequest(selectedDatos)" pButton type="button" icon="fa fa-times" iconPos="left" label="{{ 'general.boton.denegarSolicitud' | translate }}"
             [(disabled)]="disableButton || disableNew"></button>
-          <button (click)="closeDialog()" pButton type="button" icon="fa fa-close" iconPos="left"
-            label="{{ 'general.boton.close' | translate }}"></button>
+          <button (click)="closeDialog()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate }}"></button>
         </div>
 
         <div *ngIf="isNew">
-          <button (click)="closeDialog()" pButton type="button" icon="fa fa-close" iconPos="left"
-            label="{{ 'general.boton.close' | translate }}"></button>
-          <button (click)="saveData()" pButton type="button" icon="fa fa-check" iconPos="left"
-            label="{{ 'general.boton.submit' | translate }}" [disabled]="validateButton()"></button>
+          <button (click)="closeDialog()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate }}"></button>
+          <button (click)="saveData()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"
+            [disabled]="validateButton()"></button>
         </div>
       </div>
     </p-footer>
   </p-dialog>
 
   <!-- AUDITORIA -->
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="500">
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header class="title">
       <label>{{ "general.ventana.cgae" | translate }} -{{ "censo.consultaHistorico.cabecera" | translate }}
       </label>
@@ -202,7 +186,7 @@
 
     <div class="bloque col-lg-12 col-md-12">
       <div class="row">
-        <div class="form-group col-lg-12 col-md-12">
+        <div class="form-group-interlineado col-lg-12 col-md-12">
           <label>{{ "censo.datosHistorico.literal.motivo" | translate }} (*)</label>
           <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
         </div>
@@ -210,10 +194,9 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left"
-          label="{{ 'general.boton.close' | translate }}"></button>
-        <button (click)="processMultipleRequest()" [disabled]="!showGuardarAuditoria" pButton type="button"
-          icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate }}"></button>
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate }}"></button>
+        <button (click)="processMultipleRequest()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
+          label="{{ 'general.boton.guardarCerrar' | translate }}"></button>
       </div>
     </p-footer>
   </p-dialog>

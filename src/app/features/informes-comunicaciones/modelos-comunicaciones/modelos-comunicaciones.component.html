@@ -16,37 +16,35 @@
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-4 col-md-4">
             <label>{{'informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones' | translate }}</label>
-            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              filterBy="label,labelSinTilde" [options]="clasesComunicaciones"
-              [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
+            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+              [options]="clasesComunicaciones" [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form"></p-dropdown>
           </div>
-          <div class="form-group col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-4 col-md-4">
             <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
             <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
           </div>
         </div>
         <div class="form-row d-flex align-items-end">
-          <div class="form-group col-lg-4 col-md-4">
+          <div class="form-group-interlineado col-lg-4 col-md-4">
             <label>{{'censo.busquedaClientesAvanzada.literal.colegio' | translate }}</label>
-            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [filter]="true" filterBy="label,labelSinTilde" [options]="colegios" [showClear]="true"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodySearch.idInstitucion"
-              class="select-form"></p-dropdown>
+            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+              filterBy="label,labelSinTilde" [options]="colegios" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [(ngModel)]="bodySearch.idInstitucion" class="select-form"></p-dropdown>
           </div>
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label class="d-block">{{'administracion.informes.literal.preseleccionado' | translate }}</label>
-            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [options]="preseleccionar" [(ngModel)]="bodySearch.preseleccionar" class="select-form"></p-dropdown>
+            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="preseleccionar"
+              [(ngModel)]="bodySearch.preseleccionar" class="select-form"></p-dropdown>
             <!-- <p-radioButton (onClick)="onChangeRadio('s')" class="mr-2" name="groupname" value="SI" [(ngModel)]="bodySearch.preseleccionar"
             label="Sí"></p-radioButton>
           <p-radioButton (onClick)="onChangeRadio('n')" name="groupname" value="NO" [(ngModel)]="bodySearch.preseleccionar" label="No"></p-radioButton> -->
           </div>
-          <div class="form-group col-lg-2 col-md-2">
+          <div class="form-group-interlineado col-lg-2 col-md-2">
             <label class="d-block">{{'administracion.informes.literal.visible' | translate }}</label>
-            <p-dropdown [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="visible"
-              [(ngModel)]="bodySearch.visible" class="select-form"></p-dropdown>
+            <p-dropdown [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="visible" [(ngModel)]="bodySearch.visible"
+              class="select-form"></p-dropdown>
           </div>
         </div>
       </div>
@@ -64,8 +62,8 @@
   </div>
   <div class="card" *ngIf="showResultados" id="tablaFoco">
     <div class="card-body p-0">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
+        [paginator]="true" [rows]="selectedItem" (onRowSelect)="clickRow($event)" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}
          " selectionMode="multiple" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -87,14 +85,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <!-- PRESELECCIONADO -->
-              <span
-                *ngIf="col.field !='preseleccionado' && col.field !='nombre' && showHistorico && dato.fechaBaja!=null"
-                [ngStyle]="{
+              <span *ngIf="col.field !='preseleccionado' && col.field !='nombre' && showHistorico && dato.fechaBaja!=null" [ngStyle]="{
           'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'}">
                 {{dato[col.field]}}</span>
 
-              <span
-                *ngIf="col.field !='preseleccionado' &&col.field !='nombre' && showHistorico && dato.fechaBaja==null">
+              <span *ngIf="col.field !='preseleccionado' &&col.field !='nombre' && showHistorico && dato.fechaBaja==null">
                 {{dato[col.field]}}</span>
 
               <span *ngIf="col.field !='preseleccionado' && col.field !='nombre' && !showHistorico">
@@ -104,15 +99,12 @@
                 <i class="fa fa-check"></i>
               </span>
               <!-- NOMBRE -->
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace"
-                *ngIf="col.field =='nombre' && showHistorico&& dato.fechaBaja!=null"
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && showHistorico&& dato.fechaBaja!=null"
                 [ngStyle]="{ 'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'}">
                 {{dato[col.field]}}</a>
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace"
-                *ngIf="col.field =='nombre' && showHistorico && dato.fechaBaja==null">
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && showHistorico && dato.fechaBaja==null">
                 {{dato[col.field]}}</a>
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace"
-                *ngIf="col.field =='nombre' && !showHistorico">{{dato[col.field]}}</a>
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field =='nombre' && !showHistorico">{{dato[col.field]}}</a>
 
             </td>
           </tr>
@@ -130,24 +122,20 @@
 
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label
-              class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
-              {{table.first + 1}} al {{table.first
-              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-              {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados"
-              *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}:
-              {{selectedDatos.length}}</label>
-            <label class="pr-3 numSeleccionados"
-              *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}:
-              0</label>
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}: 0
+            </label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-                label="{{ 'tablas.literal.seleccionarTodo'| translate }}" name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo'| translate }}"
+                name="groupname"></p-checkbox>
             </div>
             <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{ ' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
@@ -160,14 +148,12 @@
          " iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
 
           <button [disabled]="!(selectedDatos && selectedDatos !='' && !showHistorico)" (click)="onBorrar(selectedDatos)
-         " pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-            label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button [disabled]="!(selectedDatos && selectedDatos.length ==1)" (click)="onDuplicar(selectedDatos)" pButton
-            type="button" icon="fa
+         " pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+          <button [disabled]="!(selectedDatos && selectedDatos.length ==1)" (click)="onDuplicar(selectedDatos)" pButton type="button"
+            icon="fa
           fa-reply-all" iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
           <button *ngIf="showHistorico" [disabled]="!(selectedDatos && selectedDatos !='')" (click)="rehabilitar(selectedDatos)
-         " pButton type="button" icon="fa fa-check" iconPos="left"
-            label="{{ 'general.message.rehabilitar' | translate}}"></button>
+         " pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.message.rehabilitar' | translate}}"></button>
           <button *ngIf="!showHistorico" (click)="getHistorico( 'visible')" pButton type="button" icon="fa fa-history
          " iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
         </div>

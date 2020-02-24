@@ -304,7 +304,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         () => {
           this.table.reset();
-          setTimeout(()=>{
+          setTimeout(() => {
             this.commonsService.scrollTablaFoco('tablaFoco');
           }, 5);
         }
@@ -347,6 +347,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else if (key == "hidden") {
       this.showHistorico = false;
     }
+    this.selectedDatos = [];
     this.getResultados();
   }
 
@@ -611,6 +612,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   ngOnDestroy() {
     if (!this.anotherPage) {
       localStorage.removeItem("recoverLabel");
+    }
+  }
+  clickRow(event) {
+    if (event.data && !event.data.fechaBaja && this.showHistorico) {
+      this.selectedDatos.pop();
     }
   }
 }
