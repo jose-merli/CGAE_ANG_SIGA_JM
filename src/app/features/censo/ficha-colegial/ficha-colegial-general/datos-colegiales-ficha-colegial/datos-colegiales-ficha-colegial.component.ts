@@ -1499,7 +1499,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       (this.colegialesBody.fechapresentacion == null || this.colegialesBody.fechapresentacion == undefined) ||
       (this.inscritoSeleccionado == null || this.inscritoSeleccionado == undefined || this.inscritoSeleccionado === "")||
       (this.datosColegiales.length > 0 && (!this.nuevoEstadoColegial.fechaEstadoStr || !this.nuevoEstadoColegial.situacion ||
-        !this.nuevoEstadoColegial.situacionResidente))) {
+        !this.nuevoEstadoColegial.situacionResidente) && this.isCrearColegial)) {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatosColegiales = true;
     } else {
