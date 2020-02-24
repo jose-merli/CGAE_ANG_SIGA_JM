@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -10,13 +10,14 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'menu.informesYcomunicaciones.consultas.fichaConsulta.consulta' | translate }}</label>
+            <label (click)="abreCierraFicha()"
+              class="mr-auto title-ficha">{{ 'menu.informesYcomunicaciones.consultas.fichaConsulta.consulta' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>
               <!-- <span>{{body.nombre}}</span> -->
             </label>
-            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -25,8 +26,9 @@
           <i class="fas fa-comment-alt icon-ficha">
           </i>
         </div>
-        <label class="title-ficha">{{ 'menu.informesYcomunicaciones.consultas.fichaConsulta.consulta' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <label (click)="abreCierraFicha()"
+          class="title-ficha">{{ 'menu.informesYcomunicaciones.consultas.fichaConsulta.consulta' | translate }}</label>
+        <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
@@ -51,10 +53,12 @@
     </div>
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!editar" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
-        <button [disabled]="!editar" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="isButtonDisabled()" (click)="navigateComunicar()" pButton type="button" icon="fas fa-play" iconPos="left"
-          label="{{ 'general.boton.ejecutar' | translate}}"></button>
+        <button [disabled]="!editar" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="!editar" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="navigateComunicar()" pButton type="button" icon="fas fa-play"
+          iconPos="left" label="{{ 'general.boton.ejecutar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -75,18 +79,20 @@
       </div>
       <div class="form-group col-lg-3 col-md-3">
         <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-          *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero" [(ngModel)]="dato.operacion"
-          class="select-form" ></p-dropdown>
-        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-          *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+          *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [options]="operadoresNumero"
+          [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
+        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" *ngIf="dato.tipoDato=='A'"
+          [options]="operadoresTexto" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
       </div>
       <div class="form-group col-lg-6 col-md-6">
-        <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control" [(ngModel)]="dato.valor" pInputText>
-        <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="dato.valor" (valueChangeSelected)="fillFechaValor($event, dato)"
-          (valueChangeInput)="fillFechaValor($event, dato)"></app-fecha>
+        <input *ngIf="dato.tipoDato=='A' || dato.tipoDato=='N'" type="text" class="form-control"
+          [(ngModel)]="dato.valor" pInputText>
+        <app-fecha *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="dato.valor"
+          (valueChangeSelected)="fillFechaValor($event, dato)" (valueChangeInput)="fillFechaValor($event, dato)">
+        </app-fecha>
         <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-          *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor" class="select-form"
-          optionLabel="DESCRIPCION"></p-dropdown>
+          *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores" [(ngModel)]="dato.valor"
+          class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
       </div>
     </div>
   </div>

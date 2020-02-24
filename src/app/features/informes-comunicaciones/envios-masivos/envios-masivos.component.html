@@ -10,36 +10,42 @@
   <div class="card">
     <div class="card-body">
       <p class="title-module">
-        <span>{{'general.message.datos.generales' | translate }}</span>
-        <i *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span>
+        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-avanzada">
         <div class="form-row">
-          <div class="fform-group col-lg-4 col-md-4">
+          <div class="form-group col-lg-4 col-md-4">
             <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
             <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{'administracion.auditoriaUsuarios.fechaDesde' | translate}} (*)</label>
 
-            <app-fecha [utc]="false" [(value)]="bodySearch.fechaCreacion" (valueChangeSelected)="fillFechaCreacion($event)" (valueChangeInput)="fillFechaCreacion($event)"></app-fecha>
+            <app-fecha [utc]="false" [(value)]="bodySearch.fechaCreacion"
+              (valueChangeSelected)="fillFechaCreacion($event)" (valueChangeInput)="fillFechaCreacion($event)">
+            </app-fecha>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}}</label>
-            <app-fecha [utc]="false" [(value)]="bodySearch.fechaProgramacion" (valueChangeSelected)="fillFechaProgramacion($event)" (valueChangeInput)="fillFechaProgramacion($event)"></app-fecha>
+            <app-fecha [utc]="false" [(value)]="bodySearch.fechaProgramacion"
+              (valueChangeSelected)="fillFechaProgramacion($event)" (valueChangeInput)="fillFechaProgramacion($event)">
+            </app-fecha>
           </div>
         </div>
         <div class="form-row d-flex align-items-end">
 
           <div class="form-group col-lg-4 col-md-4">
             <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}</label>
-            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
-              [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              filterBy="label,labelSinTilde" [options]="tiposEnvio" [(ngModel)]="bodySearch.idTipoEnvios"
+              class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
           </div>
           <div class="form-group col-lg-4 col-md-4">
             <label>{{'enviosMasivos.literal.estado' | translate}}</label>
-            <p-dropdown [options]="estados" [showClear]="true" [(ngModel)]="bodySearch.idEstado" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+            <p-dropdown [options]="estados" [showClear]="true" [(ngModel)]="bodySearch.idEstado" class="select-form"
+              placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
           </div>
         </div>
       </div>
@@ -48,16 +54,19 @@
       <div class="text-right main-button">
         <button (click)="limpiar()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{
             'general.boton.clear'| translate }}"></button>
-        <button [disabled]="isButtonDisabled()" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="addEnvio()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        <button [disabled]="isButtonDisabled()" (click)="buscar()" pButton type="button" icon="fa fa-search"
+          iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+        <button (click)="addEnvio()" pButton type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>
   <div class="card" *ngIf="showResultados" id="tablaFoco">
     <div class="card-body p-0">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" dataKey="idEnvio" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
-        selectionMode="multiple" paginatorPosition="both" (onRowUnselect)="showButtons(selectedDatos)">
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem" dataKey="idEnvio" [first]="first"
+        [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both"
+        (onRowUnselect)="showButtons(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -68,7 +77,8 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="table.filter($event.target.value,
                           col.field, 'contains')">
             </th>
           </tr>
@@ -76,11 +86,15 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'&& col.field !='descripcion'"> {{dato[col.field]}}</span>
-              <span *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
-              <span *ngIf="col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
+              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'&& col.field !='descripcion'">
+                {{dato[col.field]}}</span>
+              <span
+                *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
+              <span
+                *ngIf="col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
               <span *ngIf="dato[col.field]==null ||dato[col.field]==''">-</span>
-              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field == 'descripcion'">{{dato[col.field]}}</a>
+              <a [routerLink]="" (click)="navigateTo([dato])" class="enlace"
+                *ngIf="col.field == 'descripcion'">{{dato[col.field]}}</a>
 
             </td>
 
@@ -95,12 +109,19 @@
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
-              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+            <label
+              class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
+              {{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+              {{table.totalRecords}}
             </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+            <label class="pr-3 numSeleccionados"
+              *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+              {{selectedDatos.length}}
             </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+            <label class="pr-3 numSeleccionados"
+              *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+              0
             </label>
 
             <label>{{"general.message.mostrar" | translate}}</label>
@@ -108,8 +129,8 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
             </div>
             <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
               <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
@@ -118,15 +139,17 @@
       </p-table>
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="enviar(selectedDatos)"
-            pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' |
+          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6"
+            (click)="enviar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="onShowProgamar(selectedDatos)"
-            pButton type="button" icon="fas fa-cog" iconPos="left" label="{{ 'general.boton.programar' | translate}}"></button>
-          <button *ngIf="estado && (estado == 4 || estado == 1)" (click)="cancelar(selectedDatos)" pButton type="button" icon="fa fa-close"
-            iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
-          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton type="button" icon="fa fa-reply-all"
-            iconPos="left" label="{{ 'general.boton.duplicar' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6"
+            (click)="onShowProgamar(selectedDatos)" pButton type="button" icon="fas fa-cog" iconPos="left"
+            label="{{ 'general.boton.programar' | translate}}"></button>
+          <button *ngIf="estado && (estado == 4 || estado == 1)" (click)="cancelar(selectedDatos)" pButton type="button"
+            icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos.length == 1" (click)="duplicar(selectedDatos)" pButton
+            type="button" icon="fa fa-reply-all" iconPos="left"
+            label="{{ 'general.boton.duplicar' | translate}}"></button>
         </div>
       </div>
     </div>
@@ -134,21 +157,24 @@
 </div>
 
 
-<p-dialog [(visible)]="showProgramar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="400">
+<p-dialog [(visible)]="showProgramar" responsive="true" [draggable]="false" modal="modal" resizable="false"
+  [minWidth]="400">
   <p-header class="title">
     <label>{{'general.boton.programar' | translate }}</label>
   </p-header>
   <div class="form-row">
     <div class="form-group col-lg-12 col-md-12">
       <label>{{"envio.programar" | translate}}</label>
-      <app-fecha [(value)]="bodyProgramar.fechaProgramada" showTime="true" [minDate]="currentDate" [utc]="false" (valueChangeSelected)="fillFechaProgramada($event)"
-        (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
+      <app-fecha [(value)]="bodyProgramar.fechaProgramada" showTime="true" [minDate]="currentDate" [utc]="false"
+        (valueChangeSelected)="fillFechaProgramada($event)" (valueChangeInput)="fillFechaProgramada($event)">
+      </app-fecha>
 
     </div>
   </div>
   <p-footer>
     <div class="text-right main-button ">
-      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="programar(selectedDatos)" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
     </div>
   </p-footer>
 </p-dialog>

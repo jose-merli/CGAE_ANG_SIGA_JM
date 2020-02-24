@@ -8,15 +8,18 @@
     <div class="card">
         <div class="card-body">
             <p class="title-module">
-                <span>{{'administracion.catalogos.titulo.datos.generales' | translate}}</span>
-                <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+                <span
+                    (click)="onHideDatosGenerales()">{{'administracion.catalogos.titulo.datos.generales' | translate}}</span>
+                <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales"
+                    class="fa fa-angle-down float-right"></i>
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'general.boton.usuario' | translate}}</label>
-                        <input type="text" [disabled]="isHabilitadoInputUsuario()" class="form-control" [(ngModel)]="usuario" pInputText>
+                        <input type="text" [disabled]="isHabilitadoInputUsuario()" class="form-control"
+                            [(ngModel)]="usuario" pInputText>
                     </div>
                     <div class="form-group col-lg-1 col-md-1">
                     </div>
@@ -29,28 +32,34 @@
                     </div>
                     <div class="form-check col-lg-3 col-md-3">
                         <br>
-                        <label class="form-group-label">{{'administracion.auditoriaUsuarios.literal.usuarioAutomatico' | translate}}</label> &nbsp;&nbsp;
+                        <label
+                            class="form-group-label">{{'administracion.auditoriaUsuarios.literal.usuarioAutomatico' | translate}}</label>
+                        &nbsp;&nbsp;
                         <p-checkbox [(ngModel)]='valorCheckUsuarioAutomatico' binary="true"></p-checkbox>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.auditoriaUsuarios.literal.tipoAccion' | translate}}</label>
-                        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
-                            class="select-form" [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" filterMatchMode="contains"></p-dropdown> &nbsp;&nbsp;
+                        <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
+                            [showClear]="true" filterBy="label,labelSinTilde" class="select-form"
+                            [(ngModel)]='selectedTipoAccion' [options]="tipoAcciones" filterMatchMode="contains">
+                        </p-dropdown> &nbsp;&nbsp;
                     </div>
                     <div class="form-group col-lg-1 col-md-1">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.auditoriaUsuarios.fechaDesde' | translate}} (*)</label>
-                        <app-fecha [(value)]="fechaDesdeCalendar" [maxDate]="getFechaHastaCalendar()" (valueChangeSelected)="fillFechaDesdeCalendar($event)"
+                        <app-fecha [(value)]="fechaDesdeCalendar" [maxDate]="getFechaHastaCalendar()"
+                            (valueChangeSelected)="fillFechaDesdeCalendar($event)"
                             (valueChangeInput)="fillFechaDesdeCalendar($event)"></app-fecha>
                     </div>
                     <div class="form-group col-lg-1 col-md-1">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{'administracion.auditoriaUsuarios.fechaHasta' | translate}} (*)</label>
-                        <app-fecha [(value)]="fechaHastaCalendar" [minDate]="getFechaDesdeCalendar()" (valueChangeSelected)="fillFechaHastaCalendar($event)"
+                        <app-fecha [(value)]="fechaHastaCalendar" [minDate]="getFechaDesdeCalendar()"
+                            (valueChangeSelected)="fillFechaHastaCalendar($event)"
                             (valueChangeInput)="fillFechaHastaCalendar($event)"></app-fecha>
                     </div>
                 </div>
@@ -58,19 +67,20 @@
         </div>
         <div class="card-footer" *ngIf="showDatosGenerales">
             <div class="text-right main-button">
-                <button (click)="confirmarBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button " icon="fa fa-search" iconPos="left"
-                    label="{{'general.boton.search' | translate}}"></button>
+                <button (click)="confirmarBuscar()" [disabled]="isHabilitadoBuscar()" pButton type="button "
+                    icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
             </div>
         </div>
     </div>
     <!--FIN CARD-->
     <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
         <div class="card-body p-0">
-            <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios" [responsive]="true"
-                class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both"
-                [rows]="selectedItem" selectionMode="single">
-                <p-column [style]="{'width': col.width}" *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate"
-                    [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+            <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios"
+                [responsive]="true" class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos"
+                [paginator]="true" paginatorPosition="both" [rows]="selectedItem" selectionMode="single">
+                <p-column [style]="{'width': col.width}" *ngFor="let col of columnasTabla" [sortable]="true"
+                    [field]="col.field" [header]="col.header | translate" [filter]="true" filterMatchMode="contains"
+                    filterPlaceholder="{{'general.boton.search' | translate}}">
                     <ng-template let-dato="rowData" pTemplate="body">
                         <div *ngIf="col.field != 'persona'">
                             <span>{{dato[col.field]}}</span>
@@ -83,11 +93,13 @@
 
                 <ng-template pTemplate="paginatorLeft">
                     <div class="mostrar">
-                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                        <label
+                            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
                             + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
                             | translate }} {{table.totalRecords}}</label>
                         <label>{{ 'general.message.mostrar' | translate}}</label>
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                            (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                         <label>{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
                     </div>
                 </ng-template>
@@ -98,7 +110,8 @@
 </div>
 
 <div *ngIf="volver==true" class="mt-3 text-right main-button ">
-    <button (click)="volverAFicha()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+    <button (click)="volverAFicha()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate }}"></button>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

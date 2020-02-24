@@ -1,26 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { TranslateService } from '../../../../../commons/translate';
+import { DatePipe, Location } from '@angular/common';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "./../../../../../_services/cardSearch.service";
-import { Location } from "@angular/common";
-import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
-import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-import { AutoComplete, Dialog, Calendar, DataTable } from 'primeng/primeng';
-import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
-import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
-import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
-import * as moment from 'moment';
+import { ConfirmationService, Message } from "primeng/components/common/api";
+import { DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesItem';
 import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
+import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
+import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
+import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
+import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
+import { AuthenticationService } from '../../../../../_services/authentication.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { cardService } from "./../../../../../_services/cardSearch.service";
 
 @Component({
   selector: 'app-direcciones-ficha-colegial',
@@ -700,8 +693,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     // window.scrollTo(0,0);
   }
   clickFilaDirecciones(event) {
-    if (event.data && !event.data.fechaBaja && this.bodyDirecciones.historico)
+    if (event.data && !event.data.fechaBaja && this.bodyDirecciones.historico) {
       this.selectedDatosDirecciones.pop();
+    }
   }
 
 }
