@@ -216,7 +216,7 @@
     <div *ngIf="buscar == true" class="card mt-3">
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-                [responsive]="true" [columns]="cols" dataKey="idPersona" selectionMode="multiple" #table class="tabla-listado"
+                [responsive]="true" [columns]="cols" dataKey="idPersona" [(selectionMode)]="selection" #table class="tabla-listado"
                 [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
 
                 <ng-template pTemplate="colgroup" let-columns>
@@ -229,7 +229,7 @@
                         <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                             {{col.header | translate}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
-                            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                            <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
                                     col.field, 'contains')">
                         </th>
                     </tr>
@@ -242,8 +242,8 @@
                             col.field !='estadoColegial' && 
                             col.field !='situacionResidente' && 
                             col.field !='correo' && 
-                            col.field !='noAparecerRedAbogaciaFilter' &&
-                            col.field != 'incorporacionDate'">
+                            col.field !='noAparecerRedAbogacia2' &&
+                            col.field !='incorporacionDate'">
 
                                 <label>{{ dato[col.field] }}</label>
                             </div>
@@ -264,14 +264,20 @@
                             <div *ngIf="col.field == 'situacionResidente'">
                                 <label *ngIf="dato.situacionResidente == '1'">Si</label>
                             </div>
-                            <span *ngIf="col.field == 'incorporacionDate'">
-                                {{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
 
                             <div *ngIf="col.field == 'correo'">
                                 <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
                             </div>
-                            <div *ngIf="col.field == 'noAparecerRedAbogaciaFilter'">
+                         
+                            <div *ngIf="col.field == 'incorporacionDate'">
+                                    <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div *ngIf="col.field == 'noAparecerRedAbogacia2'">
                                 <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
+                                </label>
+                                <label (click)="displayBoolean=true; show($event,dato); searchHistoricoDatosDirecciones(dato)">
+                                        <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png">
                                 </label>
                                 <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''" *ngIf="dato.noAparecerRedAbogacia2 == '1'">
                                     <img src="./assets/images/icons/warning.png">
@@ -344,7 +350,7 @@
         </div>
     </div>
 
-    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="false" #table
+    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [responsive]="false" #table
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
         paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
@@ -367,7 +373,7 @@
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                     <span *ngIf="col.field != 'correoElectronico'"> {{dato[col.field]}} a</span>
-                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''" style="color: blue;"
+                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''"
                         [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
                     <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
                 </td>

@@ -86,7 +86,7 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableBancarios.filter($event.target.value,
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableBancarios.filter($event.target.value,
                                   col.field, 'contains')">
             </th>
           </tr>
@@ -142,3 +142,10 @@
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteBancarios" icon="icon" width="425" #deleteBancarios>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deleteBancarios.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deleteBancarios.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

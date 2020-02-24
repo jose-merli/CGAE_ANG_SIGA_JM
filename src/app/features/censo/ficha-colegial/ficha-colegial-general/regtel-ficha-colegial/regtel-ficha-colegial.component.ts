@@ -553,7 +553,7 @@ ngOnChanges(changes: SimpleChanges) {
   callConfirmationServiceRegtel() {
     let mess = this.translateService.instant("messages.creaCollection");
     this.icon = "fa fa-edit";
-    let keyConfirmation = "regtel";
+    let keyConfirmation = "regtelFicha";
 
     this.confirmationService.confirm({
       key: keyConfirmation,

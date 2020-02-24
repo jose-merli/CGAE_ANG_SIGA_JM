@@ -305,6 +305,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
+    this.progressSpinner = true;
     let bodyCurricular = {
       idPersona: this.idPersona,
       historico: this.historicoCV
@@ -324,6 +325,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
         err => {
           //   console.log(err);
         }, () => {
+          this.progressSpinner = false;
           if (this.datosCurriculares.length > 0) {
             this.mostrarDatosCurriculares = true;
             for (let i = 0; i <= this.datosCurriculares.length - 1; i++) {
@@ -430,7 +432,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     // window.scrollTo(0,0);
   }
   clickFilaCurricular(event) {
-    if (event.data && !event.data.fechaBaja && this.historicoCV) {
+    if (event.data && event.data.fechaBaja != undefined && this.historicoCV) {
       this.selectedDatosCurriculares.pop();
     }
   }

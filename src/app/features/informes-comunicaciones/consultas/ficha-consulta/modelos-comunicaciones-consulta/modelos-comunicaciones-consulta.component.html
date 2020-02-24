@@ -1,7 +1,7 @@
 <!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -10,7 +10,8 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.modelosComunicacion.cabecera' | translate }}</label>
+            <label (click)="abreCierraFicha()"
+              class="mr-auto title-ficha">{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.modelosComunicacion.cabecera' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.modelosComunicacion.numero' | translate }}:
@@ -25,15 +26,17 @@
         <div class="img-colegiado">
           <i class="fas fa-list-alt icon-ficha"></i>
         </div>
-        <label (click)="abreCierraFicha()" class="title-ficha">{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.modelosComunicacion.cabecera' | translate }}</label>
+        <label (click)="abreCierraFicha()"
+          class="title-ficha">{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.modelosComunicacion.cabecera' | translate }}</label>
         <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="px-0 card-body card-body-ficha">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
-        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both"
-        selectionMode="multiple" (onRowSelect)="navigateTo(selectedDatos)">
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
+        [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" selectionMode="multiple"
+        (onRowSelect)="navigateTo(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -44,7 +47,8 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate }}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="table.filter($event.target.value,
                       col.field, 'contains')">
             </th>
           </tr>
@@ -65,10 +69,14 @@
         </ng-template>
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
-              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label
+              class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
+              {{table.first + 1}} al {{table.first
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+              {{table.totalRecords}}</label>
             <label>{{"general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           </div>
         </ng-template>

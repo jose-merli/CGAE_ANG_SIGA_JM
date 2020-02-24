@@ -2,66 +2,68 @@
 <div class="busqueda-container">
   <!--DATOS GENERALES-->
   <div id="datosGen">
-  <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
-    <div (click)="abreCierraFicha()" class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
+    <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+              <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1">
+              <label (click)="abreCierraFicha()"
+                class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+              <!--<label class="registros-ficha">(0 registros)</label>-->
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>{{"censo.fichaCliente.literal.identificacion" | translate}}
+                <span>{{body.nif}}</span>
+              </label>
+              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}
+                <span>{{tipoPersonaJuridica}}</span>
+              </label>
+              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
+                <span>{{body.fechaConstitucion}}</span>
+              </label>
+              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}
+                <span>{{body.fechaBaja}}</span>
+              </label>
+              <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}
+                <span>{{body.denominacion}}</span>
+              </label>
+              <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}
+                <span>{{body.abreviatura}}</span>
+              </label>
+              <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
           <div class="img-colegiado">
             <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate}}</label>
-            <!--<label class="registros-ficha">(0 registros)</label>-->
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>{{"censo.fichaCliente.literal.identificacion" | translate}}
-              <span>{{body.nif}}</span>
-            </label>
-            <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}
-              <span>{{tipoPersonaJuridica}}</span>
-            </label>
-            <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
-              <span>{{body.fechaConstitucion}}</span>
-            </label>
-            <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}
-              <span>{{body.fechaBaja}}</span>
-            </label>
-            <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}
-              <span>{{body.denominacion}}</span>
-            </label>
-            <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}
-              <span>{{body.abreviatura}}</span>
-            </label>
-            <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
-          </div>
+          <label (click)="abreCierraFicha()"
+            class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
+          <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-          <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-        </div>
-        <label (click)="abreCierraFicha()" class="title-ficha">{{ "general.message.datos.generales" | translate}}</label>
-        <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--cuerpo datos generales-->
+      <!--cuerpo datos generales-->
 
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
-          <div class="positionUpload img-colegiado text-center my-0 mx-auto">
-            <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica">
-            <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file" auto="true" accept="image/*"
-              (onSelect)="uploadImage($event)" auto="true" [disabled]="tarjeta == '2'">
-            </p-fileUpload>
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+            <div class="positionUpload img-colegiado text-center my-0 mx-auto">
+              <i *ngIf="!existeImagen" class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+              <img *ngIf="existeImagen" [src]="imagenPersonaJuridica">
+              <p-fileUpload #fubauto chooseLabel="" class="edit my-0 mx-auto main-button" mode="basic" name="file"
+                auto="true" accept="image/*" (onSelect)="uploadImage($event)" auto="true" [disabled]="tarjeta == '2'">
+              </p-fileUpload>
+            </div>
           </div>
-        </div>
-        <!-- <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+          <!-- <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
           <div class="form-row">
             <div class="form-group col-lg-8 col-md-8 my-0 mx-auto">
               <div class="text-center img-colegiado my-0 mx-auto">
@@ -73,48 +75,51 @@
             </div>
           </div>
         </div> -->
-        <div class="bloque col-lg-6 col-md-5 col-sm-5">
-          <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="!editar || disabledAction || tarjeta == '2'"
-                pInputText>
-              <div *ngIf="identificacionValida == false">
-                <label class="labelError">{{"El cif es inválido"}}</label>
+          <div class="bloque col-lg-6 col-md-5 col-sm-5">
+            <div class="form-row">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
+                <input [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                  [disabled]="!editar || disabledAction || tarjeta == '2'" pInputText>
+                <div *ngIf="identificacionValida == false">
+                  <label class="labelError">{{"El cif es inválido"}}</label>
+                </div>
               </div>
-            </div>
-            <div *ngIf="editar" class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
-              <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion" optionLabel="label" (ngModelChange)="getTipo($event)"
-                [disabled]="true"></p-dropdown>
-            </div>
-            <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
-              <input [(ngModel)]="comboTipo[0]" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="true" pInputText>
-            </div>
-            <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
-              <app-fecha [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)"
-                (valueChangeInput)="detectFechaConstitucionInput($event)"></app-fecha>
-            </div>
-            <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
-              <!-- <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaBaja"
+              <div *ngIf="editar" class="form-group col-lg-6 col-md-6">
+                <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
+                <p-dropdown class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
+                  optionLabel="label" (ngModelChange)="getTipo($event)" [disabled]="true"></p-dropdown>
+              </div>
+              <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
+                <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
+                <input [(ngModel)]="comboTipo[0]" type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                  [disabled]="true" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6 form-group-date">
+                <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
+                <app-fecha [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction || tarjeta == '2'"
+                  (valueChangeSelected)="fillFechaConstitucion($event)"
+                  (valueChangeInput)="detectFechaConstitucionInput($event)"></app-fecha>
+              </div>
+              <div class="form-group col-lg-6 col-md-6 form-group-date">
+                <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
+                <!-- <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="1930:2050" [locale]="es" [(ngModel)]="body.fechaBaja"
                 (ngModelChange)="onChangeForm()" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [disabled]="true"></p-calendar> -->
-              <input [(ngModel)]="body.fechaBaja" dateFormat="dd/mm/yy" [disabled]="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"
-                type="text" class="form-control" (ngModelChange)="onChangeForm()" pInputText>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
-              <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
-                [maxLength]="99" pInputText>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
-              <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
-                [maxLength]="100" pInputText>
-            </div>
-            <!--<div class="form-row p-1 col-lg-6 col-md-6">
+                <input [(ngModel)]="body.fechaBaja" dateFormat="dd/mm/yy" [disabled]="true"
+                  [style]="{ 'position': 'relative', 'z-index': '1000' }" type="text" class="form-control"
+                  (ngModelChange)="onChangeForm()" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
+                <input [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [maxLength]="99" pInputText>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
+                <input [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [maxLength]="100" pInputText>
+              </div>
+              <!--<div class="form-row p-1 col-lg-6 col-md-6">
               <div class="col-lg-12 col-md-12">
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro" | translate}} (*)</label>
               </div>
@@ -131,61 +136,65 @@
                 <input [(disabled)]="camposDesactivados" [(ngModel)]="body.sufijoNumsspp" type="text" class="form-control" pInputText>
               </div>
           </div>-->
-          </div>
-        </div>
-        <!-- INFORMACIÓN ADICIONAL -->
-        <div class="bloque col-lg-4 col-md-4">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
-              <p-dropdown class="select-form" [showClear]="true" [options]="idiomas" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="idiomaPreferenciaSociedad"
-                [filter]="true" (ngModelChange)="onChangeForm()" filterBy="label"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-              <input type="text " class="form-control " [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.cuentaContable"
-                [maxLength]="20" (ngModelChange)="onChangeForm()" pInputText>
-            </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
-              <textarea pInputTextarea [(ngModel)]="body.anotaciones" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
-                (ngModelChange)="onChangeForm()" [maxLength]="2000"></textarea>
-            </div>
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
-                <i class="fa fa-plus" style="color:grey" (click)="habilitarAutocompletar($event)"></i>
-              </label>
-
-              <br>
-
-              <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]="etiquetasPersonaJuridicaSelecionados"
-              [options]="comboEtiquetas"
-              [disabled]="!autocompletar || disabledAction || tarjeta == '2'"
-              styleClass="widthAll" [panelStyle]="{width:'100%'}"
-              (ngModelChange)="onChangeForm()"
-              (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)"
-              (click)="disabledAutocomplete()"></p-multiSelect>
             </div>
           </div>
+          <!-- INFORMACIÓN ADICIONAL -->
+          <div class="bloque col-lg-4 col-md-4">
+            <div class="form-row">
+              <div class="form-group col-lg-12 col-md-12">
+                <label>{{"censo.fichaCliente.situacion.idiomaPref" | translate}} (*)</label>
+                <p-dropdown class="select-form" [showClear]="true" [options]="idiomas"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
+                  [(ngModel)]="idiomaPreferenciaSociedad" [filter]="true" (ngModelChange)="onChangeForm()"
+                  filterBy="label"></p-dropdown>
+              </div>
+              <div class="form-group col-lg-12 col-md-12">
+                <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
+                <input type="text " class="form-control "
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.cuentaContable"
+                  [maxLength]="20" (ngModelChange)="onChangeForm()" pInputText>
+              </div>
+              <div class="form-group col-lg-12 col-md-12">
+                <label>{{"censo.general.literal.anotaciones" | translate}}: </label>
+                <textarea pInputTextarea [(ngModel)]="body.anotaciones"
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (ngModelChange)="onChangeForm()"
+                  [maxLength]="2000"></textarea>
+              </div>
+              <div class="form-group col-lg-12 col-md-12">
+                <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}
+                  <i class="fa fa-plus" style="color:grey" (click)="habilitarAutocompletar($event)"></i>
+                </label>
+
+                <br>
+
+                <p-multiSelect [defaultLabel]="textFilter" filterBy="label"
+                  [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [options]="comboEtiquetas"
+                  [disabled]="!autocompletar || disabledAction || tarjeta == '2'" styleClass="widthAll"
+                  [panelStyle]="{width:'100%'}" (ngModelChange)="onChangeForm()" (onSelect)="onSelect($event)"
+                  (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()"></p-multiSelect>
+              </div>
+            </div>
+          </div>
         </div>
+        <br>
+
       </div>
-      <br>
-
-    </div>
-    <!--END DATOS GENERALES-->
-    <div *ngIf="openFicha" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="restablecer()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton type="button"
-          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="comprobarAuditoria()" [disabled]="!showGuardar || disabledAction || tarjeta == '2'" pButton type="button"
-          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <!--END DATOS GENERALES-->
+      <div *ngIf="openFicha" class="card-footer ">
+        <div class="text-right main-button ">
+          <button (click)="restablecer()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton
+            type="button" icon="fa fa-undo" iconPos="left"
+            label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button (click)="comprobarAuditoria()" [disabled]="!showGuardar || disabledAction || tarjeta == '2'" pButton
+            type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        </div>
       </div>
     </div>
   </div>
-</div>
   <!-- CREAR ETIQUETA -->
-  <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog #dialog [(visible)]="checked" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
       <label>{{ mensaje }}</label>
     </p-header>
@@ -201,15 +210,16 @@
         <div class="form-group col-lg-6 col-md-6">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaDesde" | translate}} (*)</label>
-          <app-fecha [(value)]="item.fechaInicio" [disabled]="historico" (valueChangeSelected)="fillFechaInicio($event)" (valueChangeInput)="detectFechaInicioInput($event)"></app-fecha>
+          <app-fecha [(value)]="item.fechaInicio" [disabled]="historico" (valueChangeSelected)="fillFechaInicio($event)"
+            (valueChangeInput)="detectFechaInicioInput($event)"></app-fecha>
         </div>
 
         <div class="form-group col-lg-6 col-md-6 form-group-date">
           <label *ngIf="historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}</label>
           <label *ngIf="!historico">{{"administracion.auditoriaUsuarios.fechaHasta" | translate}}
           </label>
-          <app-fecha [(value)]="item.fechaBaja" [disabled]="historico" [minDate]="fechaHoy" (valueChangeSelected)="fillFechaBaja($event)"
-            (valueChangeInput)="detectFechaBajaInput($event)"></app-fecha>
+          <app-fecha [(value)]="item.fechaBaja" [disabled]="historico" [minDate]="fechaHoy"
+            (valueChangeSelected)="fillFechaBaja($event)" (valueChangeInput)="detectFechaBajaInput($event)"></app-fecha>
           <!-- <div *ngIf="item.fechaBaja != null && !isFechaBajaCorrect && !historico">
             <label class="labelError">{{"gratuita.altaTurnos.error.fechaBajaPosteriorInicio" | translate}}</label>
           </div> -->
@@ -219,16 +229,18 @@
 
     <p-footer *ngIf="!historico">
       <div class="text-right main-button">
-        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate}}"
-          [disabled]="!isTrue"></button>
-        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button>
+        <button (click)="aceptDialogConfirmation(item)" pButton type="button" icon="fa fa-check" iconPos="left"
+          label="{{ 'general.boton.submit' | translate}}" [disabled]="!isTrue"></button>
+        <button (click)="closeDialogConfirmation(item)" pButton type="button" icon="fa fa-close" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>
 
   <!-- AUDITORIA -->
 
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} -{{"censo.consultaHistorico.cabecera" | translate}}</label>
     </p-header>
@@ -243,8 +255,10 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-        <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left"
+          label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="guardar()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save"
+          iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>

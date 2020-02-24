@@ -10,9 +10,9 @@
   <div class="card">
     <div class="card-body">
       <p class="title-module">
-        <span>{{'general.message.datos.generales' | translate }}</span>
-        <i *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
+        <span (click)="abreCierraFicha()">{{'general.message.datos.generales' | translate }}</span>
+        <i (click)="abreCierraFicha()" *ngIf="fichaBusqueda" class="fa fa-angle-up float-right"></i>
+        <i (click)="abreCierraFicha()" *ngIf="!fichaBusqueda" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-avanzada">
         <div class="form-row">
@@ -75,7 +75,7 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field
          " pInputText type="text" (input)="table.filter($event.target.value, col.field, 'contains')">
             </th>
           </tr>
@@ -92,7 +92,8 @@
               <span *ngIf="col.field !='preseleccionado' &&col.field !='nombre' && showHistorico && dato.fechaBaja==null">
                 {{dato[col.field]}}</span>
 
-              <span *ngIf="col.field !='preseleccionado' && col.field !='nombre' && !showHistorico"> {{dato[col.field]}}</span>
+              <span *ngIf="col.field !='preseleccionado' && col.field !='nombre' && !showHistorico">
+                {{dato[col.field]}}</span>
 
               <span *ngIf="col.field =='preseleccionado'">
                 <i class="fa fa-check"></i>
@@ -122,11 +123,15 @@
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
-              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}: {{selectedDatos.length}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}: 0</label>
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}: {{selectedDatos.length}}
+            </label>
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros'| translate }}: 0
+            </label>
             <label>{{"general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
               <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo'| translate }}"

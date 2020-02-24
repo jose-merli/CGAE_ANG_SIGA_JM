@@ -732,10 +732,17 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             }
           }, () => {
             if (this.esColegiado) {
+              let nombreCompleto;
+              if(this.generalBody.apellidos2 != undefined){
+                nombreCompleto = this.generalBody.apellidos1 + " " + this.generalBody.apellidos2 + ", " + this.generalBody.nombre;
+              }else{
+                nombreCompleto =  this.generalBody.apellidos1 + ", " + this.generalBody.nombre;
+              }
+              
               this.datosTarjetaResumen = [
                 {
                   label: "Apellidos y Nombre",
-                  value: this.generalBody.nombre
+                  value: nombreCompleto
                 },
                 {
                   label: "Identificación",
@@ -753,10 +760,16 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
             } else {
+              let nombreCompleto;
+              if(this.generalBody.apellidos2 != undefined){
+                nombreCompleto = this.generalBody.apellidos1 + " " + this.generalBody.apellidos2 + ", " + this.generalBody.nombre;
+              }else{
+                nombreCompleto =  this.generalBody.apellidos1 + ", " + this.generalBody.nombre;
+              }
               this.datosTarjetaResumen = [
                 {
                   label: "Apellidos y Nombre",
-                  value: this.generalBody.nombre
+                  value: nombreCompleto
                 },
                 {
                   label: "Identificación",
@@ -849,10 +862,16 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             this.idPersonaNuevo.emit(this.idPersona);
 
             if (this.esColegiado) {
+              let nombreCompleto;
+              if(this.generalBody.apellidos2 != undefined){
+                nombreCompleto = this.generalBody.apellidos1 + " " + this.generalBody.apellidos2 + ", " + this.generalBody.nombre;
+              }else{
+                nombreCompleto =  this.generalBody.apellidos1 + ", " + this.generalBody.nombre;
+              }
               this.datosTarjetaResumen = [
                 {
                   label: "Apellidos y Nombre",
-                  value: this.generalBody.nombre
+                  value: nombreCompleto
                 },
                 {
                   label: "Identificación",
@@ -870,10 +889,16 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
             } else {
+              let nombreCompleto;
+              if(this.generalBody.apellidos2 != undefined){
+                nombreCompleto = this.generalBody.apellidos1 + " " + this.generalBody.apellidos2 + ", " + this.generalBody.nombre;
+              }else{
+                nombreCompleto =  this.generalBody.apellidos1 + ", " + this.generalBody.nombre;
+              }
               this.datosTarjetaResumen = [
                 {
                   label: "Apellidos y Nombre",
-                  value: this.generalBody.nombre
+                  value: nombreCompleto
                 },
                 {
                   label: "Identificación",

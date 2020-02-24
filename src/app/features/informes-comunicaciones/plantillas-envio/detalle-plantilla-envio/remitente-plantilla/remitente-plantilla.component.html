@@ -2,7 +2,7 @@
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
-    <div (click)="abreCierraFicha()" class="card-header header-ficha">
+    <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -11,7 +11,8 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
+            <label (click)="abreCierraFicha()"
+              class="mr-auto title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
@@ -28,7 +29,8 @@
         <div class="img-colegiado">
           <i class="fa fa-user icon-ficha"></i>
         </div>
-        <label (click)="abreCierraFicha()" class="title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
+        <label (click)="abreCierraFicha()"
+          class="title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
         <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -54,7 +56,8 @@
         </div>
         <div class="form-group col-md-12">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
-          <textarea style="height: 85px" [(ngModel)]="remitente.descripcion" [disabled]="soloLectura" pInputTextarea></textarea>
+          <textarea style="height: 85px" [(ngModel)]="remitente.descripcion" [disabled]="soloLectura"
+            pInputTextarea></textarea>
         </div>
       </div>
       <div class="row">
@@ -76,43 +79,48 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{'censo.consultaDirecciones.literal.direccion' | translate}}</label>
-              <input [(ngModel)]="direccion.domicilio" type="text" class="form-control" [disabled]="true" [maxLength]="99" pInputText>
+              <input [(ngModel)]="direccion.domicilio" type="text" class="form-control" [disabled]="true"
+                [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'censo.datosDireccion.literal.pais2' | translate}}</label>
-              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="direccion.idPais" [filter]="true" filterMatchMode="contains" [options]="comboPais">
+              <p-dropdown [showClear]="true" [disabled]="true" class="select-form"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="direccion.idPais" [filter]="true"
+                filterMatchMode="contains" [options]="comboPais">
               </p-dropdown>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'censo.ws.literal.codigopostal' | translate}} (*)</label>
-              <input [(ngModel)]="direccion.codigoPostal" type="text" class="form-control" [disabled]="true" [maxLength]="5" (ngModelChange)="onChangeCodigoPostal()"
-                pInputText>
+              <input [(ngModel)]="direccion.codigoPostal" type="text" class="form-control" [disabled]="true"
+                [maxLength]="5" (ngModelChange)="onChangeCodigoPostal()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'censo.datosDireccion.literal.provincia' | translate}}</label>
               <!-- (onChange)="onChangeProvincia()" -->
-              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [filter]="true" filterMatchMode="contains" [options]="comboProvincia">
+              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" [(ngModel)]="direccion.idProvincia"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterMatchMode="contains"
+                [options]="comboProvincia">
               </p-dropdown>
 
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'censo.datosDireccion.literal.otraProvincia' | translate }}</label>
-              <p-checkbox [disabled]="true" name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia [(disabled)]="disableCheck"
-                binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
+              <p-checkbox [disabled]="true" name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia
+                [(disabled)]="disableCheck" binary="true" (onChange)="onChangeOtherProvincia($event)"></p-checkbox>
             </div>
             <!-- *ngIf="!poblacionExtranjera" -->
             <div *ngIf="!poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>{{'censo.consultaDirecciones.literal.poblacion' | translate}}</label>
-              <p-dropdown [showClear]="true" [disabled]="true" class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [(ngModel)]="direccion.idPoblacion" [filter]="true" filterMatchMode="contains" [options]="comboPoblacion">
+              <p-dropdown [showClear]="true" [disabled]="true" class="select-form"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="direccion.idPoblacion"
+                [filter]="true" filterMatchMode="contains" [options]="comboPoblacion">
               </p-dropdown>
             </div>
             <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>{{'censo.consultaDirecciones.literal.poblacion' | translate}}</label>
-              <input [disabled]="true" [(ngModel)]="direccion.poblacionExtranjera" type="text" class="form-control" [maxLength]="99" pInputText>
+              <input [disabled]="true" [(ngModel)]="direccion.poblacionExtranjera" type="text" class="form-control"
+                [maxLength]="99" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'censo.datosDireccion.literal.tipo.direccion' | translate}} (*)</label>
@@ -122,8 +130,10 @@
               </p-dropdown> -->
 
 
-              <p-multiSelect defaultLabel="{{ textFilter | translate}}" styleClass="widthAll" [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
-                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="true"></p-multiSelect>
+              <p-multiSelect defaultLabel="{{ textFilter | translate}}" styleClass="widthAll"
+                [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
+                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="true">
+              </p-multiSelect>
 
 
             </div>
@@ -133,10 +143,12 @@
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label style="text-align:center; font-weight: bold;">{{'censo.datosDireccion.literal.datos.contacto' | translate }}</label>
+              <label
+                style="text-align:center; font-weight: bold;">{{'censo.datosDireccion.literal.datos.contacto' | translate }}</label>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado" [first]="first">
+              <p-table [value]="datos" [columns]="cols" [responsive]="true" #table class="tabla-listado"
+                [first]="first">
 
                 <ng-template pTemplate="header" let-columns>
                   <tr>
@@ -172,9 +184,12 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button [disabled]="soloLectura" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="soloLectura" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button [disabled]="soloLectura" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="soloLectura" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="soloLectura" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate}}"></button>
+        <button [disabled]="soloLectura" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
 
@@ -182,23 +197,30 @@
 
 </div>
 
-<p-dialog [(visible)]="showDirecciones" responsive="true" [draggable]="false" modal="modal" resizable="true" [width]="1000">
+<p-dialog [(visible)]="showDirecciones" responsive="true" [draggable]="false" modal="modal" resizable="true"
+  [width]="1000">
   <p-header>
     <label>{{ "censo.consultaDirecciones.literal.direccion" | translate}}</label>
   </p-header>
-  <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="remitente.direccion" [responsive]="true"
-    class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
-    (onRowSelect)="cambiarDireccion(selectedDatos)" selectionMode="single">
-    <p-column [style]="{'width': col.width}" *ngFor="let col of cols2" [sortable]="true" [field]="col.field" [header]="col.header | translate"
-      [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="remitente.direccion"
+    [responsive]="true" class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true"
+    paginatorPosition="both" [rows]="selectedItem" (onRowSelect)="cambiarDireccion(selectedDatos)"
+    selectionMode="single">
+    <p-column [style]="{'width': col.width}" *ngFor="let col of cols2" [sortable]="true" [field]="col.field"
+      [header]="col.header | translate" [filter]="true" filterMatchMode="contains"
+      filterPlaceholder="{{'general.boton.search' | translate}}">
     </p-column>
 
     <ng-template pTemplate="paginatorLeft">
       <div class="mostrar">
-        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first
-          + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+        <label
+          class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+          {{table.first + 1}} al {{table.first
+          + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+          {{table.totalRecords}}</label>
         <label>{{ 'general.message.mostrar' | translate}}</label>
-        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+        </p-dropdown>
         <label>{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
       </div>
     </ng-template>
@@ -215,7 +237,7 @@
         <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
           {{col.header | translate}}
           <p-sortIcon [field]="col.field"></p-sortIcon>
-          <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,col.field, 'contains')">
+          <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,col.field, 'contains')">
         </th>
       </tr>
     </ng-template>

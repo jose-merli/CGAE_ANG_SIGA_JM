@@ -1,7 +1,7 @@
 <!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -10,7 +10,8 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{"enviosMasivos.literal.destinatarios" | translate}}</label>
+            <label (click)="abreCierraFicha()"
+              class="mr-auto title-ficha">{{"enviosMasivos.literal.destinatarios" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label *ngIf="destinatarios && destinatarios.length == 0">
@@ -19,7 +20,8 @@
             <label *ngIf="destinatarios && destinatarios.length > 0">
               {{ "enviosMasivos.literal.destinatarios" | translate }}: {{ destinatarios.length }}
             </label>
-            <i (click)="abreCierraFicha()" *ngIf="!openFicha && destinatarios && destinatarios.length > 0" class="fa fa-angle-down float-right"></i>
+            <i (click)="abreCierraFicha()" *ngIf="!openFicha && destinatarios && destinatarios.length > 0"
+              class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -61,9 +63,11 @@
                 </label>
 
                 <label class="mr-3">
-                  <i (click)="navigateTo(destinatario);$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                  <i (click)="navigateTo(destinatario);$event.stopPropagation();"
+                    class="fas fa-external-link-alt mr-2"></i>
                   <a (click)="navigateTo(destinatario);$event.stopPropagation();">
-                    <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                    <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                      {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                     </span>
                   </a>
                 </label>
@@ -75,13 +79,16 @@
             <!-- <div class="img-colegiado">
                   <i class="fas fa-file-alt icon-ficha"></i>
             </div> -->
-            <label class="title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate }}
+            <label
+              class="title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate }}
             </label>
             <div class="d-flex justify-content-start mb-1 ml-auto">
-              <i (click)="navigateTo(destinatario);$event.stopPropagation();" class="fas fa-external-link-alt mr-2 float-right"></i>
+              <i (click)="navigateTo(destinatario);$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2 float-right"></i>
               <label class="mr-3">
                 <a (click)="navigateTo(destinatario);$event.stopPropagation();">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                  <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                    {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                   </span>
                 </a>
               </label>
@@ -102,25 +109,28 @@
                 <div class="form-group col-lg-4 col-md-4">
                   <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
                   </label>
-                  <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20" [disabled]="true" pInputText
-                  />
+                  <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20"
+                    [disabled]="true" pInputText />
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group col-lg-4 col-md-4">
                   <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
                   </label>
-                  <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true" pInputText />
+                  <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true"
+                    pInputText />
                 </div>
                 <div class="form-group col-lg-34 col-md-4">
                   <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }}
                   </label>
-                  <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true" pInputText />
+                  <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true"
+                    pInputText />
                 </div>
                 <div class="form-group col-lg-4 col-md-4">
                   <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
                   </label>
-                  <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true" pInputText />
+                  <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true"
+                    pInputText />
                 </div>
               </div>
             </div>

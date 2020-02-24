@@ -5,17 +5,15 @@
     <p>{{ "menu.formacion" | translate}}
       <i class="fa fa-angle-right"> </i>{{ 'menu.formacion.buscarCursos' | translate}}</p>
     <!-- <i class="fa fa-angle-right"></i> Búsqueda Cursos</p> -->
-
   </div>
-
 
   <div class="card">
     <!-- Datos generales -->
     <div class="card-body">
-      <p class="title-module" (click)="onHideDatosGenerales()">
-        <span>{{ "censo.consultaDatosGenerales.cabecera" | translate}}</span>
-        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{ "censo.consultaDatosGenerales.cabecera" | translate}}</span>
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
@@ -167,7 +165,8 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field"
+                pInputText type="text" (input)="table.filter($event.target.value,
                               col.field, 'contains')">
             </th>
           </tr>
@@ -182,7 +181,8 @@
         <ng-template pTemplate="paginatorleft">
           <div class="mostrar d-flex text-right justify-content-end">
             <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al {{table.first
-              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}
+            </label>
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
             </label>
             <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
