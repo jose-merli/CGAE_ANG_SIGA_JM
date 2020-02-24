@@ -151,7 +151,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado != undefined) {
+    if (this.isLetrado == true) {
       this.isLetrado = true
     } else {
       this.isLetrado = !this.permisos;

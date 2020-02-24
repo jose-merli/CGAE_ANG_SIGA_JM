@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -23,7 +23,8 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-datos-colegiales-ficha-colegial',
   templateUrl: './datos-colegiales-ficha-colegial.component.html',
-  styleUrls: ['./datos-colegiales-ficha-colegial.component.scss']
+  styleUrls: ['./datos-colegiales-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges {
   tarjetaColegialesNum: string;
@@ -1496,10 +1497,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     if ((this.colegialesBody.numColegiado == null || this.colegialesBody.numColegiado == undefined || this.colegialesBody.numColegiado === "") ||
       (this.colegialesBody.incorporacion == null || this.colegialesBody.incorporacion == undefined) ||
       (this.colegialesBody.fechapresentacion == null || this.colegialesBody.fechapresentacion == undefined) ||
-      (this.inscritoSeleccionado == null || this.inscritoSeleccionado == undefined || this.inscritoSeleccionado === "")
-      ||
+      (this.inscritoSeleccionado == null || this.inscritoSeleccionado == undefined || this.inscritoSeleccionado === "")||
       (this.datosColegiales.length > 0 && (!this.nuevoEstadoColegial.fechaEstadoStr || !this.nuevoEstadoColegial.situacion ||
-        !this.nuevoEstadoColegial.situacionResidente))) {
+        !this.nuevoEstadoColegial.situacionResidente) && this.isCrearColegial)) {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatosColegiales = true;
     } else {
