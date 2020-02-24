@@ -59,7 +59,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   rowsPerPage;
 
   @ViewChild("tableCurriculares")
-  tableCurriculares:Table;
+  tableCurriculares: Table;
   @Input() idPersona;
   @Input() openCurricu;
   constructor(private router: Router,
@@ -362,7 +362,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.historicoCV = false;
 
     this.searchDatosCurriculares();
-
+    this.selectedDatosCurriculares = [];
     if (!this.historicoCV) {
       this.selectMultiple = false;
       this.selectAll = false;
@@ -371,6 +371,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
 
   cargarHistorico() {
     this.historicoCV = true;
+    this.selectedDatosCurriculares = [];
+
     this.searchDatosCurriculares();
   }
 

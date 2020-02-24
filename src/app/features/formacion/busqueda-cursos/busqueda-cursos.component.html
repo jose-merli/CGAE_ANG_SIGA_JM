@@ -134,9 +134,9 @@
   <!--FIN CARD-->
   <div *ngIf="buscar" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
-      <p-table [columns]="cols" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        pageLinks="4" dataKey="idCurso" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable"
-        [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+      <p-table [columns]="cols" (onRowSelect)="clickFila($event)" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
+        (onRowUnselect)="actualizaSeleccionados(selectedDatos)" pageLinks="4" [responsive]="true" selectionMode="multiple"
+        #table class="tabla-listado inheritTable" [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
 
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
