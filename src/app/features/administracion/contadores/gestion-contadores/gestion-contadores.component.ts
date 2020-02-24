@@ -42,7 +42,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   derechoAcceso: any;
   comparacion: boolean;
 
-  resaltadoDatos:boolean = false;
+  resaltadoDatos: boolean = false;
 
   constructor(
     private sigaServices: SigaServices,
@@ -56,7 +56,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table;
   ngOnInit() {
-    this.resaltadoDatos=false;
+    this.resaltadoDatos = false;
 
     console.log(sessionStorage);
     this.checkAcceso();
@@ -118,10 +118,10 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.body.fechareconfiguracion = this.arreglarDate(this.fechareconfiguracion);
     this.comparacion =
       JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
-    if (this.editar == true && !this.comparacion ) {
+    if (this.editar == true && !this.comparacion) {
       return false;
     } else {
-      if(this.body.modo != undefined){
+      if (this.body.modo != undefined) {
         return true;
       }
       return true;
@@ -142,7 +142,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   isRestablecer() {
     this.body = JSON.parse(sessionStorage.getItem("contadorBody"));
     this.bodyToModificable();
-    this.resaltadoDatos=false;
+    this.resaltadoDatos = false;
   }
 
   bodyToModificable() {
@@ -183,7 +183,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
       this.body.modificablecontador = "0";
     }
   }
-  
+
   isEditar() {
     this.modificableToBody();
     if (this.body.nombre != null) {
@@ -290,27 +290,29 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.fechareconfiguracion = event;
   }
 
-  styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento==="")){
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento === "")) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
-  muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatos=true;
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
   }
 
-  checkDatos(){
-    if(this.checkEditar()){
+
+
+  checkDatos() {
+    if (this.checkEditar()) {
       this.confirmEdit();
-    }else{
-      if((this.body.nombre == undefined || this.body.nombre==null || this.body.nombre=="") ||
-      (this.body.modo == undefined || this.body.modo == null || this.body.modo =="") || 
-      (this.body.contador == undefined || this.body.contador == null || this.body.contador =="") ||
-      (this.body.longitudcontador == undefined || this.body.longitudcontador == null || this.body.longitudcontador =="") ||
-      (this.body.reconfiguracioncontador == undefined || this.body.reconfiguracioncontador == null || this.body.reconfiguracioncontador =="")){
+    } else {
+      if ((this.body.nombre == undefined || this.body.nombre == null || this.body.nombre == "") ||
+        (this.body.modo == undefined || this.body.modo == null || this.body.modo == "") ||
+        (this.body.contador == undefined || this.body.contador == null || this.body.contador == "") ||
+        (this.body.longitudcontador == undefined || this.body.longitudcontador == null || this.body.longitudcontador == "") ||
+        (this.body.reconfiguracioncontador == undefined || this.body.reconfiguracioncontador == null || this.body.reconfiguracioncontador == "")) {
         this.muestraCamposObligatorios();
-      }else{
+      } else {
         this.confirmEdit();
       }
     }

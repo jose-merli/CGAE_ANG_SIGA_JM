@@ -2,7 +2,7 @@
 <div class="ficha-container">
   <!--DATOS GENERALES-->
   <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -11,7 +11,8 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
+            <label (click)="abreCierraFicha()"
+              class="mr-auto title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>Fecha Programación: {{body.fechaProgramada | date: 'dd/MM/yyyy, H:mm '}}
@@ -24,7 +25,8 @@
         <div class="img-colegiado">
           <i class="fas fa-calendar-plus icon-ficha"></i>
         </div>
-        <label (click)="abreCierraFicha()" class="title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
+        <label (click)="abreCierraFicha()"
+          class="title-ficha">{{'enviosMasivos.literal.programacion' | translate}}</label>
         <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -33,25 +35,29 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-4">
           <label class="d-block mb-1">{{'enviosMasivos.literal.creado' | translate}}</label>
-          <app-fecha [(value)]="body.fechaCreacion" [disabled]="true" [minDate]="currentDate" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaCreacion($event)"
+          <app-fecha [(value)]="body.fechaCreacion" [disabled]="true" [minDate]="currentDate" [utc]="false"
+            showTime="true" (valueChangeSelected)="fillFechaCreacion($event)"
             (valueChangeInput)="fillFechaCreacion($event)"></app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'enviosMasivos.literal.estado' | translate}}</label>
-          <p-dropdown [showClear]="true" [filter]="true" [disabled]="true" [options]="estados" [(ngModel)]="body.idEstado" class="select-form no-edit">
+          <p-dropdown [showClear]="true" [filter]="true" [disabled]="true" [options]="estados"
+            [(ngModel)]="body.idEstado" class="select-form no-edit">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-4 col-md-4">
           <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} (*)</label>
-          <app-fecha [inputStyleClass]="styleObligatorio(body.fechaProgramada)" [(value)]="body.fechaProgramada" [minDate]="currentDate" [disabled]="noEditar" [utc]="false" showTime="true" (valueChangeSelected)="fillFechaProgramada($event)"
-            (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
+          <app-fecha [inputStyleClass]="styleObligatorio(body.fechaProgramada)" [(value)]="body.fechaProgramada"
+            [minDate]="currentDate" [disabled]="noEditar" [utc]="false" showTime="true"
+            (valueChangeSelected)="fillFechaProgramada($event)" (valueChangeInput)="fillFechaProgramada($event)">
+          </app-fecha>
         </div>
       </div>
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button (click)="restablecer()" [disabled]="isGuardarDisabled()" pButton type="button " icon="fa fa-undo " iconPos="left"
-          label="{{'general.boton.restablecer' | translate}} "></button>
+        <button (click)="restablecer()" [disabled]="isGuardarDisabled()" pButton type="button " icon="fa fa-undo "
+          iconPos="left" label="{{'general.boton.restablecer' | translate}} "></button>
         <button (click)="checkDatos()" [disabled]="noEditar" pButton type=" button " icon="far fa-save " iconPos="left"
           label="{{ 'general.boton.guardar' | translate}} "></button>
       </div>
