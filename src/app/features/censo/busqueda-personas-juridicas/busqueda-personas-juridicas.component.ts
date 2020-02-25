@@ -66,7 +66,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   textFilter: String = "Elegir";
   sortO: number = 1;
   etiquetasSelected: any[];
-    pInputText;
+  pInputText;
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -179,8 +179,8 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("nuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiadoGen");
     sessionStorage.removeItem("solicitudIncorporacion");
-    if(sessionStorage.getItem("migaPan") != "Buscar Sociedades")
-    sessionStorage.removeItem("migaPan");
+    if (sessionStorage.getItem("migaPan") != "Buscar Sociedades")
+      sessionStorage.removeItem("migaPan");
   }
 
   onChangeSelectAll() {
@@ -243,7 +243,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   clickFila(event) {
-    if (this.historico && !event.data.fechaBaja) {
+    if (event.data && this.historico && !event.data.fechaBaja) {
       this.selectedDatos.pop();
     }
   }
@@ -432,7 +432,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          setTimeout(()=>{
+          setTimeout(() => {
             this.commonsService.scrollTablaFoco('tablaFoco');
           }, 5);
         }
