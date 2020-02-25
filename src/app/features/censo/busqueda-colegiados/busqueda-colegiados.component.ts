@@ -1269,7 +1269,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   }
 
-  showCount(event, dato) {
+  showCount(event) {
     this.isBuscarCount(event);
   }
 
