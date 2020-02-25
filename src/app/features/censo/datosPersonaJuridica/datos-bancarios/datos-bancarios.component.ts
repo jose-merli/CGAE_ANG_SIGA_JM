@@ -150,11 +150,11 @@ export class DatosBancariosComponent implements OnInit {
       }
     ];
   }
-  ngOnChanges(changes: SimpleChanges){
-    if(this.openTarjeta == "bancarios"){
-     this.openFicha = true;
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.openTarjeta == "bancarios") {
+      this.openFicha = true;
     }
-    
+
   }
   cargarDatosBancarios() {
     this.historico = false;
@@ -166,7 +166,7 @@ export class DatosBancariosComponent implements OnInit {
     this.body.historico = false;
     this.body.idPersona = this.idPersona;
     this.body.nifTitular = this.nif;
-
+    this.selectedDatos = [];
     this.buscarDatosBancarios();
 
     if (!this.historico) {
@@ -188,11 +188,11 @@ export class DatosBancariosComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { 
-        if(this.tarjeta == "3" || this.tarjeta == "2"){
-					let permisos = "bancarios";
-					this.permisosEnlace.emit(permisos);
-				  }
+      () => {
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "bancarios";
+          this.permisosEnlace.emit(permisos);
+        }
       }
     );
   }
@@ -206,7 +206,7 @@ export class DatosBancariosComponent implements OnInit {
 
     this.body.historico = true;
     this.body.idPersona = this.idPersona;
-
+    this.selectedDatos = [];
     this.buscarDatosBancarios();
   }
 
@@ -241,6 +241,12 @@ export class DatosBancariosComponent implements OnInit {
     this.numSelected = selectedDatos.length;
   }
 
+  clickFila(event) {
+    if (event.data && this.historico && !event.data.fechaBaja) {
+      this.selectedDatos.pop();
+    }
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
@@ -248,13 +254,26 @@ export class DatosBancariosComponent implements OnInit {
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.numSelected = this.bodySearch.datosBancariosItem.length;
-      this.selectMultiple = false;
-      this.selectedDatos = this.bodySearch.datosBancariosItem;
+    if (!this.historico) {
+
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.bodySearch.datosBancariosItem;
+        this.numSelected = this.bodySearch.datosBancariosItem.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.bodySearch.datosBancariosItem.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
     }
   }
 

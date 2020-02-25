@@ -4,90 +4,123 @@
 
   <!--DATOS GENERALES-->
   <div id="sdatosBancarios">
-  <div *ngIf="tarjeta == '2' || tarjeta == '3'" class="card">
-    <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+    <div *ngIf="tarjeta == '2' || tarjeta == '3'" class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i class="fa fa-bank icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1">
+              <label (click)="abrirFicha()" class="mr-auto title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>{{"censo.datosDireccion.literal.numero.cuentas" | translate}}
+                <span>{{ bodySearch.datosBancariosItem.length }}</span>
+              </label>
+              <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado ">
             <i class="fa fa-bank icon-ficha"></i>
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abrirFicha()" class="mr-auto title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>{{"censo.datosDireccion.literal.numero.cuentas" | translate}}
-              <span>{{ bodySearch.datosBancariosItem.length }}</span>
-            </label>
-            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
-          </div>
+          <label (click)="abrirFicha()" class="title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
+          <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado ">
-          <i class="fa fa-bank icon-ficha"></i>
-        </div>
-        <label (click)="abrirFicha()" class="title-ficha">{{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
-        <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
 
-    <!--cuerpo datos generales-->
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="bodySearch.datosBancariosItem"
-        [sortOrder]="1" [paginator]="activarPaginacion()" (onRowSelect)="redireccionar(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-        paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
-        <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header" filterPlaceholder="{{'general.boton.search' | translate}}"
-          [filter]="true" filterMatchMode="contains">
-
-          <ng-template let-datoH="rowData" pTemplate="body">
-            <div *ngIf="setItalic(datoH)">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
-            </div>
-            <div *ngIf="!setItalic(datoH)">
-              <span>{{datoH[col.field]}}</span>
-            </div>
+      <!--cuerpo datos generales-->
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
+        <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+          pageLinks="4" [responsive]="true" [columns]="cols" selectionMode="multiple" #table class="tabla-listado" [value]="bodySearch.datosBancariosItem"
+          [paginator]="true" (onRowSelect)="clickFila($event)" sortOrder="1" filter="true" paginatorPosition="both" [rows]="selectedItem">
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field"
+                  pInputText type="text" (input)="table.filter($event.target.value,
+                          col.field, 'contains')">
+              </th>
+            </tr>
           </ng-template>
 
-        </p-column>
-
-
-        <ng-template pTemplate="paginatorLeft">
-          <div class="mostrar d-flex text-right justify-content-end">
-            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
-            <label>{{ "general.message.mostrar" | translate}}</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
+          <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns">
+                <div [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" *ngIf="col.field != 'iban' && setItalic(dato)">
+                  <label>{{ dato[col.field]}}</label>
+                </div>
+                <div *ngIf="col.field != 'iban' && !setItalic(dato)">
+                  <label>{{ dato[col.field]}}</label>
+                </div>
+                <div *ngIf="setItalic(dato) && col.field == 'iban'">
+                  <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [routerLink]="" (click)="redireccionar([dato])"
+                    class="enlace">{{ dato[col.field]}}</a>
+                </div>
+                <div *ngIf="!setItalic(dato) && col.field == 'iban'">
+                  <a [routerLink]="" (click)="redireccionar([dato])" class="enlace">{{ dato[col.field]}}</a>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}} al
+                {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}
+              </label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+              </label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+                  name="groupname"></p-checkbox>
+              </div>
+              <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-          </div>
-        </ng-template>
+          </ng-template>
+        </p-table>
 
-      </p-dataTable>
+        <!--<app-dialog></app-dialog>-->
+        <!--END DATOS GENERALES-->
+      </div>
+      <div *ngIf="openFicha" class="card-footer">
+        <div class="text-right main-button">
 
-      <!--<app-dialog></app-dialog>-->
-      <!--END DATOS GENERALES-->
-    </div>
-    <div *ngIf="openFicha" class="card-footer">
-      <div class="text-right main-button">
-
-        <button (click)="cargarDatosBancarios()" *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
-        <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-        <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
-          icon="fa fa-trash-alt" iconPos="left" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" label="{{'general.boton.eliminar'  | translate}}"></button>
-        <button (click)="redireccionar(selectedDatos)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton
-          type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <button (click)="cargarDatosBancarios()" *ngIf="historico" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
+          <button (click)="cargarHistorico()" *ngIf="!historico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
+          <button *ngIf="selectedDatos && selectedDatos != '' && !historico" (click)="confirmarEliminar(selectedDatos)" pButton type="button"
+            icon="fa fa-trash-alt" iconPos="left" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" label="{{'general.boton.eliminar'  | translate}}"></button>
+          <button (click)="redireccionar(selectedDatos)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton
+            type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <div *ngIf="progressSpinner " class="overlay-spinner ">
     <div class="loader "></div>
