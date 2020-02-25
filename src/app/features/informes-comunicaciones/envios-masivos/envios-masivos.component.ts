@@ -16,6 +16,8 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
 import { CommonsService } from '../../../_services/commons.service';
+import { DatosBancariosComponent } from '../../censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component';
+import { findIndex } from "rxjs/operator/findIndex";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -357,6 +359,35 @@ para poder filtrar el dato con o sin estos caracteres*/
         ];
       }
     });
+  }
+
+  obtenerDestinatarios(dato){
+    this.progressSpinner = true;
+
+    let envios = new EnviosMasivosObject();
+    envios.enviosMasivosItem = dato;
+    this.sigaServices.post("enviosMasivos_obtenerDestinatarios", envios).subscribe(
+      data => {
+
+        let datos = JSON.parse(data["body"]).enviosMasivosItem;
+
+        datos.forEach(element => {
+          
+          let datoId = dato.findIndex(item => item.idEnvio === element.idEnvio);
+
+          if( datoId != undefined && datoId > -1){
+            dato[datoId].numDestinatarios = element.numDestinatarios;
+          }
+  
+        });
+
+        this.enviar(dato);
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showFail("Error al comprobar los destinatarios");
+      }
+      );
   }
 
   enviar(dato) {
