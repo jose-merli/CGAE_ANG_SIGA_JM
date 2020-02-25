@@ -172,7 +172,7 @@
                   [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [options]="comboEtiquetas"
                   [disabled]="!autocompletar || disabledAction || tarjeta == '2'" styleClass="widthAll"
                   [panelStyle]="{width:'100%'}" (ngModelChange)="onChangeForm()" (onSelect)="onSelect($event)"
-                  (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()"></p-multiSelect>
+                  (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()" defaultLabel="Seleccionar"></p-multiSelect>
               </div>
             </div>
           </div>

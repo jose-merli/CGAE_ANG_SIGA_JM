@@ -5,7 +5,7 @@
             <i class="fa fa-angle-right"></i> {{'menu.censo.fichaSociedad' | translate}}</p>
     </div>
      <!-- TARJETA RESUMEN FIJA -->
-     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
+     <app-tarjeta-resumen-fija class="pb-50" *ngIf="datosTarjetaResumen != undefined" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
      (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)"></app-tarjeta-resumen-fija>
 <!-- FIN TARJETA RESUMEN FIJA -->
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">

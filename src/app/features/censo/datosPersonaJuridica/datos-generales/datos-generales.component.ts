@@ -286,8 +286,8 @@ export class DatosGenerales implements OnInit {
           console.log(err);
         }
       );
-
     this.filterLabelsMultiple();
+    this.textFilter = "Elegir";
   }
 
   getComboIdentificacion() {
@@ -300,6 +300,22 @@ export class DatosGenerales implements OnInit {
         if (sessionStorage.getItem("nuevoRegistro") != null && sessionStorage.getItem("nuevoRegistro") === "true") {
           this.onChangeForm();
         }
+        this.datosTarjetaResumen = [
+          {
+            label: "Identificación",
+            value: this.body.nif
+          },
+          {
+            label: "Tipo",
+            value: this.tipoPersonaJuridica
+          },
+
+          {
+            label: "Denominación",
+            value: this.body.denominacion
+          },
+        ];
+        this.datosTarjeta.emit(this.datosTarjetaResumen);
       }
     );
 
@@ -399,22 +415,22 @@ export class DatosGenerales implements OnInit {
           this.editar = false;
           // restablece motivo de auditoria
           this.body.motivo = undefined;
-          this.datosTarjetaResumen = [
-            {
-              label: "Identificación",
-              value: this.body.nif
-            },
-            {
-              label: "Tipo",
-              value: this.tipoPersonaJuridica
-            },
+          // this.datosTarjetaResumen = [
+          //   {
+          //     label: "Identificación",
+          //     value: this.body.nif
+          //   },
+          //   {
+          //     label: "Tipo",
+          //     value: this.tipoPersonaJuridica
+          //   },
 
-            {
-              label: "Denominación",
-              value: this.body.denominacion
-            },
-          ];
-          this.datosTarjeta.emit(this.datosTarjetaResumen);
+          //   {
+          //     label: "Denominación",
+          //     value: this.body.denominacion
+          //   },
+          // ];
+          // this.datosTarjeta.emit(this.datosTarjetaResumen);
         }
 
       );
