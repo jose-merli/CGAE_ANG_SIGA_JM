@@ -1,3 +1,27 @@
 .ui-picklist.ui-picklist-responsive .ui-picklist-list {
     height: 105px !important;
 }
+.camposObligatorios{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div{
+    border-color: red !important;
+  }
+
+  
+  .camposObligatorios div{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > input{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div .ui-multiselect{
+    border: 1px solid red !important;
+  }
+
+  .ui-inputtext .camposObligatorios{
+    border: 1px solid red !important;
+  }

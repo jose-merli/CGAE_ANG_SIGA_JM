@@ -872,7 +872,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   callServiceShowMessageUpdate() {
     this.progressSpinner = false;
     this.icon = "fa fa-edit";
-    let keyConfirmation = "direcciones";
+    let keyConfirmation = "direccionesColegiado";
 
     this.confirmationService.confirm({
       key: keyConfirmation,
@@ -908,7 +908,32 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     ];
   }
+  confirmarEliminarEstadoColegial(selectedDatos) {
+    let mess = this.translateService.instant("messages.deleteConfirmation");
+    this.icon = "fa fa-trash-alt";
+    let keyConfirmation = "deleteEstado";
 
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mess,
+      icon: this.icon,
+      accept: () => {
+
+        this.eliminarEstadoColegial(selectedDatos);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
   comprobarDireccion(isEjerciente) {
 
     let direcciones = [];
