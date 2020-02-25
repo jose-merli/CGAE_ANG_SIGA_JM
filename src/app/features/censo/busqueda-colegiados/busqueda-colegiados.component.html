@@ -266,7 +266,7 @@
                             </div>
 
                             <div *ngIf="col.field == 'correo'">
-                                <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
+                                <a [href]="'mailto:'+dato[col.field]" class="correo" target="_blank">{{dato[col.field]}}</a>
                             </div>
                          
                             <div *ngIf="col.field == 'incorporacionDate'">
@@ -374,7 +374,7 @@
                 <td class="text-center" *ngFor="let col of columns">
                     <span *ngIf="col.field != 'correoElectronico'"> {{dato[col.field]}}</span>
                     <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''"
-                        [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
+                        [href]="'mailto:'+dato[col.field]" class="correo" target="_blank">{{dato[col.field]}}</a>
                     <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
                 </td>
             </tr>

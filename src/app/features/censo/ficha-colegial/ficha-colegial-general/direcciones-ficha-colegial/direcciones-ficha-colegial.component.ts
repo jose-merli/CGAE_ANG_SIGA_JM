@@ -1,5 +1,5 @@
 import { DatePipe, Location } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from "primeng/components/common/api";
@@ -18,7 +18,8 @@ import { cardService } from "./../../../../../_services/cardSearch.service";
 @Component({
   selector: 'app-direcciones-ficha-colegial',
   templateUrl: './direcciones-ficha-colegial.component.html',
-  styleUrls: ['./direcciones-ficha-colegial.component.scss']
+  styleUrls: ['./direcciones-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   esNewColegiado: boolean = false;
