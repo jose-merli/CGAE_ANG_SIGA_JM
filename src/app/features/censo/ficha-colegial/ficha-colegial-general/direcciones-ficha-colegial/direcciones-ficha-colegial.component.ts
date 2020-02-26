@@ -667,7 +667,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     // this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatosDirecciones = "";
-    this.selectAll = false;
+    this.selectAllDirecciones = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(

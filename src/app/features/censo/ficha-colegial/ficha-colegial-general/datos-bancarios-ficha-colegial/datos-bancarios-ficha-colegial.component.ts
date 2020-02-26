@@ -23,6 +23,7 @@ import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesIt
 import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
 import { DatosBancariosItem } from '../../../../../models/DatosBancariosItem';
 import { DatosBancariosObject } from '../../../../../models/DatosBancariosObject';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-datos-bancarios-ficha-colegial',
@@ -70,6 +71,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openBanca;
+  @ViewChild("tableBancarios")
+  tableBancarios: Table;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -234,7 +237,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
   clickFilaBancarios(event) {
-    if (event.data && event.data.fechaBaja != undefined && this.bodyDatosBancarios.historico){
+    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico){
       this.selectedDatosBancarios.pop();
     }
   }
@@ -443,6 +446,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchHistoricoDatosBancarios() {
+    this.selectedDatosBancarios = [];
+    this.selectAllBancarios = false;
     this.bodyDatosBancarios.historico = true;
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.searchDatosBancarios();
@@ -468,5 +473,10 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.abreCierraFicha(event);
     }
     // window.scrollTo(0,0);
+  }
+  onChangeRowsPerPages(event) {
+    this.selectedItemBancarios = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableBancarios.reset();
   }
 }
