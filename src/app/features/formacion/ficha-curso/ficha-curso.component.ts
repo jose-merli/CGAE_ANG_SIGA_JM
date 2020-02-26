@@ -589,6 +589,7 @@ export class FichaCursoComponent implements OnInit {
           if (sessionStorage.getItem("formador") != undefined) {
             let x = document.getElementById("fichaFormadores");
             x.scrollIntoView({ behavior: "smooth" });
+            this.abreCierraFicha('formadores');
           }
 
         } else if (derechoAcceso == 2) {
