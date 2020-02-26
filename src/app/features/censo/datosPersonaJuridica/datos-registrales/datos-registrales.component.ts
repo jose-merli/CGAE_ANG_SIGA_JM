@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -16,11 +16,13 @@ import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "../../../../models/ComboItem";
 import { debug } from "util";
 import { Router } from "@angular/router";
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: "app-datos-registrales",
   templateUrl: "./datos-registrales.component.html",
-  styleUrls: ["./datos-registrales.component.scss"]
+  styleUrls: ["./datos-registrales.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosRegistralesComponent implements OnInit {
   uploadedFiles: any[] = [];
@@ -71,6 +73,7 @@ export class DatosRegistralesComponent implements OnInit {
   file: File = undefined;
   base64String: any;
   source: any;
+  resaltadoDatos:boolean = false;
   imageBase64: any;
   imagenURL: any;
   generos: any[];
@@ -126,7 +129,8 @@ export class DatosRegistralesComponent implements OnInit {
     private sigaServices: SigaServices,
     private cardService: cardService,
     private fichasPosibles: DatosPersonaJuridicaComponent,
-    private router: Router
+    private router: Router,
+    private commonsService: CommonsService,
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -514,6 +518,7 @@ export class DatosRegistralesComponent implements OnInit {
                   this.progressSpinner = false;
                 },
                 () => {
+                  this.resaltadoDatos = false;
                   this.search();
                 }
               );
@@ -679,6 +684,7 @@ export class DatosRegistralesComponent implements OnInit {
         this.fechaFinCorrecta != false
       ) {
         if (this.camposDesactivados == true && this.noEditable == false) {
+          this.muestraCamposObligatorios();
           return true;
         } else {
           return false;
@@ -689,6 +695,7 @@ export class DatosRegistralesComponent implements OnInit {
           this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
           this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
         }
+        this.muestraCamposObligatorios();
         return true;
       }
     } else if (
@@ -718,7 +725,7 @@ export class DatosRegistralesComponent implements OnInit {
         this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
         this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
       }
-
+      this.muestraCamposObligatorios();
       return true;
     }
   }
@@ -896,5 +903,13 @@ export class DatosRegistralesComponent implements OnInit {
     this.habilitarCheck();
   }
 
-
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
 }
