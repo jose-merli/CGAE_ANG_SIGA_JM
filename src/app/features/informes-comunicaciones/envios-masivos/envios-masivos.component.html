@@ -59,7 +59,7 @@
     <div class="card-body p-0">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table class="tabla-listado"
         [paginator]="true" [rows]="selectedItem" dataKey="idEnvio" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
-        selectionMode="multiple" paginatorPosition="both" (onRowUnselect)="showButtons(selectedDatos)">
+        selectionMode="multiple" paginatorPosition="both" (onRowSelect)="showButtons(selectedDatos)" (onRowUnselect)="showButtons(selectedDatos)">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -122,7 +122,7 @@
       </p-table>
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="enviar(selectedDatos)"
+          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="obtenerDestinatarios(selectedDatos)"
             pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
           <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="onShowProgamar(selectedDatos)"

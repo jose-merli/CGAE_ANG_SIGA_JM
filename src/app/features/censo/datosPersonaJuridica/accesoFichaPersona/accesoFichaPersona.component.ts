@@ -125,6 +125,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
       if (this.notario[0].tipoIdentificacion != undefined) {
         this.body.tipoIdentificacion = this.notario[0].tipoIdentificacion;
       }
+      this.progressSpinner = false;
     }
     if (this.usuarioBody != null && this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;

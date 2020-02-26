@@ -154,7 +154,7 @@
             </div>
             <!-- Dirección -->
 
-            <p class="title-module">
+            <p class="title-module"> 
                 <span (click)="onHideDireccion()">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate}}</span>
                 <i (click)="onHideDireccion()" *ngIf="showDatosDireccion" class="fa fa-angle-up float-right"></i>
                 <i (click)="onHideDireccion()" *ngIf="!showDatosDireccion" class="fa fa-angle-down float-right"></i>
@@ -163,6 +163,10 @@
             <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
 
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                        <label>{{'censo.consultaDirecciones.literal.direccion' | translate}}</label>
+                        <input type="text" name="direccion" class="form-control" [maxLength]="95" [(ngModel)]='body.domicilio' pInputText>
+                    </div>
                     <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
                         <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='body.codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
@@ -217,7 +221,7 @@
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
                 [responsive]="true" [columns]="cols" dataKey="idPersona" [(selectionMode)]="selection" #table class="tabla-listado"
-                [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+                [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
 
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>
@@ -267,7 +271,7 @@
                             </div>
 
                             <div *ngIf="col.field == 'correo'">
-                                <a [href]="'mailto:'+dato[col.field]" class="enlace" target="_blank">{{dato[col.field]}}</a>
+                                <a [href]="'mailto:'+dato[col.field]" class="correo" target="_blank">{{dato[col.field]}}</a>
                             </div>
 
                             <div *ngIf="col.field == 'incorporacionDate'">
@@ -374,8 +378,8 @@
                 <td class="text-center" *ngFor="let col of columns">
                     <span *ngIf="col.field != 'correoElectronico'"> {{dato[col.field]}}</span>
                     <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]"
-                        class="col-11" target="_blank">{{dato[col.field]}}</a>
-                    <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
+                        class="correo" target="_blank">{{dato[col.field]}}</a>
+                    <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="correo">{{dato[col.field]}}</span>
                 </td>
             </tr>
         </ng-template>

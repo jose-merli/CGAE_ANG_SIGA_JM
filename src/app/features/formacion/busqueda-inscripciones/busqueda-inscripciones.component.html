@@ -134,7 +134,7 @@
       <p-table [columns]="cols" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{'customCursor': selectMultiple}"
         [(selection)]="selectedDatos" pageLinks="4" dataKey="idInscripcion" [responsive]="true" selectionMode="multiple" #table
         class="tabla-listado inheritTable" [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
-        <ng-template pTemplate="colgroup" let-columns>
+        <ng-template pTemplate="colgroup" let-columns id="tablaFoco">
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
           </colgroup>

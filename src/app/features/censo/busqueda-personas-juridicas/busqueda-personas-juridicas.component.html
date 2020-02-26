@@ -75,7 +75,7 @@
     <div class="card-body p-0">
       <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         pageLinks="4" dataKey="nif" [responsive]="true" [columns]="cols" selectionMode="multiple" #table class="tabla-listado"
-        [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">
@@ -155,7 +155,7 @@
 
       <p-table [columns]="cols" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         pageLinks="4" [responsive]="true" (onRowSelect)="clickFila($event)" selectionMode="multiple" #table class="tabla-listado"
-        [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+        [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of columns" [style.width]="col.width">

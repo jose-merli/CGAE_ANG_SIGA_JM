@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from "./../../../../_services/siga.service";
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
@@ -9,13 +9,14 @@ import { TranslateService } from "../../../../commons/translate/translation.serv
 import { DatosPersonaJuridicaComponent } from "../../datosPersonaJuridica/datosPersonaJuridica.component";
 import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
-
+import { DatePipe } from '@angular/common';
 /*** COMPONENTES ***/
 
 @Component({
   selector: "app-datos-integrantes",
   templateUrl: "./datos-integrantes.component.html",
-  styleUrls: ["./datos-integrantes.component.scss"]
+  styleUrls: ["./datos-integrantes.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosIntegrantesComponent implements OnInit {
   usuarios_rol: any[];
@@ -268,7 +269,9 @@ export class DatosIntegrantesComponent implements OnInit {
             console.log(err);
             this.progressSpinner = false;
           },
-          () => { }
+          () => {
+            this.progressSpinner = false;
+           }
         );
     }
   }
@@ -454,5 +457,11 @@ export class DatosIntegrantesComponent implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+  }
+
+  clickFilaDirecciones(event) {
+    if (event.data && !event.data.fechaBaja && this.historico) {
+      this.selectedDatos.pop();
+    }
   }
 }

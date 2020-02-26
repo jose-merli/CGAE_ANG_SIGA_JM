@@ -1041,6 +1041,21 @@ export class FichaCursoComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
+        this.datosTarjetaResumen = [
+          {
+            label: "Nombre",
+            value: this.curso.nombreCurso
+          },
+          {
+            label: "Código",
+            value: this.curso.codigoCurso
+          },
+
+          {
+            label: "Estado",
+            value: this.curso.estado
+          },
+        ];
       }
     );
   }
