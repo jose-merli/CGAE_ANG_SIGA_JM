@@ -1000,7 +1000,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.fechaIncorporacionDesdeSelect == null) &&
       (this.fechaIncorporacionHastaSelect == undefined ||
         this.fechaIncorporacionHastaSelect == null) &&
-      (this.body.situaciones == undefined || this.body.situaciones == null) &&
+      (this.body.situaciones == undefined || this.body.situaciones == null || this.body.situaciones.length == 0) &&
       (this.body.residencia == undefined || this.body.residencia == null) &&
       (this.body.inscrito == undefined || this.body.inscrito == null) &&
       (this.body.sexo == undefined || this.body.sexo == null) &&

@@ -122,7 +122,7 @@
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4" [responsive]="true" selectionMode="multiple"
                 #table class="tabla-listado" (onRowSelect)="clickFila($event)" [value]="data" [columns]="cols" [paginator]="enablePagination()"
-                paginatorPosition="both" [rows]="selectedItem">
+                paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
 
                 <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
                     <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">

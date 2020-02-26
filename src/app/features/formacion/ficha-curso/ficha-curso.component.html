@@ -10,7 +10,7 @@
       <i class="fa fa-angle-right"> </i>{{ 'formacion.fichaCurso.cabecera' | translate }}</p>
   </div>
   <!-- TARJETA RESUMEN FIJA -->
-  <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen"
+  <app-tarjeta-resumen-fija *ngIf="modoEdicion" class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen"
     [enlaces]="enlacesTarjetaResumen" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)"></app-tarjeta-resumen-fija>
   <!-- FIN TARJETA RESUMEN FIJA -->
   <!-- TARJETA DATOS GENERALES -->
