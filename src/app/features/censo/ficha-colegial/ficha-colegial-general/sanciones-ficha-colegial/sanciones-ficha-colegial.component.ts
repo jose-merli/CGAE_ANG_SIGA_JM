@@ -249,10 +249,11 @@ export class SancionesFichaColegialComponent implements OnInit {
         }, () => {
           if (this.dataSanciones.length > 0) {
             this.mostrarDatosSanciones = true;
-            for (let i; i <= this.dataSanciones.length - 1; i++) {
+            for (let i = 0; i <= this.dataSanciones.length - 1; i++) {
               this.DescripcionSanciones = this.dataSanciones[i];
             }
           }
+          this.progressSpinner = false;
         }
       );
   }
