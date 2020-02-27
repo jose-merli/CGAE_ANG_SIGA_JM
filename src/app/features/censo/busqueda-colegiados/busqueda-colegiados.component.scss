@@ -2,10 +2,7 @@
   table-layout: inherit !important;
 }
 
-.textAlignCenter{
-  text-align: center;
-  width: 50%;
-}
+
 .width20{
  width: 20%;
 }
@@ -16,6 +13,21 @@
   width: 5%;
  }
 
+ .overlayPanelPrueba > .ui-overlaypanel{
+//   top: 50% !important;
+//   left: 40% !important;
+  // width: 30em !important;
+  left: 5% !important;
+  // border-radius: 2em;
+  width: 90%;
+ }
+
+ .overlayPanelCount > .ui-overlaypanel > .ui-overlaypanel-content{
+  text-align: center;
+  // vertical-align: middle;
+  // line-height: 4em;
+ }
+
 .overlayPanelPrueba{
   max-width: 60%;
   max-height: 60%;
@@ -24,10 +36,11 @@
   // margin-left:50%;
   text-align: center;
 }
+
 .ui-overlaypanel{
-  left: 5% !important;
+  // left: 5% !important;
   border-radius: 2em;
-  width: 90%;
+  // width: 90%;
 }
 .imagenEye{
   width: 1.7em;
@@ -43,5 +56,23 @@
   color: #0000EE !important
 }
 .correo{
-  color:black !important
+  color:black !important;
+}
+
+#numero{
+  font-weight: bold;
+  font-size: 1.3em;
+}
+
+#dirIcon{
+  font-size: 2em;
+}
+
+#lopdColumn{
+  text-align: center;
+  vertical-align: middle;
+}
+
+#imageLOPD{
+  margin-top: -10px;
 }
