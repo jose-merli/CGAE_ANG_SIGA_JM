@@ -75,6 +75,7 @@ export class ConsultasComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos = [];
 
+
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -349,12 +350,17 @@ export class ConsultasComponent implements OnInit {
   SelectAll() {
     if (this.selectAll === true) {
       //this.eliminar = true;
-
+      this.selectMultiple = false;
       this.controlBtnEliminar(this.datos);
 
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      if(this.historico){
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -567,7 +573,7 @@ export class ConsultasComponent implements OnInit {
       },
       () => {
         this.table.reset();
-        this.buscar(false);
+        this.buscar(this.historico);
       }
     );
   }

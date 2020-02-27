@@ -239,8 +239,15 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+
+      if(!this.modoHistorico){
+        this.selectedDatos = this.datos.filter(dato => dato.flagArchivado == 1);
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;

@@ -230,8 +230,15 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+
+      if(this.showHistorico){
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+      
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -489,6 +496,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         () => {
+          this.selectedDatos = [];
           this.getResultados();
         }
       );
@@ -618,5 +626,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (event.data && !event.data.fechaBaja && this.showHistorico) {
       this.selectedDatos.pop();
     }
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
 }

@@ -32,7 +32,7 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="px-0 card-body card-body-ficha">
       <div *ngIf="!soloLectura">
-        <p-table [value]="datos" dataKey="idPlantillas" [columns]="cols" [(selection)]="selectedDatos"
+        <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos"
           [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
           [ngClass]="{ customCursor: selectMultiple }" selectionMode="multiple" paginatorPosition="both"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="actualizaSeleccionados(selectedDatos)">
@@ -102,7 +102,7 @@
         <!-- <p-table [value]="datos" dataKey="idPlantillas" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
           class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ customCursor: selectMultiple }"
           paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"> -->
-        <p-table [value]="datos" dataKey="idPlantillas" [columns]="cols" [(selection)]="selectedDatos"
+        <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos"
           [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
           [ngClass]="{ customCursor: selectMultiple }" selectionMode="multiple" paginatorPosition="both"
           (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="actualizaSeleccionados(selectedDatos)">
