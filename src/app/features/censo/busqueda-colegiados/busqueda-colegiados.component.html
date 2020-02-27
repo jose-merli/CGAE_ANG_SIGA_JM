@@ -254,7 +254,7 @@
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                 (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="cols"
-                dataKey="idPersona" [(selectionMode)]="selection" #table class="tabla-listado" [value]="datos"
+             [(selectionMode)]="selection" #table class="tabla-listado" [value]="datos"
                 [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
 
                 <ng-template pTemplate="colgroup" let-columns>

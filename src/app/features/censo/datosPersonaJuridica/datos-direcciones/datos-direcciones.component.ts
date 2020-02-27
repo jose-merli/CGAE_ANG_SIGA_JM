@@ -73,6 +73,7 @@ export class DatosDireccionesComponent implements OnInit {
   @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService,
@@ -439,5 +440,10 @@ export class DatosDireccionesComponent implements OnInit {
     if (event.data && !event.data.fechaBaja && this.historico) {
       this.selectedDatos.pop();
     }
+  }
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 }
