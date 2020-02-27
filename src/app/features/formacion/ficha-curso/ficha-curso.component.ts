@@ -33,7 +33,37 @@ import { CommonsService } from '../../../_services/commons.service';
 export class FichaCursoComponent implements OnInit {
   iconoTarjetaResumen = "clipboard";
   openFicha;
-  fichasPosibles;
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "descripcion",
+      activa: true
+    },
+    {
+      key: "formadores",
+      activa: true
+    },
+    {
+      key: "price",
+      activa: true
+    },
+    {
+      key: "certificate",
+      activa: true
+    },
+    {
+      key: "session",
+      activa: true
+    },
+    {
+      key: "carga",
+      activa: true
+    }
+    
+  ];
   msgs;
   results;
   es: any = esCalendar;
@@ -270,7 +300,37 @@ export class FichaCursoComponent implements OnInit {
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
-    this.getFichasPosibles();
+    this.fichasPosibles = [
+      {
+        key: "generales",
+        activa: true
+      },
+      {
+        key: "descripcion",
+        activa: true
+      },
+      {
+        key: "formadores",
+        activa: true
+      },
+      {
+        key: "price",
+        activa: true
+      },
+      {
+        key: "certificate",
+        activa: true
+      },
+      {
+        key: "session",
+        activa: true
+      },
+      {
+        key: "carga",
+        activa: true
+      }
+      
+    ];
     this.getCombosDatosGenerales();
     this.getCombosFormadores();
     this.getColsResultsPrices();
@@ -3436,31 +3496,31 @@ export class FichaCursoComponent implements OnInit {
       },
       {
         key: "price",
-        activa: false
+        activa: true
       },
       {
         key: "descripcion",
-        activa: false
+        activa: true
       },
       {
         key: "formadores",
-        activa: false
+        activa: true
       },
       {
         key: "inscription",
-        activa: false
+        activa: true
       },
       {
         key: "certificate",
-        activa: false
+        activa: true
       },
       {
         key: "session",
-        activa: false
+        activa: true
       },
       {
         key: "carga",
-        activa: false
+        activa: true
       }
     ];
   }
