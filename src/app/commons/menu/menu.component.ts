@@ -70,6 +70,7 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
+    sessionStorage.removeItem("disabledPlantillaEnvio");
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;

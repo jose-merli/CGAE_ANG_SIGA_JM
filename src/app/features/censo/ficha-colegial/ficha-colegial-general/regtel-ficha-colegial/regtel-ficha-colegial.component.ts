@@ -51,7 +51,7 @@ export class RegtelFichaColegialComponent implements OnInit {
   icon
   msgs = [];
   colsRegtel;
-@Input() openRegtel;
+  @Input() openRegtel;
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService) { }
@@ -147,14 +147,14 @@ export class RegtelFichaColegialComponent implements OnInit {
 
   }
 
-ngOnChanges(changes: SimpleChanges) {
-  
-  if (this.openRegtel == true) {
-    if (this.openFicha == false) {
-     this.abreCierraRegtel('regtel');
+  ngOnChanges(changes: SimpleChanges) {
+
+    if (this.openRegtel == true) {
+      if (this.openFicha == false) {
+        this.abreCierraRegtel('regtel');
+      }
     }
   }
-}
   getCols() {
     this.colsRegtel = [
       {
@@ -574,6 +574,9 @@ ngOnChanges(changes: SimpleChanges) {
         ];
       }
     });
+  }
+  clear() {
+    this.msgs = [];
   }
 
   addCollectionRegtel() {

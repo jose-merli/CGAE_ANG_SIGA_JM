@@ -59,7 +59,7 @@ export class SancionesFichaColegialComponent implements OnInit {
   @ViewChild("tableSanciones")
   tableSanciones: DataTable;
 @Input() openSanci;
-
+disabledAction:boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -74,6 +74,12 @@ export class SancionesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     this.getCols();
     if (
       sessionStorage.getItem("personaBody") != null &&

@@ -219,7 +219,7 @@
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio() || permisoTarjeta == '2'"
             label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-          <button *ngIf="!isLetrado" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="permisoTarjeta == '2'"
+          <button *ngIf="!isLetrado" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaDuplicar() || permisoTarjeta == '2'"
             label="{{ 'general.boton.guardar' | translate}}"></button>
 
           <button *ngIf="isLetrado" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="permisoTarjeta == '2'"

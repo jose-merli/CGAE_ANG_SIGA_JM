@@ -57,6 +57,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   colsCurriculares;
   selectedItemCurriculares: number = 10;
   rowsPerPage;
+  disabledAction: boolean = false;
 
   @ViewChild("tableCurriculares")
   tableCurriculares: Table;
@@ -69,7 +70,12 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
-
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     this.colsCurriculares = [
       {
         field: "dateFechaInicio",

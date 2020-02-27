@@ -127,7 +127,7 @@
           label="{{ 'general.boton.cancel' | translate}}"></button>
         <button [disabled]="checkEditar()" (click)="isRestablecer();" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="checkDatos()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        <button [disabled]="!editar" (click)="checkDatos()" pButton type="button" icon="fa fa-edit" iconPos="left"
           label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </div>

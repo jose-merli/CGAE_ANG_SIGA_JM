@@ -531,9 +531,13 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     if (selectedDatos.length >= 1 && this.selectMultiple == false) {
       if (selectedDatos[0].idEstado != "5") {
         sessionStorage.setItem("isCancelado", "false");
-      } else {
-        sessionStorage.setItem("isCancelado", "true");
       }
+      if (selectedDatos[0].flagArchivado == 1) {
+        sessionStorage.setItem("isCancelado", "true");
+      } else {
+        sessionStorage.setItem("isCancelado", "false");
+      }
+
 
       sessionStorage.setItem("modoEdicionCurso", "true");
 

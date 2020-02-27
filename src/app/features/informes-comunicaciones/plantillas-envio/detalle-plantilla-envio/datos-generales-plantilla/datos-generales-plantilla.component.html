@@ -41,7 +41,7 @@
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-          <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="soloLectura" pInputText>
+          <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="soloLectura || disabledPlantilla" pInputText>
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
@@ -51,7 +51,7 @@
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'general.description' | translate}} (*)</label>
-          <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="soloLectura" pInputText>
+          <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="soloLectura || disabledPlantilla" pInputText>
         </div>
         <div class="form-group col-lg-3">
           <label
@@ -64,16 +64,16 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="soloLectura"></button>
-        <button (click)="checkDatos()" pButton type="button" icon="far fa-save"
-          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="soloLectura || disabledPlantilla"></button>
+        <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="soloLectura || disabledPlantilla"></button>
       </div>
     </div>
 
   </div>
 
   <!-- Detalle -->
-  <div [hidden]="!(body.idTipoEnvios==4 || body.idTipoEnvios == 5 || body.idTipoEnvios == 1 || body.idTipoEnvios == 7)"
+  <div [hidden]="!(body.idTipoEnvios=='4' || body.idTipoEnvios == '5' || body.idTipoEnvios == '1' || body.idTipoEnvios == '7')"
     class="card">
     <!-- Cabecera -->
     <div class="card-header header-ficha">
@@ -120,18 +120,18 @@
         </div>
         <div *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7'" class="col-lg-12 col-md-12 descripcion">
           <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="soloLectura" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="soloLectura || disabledPlantilla" pInputText>
         </div>
         <div [hidden]="!(body.idTipoEnvios=='1' || body.idTipoEnvios=='7')"
           class="form-group col-lg-12 col-md-12 descripcion">
           <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-          <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.cuerpo" [disabled]="soloLectura">
+          <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.cuerpo" [disabled]="soloLectura || disabledPlantilla">
           </editor>
         </div>
         <div *ngIf="(body.idTipoEnvios=='4' || body.idTipoEnvios=='5')"
           class="form-group col-lg-12 col-md-12 descripcion">
           <textarea style="height:140px" pInputTextarea autoResize="autoResize" [(ngModel)]="body.cuerpo"
-            maxlength="160" [disabled]="soloLectura"></textarea>
+            maxlength="160" [disabled]="soloLectura || disabledPlantilla"></textarea>
         </div>
         <div [hidden]="!(body.idTipoEnvios=='4' || body.idTipoEnvios=='5')" class="form-group col-lg-12 col-md-12 ">
           <label>{{'enviosMasivos.literal.numCaracteres' | translate}}:
@@ -145,8 +145,8 @@
       <div class="text-right main-button">
         <!-- Botón guardar -->
         <button (click)="restablecerDesc()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="soloLectura || nuevo"></button>
-        <button (click)="guardarDesc()" pButton type="button" icon="far fa-save"
+          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="soloLectura || nuevo || disabledPlantilla"></button>
+        <button [disabled]="nuevo || soloLectura || disabledPlantilla" (click)="guardarDesc()" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

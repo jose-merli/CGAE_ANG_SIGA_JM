@@ -352,7 +352,7 @@ export class ConsultasComponent implements OnInit {
       //this.eliminar = true;
       this.selectMultiple = false;
       this.controlBtnEliminar(this.datos);
-
+      
       if(this.historico){
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
         this.numSelected = this.selectedDatos.length;
@@ -399,6 +399,7 @@ export class ConsultasComponent implements OnInit {
       this.selectMultiple = false;
       this.selectedDatos = [];
       this.progressSpinner = true;
+      this.selectAll = false;
       sessionStorage.removeItem("consultasSearch");
       sessionStorage.removeItem("filtrosConsulta");
       this.getResultados(historico);
@@ -530,6 +531,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   confirmarCancelar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -572,6 +574,8 @@ export class ConsultasComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.selectAll = false;
+        this.progressSpinner = false;
         this.table.reset();
         this.buscar(this.historico);
       }
@@ -636,10 +640,7 @@ export class ConsultasComponent implements OnInit {
     }
     if (dato.length > 0) {
       if (
-        (this.institucionActual != 2000 &&
-          dato[0].idInstitucion == "2000" &&
-          dato[0].generica == "Si") ||
-        !this.activacionEditar
+        (this.institucionActual != 2000 && dato[0].idInstitucion == "2000" && dato[0].generica == "Si") || !this.activacionEditar || dato[0].fechaBaja != undefined
       ) {
         sessionStorage.setItem("soloLectura", "true");
         sessionStorage.setItem("permisoModoLectura", "true");
@@ -647,6 +648,9 @@ export class ConsultasComponent implements OnInit {
         sessionStorage.setItem("soloLectura", "false");
         sessionStorage.setItem("permisoModoLectura", "false");
       }
+    }
+    if (dato[0].fechaBaja) {
+      sessionStorage.setItem("soloLectura", "true");
     }
   }
 

@@ -103,9 +103,9 @@
             <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{tableBancarios.first +
               1}} al {{tableBancarios.first + tableBancarios.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
               | translate }} {{tableBancarios.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatosBancarios  && selectedDatosBancarios.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatosBancarios.length}}
             </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatosBancarios && selectedDatosBancarios.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
             </label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">

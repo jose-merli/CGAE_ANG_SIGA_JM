@@ -20,6 +20,7 @@ import { SolicitudesModificacionObject } from "../../../models/SolicitudesModifi
 import { ComboItem } from "../../../models/ComboItem";
 import { StringObject } from "../../../models/StringObject";
 import { CommonsService } from '../../../_services/commons.service';
+import { ControlAccesoDto } from '../../../models/ControlAccesoDto';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -55,7 +56,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   tipoModificacionSolGeneral: String;
   motivoSolGeneral: String;
   resultado: String;
-
+  tarjeta:String;
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   bodyMultiple: any = [];
   bodyMultipleEspecifica: any = [];
@@ -88,6 +89,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   ngOnInit() {
     // Comprobamos si es colegiado o no
     this.getLetrado();
+    this.checkAcceso();
 
     // Llamada al rest de tipo modificación
     this.sigaServices.get("solicitudModificacion_tipoModificacion").subscribe(
@@ -760,7 +762,27 @@ export class SolicitudesModificacionComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "01";
 
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        // if (this.tarjeta == "3" || this.tarjeta == "2") {
+        //   let permisos = "registrales";
+        //   this.permisosEnlace.emit(permisos);
+        // }
+      }
+    );
+  }
   obtenerMostrarAuditoria() {
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
