@@ -37,7 +37,7 @@
         <p-table [value]="datos" dataKey="idPlantillas" [columns]="cols" [(selection)]="selectedDatos"
           [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
           [ngClass]="{ customCursor: selectMultiple }" selectionMode="multiple" paginatorPosition="both"
-          (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+          (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="actualizaSeleccionados(selectedDatos)">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of columns" [style.width]="col.width" />
@@ -111,7 +111,7 @@
         <p-table [value]="datos" dataKey="idPlantillas" [columns]="cols" [(selection)]="selectedDatos"
           [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
           [ngClass]="{ customCursor: selectMultiple }" selectionMode="multiple" paginatorPosition="both"
-          (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+          (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="actualizaSeleccionados(selectedDatos)">
 
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
@@ -196,3 +196,17 @@
   </div>
   <!--END TARJETA INFORMES-->
 </div>
+
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon" width="425"
+  #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+

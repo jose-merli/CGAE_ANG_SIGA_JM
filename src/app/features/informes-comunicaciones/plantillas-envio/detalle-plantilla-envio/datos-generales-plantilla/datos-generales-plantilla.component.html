@@ -34,60 +34,30 @@
     <!--cuerpo datos generales-->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
-        <div class="bloque"
-          [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-3':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5' || body.idTipoEnvios =='7'}">
-          <div class="form-row">
-            <div class="form-group col-lg-12">
-              <label>
-                <strong>{{'enviosMasivos.literal.datosGlobales' | translate}}</strong>
-              </label>
-            </div>
-            <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='7' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5' || body.idTipoEnvios =='7'}">
-              <label class="d-block">{{'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control"
-                [(ngModel)]="body.nombre" [disabled]="soloLectura" pInputText>
-            </div>
-            <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5' && body.idTipoEnvios !='7','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5' || body.idTipoEnvios=='7'}">
-              <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
-              <p-dropdown [ngClass]="styleObligatorio(body.idTipoEnvios)" [filter]="true" [showClear]="true"
-                filterBy="label,labelSinTilde" [options]="tiposEnvio"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!nuevo || soloLectura"
-                [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
-            </div>
-            <div class="form-group"
-              [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5' && body.idTipoEnvios !='7','col-lg-12':body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5' || body.idTipoEnvios=='7'}">
-              <label class="d-block">{{'general.description' | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control"
-                [(ngModel)]="body.descripcion" [disabled]="soloLectura" pInputText>
-            </div>
-            <div *ngIf="body.idTipoEnvios== '1'" class="form-group col-lg-12">
-              <label
-                class="d-block">{{'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicacion' | translate}}</label>
-              <input type="text" class="form-control" [ngModel]="claseComunicacion" disabled pInputText>
-            </div>
-          </div>
+        <div class="form-group col-lg-12">
+          <label>
+            <strong>{{'enviosMasivos.literal.datosGlobales' | translate}}</strong>
+          </label>
         </div>
-        <!-- <div class="form-group col-lg-3">
+        <div class="form-group col-lg-3">
           <label class="d-block">{{'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="soloLectura" pInputText>
+          <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="soloLectura" pInputText>
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
-          <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [options]="tiposEnvio"
+          <p-dropdown [ngClass]="styleObligatorio(body.idTipoEnvios)" [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [options]="tiposEnvio"
             placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="!nuevo || soloLectura"
             [(ngModel)]="body.idTipoEnvios" (ngModelChange)="cambiaDesc()" class="select-form"></p-dropdown>
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'general.description' | translate}} (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="soloLectura" pInputText>
+          <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="soloLectura" pInputText>
         </div>
         <div class="form-group col-lg-3">
           <label
             class="d-block">{{'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicacion' | translate}}</label>
           <input type="text" class="form-control" [ngModel]="claseComunicacion" disabled pInputText>
-        </div> -->
+        </div>
       </div>
     </div>
 
@@ -95,8 +65,8 @@
       <div class="text-right main-button ">
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}" [disabled]="soloLectura"></button>
-        <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="soloLectura"></button>
+        <button (click)="checkDatos()" pButton type="button" icon="far fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
 
@@ -176,7 +146,7 @@
         <!-- Botón guardar -->
         <button (click)="restablecerDesc()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}" [disabled]="soloLectura || nuevo"></button>
-        <button [disabled]="nuevo || soloLectura" (click)="guardarDesc()" pButton type="button" icon="far fa-save"
+        <button (click)="guardarDesc()" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
