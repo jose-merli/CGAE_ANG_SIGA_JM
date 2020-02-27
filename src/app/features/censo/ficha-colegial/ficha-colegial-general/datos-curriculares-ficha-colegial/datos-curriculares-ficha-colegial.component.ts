@@ -444,7 +444,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     // window.scrollTo(0,0);
   }
   clickFilaCurricular(event) {
-    if (event.data && event.data.fechaBaja != undefined && this.historicoCV) {
+    if (event.data && !event.data.fechaBaja && this.historicoCV) {
       this.selectedDatosCurriculares.pop();
     }
   }

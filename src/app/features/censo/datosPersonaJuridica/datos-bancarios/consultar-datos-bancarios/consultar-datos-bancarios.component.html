@@ -468,18 +468,18 @@
 
       <div *ngIf="openFichaListadoFicherosAnexos" class="card-footer">
         <div class="text-right main-button ">
-          <div *ngIf="editar == true" class="text-right main-button">
-            <button (click)="editarDescripcion()" [(disabled)]="!permisos || disabledAction" pButton type="button"
+          <div  class="text-right main-button">
+            <button  (click)="editarDescripcion()" [(disabled)]="!permisos || disabledAction" pButton type="button"
               icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
             <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction"
               (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"></button>
           </div>
-          <div *ngIf="editar == false" class="text-right main-button">
+          <!-- <div *ngIf="editar == false" class="text-right main-button">
             <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction"
               (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"></button>
-          </div>
+          </div> -->
 
         </div>
       </div>
