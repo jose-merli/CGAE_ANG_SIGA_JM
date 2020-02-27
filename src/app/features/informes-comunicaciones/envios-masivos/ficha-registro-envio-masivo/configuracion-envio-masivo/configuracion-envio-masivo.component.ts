@@ -220,6 +220,9 @@ para poder filtrar el dato con o sin estos caracteres*/
           data => {
             let comboPlantillas = JSON.parse(data["body"]);
             this.plantillas = comboPlantillas.combooItems;
+            if(this.plantillas != undefined && this.plantillas.length > 0){
+              this.body.idPlantillaEnvios = this.plantillas[0].value;
+            }
             this.progressSpinner = false;
 
             // if (this.editar) {
