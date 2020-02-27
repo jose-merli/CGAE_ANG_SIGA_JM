@@ -103,10 +103,10 @@
       </p-table>
       <p-footer>
         <div class="text-right main-button ">
-          <button [disabled]="nuevaConsulta || selectMultiple || selectAll || soloLectura" (click)="addConsulta()"
+          <button [disabled]="nuevaConsulta || selectMultiple || selectAll || soloLectura || disabledPlantilla" (click)="addConsulta()"
             pButton type="button" icon="fa fa-plus" iconPos="left"
             label="{{ 'general.boton.anadir' | translate }}"></button>
-          <button [disabled]="soloLectura" (click)="restablecer()" pButton type="button" icon="fa fa-undo"
+          <button [disabled]="soloLectura || disabledPlantilla" (click)="restablecer()" pButton type="button" icon="fa fa-undo"
             iconPos="left" label="{{'general.boton.restablecer' | translate}}"></button>
           <button
             [disabled]="selectedDatos && selectedDatos =='' || selectedDatos == null || selectAll || nuevaConsulta || soloLectura"
@@ -120,7 +120,7 @@
     <div *ngIf="openFicha " class="card-footer ">
       <div class="text-right main-button ">
 
-        <button [disabled]="soloLectura" (click)="goNuevaConsulta()" pButton type="button" icon="fa fa-plus"
+        <button [disabled]="soloLectura || disabledPlantilla" (click)="goNuevaConsulta()" pButton type="button" icon="fa fa-plus"
           iconPos="left" label="{{
                   'general.boton.new' | translate}}"></button>
         <!-- <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->

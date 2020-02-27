@@ -103,7 +103,7 @@
           paginatorPosition="both" (onRowSelect)="navigateTo(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"> -->
         <p-table [value]="datos" dataKey="idPlantillas" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
           class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ customCursor: selectMultiple }"
-          selectionMode="multiple" paginatorPosition="both" (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+          selectionMode="multiple" paginatorPosition="both" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"> 
 
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
@@ -174,7 +174,7 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button [disabled]="!(selectedDatos && selectedDatos !='')  || !editar" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+        <button [disabled]="!(selectedDatos && selectedDatos !='')  || !editar || soloLectura" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.eliminar' | translate }}" (click)="eliminar(selectedDatos)"></button>
         <button (click)="addInforme()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
           [disabled]="soloLectura || !editar"></button>

@@ -24,6 +24,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   nuevo: boolean = false;
   soloLectura: boolean = false;
   apiKey: string = "";
+  disabledPlantilla: boolean = false;
 
   resaltadoDatos: boolean = false;
 
@@ -89,6 +90,12 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       }
     ];
     this.openDesc = false;
+
+    if(sessionStorage.getItem("disabledPlantillaEnvio") == "true"){
+      this.disabledPlantilla  = true;
+    }else{
+      this.disabledPlantilla = false;
+    }
   }
 
   getInstitucion() {

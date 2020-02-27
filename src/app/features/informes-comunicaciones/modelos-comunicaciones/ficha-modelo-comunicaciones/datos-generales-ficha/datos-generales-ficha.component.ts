@@ -237,7 +237,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (this.institucionActual != '2000' && sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (this.institucionActual != '2000' && sessionStorage.getItem("soloLectura") == 'true') {
         this.soloLectura = true;
       }
 

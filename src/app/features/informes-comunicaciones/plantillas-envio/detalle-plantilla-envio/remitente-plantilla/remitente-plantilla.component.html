@@ -54,7 +54,7 @@
         </div>
         <div class="form-group col-md-12">
           <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
-          <textarea style="height: 85px" [(ngModel)]="remitente.descripcion" [disabled]="soloLectura || body == null || body.idPersona == null"
+          <textarea style="height: 85px" [(ngModel)]="remitente.descripcion" [disabled]="soloLectura || body == null || body.idPersona == null || disabledPlantilla"
             pInputTextarea></textarea>
         </div>
       </div>
@@ -174,9 +174,9 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button [disabled]="soloLectura" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button [disabled]="soloLectura" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
-        <button [disabled]="soloLectura" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button [disabled]="soloLectura || disabledPlantilla" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button [disabled]="soloLectura || disabledPlantilla" (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button [disabled]="soloLectura || disabledPlantilla" (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
 
