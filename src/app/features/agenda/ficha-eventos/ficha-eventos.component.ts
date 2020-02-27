@@ -57,6 +57,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   progressSpinner2: boolean = false;
 
   resaltadoDatos: boolean = false;
+  resaltadoDatosOpcionales: boolean = false;
+
 
   tipoInscripcionEvento: boolean = false;
 
@@ -852,7 +854,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     let url = "";
     this.newEvent.idCurso = this.curso.idCurso;
     this.progressSpinner = true;
-    this.resaltadoDatos=false;
+    this.resaltadoDatos = false;
 
     if (this.newEvent.idEstadoEvento == null) {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
@@ -1035,6 +1037,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.showUnSuccess();
       },
       () => {
+        this.resaltadoDatosOpcionales = false;
+        this.resaltadoDatos = false;
         this.progressSpinner = false;
       }
     );
@@ -1126,7 +1130,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   restEvent() {
     this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
-
+    this.resaltadoDatos = false;
+    this.resaltadoDatosOpcionales = false;
     if (this.initEvent.start != null) {
       this.newEvent.start = new Date(this.newEvent.start);
     } else {
@@ -2767,27 +2772,53 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     return fecha;
   }
 
-  styleObligatorio(opcional, evento){
-    if(opcional=='opcional'){
-      if(this.resaltadoDatos && !(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado)){
-        return this.commonsService.styleObligatorio(evento);
-      }
-    }else{
-      if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+  styleObligatorio(opcional, evento) {
+    // if(opcional=='opcional'){
+    //   if(this.resaltadoDatos && !(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado)){
+    //     return this.commonsService.styleObligatorio(evento);
+    //   }
+    // }else{
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+
+  }
+  styleObligatorioOpcional(opcional, evento) {
+    if (opcional == 'opcional') {
+      if (this.resaltadoDatosOpcionales && !(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado)) {
         return this.commonsService.styleObligatorio(evento);
       }
     }
   }
 
-  muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatos=true;
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
   }
 
-  checkDatos(){
-    if(this.validateForm()){
-      this.muestraCamposObligatorios();
-    }else{
+  muestraCamposObligatoriosOpcionales() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosOpcionales = true;
+  }
+
+  muestraCamposObligatoriosTodos(){
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosOpcionales = true;
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (this.validateForm()) {
+      if (this.newEvent.fechaInicioRepeticion == undefined && this.newEvent.fechaFinRepeticion == undefined && this.newEvent.valoresRepeticion == undefined) {
+        this.muestraCamposObligatorios();
+      } else {
+        if (this.newEvent.fechaInicioRepeticion != undefined || this.newEvent.fechaFinRepeticion != undefined || this.newEvent.valoresRepeticion != undefined) {
+          this.muestraCamposObligatoriosTodos();
+        } else {
+          this.muestraCamposObligatoriosOpcionales();
+        }
+      }
+    } else {
       this.saveEvent();
     }
   }

@@ -517,7 +517,7 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   clickFila(event) {
-    if (event.data && event.data.archivada == 'No' && this.isHistory)
+    if (event.data && event.data.archivada == 'Sí' && this.isHistory)
       this.selectedDatos.pop();
   }
   showFail(mensaje: string) {

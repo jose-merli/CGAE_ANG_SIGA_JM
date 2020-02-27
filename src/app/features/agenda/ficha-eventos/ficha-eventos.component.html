@@ -137,13 +137,13 @@
           <div class="row mb-4">
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaInicio' | translate}} (*)</label>
-              <app-fecha [inputStyleClass]="styleObligatorio('opcional', newEvent.fechaInicioRepeticion)" [(value)]="newEvent.fechaInicioRepeticion" (valueChangeInput)="isCheckFechaInicioRepeticion($event)" [minDate]="newEvent.start"
+              <app-fecha [inputStyleClass]="styleObligatorioOpcional('opcional', newEvent.fechaInicioRepeticion)" [(value)]="newEvent.fechaInicioRepeticion" (valueChangeInput)="isCheckFechaInicioRepeticion($event)" [minDate]="newEvent.start"
                 [maxDate]="newEvent.fechaFinRepeticion" [disabled]="tipoAccesoLectura || selectedTipoLaboral || tipoInscripcionEvento || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaInicioRepeticion($event)" [utc]="false"></app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-              <app-fecha [inputStyleClass]="styleObligatorio('opcional', newEvent.fechaFinRepeticion)" [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
+              <app-fecha [inputStyleClass]="styleObligatorioOpcional('opcional', newEvent.fechaFinRepeticion)" [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
                 [disabled]="tipoInscripcionEvento || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaFinRepeticion($event)" [utc]="false"></app-fecha>
             </div>
@@ -155,7 +155,7 @@
                   <label>{{'agenda.fichaEventos.datosGenerales.repetirCada' | translate}}: (*)</label>
                 </div>
                 <div class="col-lg-8 col-md-8">
-                  <p-dropdown [ngClass]="styleObligatorio('opcional', newEvent.tipoRepeticion)" (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}"
+                  <p-dropdown [ngClass]="styleObligatorioOpcional('opcional', newEvent.tipoRepeticion)" (onChange)="isCheckTipoRepeticion()" [options]="comboRepeatEvery" [(ngModel)]="newEvent.tipoRepeticion" placeholder="{{'tablas.literal.seleccionar' | translate }}"
                     [disabled]="tipoInscripcionEvento || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                     [showClear]="true"></p-dropdown>
                 </div>

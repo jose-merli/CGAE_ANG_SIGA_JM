@@ -637,7 +637,6 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
 
   disabledDuplicate() {
     if (
-      this.selectMultiple &&
       (this.selectedDatos != null && this.selectedDatos.length == 1)
     )
       return false;

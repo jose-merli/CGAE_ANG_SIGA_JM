@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DatePipe } from "@angular/common";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
@@ -22,11 +22,13 @@ import { Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NullAstVisitor } from "../../../../../../node_modules/@angular/compiler";
 import { ComboEtiquetasItem } from "../../../../models/ComboEtiquetasItem";
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
-  styleUrls: ["./datos-generales.component.scss"]
+  styleUrls: ["./datos-generales.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGenerales implements OnInit {
   uploadedFiles: any[] = [];
@@ -61,7 +63,7 @@ export class DatosGenerales implements OnInit {
   newDireccion: boolean = false;
   nuevo: boolean = false;
   identificacionValida: boolean;
-
+  resaltadoDatos: boolean = false;
   editar: boolean = false;
   archivoDisponible: boolean = false;
   file: File = undefined;
@@ -185,7 +187,9 @@ export class DatosGenerales implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService,
+
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -244,7 +248,7 @@ export class DatosGenerales implements OnInit {
         this.editar = true;
         this.datosGeneralesSearch();
         this.cargarImagen(this.body.idPersona);
-
+        
       }
       this.textFilter = "Elegir";
 
@@ -284,6 +288,8 @@ export class DatosGenerales implements OnInit {
         },
         err => {
           console.log(err);
+        },()=>{
+          
         }
       );
     this.filterLabelsMultiple();
@@ -300,22 +306,6 @@ export class DatosGenerales implements OnInit {
         if (sessionStorage.getItem("nuevoRegistro") != null && sessionStorage.getItem("nuevoRegistro") === "true") {
           this.onChangeForm();
         }
-        this.datosTarjetaResumen = [
-          {
-            label: "Identificación",
-            value: this.body.nif
-          },
-          {
-            label: "Tipo",
-            value: this.tipoPersonaJuridica
-          },
-
-          {
-            label: "Denominación",
-            value: this.body.denominacion
-          },
-        ];
-        this.datosTarjeta.emit(this.datosTarjetaResumen);
       }
     );
 
@@ -411,26 +401,26 @@ export class DatosGenerales implements OnInit {
               this.comboTipo.push(newTipo.label);
             }
           }
-          this.showGuardar = false;
+          this.showGuardar = true;
           this.editar = false;
           // restablece motivo de auditoria
           this.body.motivo = undefined;
-          // this.datosTarjetaResumen = [
-          //   {
-          //     label: "Identificación",
-          //     value: this.body.nif
-          //   },
-          //   {
-          //     label: "Tipo",
-          //     value: this.tipoPersonaJuridica
-          //   },
+          this.datosTarjetaResumen = [
+            {
+              label: "Identificación",
+              value: this.body.nif
+            },
+            {
+              label: "Tipo",
+              value: this.tipoPersonaJuridica
+            },
 
-          //   {
-          //     label: "Denominación",
-          //     value: this.body.denominacion
-          //   },
-          // ];
-          // this.datosTarjeta.emit(this.datosTarjetaResumen);
+            {
+              label: "Denominación",
+              value: this.body.denominacion
+            },
+          ];
+          this.datosTarjeta.emit(this.datosTarjetaResumen);
         }
 
       );
@@ -507,7 +497,7 @@ export class DatosGenerales implements OnInit {
               }
 
               this.progressSpinner = false;
-              this.showGuardar = false;
+              this.showGuardar = true;
 
             },
             () => {
@@ -523,12 +513,12 @@ export class DatosGenerales implements OnInit {
               );
               this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
               arrayPersonaJuridica.push(this.bodyPersonaJuridica);
-
+                this.resaltadoDatos = false;
               sessionStorage.setItem(
                 "usuarioBody",
                 JSON.stringify(arrayPersonaJuridica)
               );
-
+              sessionStorage.removeItem("crearnuevo");
               // pasamos el idPersona creado para la nueva sociedad
               if (this.file != undefined) {
                 this.guardarImagen(this.idPersona);
@@ -544,6 +534,23 @@ export class DatosGenerales implements OnInit {
               this.showSuccess();
               this.cardService.searchNewAnnounce.next(this.idPersona);
               this.autocompletar = false;
+              this.tipoPersonaJuridica = selectedComboTipo.label
+              this.datosTarjetaResumen = [
+                {
+                  label: "Identificación",
+                  value: this.body.nif
+                },
+                {
+                  label: "Tipo",
+                  value: this.tipoPersonaJuridica
+                },
+      
+                {
+                  label: "Denominación",
+                  value: this.body.denominacion
+                },
+              ];
+              this.datosTarjeta.emit(this.datosTarjetaResumen);
               this.progressSpinner = false;
             }
           );
@@ -615,14 +622,31 @@ export class DatosGenerales implements OnInit {
           this.obtenerEtiquetasPersonaJuridicaConcreta();
           this.showSuccess();
           this.autocompletar = false;
+          this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+          this.datosTarjetaResumen = [
+            {
+              label: "Identificación",
+              value: this.body.nif
+            },
+            {
+              label: "Tipo",
+              value: this.tipoPersonaJuridica
+            },
+  
+            {
+              label: "Denominación",
+              value: this.body.denominacion
+            },
+          ];
+          this.datosTarjeta.emit(this.datosTarjetaResumen);
           this.progressSpinner = false;
+          this.resaltadoDatos = false;
         }
       );
     }
 
     //sessionStorage.removeItem("crearnuevo");
-  }
-
+}
   restablecer() {
     // si ya existe la sociedad
     if (sessionStorage.getItem("crearnuevo") == null) {
@@ -630,10 +654,11 @@ export class DatosGenerales implements OnInit {
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.cargarImagen(this.body.idPersona);
       this.file = undefined;
+      this.resaltadoDatos = false;
       // Para las etiquetas
       this.autocompletar = false;
     } else {
-      this.body.nif = "";
+      // this.body.nif = "";
       this.selectedTipo = [];
       this.body.fechaConstitucion = null;
       this.body.fechaBaja = null;
@@ -643,8 +668,8 @@ export class DatosGenerales implements OnInit {
       this.body.cuentaContable = "";
       this.body.anotaciones = "";
       this.etiquetasPersonaJuridicaSelecionados = [];
-
-      this.showGuardar = false;
+      this.resaltadoDatos = false
+      this.showGuardar = true;
       // Para las etiquetas
       this.autocompletar = false;
     }
@@ -805,15 +830,50 @@ export class DatosGenerales implements OnInit {
         this.showGuardar = true;
       }
     } else {
-      this.showGuardar = false;
+      this.showGuardar = true;
     }
     this.sortOptions();
     this.comprobarValidacion();
   }
-
+  checkDatos(){
+    if (
+      this.body.abreviatura != "" &&
+      this.body.abreviatura != undefined &&
+      !this.onlySpaces(this.body.abreviatura) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.body.denominacion != "" &&
+      this.body.denominacion != undefined &&
+      !this.onlySpaces(this.body.denominacion) &&
+      this.body.fechaConstitucion != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.idiomaPreferenciaSociedad != "" &&
+      this.idiomaPreferenciaSociedad != undefined
+      //this.file != undefined
+    ) {
+      if (
+        this.editar &&
+        (this.body.fechaConstitucion != undefined ||
+          this.body.fechaConstitucion != null)
+      ) {
+        if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
+          this.showGuardar = true;
+        }
+      } else {
+        this.showGuardar = true;
+      }
+      return true;
+    } else {
+      this.muestraCamposObligatorios();
+      this.showGuardar = true;
+      return false;
+    }
+  }
   comprobarAuditoria() {
     // modo creación
     if (sessionStorage.getItem("crearnuevo") != null) {
+      if(this.checkDatos())
       this.guardar();
     }
     // modo edición
@@ -822,10 +882,13 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = undefined;
 
       if (this.ocultarMotivo) {
+        if(this.checkDatos())
         this.guardar();
       } else {
-        this.displayAuditoria = true;
-        this.showGuardarAuditoria = false;
+        if(this.checkDatos()){
+          this.displayAuditoria = true;
+          this.showGuardarAuditoria = false;
+        }   
       }
     }
   }
@@ -989,6 +1052,23 @@ export class DatosGenerales implements OnInit {
       },
       err => {
         console.log(err);
+      },()=>{
+        // this.datosTarjetaResumen = [
+        //   {
+        //     label: "Identificación",
+        //     value: this.body.nif
+        //   },
+        //   {
+        //     label: "Tipo",
+        //     value: this.tipoPersonaJuridica
+        //   },
+
+        //   {
+        //     label: "Denominación",
+        //     value: this.body.denominacion
+        //   },
+        // ];
+        // this.datosTarjeta.emit(this.datosTarjetaResumen);
       }
     );
   }
@@ -1332,5 +1412,14 @@ export class DatosGenerales implements OnInit {
         return a.label.localeCompare(b.label);
       });
     }
+  }
+   styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
   }
 }
