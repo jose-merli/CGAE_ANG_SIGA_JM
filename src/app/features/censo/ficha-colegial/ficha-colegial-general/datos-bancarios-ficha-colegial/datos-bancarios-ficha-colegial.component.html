@@ -45,8 +45,8 @@
   <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
     <div class="row">
       <p-table [columns]="colsBancarios" [ngClass]="{ customCursor: selectMultipleBancarios }" [(selection)]="selectedDatosBancarios"
-        (onRowSelect)="clickFilaBancarios($event)" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
-        class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
+        (onRowSelect)="clickFilaBancarios($event)" [responsive]="true" selectionMode="multiple" #tableBancarios
+        class="tabla-listado" [value]="datosBancarios" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="
             actualizaSeleccionadosBancarios(selectedDatosBancarios)
           " paginatorPosition="both" [rows]="selectedItemBancarios" pageLinks="4">
 
@@ -103,16 +103,16 @@
             <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{tableBancarios.first +
               1}} al {{tableBancarios.first + tableBancarios.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
               | translate }} {{tableBancarios.totalRecords}}</label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatosBancarios  && selectedDatosBancarios.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatosBancarios.length}}
             </label>
-            <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+            <label class="pr-3 numSeleccionados" *ngIf="selectedDatosBancarios && selectedDatosBancarios.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
             </label>
             <label>{{"general.message.mostrar" | translate}}</label>
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAllBancario()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              <p-checkbox (onChange)="onChangeSelectAllBancarios()" [(ngModel)]="selectAllBancarios" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
             <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
@@ -130,7 +130,7 @@
         label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
       <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
         iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-      <button (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!(selectedDatosBancarios && selectedDatosBancarios != '' && !historico) || tarjetaBancarios == '2' || disabledAction || isLetrado"
+      <button (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!(selectedDatosBancarios && selectedDatosBancarios != '' && bodyDatosBancarios.historico == false) || tarjetaBancarios == '2' || disabledAction || isLetrado"
         label="{{'general.boton.eliminar'  | translate}}"></button>
       <button (click)="nuevaCuentaBancaria()" [disabled]="tarjetaBancarios == '2' || disabledAction || isLetrado" pButton type="button"
         icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>

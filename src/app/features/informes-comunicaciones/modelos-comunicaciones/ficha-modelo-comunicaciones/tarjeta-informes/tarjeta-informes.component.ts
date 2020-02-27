@@ -38,6 +38,8 @@ export class TarjetaInformesComponent implements OnInit {
   continuar: boolean;
   editar: boolean = true;
 
+  progressSpinner: boolean = false;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -257,7 +259,11 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   eliminar(dato) {
+
+    let keyConfirmation = "deletePlantillaDoc";
+
     this.confirmationService.confirm({
+      key: keyConfirmation,
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
@@ -279,6 +285,7 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   confirmarEliminar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -290,10 +297,14 @@ export class TarjetaInformesComponent implements OnInit {
     });
     this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
       data => {
+        this.progressSpinner = false;
+        this.selectedDatos = [];
         this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
       },
       err => {
         let error = JSON.parse(err.error).description;
+        this.progressSpinner = false;
+
         if (error == "ultimo")
           this.showFail(
             this.translateService.instant(
@@ -304,8 +315,10 @@ export class TarjetaInformesComponent implements OnInit {
           this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
           console.log(err);
         }
+
       },
       () => {
+        this.progressSpinner = false;
         this.getInformes();
       }
     );

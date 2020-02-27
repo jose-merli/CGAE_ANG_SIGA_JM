@@ -34,7 +34,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   };
   selectedDatosSociedades;
   rowsPerPage = [];
-
+  disabledAction:boolean = false;
   @Input() idPersona;
   @Input() openSocie;
   constructor(private sigaServices: SigaServices,
@@ -44,6 +44,12 @@ export class SociedadesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.activacionTarjeta = false;
     } else {

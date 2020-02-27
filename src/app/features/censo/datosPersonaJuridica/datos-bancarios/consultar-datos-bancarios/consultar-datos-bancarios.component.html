@@ -63,7 +63,7 @@
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}} (*)</label>
                 <input [ngClass]="styleObligatorio('datosBancarios', body.titular)" type="text" class="form-control"
-                  [(disabled)]="!permisos" [(ngModel)]="body.titular" pInputText>
+                  [(disabled)]="!permisos || disabledAction" [(ngModel)]="body.titular" pInputText>
                 <div *ngIf="titularValido == false">
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
@@ -78,7 +78,7 @@
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
                 <input [ngClass]="styleObligatorio('datosBancarios', iban)" type="text" class="form-control"
-                  [(disabled)]="!permisos" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()" pInputText>
+                  [(disabled)]="!permisos || disabledAction" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()" pInputText>
                 <div
                   *ngIf="(ibanValido == false || body.banco == '' || body.banco == undefined) && iban != undefined && iban != '' && iban != ' '">
                   <label

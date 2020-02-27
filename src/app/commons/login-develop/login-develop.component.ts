@@ -7,10 +7,11 @@ import { LoginCombo } from './login-develop.combo';
 import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
 
+
 @Component({
 	selector: 'app-login-develop',
 	templateUrl: './login-develop.component.html',
-	styleUrls: [ './login-develop.component.scss' ]
+	styleUrls: ['./login-develop.component.scss']
 })
 export class LoginDevelopComponent implements OnInit {
 	form: FormGroup;
@@ -25,18 +26,28 @@ export class LoginDevelopComponent implements OnInit {
 	progressSpinner: boolean = false;
 	// value=N selected="">NO, no soy Letrado</option>
 	//                   <option value=S>SÍ, soy Letrado</option>
+	environment: string = "";
+	sigaFrontVersion: string = "";
+	sigaWebVersion: string = "";
 
-	letrado: any[] = [ { label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' } ];
+	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
 	constructor(
 		private fb: FormBuilder,
 		private service: AuthenticationService,
 		private sigaServices: SigaServices,
-		private router: Router
-	) {}
+		private router: Router,
+		
 
-	onSubmit() {}
+	) { }
+
+	onSubmit() { }
 
 	ngOnInit() {
+		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
+			this.environment = n.environment;
+			this.sigaFrontVersion = n.sigaFrontVersion;
+			this.sigaWebVersion = n.sigaWebVersion;
+		});
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
@@ -52,7 +63,7 @@ export class LoginDevelopComponent implements OnInit {
 
 					sessionStorage.setItem('codError', codError);
 					sessionStorage.setItem('descError', 'Imposible validar el certificado');
-					this.router.navigate([ '/errorAcceso' ]);
+					this.router.navigate(['/errorAcceso']);
 					this.progressSpinner = false;
 				}
 				if (error.status == 500) {
@@ -60,36 +71,36 @@ export class LoginDevelopComponent implements OnInit {
 
 					sessionStorage.setItem('codError', codError);
 					sessionStorage.setItem('descError', 'Imposible validar el certificado');
-					this.router.navigate([ '/errorAcceso' ]);
+					this.router.navigate(['/errorAcceso']);
 					this.progressSpinner = false;
 				}
 			}
 		);
 		this.sigaServices.getBackend('validaUsuario').subscribe(
-					(response) => {
-								this.progressSpinner = false;
-								this.ocultar = true;
-					},
-					(error) => {
-						console.log('ERROR', error);
-						if (error.status == 403) {
-							let codError = error.status;
+			(response) => {
+				this.progressSpinner = false;
+				this.ocultar = true;
+			},
+			(error) => {
+				console.log('ERROR', error);
+				if (error.status == 403) {
+					let codError = error.status;
 
-							sessionStorage.setItem('codError', codError);
-							sessionStorage.setItem('descError', 'Usuario no válido');
-							this.router.navigate([ '/errorAcceso' ]);
-							this.progressSpinner = false;
-						}
-						if (error.status == 500) {
-							let codError = error.status;
+					sessionStorage.setItem('codError', codError);
+					sessionStorage.setItem('descError', 'Usuario no válido');
+					this.router.navigate(['/errorAcceso']);
+					this.progressSpinner = false;
+				}
+				if (error.status == 500) {
+					let codError = error.status;
 
-							sessionStorage.setItem('codError', codError);
-							sessionStorage.setItem('descError', 'Usuario no válido');
-							this.router.navigate([ '/errorAcceso' ]);
-							this.progressSpinner = false;
-						}
-					}
-				);
+					sessionStorage.setItem('codError', codError);
+					sessionStorage.setItem('descError', 'Usuario no válido');
+					this.router.navigate(['/errorAcceso']);
+					this.progressSpinner = false;
+				}
+			}
+		);
 
 		this.sigaServices.getBackend('instituciones').subscribe((n) => {
 			this.instituciones = n.combooItems;
@@ -144,9 +155,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 		this.service.autenticateDevelop(this.form.value).subscribe(
 			(response) => {
 				if (response) {
-					this.router.navigate([ '/home' ]);
+					this.router.navigate(['/home']);
 				} else {
-					this.router.navigate([ '/landpage' ]);
+					this.router.navigate(['/landpage']);
 				}
 			},
 			(error) => {
@@ -156,14 +167,14 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 					sessionStorage.setItem('codError', codError);
 					sessionStorage.setItem('descError', 'Imposible validar el certificado');
-					this.router.navigate([ '/errorAcceso' ]);
+					this.router.navigate(['/errorAcceso']);
 				}
 			}
 		);
 	}
 
 	onChange(newValue) {
-		this.tmpLoginPerfil = [ 'ADG' ];
+		this.tmpLoginPerfil = ['ADG'];
 		var ir = null;
 		this.form.controls['location'].setValue(newValue.value);
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);

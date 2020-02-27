@@ -1500,6 +1500,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       return this.commonsService.styleObligatorio(evento);
     }
   }
+  
   muestraCamposObligatorios() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatos = true;
@@ -1507,20 +1508,16 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   checkDatos() {
     if (this.isGuardarDisabled()) {
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) {
-        this.muestraCamposObligatorios();
-      } else {
         if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
           this.muestraCamposObligatorios();
         } else {
-          this.guardarDatosGenerales();
+          this.guardarDatosSalida();
         }
-      }
     } else {
       if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
         this.muestraCamposObligatorios();
       } else {
-        this.guardarDatosGenerales();
+        this.guardarDatosSalida();
       }
     }
   }

@@ -321,9 +321,15 @@ export class DatosDireccionesComponent implements OnInit {
   }
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      if(this.historico){
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined)
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }    
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -428,5 +434,10 @@ export class DatosDireccionesComponent implements OnInit {
       });
       console.log(data);
     });
+  }
+  clickFilaDirecciones(event) {
+    if (event.data && !event.data.fechaBaja && this.historico) {
+      this.selectedDatos.pop();
+    }
   }
 }
