@@ -385,7 +385,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.body.generica == "Si" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "Si") ||
       (this.body.generica == "S" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "S")) ||
       this.body.generica == "1" ||
-      (sessionStorage.getItem("permisoModoLectura") == 'true' && sessionStorage.getItem("esDuplicar") === 'false') || sessionStorage.getItem("permisoModoLectura") == 'true') {
+      (sessionStorage.getItem("soloLectura") == 'true' && sessionStorage.getItem("esDuplicar") === 'false') || sessionStorage.getItem("soloLectura") == 'true') {
       this.editar = false;
     } else {
       this.editar = true;

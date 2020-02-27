@@ -48,6 +48,7 @@ export class ConsultasPlantillasComponent implements OnInit {
   finalidad: string;
   objetivo: string;
   institucionActual: any;
+  disabledPlantilla: boolean = false;
   consultaBuscada;
   // resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
   resultadosConsultas =
@@ -133,6 +134,12 @@ export class ConsultasPlantillasComponent implements OnInit {
     ];
 
     // this.body.idConsulta = this.consultas[1].value;
+
+    if(sessionStorage.getItem("disabledPlantillaEnvio") == "true"){
+      this.disabledPlantilla  = true;
+    }else{
+      this.disabledPlantilla = false;
+    }
   }
 
   // Mensajes

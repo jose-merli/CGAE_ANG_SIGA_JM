@@ -44,6 +44,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   progressSpinner: boolean = false;
   showDirecciones: boolean = false;
   soloLectura: boolean = false;
+  disabledPlantilla: boolean = false;
   cols2: any = [];
   textFilter: String;
   textSelected: String = this.translateService.instant("general.mensaje.0.etiquetas.seleccionadas");
@@ -153,6 +154,12 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       this.textFilter = "censo.busquedaClientesAvanzada.literal.sinResultados";
     }
     // this.body.idTipoEnvio = this.tiposEnvio[1].value;
+
+    if(sessionStorage.getItem("disabledPlantillaEnvio") == "true"){
+      this.disabledPlantilla  = true;
+    }else{
+      this.disabledPlantilla = false;
+    }
   }
 
   abreCierraFicha() {

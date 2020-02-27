@@ -530,9 +530,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       },
       () => {
         this.editar = true;
-        this.body = new PersonaJuridicaItem();
+        //this.body = new PersonaJuridicaItem();
         this.disabledRadio = false;
-        this.isBuscar();
+        this.Search();
         this.table.reset();
       }
     );

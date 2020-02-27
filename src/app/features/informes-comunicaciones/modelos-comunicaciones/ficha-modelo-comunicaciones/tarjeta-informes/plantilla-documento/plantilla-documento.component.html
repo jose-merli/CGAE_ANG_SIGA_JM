@@ -231,7 +231,7 @@
     </div>
     <div *ngIf="showDatosGenerales" class="card-footer">
       <div class="text-right main-button">
-        <button (click)="restablecerDatosGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="esPorDefecto" (click)="restablecerDatosGenerales()" pButton type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="guardarDatosGenerales()" [disabled]="isGuardarDisabled() || disabledGuardar" pButton
           type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
@@ -330,9 +330,9 @@
     <div class="card-footer" *ngIf="showDatosSalida">
       <div class="text-right main-button">
 
-        <button (click)="restablecerDatosSalida()" pButton type="button" icon=" fa fa-undo" iconPos="left"
+        <button [disabled]="esPorDefecto" (click)="restablecerDatosSalida()" pButton type="button" icon=" fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="checkDatos()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button [disabled]="esPorDefecto" (click)="checkDatos()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

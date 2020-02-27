@@ -649,6 +649,9 @@ export class ConsultasComponent implements OnInit {
         sessionStorage.setItem("permisoModoLectura", "false");
       }
     }
+    if (dato[0].fechaBaja) {
+      sessionStorage.setItem("soloLectura", "true");
+    }
   }
 
   addConsulta() {
