@@ -77,7 +77,7 @@ export class EdicionCurricularesComponent implements OnInit {
   subtipoCVSelected;
 
   resaltadoDatos:boolean = false;
-
+disabledAction:boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
@@ -86,8 +86,12 @@ export class EdicionCurricularesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.getLetrado();
-    // this.editar = this.body.editar;
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (sessionStorage.getItem("permisos")) {
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }

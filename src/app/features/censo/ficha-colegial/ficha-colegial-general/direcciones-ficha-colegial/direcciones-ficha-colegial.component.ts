@@ -92,6 +92,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openDirec;
+  disabledAction:boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -106,6 +107,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&

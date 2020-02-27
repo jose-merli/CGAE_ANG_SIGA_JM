@@ -229,9 +229,15 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      if(this.showHistorico){
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined)
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }     
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -246,6 +252,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.selectMultiple = false;
       this.selectedDatos = "";
       this.progressSpinner = true;
+      
       sessionStorage.removeItem("modelosSearch");
       sessionStorage.removeItem("filtrosModelos");
       this.getResultados();
@@ -282,10 +289,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getResultados() {
+    this.selectAll = false;
     let service = "modelos_search";
     if (this.showHistorico) {
       service = "modelos_search_historico";
     }
+    this.progressSpinner = true;
     this.sigaServices
       .postPaginado(service, "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -303,6 +312,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
+          this.progressSpinner = false;
           this.table.reset();
           setTimeout(() => {
             this.commonsService.scrollTablaFoco('tablaFoco');
@@ -312,6 +322,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getResultadosHistorico() {
+    this.selectAll = false;
+    this.progressSpinner = true;
     this.sigaServices
       .postPaginado("modelos_search_historico", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -329,6 +341,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
+          this.progressSpinner = false;
           this.table.reset();
         }
       );

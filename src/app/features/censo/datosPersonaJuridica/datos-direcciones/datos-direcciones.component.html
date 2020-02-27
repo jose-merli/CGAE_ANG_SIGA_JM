@@ -41,7 +41,7 @@
 
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatos" pageLinks="4" dataKey="idDireccion"
         [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="activarPaginacion()"
-        paginatorPosition="both" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
+        paginatorPosition="both" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" (onRowSelect)="clickFilaDirecciones($event)">
         <p-column *ngFor="let col of cols" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
           [filter]="true" filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
@@ -58,10 +58,10 @@
 
             <div *ngIf="setItalic(datoH) && col.field == 'correoElectronico'">
               <a [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" [href]="'mailto:'+datoH[col.field]"
-                class="enlace" target="_blank">{{datoH[col.field]}}</a>
+                class="correo" target="_blank">{{datoH[col.field]}}</a>
             </div>
             <div *ngIf="!setItalic(datoH) && col.field == 'correoElectronico'">
-              <a [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{datoH[col.field]}}</a>
+              <a [href]="'mailto:'+datoH[col.field]" class="correo" target="_blank">{{datoH[col.field]}}</a>
             </div>
 
           </ng-template>
