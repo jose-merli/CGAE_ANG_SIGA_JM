@@ -357,9 +357,15 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   //Opción tabla de seleccionar todas las filas
   onChangeSelectAllCurriculares() {
     if (this.selectAllCurriculares === true) {
-      this.selectMultipleCurriculares = false;
-      this.selectedDatosCurriculares = this.datosCurriculares;
-      this.numSelectedCurriculares = this.datosCurriculares.length;
+      if(this.historicoCV){
+        this.selectMultipleCurriculares = false;
+        this.selectedDatosCurriculares = this.datosCurriculares.filter(dato => dato.fechaBaja != undefined);
+        this.numSelectedCurriculares = this.selectedDatosCurriculares.length;
+      }else{
+        this.selectMultipleCurriculares = false;
+        this.selectedDatosCurriculares = this.datosCurriculares;
+        this.numSelectedCurriculares = this.datosCurriculares.length;
+      }
     } else {
       this.selectedDatosCurriculares = [];
       this.numSelectedCurriculares = 0;

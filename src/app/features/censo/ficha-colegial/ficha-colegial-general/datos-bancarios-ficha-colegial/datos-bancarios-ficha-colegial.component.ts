@@ -73,7 +73,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   @Input() openBanca;
   @ViewChild("tableBancarios")
   tableBancarios: Table;
-  disabledAction:boolean = false;
+  disabledAction: boolean = false;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -244,15 +244,22 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
   clickFilaBancarios(event) {
-    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico){
+    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico) {
       this.selectedDatosBancarios.pop();
     }
   }
   onChangeSelectAllBancarios() {
     if (this.selectAllBancarios === true) {
-      this.numSelectedBancarios = this.datosBancarios.length;
-      this.selectMultipleBancarios = false;
-      this.selectedDatosBancarios = this.datosBancarios;
+      if (this.bodyDatosBancarios.historico) {
+        this.numSelectedBancarios = this.selectedDatosBancarios.length;
+        this.selectMultipleBancarios = false;
+        this.selectedDatosBancarios = this.datosBancarios.filter(dato => dato.fechaBaja != undefined)
+      } else {
+        this.numSelectedBancarios = this.datosBancarios.length;
+        this.selectMultipleBancarios = false;
+        this.selectedDatosBancarios = this.datosBancarios;
+      }
+
     } else {
       this.selectedDatosBancarios = [];
       this.numSelectedBancarios = 0;
