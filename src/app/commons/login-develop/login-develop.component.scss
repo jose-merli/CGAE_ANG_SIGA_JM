@@ -17,3 +17,17 @@
 label {
   margin-right: 1em;
 }
+
+#paramContainer{
+ position: fixed;
+ left: 0;
+ bottom: 0;
+ width: 100%;
+ text-align: center;
+}
+
+#params {
+  text-align: center;
+  font-style: bold;
+  margin-bottom: 0.5em;
+}

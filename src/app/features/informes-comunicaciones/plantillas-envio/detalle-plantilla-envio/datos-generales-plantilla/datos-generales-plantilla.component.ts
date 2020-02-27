@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { DatosGeneralesPlantillaItem } from "../../../../../models/DatosGeneralesPlantillaItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
@@ -9,7 +9,8 @@ import { CommonsService } from "../../../../../_services/commons.service";
 @Component({
   selector: "app-datos-generales-plantilla",
   templateUrl: "./datos-generales-plantilla.component.html",
-  styleUrls: ["./datos-generales-plantilla.component.scss"]
+  styleUrls: ["./datos-generales-plantilla.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesPlantillaComponent implements OnInit {
   openFicha: boolean = true;

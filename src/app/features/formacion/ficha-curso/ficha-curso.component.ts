@@ -3743,7 +3743,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    sessionStorage.removeItem("isCancelado");
+    // sessionStorage.removeItem("isCancelado");
   }
 
   isOpenReceive(event) {

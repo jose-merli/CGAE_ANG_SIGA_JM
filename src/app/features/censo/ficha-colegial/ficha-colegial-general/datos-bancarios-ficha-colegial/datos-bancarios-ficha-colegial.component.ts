@@ -73,6 +73,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   @Input() openBanca;
   @ViewChild("tableBancarios")
   tableBancarios: Table;
+  disabledAction:boolean = false;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
@@ -85,6 +86,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     private location: Location, ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
