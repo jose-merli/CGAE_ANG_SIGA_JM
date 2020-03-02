@@ -101,7 +101,7 @@
               table.totalRecords }}
             </label>
             <label>Mostrar</label>
-            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" showClear="true" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label> registros</label>
           </div>

@@ -63,7 +63,7 @@
 
     <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
       <div class="row">
-        <p-table [columns]="colsDirecciones" [(selection)]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
+        <p-table [columns]="colsDirecciones" [selection]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
           [responsive]="true" selectionMode="multiple" #tableDirecciones class="tabla-listado" [value]="datosDirecciones" (onRowSelect)="clickFilaDirecciones($event)"
           [paginator]="true" paginatorPosition="both" [rows]="selectedItemDirecciones" (onRowUnselect)="
             actualizaSeleccionadosDirecciones(selectedDatosDirecciones)
@@ -116,7 +116,8 @@
               <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                 {{col.header | translate}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
-                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableDirecciones.filter($event.target.value,
+                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field"
+                  pInputText type="text" (input)="tableDirecciones.filter($event.target.value,
                                 col.field, 'contains')">
               </th>
             </tr>

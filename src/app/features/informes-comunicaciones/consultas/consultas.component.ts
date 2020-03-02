@@ -247,7 +247,11 @@ export class ConsultasComponent implements OnInit {
     }
   }
 
-
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
@@ -352,11 +356,11 @@ export class ConsultasComponent implements OnInit {
       //this.eliminar = true;
       this.selectMultiple = false;
       this.controlBtnEliminar(this.datos);
-      
-      if(this.historico){
+
+      if (this.historico) {
         this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
         this.numSelected = this.selectedDatos.length;
-      }else{
+      } else {
         this.selectedDatos = this.datos;
         this.numSelected = this.datos.length;
       }

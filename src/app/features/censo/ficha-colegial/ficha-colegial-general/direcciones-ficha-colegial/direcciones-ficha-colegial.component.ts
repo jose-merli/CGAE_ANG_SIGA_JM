@@ -92,7 +92,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openDirec;
-  disabledAction:boolean = false;
+  disabledAction: boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -188,7 +188,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.colsDirecciones = [
       {
         field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
+        header: "censo.datosDireccion.literal.tipo.direccion",
+        width: "22%"
       },
       {
         field: "domicilioLista",
@@ -292,16 +293,16 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   onChangeSelectAllDirecciones() {
     if (this.selectAllDirecciones === true) {
-      if(this.bodyDirecciones.historico == true){
+      if (this.bodyDirecciones.historico == true) {
         this.selectMultipleDirecciones = false;
         this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined);
         this.numSelectedCurriculares = this.selectedDatosDirecciones.length;
-      }else{
+      } else {
         this.numSelectedDirecciones = this.datosDirecciones.length;
         this.selectMultipleDirecciones = false;
         this.selectedDatosDirecciones = this.datosDirecciones;
       }
-      
+
     } else {
       this.selectedDatosDirecciones = [];
       this.numSelectedDirecciones = 0;
