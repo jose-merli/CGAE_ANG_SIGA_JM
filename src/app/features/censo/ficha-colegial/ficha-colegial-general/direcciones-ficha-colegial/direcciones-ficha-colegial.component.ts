@@ -172,7 +172,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       }
     }
     if (this.idPersona != undefined) {
-      this.onInitDirecciones();
+      if(this.bodyDirecciones == undefined){
+        this.onInitDirecciones();
+      }         
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;

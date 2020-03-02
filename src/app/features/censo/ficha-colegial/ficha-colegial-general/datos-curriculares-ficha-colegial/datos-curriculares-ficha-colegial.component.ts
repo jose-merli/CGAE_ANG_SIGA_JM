@@ -120,7 +120,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
     }
     if (this.idPersona != undefined) {
-      this.onInitCurriculares();
+      if(this.datosCurriculares == undefined){
+        this.onInitCurriculares();
+      }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;

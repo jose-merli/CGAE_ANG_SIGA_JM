@@ -126,7 +126,9 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.idPersona != undefined) {
-      this.searchCertificados();
+      if(this.datosCertificados == undefined){
+        this.searchCertificados();
+      }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
