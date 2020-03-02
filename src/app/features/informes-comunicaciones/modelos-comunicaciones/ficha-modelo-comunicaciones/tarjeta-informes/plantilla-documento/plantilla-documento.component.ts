@@ -224,26 +224,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   }
-
-  isSelectMultipleDocs() {
-    if (!this.nuevoDocumento) {
-
-      if (!this.esPorDefecto) {
-        this.selectMultipleDocs = !this.selectMultipleDocs;
-        if (!this.selectMultipleDocs) {
-          // this.controlSelectionMode = "none";
-          this.selectedDocs = [];
-        } else {
-          this.selectAllDocs = false;
-          this.controlSelectionMode = "multiple";
-          this.selectedDocs = [];
-        }
-      }
-    } else {
-      this.selectMultiple = false;
-    }
-  }
-
   onChangeSelectAll(key) {
     if (key != "docs") {
       if (this.selectAll === true) {
@@ -1500,7 +1480,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       return this.commonsService.styleObligatorio(evento);
     }
   }
-  
+
   muestraCamposObligatorios() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatos = true;
@@ -1508,11 +1488,11 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   checkDatos() {
     if (this.isGuardarDisabled()) {
-        if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
-          this.muestraCamposObligatorios();
-        } else {
-          this.guardarDatosSalida();
-        }
+      if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardarDatosSalida();
+      }
     } else {
       if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
         this.muestraCamposObligatorios();

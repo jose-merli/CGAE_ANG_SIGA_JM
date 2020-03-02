@@ -176,6 +176,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               return e.labelSinTilde;
             }
           }
+
         });
       },
       err => {
@@ -207,6 +208,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.sigaServices.notifyDesHabilitarDocumentos();
     }
+    if (!this.body.idTipoEnvios) {
+      this.body.idPlantillaEnvios = null;
+      this.plantillas = [];
+    }
+
   }
 
   getPlantillas() {
@@ -220,7 +226,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           data => {
             let comboPlantillas = JSON.parse(data["body"]);
             this.plantillas = comboPlantillas.combooItems;
-            if(this.plantillas != undefined && this.plantillas.length > 0){
+            if (this.plantillas != undefined && this.plantillas.length > 0) {
               this.body.idPlantillaEnvios = this.plantillas[0].value;
             }
             this.progressSpinner = false;
@@ -271,6 +277,9 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
     } else {
+      this.body.idTipoEnvios = "5";
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.getPlantillas();
       this.editar = false;
     }
   }
@@ -375,6 +384,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.getPlantillas();
     this.resaltadoDatos = false;
   }
 
