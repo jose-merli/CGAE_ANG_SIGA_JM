@@ -77,6 +77,10 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
 
     this.textFilter = this.translateService.instant("general.boton.seleccionar");
 
+    if(sessionStorage.getItem("direccionesInicial") != undefined ){
+      this.direccionesInicial = JSON.parse(sessionStorage.getItem("direccionesInicial"));
+      sessionStorage.removeItem("direccionesInicial");
+    }
     this.getDatos();
     this.getInstitucion();
     this.getComboPais();
@@ -345,6 +349,12 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
             let filtro = "";
             this.getComboPoblacionInicial(filtro);
           }
+
+          if(this.direccionesInicial == undefined || this.direccionesInicial == null || this.direccionesInicial.length > 0){
+            this.direccionesInicial = JSON.parse(JSON.stringify(
+              this.direccion));
+          }
+         
           // this.direcciones = this.remitente.direccion;
         },
         err => {
@@ -379,6 +389,11 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       }
     }
 
+    sessionStorage.setItem(
+      "direccionesInicial",
+      JSON.stringify(this.direccionesInicial)
+    );
+
     sessionStorage.removeItem("menuProcede");
     sessionStorage.removeItem("migaPan");
     sessionStorage.removeItem("migaPan2");
@@ -406,8 +421,8 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       this.direccion = dir;
       // this.remitente = dir;
       this.showDirecciones = false;
-      this.direccionesInicial = dir;
-      this.remitenteInicial = this.remitente;
+      // this.direccionesInicial = dir;
+      // this.remitenteInicial = this.remitente;
     }
   }
 

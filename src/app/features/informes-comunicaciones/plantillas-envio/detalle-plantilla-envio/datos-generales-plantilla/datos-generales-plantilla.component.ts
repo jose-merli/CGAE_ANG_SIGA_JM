@@ -6,6 +6,7 @@ import { TranslateService } from "../../../../../commons/translate/translation.s
 import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 import { CommonsService } from "../../../../../_services/commons.service";
 
+
 @Component({
   selector: "app-datos-generales-plantilla",
   templateUrl: "./datos-generales-plantilla.component.html",
@@ -318,7 +319,18 @@ para poder filtrar el dato con o sin estos caracteres*/
     let asunto = this.body.asunto;
     let cuerpo = this.body.cuerpo;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.resaltadoDatos = false;
+    this.body.asunto = asunto;
+    this.body.cuerpo = cuerpo;
+  }
+
+  restablecerDesc() {
+    if (this.nuevo) {
+      this.body.cuerpo = "";
+      this.body.asunto = "";
+    } else {
+      this.body.cuerpo = JSON.parse(JSON.stringify(this.bodyInicial.cuerpo));
+      this.body.asunto = JSON.parse(JSON.stringify(this.bodyInicial.asunto));
+    }
   }
 
   styleObligatorio(evento) {

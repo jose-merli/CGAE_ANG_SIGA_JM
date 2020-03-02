@@ -93,7 +93,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
         console.log(err);
       }
     );
-    this.isBuscar();
+    // this.isBuscar();
     this.checkAcceso();
     this.reestablecer();
     this.cols = [
