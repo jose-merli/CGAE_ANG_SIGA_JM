@@ -991,7 +991,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
     if (this.calificacion) {
       this.table.selectionMode = "";
-      this.selectedDatos = "";
+      this.selectedDatos = [];
     } else {
       this.table.selectionMode = "multiple";
     }

@@ -127,7 +127,6 @@ export class SolicitudesModificacionComponent implements OnInit {
       if (sessionStorage.getItem("processingPerformed") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
         this.isSearch = true;
-        this.search();
 
         if (this.body.fechaDesde != null) {
           this.body.fechaDesde = new Date(this.body.fechaDesde);
@@ -146,6 +145,8 @@ export class SolicitudesModificacionComponent implements OnInit {
         }
       }
       sessionStorage.removeItem("saveFilters");
+      this.search();
+
     } else {
       if (sessionStorage.getItem("search") != null) {
         this.isSearch = true;
