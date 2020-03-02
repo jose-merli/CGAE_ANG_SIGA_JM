@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
@@ -64,7 +64,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -164,7 +165,11 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
   // Métodos
   isBuscar() {
 
@@ -217,7 +222,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
-            setTimeout(()=>{
+            setTimeout(() => {
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
           }
@@ -257,7 +262,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          setTimeout(()=>{
+          setTimeout(() => {
             this.commonsService.scrollTablaFoco('tablaFoco');
           }, 5);
         }
@@ -572,5 +577,5 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     }
   }
 
-  
+
 }
