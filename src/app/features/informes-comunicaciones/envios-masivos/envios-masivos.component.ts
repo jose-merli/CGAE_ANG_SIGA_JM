@@ -66,7 +66,7 @@ export class EnviosMasivosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("crearNuevoEnvio");
@@ -288,7 +288,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
   getResultadosComunicacionDuplicada() {
@@ -310,7 +310,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => {}
+        () => { }
       );
   }
 
@@ -353,6 +353,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   enviar(dato) {
+    this.progressSpinner = true;
     this.enviosArray = [];
     let estadoInvalido = false;
     let tieneDestiantarios = true;
@@ -375,6 +376,8 @@ para poder filtrar el dato con o sin estos caracteres*/
           "informesycomunicaciones.enviosMasivos.sinDestinatarios"
         )
       );
+      this.progressSpinner = false;
+
     } else if (!estadoInvalido) {
       this.sigaServices
         .post("enviosMasivos_enviar", this.enviosArray)
@@ -396,15 +399,20 @@ para poder filtrar el dato con o sin estos caracteres*/
               )
             );
             console.log(err);
+            this.progressSpinner = false;
           },
-          () => {}
+          () => {
+            this.progressSpinner = false;
+          }
         );
+
     } else {
       this.showInfo(
         this.translateService.instant(
           "informesycomunicaciones.enviosMasivos.estadoIncorrecto"
         )
       );
+      this.progressSpinner = false;
     }
   }
 
@@ -513,7 +521,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {}
+          () => { }
         );
     } else if (!this.selectMultiple && this.estado == 5) {
       this.progressSpinner = false;

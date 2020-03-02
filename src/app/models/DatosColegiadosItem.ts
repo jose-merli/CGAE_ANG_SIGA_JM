@@ -17,7 +17,7 @@ export class DatosColegiadosItem {
   tipoDireccion: string;
   numberColegiado: number;
   sexo: string;
-  incorporacionDate:Date;
+  incorporacionDate: Date;
   estadoCivil: string;
   estadoColegial: string;
   fechaIncorporacion: Date[];
@@ -67,6 +67,8 @@ export class DatosColegiadosItem {
   colegio: string[];
   identificadords: string;
   noAparecerRedAbogaciaFilter: string;
-
+  searchCount: boolean;
+  count: string;
+  situacionResidenteFilter: string;
   constructor() { }
 }
