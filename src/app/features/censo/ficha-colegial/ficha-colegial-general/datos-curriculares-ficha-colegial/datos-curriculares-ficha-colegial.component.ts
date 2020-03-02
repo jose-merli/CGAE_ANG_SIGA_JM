@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
@@ -12,7 +12,8 @@ import { Table } from 'primeng/table';
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',
   templateUrl: './datos-curriculares-ficha-colegial.component.html',
-  styleUrls: ['./datos-curriculares-ficha-colegial.component.scss']
+  styleUrls: ['./datos-curriculares-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosCurricularesFichaColegialComponent implements OnInit, OnChanges {
 
@@ -157,6 +158,20 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       if (this.openFicha == false) {
         this.abreCierraFicha('curriculares')
       }
+    }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
+
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
     }
   }
   getCols() {

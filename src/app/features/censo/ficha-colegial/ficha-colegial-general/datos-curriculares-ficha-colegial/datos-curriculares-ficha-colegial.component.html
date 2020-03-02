@@ -47,7 +47,7 @@
     <!-- cuerpo -->
 
     <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
-      <div class="row">
+      <div class="rowPrueba">
         <p-table [(selection)]="selectedDatosCurriculares" pageLinks="4" [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }"
           selectionMode="multiple" #tableCurriculares class="tabla-listado" [value]="datosCurriculares" [columns]="colsCurriculares"
           [sortOrder]="1" (onRowSelect)="clickFilaCurricular($event)" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"

@@ -40,7 +40,7 @@
   <!-- cuerpo -->
 
   <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="rowPrueba">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCertificados" pageLinks="4"
         dataKey="idSolicitud" [responsive]="true" selectionMode="multiple" #tableCertificados class="tabla-listado tableCertificados"
         [value]="datosCertificados" [sortOrder]="1" [paginator]="activarPaginacionCertificados()" paginatorPosition="both"

@@ -49,7 +49,7 @@
       <!-- cuerpo -->
 
       <div *ngIf="esFichaActiva('sanciones')" class="card-body card-body-ficha">
-        <div class="row">
+        <div class="rowPrueba">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
             [(selection)]="selectedDatosSanciones" pageLinks="4" [responsive]="true" selectionMode="single" #tableSanciones
             class="tabla-listado" [value]="dataSanciones" [sortOrder]="1" [paginator]="enablePagination()" paginatorPosition="both"

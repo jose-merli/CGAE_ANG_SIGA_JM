@@ -50,7 +50,7 @@
   <!-- cuerpo -->
 
   <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="rowPrueba">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" dataKey="movil" [responsive]="true"
         #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
         paginatorPosition="both" [rows]="selectedItemColegiaciones">

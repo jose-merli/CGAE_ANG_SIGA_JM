@@ -33,37 +33,7 @@ import { CommonsService } from '../../../_services/commons.service';
 export class FichaCursoComponent implements OnInit {
   iconoTarjetaResumen = "clipboard";
   openFicha;
-  fichasPosibles = [
-    {
-      key: "generales",
-      activa: true
-    },
-    {
-      key: "descripcion",
-      activa: true
-    },
-    {
-      key: "formadores",
-      activa: true
-    },
-    {
-      key: "price",
-      activa: true
-    },
-    {
-      key: "certificate",
-      activa: true
-    },
-    {
-      key: "session",
-      activa: true
-    },
-    {
-      key: "carga",
-      activa: true
-    }
-    
-  ];
+  fichasPosibles = [];
   msgs;
   results;
   es: any = esCalendar;
@@ -307,27 +277,27 @@ export class FichaCursoComponent implements OnInit {
       },
       {
         key: "descripcion",
-        activa: true
+        activa: false
       },
       {
         key: "formadores",
-        activa: true
+        activa: false
       },
       {
         key: "price",
-        activa: true
+        activa: false
       },
       {
         key: "certificate",
-        activa: true
+        activa: false
       },
       {
         key: "session",
-        activa: true
+        activa: false
       },
       {
         key: "carga",
-        activa: true
+        activa: false
       }
       
     ];
