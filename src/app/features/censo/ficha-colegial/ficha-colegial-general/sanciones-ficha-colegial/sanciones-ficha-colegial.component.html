@@ -1,6 +1,6 @@
 <div *ngIf="!esNewColegiado">
   <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
-    <div class="card-header header-ficha">
+    <div (click)="abreCierraFicha('sanciones')" class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -9,12 +9,12 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('sanciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+            <label  class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
+            <!-- <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
               <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
             </label>
 
@@ -28,12 +28,12 @@
 
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
               <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
-            </label>
+            </label> -->
 
               <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
                 <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
               </label>
-            <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
+            <i *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
       </div>
@@ -41,8 +41,8 @@
         <div class="img-colegiado">
           <i class="fa fa-gavel icon-ficha"></i>
         </div>
-        <label (click)="abreCierraFicha('sanciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
-        <i (click)="abreCierraFicha('sanciones')" class="fa fa-angle-up ml-auto"></i>
+        <label class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <!-- cuerpo -->

@@ -1,5 +1,5 @@
 <div *ngIf="tarjetaCertificados == '3' || tarjetaCertificados == '2'" class="card">
-  <div class="card-header header-ficha">
+  <div (click)="abreCierraFicha('certificados')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('certificados')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -8,23 +8,23 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('certificados')" class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
+          <label class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
         <div class="d-flex justify-content-between">
-            <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
+            <!-- <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
               <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
             </label>
 
             <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
               <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
-            </label>
+            </label> -->
             
             <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
               <span>{{ datosCertificados.length }}</span>
             </label>
-          <i (click)="abreCierraFicha('certificados')" *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
+          <i *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
     </div>
@@ -32,8 +32,8 @@
       <div class="img-colegiado">
         <i class="fa fa-certificate icon-ficha"></i>
       </div>
-      <label (click)="abreCierraFicha('certificados')" class="title-ficha">{{ "menu.certificados" | translate }}</label>
-      <i (click)="abreCierraFicha('certificados')" class="fa fa-angle-up ml-auto"></i>
+      <label class="title-ficha">{{ "menu.certificados" | translate }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
   <!-- cuerpo -->

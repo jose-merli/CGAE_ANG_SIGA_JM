@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div *ngIf="(tarjetaColegiales == '3' || tarjetaColegiales == '2') && esColegiado" class="card">
-  <div class="card-header header-ficha">
+  <div (click)="abreCierraFicha('colegiales')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -9,7 +9,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('colegiales')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+          <label  class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
@@ -33,7 +33,7 @@
             <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
             <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
           </label>
-          <i  (click)="abreCierraFicha('colegiales')" *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
+          <i  *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
     </div>
@@ -41,9 +41,9 @@
       <div class="img-colegiado">
         <i class="far fa-address-book icon-ficha"></i>
       </div>
-      <label (click)="abreCierraFicha('colegiales')" class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+      <label  class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
       </label> 
-      <i (click)="abreCierraFicha('colegiales')" class="fa fa-angle-up ml-auto"></i>
+      <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
   <!-- cuerpo -->

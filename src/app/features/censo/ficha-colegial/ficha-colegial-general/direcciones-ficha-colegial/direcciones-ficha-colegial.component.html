@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div *ngIf="tarjetaDirecciones == '3' || tarjetaDirecciones == '2'" class="card">
-  <div class="card-header header-ficha">
+  <div (click)="abreCierraFicha('direcciones')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -9,12 +9,12 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('direcciones')" class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+          <label  class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
           </label>
         </div>
         <div class="d-flex justify-content-between">
           <!-- <div class="d-flex justify-content-between"> -->
-            <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
+            <!-- <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.domicilioLista }}</span>
             </label>
 
@@ -36,13 +36,13 @@
 
             <label>{{ "censo.datosDireccion.literal.movil" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
-            </label>
+            </label> -->
 
               <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
                 <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}
                 </span>
               </label>
-              <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
+              <i [ngClass]="{
                 'fa fa-angle-up': esFichaActiva('direcciones'),
                 'fa fa-angle-down': !esFichaActiva('direcciones')
               }"></i>
@@ -54,9 +54,9 @@
       <div class="img-colegiado">
         <i class="fa fa-map-marker icon-ficha"> </i>
       </div>
-      <label (click)="abreCierraFicha('direcciones')" class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+      <label class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
       </label>
-      <i (click)="abreCierraFicha('direcciones')" class="fa fa-angle-up ml-auto"></i>
+      <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -104,7 +104,23 @@ export class SancionesFichaColegialComponent implements OnInit {
 
 
   }
+ngOnChanges(changes: SimpleChanges) {
+  if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+    this.esNewColegiado = true;
+    this.activacionEditar = false;
+    this.emptyLoadFichaColegial = false;
+    this.desactivarVolver = false;
+    this.activacionTarjeta = false;
 
+    // sessionStorage.removeItem("esNuevoNoColegiado");
+    // this.onInitGenerales();
+  } else {
+    this.activacionEditar = true;
+    this.esNewColegiado = false;
+    this.activacionTarjeta = true;
+  }
+  
+}
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 

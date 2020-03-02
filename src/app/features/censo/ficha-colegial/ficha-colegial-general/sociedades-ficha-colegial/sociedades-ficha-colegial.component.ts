@@ -64,7 +64,15 @@ export class SociedadesFichaColegialComponent implements OnInit {
     if (this.idPersona != undefined) {
       this.searchSocieties();
     }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      // this.desactivarVolver = false;
+      this.activacionTarjeta = false;
 
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionTarjeta = true;
+    }
   }
 
   getCols() {

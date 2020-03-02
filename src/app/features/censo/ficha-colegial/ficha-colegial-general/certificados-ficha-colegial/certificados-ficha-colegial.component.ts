@@ -128,6 +128,20 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
     if (this.idPersona != undefined) {
       this.searchCertificados();
     }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
+
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
+    }
   }
 
   activarPaginacionCertificados() {

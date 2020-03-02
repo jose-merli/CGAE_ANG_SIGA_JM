@@ -1,7 +1,7 @@
 <!-- FICHA DATOS GENERALES -->
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div *ngIf="tarjetaGenerales == '3' || tarjetaGenerales == '2'" class="card">
-  <div class="card-header header-ficha">
+  <div (click)="abreCierraFicha('generales')" class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('generales')" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
@@ -11,7 +11,7 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('generales')" class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+          <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
@@ -30,7 +30,7 @@
             <span *ngIf="fechaNacCambiada">{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
 
           </label>
-          <i (click)="abreCierraFicha('generales')" *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
+          <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
     </div>
@@ -39,9 +39,9 @@
         <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
         <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
       </div>
-      <label (click)="abreCierraFicha('generales')" class="title-ficha">{{ "general.message.datos.generales" | translate }}
+      <label class="title-ficha">{{ "general.message.datos.generales" | translate }}
       </label>
-      <i (click)="abreCierraFicha('generales')" class="fa fa-angle-up ml-auto"></i>
+      <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
   <div *ngIf="esFichaActiva('generales')" class="card-body card-body-ficha">
