@@ -8,7 +8,7 @@
     <div class="mt-4 permisos-filters d-flex  justify-content-start">
         <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
             <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm($event)" [filter]="true"
+            <p-dropdown [showClear]="true" placeholder="{{ 'tablas.literal.seleccionar' | translate }}" class="select-form" [(ngModel)]='selectedModulo' [options]="modulos" (ngModelChange)="onChangeForm($event)" [filter]="true"
                 filterBy="label"></p-dropdown>
         </div>
 

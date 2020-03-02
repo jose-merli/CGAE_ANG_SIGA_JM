@@ -292,9 +292,16 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   onChangeSelectAllDirecciones() {
     if (this.selectAllDirecciones === true) {
-      this.numSelectedDirecciones = this.datosDirecciones.length;
-      this.selectMultipleDirecciones = false;
-      this.selectedDatosDirecciones = this.datosDirecciones;
+      if(this.bodyDirecciones.historico == true){
+        this.selectMultipleDirecciones = false;
+        this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined);
+        this.numSelectedCurriculares = this.selectedDatosDirecciones.length;
+      }else{
+        this.numSelectedDirecciones = this.datosDirecciones.length;
+        this.selectMultipleDirecciones = false;
+        this.selectedDatosDirecciones = this.datosDirecciones;
+      }
+      
     } else {
       this.selectedDatosDirecciones = [];
       this.numSelectedDirecciones = 0;
