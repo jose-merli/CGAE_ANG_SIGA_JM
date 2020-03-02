@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -24,7 +24,8 @@ import { DatosColegiadosObject } from '../../../../../models/DatosColegiadosObje
 @Component({
   selector: 'app-otras-colegiaciones-ficha-colegial',
   templateUrl: './otras-colegiaciones-ficha-colegial.component.html',
-  styleUrls: ['./otras-colegiaciones-ficha-colegial.component.scss']
+  styleUrls: ['./otras-colegiaciones-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChanges {
   activacionTarjeta: boolean = false;

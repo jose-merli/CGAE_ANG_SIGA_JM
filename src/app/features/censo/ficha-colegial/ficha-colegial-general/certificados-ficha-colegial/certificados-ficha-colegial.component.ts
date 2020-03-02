@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -24,7 +24,8 @@ import { FichaColegialCertificadosObject } from '../../../../../models/FichaCole
 @Component({
   selector: 'app-certificados-ficha-colegial',
   templateUrl: './certificados-ficha-colegial.component.html',
-  styleUrls: ['./certificados-ficha-colegial.component.scss']
+  styleUrls: ['./certificados-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   tarjetaOtrasColegiacionesNum: string;
@@ -133,6 +134,20 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       if (this.openFicha == false) {
         this.abreCierraFicha('certificados')
       }
+    }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
+
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
     }
   }
 

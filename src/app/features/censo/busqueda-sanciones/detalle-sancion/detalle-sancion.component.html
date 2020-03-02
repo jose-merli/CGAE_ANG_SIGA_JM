@@ -58,8 +58,8 @@
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }} (*)</label>
-                <p-dropdown [ngClass]="styleObligatorio(body.tipoSancion)" class="select-form" [options]="tipoSancion"
-                  [(ngModel)]="body.tipoSancion" (onChange)="disableFields()"
+                <p-dropdown [showClear]="true" [ngClass]="styleObligatorio(body.tipoSancion)" class="select-form" [options]="tipoSancion"
+                  [(ngModel)]="body.tipoSancion"  (onChange)="disableFields()" placeholder="{{'general.boton.seleccionar' | translate}}"
                   [disabled]="disabledField || permisoTarjeta == '2'"></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">

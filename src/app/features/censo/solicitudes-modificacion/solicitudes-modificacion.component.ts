@@ -56,7 +56,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   tipoModificacionSolGeneral: String;
   motivoSolGeneral: String;
   resultado: String;
-  tarjeta:String;
+  tarjeta: String;
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   bodyMultiple: any = [];
   bodyMultipleEspecifica: any = [];
@@ -853,14 +853,10 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   checkFilters() {
     if (
-      (this.body.tipoModificacion == null ||
-        this.body.tipoModificacion == undefined) &&
-      (this.body.estado == null ||
-        this.body.estado == undefined) &&
-      (this.body.fechaDesde == null ||
-        this.body.fechaDesde == undefined) &&
-      (this.body.fechaHasta == null ||
-        this.body.fechaHasta == undefined)
+      !this.body.tipoModificacion &&
+      !this.body.estado &&
+      !this.body.fechaDesde &&
+      !this.body.fechaHasta
     ) {
       this.showSearchIncorrect();
       this.progressSpinner = false;

@@ -88,6 +88,9 @@ export class BusquedaSancionesComponent implements OnInit {
 
       if (sessionStorage.getItem("back") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+        if(this.body.chkArchivadas == true){
+          this.historico();
+        }
         this.transformDates(this.body);
 
         this.getComboColegios();
@@ -433,6 +436,9 @@ export class BusquedaSancionesComponent implements OnInit {
 
   onRowSelect(selectedDatos) {
     if (!this.selectMultiple) {
+      if(this.isHistory){
+        this.body.chkArchivadas = true;
+      }
       // Guardamos los filtros
       sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
 
@@ -457,6 +463,7 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   historico() {
+    this.body.chkArchivadas = true;
     this.isHistory = true;
     this.hideHistory = true;
     this.search();

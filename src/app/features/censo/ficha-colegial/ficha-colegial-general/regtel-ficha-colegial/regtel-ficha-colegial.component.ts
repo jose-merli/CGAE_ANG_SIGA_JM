@@ -154,6 +154,13 @@ export class RegtelFichaColegialComponent implements OnInit {
         this.abreCierraRegtel('regtel');
       }
     }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.activacionEditar = false;
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+    }
   }
   getCols() {
     this.colsRegtel = [

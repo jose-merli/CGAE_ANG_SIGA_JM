@@ -16,7 +16,7 @@
                 <div class="form-row">
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde">
+                        <p-dropdown [showClear]="true" placeholder="{{ 'tablas.literal.seleccionar' | translate }}" class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde">
                         </p-dropdown>
                     </div> &nbsp;&nbsp;
                     <div class="form-group-interlineado col-lg-3 col-md-3">

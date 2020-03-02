@@ -92,7 +92,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openDirec;
-  disabledAction:boolean = false;
+  disabledAction: boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -181,6 +181,20 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.abreCierraFicha('direcciones');
       }
     }
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
+
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
+    }
   }
 
 
@@ -188,7 +202,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.colsDirecciones = [
       {
         field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
+        header: "censo.datosDireccion.literal.tipo.direccion",
+        width: "22%"
       },
       {
         field: "domicilioLista",
@@ -292,9 +307,16 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   onChangeSelectAllDirecciones() {
     if (this.selectAllDirecciones === true) {
-      this.numSelectedDirecciones = this.datosDirecciones.length;
-      this.selectMultipleDirecciones = false;
-      this.selectedDatosDirecciones = this.datosDirecciones;
+      if (this.bodyDirecciones.historico == true) {
+        this.selectMultipleDirecciones = false;
+        this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined);
+        this.numSelectedCurriculares = this.selectedDatosDirecciones.length;
+      } else {
+        this.numSelectedDirecciones = this.datosDirecciones.length;
+        this.selectMultipleDirecciones = false;
+        this.selectedDatosDirecciones = this.datosDirecciones;
+      }
+
     } else {
       this.selectedDatosDirecciones = [];
       this.numSelectedDirecciones = 0;
