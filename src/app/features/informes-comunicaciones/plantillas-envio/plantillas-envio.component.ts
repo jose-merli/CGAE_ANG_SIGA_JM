@@ -210,7 +210,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
 	checkFilters() {
 		if (
-			(this.bodySearch.nombre == undefined || this.bodySearch.nombre == "") &&
+			(this.bodySearch.nombre == undefined || this.bodySearch.nombre == "" || this.bodySearch.nombre.trim().length < 3) &&
 			(this.bodySearch.idTipoEnvios == undefined || this.bodySearch.idTipoEnvios == "")) {
 			this.showSearchIncorrect();
 			return false;

@@ -268,6 +268,7 @@ export class ConsultasPlantillasComponent implements OnInit {
     }
     return {};
   }
+  
 
   addConsulta() {
     let objNewConsulta = {
