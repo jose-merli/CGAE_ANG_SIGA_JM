@@ -43,7 +43,7 @@
   </div>
 
   <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="rowPrueba">
       <p-table [columns]="colsBancarios" [ngClass]="{ customCursor: selectMultipleBancarios }" [(selection)]="selectedDatosBancarios"
         (onRowSelect)="clickFilaBancarios($event)" [responsive]="true" selectionMode="multiple" #tableBancarios
         class="tabla-listado" [value]="datosBancarios" [paginator]="activarPaginacionBancarios()" (onRowUnselect)="

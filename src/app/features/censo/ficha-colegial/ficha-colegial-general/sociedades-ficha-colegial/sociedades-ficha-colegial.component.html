@@ -48,7 +48,7 @@
       </div>
     </div>
     <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
-      <div class="row">
+      <div class="rowPrueba">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosSociedades" pageLinks="4"
           dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableSociedades class="tabla-listado" [value]="datosSociedades"
           [sortOrder]="1" [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItemSociedades"

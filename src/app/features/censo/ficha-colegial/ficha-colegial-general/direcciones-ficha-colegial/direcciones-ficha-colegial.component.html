@@ -62,7 +62,7 @@
     </div>
 
     <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
-      <div class="row">
+      <div class="rowPrueba">
         <p-table [columns]="colsDirecciones" [(selection)]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
           [responsive]="true" selectionMode="multiple" #tableDirecciones class="tabla-listado" [value]="datosDirecciones" (onRowSelect)="clickFilaDirecciones($event)"
           [paginator]="true" paginatorPosition="both" [rows]="selectedItemDirecciones" (onRowUnselect)="
