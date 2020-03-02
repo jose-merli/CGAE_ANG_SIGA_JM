@@ -45,11 +45,12 @@
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
               <p-dropdown [ngClass]="styleObligatorio(body.idTipoEnvios)" [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar || editarPlantilla"
-                (onChange)="onChangeTipoEnvio($event)" [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
+                (onChange)="onChangeTipoEnvio($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}" showClear="true"
+                [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12': body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
               <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} (*)</label>
-              <p-dropdown [ngClass]="styleObligatorio(body.idPlantillaEnvios)" [disabled]="(plantillas && plantillas.length <= 0) || editar || editarPlantilla"
+              <p-dropdown [ngClass]="styleObligatorio(body.idPlantillaEnvios)" [disabled]="(plantillas && plantillas.length <= 0) || editar || editarPlantilla || !body.idTipoEnvios"
                 [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios" class="select-form" (onChange)="detallePlantilla($event)"></p-dropdown>
             </div>
             <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='7' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
