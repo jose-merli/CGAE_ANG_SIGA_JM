@@ -416,7 +416,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.mensajeResumen == this.datosCurriculares.length+"") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }

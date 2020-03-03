@@ -234,7 +234,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.mensajeResumen == this.datosBancarios.length + "") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }

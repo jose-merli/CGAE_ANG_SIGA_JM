@@ -81,11 +81,11 @@ export class SancionesFichaColegialComponent implements OnInit {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-    this.generalBody = new FichaColegialGeneralesItem();
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.checkGeneralBody = new FichaColegialGeneralesItem();
-    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -107,23 +107,23 @@ export class SancionesFichaColegialComponent implements OnInit {
 
 
   }
-ngOnChanges(changes: SimpleChanges) {
-  if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-    this.esNewColegiado = true;
-    this.activacionEditar = false;
-    this.emptyLoadFichaColegial = false;
-    this.desactivarVolver = false;
-    this.activacionTarjeta = false;
+  ngOnChanges(changes: SimpleChanges) {
+    if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.esNewColegiado = true;
+      this.activacionEditar = false;
+      this.emptyLoadFichaColegial = false;
+      this.desactivarVolver = false;
+      this.activacionTarjeta = false;
 
-    // sessionStorage.removeItem("esNuevoNoColegiado");
-    // this.onInitGenerales();
-  } else {
-    this.activacionEditar = true;
-    this.esNewColegiado = false;
-    this.activacionTarjeta = true;
+      // sessionStorage.removeItem("esNuevoNoColegiado");
+      // this.onInitGenerales();
+    } else {
+      this.activacionEditar = true;
+      this.esNewColegiado = false;
+      this.activacionTarjeta = true;
+    }
+
   }
-  
-}
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
 
@@ -135,7 +135,7 @@ ngOnChanges(changes: SimpleChanges) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.message == this.dataSanciones.length.toString()) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -265,12 +265,12 @@ ngOnChanges(changes: SimpleChanges) {
               this.DescripcionSanciones = this.dataSanciones[i];
             }
           }
-          if(this.dataSanciones.length == 0){
+          if (this.dataSanciones.length == 0) {
             this.message = this.dataSanciones.length.toString();
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
-          }else{
+          } else {
             this.message = this.dataSanciones.length.toString();
           }
         }

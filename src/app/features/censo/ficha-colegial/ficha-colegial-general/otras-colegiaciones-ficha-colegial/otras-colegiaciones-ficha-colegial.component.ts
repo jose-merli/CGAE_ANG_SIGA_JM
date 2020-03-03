@@ -72,15 +72,15 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-    this.generalBody = new FichaColegialGeneralesItem();
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.checkGeneralBody = new FichaColegialGeneralesItem();
-    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-    if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
-    this.onInitOtrasColegiaciones();
+      this.onInitOtrasColegiaciones();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -135,7 +135,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.message == this.datosColegiaciones.length.toString()) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -187,13 +187,13 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
             "general.message.no.registros"
           );
           this.progressSpinner = false;
-        },()=>{
-          if(this.datosColegiaciones.length == 0){
+        }, () => {
+          if (this.datosColegiaciones.length == 0) {
             this.message = this.datosColegiaciones.length.toString();
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
-          }else{
+          } else {
             this.message = this.datosColegiaciones.length.toString();
           }
         }

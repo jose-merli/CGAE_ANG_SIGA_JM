@@ -268,7 +268,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.mensajeResumen == this.datosDirecciones.length + "") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
