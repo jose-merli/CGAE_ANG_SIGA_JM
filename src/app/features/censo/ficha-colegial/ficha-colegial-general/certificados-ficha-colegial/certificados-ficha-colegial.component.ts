@@ -35,7 +35,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
   colsCertificados;
-  datosCertificados: any[] = [];
+  datosCertificados;
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
 
@@ -75,15 +75,15 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-    this.generalBody = new FichaColegialGeneralesItem();
-    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.checkGeneralBody = new FichaColegialGeneralesItem();
-    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-    if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-    if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+      this.generalBody = new FichaColegialGeneralesItem();
+      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.checkGeneralBody = new FichaColegialGeneralesItem();
+      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
     }
-    
+
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -126,7 +126,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.idPersona != undefined) {
-      if(this.datosCertificados == undefined){
+      if (this.datosCertificados == undefined) {
         this.searchCertificados();
       }
     }
