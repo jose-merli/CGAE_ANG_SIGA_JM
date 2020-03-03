@@ -38,9 +38,12 @@
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
             </label> -->
 
-          <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
+          <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
             <span>{{ mensajeResumen }}
             </span>
+          </label>
+          <label *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
           </label>
           <i [ngClass]="{
                 'fa fa-angle-up': esFichaActiva('direcciones'),

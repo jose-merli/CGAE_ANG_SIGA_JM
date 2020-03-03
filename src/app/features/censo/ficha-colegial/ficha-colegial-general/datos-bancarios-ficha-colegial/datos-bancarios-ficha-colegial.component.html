@@ -22,8 +22,12 @@
             <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
           </label> -->
 
-          <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
+          <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
             <span>{{ mensajeResumen }}</span>
+          </label>
+
+          <label *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
           </label>
           <i [ngClass]="{
               'fa fa-angle-up': esFichaActiva('bancarios'),
