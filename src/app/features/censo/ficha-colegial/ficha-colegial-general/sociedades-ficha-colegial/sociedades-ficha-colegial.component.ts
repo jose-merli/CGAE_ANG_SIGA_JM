@@ -169,7 +169,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.mensajeResumen == this.datosSociedades.length+"") {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }

@@ -180,12 +180,12 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
               this.DescripcionCertificado = this.datosCertificados[i];
             }
           }
-          if(this.datosCertificados.length == 0){
+          if (this.datosCertificados.length == 0) {
             this.message = this.datosCertificados.length.toString();
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
-          }else{
+          } else {
             this.message = this.datosCertificados.length.toString();
           }
         }
@@ -221,7 +221,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.message == this.datosCertificados.length.toString()) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
