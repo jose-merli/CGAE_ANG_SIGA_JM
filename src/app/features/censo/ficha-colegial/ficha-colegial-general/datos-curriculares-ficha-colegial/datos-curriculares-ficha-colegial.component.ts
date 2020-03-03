@@ -36,6 +36,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   DescripcionDatosCurriculares;
+  mensajeResumen: String;
   fichasPosibles = [
     {
       key: "curriculares",
@@ -66,8 +67,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
-
-
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -81,7 +80,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-
+      this.mensajeResumen = this.translateService.instant(
+        "aplicacion.cargando"
+      );
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -321,7 +322,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
         data => {
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
-          // this.table.reset();
+          this.mensajeResumen = this.datosCurriculares.length;
         },
         err => {
           //   console.log(err);

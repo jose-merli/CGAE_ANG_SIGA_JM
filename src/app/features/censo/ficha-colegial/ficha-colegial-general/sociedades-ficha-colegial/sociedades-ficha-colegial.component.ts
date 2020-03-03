@@ -34,6 +34,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   };
   selectedDatosSociedades;
   rowsPerPage = [];
+  mensajeResumen: String;
 
   @Input() idPersona;
   constructor(private sigaServices: SigaServices,
@@ -54,6 +55,9 @@ export class SociedadesFichaColegialComponent implements OnInit {
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
       this.generalBody = new FichaColegialGeneralesItem();
+      this.mensajeResumen = this.translateService.instant(
+        "aplicacion.cargando"
+      );
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     }
 
@@ -136,6 +140,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
           this.progressSpinner = false;
           this.sociedadesBody = JSON.parse(data["body"]);
           this.datosSociedades = this.sociedadesBody.busquedaJuridicaItems;
+          this.mensajeResumen = this.datosSociedades.length + "";
         },
         err => {
           console.log(err);
