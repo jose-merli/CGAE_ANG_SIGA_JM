@@ -38,7 +38,8 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   datosCertificados;
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
-
+  message;
+  messageNoContent;
   fichasPosibles = [
     {
       key: "certificados",
@@ -153,6 +154,10 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchCertificados() {
+    this.messageNoContent = this.translateService.instant(
+      "aplicacion.cargando"
+    );
+    this.message = this.messageNoContent;
     this.sigaServices
       .postPaginado(
         "fichaDatosCertificados_datosCertificadosSearch",
@@ -174,6 +179,14 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
             for (let i = 0; i <= this.datosCertificados.length - 1; i++) {
               this.DescripcionCertificado = this.datosCertificados[i];
             }
+          }
+          if(this.datosCertificados.length == 0){
+            this.message = this.datosCertificados.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+          }else{
+            this.message = this.datosCertificados.length.toString();
           }
         }
       );

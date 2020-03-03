@@ -188,9 +188,12 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
           this.progressSpinner = false;
         },()=>{
           if(this.datosColegiaciones.length == 0){
-            this.message = this.translateService.instant(
+            this.message = this.datosColegiaciones.length.toString();
+            this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
+          }else{
+            this.message = this.datosColegiaciones.length.toString();
           }
         }
       );

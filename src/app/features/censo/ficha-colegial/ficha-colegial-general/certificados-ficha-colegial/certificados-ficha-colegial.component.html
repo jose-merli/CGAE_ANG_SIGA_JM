@@ -22,7 +22,7 @@
             </label> -->
 
           <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
-            <span>{{ datosCertificados ? datosCertificados.length:0 }}</span>
+            <span>{{ message }}</span>
           </label>
           <i *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
         </div>
@@ -40,7 +40,7 @@
 
   <div *ngIf="esFichaActiva('certificados')" class="card-body card-body-ficha">
     <div class="row">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCertificados" pageLinks="4"
+      <p-dataTable emptyMessage="{{ messageNoContent }}" [(selection)]="selectedDatosCertificados" pageLinks="4"
         dataKey="idSolicitud" [responsive]="true" selectionMode="multiple" #tableCertificados class="tabla-listado tableCertificados"
         [value]="datosCertificados" [sortOrder]="1" [paginator]="activarPaginacionCertificados()" paginatorPosition="both"
         [rows]="selectedItemCertificados">

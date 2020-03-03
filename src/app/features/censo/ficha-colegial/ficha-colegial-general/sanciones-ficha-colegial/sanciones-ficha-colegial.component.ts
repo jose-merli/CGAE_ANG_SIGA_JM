@@ -41,6 +41,8 @@ export class SancionesFichaColegialComponent implements OnInit {
       activa: false
     },
   ];
+  messageNoContent;
+  message;
   progressSpinner: boolean = false;
   selectedItemSanciones: number = 10;
   colsSanciones;
@@ -227,7 +229,10 @@ ngOnChanges(changes: SimpleChanges) {
 
   searchSanciones() {
     // Llamada al rest
-
+    this.messageNoContent = this.translateService.instant(
+      "aplicacion.cargando"
+    );
+    this.message = this.messageNoContent;
     this.bodySanciones.chkArchivadas = undefined;
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
@@ -258,6 +263,14 @@ ngOnChanges(changes: SimpleChanges) {
             for (let i; i <= this.dataSanciones.length - 1; i++) {
               this.DescripcionSanciones = this.dataSanciones[i];
             }
+          }
+          if(this.dataSanciones.length == 0){
+            this.message = this.dataSanciones.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+          }else{
+            this.message = this.dataSanciones.length.toString();
           }
         }
       );
