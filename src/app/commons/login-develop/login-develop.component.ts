@@ -192,6 +192,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 		//});
 	}
 
+	
 	isHabilitadoEntrar() {
 		if (
 			this.form.controls['tmpLoginPerfil'].value == '' ||

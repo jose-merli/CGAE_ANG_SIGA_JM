@@ -170,8 +170,9 @@
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} </label>
-                <p-dropdown class="select-form" [options]="tipoIdentificacion" [showClear]="true" [disabled]="!activaProductos || !permisos || disabledAction" placeholder="{{'general.boton.seleccionar' | translate}}"
-                  [(ngModel)]="bodyDatosMandatos.tipoIdProducto" (onChange)="editarMandato = true"></p-dropdown>
+                <p-dropdown class="select-form" [options]="tipoIdentificacion" [showClear]="true" [disabled]="!activaProductos || !permisos || disabledAction"
+                  placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyDatosMandatos.tipoIdProducto"
+                  (onChange)="editarMandato = true"></p-dropdown>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
@@ -352,7 +353,7 @@
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
             [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem"
             [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
-            (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
+            (onEditInit)="editarAnexo=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
 
 
 
@@ -396,17 +397,12 @@
 
       <div *ngIf="openFichaListadoFicherosAnexos" class="card-footer">
         <div class="text-right main-button ">
-          <div *ngIf="editar == true" class="text-right main-button">
-            <button (click)="editarDescripcion()" [(disabled)]="!permisos || disabledAction" pButton type="button" icon="far fa-save"
-              iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+          <div class="text-right main-button">
+            <button (click)="editarDescripcion()" *ngIf="editarAnexo == true" [(disabled)]="!permisos || disabledAction" pButton type="button"
+              icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
             <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction" (click)="mostrarDialogoNuevo()" pButton
               type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
           </div>
-          <div *ngIf="editar == false" class="text-right main-button">
-            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction" (click)="mostrarDialogoNuevo()" pButton
-              type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          </div>
-
         </div>
       </div>
     </div>

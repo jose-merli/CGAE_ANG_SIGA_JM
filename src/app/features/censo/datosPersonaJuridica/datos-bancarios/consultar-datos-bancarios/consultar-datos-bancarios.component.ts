@@ -129,7 +129,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   file: File = undefined;
   ocultarMotivo: boolean = undefined;
   showComunicar: boolean = false;
-
+  editarAnexo: boolean = false;
   lengthCountryCode: Number = 0;
   // historico:boolean = false;
   activaServicios: boolean = false;
@@ -1717,9 +1717,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   activarPaginacion() {
-    if (this.bodyDatosBancariosAnexoSearch != null && this.bodyDatosBancariosAnexoSearch != undefined && 
+    if (this.bodyDatosBancariosAnexoSearch != null && this.bodyDatosBancariosAnexoSearch != undefined &&
       (!this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem ||
-      this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length == 0)
+        this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.length == 0)
     )
       return false;
     else return true;
@@ -2030,7 +2030,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.showFail("message.error.editar.descripcion.mandato");
       this.selectedProductoServicio = [];
       this.comboProductoServicio = [];
-      this.editar = false;
+      this.editarAnexo = false;
       this.cargarDatosAnexos();
     }
   }
@@ -2040,7 +2040,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   onEditCancel() {
-    this.editar = false;
+    this.editarAnexo = false;
   }
 
   editarCompleto(event) {
@@ -2050,6 +2050,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.blockCrear = true;
     } else {
       this.editar = true;
+      this.editarAnexo = true;
       this.blockCrear = false;
       this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.forEach(
         (value: DatosBancariosSearchAnexosItem, key: number) => {
@@ -2093,9 +2094,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   controlarEdicion(evento) {
     this.activaDescarga(evento);
     if (!this.selectMultiple) {
-      this.editar = true;
+      this.editarAnexo = true;
     } else {
-      this.editar = false;
+      this.editarAnexo = false;
     }
   }
 

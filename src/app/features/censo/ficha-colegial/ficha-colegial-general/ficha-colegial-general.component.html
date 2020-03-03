@@ -1,0 +1,46 @@
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p *ngIf="esColegiado">
+      {{ "menu.censo" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaColegial" | translate }}
+    </p>
+    <p *ngIf="!esColegiado">
+      {{ "menu.censo" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaNoColegial" | translate }}
+    </p>
+  </div>
+  <div>
+    <app-servicios-interes-ficha-colegial [tarjetaInteres]="tarjetaInteres" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
+    <app-datos-generales-ficha-colegial [tarjetaGenerales]="tarjetaGenerales" [esColegiado]="esColegiado" (idPersonaNuevo)="idPersonaNuevoEvent($event)"></app-datos-generales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial [tarjetaColegiales]="tarjetaColegiales" [esColegiado]="esColegiado"></app-datos-colegiales-ficha-colegial>
+    <app-otras-colegiaciones-ficha-colegial [tarjetaOtrasColegiaciones]="tarjetaOtrasColegiaciones"
+      [esColegiado]="esColegiado"></app-otras-colegiaciones-ficha-colegial>
+    <app-certificados-ficha-colegial [tarjetaCertificados]="tarjetaCertificados" [esColegiado]="esColegiado" [idPersona]="idPersona"></app-certificados-ficha-colegial>
+    <app-sanciones-ficha-colegial [tarjetaSanciones]="tarjetaSanciones"></app-sanciones-ficha-colegial>
+    <app-sociedades-ficha-colegial [tarjetaSociedades]="tarjetaSociedades" [idPersona]="idPersona"></app-sociedades-ficha-colegial>
+    <app-datos-curriculares-ficha-colegial [tarjetaCurriculares]="tarjetaCurriculares"
+      [esColegiado]="esColegiado" [idPersona]="idPersona"></app-datos-curriculares-ficha-colegial>
+    <app-direcciones-ficha-colegial [tarjetaDirecciones]="tarjetaDirecciones" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado" [idPersona]="idPersona"></app-direcciones-ficha-colegial>
+    <app-datos-bancarios-ficha-colegial [tarjetaBancarios]="tarjetaBancarios" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado" [idPersona]="idPersona"></app-datos-bancarios-ficha-colegial>
+    <app-regtel-ficha-colegial [tarjetaRegtel]="tarjetaRegtel"></app-regtel-ficha-colegial>
+    <app-alter-mutua-ficha-colegial [tarjetaAlterMutua]="tarjetaAlterMutua"></app-alter-mutua-ficha-colegial>
+    <app-mutualidad-abogacia-ficha-colegial [tarjetaMutualidad]="tarjetaMutualidad" [datosBancarios]="datosBancarios"
+      [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
+
+  </div>
+  <!--END DATOS GENERALES-->
+  <!--DATOS COLEGIALES-->
+  <!--DATOS RETENCIONES-->
+  <!--END DATOS RETENCIONES-->
+  <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>
+  <app-dialog></app-dialog>
+</div>
+
+ <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

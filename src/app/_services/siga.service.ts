@@ -82,6 +82,7 @@ export class SigaServices {
     auditoriaUsuarios_update: "auditoriaUsuarios/update",
     permisos_update: "permisos/update",
     acces_control: "/accesControl",
+    acces_controls: "/accesControls",
     acces_controlUrl: "/accesControlUrl",
     entidad_lenguajeInstitucion: "entidad/lenguajeInstitucion",
     entidad_lenguaje: "entidad/lenguaje",

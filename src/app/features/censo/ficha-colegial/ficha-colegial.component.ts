@@ -234,7 +234,7 @@ export class FichaColegialComponent implements OnInit {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -483,7 +483,7 @@ export class FichaColegialComponent implements OnInit {
     this.initSpinner = true;
     this.getYearRange();
     this.getLenguage();
-    this.checkAccesos();
+    this.checkAccesos(); // Se hacen las llamadas en cadena. ( Fredi lo hizo un poco cutre )
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
@@ -494,35 +494,37 @@ export class FichaColegialComponent implements OnInit {
       this.disabledNif = false;
     }
 
-    if (sessionStorage.getItem("disabledAction") == "true") {
-      // Es estado baja colegial
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
       this.disabledAction = true;
     } else {
       this.disabledAction = false;
     }
 
-    if (sessionStorage.getItem("solimodifMensaje")) {
-      this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje");
+    if (sessionStorage.getItem("solimodifMensaje")) { // Texto que se muestra. Se usa solo al principio asi que se deberia 
+      this.solicitudModificacionMens = sessionStorage.getItem("solimodifMensaje"); //poder quedar en el padre.
       sessionStorage.removeItem("solimodifMensaje");
     }
 
     // Cogemos los datos de la busqueda de Colegiados
-    this.getLetrado();
-    if (sessionStorage.getItem("filtrosBusquedaColegiados")) {
+    this.getLetrado(); // Solo afecta a DatosGenerales y puede que algo a DatosColegiales
+
+    // Esto es solo para el volver y recargar (?)
+    if (sessionStorage.getItem("filtrosBusquedaColegiados")) { // Comprueba si viene de BusquedaColegiado para establecer datos
       sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
       this.persistenciaColeg = new DatosColegiadosItem();
       this.persistenciaColeg = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiados")
       );
       this.desactivarVolver = false;
-    } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) {
+    } else if (sessionStorage.getItem("filtrosBusquedaNoColegiados")) { // Comprueba si viene de BusquedaNoColegiado para establecer datos
       sessionStorage.removeItem("filtrosBusquedaNoColegiadosFichaColegial");
       this.persistenciaNoCol = new NoColegiadoItem();
       this.persistenciaNoCol = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaNoColegiados")
       );
       this.desactivarVolver = false;
-    } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
+    } else if (sessionStorage.getItem("busquedaCensoGeneral") == "true") { // Si viene de censo desactiva nif y ya.
       this.disabledNif = true;
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
@@ -534,11 +536,6 @@ export class FichaColegialComponent implements OnInit {
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
-      // if (this.emptyLoadFichaColegial) {
-      // this.showFailDetalle(
-      //   "No se han podido cargar los datos porque el usuario desde el que ha inciado sesión no es colegiado"
-      // );
-      // }
       this.desactivarVolver = true;
     }
 
@@ -633,7 +630,7 @@ export class FichaColegialComponent implements OnInit {
 
       // this.searchDatosBancariosIdPersona.datosBancariosItem[0] = new DatosBancariosItem();
     }
-
+    // Control de si es creacion o no 
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -648,15 +645,15 @@ export class FichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-
+    // En edicion inicializacion de nuevos datos.
     if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-      this.onInitCurriculares();
-      this.onInitDirecciones();
-      this.onInitDatosBancarios();
-      this.comprobarREGTEL();
-
+      this.onInitCurriculares(); // Datos curriculares
+      this.onInitDirecciones(); // Direcciones
+      this.onInitDatosBancarios(); // Bancarios
+      this.comprobarREGTEL(); // REGTEL
+      // Cada uno de estos se pondria en su respectiva tarjeta
     }
-
+    // Esto es de un combo de DatosGenerales.
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";
     }
@@ -665,7 +662,7 @@ export class FichaColegialComponent implements OnInit {
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
-
+    // Esto preguntarselo a Fredi
     this.sigaServices
       .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
@@ -684,14 +681,13 @@ export class FichaColegialComponent implements OnInit {
         }
       );
 
-    // this.onInitSociedades();
-
-    // this.onInitOtrasColegiaciones();
-
+    // Esto va para generales
     if (!this.esNewColegiado) {
       this.compruebaDNI();
     }
 
+
+    // Las cols posiblemente rente mas separarlas y ponerselas a sus respectivas tarjetas.
     // RELLENAMOS LOS ARRAY PARA LAS CABECERAS DE LAS TABLAS
     this.colsColegiales = [
       {
@@ -4898,7 +4894,7 @@ export class FichaColegialComponent implements OnInit {
               "general.message.no.registros"
             );
           },
-        );
+      );
     } else {
       this.sigaServices
         .postPaginado(
@@ -6000,6 +5996,28 @@ export class FichaColegialComponent implements OnInit {
 
   asignarPermisosTarjetas() {
     this.tarjetaInteres = this.tarjetaInteresNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
+    this.tarjetaGenerales = this.tarjetaGeneralesNum;
     this.tarjetaGenerales = this.tarjetaGeneralesNum;
     this.tarjetaColegiales = this.tarjetaColegialesNum;
     this.tarjetaOtrasColegiaciones = this.tarjetaOtrasColegiacionesNum;
