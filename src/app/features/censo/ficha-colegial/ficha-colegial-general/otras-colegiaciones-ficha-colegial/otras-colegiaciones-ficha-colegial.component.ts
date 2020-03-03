@@ -41,6 +41,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       activa: false
     },
   ];
+  mostrarNumero:Boolean = false;
   messageNoContent: String = "";
   message: String;
   selectedItemColegiaciones: number = 10;
@@ -166,6 +167,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   }
 
   searchOtherCollegues() {
+    this.mostrarNumero = false;
     this.messageNoContent = this.translateService.instant(
       "aplicacion.cargando"
     );
@@ -187,14 +189,17 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
             "general.message.no.registros"
           );
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         }, () => {
           if (this.datosColegiaciones.length == 0) {
             this.message = this.datosColegiaciones.length.toString();
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
+            this.mostrarNumero = true;
           } else {
             this.message = this.datosColegiaciones.length.toString();
+            this.mostrarNumero = true;
           }
         }
       );

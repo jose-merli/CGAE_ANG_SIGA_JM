@@ -13,7 +13,8 @@
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
         <div class="d-flex justify-content-between">
-          <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
+          <label class="registros-ficha" *ngIf="!mostrarNumero">{{ message }}...</label>
+          <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
             <span>{{ message }}</span>
           </label>
           <i *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>

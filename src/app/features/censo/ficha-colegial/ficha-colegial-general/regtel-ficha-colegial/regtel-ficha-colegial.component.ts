@@ -20,7 +20,7 @@ import { ConfirmationService } from '../../../../../../../node_modules/primeng/a
 
 })
 export class RegtelFichaColegialComponent implements OnInit {
-
+  mostrarNumero:Boolean = false;
   messageRegtel: String;
   numSelectedDatosRegtel: number = 0;
   dataSanciones: any[] = [];
@@ -94,19 +94,27 @@ export class RegtelFichaColegialComponent implements OnInit {
             // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
+              this.mostrarNumero = true;
+
             } else {
               this.messageRegtel = this.translateService.instant(
                 "general.message.no.registros"
               );
+              this.mostrarNumero = true;
+
             }
             if (this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
+              this.mostrarNumero = true;
+
             }
           },
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
+            this.mostrarNumero = true;
+
           },
       );
     } else {
@@ -128,19 +136,27 @@ export class RegtelFichaColegialComponent implements OnInit {
             // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
+              this.mostrarNumero = true;
+
             } else {
               this.messageRegtel = this.translateService.instant(
                 "general.message.no.registros"
               );
+              this.mostrarNumero = true;
+
             }
             if (this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
+              this.mostrarNumero = true;
+
             }
           },
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
+                        this.mostrarNumero = true;
+
           }
         );
     }
@@ -196,6 +212,8 @@ export class RegtelFichaColegialComponent implements OnInit {
 
   comprobarREGTEL() {
     this.esRegtel = false;
+    this.mostrarNumero = false;
+
     this.messageNoContentRegTel = this.translateService.instant(
       "aplicacion.cargando"
     );
@@ -215,6 +233,7 @@ export class RegtelFichaColegialComponent implements OnInit {
           "general.message.no.registros"
         );
         this.progressSpinner = false;
+        this.mostrarNumero = true;
       }
     );
   }
@@ -238,19 +257,27 @@ export class RegtelFichaColegialComponent implements OnInit {
             // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
+              this.mostrarNumero = true;
+
             } else {
               this.messageRegtel = this.translateService.instant(
                 "general.message.no.registros"
               );
+              this.mostrarNumero = true;
+
             }
             if (this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
             }
+            this.mostrarNumero = true;
+
           },
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
+            this.mostrarNumero = true;
+
           },
       );
     } else {
@@ -272,19 +299,27 @@ export class RegtelFichaColegialComponent implements OnInit {
             // });
             if (this.bodyRegTel.length != 0) {
               this.messageRegtel = this.bodyRegTel.length + "";
+              this.mostrarNumero = true;
+
             } else {
               this.messageRegtel = this.translateService.instant(
                 "general.message.no.registros"
               );
+              this.mostrarNumero = true;
+
             }
             if (this.bodyRegTel.length > 0) {
               this.atrasRegTel = this.bodyRegTel[0].parent;
+              this.mostrarNumero = true;
+
             }
           },
           err => {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
+            this.mostrarNumero = true;
+
           }
         );
     }
