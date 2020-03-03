@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -27,7 +27,8 @@ import { DatosBancariosObject } from '../../../../../models/DatosBancariosObject
 @Component({
   selector: 'app-datos-bancarios-ficha-colegial',
   templateUrl: './datos-bancarios-ficha-colegial.component.html',
-  styleUrls: ['./datos-bancarios-ficha-colegial.component.scss']
+  styleUrls: ['./datos-bancarios-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();

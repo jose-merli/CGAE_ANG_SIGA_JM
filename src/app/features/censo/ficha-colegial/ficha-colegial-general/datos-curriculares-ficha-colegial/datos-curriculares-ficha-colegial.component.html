@@ -47,7 +47,7 @@
   <!-- cuerpo -->
 
   <div *ngIf="esFichaActiva('curriculares')" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="rowPrueba">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosCurriculares" pageLinks="4"
         [responsive]="true" [ngClass]="{ customCursor: selectMultipleCurriculares }" selectionMode="multiple" #tableCurriculares
         class="tabla-listado" [value]="datosCurriculares" [sortOrder]="1" [paginator]="activarPaginacionCurriculares()" paginatorPosition="both"

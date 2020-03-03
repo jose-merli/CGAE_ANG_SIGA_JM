@@ -43,7 +43,7 @@
   </div>
 
   <div *ngIf="esFichaActiva('bancarios')" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="rowPrueba">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleBancarios }"
         [(selection)]="selectedDatosBancarios" [responsive]="true" selectionMode="multiple" dataKey="idCuenta" #tableBancarios
         class="tabla-listado" [value]="datosBancarios" [sortOrder]="1" [paginator]="activarPaginacionBancarios()" (onRowSelect)="redireccionarDatosBancarios(selectedDatosBancarios)"

@@ -61,7 +61,7 @@
   </div>
 
   <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
-    <div class="row">
+    <div class="rowPrueba">
       <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosDirecciones" pageLinks="4"
         [ngClass]="{ customCursor: selectMultipleDirecciones }" dataKey="idDireccion" [responsive]="true" selectionMode="multiple"
         #tableDirecciones class="tabla-listado" [value]="datosDirecciones" [sortOrder]="1" [paginator]="activarPaginacionDireciones()"

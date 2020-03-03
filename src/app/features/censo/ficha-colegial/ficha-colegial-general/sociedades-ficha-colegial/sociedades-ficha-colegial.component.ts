@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersonaJuridicaObject } from '../../../../../models/PersonaJuridicaObject';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -10,7 +10,8 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 @Component({
   selector: 'app-sociedades-ficha-colegial',
   templateUrl: './sociedades-ficha-colegial.component.html',
-  styleUrls: ['./sociedades-ficha-colegial.component.scss']
+  styleUrls: ['./sociedades-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SociedadesFichaColegialComponent implements OnInit {
   datosSociedades: any[] = [];

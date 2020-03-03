@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -15,7 +15,9 @@ import { ConfirmationService } from '../../../../../../../node_modules/primeng/a
 @Component({
   selector: 'app-regtel-ficha-colegial',
   templateUrl: './regtel-ficha-colegial.component.html',
-  styleUrls: ['./regtel-ficha-colegial.component.scss']
+  styleUrls: ['./regtel-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class RegtelFichaColegialComponent implements OnInit {
 

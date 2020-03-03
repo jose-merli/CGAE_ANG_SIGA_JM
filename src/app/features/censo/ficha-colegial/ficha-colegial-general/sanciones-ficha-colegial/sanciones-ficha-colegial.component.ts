@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -26,7 +26,8 @@ import { BusquedaSancionesObject } from '../../../../../models/BusquedaSanciones
 @Component({
   selector: 'app-sanciones-ficha-colegial',
   templateUrl: './sanciones-ficha-colegial.component.html',
-  styleUrls: ['./sanciones-ficha-colegial.component.scss']
+  styleUrls: ['./sanciones-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SancionesFichaColegialComponent implements OnInit {
   esNewColegiado: boolean = false;

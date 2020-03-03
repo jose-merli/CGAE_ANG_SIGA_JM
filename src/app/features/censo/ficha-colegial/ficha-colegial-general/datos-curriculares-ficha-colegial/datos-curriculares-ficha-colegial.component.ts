@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
@@ -11,7 +11,8 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',
   templateUrl: './datos-curriculares-ficha-colegial.component.html',
-  styleUrls: ['./datos-curriculares-ficha-colegial.component.scss']
+  styleUrls: ['./datos-curriculares-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosCurricularesFichaColegialComponent implements OnInit, OnChanges {
 
