@@ -33,15 +33,23 @@ export class MenuComponent implements OnInit {
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
-    this.progressSpinner = true;
-    this.sigaServices.get("diccionarios").subscribe(response => {
-      response.DiccionarioItems;
-      this.sigaServices.get("menu").subscribe(response => {
+    this.progressSpinner = true;  
+    
+    this.translateService.getTranslations().then(
+      items=>{
+        this.items = items;
         this.progressSpinner = false;
-        this.items = response.menuItems;
-        return this.items;
-      });
-    });
+      }
+    );
+
+    // this.sigaServices.get("diccionarios").subscribe(response => {
+    //   response.DiccionarioItems;
+    //   this.sigaServices.get("menu").subscribe(response => {
+    //     this.progressSpinner = false;
+    //     this.items = response.menuItems;
+    //     return this.items;
+    //   });
+    // });
   }
 
   onCloseMenu() {

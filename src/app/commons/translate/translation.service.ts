@@ -105,9 +105,9 @@ export class TranslateService {
     service.get("usuario").subscribe(response => {
       this._currentLang = response.usuarioItem[0].idLenguaje;
     });
-    service.get("diccionarios").subscribe(response => {
-      this._translations = response.DiccionarioItems;
-    });
+    // service.get("diccionarios").subscribe(response => {
+    //   this._translations = response.DiccionarioItems;
+    // });
   }
 
   public get currentLang() {
@@ -150,4 +150,35 @@ export class TranslateService {
       this._translations = response.DiccionarioItems;
     });
   }
+
+  // public getTranslations(): any {
+  //   this.service.get("diccionarios").subscribe(response => {
+  //     this._translations = response.DiccionarioItems;
+
+  //     this.service.get("menu").subscribe(response => {
+  //       return response.menuItems;
+  //     });
+
+  //   });
+  // }
+
+
+  getTranslations(): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+
+      this.service.get("diccionarios").subscribe(response => {
+        this._translations = response.DiccionarioItems;
+
+        this.service.get("menu").subscribe(res => {
+          resolve(res.menuItems);
+        }, err =>{
+          console.log(err);
+        });
+
+      });
+
+
+    });
+  }
+
 }
