@@ -40,7 +40,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   disabledNif: boolean = false;
   es: any = esCalendar;
   suggestTopics: any[] = [];
-
+  mostrarDatos:Boolean = false;
   comboTopics: any[] = [];
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
   msgs = [];
@@ -140,6 +140,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   bodyDirecciones: DatosDireccionesItem;
   bodyDatosBancarios: DatosBancariosItem;
   icon;
+  message;
   activarGuardarColegiales: boolean = false;
   disabledAction: boolean = false;
   mostrarDatosDireccion: boolean = false;
@@ -156,7 +157,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   idPersona: any;
   isColegiadoEjerciente: boolean = false;
   yearRange: string;
-
+  messageNoContent;
   resultsTopics: any[] = [];
   displayAuditoria: boolean = false;
   permisos: boolean = true;
@@ -339,6 +340,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   }
   onInitGenerales() {
+    this.mostrarDatos = false;
+    this.messageNoContent = this.translateService.instant(
+      "aplicacion.cargando"
+    );
+    this.message = this.messageNoContent;
     // this.activacionGuardarGenerales();
     this.etiquetasPersonaJuridicaSelecionados = this.generalBody.etiquetas;
     // this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.generalBody.etiquetas));
@@ -1480,6 +1486,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         },
         () => {
           this.progressSpinner = false;
+          this.message = "Cargado";
+          this.mostrarDatos = true;
+          
         }
       );
   }
@@ -1514,7 +1523,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta) {
+    if (this.activacionTarjeta && this.message == "Cargado") {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
