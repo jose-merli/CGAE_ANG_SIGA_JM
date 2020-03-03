@@ -14,7 +14,7 @@
         </div>
         <div class="d-flex justify-content-between">
           <label class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
-            <span>{{ datosColegiaciones.length }}</span>
+            <span>{{ message }}</span>
           </label>
           <i *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
         </div>
@@ -33,7 +33,7 @@
 
   <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
     <div class="row">
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" dataKey="movil" [responsive]="true"
+      <p-dataTable emptyMessage="{{ message }}" pageLinks="4" dataKey="movil" [responsive]="true"
         #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
         paginatorPosition="both" [rows]="selectedItemColegiaciones">
         <p-column *ngFor="let col of colsColegiaciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"

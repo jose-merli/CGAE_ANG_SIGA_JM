@@ -257,9 +257,15 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
 
   onChangeSelectAllBancarios() {
     if (this.selectAllBancarios === true) {
-      this.numSelectedBancarios = this.datosBancarios.length;
-      this.selectMultipleBancarios = false;
-      this.selectedDatosBancarios = this.datosBancarios;
+      if (this.bodyDatosBancarios.historico) {
+        this.numSelectedBancarios = this.selectedDatosBancarios.length;
+        this.selectMultipleBancarios = false;
+        this.selectedDatosBancarios = this.datosBancarios.filter(dato => dato.fechaBaja != undefined)
+      } else {
+        this.numSelectedBancarios = this.datosBancarios.length;
+        this.selectMultipleBancarios = false;
+        this.selectedDatosBancarios = this.datosBancarios;
+      }
     } else {
       this.selectedDatosBancarios = [];
       this.numSelectedBancarios = 0;
