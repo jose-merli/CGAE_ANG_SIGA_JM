@@ -117,7 +117,7 @@
       </p-table>
       <div *ngIf="selectedDatos && selectedDatos != ''" class="card-footer">
         <div class="text-right main-button">
-          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="enviar(selectedDatos)"
+          <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="obtenerDestinatarios(selectedDatos)"
             pButton type="button" icon="fa fa-send" iconPos="left" label="{{ 'general.boton.enviar' |
           translate}}"></button>
           <button *ngIf="selectedDatos && selectedDatos.length > 0 && estado != 2 && estado != 3 && estado != 6" (click)="onShowProgamar(selectedDatos)"
