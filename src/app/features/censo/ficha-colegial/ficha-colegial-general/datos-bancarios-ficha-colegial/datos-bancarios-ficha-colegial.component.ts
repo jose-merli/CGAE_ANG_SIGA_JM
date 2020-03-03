@@ -66,6 +66,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   camposDesactivados: boolean = false;
   permisos: boolean = true;
   disabledAction: boolean = false;
+  mensajeResumen: String;
 
   colsBancarios;
   rowsPerPage;
@@ -93,6 +94,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.mensajeResumen = this.translateService.instant(
+        "aplicacion.cargando"
+      );
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -134,8 +138,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       }
     if (this.idPersona != undefined) {
-      if(this.bodyDatosBancarios == undefined)
-      this.onInitDatosBancarios();
+      if (this.bodyDatosBancarios == undefined)
+        this.onInitDatosBancarios();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -360,6 +364,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
             this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
+            this.mensajeResumen = this.datosBancarios.length + "";
           },
           error => {
             this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
@@ -475,4 +480,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
+
+
 }
