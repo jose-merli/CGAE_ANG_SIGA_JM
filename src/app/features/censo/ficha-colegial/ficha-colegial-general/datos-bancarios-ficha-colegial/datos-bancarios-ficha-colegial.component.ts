@@ -65,6 +65,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   DescripcionDatosBancarios;
   camposDesactivados: boolean = false;
   permisos: boolean = true;
+  disabledAction: boolean = false;
+
   colsBancarios;
   rowsPerPage;
   @Input() isLetrado;
@@ -109,10 +111,16 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
 
     this.getCols();
 
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      // Es estado baja colegial
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado != undefined) {
+    if (this.isLetrado == true) {
       this.isLetrado = true
     } else {
       this.isLetrado = !this.permisos;
