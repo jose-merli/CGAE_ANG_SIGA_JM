@@ -588,7 +588,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     return fecha;
   }
   checkAccesos() {
-    this.initSpinner = true;
+    this.progressSpinner = true;
     let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299"];
     let proceso;
     procesos = procesos.map(it => {
@@ -621,6 +621,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         console.log(err);
       },
       () => {
+        this.progressSpinner = false;
         this.asignarPermisosTarjetas();
       }
     );

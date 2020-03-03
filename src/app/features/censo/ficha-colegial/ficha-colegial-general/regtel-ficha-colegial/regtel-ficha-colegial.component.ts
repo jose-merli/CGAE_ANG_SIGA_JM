@@ -574,7 +574,7 @@ export class RegtelFichaColegialComponent implements OnInit {
         this.activacionEditar = false;
         this.callConfirmationServiceRegtel();
       }
-      if (this.activacionEditar) {
+      if (this.activacionEditar && this.messageRegtel != "Cargando") {
         this.ficha.activa = !this.ficha.activa;
         this.openFicha = !this.openFicha;
       }
