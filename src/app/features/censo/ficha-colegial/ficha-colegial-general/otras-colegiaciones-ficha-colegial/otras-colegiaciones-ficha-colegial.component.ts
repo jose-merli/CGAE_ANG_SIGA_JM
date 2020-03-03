@@ -40,6 +40,8 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       activa: false
     },
   ];
+  messageNoContent: String = "";
+  message: String;
   selectedItemColegiaciones: number = 10;
   @Input() tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];
@@ -163,6 +165,10 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   }
 
   searchOtherCollegues() {
+    this.messageNoContent = this.translateService.instant(
+      "aplicacion.cargando"
+    );
+    this.message = this.messageNoContent;
     this.sigaServices
       .postPaginado(
         "fichaColegialOtrasColegiaciones_searchOtherCollegues",
@@ -176,8 +182,16 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
           this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
         },
         err => {
-          console.log(err);
+          this.message = this.translateService.instant(
+            "general.message.no.registros"
+          );
           this.progressSpinner = false;
+        },()=>{
+          if(this.datosColegiaciones.length == 0){
+            this.message = this.translateService.instant(
+              "general.message.no.registros"
+            );
+          }
         }
       );
   }

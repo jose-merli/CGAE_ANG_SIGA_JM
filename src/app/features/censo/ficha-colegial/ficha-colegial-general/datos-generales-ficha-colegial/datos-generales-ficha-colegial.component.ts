@@ -2523,5 +2523,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   onBlur(event) {
     event.currentTarget.value = "";
   }
+  
+  clear() {
+    this.msgs = [];
+  }
 }
 

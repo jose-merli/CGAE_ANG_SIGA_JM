@@ -28,7 +28,7 @@
             </label> -->
 
             <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
-              <span>{{ datosCurriculares.length }}</span>
+              <span>{{ datosCurriculares ? datosCurriculares.length : 0 }}</span>
             </label>                       
           <i *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
       </div>
@@ -111,15 +111,14 @@
   -->
       <button (click)="cargarDatosCV()"  *ngIf="historicoCV"  pButton type="button" icon="fa fa-undo"  iconPos="left"  label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
       <button (click)="cargarHistorico()"  *ngIf="!historicoCV"  pButton type="button"  icon="fa fa-history"  iconPos="left"  label="{{'general.message.mostrarHistorico' | translate}}"></button>
-      <button  (click)="deleteCurriculares(selectedDatosCurriculares)" pButton type="button" [(disabled)]="!(selectedDatosCurriculares && selectedDatosCurriculares != '') || isLetrado || tarjetaCurriculares == '2' || disabledAction"
-        icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
+      <button  (click)="deleteCurriculares(selectedDatosCurriculares)" pButton type="button" [(disabled)]="!(selectedDatosCurriculares && selectedDatosCurriculares != '') || isLetrado || tarjetaCurriculares == '2' || disabledAction || historicoCV"
+      icon="fa fa-trash-alt " iconPos="left" label="{{'general.boton.eliminar' | translate}}"></button>
       <button (click)="irNuevoCurriculares()" pButton type="button" [(disabled)]="tarjetaCurriculares == '2' || disabledAction || isLetrado"
         icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 </div>
 
-<div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
-  <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
+<!-- <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
   <div class="loader"></div>
-</div>
+</div> -->
