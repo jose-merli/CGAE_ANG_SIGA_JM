@@ -34,7 +34,7 @@
 
   <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
     <div class="rowPrueba">
-      <p-dataTable emptyMessage="{{ messageNoContent | translate }}" pageLinks="4" dataKey="movil" [responsive]="true"
+      <p-dataTable emptyMessage="{{'general.message.no.registros' | translate }}" pageLinks="4" dataKey="movil" [responsive]="true"
         #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
         paginatorPosition="both" [rows]="selectedItemColegiaciones">
         <p-column *ngFor="let col of colsColegiaciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
