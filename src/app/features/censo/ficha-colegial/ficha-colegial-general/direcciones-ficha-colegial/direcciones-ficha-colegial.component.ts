@@ -71,6 +71,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   mostrarDatosSanciones: boolean = false;
   DescripcionSanciones;
   rowsPerPage;
+  disabledAction: boolean = false;
   numSelectedCurriculares: number = 0;
   colsDirecciones;
   bodyDirecciones: DatosDireccionesItem;
@@ -128,6 +129,13 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       this.esColegiado = true;
     }
 
+    if (sessionStorage.getItem("disabledAction") == "true") {
+      // Es estado baja colegial
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
+
     if (this.esColegiado) {
       if (this.colegialesBody.situacion == "20") {
         this.isColegiadoEjerciente = true;
@@ -157,7 +165,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado != undefined) {
+    if (this.isLetrado == true) {
       this.isLetrado = true
     } else {
       this.isLetrado = !this.permisos;
