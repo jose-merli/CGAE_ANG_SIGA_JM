@@ -9,11 +9,11 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
-          <label  class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+          <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
-        <div class="d-flex justify-content-between">
+        <div *ngIf="mensajeResumen != 'Cargando'" class="d-flex justify-content-between">
           <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
             <span>{{ colegialesBody.colegioResultado }}</span>
           </label>
@@ -33,7 +33,10 @@
             <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
             <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
           </label>
-          <i  *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
+          <label *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
+          </label>
+          <i *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
         </div>
       </div>
     </div>
@@ -41,8 +44,8 @@
       <div class="img-colegiado">
         <i class="far fa-address-book icon-ficha"></i>
       </div>
-      <label  class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
-      </label> 
+      <label class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+      </label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
@@ -80,8 +83,7 @@
             <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
             <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
               [(ngModel)]="colegialesBody.idTiposSeguro" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-              [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-              [options]="comboTipoSeguro"></p-dropdown>
+              [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3 form-group-date">
             <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
@@ -127,8 +129,8 @@
             <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
             <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
               (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
-              (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura"
-              dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+              (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura" dateFormat="dd/mm/yy"
+              icon="far fa-calendar-alt" showIcon="true" [utc]="false">
               <p-footer>
                 <div class="main-button d-flex col-lg-12">
                   <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
@@ -235,8 +237,8 @@
 
       <ng-template pTemplate="paginatorLeft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first +
-            1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first + 1
+            }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
             | translate }} {{ tableColegiales.totalRecords }}
           </label>
 
@@ -289,8 +291,8 @@
 
       <ng-template pTemplate="paginatorLeft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first +
-            1 }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first + 1
+            }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
             | translate }} {{ tableColegiales.totalRecords }}
           </label>
 
@@ -398,66 +400,66 @@
   </p-dialog>
 </div>
 
- <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtel" icon="icon" width="425" #regtel>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
-    #bajaInscripcionesUpdate>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
+  #bajaInscripcionesUpdate>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 
-  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
-    #bajaInscripcionesDelete>
-    <p-footer>
-      <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
-      <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>
-    </p-footer>
-  </p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
+  #bajaInscripcionesDelete>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
-  <!-- <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+<!-- <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
     <div class="loader"></div>
   </div>
 
