@@ -42,6 +42,7 @@ export class SancionesFichaColegialComponent implements OnInit {
       activa: false
     },
   ];
+  mostrarNumero: Boolean = false;
   messageNoContent;
   message;
   progressSpinner: boolean = false;
@@ -230,6 +231,7 @@ export class SancionesFichaColegialComponent implements OnInit {
 
   searchSanciones() {
     // Llamada al rest
+    this.mostrarNumero = false;
     this.messageNoContent = this.translateService.instant(
       "aplicacion.cargando"
     );
@@ -258,6 +260,8 @@ export class SancionesFichaColegialComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
+          this.mostrarNumero = true;
+
         }, () => {
           if (this.dataSanciones.length > 0) {
             this.mostrarDatosSanciones = true;
@@ -270,8 +274,12 @@ export class SancionesFichaColegialComponent implements OnInit {
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
+            this.mostrarNumero = true;
+
           } else {
             this.message = this.dataSanciones.length.toString();
+            this.mostrarNumero = true;
+
           }
         }
       );

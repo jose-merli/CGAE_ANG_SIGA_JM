@@ -36,6 +36,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
   colsCertificados;
+  mostrarNumero: Boolean = false;
   datosCertificados;
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
@@ -155,6 +156,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchCertificados() {
+    this.mostrarNumero = false;
     this.messageNoContent = this.translateService.instant(
       "aplicacion.cargando"
     );
@@ -174,6 +176,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
         err => {
           console.log(err);
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         }, () => {
           if (this.datosCertificados.length > 0) {
             this.mostrarDatosCertificados = true;
@@ -186,8 +189,10 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
             );
+            this.mostrarNumero = true;
           } else {
             this.message = this.datosCertificados.length.toString();
+            this.mostrarNumero = true;
           }
         }
       );

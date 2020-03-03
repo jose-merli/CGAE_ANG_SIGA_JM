@@ -29,10 +29,13 @@
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
               <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
             </label> -->
-
-              <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+            <label class="registros-ficha" *ngIf="!mostrarNumero">{{ message }}...</label>
+            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+              <span>{{ message }}</span>
+            </label>
+              <!-- <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
                 <span>{{ message }}</span>
-              </label>
+              </label> -->
             <i *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>
