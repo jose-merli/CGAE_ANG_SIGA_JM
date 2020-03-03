@@ -30,8 +30,11 @@
             <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
           </label> -->
 
-          <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
+          <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
             <span>{{ mensajeResumen }}</span>
+          </label>
+          <label *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
           </label>
           <i *ngIf="!esFichaActiva()" class="fa fa-angle-down float-right"></i>
         </div>

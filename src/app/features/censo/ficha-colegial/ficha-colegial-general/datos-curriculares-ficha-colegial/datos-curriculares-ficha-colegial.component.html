@@ -27,8 +27,11 @@
               <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde}}</span>
             </label> -->
 
-          <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
+          <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
             <span>{{ mensajeResumen }}</span>
+          </label>
+          <label *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
           </label>
           <i *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
         </div>
