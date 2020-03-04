@@ -187,6 +187,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.getLetrado();
       }
     }
+
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -297,6 +298,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.bodyDirecciones.historico = false;
     this.searchDirecciones();
   }
+
+  ocultarHistoricoDatosDirecciones(){
+    this.progressSpinner = true;
+    this.onInitDirecciones();
+  }
+
 
   isSelectMultipleDirecciones() {
     this.selectMultipleDirecciones = !this.selectMultipleDirecciones;
@@ -470,7 +477,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   searchDirecciones() {
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = "";
-    this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
@@ -500,8 +506,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           },
           err => {
             console.log(err);
+            this.progressSpinner = false;
+
           },
           () => {
+            this.progressSpinner = false;
+
             if (this.datosDirecciones.length > 0) {
               this.mostrarDatosDireccion = true;
               for (let i = 0; i <= this.datosDirecciones.length - 1; i++) {
@@ -514,6 +524,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDireccionesHistoric() {
+    this.progressSpinner = true;
     this.bodyDirecciones.historico = true;
     this.searchDirecciones();
   }

@@ -243,6 +243,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   eliminarRegistroCV(selectedDatosCurriculares) {
+    this.progressSpinner = true;
+    
     selectedDatosCurriculares.forEach(element => {
       this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
     });
@@ -330,13 +332,18 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       )
       .subscribe(
         data => {
+          this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
           this.mensajeResumen = this.datosCurriculares.length;
         },
         err => {
           //   console.log(err);
+          this.progressSpinner = false;
+
         }, () => {
+          this.progressSpinner = false;
+
           if (this.datosCurriculares.length > 0) {
             this.mostrarDatosCurriculares = true;
             for (let i = 0; i <= this.datosCurriculares.length - 1; i++) {
@@ -379,6 +386,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
 
   cargarDatosCV() {
     this.historicoCV = false;
+    this.progressSpinner = true;
 
     this.searchDatosCurriculares();
 
@@ -389,6 +397,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   cargarHistorico() {
+    this.progressSpinner = true;
     this.historicoCV = true;
     this.searchDatosCurriculares();
   }
