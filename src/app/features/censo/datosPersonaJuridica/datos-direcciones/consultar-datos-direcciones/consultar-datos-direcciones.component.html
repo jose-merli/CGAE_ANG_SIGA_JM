@@ -181,8 +181,10 @@
 
                       <div *ngIf="dato.tipo == 'Correo-Electrónico'">
                         <div *ngIf="edicionEmail" class="ui-inputgroup">
-                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" />
-                          <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>
+                          <input type="text" class="form-control" [disabled]="historyDisable || permisoTarjeta == '2'" pInputText [(ngModel)]="dato[col.field]"
+                            (input)="changeEmail(dato)" />
+                          <button (click)="editEmail()" pButton type="button" [disabled]="historyDisable || permisoTarjeta == '2'" icon="fas fa-check"
+                            class="ui-button-warn"></button>
                         </div>
                         <div *ngIf="!emailValido">
                           <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
@@ -190,7 +192,8 @@
                         <div *ngIf="!edicionEmail" class="ui-inputgroup">
                           <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
                           <span *ngIf="dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
-                          <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit col-1"></button>
+                          <button (click)="editEmail()" pButton type="button" [disabled]="historyDisable || permisoTarjeta == '2'" icon="fas fa-pencil-alt"
+                            class="ui-button-warn button-edit col-1"></button>
                         </div>
                       </div>
                       <!-- </span> -->

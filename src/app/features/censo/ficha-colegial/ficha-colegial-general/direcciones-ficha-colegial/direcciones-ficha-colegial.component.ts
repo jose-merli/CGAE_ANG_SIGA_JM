@@ -128,7 +128,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       } else {
         this.esColegiado = true;
       }
-
+      sessionStorage.removeItem("historicoDir")
       if (sessionStorage.getItem("disabledAction") == "true") {
         // Es estado baja colegial
         this.disabledAction = true;
@@ -564,7 +564,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       if (!this.selectMultipleDirecciones) {
         if (dato[0].fechaBaja != null) {
           sessionStorage.setItem("historicoDir", "true");
-        }
+        } else sessionStorage.setItem("historicoDir", "false");
+
         var enviarDatos = null;
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];

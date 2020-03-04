@@ -122,8 +122,8 @@
            -->
             <p-calendar #calendarFechaNacimiento [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event); activacionGuardarGenerales()"
               (onInput)="inputFechaNacimiento($event)" [yearRange]="yearRange" [locale]="es" [(ngModel)]="fechaNacimiento"
-              (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
-              [utc]="true" showIcon="true">
+              (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || tarjetaGenerales == 2 || disabledAction" dateFormat="dd/mm/yy"
+              icon="far fa-calendar-alt" [utc]="true" showIcon="true">
               <p-footer>
                 <div class="main-button d-flex col-lg-12">
                   <button (click)="fechaHoyFechaNacimiento()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
