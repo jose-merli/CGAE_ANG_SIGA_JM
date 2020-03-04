@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -23,7 +23,8 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-datos-colegiales-ficha-colegial',
   templateUrl: './datos-colegiales-ficha-colegial.component.html',
-  styleUrls: ['./datos-colegiales-ficha-colegial.component.scss']
+  styleUrls: ['./datos-colegiales-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges {
   tarjetaColegialesNum: string;
@@ -184,12 +185,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       this.tipoCambioAuditoria = null;
       // this.checkAcceso();
-      this.onInitGenerales();
+      // this.onInitGenerales();
 
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
       this.idPersona = this.generalBody.idPersona;
-
-      this.onInitColegiales();
+          
       this.getYearRange();
       this.getLenguage();
     }
@@ -203,7 +203,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         "aplicacion.cargando"
       );
       // sessionStorage.removeItem("esNuevoNoColegiado");
-      this.onInitGenerales();
+      // this.onInitGenerales();
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;
@@ -232,9 +232,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         }
       );
 
-    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-      this.onInitDirecciones(); // Direcciones
-    }
+    // if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+    //   this.onInitDirecciones(); // Direcciones
+    // }
   }
 
   ngOnChanges() {
@@ -259,6 +259,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+    if(this.tarjetaColegiales == "3" || this.tarjetaColegiales == "2"){
+      this.onInitColegiales();
     }
   }
 

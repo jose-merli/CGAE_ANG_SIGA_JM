@@ -130,7 +130,9 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
     }
     if (this.idPersona != undefined) {
       if (this.datosCertificados == undefined) {
-        this.searchCertificados();
+        if(this.tarjetaCertificados == "3" || this.tarjetaCertificados == "2"){
+          this.searchCertificados();
+        }  
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {

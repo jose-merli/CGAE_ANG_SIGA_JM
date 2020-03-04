@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
@@ -21,7 +21,8 @@ import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
   templateUrl: './datos-generales-ficha-colegial.component.html',
-  styleUrls: ['./datos-generales-ficha-colegial.component.scss']
+  styleUrls: ['./datos-generales-ficha-colegial.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
@@ -230,8 +231,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
       this.tipoCambioAuditoria = null;
       // this.checkAcceso();
-      this.onInitGenerales();
-      this.onInitColegiales();
+      // this.onInitColegiales();
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
         this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -281,7 +281,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.activacionTarjeta = false;
 
       // sessionStorage.removeItem("esNuevoNoColegiado");
-      this.onInitGenerales();
+      // this.onInitGenerales();
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;
@@ -334,8 +334,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.tarjetaGenerales != undefined){
-      
+    if(this.tarjetaGenerales == "3" || this.tarjetaGenerales == "2"){
+      this.onInitGenerales();
     }
 
   }

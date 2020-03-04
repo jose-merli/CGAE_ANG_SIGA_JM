@@ -11,14 +11,16 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraRegtel('regtel')" class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+            <!-- <label *ngIf="!mostrarNumero" (click)="abreCierraRegtel('regtel')" class="mr-auto-title-ficha-prueba">{{ "censo.regtel.literal.titulo" | translate }}
+            </label> -->
+             <label (click)="abreCierraRegtel('regtel')" class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
             <!-- <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
               <span>{{ messageRegtel }}</span>
             </label> -->
-            <label class="registros-ficha" *ngIf="!mostrarNumero">{{ messageRegtel }}...</label>
+            <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ messageRegtel }}...</label>
             <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.regtel.literal.numero.directorios" | translate }}
               <span>{{ messageRegtel }}</span>
             </label>
@@ -99,3 +101,10 @@
     </div>
   </div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelConfirmation" icon="icon" width="425" #regtelConfirmation>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="regtel.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="regtel.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+

@@ -10,6 +10,8 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
+          <!-- <label *ngIf="mensajeResumen == 'Cargando'"  class="mr-auto-title-ficha-prueba">{{ "censo.consultaDatosCV.cabecera" | translate }}
+          </label> -->
           <label class="mr-auto title-ficha">{{ "censo.consultaDatosCV.cabecera" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
@@ -30,7 +32,7 @@
           <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
             <span>{{ mensajeResumen }}</span>
           </label>
-          <label *ngIf="mensajeResumen == 'Cargando'">
+          <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">
             {{ mensajeResumen }}...
           </label>
           <i *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>

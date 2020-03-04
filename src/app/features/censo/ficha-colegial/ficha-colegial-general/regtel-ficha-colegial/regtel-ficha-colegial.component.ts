@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewEncapsulation, SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -75,96 +75,99 @@ export class RegtelFichaColegialComponent implements OnInit {
     } else {
       this.esColegiado = true;
     }
-    if (this.esColegiado) {
-      this.sigaServices
-        .postPaginado(
-          "fichaColegialRegTel_searchListDoc",
-          "?numPagina=1",
-          this.idPersona
-        )
-        .subscribe(
-          data => {
-            this.bodySearchRegTel = JSON.parse(data["body"]);
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
-            // this.bodyRegTel.forEach(element => {
-            //   element.fechaModificacion = this.arreglarFechaRegtel(
-            //     JSON.stringify(new Date(element.fechaModificacion))
-            //   );
-            // });
-            if (this.bodyRegTel.length != 0) {
-              this.messageRegtel = this.bodyRegTel.length + "";
-              this.mostrarNumero = true;
+   
+  }
+ngOnChanges(changes: SimpleChanges) {
+  if (this.esColegiado && (this.tarjetaRegtel == "3" || this.tarjetaRegtel == "2")) {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialRegTel_searchListDoc",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = JSON.parse(data["body"]);
+          this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+          this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
+          // this.bodyRegTel.forEach(element => {
+          //   element.fechaModificacion = this.arreglarFechaRegtel(
+          //     JSON.stringify(new Date(element.fechaModificacion))
+          //   );
+          // });
+          if (this.bodyRegTel.length != 0) {
+            this.messageRegtel = this.bodyRegTel.length + "";
+            this.mostrarNumero = true;
 
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                "general.message.no.registros"
-              );
-              this.mostrarNumero = true;
-
-            }
-            if (this.bodyRegTel.length > 0) {
-              this.atrasRegTel = this.bodyRegTel[0].parent;
-              this.mostrarNumero = true;
-
-            }
-          },
-          err => {
+          } else {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
             this.mostrarNumero = true;
 
-          },
-      );
-    } else {
-      this.sigaServices
-        .postPaginado(
-          "fichaColegialRegTel_searchListDocNoCol",
-          "?numPagina=1",
-          this.idPersona
-        )
-        .subscribe(
-          data => {
-            this.bodySearchRegTel = JSON.parse(data["body"]);
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            // this.bodyRegTel.forEach(element => {
-            //   element.fechaModificacion = this.arreglarFechaRegtel(
-            //     JSON.stringify(new Date(element.fechaModificacion))
-            //   );
+          }
+          if (this.bodyRegTel.length > 0) {
+            this.atrasRegTel = this.bodyRegTel[0].parent;
+            this.mostrarNumero = true;
 
-            // });
-            if (this.bodyRegTel.length != 0) {
-              this.messageRegtel = this.bodyRegTel.length + "";
-              this.mostrarNumero = true;
+          }
+        },
+        err => {
+          this.messageRegtel = this.translateService.instant(
+            "general.message.no.registros"
+          );
+          this.mostrarNumero = true;
 
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                "general.message.no.registros"
-              );
-              this.mostrarNumero = true;
+        },
+    );
+  } else {
+    this.sigaServices
+      .postPaginado(
+        "fichaColegialRegTel_searchListDocNoCol",
+        "?numPagina=1",
+        this.idPersona
+      )
+      .subscribe(
+        data => {
+          this.bodySearchRegTel = JSON.parse(data["body"]);
+          this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+          // this.bodyRegTel.forEach(element => {
+          //   element.fechaModificacion = this.arreglarFechaRegtel(
+          //     JSON.stringify(new Date(element.fechaModificacion))
+          //   );
 
-            }
-            if (this.bodyRegTel.length > 0) {
-              this.atrasRegTel = this.bodyRegTel[0].parent;
-              this.mostrarNumero = true;
+          // });
+          if (this.bodyRegTel.length != 0) {
+            this.messageRegtel = this.bodyRegTel.length + "";
+            this.mostrarNumero = true;
 
-            }
-          },
-          err => {
+          } else {
             this.messageRegtel = this.translateService.instant(
               "general.message.no.registros"
             );
-                        this.mostrarNumero = true;
+            this.mostrarNumero = true;
 
           }
-        );
-    }
+          if (this.bodyRegTel.length > 0) {
+            this.atrasRegTel = this.bodyRegTel[0].parent;
+            this.mostrarNumero = true;
 
-    this.comprobarREGTEL();
+          }
+        },
+        err => {
+          this.messageRegtel = this.translateService.instant(
+            "general.message.no.registros"
+          );
+                      this.mostrarNumero = true;
 
+        }
+      );
   }
-
+  if(this.tarjetaRegtel == "3" || this.tarjetaRegtel == "2"){
+    this.comprobarREGTEL();
+  }
+  
+}
 
   getCols() {
     this.colsRegtel = [
@@ -583,7 +586,7 @@ export class RegtelFichaColegialComponent implements OnInit {
   callConfirmationServiceRegtel() {
     let mess = this.translateService.instant("messages.creaCollection");
     this.icon = "fa fa-edit";
-    let keyConfirmation = "regtel";
+    let keyConfirmation = "regtelConfirmation";
 
     this.confirmationService.confirm({
       key: keyConfirmation,
