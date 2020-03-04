@@ -309,6 +309,8 @@ export class NuevaIncorporacionComponent implements OnInit {
       result => {
         this.estadosSolicitud = result.combooItems;
         this.arregloTildesCombo(this.estadosSolicitud);
+        let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+        this.solicitudEditar.estadoSolicitud = estado.label;
       },
       error => {
         console.log(error);
