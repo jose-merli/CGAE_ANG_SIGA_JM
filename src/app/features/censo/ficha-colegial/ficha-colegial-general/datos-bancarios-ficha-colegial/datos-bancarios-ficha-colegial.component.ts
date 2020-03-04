@@ -125,11 +125,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado == true) {
-      this.isLetrado = true
-    } else {
-      this.isLetrado = !this.permisos;
-    }
     if (this.esColegiado != null)
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -141,6 +136,13 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     if (this.idPersona != undefined) {
       if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")){
         this.onInitDatosBancarios();
+
+        if(this.tarjetaBancarios == "3"){
+          this.permisos = true;
+        }else{
+          this.permisos = false;
+        }
+        this.getLetrado();
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -489,5 +491,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     else return true;
   }
 
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = !this.permisos;
+    }
+  }
 
 }

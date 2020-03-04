@@ -151,6 +151,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   generalTratamiento: any[] = [];
   tratamientoDesc: String;
   tipoCambioAuditoria: String;
+  permisos: boolean = true;
+  isLetrado: boolean;
+
   @ViewChild("calendarFechaIncorporacion") calendarFechaIncorporacion: Calendar;
   fechaIncorporacionSelected: boolean = true;
   @ViewChild("calendarFechaPresentacion") calendarFechaPresentacion: Calendar;
@@ -262,6 +265,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     }
     if(this.tarjetaColegiales == "3" || this.tarjetaColegiales == "2"){
       this.onInitColegiales();
+
+      if(this.tarjetaColegiales == "3"){
+        this.permisos = true;
+      }else{
+        this.permisos = false;
+      }
+      this.getLetrado();
     }
   }
 
@@ -2011,6 +2021,14 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         value: 40
       }
     ];
+  }
+
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = !this.permisos;
+    }
   }
 
 }

@@ -165,11 +165,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado == true) {
-      this.isLetrado = true
-    } else {
-      this.isLetrado = !this.permisos;
-    }
+
     if (this.esColegiado != null) {
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -182,6 +178,13 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     if (this.idPersona != undefined) {
       if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
         this.onInitDirecciones();
+
+        if(this.tarjetaDirecciones == "3"){
+          this.permisos = true;
+        }else{
+          this.permisos = false;
+        }
+        this.getLetrado();
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {

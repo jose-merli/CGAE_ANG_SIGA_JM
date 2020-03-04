@@ -612,10 +612,10 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.tarjetaSociedadesNum = permisosArray[7].derechoacceso;
         this.tarjetaCurricularesNum = permisosArray[8].derechoacceso;
         this.tarjetaDireccionesNum = permisosArray[9].derechoacceso;
-        this.tarjetaBancariosNum = permisosArray[9].derechoacceso;
-        this.tarjetaRegtelNum = permisosArray[10].derechoacceso;
-        this.tarjetaMutualidadNum = permisosArray[11].derechoacceso;
-        this.tarjetaAlterMutuaNum = permisosArray[12].derechoacceso;
+        this.tarjetaBancariosNum = permisosArray[10].derechoacceso;
+        this.tarjetaRegtelNum = permisosArray[11].derechoacceso;
+        this.tarjetaMutualidadNum = permisosArray[12].derechoacceso;
+        this.tarjetaAlterMutuaNum = permisosArray[13].derechoacceso;
       },
       err => {
         console.log(err);

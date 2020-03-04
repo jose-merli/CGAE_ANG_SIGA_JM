@@ -58,6 +58,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   colsCurriculares;
   selectedItemCurriculares: number = 10;
   rowsPerPage;
+  permisos: boolean = true;
+  isLetrado: boolean;
 
   @ViewChild("tableCurriculares")
   tableCurriculares: DataTable;
@@ -124,6 +126,13 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     if (this.idPersona != undefined) {
       if (this.datosCurriculares == undefined && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
         this.onInitCurriculares();
+
+        if(this.tarjetaCurriculares == "3"){
+          this.permisos = true;
+        }else{
+          this.permisos = false;
+        }
+        this.getLetrado();
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -429,5 +438,13 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = !this.permisos;
+    }
   }
 }

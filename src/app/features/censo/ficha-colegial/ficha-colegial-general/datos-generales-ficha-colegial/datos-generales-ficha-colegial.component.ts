@@ -186,11 +186,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.getLetrado();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
-    sessionStorage.setItem("permisos", JSON.stringify(this.permisos)); // No se si esto hace falta
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
@@ -336,7 +334,16 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
     if(this.tarjetaGenerales == "3" || this.tarjetaGenerales == "2"){
       this.onInitGenerales();
+
+      if(this.tarjetaGenerales == "3"){
+        this.permisos = true;
+      }else{
+        this.permisos = false;
+      }
+      this.getLetrado();
     }
+
+
 
   }
   onInitGenerales() {
