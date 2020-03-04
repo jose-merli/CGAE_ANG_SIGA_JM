@@ -63,7 +63,7 @@
 
     <div *ngIf="esFichaActiva('direcciones')" class="card-body card-body-ficha">
       <div class="row">
-        <p-table [columns]="colsDirecciones" [selection]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
+        <p-table [columns]="colsDirecciones" [(selection)]="selectedDatosDirecciones" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
           [responsive]="true" selectionMode="multiple" #tableDirecciones class="tabla-listado" [value]="datosDirecciones" (onRowSelect)="clickFilaDirecciones($event)"
           [paginator]="true" paginatorPosition="both" [rows]="selectedItemDirecciones" (onRowUnselect)="
             actualizaSeleccionadosDirecciones(selectedDatosDirecciones)
@@ -164,7 +164,7 @@
           iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}" [disabled]="tarjetaDirecciones == '2'"></button>
 
         <button [disabled]="!(
-          selectedDatosDirecciones &&
+          selectedDatosDirecciones != undefined &&
           selectedDatosDirecciones != '' &&
           bodyDirecciones.historico == false) || isLetrado || tarjetaDirecciones == '2' || disabledAction" (click)="
           borrarSelectedDatos(selectedDatosDirecciones);

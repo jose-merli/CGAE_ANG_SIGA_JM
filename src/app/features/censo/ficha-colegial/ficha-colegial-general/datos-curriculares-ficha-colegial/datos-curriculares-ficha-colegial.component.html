@@ -161,3 +161,9 @@
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>

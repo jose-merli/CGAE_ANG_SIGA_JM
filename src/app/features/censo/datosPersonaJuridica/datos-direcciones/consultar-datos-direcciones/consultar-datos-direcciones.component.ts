@@ -1139,7 +1139,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.historyDisable) {
       return true;
     } else {
-      if (this.codigoPostalValido && !this.isLetrado) {
+      if (
+       // this.codigoPostalValido && 
+        !this.isLetrado) {
         return false;
       } else {
         return true;
@@ -1195,7 +1197,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+    if(//this.resaltadoDatos && 
+      (evento==undefined || evento==null || evento=="")){
       return this.commonsService.styleObligatorio(evento);
     }
   }
@@ -1212,7 +1215,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }else{
         if((this.body.codigoPostal==undefined || this.body.codigoPostal==null || this.body.codigoPostal==="") ||
         ((this.body.poblacionExtranjera==undefined || this.body.poblacionExtranjera==null || this.body.poblacionExtranjera==="") && this.poblacionExtranjera) ||
-        (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
+        (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null || this.body.idTipoDireccion.length==0)){
           this.muestraCamposObligatorios();
         }else{
           this.comprobarAuditoria('noletrado');
