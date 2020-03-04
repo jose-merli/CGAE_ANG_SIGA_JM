@@ -171,9 +171,9 @@
     </div>
     <br />
 
-    <p-dataTable *ngIf="!isLetrado" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
-      (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)" [(selection)]="selectedDatosColegiales"
-      pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
+    <p-dataTable *ngIf="!isLetrado && (tarjetaColegiales == '3')" emptyMessage="{{ 'general.message.no.registros' | translate}}"
+      (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)" (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)"
+      [(selection)]="selectedDatosColegiales" pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
       [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
       rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
 
@@ -255,9 +255,9 @@
       </ng-template>
     </p-dataTable>
 
-    <p-dataTable *ngIf="isLetrado" emptyMessage="{{ 'general.message.no.registros' | translate}}" (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
-      (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)" [(selection)]="selectedDatosColegiales"
-      pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
+    <p-dataTable *ngIf="isLetrado || (tarjetaColegiales =='2')" emptyMessage="{{ 'general.message.no.registros' | translate}}"
+      (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)" (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)"
+      [(selection)]="selectedDatosColegiales" pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
       [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
       rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
 
