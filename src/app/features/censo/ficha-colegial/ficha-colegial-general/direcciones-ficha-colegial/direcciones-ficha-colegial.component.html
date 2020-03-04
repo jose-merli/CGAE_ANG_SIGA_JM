@@ -125,7 +125,7 @@
   </div>
   <div *ngIf="esFichaActiva('direcciones')" class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="bodyDirecciones.historico" (click)="onInitDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      <button *ngIf="bodyDirecciones.historico" (click)="ocultarHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
 
       <button *ngIf="!bodyDirecciones.historico" (click)="searchHistoricoDatosDirecciones()" pButton type="button" icon="fa fa-history"
@@ -144,7 +144,7 @@
     </div>
   </div>
 </div>
-<!-- 
-<div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
-</div> -->
+</div>

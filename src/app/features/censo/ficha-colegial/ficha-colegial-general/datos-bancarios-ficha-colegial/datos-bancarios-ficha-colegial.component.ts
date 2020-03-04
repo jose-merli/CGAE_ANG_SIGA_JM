@@ -69,6 +69,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   disabledAction: boolean = false;
   mensajeResumen: String;
 
+
   colsBancarios;
   rowsPerPage;
   @Input() isLetrado;
@@ -259,6 +260,11 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
 
+  ocultarHistoricoDatosBancarios(){
+    this.progressSpinner = true;
+    this.onInitDatosBancarios();
+  }
+
   onChangeSelectAllBancarios() {
     if (this.selectAllBancarios === true) {
       if (this.bodyDatosBancarios.historico) {
@@ -331,7 +337,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
       data => {
-        this.progressSpinner = false;
+
         if (selectedDatos.length == 1) {
           this.showSuccessDetalle(
             this.translateService.instant("messages.deleted.success")
@@ -470,6 +476,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchHistoricoDatosBancarios() {
+    this.progressSpinner = true;
     this.bodyDatosBancarios.historico = true;
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.searchDatosBancarios();
