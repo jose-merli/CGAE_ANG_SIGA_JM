@@ -296,7 +296,9 @@ disabledAction:boolean = false;
     // modo creación
 
     // mostrar la auditoria depende de un parámetro que varía según la institución
-    this.body.motivo = undefined;
+    if(this.body != undefined && this.body != null){
+      this.body.motivo = undefined;
+    }
 
     if (!this.isLetrado) {
       this.solicitudGuardarCv();
@@ -533,6 +535,9 @@ disabledAction:boolean = false;
     if (this.nuevo == false) {
       this.getComboSubtipoCurricular(this.body.idTipoCv);
       this.getComboTipoCurricular(this.body.idTipoCv);
+    }else{
+      this.tipoCVSelected = undefined;
+      this.subtipoCVSelected = undefined;
     }
     this.booleanToCertificado();
     this.compruebaRegistro();
