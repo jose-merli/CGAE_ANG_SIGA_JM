@@ -18,16 +18,28 @@
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
         <div class="d-flex justify-content-between">
-          <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ message }}...</label>
-
+          <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ message }}...</label> -->
+          <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ "censo.fichaCliente.literal.identificacion" | translate }}
+            <span class="registros-ficha-prueba">{{ generalBody.nif }}</span>
+          </label>
           <label *ngIf="mostrarDatos">{{ "censo.fichaCliente.literal.identificacion" | translate }}
             <span>{{ generalBody.nif }}</span>
+          </label>
+          <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
+            <span class="registros-ficha-prueba">{{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span>
           </label>
           <label *ngIf="mostrarDatos">{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
             <span>{{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span>
           </label>
+          <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+            <span class="registros-ficha-prueba">{{ generalBody.soloNombre }}</span>
+          </label>
           <label *ngIf="mostrarDatos">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-            <span>{{ generalBody.soloNombre }}</span>
+            <span >{{ generalBody.soloNombre }}</span >
+          </label>
+          <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+            <span class="registros-ficha-prueba" *ngIf="!fechaNacCambiada">{{ generalBody.fechaNacimiento }}</span>
+            <span class="registros-ficha-prueba" *ngIf="fechaNacCambiada">{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
           </label>
           <label *ngIf="mostrarDatos">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
             <span *ngIf="!fechaNacCambiada">{{ generalBody.fechaNacimiento }}</span>

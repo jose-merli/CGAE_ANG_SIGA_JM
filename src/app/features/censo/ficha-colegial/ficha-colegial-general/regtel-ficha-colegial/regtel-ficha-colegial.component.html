@@ -20,7 +20,10 @@
             <!-- <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
               <span>{{ messageRegtel }}</span>
             </label> -->
-            <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ messageRegtel }}...</label>
+            <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ messageRegtel }}...</label> -->
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.regtel.literal.numero.directorios" | translate }}
+              <span class="registros-ficha-prueba">{{ messageRegtel }}</span>
+            </label>
             <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.regtel.literal.numero.directorios" | translate }}
               <span>{{ messageRegtel }}</span>
             </label>

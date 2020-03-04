@@ -35,9 +35,12 @@
           <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
             <span>{{ mensajeResumen }}</span>
           </label>
-          <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">
-            {{ mensajeResumen }}...
+          <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
+            <span class="registros-ficha-prueba">{{ mensajeResumen }}</span>
           </label>
+          <!-- <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
+          </label> -->
           <i *ngIf="!esFichaActiva()" class="fa fa-angle-down float-right"></i>
         </div>
       </div>

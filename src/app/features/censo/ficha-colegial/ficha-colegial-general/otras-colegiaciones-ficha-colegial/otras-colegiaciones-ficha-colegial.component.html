@@ -15,10 +15,13 @@
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
         <div class="d-flex justify-content-between">
-          <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label>
+          <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label> -->
           <!-- <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
             <span>{{ message }}</span>
           </label> -->
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
           <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
             <span>{{ message }}</span>
           </label>
