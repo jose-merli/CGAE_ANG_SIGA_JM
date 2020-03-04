@@ -235,9 +235,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         }
       );
 
-    // if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-    //   this.onInitDirecciones(); // Direcciones
-    // }
+    if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+      this.onInitDirecciones(); // Direcciones
+    }
   }
 
   ngOnChanges() {
