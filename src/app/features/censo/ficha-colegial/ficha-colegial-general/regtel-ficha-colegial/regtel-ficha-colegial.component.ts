@@ -649,4 +649,9 @@ ngOnChanges(changes: SimpleChanges) {
       )
     });
   }
+
+
+   clear(){
+    this.msgs = [];
+   } 
 }
