@@ -1466,7 +1466,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   getTopicsCourse() {
-    this.progressSpinner = true;
     this.sigaServices
       .getParam(
         "fichaCursos_getTopicsSpecificPerson",
@@ -1691,7 +1690,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   }
   guardarColegiales() {
     // Meter datos colegiales aquí para guardar y probar.
-    this.progressSpinner = true;
     this.inscritoAItem();
     this.pasarFechas();
 
@@ -2332,7 +2330,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   searchDirecciones() {
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = "";
-    this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
