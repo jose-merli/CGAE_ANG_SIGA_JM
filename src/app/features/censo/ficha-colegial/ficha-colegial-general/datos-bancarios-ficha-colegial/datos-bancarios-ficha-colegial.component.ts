@@ -362,7 +362,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
   searchDatosBancarios() {
     if (this.emptyLoadFichaColegial != true) {
-      this.progressSpinner = true;
       this.sigaServices
         .postPaginado(
           "fichaDatosBancarios_datosBancariosSearch",

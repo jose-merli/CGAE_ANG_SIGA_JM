@@ -230,6 +230,7 @@ export class DatosDireccionesComponent implements OnInit {
   nuevo() {
     let newDireccion = new DatosDireccionesItem();
     sessionStorage.setItem("direccion", JSON.stringify(newDireccion));
+    sessionStorage.setItem("permisoTarjeta", "3");
     sessionStorage.removeItem("editarDireccion");
     sessionStorage.setItem("editarDireccion", "false");
     this.router.navigate(["/consultarDatosDirecciones"]);

@@ -243,6 +243,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   eliminarRegistroCV(selectedDatosCurriculares) {
+    this.progressSpinner = true;
     selectedDatosCurriculares.forEach(element => {
       this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
     });
