@@ -66,7 +66,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.idPersona != undefined) {
+    if (this.idPersona != undefined && (this.tarjetaSociedades == "3" || this.tarjetaSociedades =="2")) {
       this.searchSocieties();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {

@@ -10,6 +10,8 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
+          <!-- <label *ngIf="mensajeResumen == 'Cargando'" class="mr-auto-title-ficha-prueba">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
+          </label> -->
           <label class="mr-auto title-ficha">{{ "censo.consultaDatosBancarios.cabecera" | translate }}
           </label>
         </div>
@@ -22,13 +24,17 @@
             <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
           </label> -->
 
+          <label *ngIf="mensajeResumen == 'Cargando'" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
+            <span class="registros-ficha-prueba">{{ mensajeResumen }}</span>
+          </label>
+
           <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
             <span>{{ mensajeResumen }}</span>
           </label>
 
-          <label *ngIf="mensajeResumen == 'Cargando'">
+          <!-- <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">
             {{ mensajeResumen }}...
-          </label>
+          </label> -->
           <i [ngClass]="{
               'fa fa-angle-up': esFichaActiva('bancarios'),
               'fa fa-angle-down': !esFichaActiva('bancarios')

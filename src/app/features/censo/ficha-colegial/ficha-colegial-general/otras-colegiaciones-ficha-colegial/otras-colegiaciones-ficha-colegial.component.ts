@@ -80,8 +80,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-
-      this.onInitOtrasColegiaciones();
+      
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -122,6 +121,9 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
 
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
+    }
+    if(this.tarjetaOtrasColegiaciones == "3" || this.tarjetaOtrasColegiaciones == "2"){
+      this.onInitOtrasColegiaciones();
     }
   }
 

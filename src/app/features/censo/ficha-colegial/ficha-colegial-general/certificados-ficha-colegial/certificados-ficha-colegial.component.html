@@ -8,6 +8,8 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
+          <!-- <label *ngIf="!mostrarNumero" class="mr-auto-title-ficha-prueba">{{ "menu.certificados" | translate }}
+          </label> -->
           <label class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
@@ -20,7 +22,10 @@
             <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
               <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
             </label> -->
-            <label class="registros-ficha" *ngIf="!mostrarNumero">{{ message }}...</label>
+            <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label> -->
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
             <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
               <span>{{ message }}</span>
             </label>

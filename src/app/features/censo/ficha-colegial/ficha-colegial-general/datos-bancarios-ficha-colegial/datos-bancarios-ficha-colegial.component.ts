@@ -139,8 +139,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       }
     if (this.idPersona != undefined) {
-      if (this.bodyDatosBancarios == undefined)
+      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")){
         this.onInitDatosBancarios();
+      }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;

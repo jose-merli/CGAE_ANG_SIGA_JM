@@ -9,6 +9,8 @@
       </div>
       <div class="col-lg-11 col-md-10">
         <div class="d-flex justify-content-start mb-1">
+          <!-- <label *ngIf="mensajeResumen == 'Cargando'" class="mr-auto-title-ficha-prueba">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+          </label> -->
           <label class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
           </label>
         </div>
@@ -38,13 +40,17 @@
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
             </label> -->
 
-          <label *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
+          <label  *ngIf="mensajeResumen != 'Cargando'">{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
             <span>{{ mensajeResumen }}
             </span>
           </label>
-          <label *ngIf="mensajeResumen == 'Cargando'">
-            {{ mensajeResumen }}...
+          <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
+            <span class="registros-ficha-prueba">{{ mensajeResumen }}
+            </span>
           </label>
+          <!-- <label class="registros-ficha-prueba" *ngIf="mensajeResumen == 'Cargando'">
+            {{ mensajeResumen }}...
+          </label> -->
           <i [ngClass]="{
                 'fa fa-angle-up': esFichaActiva('direcciones'),
                 'fa fa-angle-down': !esFichaActiva('direcciones')

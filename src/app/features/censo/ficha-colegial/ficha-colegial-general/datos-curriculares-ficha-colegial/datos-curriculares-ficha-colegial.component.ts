@@ -122,7 +122,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
     }
     if (this.idPersona != undefined) {
-      if (this.datosCurriculares == undefined) {
+      if (this.datosCurriculares == undefined && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
         this.onInitCurriculares();
       }
     }

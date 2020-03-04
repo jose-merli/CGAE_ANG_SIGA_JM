@@ -9,7 +9,10 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label  class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+            <!-- <label *ngIf="!mostrarNumero" class="mr-auto-title-ficha-prueba">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+            </label> -->
+
+            <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
@@ -29,9 +32,12 @@
             <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
               <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
             </label> -->
-            <label class="registros-ficha" *ngIf="!mostrarNumero">{{ message }}...</label>
+            <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label> -->
             <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
               <span>{{ message }}</span>
+            </label>
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
             </label>
               <!-- <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
                 <span>{{ message }}</span>

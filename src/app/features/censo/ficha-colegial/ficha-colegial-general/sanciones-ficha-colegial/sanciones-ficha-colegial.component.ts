@@ -104,7 +104,7 @@ export class SancionesFichaColegialComponent implements OnInit {
       this.activacionTarjeta = true;
     }
 
-    this.searchSanciones();
+
 
 
   }
@@ -123,7 +123,9 @@ export class SancionesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-
+if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
+  this.searchSanciones();
+}
   }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);

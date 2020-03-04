@@ -180,7 +180,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       }
     }
     if (this.idPersona != undefined) {
-      if (this.bodyDirecciones == undefined) {
+      if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
         this.onInitDirecciones();
       }
     }
