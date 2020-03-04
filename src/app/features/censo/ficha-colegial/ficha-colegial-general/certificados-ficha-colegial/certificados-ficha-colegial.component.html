@@ -22,7 +22,10 @@
             <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
               <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
             </label> -->
-            <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label>
+            <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label> -->
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
             <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
               <span>{{ message }}</span>
             </label>

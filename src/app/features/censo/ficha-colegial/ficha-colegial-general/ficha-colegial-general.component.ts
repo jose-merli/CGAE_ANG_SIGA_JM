@@ -210,7 +210,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-    >();
+  >();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -306,8 +306,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   datePipeFechaTitulacion: boolean = false;
   fechaNacCambiada: boolean = false;
   yearRange: string;
-
   nuevaFecha: any;
+  tarjetasActivas: boolean = false;
 
   isColegiadoEjerciente: boolean = false;
   inscritoChange: boolean = false;
@@ -393,13 +393,13 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.OnInit();
     }
   }
+
   OnInit() {
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
 
     this.checkAccesos();
-
 
     if (sessionStorage.getItem("disabledAction") == "true") {
       // Es estado baja colegial
@@ -440,6 +440,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
       this.desactivarVolver = true;
+      this.generalBody.searchLoggedUser = true;
     }
 
     if (
@@ -447,7 +448,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-      this.generalBody = new FichaColegialGeneralesItem();
+      if (this.generalBody == undefined)
+        this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -512,6 +514,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           console.log(err);
         }
       );
+    this.tarjetasActivas = true;
+
   }
 
 
@@ -519,23 +523,32 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     this.generalBody.searchLoggedUser = true;
 
     this.sigaServices
-      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+      .postPaginado('busquedaColegiados_searchColegiadoFicha', '?numPagina=1', this.generalBody)
       .subscribe(
         (data) => {
           let busqueda = JSON.parse(data['body']);
           if (busqueda.colegiadoItem.length > 0) {
-            this.OnInit();
-            this.displayColegiado = false;
-
+            sessionStorage.setItem('personaBody', JSON.stringify(busqueda.colegiadoItem[0]));
+            sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
+            sessionStorage.setItem('esColegiado', 'true');
           } else {
-            this.displayColegiado = true;
+            sessionStorage.setItem('personaBody', JSON.stringify(this.generalBody));
+            sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(true));
+            sessionStorage.setItem('emptyLoadFichaColegial', 'true');
+            sessionStorage.setItem('esColegiado', 'true');
           }
+          if (this.generalBody == undefined)
+            this.generalBody = new FichaColegialGeneralesItem();
+          this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         },
         (err) => {
           console.log(err);
-        }
-      );
+        }, () => {
+          this.OnInit();
+        });
+
   }
+
   ngOnDestroy() {
     sessionStorage.removeItem("esNuevoNoColegiado");
 
@@ -646,8 +659,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
     this.initSpinner = false;
   }
-  idPersonaNuevoEvent(event){
-    if(event != undefined){
+  idPersonaNuevoEvent(event) {
+    if (event != undefined) {
       this.idPersona = event;
     }
   }
