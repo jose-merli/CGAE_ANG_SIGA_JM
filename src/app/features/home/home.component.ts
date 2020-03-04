@@ -50,28 +50,8 @@ export class HomeComponent implements OnInit {
 	}
 
 	getColegiadoLogeado() {
-		this.generalBody.searchLoggedUser = true;
-
-		this.sigaServices
-			.postPaginado('busquedaColegiados_searchColegiadoFicha', '?numPagina=1', this.generalBody)
-			.subscribe(
-				(data) => {
-					let busqueda = JSON.parse(data['body']);
-					if (busqueda.colegiadoItem.length > 0) {
-						sessionStorage.setItem('personaBody', JSON.stringify(busqueda.colegiadoItem[0]));
-						sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
-						sessionStorage.setItem('esColegiado', 'true');
-					} else {
-						sessionStorage.setItem('personaBody', JSON.stringify(this.generalBody));
-						sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(true));
-						sessionStorage.setItem('emptyLoadFichaColegial', 'true');
-						sessionStorage.setItem('esColegiado', 'true');
-					}
-				},
-				(err) => {
-					console.log(err);
-				}
-			);
+		sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
+		sessionStorage.setItem('esColegiado', 'true');
 	}
 
 	getMantenerSesion() {
