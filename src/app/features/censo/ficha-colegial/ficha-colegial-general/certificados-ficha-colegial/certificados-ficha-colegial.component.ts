@@ -36,7 +36,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
   colsCertificados;
-  mostrarNumero: Boolean = false;
+  mostrarNumero: Boolean = true;
   datosCertificados;
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
