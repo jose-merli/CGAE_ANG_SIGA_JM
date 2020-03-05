@@ -372,7 +372,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
             this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
-            if (this.datosBancarios && this.datosBancarios.length > 0)
+            if (this.datosBancarios)
               this.mensajeResumen = this.datosBancarios.filter(it => it.fechaBaja == null).length + "";
           },
           error => {

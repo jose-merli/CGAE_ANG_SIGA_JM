@@ -498,7 +498,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
                 contador = contador + 1;
               }
             });
-            this.mensajeResumen = this.datosDirecciones.length + "";
+            if (this.datosDirecciones)
+              this.mensajeResumen = this.datosDirecciones.filter(it => it.fechaBaja == null).length + "";
             sessionStorage.setItem("numDespacho", JSON.stringify(contador));
 
             this.progressSpinner = false;

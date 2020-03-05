@@ -333,7 +333,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
-          if (this.datosCurriculares && this.datosCurriculares.length > 0)
+          if (this.datosCurriculares)
             this.mensajeResumen = this.datosCurriculares.filter(it => it.fechaBaja == null).length;
         },
         err => {
