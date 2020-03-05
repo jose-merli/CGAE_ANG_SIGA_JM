@@ -530,6 +530,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   nuevaDireccion() {
     let newDireccion = new DatosDireccionesItem();
+    sessionStorage.setItem("permisoTarjeta", "3");
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
     sessionStorage.setItem("fichaColegial", "true");
