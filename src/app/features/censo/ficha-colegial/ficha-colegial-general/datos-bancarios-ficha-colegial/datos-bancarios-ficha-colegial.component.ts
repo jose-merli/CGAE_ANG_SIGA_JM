@@ -134,12 +134,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       }
     if (this.idPersona != undefined) {
-      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")){
+      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")) {
         this.onInitDatosBancarios();
 
-        if(this.tarjetaBancarios == "3"){
+        if (this.tarjetaBancarios == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -253,6 +253,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   onInitDatosBancarios() {
+    this.selectAllBancarios = false;
+    this.selectMultipleBancarios = false;
+    this.selectedDatosBancarios = [];
     this.bodyDatosBancarios = new DatosBancariosItem();
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.bodyDatosBancarios.historico = false;
@@ -471,6 +474,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchHistoricoDatosBancarios() {
+    this.selectAllBancarios = false;
+    this.selectMultipleBancarios = false;
+    this.selectedDatosBancarios = [];
     this.bodyDatosBancarios.historico = true;
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.searchDatosBancarios();

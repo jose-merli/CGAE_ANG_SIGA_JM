@@ -127,9 +127,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       if (this.datosCurriculares == undefined && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
         this.onInitCurriculares();
 
-        if(this.tarjetaCurriculares == "3"){
+        if (this.tarjetaCurriculares == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -318,6 +318,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
+    this.selectAllCurriculares = false;
+    this.selectMultipleCurriculares = false;
+    this.selectedDatosCurriculares = [];
+    this.numSelectedCurriculares = 0;
     let bodyCurricular = {
       idPersona: this.idPersona,
       historico: this.historicoCV
@@ -389,6 +393,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   cargarHistorico() {
+    this.selectAllCurriculares = false;
+    this.selectMultipleCurriculares = false;
+    this.selectedDatosCurriculares = [];
+    this.numSelectedCurriculares = 0;
     this.historicoCV = true;
     this.searchDatosCurriculares();
   }
@@ -425,7 +433,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosCurriculares.length+"") {
+    if (this.activacionTarjeta && this.mensajeResumen == this.datosCurriculares.length + "") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }

@@ -179,9 +179,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
         this.onInitDirecciones();
 
-        if(this.tarjetaDirecciones == "3"){
+        if (this.tarjetaDirecciones == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -468,6 +468,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDirecciones() {
+    this.selectAllDirecciones = false;
+    this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = [];
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = "";
     this.progressSpinner = true;
@@ -690,6 +693,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     else return true;
   }
   searchHistoricoDatosDirecciones() {
+    this.selectAllDirecciones = false;
+    this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = [];
     this.bodyDirecciones.historico = true;
     this.progressSpinner = true;
     // this.historico = true;
