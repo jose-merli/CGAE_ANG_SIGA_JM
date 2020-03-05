@@ -4,6 +4,7 @@ import { AppComponent } from "./app.component";
 import { AuthGuard } from "./_guards/auth.guards";
 import { LoginComponent } from "./commons/login/login.component";
 import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
+import { LoginColegiadoComponent } from "./commons/login-colegiado/login-colegiado.component";
 import { HomeComponent } from "./features/home/home.component";
 
 // Censo
@@ -240,6 +241,7 @@ const appRoutes: Routes = [
   { path: "login", component: LoginComponent },
 
   { path: "loginDevelop", component: LoginDevelopComponent },
+  { path: "loginColegiado", component: LoginColegiadoComponent },
 
   {
     path: "politicaCookies",
