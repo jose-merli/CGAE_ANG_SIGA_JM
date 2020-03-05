@@ -213,27 +213,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.activacionTarjeta = true;
     }
 
-    let parametro = {
-      valor: "OCULTAR_MOTIVO_MODIFICACION"
-    };
-    // Esto preguntarselo a Fredi
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
+
 
 
   }
@@ -333,20 +313,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     );
 
-    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
-      n => {
-        this.generalTratamiento = n.combooItems;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
-        }
-      },
-      err => {
-        console.log(err);
-      }
-    );
+
 
     this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
       n => {
@@ -632,6 +599,42 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.comboTipoSeguro = n.combooItems;
         this.arregloTildesCombo(this.comboTipoSeguro);
 
+      },
+      err => {
+        console.log(err);
+      }
+    );
+
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+    // Esto preguntarselo a Fredi
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
+      n => {
+        this.generalTratamiento = n.combooItems;
+        let tratamiento = this.generalTratamiento.find(
+          item => item.value === this.generalBody.idTratamiento
+        );
+        if (tratamiento != undefined && tratamiento.label != undefined) {
+          this.tratamientoDesc = tratamiento.label;
+        }
       },
       err => {
         console.log(err);
