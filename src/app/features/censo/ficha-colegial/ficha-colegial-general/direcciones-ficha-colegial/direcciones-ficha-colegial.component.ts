@@ -120,9 +120,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
+      this.mensajeResumen = "Cargando";
+
       if (sessionStorage.getItem("esColegiado")) {
         this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       } else {
@@ -187,6 +186,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.getLetrado();
       }
     }
+
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -271,7 +271,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosDirecciones.length + "") {
+    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -297,6 +297,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.bodyDirecciones.historico = false;
     this.searchDirecciones();
   }
+
+  ocultarHistoricoDatosDirecciones() {
+    this.progressSpinner = true;
+    this.onInitDirecciones();
+  }
+
 
   isSelectMultipleDirecciones() {
     this.selectMultipleDirecciones = !this.selectMultipleDirecciones;
@@ -473,7 +479,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.selectedDatosDirecciones = [];
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = "";
-    this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
@@ -496,15 +501,20 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
                 contador = contador + 1;
               }
             });
-            this.mensajeResumen = this.datosDirecciones.length + "";
+            if (this.datosDirecciones)
+              this.mensajeResumen = this.datosDirecciones.filter(it => it.fechaBaja == null).length + "";
             sessionStorage.setItem("numDespacho", JSON.stringify(contador));
 
             this.progressSpinner = false;
           },
           err => {
             console.log(err);
+            this.progressSpinner = false;
+
           },
           () => {
+            this.progressSpinner = false;
+
             if (this.datosDirecciones.length > 0) {
               this.mostrarDatosDireccion = true;
               for (let i = 0; i <= this.datosDirecciones.length - 1; i++) {
@@ -517,12 +527,14 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDireccionesHistoric() {
+    this.progressSpinner = true;
     this.bodyDirecciones.historico = true;
     this.searchDirecciones();
   }
 
   nuevaDireccion() {
     let newDireccion = new DatosDireccionesItem();
+    sessionStorage.setItem("permisoTarjeta", "3");
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
     sessionStorage.setItem("fichaColegial", "true");

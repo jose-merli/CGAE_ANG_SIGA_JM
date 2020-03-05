@@ -102,7 +102,7 @@
   </div>
   <div *ngIf="esFichaActiva('bancarios')" class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      <button *ngIf="bodyDatosBancarios.historico" (click)="ocultarHistoricoDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
       <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
         iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
@@ -114,6 +114,6 @@
   </div>
 </div>
 
-<!-- <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
-</div> -->
+</div>

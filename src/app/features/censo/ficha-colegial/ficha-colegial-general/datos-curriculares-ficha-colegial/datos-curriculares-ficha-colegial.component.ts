@@ -83,9 +83,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
+      this.mensajeResumen = "Cargando";
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -243,6 +241,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   eliminarRegistroCV(selectedDatosCurriculares) {
+    this.progressSpinner = true;
+
     selectedDatosCurriculares.forEach(element => {
       this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
     });
@@ -334,13 +334,19 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       )
       .subscribe(
         data => {
+          this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
-          this.mensajeResumen = this.datosCurriculares.length;
+          if (this.datosCurriculares)
+            this.mensajeResumen = this.datosCurriculares.filter(it => it.fechaBaja == null).length;
         },
         err => {
           //   console.log(err);
+          this.progressSpinner = false;
+
         }, () => {
+          this.progressSpinner = false;
+
           if (this.datosCurriculares.length > 0) {
             this.mostrarDatosCurriculares = true;
             for (let i = 0; i <= this.datosCurriculares.length - 1; i++) {
@@ -383,6 +389,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
 
   cargarDatosCV() {
     this.historicoCV = false;
+    this.progressSpinner = true;
 
     this.searchDatosCurriculares();
 
@@ -397,6 +404,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.selectMultipleCurriculares = false;
     this.selectedDatosCurriculares = [];
     this.numSelectedCurriculares = 0;
+    this.progressSpinner = true;
     this.historicoCV = true;
     this.searchDatosCurriculares();
   }
@@ -433,7 +441,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosCurriculares.length + "") {
+    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }

@@ -69,20 +69,15 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   disabledAction: boolean = false;
   mensajeResumen: String;
 
+
   colsBancarios;
   rowsPerPage;
   @Input() isLetrado;
   @Input() idPersona;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location, ) { }
+    private router: Router, ) { }
 
   ngOnInit() {
     if (
@@ -95,9 +90,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
+      this.mensajeResumen = "Cargando";
+
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -237,7 +231,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosBancarios.length + "") {
+    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -260,6 +254,11 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.bodyDatosBancarios.historico = false;
     this.searchDatosBancarios();
+  }
+
+  ocultarHistoricoDatosBancarios() {
+    this.progressSpinner = true;
+    this.onInitDatosBancarios();
   }
 
   onChangeSelectAllBancarios() {
@@ -334,7 +333,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
       data => {
-        this.progressSpinner = false;
+
         if (selectedDatos.length == 1) {
           this.showSuccessDetalle(
             this.translateService.instant("messages.deleted.success")
@@ -365,7 +364,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
   searchDatosBancarios() {
     if (this.emptyLoadFichaColegial != true) {
-      this.progressSpinner = true;
       this.sigaServices
         .postPaginado(
           "fichaDatosBancarios_datosBancariosSearch",
@@ -377,7 +375,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
             this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
-            this.mensajeResumen = this.datosBancarios.length + "";
+            if (this.datosBancarios)
+              this.mensajeResumen = this.datosBancarios.filter(it => it.fechaBaja == null).length + "";
           },
           error => {
             this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
@@ -477,6 +476,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.selectAllBancarios = false;
     this.selectMultipleBancarios = false;
     this.selectedDatosBancarios = [];
+    this.progressSpinner = true;
     this.bodyDatosBancarios.historico = true;
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.searchDatosBancarios();

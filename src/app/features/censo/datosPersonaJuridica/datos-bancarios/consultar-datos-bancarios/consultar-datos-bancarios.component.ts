@@ -220,7 +220,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.idPersona = this.usuarioBody.idPersona;
     }
     this.idCuenta = sessionStorage.getItem("idCuenta");
-    sessionStorage.removeItem("idCuenta");
 
     this.bic = sessionStorage.getItem("bic");
     sessionStorage.removeItem("bic");
@@ -1695,11 +1694,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   rellenarComboProductoServicio(bodyDatosBancariosAnexo) {
-    this.comboProductoServicio.push({
-      label: "Seleccione el tipo",
-      value: ""
-    });
-
+   
     bodyDatosBancariosAnexo.forEach(element => {
       if (element.tipo === "MANDATO") {
         this.comboProductoServicio.push({

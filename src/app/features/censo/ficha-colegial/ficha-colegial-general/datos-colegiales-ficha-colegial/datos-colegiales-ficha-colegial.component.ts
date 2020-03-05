@@ -170,32 +170,32 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    if (
-      sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined &&
-      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
-    ) {
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.checkGeneralBody = new FichaColegialGeneralesItem();
-      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+    // if (
+    //   sessionStorage.getItem("personaBody") != null &&
+    //   sessionStorage.getItem("personaBody") != undefined &&
+    //   JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+    // ) {
+    //   this.generalBody = new FichaColegialGeneralesItem();
+    //   this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    //   this.checkGeneralBody = new FichaColegialGeneralesItem();
+    //   this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    //   this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    //   if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+    //   if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
 
-      this.getCols();
+    //   this.getCols();
 
 
-      this.tipoCambioAuditoria = null;
-      // this.checkAcceso();
-      this.onInitGenerales();
+    //   this.tipoCambioAuditoria = null;
+    //   // this.checkAcceso();
+    //   this.onInitGenerales();
 
-      this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
-      this.idPersona = this.generalBody.idPersona;
+    //   this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
+    //   this.idPersona = this.generalBody.idPersona;
 
-      this.getYearRange();
-      this.getLenguage();
-    }
+    //   this.getYearRange();
+    //   this.getLenguage();
+    // }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -235,9 +235,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         }
       );
 
-    // if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-    //   this.onInitDirecciones(); // Direcciones
-    // }
+
   }
 
   ngOnChanges() {
@@ -265,10 +263,40 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     }
     if (this.tarjetaColegiales == "3" || this.tarjetaColegiales == "2") {
       this.onInitColegiales();
+      if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+        this.onInitDirecciones(); // Direcciones
+      }
 
-      if(this.tarjetaColegiales == "3"){
+      if (
+        sessionStorage.getItem("personaBody") != null &&
+        sessionStorage.getItem("personaBody") != undefined &&
+        JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+      ) {
+        this.generalBody = new FichaColegialGeneralesItem();
+        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.checkGeneralBody = new FichaColegialGeneralesItem();
+        this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+        if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+
+        this.getCols();
+
+
+        this.tipoCambioAuditoria = null;
+        // this.checkAcceso();
+        this.onInitGenerales();
+
+        this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
+        this.idPersona = this.generalBody.idPersona;
+
+        this.getYearRange();
+        this.getLenguage();
+      }
+
+      if (this.tarjetaColegiales == "3") {
         this.permisos = true;
-      }else{
+      } else {
         this.permisos = false;
       }
       this.getLetrado();
