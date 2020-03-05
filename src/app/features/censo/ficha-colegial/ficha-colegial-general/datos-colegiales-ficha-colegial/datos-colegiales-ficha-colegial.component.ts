@@ -262,11 +262,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.tarjetaColegiales == "3" || this.tarjetaColegiales == "2") {
-      this.onInitColegiales();
-      if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-        this.onInitDirecciones(); // Direcciones
-      }
-
       if (
         sessionStorage.getItem("personaBody") != null &&
         sessionStorage.getItem("personaBody") != undefined &&
@@ -292,6 +287,10 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
         this.getYearRange();
         this.getLenguage();
+      }
+      this.onInitColegiales();
+      if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+        this.onInitDirecciones(); // Direcciones
       }
 
       if (this.tarjetaColegiales == "3") {
