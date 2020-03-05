@@ -83,9 +83,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
+      this.mensajeResumen = "Cargando";
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -127,9 +125,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       if (this.datosCurriculares == undefined && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
         this.onInitCurriculares();
 
-        if(this.tarjetaCurriculares == "3"){
+        if (this.tarjetaCurriculares == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -244,7 +242,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
 
   eliminarRegistroCV(selectedDatosCurriculares) {
     this.progressSpinner = true;
-    
+
     selectedDatosCurriculares.forEach(element => {
       this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
     });
@@ -335,7 +333,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
-          this.mensajeResumen = this.datosCurriculares.length;
+          if (this.datosCurriculares && this.datosCurriculares.length > 0)
+            this.mensajeResumen = this.datosCurriculares.filter(it => it.fechaBaja == null).length;
         },
         err => {
           //   console.log(err);
@@ -434,7 +433,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosCurriculares.length+"") {
+    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }

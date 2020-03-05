@@ -76,14 +76,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   @Input() idPersona;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
-    private authenticationService: AuthenticationService,
-    private cardService: cardService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef,
-    // private sanitizer: DomSanitizer,
-    private router: Router,
-    private datepipe: DatePipe,
-    private location: Location, ) { }
+    private router: Router, ) { }
 
   ngOnInit() {
     if (
@@ -96,9 +90,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
+      this.mensajeResumen = "Cargando";
+
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -135,12 +128,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       }
     if (this.idPersona != undefined) {
-      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")){
+      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")) {
         this.onInitDatosBancarios();
 
-        if(this.tarjetaBancarios == "3"){
+        if (this.tarjetaBancarios == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -238,7 +231,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosBancarios.length + "") {
+    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -260,7 +253,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
 
-  ocultarHistoricoDatosBancarios(){
+  ocultarHistoricoDatosBancarios() {
     this.progressSpinner = true;
     this.onInitDatosBancarios();
   }
@@ -379,7 +372,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
             this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
-            this.mensajeResumen = this.datosBancarios.length + "";
+            if (this.datosBancarios && this.datosBancarios.length > 0)
+              this.mensajeResumen = this.datosBancarios.filter(it => it.fechaBaja == null).length + "";
           },
           error => {
             this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
