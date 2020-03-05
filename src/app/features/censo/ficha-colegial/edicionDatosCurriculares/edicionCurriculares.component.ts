@@ -479,7 +479,7 @@ export class EdicionCurricularesComponent implements OnInit {
 
   compruebaRegistro() {
     var a = this.body.creditos;
-    if (Number(this.body.creditos) && !this.onlySpaces(this.body.creditos)) {
+    if (!Number.isNaN(Number(this.body.creditos)) && !this.onlySpaces(this.body.creditos)) {
       this.creditosIncorrecto = false;
       return true;
     } else {
