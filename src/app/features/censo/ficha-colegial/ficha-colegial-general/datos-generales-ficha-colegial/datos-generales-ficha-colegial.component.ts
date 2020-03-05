@@ -315,8 +315,15 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
     if (this.tarjetaGenerales == "3" || this.tarjetaGenerales == "2") {
       this.onInitGenerales();
+<<<<<<< HEAD
 
       if (this.tarjetaGenerales == "3") {
+=======
+      this.getSituacionPersona();
+      this.getInscritoInit();
+      this.getSituacionPersona();
+      if(this.tarjetaGenerales == "3"){
+>>>>>>> 629d46774df049636926d82a2ca76763674c97d2
         this.permisos = true;
       } else {
         this.permisos = false;

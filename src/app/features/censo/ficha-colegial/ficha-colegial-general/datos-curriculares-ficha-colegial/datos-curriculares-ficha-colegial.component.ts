@@ -318,6 +318,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
+    this.selectAllCurriculares = false;
+    this.selectMultipleCurriculares = false;
+    this.selectedDatosCurriculares = [];
+    this.numSelectedCurriculares = 0;
     let bodyCurricular = {
       idPersona: this.idPersona,
       historico: this.historicoCV
@@ -396,6 +400,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   cargarHistorico() {
+    this.selectAllCurriculares = false;
+    this.selectMultipleCurriculares = false;
+    this.selectedDatosCurriculares = [];
+    this.numSelectedCurriculares = 0;
     this.progressSpinner = true;
     this.historicoCV = true;
     this.searchDatosCurriculares();
