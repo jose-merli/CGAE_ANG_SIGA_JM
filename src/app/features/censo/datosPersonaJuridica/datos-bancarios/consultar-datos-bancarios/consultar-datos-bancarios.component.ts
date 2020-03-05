@@ -1694,11 +1694,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   rellenarComboProductoServicio(bodyDatosBancariosAnexo) {
-    this.comboProductoServicio.push({
-      label: "Seleccione el tipo",
-      value: ""
-    });
-
+   
     bodyDatosBancariosAnexo.forEach(element => {
       if (element.tipo === "MANDATO") {
         this.comboProductoServicio.push({
