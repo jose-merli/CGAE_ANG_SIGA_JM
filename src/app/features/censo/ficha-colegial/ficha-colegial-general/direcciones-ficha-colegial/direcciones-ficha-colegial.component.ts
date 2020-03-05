@@ -120,9 +120,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
+      this.mensajeResumen = "Cargando";
+
       if (sessionStorage.getItem("esColegiado")) {
         this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       } else {
@@ -179,9 +178,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
         this.onInitDirecciones();
 
-        if(this.tarjetaDirecciones == "3"){
+        if (this.tarjetaDirecciones == "3") {
           this.permisos = true;
-        }else{
+        } else {
           this.permisos = false;
         }
         this.getLetrado();
@@ -272,7 +271,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosDirecciones.length + "") {
+    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -299,7 +298,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.searchDirecciones();
   }
 
-  ocultarHistoricoDatosDirecciones(){
+  ocultarHistoricoDatosDirecciones() {
     this.progressSpinner = true;
     this.onInitDirecciones();
   }
@@ -531,6 +530,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   nuevaDireccion() {
     let newDireccion = new DatosDireccionesItem();
+    sessionStorage.setItem("permisoTarjeta", "3");
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
     sessionStorage.setItem("fichaColegial", "true");
