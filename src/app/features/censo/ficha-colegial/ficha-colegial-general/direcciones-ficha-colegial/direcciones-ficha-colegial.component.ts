@@ -474,6 +474,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDirecciones() {
+    this.selectAllDirecciones = false;
+    this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = [];
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = "";
     this.selectAll = false;
@@ -702,6 +705,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     else return true;
   }
   searchHistoricoDatosDirecciones() {
+    this.selectAllDirecciones = false;
+    this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = [];
     this.bodyDirecciones.historico = true;
     this.progressSpinner = true;
     // this.historico = true;

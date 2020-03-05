@@ -247,6 +247,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   onInitDatosBancarios() {
+    this.selectAllBancarios = false;
+    this.selectMultipleBancarios = false;
+    this.selectedDatosBancarios = [];
     this.bodyDatosBancarios = new DatosBancariosItem();
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.bodyDatosBancarios.historico = false;
@@ -470,6 +473,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchHistoricoDatosBancarios() {
+    this.selectAllBancarios = false;
+    this.selectMultipleBancarios = false;
+    this.selectedDatosBancarios = [];
     this.progressSpinner = true;
     this.bodyDatosBancarios.historico = true;
     this.bodyDatosBancarios.idPersona = this.idPersona;
