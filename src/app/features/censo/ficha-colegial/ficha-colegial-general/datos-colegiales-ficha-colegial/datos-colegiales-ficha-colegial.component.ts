@@ -339,10 +339,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.comboSituacion = n.combooItems;
         this.arregloTildesCombo(this.comboSituacion);
 
-        let situacion = this.comboSituacion.find(item => item.value === this.datosColegiales[0].situacion);
-        if(situacion != undefined){
-          this.colegialesBody.estadoColegial = situacion.label;
+        if(this.datosColegiales != undefined && this.datosColegiales.length > 0){
+          let situacion = this.comboSituacion.find(item => item.value === this.datosColegiales[0].situacion);
+          if(situacion != undefined){
+            this.colegialesBody.estadoColegial = situacion.label;
+          }
         }
+      
       },
       err => {
         console.log(err);
