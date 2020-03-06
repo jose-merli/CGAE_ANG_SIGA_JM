@@ -1,4 +1,12 @@
 <div class="busqueda-container">
+  <div class="info-limit" *ngIf="publicarDatosContacto">
+    <img src="./assets/images/icons/warning.png">
+    <div class="d-inline-block">
+        <div>
+            <span class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+        </div>
+    </div>
+</div>
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p *ngIf="esColegiado">
@@ -11,14 +19,6 @@
     </p>
   </div>
   <div>
-    <div class="info-limit" *ngIf="publicarDatosContacto">
-      <img src="./assets/images/icons/warning.png">
-      <div class="d-inline-block">
-          <div>
-              <span class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
-          </div>
-      </div>
-  </div>
     <app-servicios-interes-ficha-colegial *ngIf="tarjetasActivas" [tarjetaInteres]="tarjetaInteres"
       [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
     <app-datos-generales-ficha-colegial *ngIf="tarjetasActivas" [tarjetaGenerales]="tarjetaGenerales"
