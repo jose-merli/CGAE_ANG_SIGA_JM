@@ -213,9 +213,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.activacionTarjeta = true;
     }
 
-
-
-
   }
 
   ngOnChanges() {
@@ -254,6 +251,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
         if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
         if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+        this.residente = this.colegialesBody.situacionResidente;
 
         this.getCols();
 
@@ -341,6 +339,10 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.comboSituacion = n.combooItems;
         this.arregloTildesCombo(this.comboSituacion);
 
+        let situacion = this.comboSituacion.find(item => item.value === this.datosColegiales[0].situacion);
+        if(situacion != undefined){
+          this.colegialesBody.estadoColegial = situacion.label;
+        }
       },
       err => {
         console.log(err);
@@ -719,6 +721,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
             element.habilitarObs = false;
           });
           this.checkDatosColegiales = JSON.parse(JSON.stringify(this.datosColegiales));
+          
+
         },
         err => {
           console.log(err);
@@ -896,11 +900,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.callServiceGuardarColegiales();
       }
     }
-    if (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si") {
-      this.residente = "Si";
-    } else {
-      this.residente = "No";
-    }
+    // if (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si") {
+    //   this.residente = "Si";
+    // } else {
+    //   this.residente = "No";
+    // }
   }
 
   callServiceShowMessageUpdate() {
@@ -1250,6 +1254,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.showFail();
         }
       );
+
+
+      if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
+        this.residente = "Si";
+      } else {
+        this.residente = "No";
+      }
   }
 
   getInscrito(event) {
@@ -1799,6 +1810,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           }
         }, () => {
           this.numSelectedColegiales = 0;
+          if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
+            this.residente = "Si";
+          } else {
+            this.residente = "No";
+          }
         }
       );
     this.isRestablecer = false;
