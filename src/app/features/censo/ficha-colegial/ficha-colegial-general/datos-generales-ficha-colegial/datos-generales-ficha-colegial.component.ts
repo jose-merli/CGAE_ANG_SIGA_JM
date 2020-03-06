@@ -177,6 +177,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   isLetrado: boolean;
   @Output() idPersonaNuevo = new EventEmitter<any>();
+  @Output() aparecerLOPD = new EventEmitter<any>();
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
@@ -713,6 +714,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             } else {
               this.showFail();
             }
+          },()=>{
+            this.aparecerLOPD.emit(this.generalBody.noAparecerRedAbogacia);
           }
           // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
         );
@@ -791,6 +794,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               JSON.stringify(this.generalBody)
             );
             this.idPersonaNuevo.emit(this.idPersona);
+            this.aparecerLOPD.emit(this.generalBody.noAparecerRedAbogacia);
+            this.message = "Cargado";
+            this.mostrarDatos = true;
           }
         );
     }
