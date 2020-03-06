@@ -81,7 +81,7 @@
                 <label>{{"censo.datosCV.literal.creditos" | translate}}</label>
                 <input [(ngModel)]="body.creditos" (ngModelChange)="compruebaRegistro()" [disabled]="isLetrado || !permisos" type="text"
                   class="form-control" [maxLength]="5" pInputText>
-                <div *ngIf="creditosIncorrecto == true">
+                <div *ngIf="creditosIncorrecto">
                   <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
                 </div>
               </div>

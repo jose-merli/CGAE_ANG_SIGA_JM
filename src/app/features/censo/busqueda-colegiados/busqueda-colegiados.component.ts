@@ -339,7 +339,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
               console.log(err);
             },
 
-          );
+        );
 
 
 
@@ -811,6 +811,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             this.convertirStringADate(this.datos);
             // this.table.paginator = true;
             this.body.fechaIncorporacion = [];
+            this.datos = this.datos.map(it => {
+              it.situacionResidenteFilter = +it.situacionResidente ? "sisí" : "no";
+              it.situacionResidente = +it.situacionResidente ? "Sí" : "No";
+              it.noAparecerRedAbogacia = +it.noAparecerRedAbogacia2 ? "sisí" : "no";
+              it.noAparecerRedAbogacia2 = +it.noAparecerRedAbogacia2 ? "Sí" : "No";
+              return it;
+            })
             if (error != null && error.description != null) {
               this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
             }
