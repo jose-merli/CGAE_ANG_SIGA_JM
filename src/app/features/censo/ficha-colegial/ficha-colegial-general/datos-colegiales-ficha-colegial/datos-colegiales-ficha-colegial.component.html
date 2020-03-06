@@ -64,18 +64,23 @@
           </div> -->
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-            <input [(ngModel)]="colegialesBody.colegioResultado" [disabled]="true" type="text" class="form-control" pInputText />
+            <input [(ngModel)]="colegialesBody.colegioResultado" [disabled]="true" type="text" class="form-control"
+              pInputText />
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }} (*)</label>
-            <input *ngIf="activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" [(disabled)]="tarjetaColegiales == '2' || disabledAction || disableNumColegiado"
-              (ngModelChange)="activacionGuardarColegiales()" type="text" class="col-lg-10 col-md-10" [maxLength]="20" pInputText/>
+            <input *ngIf="activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado"
+              [(disabled)]="tarjetaColegiales == '2' || disabledAction || disableNumColegiado"
+              (ngModelChange)="activacionGuardarColegiales()" type="text" class="col-lg-10 col-md-10" [maxLength]="20"
+              pInputText />
             <!-- <label class="form-control col-lg-1 col-md-1">a</label> -->
-            <i *ngIf="!disableNumColegiado && activateNumColegiado" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true"
-              (click)="disableEnableNumCol()"></i>
-            <i *ngIf="disableNumColegiado && activateNumColegiado" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumCol()"></i>
-            <input *ngIf="!activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" disabled (ngModelChange)="activacionGuardarColegiales()"
-              type="text" [maxLength]="20" class="form-control" pInputText/>
+            <i *ngIf="!disableNumColegiado && activateNumColegiado" class="candado fa fa-unlock col-lg-1 col-md-1"
+              aria-hidden="true" (click)="disableEnableNumCol()"></i>
+            <i *ngIf="disableNumColegiado && activateNumColegiado" class="candado fa fa-lock col-lg-1 col-md-1"
+              aria-hidden="true" (click)="disableEnableNumCol()"></i>
+            <input *ngIf="!activateNumColegiado" [(ngModel)]="colegialesBody.numColegiado" disabled
+              (ngModelChange)="activacionGuardarColegiales()" type="text" [maxLength]="20" class="form-control"
+              pInputText />
             <div *ngIf="identificacionValida == false">
               <label class="labelError">{{ "El documento es inválido" }}
               </label>
@@ -83,14 +88,18 @@
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.consultaDatosGenerales.literal.seguro" | translate }}</label>
-            <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
-              [(ngModel)]="colegialesBody.idTiposSeguro" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-              [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTipoSeguro"></p-dropdown>
+            <p-dropdown class="select-form" (onChange)="activacionGuardarColegiales()"
+              [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
+              [(ngModel)]="colegialesBody.idTiposSeguro" [filter]="true"
+              placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+              filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboTipoSeguro"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3 form-group-date">
             <label>{{ "censo.consultaDatosColegiales.literal.nMutualista" | translate }}
             </label>
-            <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control" [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
+            <input [(ngModel)]="colegialesBody.nMutualista" type="text" class="form-control"
+              [(disabled)]="tarjetaColegiales == '2' || disabledAction || isLetrado"
               (ngModelChange)="activacionGuardarColegiales()" [maxLength]="100" pInputText />
             <div *ngIf="!numMutualistaCheck()">
               <label class="labelError">{{ "censo.ws.literal.soloNumeros" | translate }}
@@ -100,43 +109,56 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }} (*)</label>
-            <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-              [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
-              (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)" [(ngModel)]="colegialesBody.incorporacion"
-              dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+            <p-calendar [monthNavigator]="true" #calendarFechaIncorporacion [yearNavigator]="true"
+              [yearRange]="yearRange" [locale]="es"
+              [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+              (onSelect)="activacionGuardarColegiales(); fechaIncorporacionSelected=true"
+              (onInput)="inputFechaIncorporacion($event)" (onBlur)="blurFechaIncorporacion($event)"
+              [(ngModel)]="colegialesBody.incorporacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+              showIcon="true" [utc]="false">
               <p-footer>
                 <div class="main-button d-flex col-lg-12">
-                  <button (click)="fechaHoyFechaIncorporacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                  <button (click)="borrarFechaIncorporacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  <button (click)="fechaHoyFechaIncorporacion()" pButton type="button"
+                    label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                  <button (click)="borrarFechaIncorporacion()" pButton type="button"
+                    label="{{'general.boton.borrar'| translate }}"></button>
                 </div>
               </p-footer>
             </p-calendar>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.consultaDatosGenerales.literal.fechaPresentacion" | translate }} (*)</label>
-            <p-calendar [monthNavigator]="true" #calendarFechaPresentacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-              (onSelect)="activacionGuardarColegiales(); fechaPresentacionSelected=true" (onInput)="inputFechaPresentacion($event)"
-              (onBlur)="blurFechaPresentacion($event)" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
-              [(ngModel)]="colegialesBody.fechapresentacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true"
-              [utc]="false">
+            <p-calendar [monthNavigator]="true" #calendarFechaPresentacion [yearNavigator]="true"
+              [yearRange]="yearRange" [locale]="es"
+              (onSelect)="activacionGuardarColegiales(); fechaPresentacionSelected=true"
+              (onInput)="inputFechaPresentacion($event)" (onBlur)="blurFechaPresentacion($event)"
+              [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+              [(ngModel)]="colegialesBody.fechapresentacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+              showIcon="true" [utc]="false">
               <p-footer>
                 <div class="main-button d-flex col-lg-12">
-                  <button (click)="fechaHoyFechaPresentacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                  <button (click)="borrarFechaPresentacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  <button (click)="fechaHoyFechaPresentacion()" pButton type="button"
+                    label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                  <button (click)="borrarFechaPresentacion()" pButton type="button"
+                    label="{{'general.boton.borrar'| translate }}"></button>
                 </div>
               </p-footer>
             </p-calendar>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.consultaDatosGenerales.literal.fechaJura" | translate }}</label>
-            <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange" [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
-              (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true" (ngModelChange)="activacionGuardarColegiales()"
-              (onInput)="inputFechaJura($event)" (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura" dateFormat="dd/mm/yy"
+            <p-calendar [monthNavigator]="true" #calendarFechaJura [yearNavigator]="true" [yearRange]="yearRange"
+              [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+              (onSelect)="activacionGuardarColegiales(); fechaJuraSelected=true"
+              (ngModelChange)="activacionGuardarColegiales()" (onInput)="inputFechaJura($event)"
+              (onBlur)="blurFechaJura($event)" [(ngModel)]="colegialesBody.fechaJura" dateFormat="dd/mm/yy"
               icon="far fa-calendar-alt" showIcon="true" [utc]="false">
               <p-footer>
                 <div class="main-button d-flex col-lg-12">
-                  <button (click)="fechaHoyFechaJura()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                  <button (click)="borrarFechaJura()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  <button (click)="fechaHoyFechaJura()" pButton type="button"
+                    label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                  <button (click)="borrarFechaJura()" pButton type="button"
+                    label="{{'general.boton.borrar'| translate }}"></button>
                 </div>
               </p-footer>
             </p-calendar>
@@ -144,14 +166,18 @@
           <div class="form-group col-lg-3 col-md-3">
             <label>{{ "censo.consultaDatosColegiales.literal.fechaTitulacion" | translate }}
             </label>
-            <p-calendar [monthNavigator]="true" #calendarFechaTitulacion [yearNavigator]="true" [yearRange]="yearRange" [locale]="es"
-              [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction" (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
-              (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)" [(ngModel)]="colegialesBody.fechaTitulacion"
-              dateFormat="dd/mm/yy" icon="far fa-calendar-alt" showIcon="true" [utc]="false">
+            <p-calendar [monthNavigator]="true" #calendarFechaTitulacion [yearNavigator]="true" [yearRange]="yearRange"
+              [locale]="es" [(disabled)]="tarjetaColegiales == '2' || isLetrado || disabledAction"
+              (onSelect)="activacionGuardarColegiales(); fechaTitulacionSelected=true"
+              (onInput)="inputFechaTitulacion($event)" (onBlur)="blurFechaTitulacion($event)"
+              [(ngModel)]="colegialesBody.fechaTitulacion" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+              showIcon="true" [utc]="false">
               <p-footer>
                 <div class="main-button d-flex col-lg-12">
-                  <button (click)="fechaHoyFechaTitulacion()" pButton type="button" label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
-                  <button (click)="borrarFechaTitulacion()" pButton type="button" label="{{'general.boton.borrar'| translate }}"></button>
+                  <button (click)="fechaHoyFechaTitulacion()" pButton type="button"
+                    label="{{'general.boton.hoy'| translate }}" class="mr-auto"></button>
+                  <button (click)="borrarFechaTitulacion()" pButton type="button"
+                    label="{{'general.boton.borrar'| translate }}"></button>
                 </div>
               </p-footer>
             </p-calendar>
@@ -161,93 +187,125 @@
             <!--
               <input [(ngModel)]="colegialesBody.residenteInscrito" type="text"  (ngModelChange)="activacionGuardarColegiales()" class="form-control" [maxLength]="100" pInputText>
             -->
-            <p-dropdown class="select-form" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
-              filterBy="label,labelSinTilde" (onChange)="activacionGuardarColegiales()" (ngModelChange)="getInscrito($event)"
-              [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled || isLetrado" [(ngModel)]="inscritoSeleccionado"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"></p-dropdown>
+            <p-dropdown class="select-form" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+              [showClear]="true" filterBy="label,labelSinTilde" (onChange)="activacionGuardarColegiales()"
+              (ngModelChange)="getInscrito($event)"
+              [(disabled)]="tarjetaColegiales == '2' || disabledAction || inscritoDisabled || isLetrado"
+              [(ngModel)]="inscritoSeleccionado" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboInscrito"></p-dropdown>
           </div>
         </div>
       </div>
     </div>
     <br />
 
-    <p-dataTable *ngIf="!isLetrado && (tarjetaColegiales == '3')" emptyMessage="{{ 'general.message.no.registros' | translate}}"
-      (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)" (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)"
-      [(selection)]="selectedDatosColegiales" pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
-      [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
-      rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
+    <p-dataTable *ngIf="!isLetrado && (tarjetaColegiales == '3')"
+      emptyMessage="{{ 'general.message.no.registros' | translate}}"
+      (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
+      (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)"
+      [(selection)]="selectedDatosColegiales" pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado"
+      [ngClass]="{'customCursor': selectMultiple}" [value]="datosColegiales" [sortOrder]="1"
+      [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales" rowHover="true"
+      selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
 
-      <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsColegiales[0].header | translate"
-        [filter]="true" filterMatchMode="contains">
+      <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}"
+        [header]="colsColegiales[0].header | translate" [filter]="true" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-          <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-          <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length > 9">{{car[col.field]}}</span>
-          <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
-          <app-fecha *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(value)]="nuevoEstadoColegial.fechaEstadoStr"
-            [minDate]="fechaMinimaEstadoColegial" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
-            (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
-          <app-fecha *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-            [(value)]="car[col.field]" [minDate]="fechaMinimaEstadoColegialMod" (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
-            (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])" [disabledToday]="disabledToday"></app-fecha>
+          <span
+            *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+          <span
+            *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length > 9">{{car[col.field]}}</span>
+          <span
+            *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
+          <app-fecha *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') "
+            [(value)]="nuevoEstadoColegial.fechaEstadoStr" [minDate]="fechaMinimaEstadoColegial"
+            (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
+            (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
+            [disabledToday]="disabledToday"></app-fecha>
+          <app-fecha
+            *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
+            [(value)]="car[col.field]" [minDate]="fechaMinimaEstadoColegialMod"
+            (valueChangeSelected)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
+            (valueChangeInput)="onChangeCalendarTable($event, datosColegiales[rowIndex])"
+            [disabledToday]="disabledToday"></app-fecha>
         </ng-template>
 
       </p-column>
 
-      <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-        filterMatchMode="contains">
+      <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true"
+        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-          <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-          <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
-          <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') " [(ngModel)]="nuevoEstadoColegial.situacion"
-            [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
-            filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])" placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-          <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-            [(ngModel)]="datosColegiales[rowIndex].idEstado" [options]="comboSituacion" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-            [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
+          <span
+            *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+          <span
+            *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
+          <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') "
+            [(ngModel)]="nuevoEstadoColegial.situacion" [options]="comboSituacion" [filter]="true"
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+            filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
+            placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+          <p-dropdown
+            *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
+            [(ngModel)]="datosColegiales[rowIndex].idEstado" [options]="comboSituacion" [filter]="true"
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+            filterBy="label,labelSinTilde" (onChange)="onChangeDropEstadoColegial($event, datosColegiales[rowIndex])"
             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
         </ng-template>
       </p-column>
 
-      <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-        filterMatchMode="contains">
+      <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true"
+        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-          <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-          <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
-          <p-dropdown *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') && datosColegiales[rowIndex].isMod == true"
-            [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-            [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+          <span
+            *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+          <span
+            *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) ">{{car[col.field]}}</span>
+          <p-dropdown
+            *ngIf="isCrearColegial && (car[col.field] == undefined || car[col.field] == '') && datosColegiales[rowIndex].isMod == true"
+            [(ngModel)]="nuevoEstadoColegial.situacionResidente" [options]="comboResidente" [filter]="true"
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+            filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-          <p-dropdown *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
-            [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" [filter]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-            [showClear]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
+          <p-dropdown
+            *ngIf="datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable"
+            [(ngModel)]="datosColegiales[rowIndex].idSituacionResidente" [options]="comboResidente" [filter]="true"
+            placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+            filterBy="label,labelSinTilde" (onChange)="onChangeDropResidenteColegial($event, datosColegiales[rowIndex])"
             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
         </ng-template>
       </p-column>
 
-      <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-        filterMatchMode="contains">
+      <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true"
+        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
-          <span *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
-          <span *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && !datosColegiales[rowIndex].habilitarObs">{{car[col.field]}}</span>
-          <input *ngIf="datosColegiales[rowIndex].nuevoRegistro" [(ngModel)]="nuevoEstadoColegial.observaciones" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()"
+          <span
+            *ngIf="filaEditable && datosColegiales[rowIndex].isMod == true && isCrearColegial">{{car[col.field]}}</span>
+          <span
+            *ngIf="(!filaEditable || (filaEditable && datosColegiales[rowIndex].isMod == false)) && !datosColegiales[rowIndex].habilitarObs">{{car[col.field]}}</span>
+          <input *ngIf="datosColegiales[rowIndex].nuevoRegistro" [(ngModel)]="nuevoEstadoColegial.observaciones"
+            type="text" (input)="isRestablecer = true; activacionGuardarColegiales()" pInputText />
+          <input
+            *ngIf="datosColegiales[rowIndex].habilitarObs || (datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable)"
+            [(ngModel)]="car[col.field]" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()"
             pInputText />
-          <input *ngIf="datosColegiales[rowIndex].habilitarObs || (datosColegiales[rowIndex].isMod != undefined && datosColegiales[rowIndex].isMod == true && !isCrearColegial && filaEditable)"
-            [(ngModel)]="car[col.field]" type="text" (input)="isRestablecer = true; activacionGuardarColegiales()" pInputText
-          />
         </ng-template>
       </p-column>
 
       <ng-template pTemplate="paginatorLeft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first + 1
+          <label
+            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first + 1
             }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
             | translate }} {{ tableColegiales.totalRecords }}
           </label>
 
-          <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales }}</label>
+          <label
+            class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            {{ numSelectedColegiales }}</label>
 
           <label>{{ "general.message.mostrar" | translate }}</label>
-          <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
+          <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage"
+            (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
           <label class="pl-1">
             {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
           </label>
@@ -255,14 +313,17 @@
       </ng-template>
     </p-dataTable>
 
-    <p-dataTable *ngIf="isLetrado || (tarjetaColegiales =='2')" emptyMessage="{{ 'general.message.no.registros' | translate}}"
-      (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)" (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)"
-      [(selection)]="selectedDatosColegiales" pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado" [ngClass]="{'customCursor': selectMultiple}"
-      [value]="datosColegiales" [sortOrder]="1" [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales"
-      rowHover="true" selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
+    <p-dataTable *ngIf="isLetrado || (tarjetaColegiales =='2')"
+      emptyMessage="{{ 'general.message.no.registros' | translate}}"
+      (onRowSelect)="onRowSelectColegiales(selectedDatosColegiales)"
+      (onEditComplete)="actualizaSeleccionadosColegiales(selectedDatosColegiales)"
+      [(selection)]="selectedDatosColegiales" pageLinks="4" [responsive]="true" #tableColegiales class="tabla-listado"
+      [ngClass]="{'customCursor': selectMultiple}" [value]="datosColegiales" [sortOrder]="1"
+      [paginator]="activarPaginacionColegial()" paginatorPosition="both" [rows]="selectedItemColegiales" rowHover="true"
+      selectionMode="single" editable="true" [sortField]="sortF" (onSort)="changeSortColegiales($event)">
 
-      <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}" [header]="colsColegiales[0].header | translate"
-        [filter]="true" filterMatchMode="contains">
+      <p-column field="fechaEstadoStr" #fechaEstadoColegiales filterPlaceholder="{{'general.boton.search' | translate}}"
+        [header]="colsColegiales[0].header | translate" [filter]="true" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
           <span *ngIf="car[col.field].length > 9">{{car[col.field]}}</span>
           <span *ngIf="car[col.field].length == undefined">{{car[col.field] | date: 'dd/MM/yyyy'}}</span>
@@ -270,22 +331,22 @@
 
       </p-column>
 
-      <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-        filterMatchMode="contains">
+      <p-column field="estadoColegial" [header]="colsColegiales[1].header | translate" [filter]="true"
+        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
           <span>{{car[col.field]}}</span>
         </ng-template>
       </p-column>
 
-      <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-        filterMatchMode="contains">
+      <p-column field="situacionResidente" [header]="colsColegiales[2].header | translate" [filter]="true"
+        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
           <span>{{car[col.field]}}</span>
         </ng-template>
       </p-column>
 
-      <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
-        filterMatchMode="contains">
+      <p-column editable="true" field="observaciones" [header]="colsColegiales[3].header | translate" [filter]="true"
+        filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
         <ng-template let-col let-car="rowData" pTemplate="body" let-rowIndex="rowIndex">
           <span>{{car[col.field]}}</span>
         </ng-template>
@@ -293,15 +354,19 @@
 
       <ng-template pTemplate="paginatorLeft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first + 1
+          <label
+            class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiales.first + 1
             }} al {{ tableColegiales.first + tableColegiales.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
             | translate }} {{ tableColegiales.totalRecords }}
           </label>
 
-          <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{ numSelectedColegiales }}</label>
+          <label
+            class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+            {{ numSelectedColegiales }}</label>
 
           <label>{{ "general.message.mostrar" | translate }}</label>
-          <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
+          <p-dropdown [(ngModel)]="selectedItemColegiales" [options]="rowsPerPage"
+            (onChange)="onChangeRowsPerPagesColegiales($event)"></p-dropdown>
           <label class="pl-1">
             {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
           </label>
@@ -313,21 +378,27 @@
 
   <div *ngIf="esFichaActiva('colegiales')" class="card-footer ">
     <div class="text-right main-button ">
-      <button [disabled]="isLetrado || disabledAction || tarjetaColegiales=='2'"
-        (click)="restablecerColegiales()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-      <button (click)="callConfirmationServiceDelete(selectedDatosColegiales)" [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2' || isLetrado || datosColegiales.length <= 1"
-        pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <button *ngIf="!inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')" [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2' || isLetrado"
-        pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-      <button *ngIf="inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')" pButton type="button" [disabled]="isLetrado"
-        icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-      <button (click)="nuevoColegial()" [disabled]="isCrearColegial || disabledAction || tarjetaColegiales=='2' || isLetrado || filaEditable" pButton
+      <button [disabled]="isLetrado || disabledAction || tarjetaColegiales=='2'" (click)="restablecerColegiales()"
+        pButton type="button" icon="fa fa-undo" iconPos="left"
+        label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button (click)="callConfirmationServiceDelete(selectedDatosColegiales)"
+        [disabled]="!isEliminarEstadoColegial || disabledAction || tarjetaColegiales=='2' || isLetrado || datosColegiales.length <= 1"
+        pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+        label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button *ngIf="!inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')"
+        [disabled]="!activarGuardarColegiales || disabledAction || tarjetaColegiales=='2' || isLetrado" pButton
+        type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button *ngIf="inscritoChange" (click)="comprobarAuditoria('guardarDatosColegiales')" pButton type="button"
+        [disabled]="isLetrado" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="nuevoColegial()"
+        [disabled]="isCrearColegial || disabledAction || tarjetaColegiales=='2' || isLetrado || filaEditable" pButton
         type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>
 
-  <p-dialog [(visible)]="information" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
-    [minWidth]="500">
+  <p-dialog [(visible)]="information" [closable]="false" responsive="true" [draggable]="false" modal="modal"
+    resizable="false" [minWidth]="500">
     <p-header class="title">
       <label>
         <strong>{{"general.message.informacion" | translate}}</strong>
@@ -336,11 +407,13 @@
 
     {{ msgDir }}
     <p-footer class="text-right main-button">
-      <button (click)="aceptInformation()" pButton type="button" icon="fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+      <button (click)="aceptInformation()" pButton type="button" icon="fa-check" iconPos="left"
+        label="{{ 'general.boton.submit' | translate }}"></button>
     </p-footer>
   </p-dialog>
 
-  <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
       <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
       </label>
@@ -354,12 +427,14 @@
 
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.submit' | translate }}"></button>
+        <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left"
+          label="{{ 'general.boton.submit' | translate }}"></button>
       </div>
     </p-footer>
   </p-dialog>
 
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
       <label>{{ "general.ventana.cgae" | translate }} -{{ "censo.consultaHistorico.cabecera" | translate }}
       </label>
@@ -375,14 +450,16 @@
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-        <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        <button (click)="cerrarAuditoria()" pButton type="button" icon="fa fa-close" iconPos="left"
+          label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="guardarAuditoria()" [disabled]="!showGuardarAuditoria" pButton type="button" icon="fa fa-save"
+          iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>
 
-  <p-dialog [(visible)]="displayDelete" responsive="true" [draggable]="false" modal="modal" resizable="false" [style]="{'max-width':'500px'}">
+  <p-dialog [(visible)]="displayDelete" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [style]="{'max-width':'500px'}">
     <p-header class="title">
       <label>{{ 'general.cabecera.confirmacion' | translate}}
       </label>
@@ -395,9 +472,10 @@
     </div>
 
     <p-footer class="text-right main-button">
-      <button (click)="callServiceEliminarEstadoColegial(selectedItemDelete)" pButton type="button" icon="fa fa-check" iconPos="left"
-        label="{{ 'messages.si' | translate }}"></button>
-      <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.no' | translate }}"></button>
+      <button (click)="callServiceEliminarEstadoColegial(selectedItemDelete)" pButton type="button" icon="fa fa-check"
+        iconPos="left" label="{{ 'messages.si' | translate }}"></button>
+      <button (click)="callCancelAction()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{ 'general.boton.no' | translate }}"></button>
     </p-footer>
   </p-dialog>
 </div>
@@ -411,7 +489,8 @@
 
 
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425" #direcciones>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="direcciones" icon="icon" width="425"
+  #direcciones>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="direcciones.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="direcciones.reject()"></button>
@@ -420,7 +499,8 @@
 
 
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425"
+  #deleteEstado>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="deleteEstado.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="deleteEstado.reject()"></button>
@@ -428,7 +508,8 @@
 </p-confirmDialog>
 
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425" #eliminarCV>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="eliminarCV" icon="icon" width="425"
+  #eliminarCV>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="eliminarCV.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="eliminarCV.reject()"></button>
@@ -436,7 +517,8 @@
 </p-confirmDialog>
 
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425"
+  #alterMutua>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
@@ -444,8 +526,8 @@
 </p-confirmDialog>
 
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon" width="425"
-  #bajaInscripcionesUpdate>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesUpdate" icon="icon"
+  width="425" #bajaInscripcionesUpdate>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesUpdate.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesUpdate.reject()"></button>
@@ -453,18 +535,18 @@
 </p-confirmDialog>
 
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon" width="425"
-  #bajaInscripcionesDelete>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="bajaInscripcionesDelete" icon="icon"
+  width="425" #bajaInscripcionesDelete>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="bajaInscripcionesDelete.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="bajaInscripcionesDelete.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 
-<!-- <div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-  </div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
 
-  <div *ngIf="initSpinner" class="overlay-spinner">
+<!-- <div *ngIf="initSpinner" class="overlay-spinner">
     <div class="loader"></div>
   </div> -->

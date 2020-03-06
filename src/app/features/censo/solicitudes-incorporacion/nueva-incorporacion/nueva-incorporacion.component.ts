@@ -173,7 +173,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         let nuevaIncorporacion = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
-      
+
         this.solicitudEditar.numeroIdentificacion = nuevaIncorporacion.numeroIdentificacion;
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
@@ -309,8 +309,11 @@ export class NuevaIncorporacionComponent implements OnInit {
       result => {
         this.estadosSolicitud = result.combooItems;
         this.arregloTildesCombo(this.estadosSolicitud);
-        let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
-        this.solicitudEditar.estadoSolicitud = estado.label;
+        if (this.consulta == false) {
+          this.estadoSolicitudSelected = "20";
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+        }
       },
       error => {
         console.log(error);
@@ -515,7 +518,9 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.fechaNacimiento
       );
     }
-
+    if(this.bodyInicial.idEstado != undefined){
+      this.estadoSolicitudSelected = this.bodyInicial.idEstado;
+    }
     if (this.bodyInicial.apellidos != undefined &&
       this.bodyInicial.apellidos != null) {
       this.bodyInicial.apellidos = this.bodyInicial.apellidos.trim();
