@@ -387,12 +387,15 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.comprobarColegiado();
     if (sessionStorage.getItem("fichaColegialByMenu")) {
-      this.getColegiadoLogeado(); // Hay que asegurarse de que esto sirve para algo y funciona correctamente
+      this.getColegiadoLogeado();
     } else {
       this.OnInit();
     }
+
   }
+
 
   OnInit() {
     sessionStorage.removeItem("direcciones");
@@ -663,6 +666,31 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     if (event != undefined) {
       this.idPersona = event;
     }
+  }
+  returnHome() {
+    this.displayColegiado = false;
+    sessionStorage.removeItem("fichaColegialByMenu");
+    this.location.back();
+  }
+  comprobarColegiado() {
+    this.generalBody.searchLoggedUser = true;
+    this.sigaServices
+      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+      .subscribe(
+        (data) => {
+          let busqueda = JSON.parse(data['body']);
+          if (busqueda.colegiadoItem.length > 0) {
+            this.OnInit();
+            this.displayColegiado = false;
+
+          } else {
+            this.displayColegiado = true;
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
 }
 

@@ -10,7 +10,7 @@
       <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaNoColegial" | translate }}
     </p>
   </div>
-  <div>
+  <div [hidden]="displayColegiado">
     <app-servicios-interes-ficha-colegial *ngIf="tarjetasActivas" [tarjetaInteres]="tarjetaInteres"
       [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
     <app-datos-generales-ficha-colegial *ngIf="tarjetasActivas" [tarjetaGenerales]="tarjetaGenerales"
@@ -49,6 +49,26 @@
   </div>
   <app-dialog></app-dialog>
 </div>
+<p-dialog [(visible)]="displayColegiado" responsive="true" [draggable]="false" modal="modal" resizable="false"
+  [minWidth]="500">
+  <p-header class="title">
+    <label>{{ "general.ventana.cgae" | translate }} - {{ "general.message.informacion" | translate }}
+    </label>
+  </p-header>
+
+  <div class="bloque col-lg-12 col-md-12">
+    <div class="row">
+      <span> {{ "mensaje.informacion.noAcceso.fichaColegial" | translate }} </span>
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="returnHome()" pButton type="button" icon="fa fa-check" iconPos="left"
+        label="{{ 'general.boton.submit' | translate }}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
