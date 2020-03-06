@@ -18,9 +18,9 @@ export class LoginColegiadoComponent implements OnInit {
 
 	instituciones: any[];
 	perfiles: any[];
-	isLetrado: String;
 	isEntrar: boolean = true;
 	tmpLoginPerfil: String[];
+	tmpLoginRol: String[];
 	entorno: String;
 	ocultar: boolean = false;
 	progressSpinner: boolean = false;
@@ -30,7 +30,7 @@ export class LoginColegiadoComponent implements OnInit {
 	sigaFrontVersion: string = "";
 	sigaWebVersion: string = "";
 
-	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
+	roles: any[];
 	constructor(
 		private fb: FormBuilder,
 		private service: AuthenticationService,
@@ -43,73 +43,37 @@ export class LoginColegiadoComponent implements OnInit {
 	onSubmit() { }
 
 	ngOnInit() {
-		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
-			this.environment = n.environment;
-			this.sigaFrontVersion = n.sigaFrontVersion;
-			this.sigaWebVersion = n.sigaWebVersion;
-		});
-		sessionStorage.removeItem('authenticated');
+		sessionStorage.removeItem("authenticated");
 		this.ocultar = true;
 		this.progressSpinner = true;
-		this.sigaServices.getBackend('validaInstitucion').subscribe(
-			(response) => {
-				this.progressSpinner = false;
-				this.ocultar = true;
-			},
-			(error) => {
-				console.log('ERROR', error);
-				if (error.status == 403) {
-					let codError = error.status;
+		// this.sigaServices.getBackend("validaInstitucion").subscribe(
+		//   response => {
+		//     this.progressSpinner = false;
+		//     this.ocultar = true;
+		//   },
+		//   error => {
+		//     console.log("ERROR", error);
+		//     if (error.status == 403) {
+		//       let codError = error.status;
 
-					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
-					this.router.navigate(['/errorAcceso']);
-					this.progressSpinner = false;
-				}
-				if (error.status == 500) {
-					let codError = error.status;
+		//       sessionStorage.setItem("codError", codError);
+		//       sessionStorage.setItem("descError", "Imposible validar el certificado");
+		//       this.router.navigate(["/errorAcceso"]);
+		//       this.progressSpinner = false;
+		//     }
+		//   }
+		// );
+		this.progressSpinner = false;
+		this.ocultar = true;
 
-					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
-					this.router.navigate(['/errorAcceso']);
-					this.progressSpinner = false;
-				}
-			}
-		);
-		this.sigaServices.getBackend('validaUsuario').subscribe(
-			(response) => {
-				this.progressSpinner = false;
-				this.ocultar = true;
-			},
-			(error) => {
-				console.log('ERROR', error);
-				if (error.status == 403) {
-					let codError = error.status;
-
-					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Usuario no válido');
-					this.router.navigate(['/errorAcceso']);
-					this.progressSpinner = false;
-				}
-				if (error.status == 500) {
-					let codError = error.status;
-
-					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Usuario no válido');
-					this.router.navigate(['/errorAcceso']);
-					this.progressSpinner = false;
-				}
-			}
-		);
-
-		this.sigaServices.getBackend('instituciones').subscribe((n) => {
+		this.sigaServices.getBackend("institucionesUsuario").subscribe(n => {
 			this.instituciones = n.combooItems;
 
 			/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-para poder filtrar el dato con o sin estos caracteres*/
-			this.instituciones.map((e) => {
+	  para poder filtrar el dato con o sin estos caracteres*/
+			this.instituciones.map(e => {
 				let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-				let accentsOut = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+				let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
 				let i;
 				let x;
 				for (i = 0; i < e.label.length; i++) {
@@ -120,31 +84,31 @@ para poder filtrar el dato con o sin estos caracteres*/
 				}
 			});
 
-			this.isLetrado = 'N';
+
 		});
 		this.ocultar = true;
 		this.form = this.fb.group({
-			tmpLoginInstitucion: new FormControl(''),
-			tmpLoginPerfil: new FormControl('ADG'),
-			sLetrado: new FormControl('N'),
+			tmpLoginInstitucion: new FormControl(""),
+			tmpLoginPerfil: new FormControl("ADG"),
+			tmpLoginRol: new FormControl(""),
 			user: new FormControl(),
-			letrado: new FormControl('N'),
-			location: new FormControl('2000'),
-			profile: new FormControl('ADG'),
+			letrado: new FormControl("N"),
+			location: new FormControl("2000"),
+			profile: new FormControl("ADG"),
 
 			posMenu: new FormControl(0)
 		});
 		//this.onChange(this.form.controls['tmpLoginInstitucion'].value);
-		this.form.controls['tmpLoginInstitucion'].valueChanges.subscribe((newValue) => {
-			this.form.controls['location'].setValue(newValue);
+		this.form.controls["tmpLoginInstitucion"].valueChanges.subscribe(
+			newValue => {
+				this.form.controls["location"].setValue(newValue);
+			}
+		);
+
+		this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
+			this.form.controls["profile"].setValue(n);
 		});
 
-		this.form.controls['tmpLoginPerfil'].valueChanges.subscribe((n) => {
-			this.form.controls['profile'].setValue(n);
-		});
-		this.form.controls['sLetrado'].valueChanges.subscribe((n) => {
-			this.form.controls['letrado'].setValue(n);
-		});
 
 		// this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
 	}
@@ -173,12 +137,30 @@ para poder filtrar el dato con o sin estos caracteres*/
 		);
 	}
 
-	onChange(newValue) {
+	onChangeInstitucion(newValue) {
 		this.tmpLoginPerfil = ['ADG'];
 		var ir = null;
 		this.form.controls['location'].setValue(newValue.value);
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
-		this.sigaServices.getPerfil('perfiles', newValue.value).subscribe((n) => {
+		this.sigaServices.getPerfil('rolesColegioUsuario', newValue.value).subscribe((n) => {
+			this.perfiles = n.combooItems;
+		});
+		// this.tmpLoginPerfil = "Administrador General";
+		//console.log(newValue);
+		//let combo = new LoginCombo();
+		//combo.setValue(newValue.id);
+		//this.sigaServices.post("perfilespost", combo).subscribe(n => {
+		//if (n) {
+		//this.perfiles = JSON.parse(n['body']);;
+		//}
+		//});
+	}
+	onChangeRol(newValue) {
+		this.tmpLoginPerfil = ['ADG'];
+		var ir = null;
+		this.form.controls['location'].setValue(newValue.value);
+		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
+		this.sigaServices.getPerfil('perfilesColegioRol', newValue.value).subscribe((n) => {
 			this.perfiles = n.combooItems;
 		});
 		// this.tmpLoginPerfil = "Administrador General";
@@ -198,7 +180,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 			this.form.controls['tmpLoginPerfil'].value == '' ||
 			this.form.controls['tmpLoginPerfil'].value == undefined ||
 			(this.form.controls['tmpLoginInstitucion'].value == '' ||
-				this.form.controls['tmpLoginInstitucion'].value == undefined)
+				this.form.controls['tmpLoginInstitucion'].value == undefined) ||
+			(this.form.controls['tmpLoginRol'].value == '' ||
+				this.form.controls['tmpLoginRol'].value == undefined)
 		) {
 			this.isEntrar = true;
 			return this.isEntrar;

@@ -16,7 +16,7 @@
                 </select>-->
 
                 <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion"
-                    [(ngModel)]="tmpLoginInstitucion" [options]="instituciones" (onChange)="onChange($event)" id="dropdown">
+                    [(ngModel)]="tmpLoginInstitucion" [options]="instituciones" (onChange)="onChangeInstitucion($event)" id="dropdown">
                 </p-dropdown>
 
             </td>
@@ -33,10 +33,10 @@
                     <option value=N selected="">NO, no soy Letrado</option>
                     <option value=S>SÍ, soy Letrado</option>
                 </select>-->
-
-                <p-dropdown [style]="{'width':'400px'}" formControlName="sLetrado" [options]="roles" [(ngModel)]="rol" id="dropdown">
-
+                <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}" formControlName="tmpLoginRol" [(ngModel)]="tmpLoginRol"
+                    [options]="roles" (onChange)="onChangeRol($event)" id="dropdown">
                 </p-dropdown>
+
 
             </td>
 
