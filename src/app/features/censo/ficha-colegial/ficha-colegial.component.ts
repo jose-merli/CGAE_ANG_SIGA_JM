@@ -4295,6 +4295,7 @@ export class FichaColegialComponent implements OnInit {
         );
         sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
 
+
         if (this.datosColegiales.length != 0) {
           if (this.isCrearColegial) {
             sessionStorage.setItem(
