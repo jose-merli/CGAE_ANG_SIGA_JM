@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../_services/authentication.service';
@@ -39,10 +39,11 @@ import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 @Component({
   selector: 'app-ficha-colegial-general',
   templateUrl: './ficha-colegial-general.component.html',
-  styleUrls: ['./ficha-colegial-general.component.scss']
+  styleUrls: ['./ficha-colegial-general.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
-
+  publicarDatosContacto: Boolean = false;
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   generalError: FichaColegialGeneralesObject = new FichaColegialGeneralesObject();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -61,7 +62,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   idPersonaNuevo;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
-  publicarDatosContacto: boolean;
   idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
@@ -403,7 +403,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     sessionStorage.removeItem("fichaColegial");
 
     this.checkAccesos();
-
     if (sessionStorage.getItem("disabledAction") == "true") {
       // Es estado baja colegial
       this.disabledAction = true;
@@ -436,6 +435,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.desactivarVolver = true;
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
+      this.desactivarVolver = false;
+    } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
       this.desactivarVolver = false;
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ
@@ -499,28 +500,21 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
-
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
     this.tarjetasActivas = true;
-
+    this.stringAComisiones();
   }
-
+  stringAComisiones() {
+    if (this.generalBody.comisiones == "1") {
+      this.comisiones = true;
+    } else {
+      this.comisiones = false;
+    }
+    if (this.generalBody.noAparecerRedAbogacia == "1") {
+      this.publicarDatosContacto = true;
+    } else {
+      this.publicarDatosContacto = false;
+    }
+  }
 
   getColegiadoLogeado() {
     this.generalBody.searchLoggedUser = true;
@@ -691,6 +685,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           console.log(err);
         }
       );
+  }
+  aparecerLOPDEvent(event) {
+    if (event != undefined) {
+      this.generalBody.noAparecerRedAbogacia = event;
+      this.stringAComisiones();
+    }
   }
 }
 

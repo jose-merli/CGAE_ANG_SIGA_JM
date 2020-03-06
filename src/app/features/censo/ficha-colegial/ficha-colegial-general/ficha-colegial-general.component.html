@@ -1,4 +1,12 @@
 <div class="busqueda-container">
+  <div class="info-limit" *ngIf="publicarDatosContacto">
+    <img src="./assets/images/icons/warning.png">
+    <div class="d-inline-block">
+        <div>
+            <span class="pr-2 text-left">{{"menu.fichaColegial.lopd.literal" | translate}}</span>
+        </div>
+    </div>
+</div>
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p *ngIf="esColegiado">
@@ -14,7 +22,7 @@
     <app-servicios-interes-ficha-colegial *ngIf="tarjetasActivas" [tarjetaInteres]="tarjetaInteres"
       [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
     <app-datos-generales-ficha-colegial *ngIf="tarjetasActivas" [tarjetaGenerales]="tarjetaGenerales"
-      [esColegiado]="esColegiado" (idPersonaNuevo)="idPersonaNuevoEvent($event)"></app-datos-generales-ficha-colegial>
+      [esColegiado]="esColegiado" (idPersonaNuevo)="idPersonaNuevoEvent($event)" (aparecerLOPD)="aparecerLOPDEvent($event)"></app-datos-generales-ficha-colegial>
     <app-datos-colegiales-ficha-colegial *ngIf="tarjetasActivas" [tarjetaColegiales]="tarjetaColegiales"
       [esColegiado]="esColegiado"></app-datos-colegiales-ficha-colegial>
     <app-otras-colegiaciones-ficha-colegial *ngIf="tarjetasActivas"

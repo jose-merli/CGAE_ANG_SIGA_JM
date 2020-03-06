@@ -41,7 +41,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   disabledNif: boolean = false;
   es: any = esCalendar;
   suggestTopics: any[] = [];
-  mostrarDatos:Boolean = false;
+  mostrarDatos: Boolean = false;
   comboTopics: any[] = [];
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
   msgs = [];
@@ -167,7 +167,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
 
   @ViewChild("calendarFechaNacimiento") calendarFechaNacimiento: Calendar;
   fechaNacimientoSelected: boolean = true;
@@ -177,6 +177,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   isLetrado: boolean;
   @Output() idPersonaNuevo = new EventEmitter<any>();
+  @Output() aparecerLOPD = new EventEmitter<any>();
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
@@ -287,26 +288,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
     this.getLenguage();
     this.getYearRange();
-    let parametro = {
-      valor: "OCULTAR_MOTIVO_MODIFICACION"
-    };
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -332,18 +314,22 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
-    if(this.tarjetaGenerales == "3" || this.tarjetaGenerales == "2"){
+    if (this.tarjetaGenerales == "3" || this.tarjetaGenerales == "2") {
       this.onInitGenerales();
 
-      if(this.tarjetaGenerales == "3"){
-        this.permisos = true;
-      }else{
-        this.permisos = false;
+      if (this.tarjetaGenerales == "3") {
+        this.getSituacionPersona();
+        this.getInscritoInit();
+        this.getSituacionPersona();
+        if (this.tarjetaGenerales == "3") {
+          this.permisos = true;
+        } else {
+          this.permisos = false;
+        }
+        this.getLetrado();
       }
-      this.getLetrado();
+
     }
-
-
 
   }
   onInitGenerales() {
@@ -380,6 +366,26 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         console.log(err);
       }
     );
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
 
     this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
       n => {
@@ -708,6 +714,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             } else {
               this.showFail();
             }
+          },()=>{
+            this.aparecerLOPD.emit(this.generalBody.noAparecerRedAbogacia);
           }
           // EVENTO PARA ACTIVAR GUARDAR AL BORRAR UNA ETIQUETA
         );
@@ -785,7 +793,10 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               "personaBody",
               JSON.stringify(this.generalBody)
             );
-              this.idPersonaNuevo.emit(this.idPersona);
+            this.idPersonaNuevo.emit(this.idPersona);
+            this.aparecerLOPD.emit(this.generalBody.noAparecerRedAbogacia);
+            this.message = "Cargado";
+            this.mostrarDatos = true;
           }
         );
     }
@@ -1494,7 +1505,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
           this.message = "Cargado";
           this.mostrarDatos = true;
-          
+
         }
       );
   }
@@ -2536,7 +2547,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   onBlur(event) {
     event.currentTarget.value = "";
   }
-  
+
   clear() {
     this.msgs = [];
   }

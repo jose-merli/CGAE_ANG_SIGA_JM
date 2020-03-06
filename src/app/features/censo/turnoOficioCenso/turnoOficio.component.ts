@@ -48,7 +48,7 @@ export class TurnoOficioComponent implements OnInit {
 				this.url = JSON.parse(sessionStorage.getItem('url'));
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
 				document.getElementById('noViewContent').className = 'mainFrameWrapper2';
-				this.router.navigate([ '/turnoOficioCenso' ]);
+				this.router.navigate([ '/fichaColegialClassique' ]);
 			}, 2000);
 		} else {
 			this.url = JSON.parse(sessionStorage.getItem('url'));
