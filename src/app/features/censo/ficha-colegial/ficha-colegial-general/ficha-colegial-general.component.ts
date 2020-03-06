@@ -210,7 +210,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   updateItems: Map<String, ComboEtiquetasItem> = new Map<
     String,
     ComboEtiquetasItem
-  >();
+    >();
   items: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   newItems: Array<ComboEtiquetasItem> = new Array<ComboEtiquetasItem>();
   item: ComboEtiquetasItem = new ComboEtiquetasItem();
@@ -433,6 +433,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.desactivarVolver = true;
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
+      this.desactivarVolver = false;
+    } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
       this.desactivarVolver = false;
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ
