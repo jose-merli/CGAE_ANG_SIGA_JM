@@ -132,7 +132,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("enviosMasivosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
-      console.log(this.body)
       this.body.fechaProgramada = this.body.fechaProgramada ? new Date(this.body.fechaProgramada) : null;
       this.body.fechaCreacion = this.body.fechaCreacion ? new Date(this.body.fechaCreacion) : null;
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -197,7 +196,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
       data => {
         this.estados = data.combooItems;
         this.estados.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
-        console.log(this.estados)
       },
       err => {
         console.log(err);

@@ -558,7 +558,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          console.log(this.poblaciones);
         },
         error => {
           console.log(error);

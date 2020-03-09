@@ -153,7 +153,6 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
-                // console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
@@ -328,7 +327,6 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         }
 
-        console.log(this.colegiosArray);
         this.actualizarDescripcionTipoColegio();
       },
       err => {
@@ -1083,11 +1081,9 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
-    // console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
-    // console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 

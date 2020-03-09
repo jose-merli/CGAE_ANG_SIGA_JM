@@ -322,7 +322,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
             console.log(err);
           },
           () => {
-            console.log('eeee', this.colegioDisabled);
             // this.sigaServices.get("institucionActual").subscribe(n => {
             //   this.colegios_seleccionados.push(n);
             // });

@@ -52,7 +52,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table;
   ngOnInit() {
-    console.log(sessionStorage);
     this.checkAcceso();
     this.sigaServices.get("contadores_modo").subscribe(
       n => {
@@ -203,7 +202,6 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();
-        console.log(data);
         this.correcto = true;
       },
       err => {

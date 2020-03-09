@@ -316,7 +316,6 @@ export class TipoCurricularComponent {
       this.body.codigoExterno = e.srcElement.value.trim();
       this.body.codigoExterno = this.body.codigoExterno.trim();
       this.inputCdgoExt.nativeElement.value = e.srcElement.value.trim();
-      console.log(this.inputCdgoExt);
     }
 
     this.editar = false;
@@ -369,7 +368,6 @@ export class TipoCurricularComponent {
       this.body.descripcion = e.srcElement.value.trim();
       this.body.descripcion = this.body.descripcion.trim();
       this.inputDesc.nativeElement.value = e.srcElement.value.trim();
-      console.log(this.inputDesc);
     }
   }
 
@@ -583,7 +581,6 @@ export class TipoCurricularComponent {
             value.editar = true;
           }
         });
-        console.log(this.datosHist);
       }
     }
   }
@@ -666,7 +663,6 @@ export class TipoCurricularComponent {
       .post("tipoCurricular_historyTipoCurricular", this.history)
       .subscribe(
         data => {
-          console.log(data);
           this.bodySearch = JSON.parse(data["body"]);
           this.datos = this.bodySearch.tipoCurricularItems;
         },

@@ -593,7 +593,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   deleteSeleccion(selectedDatos) {
-    console.log("SE", selectedDatos);
+
     let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-trash-alt";
     this.confirmationService.confirm({
@@ -775,7 +775,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       );
       sessionStorage.setItem("esColegiado", "false");
       sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
-      console.log(id);
 
       if (id[0].fechaBaja != null) {
         sessionStorage.setItem("disabledAction", "true");

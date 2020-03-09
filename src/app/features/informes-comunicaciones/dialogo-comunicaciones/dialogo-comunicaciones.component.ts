@@ -270,7 +270,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.progressSpinner = true;
 			this.sigaServices.post('dialogo_obtenerCamposDinamicos', this.bodyComunicacion).subscribe(
 				(data) => {
-					console.log(data);
 					this.progressSpinner = false;
 					this.valores = [];
 					this.listaConsultas = JSON.parse(data['body']).consultaItem;
@@ -407,7 +406,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	enviar() {
-		console.log(this.listaConsultas);
 	}
 
 	onRowSelectModelos(event) {

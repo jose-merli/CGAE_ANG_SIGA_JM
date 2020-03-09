@@ -56,7 +56,6 @@ export class MenuComponent implements OnInit {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
       this.sigaServices.notifyMenuToggled();
-      console.log(this.closeMenu);
     }
   }
 
@@ -117,7 +116,6 @@ export class MenuComponent implements OnInit {
     if (items) {
       this.showChildOfChild = !this.showChildOfChild;
       this.selectedItemOfChild = items;
-      console.log(this.selectedItemOfChild);
       this.selectedLabelOfChild = label;
     }
   }

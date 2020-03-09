@@ -998,7 +998,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   editarCompleto(event, dato) {
-    console.log(event);
+     
     let data = event;
 
     if (data != null && data != undefined) {
@@ -1084,7 +1084,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         "inscripcionCurrent",
         JSON.stringify(selectedDatos[0])
       );
-      console.log(selectedDatos);
       sessionStorage.setItem("pantallaListaInscripciones", "true");
       sessionStorage.setItem("datosTabla", JSON.stringify(this.datos));
       sessionStorage.setItem(
