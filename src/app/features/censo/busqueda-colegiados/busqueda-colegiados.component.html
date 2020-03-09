@@ -360,7 +360,7 @@
         </div>
     </div>
 
-    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="false" #table
+    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
         paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
