@@ -387,8 +387,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.comprobarColegiado();
     if (sessionStorage.getItem("fichaColegialByMenu")) {
+      this.comprobarColegiado();
       this.getColegiadoLogeado();
     } else {
       this.OnInit();
