@@ -32,7 +32,7 @@ export class DatosColegiadosItem {
   correo: string;
   fechaNacimiento: string;
   fechaNacimientoDate: Date;
-
+  idPersona: string;
   idgrupo: string[];
   idTratamiento: String;
   tipoCV: string;

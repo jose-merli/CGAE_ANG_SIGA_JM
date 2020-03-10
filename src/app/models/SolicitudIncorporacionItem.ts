@@ -9,6 +9,7 @@ export class SolicitudIncorporacionItem {
   soloNombre: String;
   apellidos: String;
   apellido1: String;
+  idPersona: String;
   idsolicitudincorporacion: String;
   apellido2: String;
   sexo: String;

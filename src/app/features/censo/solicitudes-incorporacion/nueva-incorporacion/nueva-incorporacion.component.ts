@@ -518,7 +518,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.fechaNacimiento
       );
     }
-    if(this.bodyInicial.idEstado != undefined){
+    if (this.bodyInicial.idEstado != undefined) {
       this.estadoSolicitudSelected = this.bodyInicial.idEstado;
     }
     if (this.bodyInicial.apellidos != undefined &&
@@ -1165,7 +1165,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.progressSpinner = true;
 
     this.body = new DatosColegiadosItem();
-    this.body.nif = this.solicitudEditar.numeroIdentificacion;
+    this.body.idPersona = this.solicitudEditar.idPersona;
     sessionStorage.setItem("consulta", "true");
 
     if (this.solicitudEditar.idEstado == "50") {
