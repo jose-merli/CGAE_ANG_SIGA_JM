@@ -246,6 +246,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.generalBody.soloNombre = enviar.nombre;
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
+        this.generalBody.idTratamiento = undefined;
         this.situacionPersona = enviar.idEstado;
         if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
           this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
