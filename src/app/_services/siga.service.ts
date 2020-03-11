@@ -804,8 +804,25 @@ export class SigaServices {
         return response;
       });
   }
+  postBackend(service: string, body: any): Observable<any> {
+   
+    let headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    return this.httpbackend
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: "response",
+        responseType: "text"
+      })
+      .map(response => {
+        return response;
+      })
+      ;
+  }
 
   post(service: string, body: any): Observable<any> {
+   
     let headers = new HttpHeaders({
       "Content-Type": "application/json"
     });

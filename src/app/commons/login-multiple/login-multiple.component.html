@@ -10,11 +10,6 @@
                 <label>Institución</label>
             </td>
             <td>
-                <!--<select formControlName="tmpLoginInstitucion" style="width:300px" (ngModelChange)="onChange($event)">
-                    <option value="" selected></option>
-                    <option *ngFor="let i of instituciones" [ngValue]="i.value">{{ i.label }}</option>
-                </select>-->
-
                 <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}" formControlName="tmpLoginInstitucion"
                     [(ngModel)]="tmpLoginInstitucion" [options]="instituciones" (onChange)="onChangeInstitucion($event)" id="dropdown">
                 </p-dropdown>
@@ -29,10 +24,6 @@
                 <label>Rol</label>
             </td>
             <td colspan="2">
-                <!--<select formControlName="sLetrado" class="boxCombo" style="width:300px;">
-                    <option value=N selected="">NO, no soy Letrado</option>
-                    <option value=S>SÍ, soy Letrado</option>
-                </select>-->
                 <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [style]="{'width':'400px'}" formControlName="tmpLoginRol" [(ngModel)]="tmpLoginRol"
                     [options]="roles" (onChange)="onChangeRol($event)" id="dropdown">
                 </p-dropdown>
@@ -42,28 +33,23 @@
 
         </tr>
         <tr>
-            <td class="labelText">Perfil</td>
+            <td class="labelText">
+                <label>Perfil</label>
+            </td>
             <td colspan="2">
 
                 <p-listbox styleClass="loginSiga" formControlName="tmpLoginPerfil" [options]="perfiles" [(ngModel)]="tmpLoginPerfil" multiple="multiple"
                     [style]="{'width':'400px'}" [listStyle]="{'height':'400px'}"></p-listbox>
-
-                <!--<select formControlName="tmpLoginPerfil" style="width:300px;width:300px;" size="20">
-                    <option *ngFor="let i of perfiles" [ngValue]="i.value">{{ i.label }}</option>
-                </select>-->
             </td>
         </tr>
 
     </table>
 
 
-    <!-- <input type="hidden" formControlName="tmpLoginInstitucion"> -->
     <input type="hidden" formControlName="location">
-    <!-- <input type="hidden" formControlName="sLetrado"> -->
     <input type="hidden" formControlName="user">
     <input type="hidden" formControlName="profile">
-    <!-- <input type="hidden" formControlName="tmpLoginPerfil"> -->
-    <input type="hidden" formControlName="letrado">
+    <input type="hidden" formControlName="rol">
     <input type="hidden" formControlName="posMenu">
 
 

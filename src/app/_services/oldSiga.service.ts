@@ -165,7 +165,7 @@ export class OldSigaServices {
 	constructor(private http: HttpClient) {}
 
 	getOldSigaUrl(service: string) {
-		return environment.oldSigaUrl + this.oldServices[service];
+		return environment.oldSigaUrl + this.oldServices[service] + '?token=' + sessionStorage.getItem('Authorization');
 	}
 
 	get(url: string): Observable<any> {

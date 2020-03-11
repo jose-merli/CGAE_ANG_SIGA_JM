@@ -35,7 +35,7 @@ import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
-import { LoginColegiadoComponent } from './commons/login-colegiado/login-colegiado.component';
+import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
 import { TranslatePipe, TranslateService } from './commons/translate';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
 import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
@@ -368,7 +368,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		MenuComponent,
 		LoginComponent,
 		LoginDevelopComponent,
-		LoginColegiadoComponent,
+		LoginMultipleComponent,
 		HeaderComponent,
 		HomeComponent,
 		ConfirmDialogComponent,

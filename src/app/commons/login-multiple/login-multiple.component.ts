@@ -3,17 +3,17 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { SigaServices } from '../../_services/siga.service';
 import { Router } from '@angular/router';
-import { LoginCombo } from './login-colegiado.combo';
+import { LoginCombo } from './login-multiple.combo';
 import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
-
+import { LoginMultipleItem} from '../../models/LoginMultipleItem';
 
 @Component({
-	selector: 'app-login-colegiado',
-	templateUrl: './login-colegiado.component.html',
-	styleUrls: ['./login-colegiado.component.scss']
+	selector: 'app-login-multiple',
+	templateUrl: './login-multiple.component.html',
+	styleUrls: ['./login-multiple.component.scss']
 })
-export class LoginColegiadoComponent implements OnInit {
+export class LoginMultipleComponent implements OnInit {
 	form: FormGroup;
 
 	instituciones: any[];
@@ -21,11 +21,11 @@ export class LoginColegiadoComponent implements OnInit {
 	isEntrar: boolean = true;
 	tmpLoginPerfil: String[];
 	tmpLoginRol: String[];
+	body : LoginMultipleItem = new LoginMultipleItem();
+	bodySearch : LoginMultipleItem = new LoginMultipleItem();
 	entorno: String;
 	ocultar: boolean = false;
 	progressSpinner: boolean = false;
-	// value=N selected="">NO, no soy Letrado</option>
-	//                   <option value=S>SÍ, soy Letrado</option>
 	environment: string = "";
 	sigaFrontVersion: string = "";
 	sigaWebVersion: string = "";
@@ -89,13 +89,12 @@ export class LoginColegiadoComponent implements OnInit {
 		this.ocultar = true;
 		this.form = this.fb.group({
 			tmpLoginInstitucion: new FormControl(""),
-			tmpLoginPerfil: new FormControl("ADG"),
+			tmpLoginPerfil: new FormControl(""),
 			tmpLoginRol: new FormControl(""),
 			user: new FormControl(),
-			letrado: new FormControl("N"),
-			location: new FormControl("2000"),
-			profile: new FormControl("ADG"),
-
+			location: new FormControl(""),
+			profile: new FormControl(""),
+			rol: new FormControl(""),
 			posMenu: new FormControl(0)
 		});
 		//this.onChange(this.form.controls['tmpLoginInstitucion'].value);
@@ -104,6 +103,10 @@ export class LoginColegiadoComponent implements OnInit {
 				this.form.controls["location"].setValue(newValue);
 			}
 		);
+
+		this.form.controls["tmpLoginRol"].valueChanges.subscribe(n => {
+			this.form.controls["rol"].setValue(n);
+		});
 
 		this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
 			this.form.controls["profile"].setValue(n);
@@ -143,7 +146,7 @@ export class LoginColegiadoComponent implements OnInit {
 		this.form.controls['location'].setValue(newValue.value);
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
 		this.sigaServices.getPerfil('rolesColegioUsuario', newValue.value).subscribe((n) => {
-			this.perfiles = n.combooItems;
+			this.roles = n.combooItems;
 		});
 		// this.tmpLoginPerfil = "Administrador General";
 		//console.log(newValue);
@@ -156,12 +159,19 @@ export class LoginColegiadoComponent implements OnInit {
 		//});
 	}
 	onChangeRol(newValue) {
-		this.tmpLoginPerfil = ['ADG'];
 		var ir = null;
-		this.form.controls['location'].setValue(newValue.value);
+		this.form.controls['tmpLoginRol'].setValue(newValue.value);
+		debugger;
+		
+		this.body = new LoginMultipleItem();
+		this.body.idInstitucion = this.form.controls['location'].value;
+		this.body.rol = newValue.value;
+    
+
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
-		this.sigaServices.getPerfil('perfilesColegioRol', newValue.value).subscribe((n) => {
-			this.perfiles = n.combooItems;
+		this.sigaServices.postBackend('perfilesColegioRol',this.body).subscribe((n) => {
+			var respuesta = JSON.parse(n["body"]);
+			this.perfiles = respuesta.combooItems;
 		});
 		// this.tmpLoginPerfil = "Administrador General";
 		//console.log(newValue);
