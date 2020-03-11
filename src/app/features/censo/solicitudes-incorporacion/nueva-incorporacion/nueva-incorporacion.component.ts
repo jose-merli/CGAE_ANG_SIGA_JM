@@ -1,29 +1,16 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  HostListener,
-  ChangeDetectorRef
-} from "@angular/core";
-import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
-  Validators
-} from "../../../../../../node_modules/@angular/forms";
-import { Router } from "../../../../../../node_modules/@angular/router";
-import { SigaServices } from "../../../../_services/siga.service";
-import { TranslateService } from "../../../../commons/translate";
-import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
-import { ConfirmationService } from "primeng/api";
 import { Location } from "@angular/common";
+import { Component, HostListener, OnInit, ViewChild } from "@angular/core";
+import { ConfirmationService } from "primeng/api";
 import { Message } from "primeng/components/common/api";
-import { isNumeric } from "rxjs/util/isNumeric";
-
-import { DropdownModule, Dropdown } from "primeng/dropdown";
-import { NoColegiadoItem } from "../../../../models/NoColegiadoItem";
+import { Dropdown } from "primeng/dropdown";
+import { FormBuilder, FormGroup } from "../../../../../../node_modules/@angular/forms";
+import { Router } from "../../../../../../node_modules/@angular/router";
+import { TranslateService } from "../../../../commons/translate";
 import { DatosColegiadosItem } from "../../../../models/DatosColegiadosItem";
+import { SolicitudIncorporacionItem } from "../../../../models/SolicitudIncorporacionItem";
 import { CommonsService } from "../../../../_services/commons.service";
+import { SigaServices } from "../../../../_services/siga.service";
+
 
 export enum KEY_CODE {
   ENTER = 13
@@ -112,6 +99,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   numColegiadoDuplicado: boolean = false;
   bodyInicial;
   cargarDatos: boolean = false;
+  veFicha: boolean = false;
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -249,6 +237,8 @@ export class NuevaIncorporacionComponent implements OnInit {
 
 
     }
+    if (new Date(this.solicitudEditar.fechaEstado) <= new Date())
+      this.veFicha = true;
 
     if (this.solicitudEditar.apellido2 != undefined && this.solicitudEditar.apellido2 != null && this.solicitudEditar.apellido2 != "") {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
@@ -1100,8 +1090,10 @@ export class NuevaIncorporacionComponent implements OnInit {
                           detail: "Solicitud aprobada."
                         }
                       ];
-
-                      this.searchSolicitante();
+                      if (new Date(this.solicitudEditar.fechaEstado) <= new Date()) {
+                        this.veFicha = true;
+                        this.searchSolicitante();
+                      }
                       this.consulta = true;
                       this.pendienteAprobacion = false;
                       sessionStorage.setItem("pendienteAprobacion", "false");
@@ -1120,7 +1112,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                         JSON.stringify(this.solicitudEditar)
                       );
                       this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
-
+                      this.progressSpinner = false;
                       this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
                     },
                     error => {
