@@ -212,16 +212,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "tipoDireccion",
         header: "censo.datosDireccion.literal.tipo.direccion",
-        width: "25%"
+        width: "17%"
       },
       {
         field: "domicilioLista",
         header: "censo.consultaDirecciones.literal.direccion",
+        width: "10%"
       },
       {
         field: "codigoPostal",
         header: "censo.ws.literal.codigopostal",
-        width: "8%"
+        width: "5%"
       },
       {
         field: "nombrePoblacion",
@@ -231,7 +232,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "nombreProvincia",
         header: "censo.datosDireccion.literal.provincia",
-        width: "8%"
+        width: "10%"
       },
       {
         field: "telefono",
@@ -245,7 +246,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       },
       {
         field: "correoElectronico",
-        header: "censo.datosDireccion.literal.correo"
+        header: "censo.datosDireccion.literal.correo",
+        width: "15%"
       }
     ];
   }
@@ -339,7 +341,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
               console.log(err);
             },
 
-          );
+        );
 
 
 
@@ -811,6 +813,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             this.convertirStringADate(this.datos);
             // this.table.paginator = true;
             this.body.fechaIncorporacion = [];
+            this.datos = this.datos.map(it => {
+              it.situacionResidenteFilter = +it.situacionResidente ? "sisí" : "no";
+              it.situacionResidente = +it.situacionResidente ? "Sí" : "No";
+              it.noAparecerRedAbogacia = +it.noAparecerRedAbogacia2 ? "sisí" : "no";
+              it.noAparecerRedAbogacia2 = +it.noAparecerRedAbogacia2 ? "Sí" : "No";
+              return it;
+            })
             if (error != null && error.description != null) {
               this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
             }

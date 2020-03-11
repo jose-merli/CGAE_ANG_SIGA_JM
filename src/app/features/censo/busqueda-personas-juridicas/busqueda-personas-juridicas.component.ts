@@ -446,7 +446,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   paginate(event) {
-    console.log(event);
+     
   }
 
   cancelar() {

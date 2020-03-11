@@ -162,7 +162,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     sessionStorage.setItem("reload", "si");
     sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
     sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
-    this.router.navigate(["/turnoOficioCenso"]);
+    this.router.navigate(["/fichaColegialClassique"]);
   }
 
  

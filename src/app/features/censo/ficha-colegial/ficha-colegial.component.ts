@@ -4295,6 +4295,7 @@ export class FichaColegialComponent implements OnInit {
         );
         sessionStorage.setItem("permisoTarjeta", this.tarjetaDirecciones);
 
+
         if (this.datosColegiales.length != 0) {
           if (this.isCrearColegial) {
             sessionStorage.setItem(
@@ -4719,7 +4720,7 @@ export class FichaColegialComponent implements OnInit {
     sessionStorage.setItem("reload", "si");
     sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
     sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
-    this.router.navigate(["/turnoOficioCenso"]);
+    this.router.navigate(["/fichaColegialClassique"]);
   }
 
   irRegTel() {

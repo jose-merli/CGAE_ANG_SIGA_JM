@@ -293,7 +293,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onSelectConsulta(event, dato) {
-    console.log(dato);
     if (!this.esPorDefecto) {
       if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1
       ) {
@@ -473,7 +472,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   changeFormato() {
-    console.log(this.body.idFormatoSalida);
     if (this.body.idFormatoSalida == "2") {
       this.formatoAccept = ".doc,.docx";
     } else if (this.body.idFormatoSalida == "1") {
@@ -1241,7 +1239,6 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   onChangeSufijo(dato) {
-    console.log(dato);
     this.selectedSufijos.map(e => {
       if (e.value == "1" && dato.itemValue.value == "1") {
         e.abr = "A";
@@ -1369,7 +1366,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   confirmarNavegar(dato) {
     let idConsulta = dato.idConsulta;
-    console.log(dato);
     if (!this.selectMultiple && idConsulta) {
       if (!dato.sentencia || dato.sentencia == null || dato.sentencia == "") {
         // Obtenemos la consulta para ir a ella

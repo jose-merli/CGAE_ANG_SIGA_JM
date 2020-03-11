@@ -493,7 +493,6 @@ export class FichaCursoComponent implements OnInit {
       );
     }
 
-    console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
     this.progressSpinner2 = false; 

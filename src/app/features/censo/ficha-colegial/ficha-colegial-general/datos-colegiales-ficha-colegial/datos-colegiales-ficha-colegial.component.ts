@@ -213,29 +213,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.activacionTarjeta = true;
     }
 
-    let parametro = {
-      valor: "OCULTAR_MOTIVO_MODIFICACION"
-    };
-    // Esto preguntarselo a Fredi
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
-
-
   }
 
   ngOnChanges() {
@@ -262,11 +239,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.tarjetaColegiales == "3" || this.tarjetaColegiales == "2") {
-      this.onInitColegiales();
-      if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
-        this.onInitDirecciones(); // Direcciones
-      }
-
       if (
         sessionStorage.getItem("personaBody") != null &&
         sessionStorage.getItem("personaBody") != undefined &&
@@ -279,6 +251,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
         if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
         if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+        this.residente = this.colegialesBody.situacionResidente;
 
         this.getCols();
 
@@ -292,6 +265,10 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
         this.getYearRange();
         this.getLenguage();
+      }
+      this.onInitColegiales();
+      if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
+        this.onInitDirecciones(); // Direcciones
       }
 
       if (this.tarjetaColegiales == "3") {
@@ -334,20 +311,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     );
 
-    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
-      n => {
-        this.generalTratamiento = n.combooItems;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
-        }
-      },
-      err => {
-        console.log(err);
-      }
-    );
+
 
     this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
       n => {
@@ -374,7 +338,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       n => {
         this.comboSituacion = n.combooItems;
         this.arregloTildesCombo(this.comboSituacion);
-
+        this.cambioEstadoResumen();
+      
       },
       err => {
         console.log(err);
@@ -638,6 +603,42 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         console.log(err);
       }
     );
+
+    let parametro = {
+      valor: "OCULTAR_MOTIVO_MODIFICACION"
+    };
+    // Esto preguntarselo a Fredi
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          let parametroOcultarMotivo = JSON.parse(data.body);
+          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
+            this.ocultarMotivo = true;
+          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
+            this.ocultarMotivo = false;
+          } else {
+            this.ocultarMotivo = undefined;
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
+      n => {
+        this.generalTratamiento = n.combooItems;
+        let tratamiento = this.generalTratamiento.find(
+          item => item.value === this.generalBody.idTratamiento
+        );
+        if (tratamiento != undefined && tratamiento.label != undefined) {
+          this.tratamientoDesc = tratamiento.label;
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
     this.searchColegiales();
     this.getInscritoInit();
     this.getSituacionPersona();
@@ -716,7 +717,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.datosColegiales.forEach(element => {
             element.habilitarObs = false;
           });
-          this.checkDatosColegiales = JSON.parse(JSON.stringify(this.datosColegiales));
+          this.checkDatosColegiales = JSON.parse(JSON.stringify(this.datosColegiales));         
+          this.cambioEstadoResumen();
+
         },
         err => {
           console.log(err);
@@ -737,6 +740,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                   this.colegialesObject = JSON.parse(data["body"]);
                   this.datosColegialesActual = this.colegialesObject.colegiadoItem;
                   //this.estadoColegial = this.datosColegialesActual[0].estadoColegial;
+                 
 
                   if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
                     this.residente = "Si";
@@ -748,7 +752,10 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           }
         }
       );
+
+
   }
+
   getInscritoInit() {
     if (
       this.inscritoSeleccionado == "1"
@@ -795,8 +802,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                 this.progressSpinner = false;
               }
 
-              this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].situacion).label;
-
               if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
                 this.residente = "Si";
               } else {
@@ -824,6 +829,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.colegialesBody.situacionResidente = this.nuevoEstadoColegial.situacionResidente;
       this.colegialesBody.fechaEstado = this.arreglarFecha(this.nuevoEstadoColegial.fechaEstadoStr);
       this.colegialesBody.fechaEstadoStr = JSON.stringify(this.nuevoEstadoColegial.fechaEstadoStr);
+
       this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.nuevoEstadoColegial.situacion).label;
 
       //Si el cambio es a ejerciente
@@ -894,11 +900,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.callServiceGuardarColegiales();
       }
     }
-    if (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si") {
-      this.residente = "Si";
-    } else {
-      this.residente = "No";
-    }
+    // if (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si") {
+    //   this.residente = "Si";
+    // } else {
+    //   this.residente = "No";
+    // }
   }
 
   callServiceShowMessageUpdate() {
@@ -1165,6 +1171,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                         newBody.fechapresentacion = this.colegialesBody.fechapresentacion;
                         newBody.fechaJura = this.colegialesBody.fechaJura;
                         sessionStorage.setItem("personaBody", JSON.stringify(newBody));
+                      
+                       
 
                       },
                       error => {
@@ -1212,6 +1220,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                   this.checkColegialesBody = JSON.parse(
                     JSON.stringify(this.colegialesBody)
                   );
+
+                 
                 }
               },
               error => {
@@ -1248,6 +1258,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.showFail();
         }
       );
+ 
+
+      if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
+        this.residente = "Si";
+      } else {
+        this.residente = "No";
+      }
   }
 
   getInscrito(event) {
@@ -1454,6 +1471,31 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
   }
 
+  cambioEstadoResumen(){
+
+    if(this.comboSituacion != undefined && this.comboSituacion.length > 0 ){
+      if(this.datosColegiales != undefined && this.datosColegiales.length > 0 && new Date(this.datosColegiales[0].fechaEstado) <= new Date()){
+        this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].idEstado).label;
+      }else{
+        let check = false;
+  
+        if(this.datosColegiales != undefined && this.datosColegiales.length > 1){
+          for (let index = 1; index < this.datosColegiales.length; index++) {
+            if(!check && new Date(this.datosColegiales[index].fechaEstado) <= new Date()){
+              this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[index].idEstado).label;
+              check = true;
+            }
+            
+          }
+        }else{
+          this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].idEstado).label;
+        }
+       
+      }
+    }
+  
+  }
+
   showFailNumColegiado(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
@@ -1634,7 +1676,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.activarGuardarColegiales = false;
       }
       selectedDatos.estadoColegial = identificacion.label;
-      this.colegialesBody.estadoColegial = identificacion.label;
+
+      this.cambioEstadoResumen();    
+    
     }
     this.isRestablecer = true;
     this.showMessageInscripcion = true;
@@ -1677,6 +1721,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     }
     this.isRestablecer = true;
     this.activacionGuardarColegiales();
+    this.cambioEstadoResumen();
+
 
   }
   aceptInformation() {
@@ -1796,10 +1842,17 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
             this.showFail();
           }
         }, () => {
+
           this.numSelectedColegiales = 0;
+          if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
+            this.residente = "Si";
+          } else {
+            this.residente = "No";
+          }
         }
       );
     this.isRestablecer = false;
+   
   }
 
   blurFechaIncorporacion(e) {

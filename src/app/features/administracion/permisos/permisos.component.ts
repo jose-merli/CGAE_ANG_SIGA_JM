@@ -85,7 +85,6 @@ export class PermisosComponent implements OnInit {
 
     this.sigaServices.menuToggled$.subscribe(() => {
       this.isWidthChange = !this.isWidthChange;
-      console.log(this.isWidthChange)
     });
   }
 
@@ -103,7 +102,6 @@ export class PermisosComponent implements OnInit {
       n => {
         this.grupos = n.combooItems;
         this.first = { label: "", value: "" };
-        console.log(this.first);
         this.grupos.unshift(this.first);
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 

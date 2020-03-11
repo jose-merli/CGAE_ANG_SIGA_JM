@@ -149,7 +149,6 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("plantillasEnvioSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
-      console.log(this.body);
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
       if (this.body.claseComunicacion != undefined) {

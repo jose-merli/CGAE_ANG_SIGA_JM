@@ -247,11 +247,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         .postPaginado("contadores_search", "?numPagina=1", this.body)
         .subscribe(
           data => {
-            console.log(data);
+             
 
             this.search = JSON.parse(data["body"]);
             this.datos = this.search.contadorItems;
-            console.log(this.datos);
             this.table.reset();
           },
           err => {
@@ -304,7 +303,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   paginate(event) {
-    console.log(event);
+     
   }
 
   reset() {

@@ -118,7 +118,6 @@ export class BusquedaSancionesComponent implements OnInit {
       this.showSuccess("Operación realizada satisfactoriamente");
       sessionStorage.removeItem("SancionInsertada");
     }
-    console.log("array", this.colegios_seleccionados);
 
     if (
       sessionStorage.getItem("isLetrado") != null &&

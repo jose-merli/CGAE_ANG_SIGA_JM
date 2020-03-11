@@ -122,7 +122,6 @@ export class PlantillasEnvioComponent implements OnInit {
 				this.progressSpinner = false;
 				this.searchPlantillasEnvio = JSON.parse(data['body']);
 				this.datos = this.searchPlantillasEnvio.plantillasItem;
-				console.log(this.datos);
 			},
 			(err) => {
 				console.log(err);
@@ -164,7 +163,6 @@ export class PlantillasEnvioComponent implements OnInit {
 	detallePlantilla(item) {
 		let id = item[0].id;
 		item[0].idPersona = '2';
-		console.log(item);
 
 		sessionStorage.setItem('crearNuevaPlantilla', 'false');
 		if (!this.selectMultiple) {

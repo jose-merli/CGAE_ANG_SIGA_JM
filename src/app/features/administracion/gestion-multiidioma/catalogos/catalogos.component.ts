@@ -187,7 +187,6 @@ export class Catalogos extends SigaWrapper implements OnInit {
       .postPaginado("catalogos_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
-          console.log(data);
           this.searchParametros = JSON.parse(data["body"]);
           this.datosTraduccion = this.searchParametros.multiidiomaCatalogoItem;
           this.progressSpinner = false;
@@ -200,7 +199,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
       );
   }
   datos(event) {
-    console.log(event);
+     
     this.bodySearch.local = event.value;
     this.local = event.value;
     this.bodySearch.nombreTabla = event.originalEvent.srcElement.innerText.trim();
@@ -302,10 +301,8 @@ export class Catalogos extends SigaWrapper implements OnInit {
     );
     this.elementosAGuardar.forEach(
       (value: MultiidiomaCatalogoUpdateDto, key: number) => {
-        console.log(value);
         this.sigaServices.post("catalogos_update", value).subscribe(
           data => {
-            console.log(data);
             this.showSuccessEdit();
           },
           err => {

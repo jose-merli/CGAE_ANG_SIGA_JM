@@ -16,6 +16,7 @@ export class SolicitudIncorporacionItem {
   duplicado: boolean;
   fechaNacimiento: Date;
   fechaNacimientoStr: any;
+  fechaNacimientoString: string;
   numColegiado: String;
   fechaSolicitud: Date;
   fechaEstado: Date;

@@ -443,7 +443,6 @@ export class AccesoFichaPersonaComponent implements OnInit {
       data.map(result => {
         result.cardNotario = this.isValidate;
       });
-      console.log(data);
     });
   }
 

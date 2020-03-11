@@ -102,7 +102,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
 
     if (sessionStorage.getItem("rowData") != null) {
       this.body = JSON.parse(sessionStorage.getItem("rowData"));
-      console.log("BODY", this.body);
 
       if (
         sessionStorage.getItem("isLetrado") != null &&
@@ -214,7 +213,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodySoliModDirecciones = JSON.parse(data["body"]);
-          console.log("SOL DIR", this.bodySoliModDirecciones);
         },
         err => { },
         () => {
@@ -235,7 +233,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodyDirecciones = JSON.parse(data["body"]);
-          console.log("DIR", this.bodyDirecciones);
         },
         err => {
           this.progressSpinner = false;
@@ -321,7 +318,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodySolModiFoto = JSON.parse(data["body"]);
-          console.log("SOL FOTO", this.bodySolModiFoto);
         },
         err => { },
         () => {
@@ -379,7 +375,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodyFoto = JSON.parse(data["body"]);
-          console.log("FOTO", this.bodyFoto);
         },
         err => {
           this.progressSpinner = false;
@@ -415,7 +410,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodySolDatosBasicos = JSON.parse(data["body"]);
-          console.log("SOL BASICOS", this.bodySolDatosBasicos);
         },
         err => { },
         () => {
@@ -435,7 +429,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodyDatosBasicos = JSON.parse(data["body"]);
-          console.log("DATOS BASICOS", this.bodyDatosBasicos);
         },
         err => {
           this.progressSpinner = false;
@@ -476,7 +469,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodySolDatosCV = JSON.parse(data["body"]);
-          console.log("SOL CV", this.bodySolDatosCV);
         },
         err => { },
         () => {
@@ -497,7 +489,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodyDatosCV = JSON.parse(data["body"]);
-          console.log("DATOS CV", this.bodyDatosCV);
         },
         err => {
           this.progressSpinner = false;
@@ -564,7 +555,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodySolDatosBancarios = JSON.parse(data["body"]);
-          console.log("SOL BANCARIOS", this.bodySolDatosBancarios);
         },
         err => { },
         () => {
@@ -585,7 +575,6 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
       .subscribe(
         data => {
           this.bodyDatosBancarios = JSON.parse(data["body"]);
-          console.log("DATOS BANCARIOS", this.bodyDatosBancarios);
         },
         err => {
           this.progressSpinner = false;

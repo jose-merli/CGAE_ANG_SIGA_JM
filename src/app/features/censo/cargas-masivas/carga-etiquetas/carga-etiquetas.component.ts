@@ -105,7 +105,6 @@ export class CargaEtiquetasComponent implements OnInit {
   uploadFile(event: any) {
     this.progressSpinner = true;
     if (this.file != undefined) {
-      console.log("Este es el archivo que enviaremos", this.file);
       this.sigaServices
         .postSendContent("cargasMasivasEtiquetas_uploadFile", this.file)
         .subscribe(

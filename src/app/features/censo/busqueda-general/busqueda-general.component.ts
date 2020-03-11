@@ -322,7 +322,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
             console.log(err);
           },
           () => {
-            console.log('eeee', this.colegioDisabled);
             // this.sigaServices.get("institucionActual").subscribe(n => {
             //   this.colegios_seleccionados.push(n);
             // });
@@ -793,7 +792,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             enviar.naturalDe = id[0].naturalDe;
             enviar.idTipoIdentificacion = id[0].idTipoIdentificacion;
             enviar.idEstadoCivil = id[0].idEstadoCivil;
-            enviar.fechaNacimiento = id[0].fechaNacimiento;
+            enviar.fechaNacimiento = id[0].fechaNacimientoString;
             enviar.idTratamiento = id[0].idTratamiento;
             enviar.idEstado = id[0].situacion;
 
