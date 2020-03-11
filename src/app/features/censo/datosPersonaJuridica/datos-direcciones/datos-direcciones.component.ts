@@ -411,7 +411,6 @@ export class DatosDireccionesComponent implements OnInit {
       data.map(result => {
         result.cardDirecciones = this.isValidate;
       });
-      console.log(data);
     });
   }
 }

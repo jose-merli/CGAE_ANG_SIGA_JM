@@ -326,7 +326,6 @@ export class DatosRegistralesComponent implements OnInit {
         data => {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
-          console.log(this.body);
           this.progressSpinner = false;
           // if (this.body.identificacionReg == undefined) {
           //   this.body.fechaConstitucion = null;
@@ -792,7 +791,6 @@ export class DatosRegistralesComponent implements OnInit {
         return result;
       });
 
-      console.log(data);
     });
   }
 

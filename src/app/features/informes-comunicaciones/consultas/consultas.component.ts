@@ -588,7 +588,7 @@ export class ConsultasComponent implements OnInit {
       this.numSelected = 0;
     }
     if (!this.selectMultiple) {
-      console.log(dato);
+       
       this.selectedInstitucion = dato[0].idInstitucion;
       if (
         (this.selectedInstitucion == this.institucionActual &&
@@ -721,7 +721,7 @@ export class ConsultasComponent implements OnInit {
       .post("consultas_obtenerCamposDinamicos", consulta)
       .subscribe(
         data => {
-          console.log(data);
+           
           this.valores = JSON.parse(data.body).camposDinamicos;
           if (
             this.valores != undefined &&

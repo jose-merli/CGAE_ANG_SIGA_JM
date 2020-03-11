@@ -1446,4 +1446,9 @@ p-footer .main-button{
     height: 150px;
     margin-top: 0.33em;
   }
+
+}
+
+.ui-table .ui-table-tbody > tr > td {
+  overflow-wrap: break-word !important;
 }

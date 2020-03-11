@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
     //                 }
     //                 this.sigaService.post("acces_controlUrl", path).toPromise().then(
     //                     data => {
-    //                         console.log(data);
+    //                          
     //                         let permisoItem = JSON.parse(data.body);
     //                         // this.router.navigate(['/login']);
     //                         if (permisoItem.permisoItems[0].data != 0) {

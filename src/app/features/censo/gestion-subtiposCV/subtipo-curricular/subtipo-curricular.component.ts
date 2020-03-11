@@ -672,7 +672,6 @@ export class SubtipoCurricularComponent implements OnInit {
       .post("subtipoCurricular_historySubtipoCurricular", this.history)
       .subscribe(
         data => {
-          console.log(data);
           this.bodySearch = JSON.parse(data["body"]);
           this.datos = this.bodySearch.subtipoCurricularItems;
         },

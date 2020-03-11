@@ -237,7 +237,6 @@ export class TarjetaComunicacionesComponent implements OnInit {
         result => {
           let data = JSON.parse(result.body);
           this.datos = data.plantillas;
-          console.log(this.datos);
           this.datos.map(e => {
             if (e.porDefecto == "Si") {
               e.porDefecto = true;
@@ -505,7 +504,6 @@ export class TarjetaComunicacionesComponent implements OnInit {
   //   }
   // }
   onChangePorDefecto(e, dato) {
-    console.log(e, dato);
     if (dato.fechaBaja == null || dato.fechaBaja == "") {
       if (e == true) {
         this.datos.forEach(element => {

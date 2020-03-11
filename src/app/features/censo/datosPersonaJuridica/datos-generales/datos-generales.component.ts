@@ -433,8 +433,6 @@ export class DatosGenerales implements OnInit {
 
         // this.body.motivo = "registro creado";
 
-        console.log("BODY", this.body);
-        // console.log("NEWBODY", newBody);
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
@@ -884,8 +882,6 @@ export class DatosGenerales implements OnInit {
       data.map(result => {
         result.cardGeneral = this.isValidate;
       });
-      console.log(data);
-      console.log("DAtos generales", this.progressSpinner);
     });
   }
 

@@ -172,7 +172,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         .postSendContent("entidad_uploadFile", this.file)
         .subscribe(
           data => {
-            console.log(data);
             this.file = undefined;
             this.archivoDisponible = false;
             this.nombreImagen = "";
@@ -208,7 +207,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         )
         .subscribe(
           data => {
-            console.log(data);
             this.lenguajeInstitucion = this.selectedIdiomaBusqueda;
             if (!lenguajeeImagen) {
               this.showSuccessUploadedLenguage();

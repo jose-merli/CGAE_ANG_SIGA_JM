@@ -178,7 +178,6 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
 
     navigateTo(dato) {
         let idConsulta = dato[0].idConsulta;
-        console.log(dato);
         if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
             if (
                 dato[0].generica == "No" ||
@@ -251,7 +250,6 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                     }
                 }
                 this.datos = [...this.datos];
-                console.log(this.datos);
             },
             err => {
                 console.log(err);
@@ -280,7 +278,6 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
 							}
 							}
 						});
-                //console.log("consultas combo", this.consultas);
             },
             err => {
                 console.log(err);
@@ -405,7 +402,6 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         let id = e.value;
         this.getFinalidad(id);
         this.getConsultaInstitucion(id);
-        console.log(id);
     }
 
     getConsultaInstitucion(id) {

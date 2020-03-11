@@ -45,7 +45,6 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   }
   @ViewChild("table") table;
   ngOnInit() {
-    console.log(sessionStorage);
 
     this.textFilter = "Elegir";
     this.correcto = false;
@@ -120,7 +119,6 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     });
   }
   sendEdit() {
-    console.log(this.body);
 
     if (this.body.codigoExterno == undefined) {
       this.body.codigoExterno = "";
@@ -154,7 +152,6 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       data => {
         this.showSuccess();
         this.correcto = true;
-        console.log(data);
       },
       err => {
         this.showFail();
@@ -180,7 +177,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
     }
   }
   cambios(event) {
-    console.log(event);
+     
   }
   showSuccess() {
     this.msgs = [];
