@@ -1090,6 +1090,10 @@ export class NuevaIncorporacionComponent implements OnInit {
                           detail: "Solicitud aprobada."
                         }
                       ];
+
+                      this.solicitudEditar.idSolicitud = JSON.parse(result.body).id.split(",")[0];
+                      this.solicitudEditar.idPersona = JSON.parse(result.body).id.split(",")[1];
+
                       if (new Date(this.solicitudEditar.fechaEstado) <= new Date()) {
                         this.veFicha = true;
                         this.searchSolicitante();
