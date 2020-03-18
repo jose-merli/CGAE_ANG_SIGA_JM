@@ -62,7 +62,7 @@ export class LoginDevelopComponent implements OnInit {
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 					this.progressSpinner = false;
 				}
@@ -70,7 +70,7 @@ export class LoginDevelopComponent implements OnInit {
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 					this.progressSpinner = false;
 				}
@@ -166,7 +166,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 				}
 			}

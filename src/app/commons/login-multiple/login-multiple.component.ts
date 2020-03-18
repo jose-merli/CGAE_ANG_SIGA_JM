@@ -57,7 +57,7 @@ export class LoginMultipleComponent implements OnInit {
 		//       let codError = error.status;
 
 		//       sessionStorage.setItem("codError", codError);
-		//       sessionStorage.setItem("descError", "Imposible validar el certificado");
+		//       sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
 		//       this.router.navigate(["/errorAcceso"]);
 		//       this.progressSpinner = false;
 		//     }
@@ -133,7 +133,7 @@ export class LoginMultipleComponent implements OnInit {
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 				}
 			}
@@ -141,27 +141,19 @@ export class LoginMultipleComponent implements OnInit {
 	}
 
 	onChangeInstitucion(newValue) {
-		this.tmpLoginPerfil = ['ADG'];
 		var ir = null;
 		this.form.controls['location'].setValue(newValue.value);
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
 		this.sigaServices.getPerfil('rolesColegioUsuario', newValue.value).subscribe((n) => {
 			this.roles = n.combooItems;
+			if(this.roles.length == 1){
+				this.onChangeRol(this.roles[0]);
+			}
 		});
-		// this.tmpLoginPerfil = "Administrador General";
-		//console.log(newValue);
-		//let combo = new LoginCombo();
-		//combo.setValue(newValue.id);
-		//this.sigaServices.post("perfilespost", combo).subscribe(n => {
-		//if (n) {
-		//this.perfiles = JSON.parse(n['body']);;
-		//}
-		//});
 	}
 	onChangeRol(newValue) {
 		var ir = null;
 		this.form.controls['tmpLoginRol'].setValue(newValue.value);
-		debugger;
 		
 		this.body = new LoginMultipleItem();
 		this.body.idInstitucion = this.form.controls['location'].value;
@@ -172,6 +164,8 @@ export class LoginMultipleComponent implements OnInit {
 		this.sigaServices.postBackend('perfilesColegioRol',this.body).subscribe((n) => {
 			var respuesta = JSON.parse(n["body"]);
 			this.perfiles = respuesta.combooItems;
+			this.form.controls['tmpLoginPerfil'].setValue(this.perfiles[0].value);
+			//this.tmpLoginPerfil = this.perfiles[0].value;
 		});
 		// this.tmpLoginPerfil = "Administrador General";
 		//console.log(newValue);

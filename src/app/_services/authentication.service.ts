@@ -131,7 +131,20 @@ export class AuthenticationService {
   autenticate(): Observable<any> {
     sessionStorage.removeItem("authenticated");
     let newSigaRquest = this.newSigaLogin();
-    let oldSigaRquest = this.oldSigaLogin();
+
+    return forkJoin([newSigaRquest]).map(response => {
+      let newSigaResponse = response[0].headers.get("Authorization");
+      let oldSigaResponse = response[0].status;
+      if (oldSigaResponse == 200) {
+        sessionStorage.setItem("osAutenticated", "true");
+
+        sessionStorage.setItem("authenticated", "true");
+        sessionStorage.setItem("Authorization", newSigaResponse);
+
+        return true;
+      }
+    });
+    /*let oldSigaRquest = this.oldSigaLogin();
 
     return forkJoin([oldSigaRquest, newSigaRquest]).map(response => {
       let newSigaResponse = response[1].headers.get("Authorization");
@@ -144,7 +157,7 @@ export class AuthenticationService {
 
         return true;
       }
-    });
+    });*/
   }
 
   //   autenticateDevelop(formValues): Observable<any> {
@@ -196,9 +209,9 @@ export class AuthenticationService {
                  return true;
              }
          }
-     )
-    /*
-    let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
+     );
+
+    /*let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
     return forkJoin([oldSigaRquest, newSigaRquest]).map(
       (response) => {
         let newSigaResponse = response[1].headers.get("Authorization");
@@ -213,7 +226,7 @@ export class AuthenticationService {
         }
 
       }
-    )*/
+    );*/
 
   }
 
