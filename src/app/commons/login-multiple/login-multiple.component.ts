@@ -19,7 +19,7 @@ export class LoginMultipleComponent implements OnInit {
 	instituciones: any[];
 	perfiles: any[];
 	isEntrar: boolean = true;
-	tmpLoginPerfil: String[];
+	tmpLoginMPerfil: String[];
 	tmpLoginRol: String[];
 	body : LoginMultipleItem = new LoginMultipleItem();
 	bodySearch : LoginMultipleItem = new LoginMultipleItem();
@@ -89,7 +89,7 @@ export class LoginMultipleComponent implements OnInit {
 		this.ocultar = true;
 		this.form = this.fb.group({
 			tmpLoginInstitucion: new FormControl(""),
-			tmpLoginPerfil: new FormControl(""),
+			tmpLoginMPerfil: new FormControl(""),
 			tmpLoginRol: new FormControl(""),
 			user: new FormControl(),
 			location: new FormControl(""),
@@ -108,8 +108,9 @@ export class LoginMultipleComponent implements OnInit {
 			this.form.controls["rol"].setValue(n);
 		});
 
-		this.form.controls["tmpLoginPerfil"].valueChanges.subscribe(n => {
+		this.form.controls["tmpLoginMPerfil"].valueChanges.subscribe(n => {
 			this.form.controls["profile"].setValue(n);
+			this.tmpLoginMPerfil = [n];
 		});
 
 
@@ -164,10 +165,11 @@ export class LoginMultipleComponent implements OnInit {
 		this.sigaServices.postBackend('perfilesColegioRol',this.body).subscribe((n) => {
 			var respuesta = JSON.parse(n["body"]);
 			this.perfiles = respuesta.combooItems;
-			this.form.controls['tmpLoginPerfil'].setValue(this.perfiles[0].value);
-			//this.tmpLoginPerfil = this.perfiles[0].value;
+			//this.tmpLoginMPerfil = [this.perfiles[0].value];
+			this.form.controls['tmpLoginMPerfil'].setValue(this.perfiles[0].value);
+			//this.tmpLoginMPerfil = this.perfiles[0].value;
 		});
-		// this.tmpLoginPerfil = "Administrador General";
+		// this.tmpLoginMPerfil = "Administrador General";
 		//console.log(newValue);
 		//let combo = new LoginCombo();
 		//combo.setValue(newValue.id);
@@ -181,8 +183,8 @@ export class LoginMultipleComponent implements OnInit {
 
 	isHabilitadoEntrar() {
 		if (
-			this.form.controls['tmpLoginPerfil'].value == '' ||
-			this.form.controls['tmpLoginPerfil'].value == undefined ||
+			this.form.controls['tmpLoginMPerfil'].value == '' ||
+			this.form.controls['tmpLoginMPerfil'].value == undefined ||
 			(this.form.controls['tmpLoginInstitucion'].value == '' ||
 				this.form.controls['tmpLoginInstitucion'].value == undefined) ||
 			(this.form.controls['tmpLoginRol'].value == '' ||

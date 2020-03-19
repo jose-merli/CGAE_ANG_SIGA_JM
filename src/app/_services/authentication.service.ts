@@ -134,14 +134,21 @@ export class AuthenticationService {
 
     return forkJoin([newSigaRquest]).map(response => {
       let newSigaResponse = response[0].headers.get("Authorization");
-      let oldSigaResponse = response[0].status;
-      if (oldSigaResponse == 200) {
+      let newSigaResponseStatus = response[0].status;
+      if (newSigaResponseStatus == 200) {
         sessionStorage.setItem("osAutenticated", "true");
 
         sessionStorage.setItem("authenticated", "true");
         sessionStorage.setItem("Authorization", newSigaResponse);
 
-        return true;
+        let oldSigaRquest = this.oldSigaLogin();
+
+        return forkJoin([oldSigaRquest]).map(responseOld => {
+          let oldSigaResponse = responseOld[0].status;
+          if (oldSigaResponse == 200) {
+            return true;
+          }
+        });
       }
     });
     /*let oldSigaRquest = this.oldSigaLogin();
@@ -206,7 +213,16 @@ export class AuthenticationService {
                  sessionStorage.setItem('osAutenticated', 'true');
                  sessionStorage.setItem('authenticated', 'true');
                  sessionStorage.setItem('Authorization', newSigaResponse);
-                 return true;
+                 let oldSigaRquest = this.oldSigaDevelopLogin(formValues);
+
+                 return forkJoin([oldSigaRquest]).map(
+                   (responseOld) => {
+                     let oldSigaResponse = responseOld[0].status;
+                     if (oldSigaResponse == 200) {
+                       return true;
+                      }
+                    }
+                  );
              }
          }
      );
