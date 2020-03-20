@@ -168,6 +168,14 @@ export class OldSigaServices {
 		return environment.oldSigaUrl + this.oldServices[service] + '?token=' + sessionStorage.getItem('Authorization');
 	}
 
+	getBackend(service: string): Observable<any> {
+		return this.http
+		  .get(this.getOldSigaUrl(service))
+		  .map(response => {
+			return response;
+		  });
+	  }
+
 	get(url: string): Observable<any> {
 		let headers = new HttpHeaders({
 			'X-UA-Compatible': 'IE=EmulateIE7'
