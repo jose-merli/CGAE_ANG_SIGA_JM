@@ -133,7 +133,6 @@ export class AuthenticationService {
     let newSigaRquest = this.newSigaLogin();
 
     return forkJoin([newSigaRquest]).map(response => {
-      debugger;
       let newSigaResponse = response[0].headers.get("Authorization");
       let newSigaResponseStatus = response[0].status;
       if (newSigaResponseStatus == 200) {
