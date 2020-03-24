@@ -23,8 +23,6 @@ export class LoginComponent implements OnInit {
   entorno: String;
   ocultar: boolean = false;
   progressSpinner: boolean = false;
-  // value=N selected="">NO, no soy Letrado</option>
-  //                   <option value=S>SÍ, soy Letrado</option>
 
   letrado: any[] = [
     { label: "No, no soy Letrado", value: "N" },
@@ -41,44 +39,37 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
         this.progressSpinner = true;
-    this.sigaServices.getBackend("validaUsuario").subscribe(
-      response => {
-              this.service.autenticate().subscribe(
-                response => {
-                  if (response) {
-                    this.progressSpinner = false;
-                    this.router.navigate(["/home"]);
-                  } else {
-                    this.progressSpinner = false;
-                    this.router.navigate(["/landpage"]);
-                  }
-                },
-                err => {
-                  console.log(err);
-                  this.progressSpinner = false;
-                }
-              );
-      },
-      error => {
-        console.log("ERROR", error);
-        if (error.status == 403) {
-          let codError = error.status;
-
-          sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", "Usuario no válido");
-          this.router.navigate(["/errorAcceso"]);
-          this.progressSpinner = false;
-        }
-         if (error.status == 500) {
-          let codError = error.status;
-
-          sessionStorage.setItem("codError", codError);
-          sessionStorage.setItem("descError", "Usuario no válido");
-          this.router.navigate(["/errorAcceso"]);
-          this.progressSpinner = false;
-        }
-      }
-    );              
+        this.service.autenticate().subscribe(
+          response => {
+            if (response) {
+              this.progressSpinner = false;
+              this.router.navigate(["/home"]);
+            } else {
+              this.progressSpinner = false;
+              this.router.navigate(["/landpage"]);
+            }
+          },
+          err => {
+            console.log(err);
+            if (err.status == 403) {
+              let codError = err.status;
+    
+              sessionStorage.setItem("codError", codError);
+              sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
+              this.router.navigate(["/errorAcceso"]);
+              this.progressSpinner = false;
+            }
+             if (err.status == 500) {
+              let codError = err.status;
+    
+              sessionStorage.setItem("codError", codError);
+              sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
+              this.router.navigate(["/errorAcceso"]);
+              this.progressSpinner = false;
+            }
+            this.progressSpinner = false;
+          }
+        );     
   }
 
   submit() {
@@ -98,6 +89,15 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem("codError", codError);
           sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
           this.router.navigate(["/errorAcceso"]);
+          this.progressSpinner = false;
+        }
+         if (error.status == 500) {
+          let codError = error.status;
+
+          sessionStorage.setItem("codError", codError);
+          sessionStorage.setItem("descError", "Se ha producido un error al procesar los datos del usuario");
+          this.router.navigate(["/errorAcceso"]);
+          this.progressSpinner = false;
         }
       }
     );
@@ -111,15 +111,6 @@ export class LoginComponent implements OnInit {
     this.sigaServices.getPerfil("perfiles", newValue.value).subscribe(n => {
       this.perfiles = n.combooItems;
     });
-    // this.tmpLoginPerfil = "Administrador General";
-    //console.log(newValue);
-    //let combo = new LoginCombo();
-    //combo.setValue(newValue.id);
-    //this.sigaServices.post("perfilespost", combo).subscribe(n => {
-    //if (n) {
-    //this.perfiles = JSON.parse(n['body']);;
-    //}
-    //});
   }
 
   isHabilitadoEntrar() {

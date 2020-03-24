@@ -32,23 +32,12 @@
             </td>
 
         </tr>
-        <tr>
-            <td class="labelText">
-                <label>Perfil</label>
-            </td>
-            <td colspan="2">
-
-                <p-listbox styleClass="loginSiga" formControlName="tmpLoginMPerfil" [options]="perfiles" [(ngModel)]="tmpLoginMPerfil" multiple="multiple"
-                    [style]="{'width':'400px'}" [listStyle]="{'height':'400px'}"></p-listbox>
-            </td>
-        </tr>
 
     </table>
 
 
     <input type="hidden" formControlName="location">
     <input type="hidden" formControlName="user">
-    <input type="hidden" formControlName="profile">
     <input type="hidden" formControlName="rol">
     <input type="hidden" formControlName="posMenu">
 
@@ -56,6 +45,5 @@
 </form>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
-    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
     <div class="loader"></div>
 </div>

@@ -19,7 +19,7 @@ export class LoginMultipleComponent implements OnInit {
 	instituciones: any[];
 	perfiles: any[];
 	isEntrar: boolean = true;
-	tmpLoginMPerfil: String[];
+	//tmpLoginMPerfil: String[];
 	tmpLoginRol: String[];
 	body : LoginMultipleItem = new LoginMultipleItem();
 	bodySearch : LoginMultipleItem = new LoginMultipleItem();
@@ -89,11 +89,11 @@ export class LoginMultipleComponent implements OnInit {
 		this.ocultar = true;
 		this.form = this.fb.group({
 			tmpLoginInstitucion: new FormControl(""),
-			tmpLoginMPerfil: new FormControl(""),
+			//tmpLoginMPerfil: new FormControl(""),
 			tmpLoginRol: new FormControl(""),
 			user: new FormControl(),
 			location: new FormControl(""),
-			profile: new FormControl(""),
+			//profile: new FormControl(""),
 			rol: new FormControl(""),
 			posMenu: new FormControl(0)
 		});
@@ -108,10 +108,10 @@ export class LoginMultipleComponent implements OnInit {
 			this.form.controls["rol"].setValue(n);
 		});
 
-		this.form.controls["tmpLoginMPerfil"].valueChanges.subscribe(n => {
+		/*this.form.controls["tmpLoginMPerfil"].valueChanges.subscribe(n => {
 			this.form.controls["profile"].setValue(n);
 			this.tmpLoginMPerfil = [n];
-		});
+		});*/
 
 
 		// this.form.setValue({'location': this.form.value.tmpLoginInstitucion});
@@ -120,7 +120,7 @@ export class LoginMultipleComponent implements OnInit {
 	submit() {
 		var ir = null;
 		this.progressSpinner = true;
-		this.service.autenticateDevelop(this.form.value).subscribe(
+		this.service.autenticateMultiple(this.form.value).subscribe(
 			(response) => {
 				if (response) {
 					this.router.navigate(['/home']);
@@ -154,38 +154,12 @@ export class LoginMultipleComponent implements OnInit {
 		});
 	}
 	onChangeRol(newValue) {
-		var ir = null;
 		this.form.controls['tmpLoginRol'].setValue(newValue.value);
-		
-		this.body = new LoginMultipleItem();
-		this.body.idInstitucion = this.form.controls['location'].value;
-		this.body.rol = newValue.value;
-    
-
-		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
-		this.sigaServices.postBackend('perfilesColegioRol',this.body).subscribe((n) => {
-			var respuesta = JSON.parse(n["body"]);
-			this.perfiles = respuesta.combooItems;
-			//this.tmpLoginMPerfil = [this.perfiles[0].value];
-			this.form.controls['tmpLoginMPerfil'].setValue(this.perfiles[0].value);
-			//this.tmpLoginMPerfil = this.perfiles[0].value;
-		});
-		// this.tmpLoginMPerfil = "Administrador General";
-		//console.log(newValue);
-		//let combo = new LoginCombo();
-		//combo.setValue(newValue.id);
-		//this.sigaServices.post("perfilespost", combo).subscribe(n => {
-		//if (n) {
-		//this.perfiles = JSON.parse(n['body']);;
-		//}
-		//});
 	}
 
 
 	isHabilitadoEntrar() {
 		if (
-			this.form.controls['tmpLoginMPerfil'].value == '' ||
-			this.form.controls['tmpLoginMPerfil'].value == undefined ||
 			(this.form.controls['tmpLoginInstitucion'].value == '' ||
 				this.form.controls['tmpLoginInstitucion'].value == undefined) ||
 			(this.form.controls['tmpLoginRol'].value == '' ||

@@ -70,6 +70,17 @@ export class AuthenticationService {
       { observe: "response" }
     );
   }
+  newSigaLoginMultiple(formValues): Observable<any> {
+    let params = "?";
+    for (let key in formValues) {
+      params = params + key + "=" + formValues[key] + "&";
+    }
+    return this.http.get(
+      this.sigaServices.getNewSigaUrl() + this.sigaServices.endpoints["login"] +
+      params,
+      { observe: "response" }
+    );
+  }
   newSigaDevelopLogin(formValues): Observable<any> {
     let params = "?";
     for (let key in formValues) {
@@ -145,20 +156,25 @@ export class AuthenticationService {
 
       }
     });
-    /*let oldSigaRquest = this.oldSigaLogin();
+  }
 
-    return forkJoin([oldSigaRquest, newSigaRquest]).map(response => {
-      let newSigaResponse = response[1].headers.get("Authorization");
-      let oldSigaResponse = response[0].status;
-      if (oldSigaResponse == 200) {
+  autenticateMultiple(formValues): Observable<any> {
+    sessionStorage.removeItem("authenticated");
+    let newSigaRquest = this.newSigaLoginMultiple(formValues);
+
+    return forkJoin([newSigaRquest]).map(response => {
+      let newSigaResponse = response[0].headers.get("Authorization");
+      let newSigaResponseStatus = response[0].status;
+      if (newSigaResponseStatus == 200) {
         sessionStorage.setItem("osAutenticated", "true");
 
         sessionStorage.setItem("authenticated", "true");
         sessionStorage.setItem("Authorization", newSigaResponse);
 
         return true;
+
       }
-    });*/
+    });
   }
 
   autenticateClassique(): Observable<any> {
