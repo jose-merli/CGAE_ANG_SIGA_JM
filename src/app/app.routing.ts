@@ -237,10 +237,10 @@ import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/f
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
-	{ path: 'login', component: LoginComponent },
+	{ path: 'loginDefault', component: LoginComponent },
 
   { path: "loginDevelop", component: LoginDevelopComponent },
-  { path: "loginMultiple", component: LoginMultipleComponent },
+  { path: "login", component: LoginMultipleComponent },
 
 	{
 		path: 'politicaCookies',

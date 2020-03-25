@@ -63,7 +63,7 @@ export class LoginMultipleComponent implements OnInit {
 		//     }
 		//   }
 		// );
-		this.progressSpinner = false;
+		
 		this.ocultar = true;
 
 		this.sigaServices.getBackend("institucionesUsuario").subscribe(n => {
@@ -83,7 +83,9 @@ export class LoginMultipleComponent implements OnInit {
 					}
 				}
 			});
-
+			//this.progressSpinner = false;
+			this.form.controls["location"].setValue(this.instituciones[0].value);
+			this.onChangeInstitucion(this.instituciones[0]);
 
 		});
 		this.ocultar = true;
@@ -148,13 +150,17 @@ export class LoginMultipleComponent implements OnInit {
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
 		this.sigaServices.getPerfil('rolesColegioUsuario', newValue.value).subscribe((n) => {
 			this.roles = n.combooItems;
-			if(this.roles.length == 1){
-				this.onChangeRol(this.roles[0]);
-			}
+			this.onChangeRol(this.roles[0]);
 		});
 	}
 	onChangeRol(newValue) {
 		this.form.controls['tmpLoginRol'].setValue(newValue.value);
+		if(this.instituciones.length==1 && this.roles.length==1){
+			this.form.controls["rol"].setValue(newValue.value);
+			this.submit();
+		}else{
+			this.progressSpinner = false;
+		}
 	}
 
 
