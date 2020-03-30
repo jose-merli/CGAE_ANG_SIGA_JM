@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
           response => {
             if (response) {
               this.progressSpinner = false;
+              sessionStorage.setItem("tipoLogin", "loginDefault");
               this.router.navigate(["/home"]);
             } else {
               this.progressSpinner = false;
@@ -77,6 +78,7 @@ export class LoginComponent implements OnInit {
     this.service.autenticate().subscribe(
       response => {
         if (response) {
+          sessionStorage.setItem("tipoLogin", "loginDefault");
           this.router.navigate(["/home"]);
         } else {
           this.router.navigate(["/landpage"]);

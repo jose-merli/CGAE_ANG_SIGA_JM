@@ -31,16 +31,31 @@ export class HomeComponent implements OnInit {
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
-		//this.service.autenticateClassique().subscribe(
-		this.authenticationService.oldSigaLogin().subscribe(
-				response => {
-				console.log("Login en SIGA Classique correcto");
-				},
-				err => {
-				console.log(err);
-				}
-			);
+		this.oldSigaLogin();
 	}
+
+	oldSigaLogin() {
+		
+		this.sigaServices.get('getTokenOldSiga').subscribe(
+			token => {
+				sessionStorage.setItem('AuthOldSIGA', token.valor);
+				this.authenticationService.oldSigaLogin().subscribe(
+					response => {
+						console.log("Login en SIGA Classique correcto");
+						},
+						err => {
+						console.log(err);
+						}
+				);
+			},
+			(err) => {
+				sessionStorage.setItem('isLetrado', 'true');
+				console.log(err);
+			}
+		);
+		
+	}
+
 	getLetrado() {
 		let isLetrado: ComboItem;
 		this.sigaServices.get('getLetrado').subscribe(

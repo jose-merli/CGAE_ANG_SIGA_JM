@@ -166,9 +166,9 @@ export class OldSigaServices {
 
 	getOldSigaUrl(service: string) {
 		if(service=="login"||service=="loginDevelop"){
-			return environment.oldSigaUrl + this.oldServices[service] + '?token=' + sessionStorage.getItem('Authorization');
+			return environment.oldSigaUrl + this.oldServices[service] + '?token=' + sessionStorage.getItem('AuthOldSIGA');
 		}else{
-			return environment.oldSigaUrl + this.oldServices[service] + '&token=' + sessionStorage.getItem('Authorization');
+			return environment.oldSigaUrl + this.oldServices[service] + '&token=' + sessionStorage.getItem('AuthOldSIGA');
 		}
 	}
 

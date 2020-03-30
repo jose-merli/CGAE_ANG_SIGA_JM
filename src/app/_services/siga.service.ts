@@ -33,6 +33,8 @@ export class SigaServices {
     rolesColegioUsuario: "rolesColegioUsuario",
     perfilesColegioRol: "perfilesColegioRol",
     validaUsuario: "validaUsuario",
+    getTokenOldSiga: "/getTokenOldSiga",
+    eliminaCookie: "eliminaCookie",
     menu: "menu",
     entorno: "getEntorno",
     environmentInfo: "getEnvParams",

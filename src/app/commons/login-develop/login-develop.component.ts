@@ -155,6 +155,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 		this.service.autenticateDevelop(this.form.value).subscribe(
 			(response) => {
 				if (response) {
+					sessionStorage.setItem("tipoLogin", "loginDevelop");
 					this.router.navigate(['/home']);
 				} else {
 					this.router.navigate(['/landpage']);

@@ -177,17 +177,6 @@ export class AuthenticationService {
     });
   }
 
-  autenticateClassique(): Observable<any> {
-    
-    return this.oldSigaServices.getBackend("login").map(responseOld=>{
-      let oldSigaResponse = responseOld[0].status;
-      if (oldSigaResponse == 200) {
-        return true;
-      }
-    })
-
-  }
-
   autenticateDevelop(formValues): Observable<any> {
     let newSigaRquest = this.newSigaDevelopLogin(formValues);
 

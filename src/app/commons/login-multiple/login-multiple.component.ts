@@ -85,6 +85,7 @@ export class LoginMultipleComponent implements OnInit {
 			});
 			//this.progressSpinner = false;
 			this.form.controls["location"].setValue(this.instituciones[0].value);
+			this.form.controls['tmpLoginInstitucion'].setValue(this.instituciones[0].value);
 			this.onChangeInstitucion(this.instituciones[0]);
 
 		});
@@ -99,7 +100,7 @@ export class LoginMultipleComponent implements OnInit {
 			rol: new FormControl(""),
 			posMenu: new FormControl(0)
 		});
-		//this.onChange(this.form.controls['tmpLoginInstitucion'].value);
+		
 		this.form.controls["tmpLoginInstitucion"].valueChanges.subscribe(
 			newValue => {
 				this.form.controls["location"].setValue(newValue);
@@ -125,6 +126,7 @@ export class LoginMultipleComponent implements OnInit {
 		this.service.autenticateMultiple(this.form.value).subscribe(
 			(response) => {
 				if (response) {
+					sessionStorage.setItem("tipoLogin", "login");
 					this.router.navigate(['/home']);
 				} else {
 					this.router.navigate(['/landpage']);
