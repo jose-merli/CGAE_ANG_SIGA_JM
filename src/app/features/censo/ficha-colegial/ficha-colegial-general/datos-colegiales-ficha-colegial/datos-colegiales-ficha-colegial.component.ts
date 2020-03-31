@@ -1180,7 +1180,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                         this.progressSpinner = false;
                         if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
                           let msg = JSON.parse(error.error).error.message;
-                          this.showFailDetalle(this.translateService.instant(msg));
+                          this.showFailDetalle(msg);
                         } else {
                           this.showFail();
                         }
