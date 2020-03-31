@@ -80,21 +80,23 @@ export class HeaderComponent implements OnInit {
     if (sessionStorage.getItem('loginDevelop') === 'true') {
       sessionStorage.setItem('loginDevelop', '0');
     }
-    this.sigaServices.get("eliminaCookie").subscribe(response => {
-      let responseStatus = response[0].status;
-      if (responseStatus == 200) {
-        console.log("Cookies eliminadas para cerrar la sesión");
-      }
-    });
-
+    
     let tipoLogin = sessionStorage.getItem('tipoLogin');
 
     if(tipoLogin==="loginDevelop" || tipoLogin==="login"){
+      this.sigaServices.get("eliminaCookie").subscribe(response => {
+        let responseStatus = response[0].status;
+        if (responseStatus == 200) {
+          console.log("Cookies eliminadas para cerrar la sesión");
+        }
+      });
       this.httpExit = this.menuUser[0].rutaLogoutCAS;
-    }else{
-      this.httpExit = this.menuUser[0].rutaLogout;
-    }
       window.location.href = this.httpExit;
+    }else{
+      //this.httpExit = this.menuUser[0].rutaLogout;
+      this.router.navigate(["/logout"]);
+    }
+      //window.location.href = this.httpExit;
   }
 
   navigateTo() {

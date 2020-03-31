@@ -6,6 +6,7 @@ import { LoginComponent } from "./commons/login/login.component";
 import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
 import { LoginMultipleComponent } from "./commons/login-multiple/login-multiple.component";
 import { HomeComponent } from "./features/home/home.component";
+import { LogoutComponent } from "./commons/logout/logout.component";
 
 // Censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
@@ -241,6 +242,7 @@ const appRoutes: Routes = [
 
   { path: "loginDevelop", component: LoginDevelopComponent },
   { path: "login", component: LoginMultipleComponent },
+  { path: "logout", component: LogoutComponent },
 
 	{
 		path: 'politicaCookies',
