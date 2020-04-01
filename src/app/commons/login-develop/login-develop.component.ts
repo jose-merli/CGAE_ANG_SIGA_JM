@@ -51,6 +51,7 @@ export class LoginDevelopComponent implements OnInit {
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
+		//Comentar esto para trabajar en local
 		this.sigaServices.getBackend('validaInstitucion').subscribe(
 			(response) => {
 				this.progressSpinner = false;
@@ -76,6 +77,7 @@ export class LoginDevelopComponent implements OnInit {
 				}
 			}
 		);
+		//Comentar esto para trabajar en local
 		this.sigaServices.getBackend('validaUsuario').subscribe(
 			(response) => {
 				this.progressSpinner = false;
