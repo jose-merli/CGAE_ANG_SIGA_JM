@@ -14,13 +14,14 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { AuthenticationService } from '../../_services/authentication.service';
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices, handler: HttpBackend) {
+	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend) {
 		this.http = new HttpClient(handler);
 		this.oldSigaServices = oldSigaServices;
 	}
@@ -29,8 +30,32 @@ export class HomeComponent implements OnInit {
 	ngOnInit() {
 		this.getLetrado();
 		this.getColegiadoLogeado();
-		this.getMantenerSesion();
+		//this.getMantenerSesion();
+		this.oldSigaLogin();
 	}
+
+	oldSigaLogin() {
+		
+		this.sigaServices.get('getTokenOldSiga').subscribe(
+			token => {
+				sessionStorage.setItem('AuthOldSIGA', token.valor);
+				this.authenticationService.oldSigaLogin().subscribe(
+					response => {
+						console.log("Login en SIGA Classique correcto");
+						},
+						err => {
+						console.log(err);
+						}
+				);
+			},
+			(err) => {
+				sessionStorage.setItem('isLetrado', 'true');
+				console.log(err);
+			}
+		);
+		
+	}
+
 	getLetrado() {
 		let isLetrado: ComboItem;
 		this.sigaServices.get('getLetrado').subscribe(

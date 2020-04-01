@@ -1,10 +1,12 @@
-import { Routes, RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { AppComponent } from './app.component';
-import { AuthGuard } from './_guards/auth.guards';
-import { LoginComponent } from './commons/login/login.component';
-import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
-import { HomeComponent } from './features/home/home.component';
+import { Routes, RouterModule } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
+import { AppComponent } from "./app.component";
+import { AuthGuard } from "./_guards/auth.guards";
+import { LoginComponent } from "./commons/login/login.component";
+import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
+import { LoginMultipleComponent } from "./commons/login-multiple/login-multiple.component";
+import { HomeComponent } from "./features/home/home.component";
+import { LogoutComponent } from "./commons/logout/logout.component";
 
 // Censo
 import { SearchColegiadosComponent } from './features/censo/search-colegiados/search-colegiados.component';
@@ -236,9 +238,11 @@ import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/f
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [ AuthGuard ] },
-	{ path: 'login', component: LoginComponent },
+	{ path: 'loginDefault', component: LoginComponent },
 
-	{ path: 'loginDevelop', component: LoginDevelopComponent },
+  { path: "loginDevelop", component: LoginDevelopComponent },
+  { path: "login", component: LoginMultipleComponent },
+  { path: "logout", component: LogoutComponent },
 
 	{
 		path: 'politicaCookies',

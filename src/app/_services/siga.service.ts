@@ -29,7 +29,12 @@ export class SigaServices {
     login: "login",
     loginDevelop: "loginDevelop",
     validaInstitucion: "validaInstitucion",
+    institucionesUsuario: "institucionesUsuario",
+    rolesColegioUsuario: "rolesColegioUsuario",
+    perfilesColegioRol: "perfilesColegioRol",
     validaUsuario: "validaUsuario",
+    getTokenOldSiga: "/getTokenOldSiga",
+    eliminaCookie: "eliminaCookie",
     menu: "menu",
     entorno: "getEntorno",
     environmentInfo: "getEnvParams",
@@ -184,7 +189,7 @@ export class SigaServices {
     busquedaColegiados_tipoDireccion: "busquedaColegiados/tipoDireccion",
     busquedaColegiados_searchColegiado: "/busquedaColegiado/searchColegiado",
     busquedaColegiados_searchColegiadoFicha: "/busquedaColegiado/searchColegiadoFicha",
-    busquedaColegiados_generarExcel:"busquedaColegiados/generarExcel",
+    busquedaColegiados_generarExcel: "busquedaColegiados/generarExcel",
     busquedaColegiado_etiquetas: "/busquedaColegiado/etiquetas",
     busquedaNoColegiados_estadoCivil: "/busquedaNoColegiados/estadoCivil",
     busquedaNoColegiados_provincias: "/busquedaNoColegiados/provincias",
@@ -589,7 +594,7 @@ export class SigaServices {
     fichaDatosColegiales_datosColegialesDeleteEstado:
       "/fichaDatosColegiales/datosColegialesDeleteEstado",
     fichaDatosColegiales_searchTurnosGuardias:
-    "/fichaDatosColegiales/searchTurnosGuardias",
+      "/fichaDatosColegiales/searchTurnosGuardias",
     fichaColegialRegTel_permisos: "fichaColegialRegTel/permisos",
     fichaColegialRegTel_searchListDoc: "fichaColegialRegTel/searchListDoc",
     fichaColegialRegTel_searchListDir: "fichaColegialRegTel/searchListDir",
@@ -629,7 +634,7 @@ export class SigaServices {
     enviosMasivos_guardarEtiquetas: "enviosMasivos/detalle/guardarEtiquetas",
     enviosMasivos_subirDocumento: "enviosMasivos/detalle/subirDocumento",
     enviosMasivos_detallePlantilla: "enviosMasivos/detalle/detallePlantilla",
-    enviosMasivos_obtenerDestinatarios:"enviosMasivos/obtenerDestinatarios",
+    enviosMasivos_obtenerDestinatarios: "enviosMasivos/obtenerDestinatarios",
     consultas_claseComunicaciones: "consultas/claseComunicacion",
     consultas_claseComunicacionesByModulo:
       "consultas/claseComunicacionByModulo",
@@ -703,7 +708,7 @@ export class SigaServices {
     plantillasDoc_consultas_historico: "plantillasDoc/consultas/historico",
     plantillasDoc_plantillas: "plantillasDoc/plantillas",
     plantillasDoc_guardar: "plantillasDoc/guardar",
-    plantillasDoc_guardar_datosSalida:"plantillasDoc/guardar/datosSalida",
+    plantillasDoc_guardar_datosSalida: "plantillasDoc/guardar/datosSalida",
     plantillasDoc_borrar: "plantillasDoc/borrar",
     plantillasDoc_insertarPlantilla: "plantillasDoc/insertarPlantilla",
     plantillasDoc_subirPlantilla: "plantillasDoc/subirPlantilla",
@@ -801,8 +806,25 @@ export class SigaServices {
         return response;
       });
   }
+  postBackend(service: string, body: any): Observable<any> {
+   
+    let headers = new HttpHeaders({
+      "Content-Type": "application/json"
+    });
+    return this.httpbackend
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: "response",
+        responseType: "text"
+      })
+      .map(response => {
+        return response;
+      })
+      ;
+  }
 
   post(service: string, body: any): Observable<any> {
+   
     let headers = new HttpHeaders({
       "Content-Type": "application/json"
     });

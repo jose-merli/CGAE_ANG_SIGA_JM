@@ -44,7 +44,7 @@ export class JwtInterceptor implements HttpInterceptor {
         //             let codError = error.status;
 
         //             sessionStorage.setItem("codError", codError);
-        //             sessionStorage.setItem("descError", "Imposible validar el certificado");
+        //             sessionStorage.setItem("descError", "Usuario no válido o sin permisos");
         //             this.router.navigate(["/errorAcceso"]);
         //         }
         //     }

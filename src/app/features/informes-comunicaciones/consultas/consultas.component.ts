@@ -789,7 +789,6 @@ export class ConsultasComponent implements OnInit {
       .postDownloadFiles("consultas_ejecutarConsulta", consultaEjecutar)
       .subscribe(
         data => {
-          // debugger;
           this.showValores = false;
           if (data == null) {
             this.showInfo(

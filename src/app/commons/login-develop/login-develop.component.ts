@@ -51,6 +51,7 @@ export class LoginDevelopComponent implements OnInit {
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
+		//Comentar esto para trabajar en local
 		this.sigaServices.getBackend('validaInstitucion').subscribe(
 			(response) => {
 				this.progressSpinner = false;
@@ -62,7 +63,7 @@ export class LoginDevelopComponent implements OnInit {
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 					this.progressSpinner = false;
 				}
@@ -70,12 +71,13 @@ export class LoginDevelopComponent implements OnInit {
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 					this.progressSpinner = false;
 				}
 			}
 		);
+		//Comentar esto para trabajar en local
 		this.sigaServices.getBackend('validaUsuario').subscribe(
 			(response) => {
 				this.progressSpinner = false;
@@ -155,6 +157,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 		this.service.autenticateDevelop(this.form.value).subscribe(
 			(response) => {
 				if (response) {
+					sessionStorage.setItem("tipoLogin", "loginDevelop");
 					this.router.navigate(['/home']);
 				} else {
 					this.router.navigate(['/landpage']);
@@ -166,7 +169,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 					let codError = error.status;
 
 					sessionStorage.setItem('codError', codError);
-					sessionStorage.setItem('descError', 'Imposible validar el certificado');
+					sessionStorage.setItem('descError', 'Usuario no válido o sin permisos');
 					this.router.navigate(['/errorAcceso']);
 				}
 			}
