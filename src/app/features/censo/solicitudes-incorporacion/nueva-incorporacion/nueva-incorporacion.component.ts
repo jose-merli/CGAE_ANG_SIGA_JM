@@ -183,7 +183,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.fechaSolicitud = new Date();
         this.sexoSelected = this.solicitudEditar.sexo;
         this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
-        this.tratamientoSelected = this.solicitudEditar.idTratamiento;
+      //  this.tratamientoSelected = this.solicitudEditar.idTratamiento;
 
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
@@ -528,12 +528,16 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.tipoColegiacionSelected = this.solicitudEditar.idTipoColegiacion;
     this.modalidadDocumentacionSelected = this.solicitudEditar.idModalidadDocumentacion;
     this.tipoIdentificacionSelected = this.solicitudEditar.idTipoIdentificacion;
-    this.tratamientoSelected = this.solicitudEditar.idTratamiento;
+  
     this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
     this.paisSelected = this.solicitudEditar.idPais;
     this.provinciaSelected = this.solicitudEditar.idProvincia;
     this.poblacionSelected = this.solicitudEditar.idPoblacion;
     this.sexoSelected = this.solicitudEditar.sexo;
+
+    if (sessionStorage.getItem("nuevaIncorporacion") ==  null || sessionStorage.getItem("nuevaIncorporacion") == undefined) {
+        this.tratamientoSelected = this.solicitudEditar.idTratamiento;
+    }
 
 
   }
