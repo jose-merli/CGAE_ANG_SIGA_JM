@@ -35,7 +35,7 @@
             <span class="registros-ficha-prueba">{{ generalBody.soloNombre }}</span>
           </label>
           <label *ngIf="mostrarDatos">{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-            <span >{{ generalBody.soloNombre }}</span >
+            <span>{{ generalBody.soloNombre }}</span>
           </label>
           <label class="registros-ficha-prueba" *ngIf="!mostrarDatos">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
             <span class="registros-ficha-prueba" *ngIf="!fechaNacCambiada">{{ generalBody.fechaNacimiento }}</span>
@@ -207,12 +207,11 @@
             <p-autoComplete #auto [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [suggestions]="comboEtiquetas" (completeMethod)="filterLabelsMultiple($event)"
               [minLength]="1" field="label" [multiple]="true" (ngModelChange)="activacionGuardarGenerales()" (onKeyUp)="onKeyUp($event)"
               (onBlur)="onBlur($event)" (onSelect)="onSelect($event)" (onUnselect)="onUnselect($event)" [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction"
-              [style]="{ width: '100%' }" [inputStyle]="{ width: '100%' }" (click)="disabledAutocomplete()">
-              <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem">
+              [style]="{ width: '100%' }" [inputStyle]="configComplete" (click)="disabledAutocomplete()">
+              <ng-template let-etiquetasPersonaJuridicaSelecionados pTemplate="selectedItem" style="padding:10px">
                 <div *ngIf="
                       etiquetasPersonaJuridicaSelecionados.backgroundColor != ''
-                    " class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li"
-                  [ngStyle]="{
+                    " class="configEtiq" [ngStyle]="{
                       background:
                         etiquetasPersonaJuridicaSelecionados.backgroundColor
                     }">
