@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter,ViewEncapsulation } from "@angular/core";
 import { DatePipe } from "@angular/common";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
@@ -26,7 +26,8 @@ import { ComboEtiquetasItem } from "../../../../models/ComboEtiquetasItem";
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
-  styleUrls: ["./datos-generales.component.scss"]
+  styleUrls: ["./datos-generales.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGenerales implements OnInit {
   uploadedFiles: any[] = [];
