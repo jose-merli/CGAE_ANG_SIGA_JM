@@ -848,11 +848,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     let url = "";
     this.newEvent.idCurso = this.curso.idCurso;
     this.progressSpinner = true;
-
+    let dateStart = new Date(this.newEvent.start);
     if (this.newEvent.idEstadoEvento == null) {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
     }
 
+    if(dateStart > new Date() && this.newEvent.idEstadoEvento == '2'){
+        this.showMessage(
+            "error",
+            this.translateService.instant("general.message.incorrect"),
+            this.translateService.instant("message.error.evento.cumplido")
+          );
+           this.progressSpinner = false;
+    }else{
     if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
@@ -861,7 +869,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
         if (this.newEvent.idEventoOriginal != null && this.newEvent.idEventoOriginal != undefined) {
-          let dateStart = new Date(this.newEvent.start);
+          
           let utcStart = new Date(dateStart.getUTCFullYear(), dateStart.getUTCMonth(), dateStart.getUTCDate(), dateStart.getUTCHours(), dateStart.getUTCMinutes(), dateStart.getUTCSeconds());
           let dateEnd = new Date(this.newEvent.end);
           let utcEnd = new Date(dateEnd.getUTCFullYear(), dateEnd.getUTCMonth(), dateEnd.getUTCDate(), dateEnd.getUTCHours(), dateEnd.getUTCMinutes(), dateEnd.getUTCSeconds());
@@ -884,6 +892,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else {
       url = "fichaEventos_saveEventCalendar";
       this.callSaveEvent(url);
+    }
     }
   }
 
