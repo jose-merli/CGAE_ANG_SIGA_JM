@@ -233,9 +233,23 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       // this.onInitColegiales();
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
-        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+         this.generalBody = new FichaColegialGeneralesItem();
         this.isLetrado = false;
+         let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.generalBody = enviar;
+        this.generalBody.nif = enviar.numeroIdentificacion;
+        this.generalBody.apellidos1 = enviar.apellido1;
+        this.generalBody.soloNombre = enviar.nombre;
+        this.generalBody.idInstitucion = enviar.idInstitucion;
+        this.generalBody.apellidos2 = enviar.apellido2;
+        this.generalBody.idTratamiento = undefined;
+        this.situacionPersona = enviar.idEstado;
+        if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
+          this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
+        }
+        this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
+        this.compruebaDNI();
       } else if (sessionStorage.getItem("nuevoNoColegiado")) {
         let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
         this.generalBody = new FichaColegialGeneralesItem();
