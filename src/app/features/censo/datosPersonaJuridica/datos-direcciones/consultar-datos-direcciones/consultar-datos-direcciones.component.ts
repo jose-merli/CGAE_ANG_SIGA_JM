@@ -1038,47 +1038,51 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   comprobarTablaDatosContactos() {
-    if (
-      this.datosContacto[0].valor != null ||
-      this.datosContacto[0].valor != undefined
-    ) {
-      if (this.datosContacto[0].valor != this.body.telefono) {
-        this.body.telefono = this.datosContacto[0].valor;
+      if (
+        this.datosContacto != null ||
+        this.datosContacto != undefined
+      ) {
+      if (
+        this.datosContacto[0].valor != null ||
+        this.datosContacto[0].valor != undefined
+      ) {
+        if (this.datosContacto[0].valor != this.body.telefono) {
+          this.body.telefono = this.datosContacto[0].valor;
+        }
+      }
+      if (
+        this.datosContacto[1].valor != null ||
+        this.datosContacto[1].valor != undefined
+      ) {
+        if (this.datosContacto[1].valor != this.body.fax) {
+          this.body.fax = this.datosContacto[1].valor;
+        }
+      }
+      if (
+        this.datosContacto[2].valor != null ||
+        this.datosContacto[2].valor != undefined
+      ) {
+        if (this.datosContacto[2].valor != this.body.movil) {
+          this.body.movil = this.datosContacto[2].valor;
+        }
+      }
+      if (
+        this.datosContacto[3].valor != null ||
+        this.datosContacto[3].valor != undefined
+      ) {
+        if (this.datosContacto[3].valor != this.body.correoElectronico) {
+          this.body.correoElectronico = this.datosContacto[3].valor;
+        }
+      }
+      if (
+        this.datosContacto[4].valor != null ||
+        this.datosContacto[4].valor != undefined
+      ) {
+        if (this.datosContacto[4].valor != this.body.paginaWeb) {
+          this.body.paginaWeb = this.datosContacto[4].valor;
+        }
       }
     }
-    if (
-      this.datosContacto[1].valor != null ||
-      this.datosContacto[1].valor != undefined
-    ) {
-      if (this.datosContacto[1].valor != this.body.fax) {
-        this.body.fax = this.datosContacto[1].valor;
-      }
-    }
-    if (
-      this.datosContacto[2].valor != null ||
-      this.datosContacto[2].valor != undefined
-    ) {
-      if (this.datosContacto[2].valor != this.body.movil) {
-        this.body.movil = this.datosContacto[2].valor;
-      }
-    }
-    if (
-      this.datosContacto[3].valor != null ||
-      this.datosContacto[3].valor != undefined
-    ) {
-      if (this.datosContacto[3].valor != this.body.correoElectronico) {
-        this.body.correoElectronico = this.datosContacto[3].valor;
-      }
-    }
-    if (
-      this.datosContacto[4].valor != null ||
-      this.datosContacto[4].valor != undefined
-    ) {
-      if (this.datosContacto[4].valor != this.body.paginaWeb) {
-        this.body.paginaWeb = this.datosContacto[4].valor;
-      }
-    }
-
 
   }
 

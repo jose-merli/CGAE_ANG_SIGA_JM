@@ -385,6 +385,18 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 												enviar.fechaNacimiento = this.datosNoColegiados[0].fechaNacimientoString;
 												enviar.idTratamiento = this.datosNoColegiados[0].idTratamiento;
 												enviar.idEstado = this.datosNoColegiados[0].situacion;
+												enviar.domicilio = this.datosNoColegiados[0].direccion;
+												enviar.idProvincia = this.datosNoColegiados[0].idProvincia;
+												enviar.idPoblacion = this.datosNoColegiados[0].idPoblacion;
+												enviar.idPais = this.datosNoColegiados[0].idPais;
+												enviar.movil = this.datosNoColegiados[0].movil;
+												enviar.telefono1 = this.datosNoColegiados[0].telefono1;
+												enviar.telefono2 = this.datosNoColegiados[0].telefono2;
+												enviar.fax1 = this.datosNoColegiados[0].fax1;
+												enviar.fax2 = this.datosNoColegiados[0].fax2;
+												enviar.correoElectronico = this.datosNoColegiados[0].correoelectronico;
+												enviar.codigoPostal = this.datosNoColegiados[0].codigoPostal;
+												enviar.nombrePoblacion = this.datosNoColegiados[0].nombrePoblacion;
 												sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
 												sessionStorage.setItem('esNuevoNoColegiado', 'true');
 												sessionStorage.setItem('busquedaCensoGeneral', 'true');

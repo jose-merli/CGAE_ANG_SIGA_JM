@@ -21,5 +21,17 @@ export class BusquedaFisicaItem {
 	colegios_seleccionados: any[] = [];
 	addDestinatarioIndv: boolean;
 	sexo: String;
+	nombrePoblacion: String; 
+	direccion: String;
+	idPoblacion: String;
+	idPais: String;
+
+	codigoPostal: String;
+	telefono1: String;
+	telefono2: String;
+	fax1: String;
+	fax2: String;
+	movil: String;
+	correoelectronico: String;
 	constructor() {}
 }

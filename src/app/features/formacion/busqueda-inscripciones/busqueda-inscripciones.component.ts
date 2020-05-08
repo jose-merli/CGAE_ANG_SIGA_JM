@@ -158,7 +158,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
-          this.isBuscar();
+          this.parsearFechas(filtros);
+        
         }
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
@@ -190,7 +191,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
-          this.isBuscar();
+          this.parsearFechas(filtros);
 
         }
 
@@ -209,7 +210,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
-          this.isBuscar();
+           this.parsearFechas(filtros);
         }
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
@@ -237,6 +238,31 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   }
 
+
+parsearFechas(filtros){
+    if (filtros.fechaInscripcionDesde != null) {
+      this.body.fechaInscripcionDesde = new Date(
+        filtros.fechaInscripcionDesde)
+      
+    }
+    if (filtros.fechaInscripcionHasta != null) {
+      this.body.fechaInscripcionHasta = new Date(
+        filtros.fechaInscripcionHasta)
+      
+    }
+    if (filtros.fechaImparticionDesde != null) {
+      this.body.fechaImparticionDesde = new Date(
+        filtros.fechaImparticionDesde)
+      
+    }
+    if (filtros.fechaImparticionHasta != null) {
+      this.body.fechaImparticionHasta = new Date(
+       filtros.fechaImparticionHasta)
+      
+    }
+
+  this.isBuscar();
+   }
 
   clearFilter(dropdown: Dropdown) {
     dropdown.focus();

@@ -796,6 +796,19 @@ export class BusquedaGeneralComponent implements OnDestroy {
             enviar.idTratamiento = id[0].idTratamiento;
             enviar.idEstado = id[0].situacion;
 
+            enviar.domicilio = id[0].direccion;
+            enviar.idProvincia = id[0].idProvincia;
+            enviar.idPoblacion = id[0].idPoblacion;
+            enviar.idPais = id[0].idPais;
+            enviar.movil = id[0].movil;
+            enviar.telefono1 = id[0].telefono1;
+            enviar.telefono2 = id[0].telefono2;
+            enviar.fax1 = id[0].fax1;
+            enviar.fax2 = id[0].fax2;
+            enviar.correoElectronico = id[0].correoelectronico;
+            enviar.codigoPostal = id[0].codigoPostal;
+            enviar.nombrePoblacion = id[0].nombrePoblacion;
+
             if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
               // sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
               // sessionStorage.setItem('esColegiado', 'false');

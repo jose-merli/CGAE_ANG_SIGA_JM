@@ -183,6 +183,9 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.fechaSolicitud = new Date();
         this.sexoSelected = this.solicitudEditar.sexo;
         this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
+      
+        this.provinciaSelected = this.solicitudEditar.idProvincia;
+        this.poblacionSelected = this.solicitudEditar.idPoblacion;
       //  this.tratamientoSelected = this.solicitudEditar.idTratamiento;
 
         this.checkSolicitudInicio = JSON.parse(
@@ -335,15 +338,21 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.paises = result.combooItems;
         this.arregloTildesCombo(this.paises);
 
-        if (this.solicitudEditar.pais == undefined) {
+        if (this.solicitudEditar.idPais == undefined) {
           this.paisSelected = "191";
           let paisSpain = this.paises.find(x => x.value == "191");
           this.solicitudEditar.pais = paisSpain.label;
           this.bodyInicial.pais = paisSpain.label;
           this.bodyInicial.idPais = this.paisSelected;
           this.solicitudEditar.idPais = this.paisSelected;
-        }
-
+        }else{
+          this.paisSelected = this.solicitudEditar.idPais;
+          let paisSpain = this.paises.find(x => x.value == this.solicitudEditar.idPais);
+          this.solicitudEditar.pais = paisSpain.label;
+          this.bodyInicial.pais = paisSpain.label;
+          this.bodyInicial.idPais = this.paisSelected;
+    
+        } 
       },
       error => {
         console.log(error);
