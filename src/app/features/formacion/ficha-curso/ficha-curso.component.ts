@@ -425,17 +425,20 @@ export class FichaCursoComponent implements OnInit {
       } else if (this.curso.autovalidacionInscripcion == "0") {
         this.curso.autovalidacion = false;
       }
-
+      debugger;
       if (
         (sessionStorage.getItem("formador") != null ||
           sessionStorage.getItem("formador") != undefined) &&
         sessionStorage.getItem("toBackNewFormador") == "true"
       ) {
-        sessionStorage.removeItem("toBackNewFormador");
+        this.abreCierraFicha('formadores');
         this.pressNewFormador = true;
         this.modoEdicionFormador = false;
         this.editFormador = true;
         this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+        sessionStorage.removeItem("toBackNewFormador");
+        let x = document.getElementById("fichaFormadores");
+        x.scrollIntoView({ behavior: "auto" });
       } else {
         this.getTrainers();
         sessionStorage.removeItem("toBackNewFormador");
