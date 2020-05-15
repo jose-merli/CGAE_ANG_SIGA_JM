@@ -1158,16 +1158,35 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                   );
       },
               error => {
-                console.log(error);
+
+
+               console.log(error);
+
+                if (error != null && error != undefined) {
+                    if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
+                      let msg = JSON.parse(error.error).error.message;
+                      this.showFailDetalle(msg);
+                    } else {
+                      this.showFail();
+                    }
+                } else {
+                  this.showFail();
+                }
+                
+
                 this.progressSpinner = false;
                 this.isCrearColegial = false;
                 this.isRestablecer = false;
                 this.inscritoChange = false;
                 this.activarGuardarColegiales = false;
-                this.filaEditable = false;
                 this.numSelectedColegiales = 0;
+                this.filaEditable = false;
+                this.restablecerColegiales();
                 this.cerrarAuditoria();
-                this.showFail();
+
+
+
+
               }
             );
 

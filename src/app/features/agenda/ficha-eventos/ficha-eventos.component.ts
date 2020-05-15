@@ -702,13 +702,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        if (
-          this.newEvent.idEstadoEvento == undefined ||
-          this.newEvent.idEstadoEvento == null ||
-          this.newEvent.idEstadoEvento == ""
-        ) {
-          this.newEvent.idEstadoEvento = this.comboEstados[0].value;
-        }
+        
       },
       err => {
         console.log(err);
@@ -846,7 +840,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   saveEvent() {
     let url = "";
+    if (this.curso != null) {
     this.newEvent.idCurso = this.curso.idCurso;
+    }
     this.progressSpinner = true;
     let dateStart = new Date(this.newEvent.start);
     if (this.newEvent.idEstadoEvento == null) {

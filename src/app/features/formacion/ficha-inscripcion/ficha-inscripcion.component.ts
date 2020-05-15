@@ -1366,7 +1366,7 @@ downloadFile(data: Response) {
        let filename;
 
     this.sigaServices
-      .post("inscripcion_fileDownloadInformation", this.checkBody)
+      .post("inscripcion_fileDownloadInformation", this.inscripcion)
       .subscribe(
         data => {
           let a = JSON.parse(data["body"]);
@@ -1377,7 +1377,7 @@ downloadFile(data: Response) {
         },
         () => {
           this.sigaServices
-            .postDownloadFiles("inscripcion_downloadFile", this.checkBody)
+            .postDownloadFiles("inscripcion_downloadFile", this.inscripcion)
             .subscribe(data => {
               const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
               if (blob.size == 0) {
