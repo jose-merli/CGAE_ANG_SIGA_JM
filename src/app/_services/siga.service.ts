@@ -346,6 +346,7 @@ export class SigaServices {
 		fichaColegialSociedades_searchSocieties: 'fichaColegialSociedades/searchSocieties',
 		fichaColegialOtrasColegiaciones_searchOtherCollegues: 'fichaColegialOtrasColegiaciones/searchOtherCollegues',
 		fichaDatosGenerales_partidoJudicialSearch: '/fichaDatosGenerales/partidoJudicialSearch',
+		fichaDatosGenerales_tipoidentificacion: '/fichaDatosGenerales/getTipoIdentificacion',
 		fichaDatosColegiales_datosColegialesSearch: '/fichaDatosColegiales/datosColegialesSearch',
 
 		fichaDatosColegiales_datosColegialesSearchActual: '/fichaDatosColegiales/datosColegialesSearchActual',

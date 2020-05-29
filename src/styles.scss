@@ -1440,3 +1440,8 @@ p-footer .main-button {
 tr:hover {
 	background-color: lightsteelblue !important;
 }
+.errorPosition {
+	.ui-growl.ui-widget {
+		z-index: 59684 !important;
+	}
+}

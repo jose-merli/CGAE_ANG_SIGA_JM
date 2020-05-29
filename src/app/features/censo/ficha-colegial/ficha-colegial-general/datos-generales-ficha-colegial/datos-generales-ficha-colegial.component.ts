@@ -17,6 +17,7 @@ import { FichaColegialColegialesObject } from '../../../../../models/FichaColegi
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { Calendar, AutoComplete } from 'primeng/primeng';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
+import { StringObject } from "../../../../../models/StringObject";
 
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
@@ -59,6 +60,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   checkDatosColegiales: any[] = [];
   datosColegialesInit: any[] = [];
 
+  nifCif: StringObject = new StringObject();
   activarGuardarGenerales: boolean = false;
   fechaNacCambiada: boolean = false;
   edadCalculada: any;
@@ -1258,35 +1260,59 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     // modo creacion
     this.activacionGuardarGenerales();
 
-    // if (this.generalBody.nif.length > 8) {
-    if (this.generalBody.idTipoIdentificacion != "50") {
-      if (this.isValidDNI(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "10";
-        return true;
-      } else if (this.isValidPassport(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "30";
-        return true;
-      } else if (this.isValidNIE(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "40";
-        return true;
-      } else if (this.isValidCIF(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "20";
-        return true;
-      } else {
-        this.generalBody.idTipoIdentificacion = "30";
-        return true;
+    if(this.generalBody.idTipoIdentificacion  != undefined && this.generalBody.idTipoIdentificacion  != null){
+      if (this.generalBody.idTipoIdentificacion != "50") {
+        if (this.isValidDNI(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "10";
+          return true;
+        } else if (this.isValidPassport(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "30";
+          return true;
+        } else if (this.isValidNIE(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "40";
+          return true;
+        } else if (this.isValidCIF(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "20";
+          return true;
+        } else {
+          this.generalBody.idTipoIdentificacion = "30";
+          return true;
+        }
       }
+    }else{
+      this.nifCif.valor = this.generalBody.nif;
+      this.sigaServices
+      .post("fichaDatosGenerales_tipoidentificacion", this.nifCif)
+      .subscribe(
+        data => {
+          this.generalBody.idTipoIdentificacion = JSON.parse(data.body)['valor'];
+          if (this.generalBody.idTipoIdentificacion != "50") {
+            if (this.isValidDNI(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "10";
+              return true;
+            } else if (this.isValidPassport(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "30";
+              return true;
+            } else if (this.isValidNIE(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "40";
+              return true;
+            } else if (this.isValidCIF(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "20";
+              return true;
+            } else {
+              this.generalBody.idTipoIdentificacion = "30";
+              return true;
+            }
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    
     }
-
-    // 1: {label: "CIF", value: "20"}
-    // 2: {label: "NIE", value: "40"}
-    // 3: {label: "NIF", value: "10"}
-    // 4: {label: "Otro", value: "50"}
-    // 5: {label: "Pasaporte", value: "30"}
-    // } else {
-    //   this.generalBody.idTipoIdentificacion = "30";
-    //   return false;
-    // }
+    
+    
   }
   isValidPassport(dni: String): boolean {
     return (

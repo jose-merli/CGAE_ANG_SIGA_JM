@@ -1326,12 +1326,17 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           //     }
           //   );
 
- 
+ this.nuevoEstadoColegial.situacionResidente
 
       if (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si") {
         this.residente = "Si";
       } else {
-        this.residente = "No";
+        if (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si") {
+          this.residente = "Si";
+       } else {
+
+          this.residente = "No";
+        }
       }
   }
 

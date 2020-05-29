@@ -123,6 +123,18 @@ export class DetalleIntegranteComponent implements OnInit {
     }
     // modificacion
     else {
+      
+    if(this.body.flagSocio != undefined && this.body.flagSocio !=  null){
+        if(this.body.flagSocio == "1"){
+          this.body.socio = true;
+        }else{
+          this.body.socio = false;
+        }
+
+    }
+    if(this.body.descripcionCargo != undefined && this.body.descripcionCargo !=  null){
+          this.body.cargo = this.body.descripcionCargo;
+    }
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       // caso de que la persona integrante colegiada
       if (
@@ -664,6 +676,13 @@ export class DetalleIntegranteComponent implements OnInit {
     if (this.body.numColegiado != undefined && this.body.numColegiado != null) {
       updateIntegrante.numColegiado = this.body.numColegiado;
     }
+    if (this.body.socio != undefined && this.body.socio != null) {
+      if(this.body.socio){
+        updateIntegrante.flagSocio = "1";
+      }else{
+        updateIntegrante.flagSocio = "0";
+      }
+    }
     if (
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
@@ -759,6 +778,15 @@ export class DetalleIntegranteComponent implements OnInit {
         newIntegrante.nifCif = this.body.nifCif;
       } else {
         newIntegrante.nifCif = "";
+      }
+       if (this.body.socio != undefined && this.body.socio != null) {
+         if(this.body.socio){
+        newIntegrante.flagSocio = "1";
+        }else{
+          newIntegrante.flagSocio = "0";
+        }
+      } else {
+        newIntegrante.flagSocio = "";
       }
       if (
         this.body.tipoIdentificacion != undefined &&
