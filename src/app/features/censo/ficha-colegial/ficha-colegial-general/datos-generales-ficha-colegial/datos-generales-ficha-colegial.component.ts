@@ -919,9 +919,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.fechaNacimiento
       );
     }
-    if (this.fechaAlta != undefined) {
-      this.generalBody.incorporacionDate = this.transformaFecha(this.fechaAlta);
-    }
+    //if (this.fechaAlta != undefined) {
+    //  this.generalBody.incorporacionDate = this.transformaFecha(this.fechaAlta);
+    //}
   }
 
   transformaFecha(fecha) {

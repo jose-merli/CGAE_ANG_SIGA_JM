@@ -123,6 +123,8 @@ para poder filtrar el dato con o sin estos caracteres*/
 			});
 
 			this.isLetrado = 'N';
+			//Descomentar para trabajar en local
+			//this.progressSpinner = false;
 		});
 		this.ocultar = true;
 		this.form = this.fb.group({
