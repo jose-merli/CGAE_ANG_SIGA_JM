@@ -365,7 +365,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 @NgModule({
 	declarations: [
 		AppComponent,
-		TranslatePipe,
 		ImagePipe,
 
 		MyIframeComponent,
