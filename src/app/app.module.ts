@@ -35,6 +35,8 @@ import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
+import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
+import { LogoutComponent } from './commons/logout/logout.component';
 import { TranslatePipe, TranslateService } from './commons/translate';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
 import { ConfirmDialogComponent } from './commons/dialog/dialog.component';
@@ -363,12 +365,15 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 @NgModule({
 	declarations: [
 		AppComponent,
+		TranslatePipe,
 		ImagePipe,
 
 		MyIframeComponent,
 		MenuComponent,
 		LoginComponent,
 		LoginDevelopComponent,
+		LoginMultipleComponent,
+		LogoutComponent,
 		HeaderComponent,
 		HomeComponent,
 		ConfirmDialogComponent,
@@ -676,8 +681,7 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
 		ServiciosInteresFichaColegialComponent,
-		TarjetaResumenFijaComponent,
-
+		TarjetaResumenFijaComponent
 	],
 	imports: [
 		BrowserModule,
@@ -719,6 +723,7 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		ProgressSpinnerModule,
 		FileUploadModule,
 		DialogModule,
+
 		KeyFilterModule,
 		StepsModule,
 
