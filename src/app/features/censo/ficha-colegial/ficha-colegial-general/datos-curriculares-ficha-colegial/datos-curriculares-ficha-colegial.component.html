@@ -62,7 +62,7 @@
                   <span *ngIf="setItalic(datoH)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
                 </div>
 
-                <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'&& col.field != 'categoriaCurricular' ">
+                <div *ngIf="col.field != 'dateFechaInicio' && col.field != 'dateFechaFin'&& col.field != 'descripcion' ">
                   <div *ngIf="setItalic(datoH)">
                     <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{datoH[col.field]}}</span>
                   </div>
@@ -71,10 +71,10 @@
                     <span>{{datoH[col.field]}}</span>
                   </div>
                 </div>
-                <div *ngIf="col.field == 'categoriaCurricular' && !setItalic(datoH)">
+                <div *ngIf="col.field == 'descripcion' && !setItalic(datoH)">
                   <a [routerLink]="" (click)="redireccionarCurriculares([datoH])" class="enlace">{{datoH[col.field]}}</a>
                 </div>
-                <div *ngIf="col.field == 'categoriaCurricular' && setItalic(datoH)">
+                <div *ngIf="col.field == 'descripcion' && setItalic(datoH)">
                   <a [routerLink]="" [ngStyle]="{
                   'font-style': 'italic',
                   'font-weight': 'bold',
