@@ -62,10 +62,10 @@
           filterPlaceholder="{{ 'general.boton.search' | translate }}" [filter]="true" filterMatchMode="contains">
           <ng-template let-datoH="rowData" pTemplate="body">
 
-            <div *ngIf="col.field == 'idcontador'">
+            <div *ngIf="col.field == 'nombre'">
               <a [routerLink]="" (click)="irEditarContador(datoH)" class="enlace">{{ datoH[col.field]}}</a>
             </div>
-            <div *ngIf="col.field != 'idcontador'">
+            <div *ngIf="col.field != 'nombre'">
               <span>{{ datoH[col.field]}}</span>
             </div>
           </ng-template>
