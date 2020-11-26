@@ -140,11 +140,11 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
 
-              <div *ngIf="col.field !='precioCurso' && col.field != 'nombreCurso'">
+              <div *ngIf="col.field !='precioCurso' && col.field != 'codigoCurso'">
                 <label [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}">{{dato[col.field]}}</label>
               </div>
 
-              <div *ngIf="col.field == 'nombreCurso'">
+              <div *ngIf="col.field == 'codigoCurso'">
                 <a [routerLink]="" [ngClass]="{'estiloHistorico': dato.flagArchivado == 1}" (click)="irEditarCurso([dato])" class="enlace">{{ dato[col.field]}}</a>
               </div>
 

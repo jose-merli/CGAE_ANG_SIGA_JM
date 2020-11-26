@@ -87,8 +87,8 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div>
-                <span *ngIf="col.field != 'numIdSolicitud'">{{dato[col.field]}}</span>
-                <div *ngIf="col.field == 'numIdSolicitud'">
+                <span *ngIf="col.field != 'nombre'">{{dato[col.field]}}</span>
+                <div *ngIf="col.field == 'nombre'">
                   <a (click)="onSelectRow([dato])" class="enlace">{{dato[col.field]}}</a>
                 </div>
               </div>

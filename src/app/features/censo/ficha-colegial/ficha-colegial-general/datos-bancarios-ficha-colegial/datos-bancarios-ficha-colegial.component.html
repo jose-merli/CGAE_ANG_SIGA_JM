@@ -53,20 +53,20 @@
         <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="setItalic(datoH) && col.field != 'titular'">
+              <div *ngIf="setItalic(datoH) && col.field != 'iban'">
                 <span [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
               </div>
-              <div *ngIf="col.field != 'titular' && !setItalic(datoH)">
+              <div *ngIf="col.field != 'iban' && !setItalic(datoH)">
                 <span>{{ datoH[col.field] }}</span>
               </div>
-              <div *ngIf="col.field == 'titular' && !setItalic(datoH)">
+              <div *ngIf="col.field == 'iban' && !setItalic(datoH)">
                 <a [routerLink]="" (click)="redireccionarDatosBancarios([datoH])" class="enlace">{{datoH[col.field]}}</a>
               </div>
-              <div *ngIf="col.field == 'titular' && setItalic(datoH)">
+              <div *ngIf="col.field == 'iban' && setItalic(datoH)">
                 <a [routerLink]="" [ngStyle]="{
                   'font-style': 'italic',
                   'font-weight': 'bold',
