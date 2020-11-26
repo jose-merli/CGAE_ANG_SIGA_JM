@@ -156,7 +156,7 @@ export class FichaCursoComponent implements OnInit {
   colsFormadores;
   selectedItemFormadores;
   datosFormadores = [];
-  selectedDatosFormadores = [];
+  selectedDatosFormadores;
   selectAllFormadores: any;
   selectedFormadores: number = 10;
   selectMultipleFormadores: boolean = false;
@@ -215,7 +215,7 @@ export class FichaCursoComponent implements OnInit {
   selectMultipleNotifications: boolean = false;
   numSelectedNotifications: number = 0;
   comboNotifications;
-
+  selectedItem: number = 10;
   //Cargas
   colsCargas;
   selectedItemCargas;
@@ -2032,6 +2032,9 @@ export class FichaCursoComponent implements OnInit {
 
   actualizaSeleccionadosFormadores(selectedDatosFormadores) {
     this.numSelectedFormadores = selectedDatosFormadores.length;
+    if(this.numSelectedFormadores <= 1){
+      this.selectMultipleFormadores = false;
+    }
   }
 
   saveTrainers() {
@@ -2695,7 +2698,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   onChangeRowsPerPagesFormadores(event) {
-    this.selectedFormadores = event.value;
+    this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableFormadores.reset();
   }
@@ -3782,5 +3785,14 @@ export class FichaCursoComponent implements OnInit {
       this.abreCierraFicha(event);
     }
     // window.scrollTo(0,0);
+  }
+
+  clickFilaFormadores(event) {
+    if (event.data != undefined) {
+      this.numSelectedFormadores = this.selectedDatosFormadores.length
+      if(this.numSelectedFormadores > 1){
+        this.selectMultipleFormadores = true;
+      }
+    }
   }
 }
