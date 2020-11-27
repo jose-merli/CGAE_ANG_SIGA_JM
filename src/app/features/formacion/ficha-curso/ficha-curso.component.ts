@@ -3065,6 +3065,9 @@ export class FichaCursoComponent implements OnInit {
 
   actualizaSeleccionadosCertificates(selectedDatos) {
     this.numSelectedCertificates = selectedDatos.length;
+    if(this.numSelectedCertificates <= 1){
+      this.selectMultipleCertificates = false;
+    }
   }
 
   validateCertificate() {
@@ -3792,6 +3795,15 @@ export class FichaCursoComponent implements OnInit {
       this.numSelectedFormadores = this.selectedDatosFormadores.length
       if(this.numSelectedFormadores > 1){
         this.selectMultipleFormadores = true;
+      }
+    }
+  }
+
+  clickFilaCertificados(event) {
+    if (event != undefined) {
+      this.numSelectedCertificates = this.selectedDatosCertificates.length
+      if(this.numSelectedCertificates > 1){
+        this.selectMultipleCertificates = true;
       }
     }
   }

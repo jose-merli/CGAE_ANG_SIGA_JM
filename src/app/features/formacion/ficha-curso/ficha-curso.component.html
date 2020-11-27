@@ -840,9 +840,9 @@
         <div *ngIf="(selectMultipleCertificates || selectAllCertificates  || !activacionEditar) && !pressNewCertificate">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleCertificates }"
             dataKey="idCertificadoCurso" selectionMode="multiple" [(selection)]="selectedDatosCertificates" [responsive]="true"
-            #tableCertificates class="tabla-listado" [paginator]="true" (onRowSelect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)"
-            (onRoUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)" [value]="datosCertificates" [sortOrder]="1"
-            [paginator]="true" paginatorPosition="both" [rows]="selectedCertificates" [editable]="selectMultipleCertificates">
+            #tableCertificates class="tabla-listado" [paginator]="true" (onRowSelect)="clickFilaCertificados(selectedDatosCertificates)"
+            (onRowUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)" [value]="datosCertificates" [sortOrder]="1"
+            [paginator]="true" paginatorPosition="both" [rows]="selectedCertificates" [editable]="selectMultipleCertificates" [metaKeySelection]="false">
             <p-column [sortable]="true" [field]="colsCertificates[0].field" [header]="
                   'menu.certificados'
                     | translate
@@ -889,14 +889,14 @@
                     name="groupname">
                   </p-checkbox>
                 </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{
+                <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{
                       ' seleccion-multiple': selectMultipleCertificates
                     }" (click)="
                       isSelectMultipleCertificates();
                       selectedDatosCertificates = false
                     ">
                   <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}
-                </label>
+                </label> -->
               </div>
             </ng-template>
           </p-dataTable>
@@ -908,7 +908,8 @@
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{ customCursor: selectMultipleCertificates }"
             [paginator]="true" #tableCertificates class="tabla-listado" [value]="datosCertificates" paginatorPosition="both"
             datakey="idCertificadoCurso" [(selection)]="selectedDatosCertificates" [rows]="selectedCertificates" [editable]="!selectMultipleCertificates"
-            (onEdit)="editCertificateTable($event)">
+            (onEdit)="editCertificateTable($event)" (onRowSelect)="clickFilaCertificados(selectedDatosCertificates)"
+            (onRowUnselect)="actualizaSeleccionadosCertificates(selectedDatosCertificates)" selectionMode="multiple" [metaKeySelection]="false">
             <p-column [sortable]="true" [field]="colsCertificates[0].field" [header]="
                   'menu.certificados'
                     | translate
@@ -953,7 +954,7 @@
                   <p-checkbox (onChange)="onChangeSelectAllCertificates($event)" [(ngModel)]="selectAllCertificates" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate}}"
                     name="groupname"></p-checkbox>
                 </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{
+                <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{
                       'seleccion-multiple': selectMultipleCertificates
                     }" (click)="
                       isSelectMultipleCertificates();
@@ -961,7 +962,7 @@
                     ">
 
                   <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate }}
-                </label>
+                </label> -->
               </div>
             </ng-template>
           </p-dataTable>
