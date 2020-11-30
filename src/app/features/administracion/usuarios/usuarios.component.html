@@ -85,8 +85,8 @@
   <!--FIN CARD-->
   <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="editUsuarios($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="editUsuario(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -199,8 +199,8 @@
               <p-checkbox [disabled]="!activacionEditar" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
           </div>
         </ng-template>
       </p-table>

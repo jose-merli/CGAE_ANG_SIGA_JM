@@ -187,6 +187,10 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
     this.numSelected = selectedDatos.length;
   }
 
+  actualizaDeSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+  
   desasociar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
