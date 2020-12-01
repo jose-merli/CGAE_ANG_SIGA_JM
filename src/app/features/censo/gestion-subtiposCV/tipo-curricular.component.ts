@@ -45,7 +45,7 @@ export class TipoCurricularComponent {
 
   @ViewChild("table")
   table;
-  selectedDatos = [];
+  selectedDatos;
   cols: any = [];
   colsCurricular: any = [];
   rowsPerPage: any = [];
@@ -57,7 +57,7 @@ export class TipoCurricularComponent {
   selectMultiple: boolean = false;
   selectAll: boolean = false;
   msgs: any = [];
-
+  editable: boolean = false;
   showTipoCurricular: boolean = true;
   progressSpinner: boolean = false;
   buscar: boolean = false;
@@ -139,10 +139,18 @@ export class TipoCurricularComponent {
       element.isMod = false;
     });
 
-    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo1 ==
-      selectedDatos.idTipoCvSubtipo1 && x.idInstitucion == selectedDatos.idInstitucion);
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos[0].idTipoCV && x.idTipoCvSubtipo1 ==
+      selectedDatos[0].idTipoCvSubtipo1 && x.idInstitucion == selectedDatos[0].idInstitucion);
     this.datos[id].isMod = true;
-
+    
+    if(this.selectedDatos.length > 1){
+      this.datos.forEach(element => {
+        element.isMod = false;
+      });
+    }
+    else{
+      this.editable = true;
+    }
   }
 
   changeInput(selectedDatos) {
@@ -175,7 +183,10 @@ export class TipoCurricularComponent {
 
     this.selectedDatos = [];
     this.table.reset();
-
+    this.numSelected = selectedDatos.length;
+    if(this.numSelected <= 1){
+      this.editable = true;
+    }
   }
 
   search() {
