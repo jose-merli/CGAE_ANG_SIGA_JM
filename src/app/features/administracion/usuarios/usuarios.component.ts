@@ -71,6 +71,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
   numSelected: number = 0;
+  selectMultipleUsuario: boolean = false;
   es: any = esCalendar;
   nuevo: boolean = false;
   updateUsuarios: any[] = [];
@@ -450,6 +451,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   actualizaSeleccionados(selectedDatos) {
     if (this.selectedDatos != undefined) {
+      if(this.selectedDatos.length == 1){
+        this.activacionEditar = true;
+      }
       this.numSelected = selectedDatos.length;
     } else {
       this.selectedDatos = [];
@@ -603,7 +607,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       let dato = this.datos[datoId];
 
-      this.editarUsuario(dato);
+      this.editUsuario(dato);
 
     }
   }
@@ -682,20 +686,29 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   }
 
-  editarUsuario(dato) {
+  // editarUsuario(dato) {
 
-    let findDato = this.datosInicial.find(item => item.idUsuario === dato.idUsuario);
+  //   let findDato = this.datosInicial.find(item => item.idUsuario === dato.idUsuario);
 
-    if (findDato != undefined) {
-      if (dato.codigoExterno != findDato.codigoExterno || dato.perfil != findDato.perfil) {
+  //   if (findDato != undefined) {
+  //     if (dato.codigoExterno != findDato.codigoExterno || dato.perfil != findDato.perfil) {
 
-        let findUpdate = this.updateUsuarios.find(item => item.codigoExterno === dato.codigoExterno && item.perfil === dato.perfil);
-        if (findUpdate == undefined) {
-          this.updateUsuarios.push(dato);
-        }
+  //       let findUpdate = this.updateUsuarios.find(item => item.codigoExterno === dato.codigoExterno && item.perfil === dato.perfil);
+  //       if (findUpdate == undefined) {
+  //         this.updateUsuarios.push(dato);
+  //       }
+  //     }
+  //   }
+
+  // }
+
+  editUsuario(event) {
+    if (event != undefined) {
+      this.numSelected = this.selectedDatos.length
+      if(this.numSelected > 1){
+        this.activacionEditar = false;
       }
     }
-
   }
 
   cancelar() {
@@ -891,8 +904,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
 
-  isSelectMultiple() {
-    this.selectAll = false;
+  isSelectMultiple(isSelectMultiple) {
+    this.selectAll = isSelectMultiple;
     if (!this.historico && this.activacionEditar) {
       if (this.nuevo) {
         this.nuevo = false;
@@ -900,15 +913,12 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
         this.selectionMode = "single"
       } else {
         this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
         this.selectionMode = "multiple"
       }
+      this.numSelected = isSelectMultiple;
       this.datos.forEach(element => {
         element.editable = false;
       });

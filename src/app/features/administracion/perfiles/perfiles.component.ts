@@ -153,6 +153,11 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
+    if(this.numSelected > 1) {
+      this.isforNew = false;
+    }else{
+      this.isforNew = true;
+    }
   }
 
   isBuscar() {
@@ -521,10 +526,17 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.router.navigate(["/EditarPerfiles"]);
   }
   irEditarUsuario(id) {
+    this.numSelected = id.length;
+    if(id.length > 1){
+      this.selectMultiple = true;
+    }else{
+      this.selectMultiple = false;
+    }
     if (!this.selectMultiple) {
       if (this.activacionEditar) {
-        this.selectedDatos = [];
+        this.selectedDatos = id;
         this.isRestablecer = true;
+        this.isforNew = true;
       }
 
       // var ir = null;
@@ -550,6 +562,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     } else {
       this.editar = false;
       this.numSelected = this.selectedDatos.length;
+      this.isforNew = false;
     }
   }
   isEliminar(selectedDatos) {
