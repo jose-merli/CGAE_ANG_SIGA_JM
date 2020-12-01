@@ -283,6 +283,7 @@
                             col.field !='situacionResidente' && 
                             col.field !='correo' && 
                             col.field !='noAparecerRedAbogacia2' &&
+                            col.field !='fechaEstadoDate' &&
                             col.field !='incorporacionDate'">
 
                                 <label>{{ dato[col.field] }}</label>
@@ -311,6 +312,10 @@
                             <div *ngIf="col.field == 'correo'">
                                 <a [href]="'mailto:'+dato[col.field]" class="correo"
                                     target="_blank">{{dato[col.field]}}</a>
+                            </div>
+
+                            <div *ngIf="col.field == 'fechaEstadoDate'">
+                                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                             </div>
 
                             <div *ngIf="col.field == 'incorporacionDate'">
