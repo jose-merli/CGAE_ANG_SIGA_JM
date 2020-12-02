@@ -554,7 +554,7 @@
             <p-column [sortable]="true" [field]="colsFormadores[2].select" [header]="'administracion.usuarios.literal.rol' | translate"
               [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template let-dato="rowData" pTemplate="body">
-                <p-dropdown (onChange)="onChangeTutor($event, dato)" class="select-form" [(ngModel)]="dato[colsFormadores[2].select]" [options]="comboRoles"
+                <p-dropdown (onChange)="onChangeTutor($event, dato)" class="select-form" (onClick)="CheckClick($event)" [(ngModel)]="dato[colsFormadores[2].select]" [options]="comboRoles"
                   [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}" name="type"></p-dropdown>
               </ng-template>
             </p-column>
@@ -565,7 +565,7 @@
 
                 " [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
               <ng-template pTemplate="body" let-dato="rowData">
-                <p-dropdown (onChange)="onChangeEdit($event, dato)" class="select-form" [(ngModel)]="dato[colsFormadores[3].select]" [options]="comboTipoCoste"
+                <p-dropdown (onChange)="onChangeEdit($event, dato)" class="select-form" (onClick)="CheckClick($event)" [(ngModel)]="dato[colsFormadores[3].select]" [options]="comboTipoCoste"
                   [filter]="false" placeholder="{{'general.boton.seleccionar' | translate}}" name="type"></p-dropdown>
               </ng-template>
             </p-column>

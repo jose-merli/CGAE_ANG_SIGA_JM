@@ -142,11 +142,14 @@ export class TipoCurricularComponent {
     let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos[0].idTipoCV && x.idTipoCvSubtipo1 ==
       selectedDatos[0].idTipoCvSubtipo1 && x.idInstitucion == selectedDatos[0].idInstitucion);
     this.datos[id].isMod = true;
-    
+
+    this.numSelected = this.selectedDatos.length;
+
     if(this.selectedDatos.length > 1){
       this.datos.forEach(element => {
         element.isMod = false;
       });
+     
     }
     else{
       this.editable = true;
@@ -177,15 +180,19 @@ export class TipoCurricularComponent {
 
 
   actualizaSeleccionados(selectedDatos) {
-    this.datos.forEach(element => {
-      element.isMod = false;
-    });
-
-    this.selectedDatos = [];
+    
     this.table.reset();
     this.numSelected = selectedDatos.length;
     if(this.numSelected <= 1){
       this.editable = true;
+      this.selectedDatos.forEach(element => {
+        element.isMod = true;
+      });
+    }
+    if(this.numSelected == 0){
+      this.datos.forEach(element => {
+        element.isMod = false;
+      });
     }
   }
 
@@ -659,6 +666,7 @@ export class TipoCurricularComponent {
           },
           () => {
             this.search();
+            this.selectedDatos = [];
           }
         );
     }
@@ -701,6 +709,8 @@ export class TipoCurricularComponent {
     this.editar = false;
     this.datosEditar = [];
     this.search();
+    this.selectedDatos = [];
+    this.numSelected = 0;
   }
 
   // Métodos creados para mostrar mensajes al usuario
