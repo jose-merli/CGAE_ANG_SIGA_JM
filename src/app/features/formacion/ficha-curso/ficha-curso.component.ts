@@ -1944,7 +1944,8 @@ export class FichaCursoComponent implements OnInit {
     this.datosFormadores = JSON.parse(
       sessionStorage.getItem("datosFormadoresInit")
     );
-
+    this.selectedDatosFormadores = [];
+    this.numSelectedFormadores = 0;
     this.getNumTutor();
     this.selectMultipleFormadores = false;
     this.pressNewFormador = false;
@@ -2148,6 +2149,7 @@ export class FichaCursoComponent implements OnInit {
         this.modoEdicionFormador = true;
         sessionStorage.setItem("formador", "true");
         this.getTrainers();
+        this.selectedDatosFormadores = [];
       },
       err => {
         this.progressSpinner = false;
@@ -3037,7 +3039,8 @@ export class FichaCursoComponent implements OnInit {
     this.datosCertificates = JSON.parse(
       sessionStorage.getItem("datosCertificatesInit")
     );
-
+    this.selectedDatosFormadores = [];
+    this.numSelectedFormadores = 0;
     this.selectMultipleCertificates = false;
     this.pressNewCertificate = false;
     this.editCertificate = false;
@@ -3806,5 +3809,10 @@ export class FichaCursoComponent implements OnInit {
         this.selectMultipleCertificates = true;
       }
     }
+  }
+
+  CheckClick(event){
+    this.selectedDatosFormadores = [];
+    this.numSelectedFormadores = 0;
   }
 }

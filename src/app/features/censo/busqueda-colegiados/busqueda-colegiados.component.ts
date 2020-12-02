@@ -858,6 +858,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         element.incorporacionDate = new Date(year, month - 1, day);
         element.incorporacion = day + "/" + month + "/" + year;
       }
+      if (element.fechaEstadoStr == "" || element.fechaEstadoStr == null) {
+        element.fechaEstadoStr = null;
+      } else {
+        var posIni = element.fechaEstadoStr.indexOf("-");
+        var posFin = element.fechaEstadoStr.lastIndexOf("-");
+        var day = element.fechaEstadoStr.substring(posFin+1, posFin+3);
+        var year = element.fechaEstadoStr.substring(0, posIni);
+        var month = element.fechaEstadoStr.substring(posIni + 1, posFin);
+        element.fechaEstadoDate = new Date(year, month - 1, day);
+        element.fechaEstadoStr = day + "/" + month + "/" + year;
+      }
 
     });
 
@@ -941,9 +952,14 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         width: "7%"
       },
       {
+        field: "fechaEstadoDate",
+        header: "censo.consultaDatosGenerales.literal.fechaSituacion",
+        width: "7%"
+      },
+      {
         field: "incorporacionDate",
         header: "censo.consultaDatosGenerales.literal.fechaIncorporacion",
-        width: "13%"
+        width: "7%"
       },
       {
         field: "situacionResidente",

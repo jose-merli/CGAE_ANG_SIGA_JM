@@ -317,6 +317,10 @@
                                     target="_blank">{{dato[col.field]}}</a>
                             </div>
 
+                            <div *ngIf="col.field == 'fechaEstadoDate'">
+                                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                            </div>
+
                             <div *ngIf="col.field == 'incorporacionDate'">
                                 <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                             </div>
