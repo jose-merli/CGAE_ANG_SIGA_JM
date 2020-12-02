@@ -74,7 +74,6 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
     this.currentDateInitial = new Date();
     this.currentDate = new Date();
-
   }
 
   // Mensajes
@@ -105,6 +104,9 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     if (sessionStorage.getItem("crearNuevoEnvio") == null) {
       this.openFicha = !this.openFicha;
       if (!this.body.fechaProgramada) {
@@ -221,6 +223,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   fillFechaProgramada(event) {
+    this.onlyCheckDatos();
     this.body.fechaProgramada = event;
 
     if (this.body.fechaProgramada != null)
@@ -293,6 +296,12 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
       }else{
         this.guardar();
       }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(this.isGuardarDisabled() && (this.body.fechaProgramada==undefined || this.body.fechaProgramada==null)){
+        this.muestraCamposObligatorios();
     }
   }
 }

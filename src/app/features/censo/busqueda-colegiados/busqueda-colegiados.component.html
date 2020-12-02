@@ -283,7 +283,8 @@
                             col.field !='situacionResidente' && 
                             col.field !='correo' && 
                             col.field !='noAparecerRedAbogacia2' &&
-                            col.field !='incorporacionDate'">
+                            col.field !='incorporacionDate' &&
+                            col.field !='numberColegiado'">
 
                                 <label>{{ dato[col.field] }}</label>
                             </div>
@@ -291,7 +292,10 @@
                                 <a [routerLink]="" class="enlace"
                                     (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
                             </div>
-
+                            <div *ngIf="col.field == 'numberColegiado'">
+                                <a [routerLink]="" class="enlace"
+                                    (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                            </div>
                             <div *ngIf="col.field == 'estadoColegial'">
                                 <label
                                     *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato[col.field]}}</label>

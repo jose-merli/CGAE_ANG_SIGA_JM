@@ -219,6 +219,7 @@ export class ProgramacionComponent implements OnInit {
   }
 
   fillFechaProgramada(event) {
+    this.onlyCheckDatos();
     this.body.fechaProgramada = event;
   }
 
@@ -238,6 +239,16 @@ export class ProgramacionComponent implements OnInit {
         this.muestraCamposObligatorios();
       }else{
         this.guardar();
+      }
+    }else{
+      this.muestraCamposObligatorios();
+    }
+  }
+
+  onlyCheckDatos(){
+    if(!this.isGuardarDisabled()){
+      if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
+        this.muestraCamposObligatorios();
       }
     }else{
       this.muestraCamposObligatorios();

@@ -405,4 +405,16 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     }
   }
+
+  onlyCheckDatos(){
+    if(this.isGuardarDisabled()){
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.muestraCamposObligatorios();
+      }
+    }else{
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.muestraCamposObligatorios();
+      }
+    }
+  }
 }

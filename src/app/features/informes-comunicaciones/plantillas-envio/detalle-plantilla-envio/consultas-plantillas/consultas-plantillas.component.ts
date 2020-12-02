@@ -15,6 +15,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { truncate } from 'fs';
 
 @Component({
   selector: "app-consultas-plantillas",
@@ -168,20 +169,18 @@ export class ConsultasPlantillasComponent implements OnInit {
     this.table.reset();
   }
 
-  isSelectMultiple() {
-    if (!this.soloLectura) {
-      this.selectMultiple = !this.selectMultiple;
-      this.nuevaConsulta = false;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
+  isSelectMultiple(selectedDatos) {
+    
+      if (this.selectedDatos != undefined) {
+        if(this.selectedDatos.length == 1){
+          // this.activacionEditar = true;
+        }
+        this.numSelected = this.selectedDatos.length;
       } else {
-        this.selectAll = false;
         this.selectedDatos = [];
-        this.numSelected = 0;
       }
     }
-  }
+  
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -238,8 +237,11 @@ export class ConsultasPlantillasComponent implements OnInit {
     }
     this.numSelected = 1;
   }
-  actualizaSeleccionados() {
-    this.numSelected = 0;
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos != undefined) {
+      
+      this.numSelected = this.selectedDatos.length;
+    }
   }
   abreCierraFicha() {
     if (

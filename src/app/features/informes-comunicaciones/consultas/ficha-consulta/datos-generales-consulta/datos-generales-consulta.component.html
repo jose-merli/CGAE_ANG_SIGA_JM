@@ -48,7 +48,7 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control"
+              <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" (ngModelChange)="onlyCheckDatos()"
                 [(ngModel)]="body.nombre" [disabled]="editMode" pInputText>
             </div>
           </div>
@@ -81,7 +81,7 @@
             <div class="form-group col-lg-12 col-md-12">
               <label>{{'general.description' | translate}} (*)</label>
               <textarea [ngClass]="styleObligatorio(body.descripcion)" pInputTextarea style="height:90px"
-                autoResize="autoResize" [(ngModel)]="body.descripcion" [disabled]="editMode"></textarea>
+                autoResize="autoResize" [(ngModel)]="body.descripcion" [disabled]="editMode" (ngModelChange)="onlyCheckDatos()"></textarea>
             </div>
           </div>
         </div>

@@ -39,7 +39,7 @@
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-          <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="soloLectura || disabledPlantilla"
+          <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="soloLectura || disabledPlantilla" (ngModelChange)="onlyCheckDatos()"
             pInputText>
         </div>
         <div class="form-group col-lg-3">
@@ -50,7 +50,7 @@
         </div>
         <div class="form-group col-lg-3">
           <label class="d-block">{{'general.description' | translate}} (*)</label>
-          <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="soloLectura || disabledPlantilla"
+          <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="soloLectura || disabledPlantilla" (ngModelChange)="onlyCheckDatos()"
             pInputText>
         </div>
         <div class="form-group col-lg-3">

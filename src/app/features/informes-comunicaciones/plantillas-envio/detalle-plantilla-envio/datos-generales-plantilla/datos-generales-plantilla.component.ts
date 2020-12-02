@@ -290,6 +290,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   cambiaDesc() {
+    this.onlyCheckDatos();
     this.body.cuerpo = "";
     this.body.asunto = "";
     if (this.activacionEditar == true && (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '7')) {
@@ -356,6 +357,18 @@ para poder filtrar el dato con o sin estos caracteres*/
       } else {
         this.guardar();
       }
+    }
+  }
+
+  onlyCheckDatos() {
+    if (this.isGuardarDisabled()) {
+      if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } 
+    } else {
+      if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } 
     }
   }
 }
