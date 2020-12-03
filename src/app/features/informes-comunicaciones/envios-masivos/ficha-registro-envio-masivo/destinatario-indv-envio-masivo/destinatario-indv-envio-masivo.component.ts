@@ -242,6 +242,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
   }
 
   addDestinatario() {
+    this.numSelected = 0;
     sessionStorage.setItem("AddDestinatarioIndv", "true");
 
     sessionStorage.removeItem("menuProcede");

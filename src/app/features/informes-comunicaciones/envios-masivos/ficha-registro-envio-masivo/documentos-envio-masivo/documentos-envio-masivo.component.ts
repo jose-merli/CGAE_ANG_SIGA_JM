@@ -178,17 +178,18 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     this.table.reset();
   }
 
-  isSelectMultiple() {
-    this.selectMultiple = !this.selectMultiple;
-    if (!this.selectMultiple) {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+  isSelectMultiple(selectedDatos) {
+    
+    if (this.selectedDatos != undefined) {
+      if(this.selectedDatos.length == 1){
+        // this.activacionEditar = true;
+      }
+      this.numSelected = this.selectedDatos.length;
     } else {
-      this.selectAll = false;
       this.selectedDatos = [];
-      this.numSelected = 0;
     }
   }
+
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -322,6 +323,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
 
   uploadFile(event: any) {
+    this.numSelected = 0;
     let fileList: FileList = event.files;
     this.file = fileList[0];
 
@@ -370,7 +372,9 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
   navigateTo(dato) {
     if (!this.selectMultiple) {
-      this.downloadDocumento(dato)
+      let datos = [];
+      datos.push(dato);
+      this.downloadDocumento(datos);
     }
   }
 
@@ -431,6 +435,12 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
     );
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos != undefined) {
+      
+      this.numSelected = this.selectedDatos.length;
+    }
+  }
 
 }
 

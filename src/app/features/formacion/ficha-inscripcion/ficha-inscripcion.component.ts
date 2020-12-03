@@ -1271,6 +1271,7 @@ export class FichaInscripcionComponent implements OnInit {
 
 
   fillFechaSolicitud(event) {
+    this.onlyCheckDatos();
     this.inscripcion.fechaSolicitud = event;
   }
 
@@ -1299,6 +1300,12 @@ export class FichaInscripcionComponent implements OnInit {
       this.muestraCamposObligatorios();
     }else{
       this.guardarTODO();
+    }
+  }
+
+  onlyCheckDatos(){
+    if(this.inscripcion.fechaSolicitud==null || this.inscripcion.fechaSolicitud==undefined){
+      this.muestraCamposObligatorios();
     }
   }
 }

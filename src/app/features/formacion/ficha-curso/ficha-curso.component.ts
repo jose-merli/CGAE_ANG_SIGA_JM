@@ -865,6 +865,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   onChangeSelectVisibilidad(event) {
+    this.onlyCheckDatos();
     if (event.value == 1) {
       this.deshabilitarCombCol = true;
       this.curso.colegio = this.authenticationService.getInstitucionSession();
@@ -884,6 +885,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   onChangeSelectColegio(event) {
+    this.onlyCheckDatos();
     if (
       event.value != "" &&
       event.value != this.authenticationService.getInstitucionSession()
@@ -3247,9 +3249,16 @@ export class FichaCursoComponent implements OnInit {
       );
   }
   actualizaSeleccionadosCargas(selectedDatosCargas) {
-    this.numSelectedCargas = selectedDatosCargas.length;
+    if (selectedDatosCargas != undefined) {
+      if(selectedDatosCargas.length == 1){
+        // this.activacionEditar = true;
+      }
+      this.numSelectedCargas = selectedDatosCargas.length;
+    } else {
+      selectedDatosCargas = [];
+    }
   }
-
+  
   onChangeRowsPerPagesCargas(event) {
     this.selectedCargas = event.value;
     this.changeDetectorRef.detectChanges();
@@ -3303,6 +3312,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   uploadFile() {
+    this.numSelectedCargas = 0;
     this.progressSpinner = true;
 
     if (this.file != undefined) {
@@ -3415,6 +3425,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   autovalidateInscriptions(selectedDatosCargas) {
+    this.numSelectedCargas = 0;
     this.progressSpinner = true;
     let autovalidateInscriptions = new CargaMasivaInscripcionObject();
     autovalidateInscriptions.cargaMasivaInscripcionesItem = selectedDatosCargas;
@@ -3814,5 +3825,11 @@ export class FichaCursoComponent implements OnInit {
   CheckClick(event){
     this.selectedDatosFormadores = [];
     this.numSelectedFormadores = 0;
+  }
+
+  onlyCheckDatos() {
+    if (!this.validateCourse()) {
+      this.muestraCamposObligatorios();
+    } 
   }
 }

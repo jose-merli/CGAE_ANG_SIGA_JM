@@ -71,13 +71,13 @@
               <div class="row mb-4">
                 <div class="col-lg-6 col-md-6">
                   <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}} (*)</label>
-                  <input [ngClass]="styleObligatorio(curso.nombreCurso)" type="text" #nombre class="form-control" pInputText name="nombre" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
+                  <input [ngClass]="styleObligatorio(curso.nombreCurso)" type="text" #nombre class="form-control" pInputText name="nombre"   (ngModelChange)="onlyCheckDatos()" [disabled]="!activacionEditar" [(ngModel)]="curso.nombreCurso"
     
                   />
                 </div>
                 <div class="col-lg-6 col-md-6">
                   <label>{{ 'formacion.fichaCursos.datosGenerales.codigo' | translate }} (*)</label>
-                  <input type="text" class="form-control" pInputText name="codigo" [disabled]="fieldNoEditable || !activacionEditar" [(ngModel)]="curso.codigoCurso"
+                  <input type="text" class="form-control" pInputText name="codigo" [disabled]="fieldNoEditable || !activacionEditar" [(ngModel)]="curso.codigoCurso"  (ngModelChange)="onlyCheckDatos()"
                   />
     
                 </div>
@@ -114,11 +114,11 @@
                   </p-autoComplete> -->
     
                   <p-dropdown [ngClass]="styleObligatorio(curso.tipoServicios)"  [disabled]="!activacionEditar" class="select-form" [(ngModel)]="curso.tipoServicios" [options]="comboService"
-                    [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true"></p-dropdown>
+                    [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}" (ngModelChange)="onlyCheckDatos()" [showClear]="true"></p-dropdown>
                 </div>
                 <div class="col-lg-6 col-md-6">
                   <label>{{ 'form.busquedaCursos.literal.estado' | translate}} (*)</label>
-                  <p-dropdown [ngClass]="styleObligatorio(curso.idEstado)" placeholder="-" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde"
+                  <p-dropdown [ngClass]="styleObligatorio(curso.idEstado)" placeholder="-" (ngModelChange)="onlyCheckDatos()" class="select-form" [(ngModel)]='curso.idEstado' [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde"
                     [disabled]="fieldNoEditable || !activacionEditar">
                   </p-dropdown>
                 </div>
@@ -144,12 +144,12 @@
                 <div class="col-lg-6 col-md-6">
                   <label>{{ 'formacion.fichaCurso.datosGenerales.fechaInicioInscripcion' | translate }} (*)</label>
                   <app-fecha [inputStyleClass]="styleObligatorio(curso.fechaInscripcionDesdeDate)" #fechaInicioInscripcion [(value)]="curso.fechaInscripcionDesdeDate" [maxDate]="curso.fechaInscripcionHastaDate"
-                    [disabled]="!activacionEditar" (valueFocus)="showMessageEditInitInscriptionEvent($event)" (click)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
+                    [disabled]="!activacionEditar" (valueFocus)="showMessageEditInitInscriptionEvent($event)" (ngModelChange)="onlyCheckDatos()" (click)="showMessageEditInitInscriptionEvent($event)"></app-fecha>
                 </div>
                 <div class="col-lg-6 col-md-6">
                   <label>{{ 'formacion.fichaCurso.datosGenerales.fechaFinInscripcion' | translate }} (*)</label>
                   <app-fecha [inputStyleClass]="styleObligatorio(curso.fechaInscripcionHastaDate)" #fechaFinInscripcion [(value)]="curso.fechaInscripcionHastaDate" [minDate]="curso.fechaInscripcionDesdeDate" (valueFocus)="showMessageEditEndInscriptionEvent($event)"
-                    (click)="showMessageEditEndInscriptionEvent($event)" [disabled]="!activacionEditar"></app-fecha>
+                    (click)="showMessageEditEndInscriptionEvent($event)" (ngModelChange)="onlyCheckDatos()" [disabled]="!activacionEditar"></app-fecha>
     
                 </div>
               </div>
@@ -1211,7 +1211,7 @@
             [(selection)]="selectedDatosCargas" pageLinks="4" dataKey="idCargaInscripcion" [responsive]="true" selectionMode="multiple"
             #tableCargas class="tabla-listado" [value]="datosCargas" [sortOrder]="sortO" (onRowSelect)="actualizaSeleccionadosCargas(selectedDatosCargas)"
             (onRowUnselect)="actualizaSeleccionadosCargas(selectedDatosCargas)" [paginator]="true" paginatorPosition="both"
-            [rows]="selectedCargas">
+            [rows]="selectedCargas" [metaKeySelection]="false">
             <p-column *ngFor="let col of colsCargas" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
               [filter]="true" filterMatchMode="contains">
 
@@ -1251,8 +1251,8 @@
                   <p-checkbox (onChange)="onChangeSelectAllCargas()" [(ngModel)]="selectAllCargas" binary="true" label="{{'tablas.literal.seleccionarTodo' | translate}}"
                     name="groupname"></p-checkbox>
                 </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleCargas}" (click)="isSelectMultipleCargas(); selectedDatosCargas=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
+                <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{'seleccion-multiple': selectMultipleCargas}" (click)="isSelectMultipleCargas(); selectedDatosCargas=false">
+                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label> -->
               </div>
             </ng-template>
 

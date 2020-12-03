@@ -198,6 +198,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
 
   actualizarBotonGuardarCerrar() {
+    this.onlyCheckDatos();
     if (this.motivoSinModificar != this.itemBody.motivo)
       this.habilitarBotonGuardarCerrar = false;
     else this.habilitarBotonGuardarCerrar = true;
@@ -208,10 +209,12 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
 
   fillFechaEntrada(event) {
+    this.onlyCheckDatos();
     this.itemBody.fechaEntrada = event;
   }
 
   fillFechaEfectiva(event) {
+    this.onlyCheckDatos();
     this.itemBody.fechaEfectiva = event;
   }
 
@@ -255,6 +258,18 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
         this.muestraCamposObligatorios();
       }else{
         this.confirmEdit();
+      }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(this.isHabilitadoGuardarCerrar() || this.formGroup.invalid){
+      if((this.itemBody.fechaEntrada == null || this.itemBody.fechaEntrada==undefined) || (this.itemBody.fechaEfectiva == null || this.itemBody.fechaEfectiva==undefined) || (this.itemBody.motivo == null || this.itemBody.motivo==undefined || this.itemBody.motivo=="")){
+        this.muestraCamposObligatorios();
+      }
+    }else{
+      if((this.itemBody.fechaEntrada == null || this.itemBody.fechaEntrada==undefined) || (this.itemBody.fechaEfectiva == null || this.itemBody.fechaEfectiva==undefined) || (this.itemBody.motivo == null || this.itemBody.motivo==undefined || this.itemBody.motivo=="")){
+        this.muestraCamposObligatorios();
       }
     }
   }
