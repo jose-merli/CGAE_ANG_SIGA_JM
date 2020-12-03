@@ -63,7 +63,7 @@
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}} (*)</label>
                 <input [ngClass]="styleObligatorio('datosBancarios', body.titular)" type="text" class="form-control"
-                  [(disabled)]="!permisos || disabledAction" [(ngModel)]="body.titular" pInputText>
+                  [(disabled)]="!permisos || disabledAction" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" [(ngModel)]="body.titular" pInputText>
                 <div *ngIf="titularValido == false">
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
@@ -92,7 +92,7 @@
                 <input [ngClass]="styleObligatorio('datosBancarios', body.bic)" [(ngModel)]="body.bic" type="text"
                   class="form-control" (ngModelChange)="recuperarBicBanco()"
                   [disabled]="body.banco!='BANCO EXTRANJERO' ||!editar || !permisos || disabledAction"
-                  [attr.maxlength]="11" [attr.minlength]="8" pInputText>
+                  [attr.maxlength]="11" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" [attr.minlength]="8" pInputText>
                 <div *ngIf="bicValido == false">
                   <label
                     class="labelError">{{"censo.datosBancarios.mensaje.control.bicIncorrecto" | translate }}</label>
@@ -106,7 +106,7 @@
                 <label>{{"censo.datosCuentaBancaria.literal.tipoCuenta" | translate}} (*)</label>
                 <p-multiSelect [ngClass]="styleObligatorio('datosBancarios', selectedTipo)" [defaultLabel]="textFilter"
                   styleClass="widthAll" [(disabled)]="!permisos || disabledAction" [(ngModel)]='selectedTipo'
-                  [options]="tipoCuenta" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false"
+                  [options]="tipoCuenta" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false"
                   defaultLabel="" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
                 <div *ngIf="tipoCuentaSeleccionado == false">
                   <label
@@ -506,7 +506,7 @@
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada" | translate}} (*)</label>
           <app-fecha [inputStyleClass]="styleObligatorio('firma', firmaFechaDate)" [(value)]="firmaFechaDate"
             [utc]="false" [disabled]="!permisos || disabledAction  || disabledFirma"
-            (valueChangeSelected)="fillFechaFirmada($event)" (valueChangeInput)="detectFechaFirmadaInput($event)">
+            (valueChangeSelected)="fillFechaFirmada($event)" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" (valueChangeInput)="detectFechaFirmadaInput($event)">
           </app-fecha>
 
           <!-- <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [(disabled)]="!permisos || disabledAction"
@@ -517,7 +517,7 @@
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.lugarFirma" | translate}} (*)</label>
           <input [ngClass]="styleObligatorio('firma', firmaLugar)" type="text" [(ngModel)]="firmaLugar"
-            [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control" pInputText />
+            [(disabled)]="!permisos || disabledAction || disabledFirma" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" class="form-control" pInputText />
         </div>
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
@@ -555,12 +555,12 @@
           <br>
           <p-dropdown [ngClass]="styleObligatorio('nuevo', selectedProductoServicio)"
             [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [(disabled)]="!permisos"
-            styleClass="widthAll" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
+            styleClass="widthAll" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
           <app-fecha [inputStyleClass]="styleObligatorio('nuevo', datefechaUso)" [(value)]="datefechaUso"
-            [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)"
+            [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (ngModelChange)="muestraCamposObligatorios('datosBancarios')"
             (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
 
           <!-- <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" [(disabled)]="!permisos" icon="far fa-calendar-alt" showIcon="true"

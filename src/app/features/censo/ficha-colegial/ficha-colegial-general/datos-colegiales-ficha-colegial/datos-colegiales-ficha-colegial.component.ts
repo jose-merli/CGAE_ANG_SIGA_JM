@@ -536,7 +536,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.colegialesBody.incorporacion != null &&
       this.datosColegiales[0].fechaEstadoStr != null &&
       this.colegialesBody.fechapresentacion != null) {
-
+        
       if (this.isCrearColegial == false) {
         this.activarGuardarColegiales = true;
       } else {
@@ -555,6 +555,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         }
       }
     } else {
+      this.resaltadoDatosColegiales = true;
       if (this.isCrearColegial == false) {
         let colegialesSinEditar = JSON.parse(JSON.stringify(this.datosColegiales));
         colegialesSinEditar.forEach(element => {
@@ -1526,6 +1527,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     }
   }
+
   comprobarCamposColegiales() {
     // if(this.inscritoChange && this.activarGuardarColegiales){
     //   this.comprobarAuditoria('guardarDatosColegiales');

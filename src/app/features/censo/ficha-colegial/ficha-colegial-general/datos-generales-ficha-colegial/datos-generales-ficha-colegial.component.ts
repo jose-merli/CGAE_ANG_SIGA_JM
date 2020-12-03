@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, OnChanges, Output, EventEmitter, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
@@ -17,7 +17,7 @@ import { FichaColegialColegialesObject } from '../../../../../models/FichaColegi
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { Calendar, AutoComplete } from 'primeng/primeng';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
   templateUrl: './datos-generales-ficha-colegial.component.html',
@@ -163,7 +163,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   idPersona: any;
   isColegiadoEjerciente: boolean = false;
   yearRange: string;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   resultsTopics: any[] = [];
   displayAuditoria: boolean = false;
   permisos: boolean = true;
@@ -492,7 +492,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   getPartidoJudicial() {
     return this.partidoJudicial;
   }
-
 
 
   clear() {
@@ -1040,7 +1039,13 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     this.getInscritoInit();
     this.sortOptions();
     this.generalBody.etiquetas = this.etiquetasPersonaJuridicaSelecionados;
+    if(this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&
+    this.generalBody.idTipoIdentificacion != undefined && this.generalBody.soloNombre != undefined && this.generalBody.apellidos1 != undefined &&
+    this.generalBody.soloNombre != "" && this.generalBody.apellidos1 != "" && this.generalBody.idTratamiento != null &&
+    this.generalBody.idLenguaje != "" && this.generalBody.idLenguaje != undefined){
 
+    this.resaltadoDatosGenerales = true;
+    }
     if (JSON.parse(JSON.stringify(this.resultsTopics)) != undefined && JSON.parse(JSON.stringify(this.resultsTopics)) != null && JSON.parse(JSON.stringify(this.resultsTopics)).length > 0) {
       this.generalBody.temasCombo = JSON.parse(JSON.stringify(this.resultsTopics));
     }
@@ -1355,7 +1360,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   compruebaDNI() {
     // modo creacion
     this.activacionGuardarGenerales();
-
+    if(this.generalBody.idTipoIdentificacion == "" || this.generalBody.idTipoIdentificacion == undefined){
+      this.resaltadoDatosGenerales = true;
+    }
     // if (this.generalBody.nif.length > 8) {
     if (this.generalBody.idTipoIdentificacion != "50") {
       if (this.isValidDNI(this.generalBody.nif)) {
@@ -2732,6 +2739,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
     // window.scrollTo(0,0);
   }
-
+  
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }
 

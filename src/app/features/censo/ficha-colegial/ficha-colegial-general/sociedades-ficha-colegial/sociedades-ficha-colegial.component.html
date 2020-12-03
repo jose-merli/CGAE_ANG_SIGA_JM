@@ -51,12 +51,18 @@
       <div class="rowPrueba">
         <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [(selection)]="selectedDatosSociedades" pageLinks="4"
           dataKey="idDireccion" [responsive]="true" selectionMode="multiple" #tableSociedades class="tabla-listado" [value]="datosSociedades"
-          [sortOrder]="1" [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItemSociedades"
-          (onRowSelect)="redireccionarSociedades(selectedDatosSociedades)">
+          [sortOrder]="1" [paginator]="activarPaginacionSociedades()" paginatorPosition="both" [rows]="selectedItemSociedades">
           <p-column *ngFor="let col of colsSociedades" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
             [filter]="true" filterMatchMode="contains">
-          </p-column>
-
+          <ng-template let-dato="rowData" pTemplate="body">
+            <div *ngIf="col.field != 'nif' && col.field !='denominacion'">
+                <span>{{dato[col.field]}}</span>
+            </div>
+            <div *ngIf="col.field == 'nif' || col.field =='denominacion'">
+                <a [routerLink]="" (click)="redireccionarSociedades(selectedDatosSociedades)" class="enlace">{{dato[col.field]}}</a>
+            </div>
+        </ng-template>
+      </p-column>
           <ng-template pTemplate="paginatorLeft">
             <div class="mostrar d-flex text-right justify-content-end">
               <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableSociedades.first

@@ -52,13 +52,14 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.objetoSocial)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.objetoSocial" type="text" class="form-control"
+              <input [ngClass]="styleObligatorio(body.objetoSocial)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" 
+              [(ngModel)]="body.objetoSocial" type="text" class="form-control" (ngModelChange)="desactivadoGuardar()"
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
               <input [ngClass]="styleObligatorio(body.resena)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena"
-                type="text" class="form-control" pInputText>
+                type="text" class="form-control" (ngModelChange)="desactivadoGuardar()" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numPoliza" | translate}} </label>
@@ -75,7 +76,7 @@
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
               <app-fecha [inputStyleClass]="styleObligatorio(fechaConstitucion)" [(value)]="fechaConstitucion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)"
-                (valueChangeInput)="fillFechaConstitucion($event)"></app-fecha>
+                (valueChangeInput)="fillFechaConstitucion($event)" (ngModelChange)="desactivadoGuardar()"></app-fecha>
               <div *ngIf="fechaCorrecta == false">
                 <label class="labelError">La fecha no puede ser superior a la actual</label>
               </div>
@@ -107,7 +108,8 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.numRegistro)" [(ngModel)]="body.numRegistro" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" type="text" class="form-control"
+              <input [ngClass]="styleObligatorio(body.numRegistro)" [(ngModel)]="body.numRegistro"
+               [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" type="text" class="form-control" (ngModelChange)="desactivadoGuardar()"
                  [maxLength]="20" pInputText>
             </div>
             <div class="form-row p-1 col-lg-6 col-md-6">
@@ -118,11 +120,11 @@
                 <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}} (*)</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [ngClass]="styleObligatorio(body.prefijoNumsspp)" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
+                <input [ngClass]="styleObligatorio(body.prefijoNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
                   type="text" maxlength="8" class="form-control" pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [ngClass]="styleObligatorio(body.contadorNumsspp)" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
+                <input [ngClass]="styleObligatorio(body.contadorNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
                   type="text" class="form-control" (ngModelChange)="compruebaRegistro()" [maxlength]="longitudcontador"
                   pInputText>
                 <div *ngIf="contadorNoCorrecto == true">
@@ -130,19 +132,19 @@
                 </div>
               </div>
               <div class="form-group col-lg-4 col-md-4">
-                <input [ngClass]="styleObligatorio(body.sufijoNumsspp)" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
+                <input [ngClass]="styleObligatorio(body.sufijoNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
                   type="text" maxlength="8" class="form-control" pInputText>
               </div>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio(body.identificacionReg)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
+              <input [ngClass]="styleObligatorio(body.identificacionReg)" (ngModelChange)="desactivadoGuardar()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
                 class="form-control" [maxLength]="10" pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">
               <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
-              <app-fecha [inputStyleClass]="styleObligatorio(fechaInscripcion)" [(value)]="fechaInscripcion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaInscripcion($event)"
+              <app-fecha [inputStyleClass]="styleObligatorio(fechaInscripcion)" (ngModelChange)="desactivadoGuardar()" [(value)]="fechaInscripcion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaInscripcion($event)"
                 (valueChangeInput)="fillFechaInscripcion($event)"></app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6 form-group-date">

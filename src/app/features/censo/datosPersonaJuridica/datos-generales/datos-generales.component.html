@@ -79,7 +79,7 @@
             <div class="form-row">
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.literal.identificacion" | translate}} (*)</label>
-                <input [ngClass]="styleObligatorio(body.nif)" [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm()"
+                <input [ngClass]="styleObligatorio(body.nif)" [(ngModel)]="body.nif" type="text" class="form-control" (ngModelChange)="onChangeForm();muestraCamposObligatorios()"
                   [disabled]="!editar || disabledAction || tarjeta == '2'" pInputText>
                 <div *ngIf="identificacionValida == false">
                   <label class="labelError">{{"El cif es inválido"}}</label>
@@ -88,7 +88,7 @@
               <div *ngIf="editar" class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
                 <p-dropdown [ngClass]="styleObligatorio(selectedTipo)" class="select-form" [(ngModel)]="selectedTipo" [options]="comboIdentificacion"
-                  optionLabel="label" (ngModelChange)="getTipo($event)" [disabled]="true"></p-dropdown>
+                  optionLabel="label" (ngModelChange)="getTipo($event)" [disabled]="true" (ngModelChange)="muestraCamposObligatorios()"></p-dropdown>
               </div>
               <div *ngIf="!editar" class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
@@ -99,7 +99,7 @@
                 <label>{{"administracion.usuarios.literal.fechaAlta" | translate}} (*)</label>
                 <app-fecha [inputStyleClass]="styleObligatorio(body.fechaConstitucion)" [(value)]="body.fechaConstitucion" [disabled]="!editar || disabledAction || tarjeta == '2'"
                   (valueChangeSelected)="fillFechaConstitucion($event)"
-                  (valueChangeInput)="detectFechaConstitucionInput($event)"></app-fecha>
+                  (valueChangeInput)="detectFechaConstitucionInput($event)" (ngModelChange)="muestraCamposObligatorios()"></app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6 form-group-date">
                 <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}</label>
@@ -112,12 +112,12 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}} (*)</label>
                 <input [ngClass]="styleObligatorio(body.denominacion)" [(ngModel)]="body.denominacion" type="text" class="form-control" (ngModelChange)="onChangeForm()"
-                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [maxLength]="99" pInputText>
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (ngModelChange)="muestraCamposObligatorios()" [maxLength]="99" pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}} (*)</label>
                 <input [ngClass]="styleObligatorio(body.abreviatura)" [(ngModel)]="body.abreviatura" type="text" class="form-control" (ngModelChange)="onChangeForm()"
-                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [maxLength]="100" pInputText>
+                  [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (ngModelChange)="muestraCamposObligatorios()" [maxLength]="100" pInputText>
               </div>
               <!--<div class="form-row p-1 col-lg-6 col-md-6">
               <div class="col-lg-12 col-md-12">
@@ -147,7 +147,7 @@
                   placeholder="{{'general.boton.seleccionar' | translate}}"
                   [disabled]="camposDesactivados || disabledAction || tarjeta == '2'"
                   [(ngModel)]="idiomaPreferenciaSociedad" [filter]="true" (ngModelChange)="onChangeForm()"
-                  filterBy="label"></p-dropdown>
+                  filterBy="label" (ngModelChange)="muestraCamposObligatorios()"></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>

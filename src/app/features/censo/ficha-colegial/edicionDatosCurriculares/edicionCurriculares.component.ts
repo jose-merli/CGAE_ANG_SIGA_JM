@@ -767,8 +767,12 @@ disabledAction:boolean = false;
   }
 
   muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    if((this.body.idTipoCv==null || this.body.idTipoCv==undefined || this.body.idTipoCv==="") || 
+    (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
+    (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+      this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
+    }
   }
 
   checkDatos(){

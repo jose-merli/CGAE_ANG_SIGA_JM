@@ -1419,7 +1419,24 @@ export class DatosGenerales implements OnInit {
     }
   }
   muestraCamposObligatorios(){
+    if (
+      this.body.abreviatura == "" ||
+      this.body.abreviatura == undefined ||
+      !this.onlySpaces(this.body.abreviatura) ||
+      this.body.nif == "" ||
+      this.body.nif == undefined ||
+      !this.onlySpaces(this.body.nif) ||
+      this.body.denominacion == "" ||
+      this.body.denominacion == undefined ||
+      !this.onlySpaces(this.body.denominacion) ||
+      this.body.fechaConstitucion == undefined ||
+      !this.onlySpaces(this.body.nif) ||
+      this.idiomaPreferenciaSociedad == "" ||
+      this.idiomaPreferenciaSociedad == undefined
+      //this.file != undefined
+    ) {
     this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
   }
+}
 }

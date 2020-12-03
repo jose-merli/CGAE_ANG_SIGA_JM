@@ -194,10 +194,10 @@
               </label>
 
               <br />
-              <p-multiSelect [defaultLabel]="textFilter" filter="true" filterBy="label,labelSinTilde" [(ngModel)]="etiquetasPersonaJuridicaSelecionados"
+              <p-multiSelect #someDropdown [defaultLabel]="textFilter" filter="true" filterBy="label,labelSinTilde" [(ngModel)]="etiquetasPersonaJuridicaSelecionados"
                 [options]="comboEtiquetas" [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction"
                 styleClass="widthAll" [panelStyle]="{width:'100%'}" (ngModelChange)="activacionGuardarGenerales()" (onSelect)="onSelect($event)"
-                (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()"></p-multiSelect>
+                (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()" (onPanelShow)="focusInputField()"></p-multiSelect>
             </div>
           </div>
         </div>
