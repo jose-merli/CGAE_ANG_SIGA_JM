@@ -112,6 +112,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
+    this.onlyCheckDatos();
     if (event.value != undefined) {
       this.body.cuerpo = "";
       if (
@@ -196,6 +197,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeTipoEnvio(e) {
+    this.onlyCheckDatos();
     if (e != null) {
       this.body.tipoEnvio = e.originalEvent.currentTarget.innerText;
     }
@@ -423,4 +425,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
     }
   }
+
+  onlyCheckDatos() {
+    if (this.isGuardarDisabled() && (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.idPlantillaEnvios == null || this.body.idPlantillaEnvios == undefined || this.body.idPlantillaEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } 
+    }
+  
 }

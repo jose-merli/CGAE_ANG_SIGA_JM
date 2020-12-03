@@ -427,6 +427,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   onChangeClaseComunicaciones(e){
+    this.onlyCheckDatos();
     let idClaseComunicacion = e.value; 
     if (idClaseComunicacion != "" && idClaseComunicacion != null && idClaseComunicacion != undefined) {
       this.selectedClaseCom = true;
@@ -489,6 +490,22 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.muestraCamposObligatorios();
       }else{
         this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+          this.muestraCamposObligatorios();
+        }
+      }
+    }else{
+      if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+        this.muestraCamposObligatorios();
       }
     }
   }

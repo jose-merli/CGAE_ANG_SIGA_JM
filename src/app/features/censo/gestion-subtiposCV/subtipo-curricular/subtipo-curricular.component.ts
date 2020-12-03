@@ -47,7 +47,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   @ViewChild("table")
   table;
-  selectedDatos = [];
+  selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
   datos: any[];
@@ -60,7 +60,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   msgs: any = [];
   datosOriginal;
-
+  editable: boolean = false;
   showSubtipoCurricular: boolean = true;
   progressSpinner: boolean = false;
   buscar: boolean = false;
@@ -502,11 +502,21 @@ export class SubtipoCurricularComponent implements OnInit {
       element.isMod = false;
     });
 
-    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo2 ==
-      selectedDatos.idTipoCvSubtipo2 && x.idInstitucion == selectedDatos.idInstitucion);
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos[0].idTipoCV && x.idTipoCvSubtipo2 ==
+      selectedDatos[0].idTipoCvSubtipo2 && x.idInstitucion == selectedDatos[0].idInstitucion);
     this.datos[id].isMod = true;
 
-  }
+    this.numSelected = this.selectedDatos.length;
+
+    if(this.selectedDatos.length > 1){
+          this.datos.forEach(element => {
+            element.isMod = false;
+          });
+        }
+        else{
+          this.editable = true;
+     }
+   }
 
   changeInput(selectedDatos) {
     this.editar = true;
@@ -654,9 +664,17 @@ export class SubtipoCurricularComponent implements OnInit {
       element.isMod = false;
     });
 
-    this.selectedDatos = [];
-    this.table.reset();
+    if(this.selectedDatos.length ==1){
+      this.selectedDatos.forEach(element => {
+        element.isMod = true;
+      });
+    }
 
+    this.table.reset();
+    this.numSelected = selectedDatos.length;
+    if(this.numSelected <= 1){
+      this.editable = true;
+    }
   }
 
   cancelEditAction() {

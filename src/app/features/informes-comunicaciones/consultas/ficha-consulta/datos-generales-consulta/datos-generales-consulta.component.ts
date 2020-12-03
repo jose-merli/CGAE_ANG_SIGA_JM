@@ -227,6 +227,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   }
 
   cargaComboClaseCom(event) {
+    this.onlyCheckDatos();
     if (event != null) {
       this.body.idModulo = event.value;
     }
@@ -539,6 +540,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeObjetivo() {
+    this.onlyCheckDatos(); 
     //sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
   }
 
@@ -568,6 +570,22 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.muestraCamposObligatorios();
       }else{
         this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+          this.muestraCamposObligatorios();
+        }
+      }
+    }else{
+      if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+        this.muestraCamposObligatorios();
       }
     }
   }
