@@ -1161,4 +1161,10 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
       }
     }
   }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.mySelect.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

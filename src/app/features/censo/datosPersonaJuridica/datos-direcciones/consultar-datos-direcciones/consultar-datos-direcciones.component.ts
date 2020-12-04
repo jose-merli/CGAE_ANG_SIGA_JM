@@ -16,6 +16,7 @@ import { Browser } from "../../../../../../../node_modules/protractor";
 import { Checkbox } from "../../../../../../../node_modules/primeng/primeng";
 import { findIndex } from 'rxjs/operators';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
   selector: "app-consultar-datos-direcciones",
@@ -102,7 +103,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
   tlfValido: boolean = true;
   faxValido: boolean = true;
   mvlValido: boolean = true;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   resaltadoDatos: boolean = false
 
   constructor(
@@ -1449,5 +1450,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.edicionEmail)
       this.edicionEmail = false;
     else this.edicionEmail = true;
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

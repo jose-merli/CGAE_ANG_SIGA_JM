@@ -90,7 +90,7 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
             <p-multiSelect #mySelect [defaultLabel]="literalMultiselect" autoWidth="false" [(ngModel)]='selectedTemas' [options]="comboTemas"
-              styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde">
+              styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField()">
             </p-multiSelect>
           </div>
 

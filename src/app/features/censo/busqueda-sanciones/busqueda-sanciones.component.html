@@ -48,9 +48,9 @@
                 <div class="form-row">
                     <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
-                        <p-multiSelect [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios" [disabled]="disabledColegio"
+                        <p-multiSelect #someDropdown [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegios_seleccionados' [options]="colegios" [disabled]="disabledColegio"
                             optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll"
-                            [panelStyle]="{width:'100%'}"></p-multiSelect>
+                            [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField()"></p-multiSelect>
                     </div>
 
                     <div class="form-group-interlineado col-lg-3 col-md-2">

@@ -23,7 +23,7 @@ import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { PersonaJuridicaItem } from '../../../models/PersonaJuridicaItem';
 import { ArrayType } from '../../../../../node_modules/@angular/compiler/src/output/output_ast';
 import { CommonsService } from '../../../_services/commons.service';
-
+import { MultiSelect } from 'primeng/multiselect';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -82,7 +82,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   institucionActual: string;
   labelRemitente: string;
   addDestinatarioIndv: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
+  @ViewChild('someDropdown2') someDropdown2: MultiSelect;
   currentRoute: String;
   idClaseComunicacion: String;
   keys: any[] = [];
@@ -1255,5 +1256,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+  focusInputField2() {
+    setTimeout(() => {
+      this.someDropdown2.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

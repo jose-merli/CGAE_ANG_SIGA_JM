@@ -123,8 +123,8 @@
               </p-dropdown> -->
 
 
-              <p-multiSelect defaultLabel="{{ textFilter | translate}}" styleClass="widthAll" [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
-                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="true">
+              <p-multiSelect #someDropdown defaultLabel="{{ textFilter | translate}}" styleClass="widthAll" [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
+                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="true" (onPanelShow)="focusInputField()">
               </p-multiSelect>
 
 

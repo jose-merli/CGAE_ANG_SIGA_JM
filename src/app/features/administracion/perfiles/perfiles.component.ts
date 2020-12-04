@@ -21,6 +21,7 @@ import { ComboItem } from "./../../../../app/models/ComboItem";
 import { DataTable } from "primeng/datatable";
 import { Error } from "../../../models/Error";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
   selector: "app-perfiles",
@@ -65,6 +66,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   selectedItem: number = 10;
   selectAll: boolean = false;
   numSelected: number = 0;
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
 
 
   constructor(
@@ -712,6 +714,12 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 
 }

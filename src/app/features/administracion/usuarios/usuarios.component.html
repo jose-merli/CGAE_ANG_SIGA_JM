@@ -116,10 +116,10 @@
               </div>
 
               <div *ngIf="col.field == 'perfiles'">
-                <p-multiSelect [disabled]="!activacionEditar || setItalic(dato) || selectMultiple" *ngIf="!dato.usuarioNuevo" #multiSelectPJ
+                <p-multiSelect #someDropdown [disabled]="!activacionEditar || setItalic(dato) || selectMultiple" *ngIf="!dato.usuarioNuevo" #multiSelectPJ
                   defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.perfiles" [options]="usuarios_perfil" optionLabel="label"
                   [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }" [overlayVisible]="dato.overlayVisible"
-                  (onFocus)="openMultiSelect(dato)" (onChange)="editPerfiles(dato)"></p-multiSelect>
+                  (onFocus)="openMultiSelect(dato)" (onChange)="editPerfiles(dato)"  (onPanelShow)="focusInputField()"></p-multiSelect>
 
                 <p-dropdown [disabled]="!activacionEditar" *ngIf="dato.usuarioNuevo" class="select-form" [(ngModel)]='dato.perfiles' placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
