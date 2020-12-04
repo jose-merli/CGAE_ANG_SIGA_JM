@@ -2580,6 +2580,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   abrirFicha(key) {
+    this.onlyCheckDatos();
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.saveCalendarFlag) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -2821,5 +2822,19 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else {
       this.saveEvent();
     }
+  }
+
+  onlyCheckDatos() {
+    if (this.validateForm()) {
+      if (this.newEvent.fechaInicioRepeticion == undefined && this.newEvent.fechaFinRepeticion == undefined && this.newEvent.valoresRepeticion == undefined) {
+        this.muestraCamposObligatorios();
+      } else {
+        if (this.newEvent.fechaInicioRepeticion != undefined || this.newEvent.fechaFinRepeticion != undefined || this.newEvent.valoresRepeticion != undefined) {
+          this.muestraCamposObligatoriosTodos();
+        } else {
+          this.muestraCamposObligatoriosOpcionales();
+        }
+      }
+    } 
   }
 }

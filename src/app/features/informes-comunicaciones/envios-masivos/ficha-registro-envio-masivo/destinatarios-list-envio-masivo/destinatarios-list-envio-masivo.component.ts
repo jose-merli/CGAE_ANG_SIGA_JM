@@ -176,26 +176,26 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         });
     }
 
-    navigateTo(dato) {
-        let idConsulta = dato[0].idConsulta;
-        console.log(dato);
-        if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
+    navigateTo() {
+        if (!this.selectMultiple && !this.nuevaConsulta) {
             if (
-                dato[0].generica == "No" ||
-                (this.institucionActual == 2000 && dato[0].generica == "Si")
-            ) {
+                this.institucionActual == 2000 )
+            {
                 sessionStorage.setItem("consultaEditable", "S");
             } else {
                 sessionStorage.setItem("consultaEditable", "N");
             }
-            sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
             this.router.navigate(["/fichaConsulta"]);
         }
         this.numSelected = this.selectedDatos.length;
     }
+    
     actualizaSeleccionados(selectedDatos) {
-        this.numSelected = selectedDatos.length;
-    }
+        if (this.selectedDatos != undefined) {
+          
+          this.numSelected = this.selectedDatos.length;
+        }
+      }
 
     getDatos() {
         if (sessionStorage.getItem("enviosMasivosSearch") != null) {
@@ -291,6 +291,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
     }
 
     addConsulta() {
+        this.numSelected = 0;
         let objNewConsulta = {
             idConsulta: "",
             nombre: "",
@@ -469,18 +470,17 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         this.table.reset();
     }
 
-    isSelectMultiple() {
-        this.selectMultiple = !this.selectMultiple;
-        this.nuevaConsulta = false;
-        if (!this.selectMultiple) {
-            this.selectedDatos = [];
-            this.numSelected = 0;
+    isSelectMultiple(selectedDatos) {
+    
+        if (this.selectedDatos != undefined) {
+          if(this.selectedDatos.length == 1){
+            // this.activacionEditar = true;
+          }
+          this.numSelected = this.selectedDatos.length;
         } else {
-            this.selectAll = false;
-            this.selectedDatos = [];
-            this.numSelected = 0;
+          this.selectedDatos = [];
         }
-    }
+      }
 
     onChangeSelectAll() {
         if (this.selectAll === true) {

@@ -29,12 +29,12 @@
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)</label>
             <input [ngClass]="styleObligatorio(body.nombre)" type="text" name="nombre" class="form-control"
-              [(disabled)]="!editar" [(ngModel)]='body.nombre' (ngModelChange)="activacionGuardarGenerales()" pInputText>
+              [(disabled)]="!editar" [(ngModel)]='body.nombre' (ngModelChange)="onlyCheckDatos()" pInputText>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.descripcion" | translate}}</label>
-            <input type="text" name="descripcion" class="form-control" [(disabled)]="!editar"
+            <input type="text" name="descripcion" class="form-control" [(disabled)]="!editar" 
               [(ngModel)]='body.descripcion' pInputText>
           </div>
 
@@ -47,7 +47,7 @@
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.modo" | translate}} (*)</label>
             <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" [ngClass]="styleObligatorio(body.modo)" class="select-form" [(disabled)]="!editar"
-              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.modo" (ngModelChange)="muestraCamposObligatorios()"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.modo" (ngModelChange)="onlyCheckDatos()"
               [options]="contadores_modo"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 col-md-3">
@@ -58,8 +58,8 @@
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.contadorActual" | translate}}
               (*)</label>
-            <input [ngClass]="styleObligatorio(body.contador)" type="text" name="prefijo" (ngModelChange)="muestraCamposObligatorios()" [(disabled)]="!editar"
-              class="form-control" [(ngModel)]='body.contador' pInputText>
+            <input [ngClass]="styleObligatorio(body.contador)" type="text" name="prefijo" [(disabled)]="!editar"
+              class="form-control" [(ngModel)]='body.contador' (ngModelChange)="onlyCheckDatos()" pInputText>
           </div>
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.sufijo" | translate}}</label>
@@ -69,7 +69,7 @@
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.parametrosGenerales.literal.longitud" | translate}}
               (*)</label>
-            <input [ngClass]="styleObligatorio(body.longitudcontador)" (ngModelChange)="muestraCamposObligatorios()" type="text" name="descripcion"
+            <input [ngClass]="styleObligatorio(body.longitudcontador)" type="text" name="descripcion" (ngModelChange)="onlyCheckDatos()"
               [(disabled)]="!editar" class="form-control" [(ngModel)]='body.longitudcontador' pInputText>
           </div>
         </div>
