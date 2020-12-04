@@ -29,7 +29,7 @@ import { ModelosComunicacionesItem } from "../../../models/ModelosComunicaciones
 import { saveAs } from 'file-saver/FileSaver';
 import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
 import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
-import { OverlayPanelModule, OverlayPanel } from 'primeng/primeng';
+import { OverlayPanelModule, OverlayPanel, MultiSelect } from 'primeng/primeng';
 import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
@@ -90,7 +90,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   body: DatosColegiadosItem = new DatosColegiadosItem();
   colegiadoSearch = new DatosColegiadosObject();
   subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
-
+  @ViewChild('inputNumColegiado') inputNumColegiado: ElementRef;
   siNoResidencia: any;
   siNoInscrito: any;
   selectedEstadoCivil: any;
@@ -101,7 +101,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedTipoDireccion: any;
   resultadosPoblaciones: any;
   historico: boolean;
-
+  @ViewChild('multiSelectSituacion') multiSelectSituacion: MultiSelect;
   fechaIncorporacionHastaSelect: Date;
   fechaIncorporacionDesdeSelect: Date;
   fechaNacimientoHastaSelect: Date;
@@ -256,6 +256,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       }
     ];
     this.selection = "multiple";
+
+    setTimeout(() => {
+      this.inputNumColegiado.nativeElement.focus();  
+    }, 300);
   }
 
   onHideDatosGenerales() {
@@ -264,6 +268,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   onHideDatosColegiales() {
     this.showDatosColegiales = !this.showDatosColegiales;
+    if(this.showDatosColegiales){
+      setTimeout(() => {
+        this.inputNumColegiado.nativeElement.focus();  
+      }, 300);
+    }
   }
 
   onHideDatosGeneralesAvanzados() {
@@ -1321,6 +1330,12 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.multiSelectSituacion.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 
 }

@@ -296,8 +296,14 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     }
   }
   muestraCamposObligatorios() {
+    if ((this.body.nombre == undefined || this.body.nombre == null || this.body.nombre == "") ||
+        (this.body.modo == undefined || this.body.modo == null || this.body.modo == "") ||
+        (this.body.contador == undefined || this.body.contador == null || this.body.contador == "") ||
+        (this.body.longitudcontador == undefined || this.body.longitudcontador == null || this.body.longitudcontador == "") ||
+        (this.body.reconfiguracioncontador == undefined || this.body.reconfiguracioncontador == null || this.body.reconfiguracioncontador == "")) {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatos = true;
+        }
   }
 
 
