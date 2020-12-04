@@ -55,10 +55,9 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field != 'pathDocumento'"><a [routerLink]="" class="enlace"
-                (click)="navigateTo(dato)">{{dato[col.field]}}</a> </span>
+              <span *ngIf="col.field != 'pathDocumento'">{{dato[col.field]}}</span>
               <span *ngIf="col.field == 'pathDocumento'">
-                <i class="fa fa-download"></i>
+                <i class="fa fa-download" (click)="navigateTo(dato)"></i>
               </span>
             </td>
           </tr>

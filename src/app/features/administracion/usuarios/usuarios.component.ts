@@ -23,6 +23,7 @@ import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { esCalendar } from "./../../../utils/calendar";
 import { CommonsService } from '../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -79,6 +80,7 @@ export class Usuarios extends SigaWrapper implements OnInit {
   selectionMode: string = "single";
   datosInicial: any[];
   filtrosIniciales: any;
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
   constructor(
@@ -1037,7 +1039,11 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.msgs = [];
   }
 
-
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 
 
 }

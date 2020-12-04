@@ -18,6 +18,7 @@ import { debug } from "util";
 import { Router } from "@angular/router";
 import { CommonsService } from '../../../../_services/commons.service';
 
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-datos-registrales",
   templateUrl: "./datos-registrales.component.html",
@@ -110,6 +111,8 @@ export class DatosRegistralesComponent implements OnInit {
   prefijoSSPPInicial;
   sufijoSSPPInicial;
   contadorSSPPInicial;
+
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
 
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
@@ -911,5 +914,11 @@ export class DatosRegistralesComponent implements OnInit {
   muestraCamposObligatorios(){
     this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

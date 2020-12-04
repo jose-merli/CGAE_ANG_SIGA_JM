@@ -57,7 +57,7 @@ import { FichaDatosCurricularesObject } from "../../../models/FichaDatosCurricul
 import { DatosSolicitudMutualidadItem } from "../../../models/DatosSolicitudMutualidadItem";
 import * as moment from 'moment';
 import { findIndex } from 'rxjs/operators';
-
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-ficha-colegial",
   templateUrl: "./ficha-colegial.component.html",
@@ -148,6 +148,7 @@ export class FichaColegialComponent implements OnInit {
   situacionPersona: String;
   camposDesactivados: boolean = false;
   datos: any[] = [];
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   datosCurriculares: any[] = [];
   sortF: any;
   sortO: any;
@@ -6400,4 +6401,9 @@ export class FichaColegialComponent implements OnInit {
     });
   }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

@@ -126,9 +126,9 @@
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ 'censo.datosDireccion.literal.tipo.direccion' | translate }} (*)</label>
-                <p-multiSelect [ngClass]="styleObligatorio(body.idTipoDireccion)" [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion'
+                <p-multiSelect #someDropdown [ngClass]="styleObligatorio(body.idTipoDireccion)" [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion'
                   [options]="comboTipoDireccion" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1"
-                  [disabled]="tipoDireccionDisable() || permisoTarjeta == '2'" (onChange)="onChangeTipoDireccion($event)"></p-multiSelect>
+                  [disabled]="tipoDireccionDisable() || permisoTarjeta == '2'" (onChange)="onChangeTipoDireccion($event)" (onPanelShow)="focusInputField()"></p-multiSelect>
               </div>
             </div>
           </div>

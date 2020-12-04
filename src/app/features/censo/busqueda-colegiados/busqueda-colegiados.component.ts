@@ -31,7 +31,6 @@ import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
 import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
 import { OverlayPanelModule, OverlayPanel, MultiSelect } from 'primeng/primeng';
 import { CommonsService } from '../../../_services/commons.service';
-
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -64,7 +63,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectMultiple: boolean = false;
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
+  @ViewChild('someDropdown2') someDropdown2: MultiSelect;
+  @ViewChild('someDropdown3') someDropdown3: MultiSelect;
   es: any = esCalendar;
   publicarDatosContacto: boolean;
   editar: boolean = true;
@@ -1334,8 +1335,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   focusInputField() {
     setTimeout(() => {
-      this.multiSelectSituacion.filterInputChild.nativeElement.focus();  
+      this.someDropdown.filterInputChild.nativeElement.focus();  
     }, 300);
   }
-
+  focusInputField2() {
+    setTimeout(() => {
+      this.someDropdown2.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+  focusInputField3() {
+    setTimeout(() => {
+      this.someDropdown3.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

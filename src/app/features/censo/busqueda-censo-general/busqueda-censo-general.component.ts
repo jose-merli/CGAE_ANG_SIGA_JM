@@ -13,6 +13,7 @@ import { TranslateService } from "../../../commons/translate";
 import { ConfirmationService } from "../../../../../node_modules/primeng/primeng";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
 import { CommonsService } from '../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -53,6 +54,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   modoBusqueda: string = "aprox";
   modoBusquedaAprox: boolean = true;
   selectedItem: number = 10;
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   @ViewChild("table")
   table;
   selectedDatos;
@@ -577,5 +579,10 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     }
   }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 
 }

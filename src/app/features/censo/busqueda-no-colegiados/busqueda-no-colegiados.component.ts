@@ -25,7 +25,6 @@ import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { SigaServices } from "../../../_services/siga.service";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
 import { CommonsService } from '../../../_services/commons.service';
-
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -62,7 +61,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   es: any;
 
   historico: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   cols: any;
   datos: any;
   rowsPerPage: any;
@@ -1038,4 +1037,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

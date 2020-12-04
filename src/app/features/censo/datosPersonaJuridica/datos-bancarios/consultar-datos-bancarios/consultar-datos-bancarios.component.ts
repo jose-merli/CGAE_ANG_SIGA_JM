@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 //import "rxjs/Rx";
 import { saveAs } from "file-saver/FileSaver";
 import { CommonsService } from '../../../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
   selector: "app-consultar-datos-bancarios",
@@ -31,7 +32,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   progressSpinner: boolean = false;
   editar: boolean = false;
   blockCrear: boolean = true;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   editarMandato: boolean = false;
   formValido: boolean;
   ibanValido: boolean;
@@ -2358,5 +2359,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.insertarAnexo();
       }
     }
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

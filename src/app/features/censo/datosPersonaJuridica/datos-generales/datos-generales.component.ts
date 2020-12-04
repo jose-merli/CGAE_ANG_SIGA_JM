@@ -23,7 +23,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { NullAstVisitor } from "../../../../../../node_modules/@angular/compiler";
 import { ComboEtiquetasItem } from "../../../../models/ComboEtiquetasItem";
 import { CommonsService } from '../../../../_services/commons.service';
-
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
@@ -57,7 +57,7 @@ export class DatosGenerales implements OnInit {
   progressSpinner: boolean = false;
   openFicha: boolean = false;
   displayAuditoria: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
   newDireccion: boolean = false;
@@ -1438,5 +1438,10 @@ export class DatosGenerales implements OnInit {
     this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
     this.resaltadoDatos=true;
   }
+}
+focusInputField() {
+  setTimeout(() => {
+    this.someDropdown.filterInputChild.nativeElement.focus();  
+  }, 300);
 }
 }

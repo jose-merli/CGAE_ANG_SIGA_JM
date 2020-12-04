@@ -1165,4 +1165,10 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
     if (event.data && event.data.flagArchivado == 0 && !this.modoHistorico)
       this.selectedDatos.pop();
   }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.mySelect.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

@@ -6,7 +6,7 @@ import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 import { Router } from "@angular/router";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-remitente-plantilla",
   templateUrl: "./remitente-plantilla.component.html",
@@ -48,6 +48,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   cols2: any = [];
   textFilter: String;
   textSelected: String = this.translateService.instant("general.mensaje.0.etiquetas.seleccionadas");
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -561,5 +562,11 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
     //     this.direccion = this.remitente.direccion[0];
     //   }
     // }
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

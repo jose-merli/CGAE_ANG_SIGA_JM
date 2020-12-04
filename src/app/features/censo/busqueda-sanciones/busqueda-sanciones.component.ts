@@ -15,7 +15,7 @@ import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { AuthenticationService } from "../../../_services/authentication.service";
 import { CommonsService } from '../../../_services/commons.service';
-
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-busqueda-sanciones",
   templateUrl: "./busqueda-sanciones.component.html",
@@ -40,7 +40,7 @@ export class BusquedaSancionesComponent implements OnInit {
   datesType: SelectItem[];
   colegios: any[] = [];
   colegios_seleccionados: any[] = [];
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   msgs: any;
   es: any = esCalendar;
 
@@ -660,4 +660,9 @@ export class BusquedaSancionesComponent implements OnInit {
     });
   }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }
