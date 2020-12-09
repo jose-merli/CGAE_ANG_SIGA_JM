@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef, ViewEncapsulation } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
@@ -22,7 +22,8 @@ export enum KEY_CODE {
 @Component({
   selector: "app-busqueda-censo-general",
   templateUrl: "./busqueda-censo-general.component.html",
-  styleUrls: ["./busqueda-censo-general.component.scss"]
+  styleUrls: ["./busqueda-censo-general.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class BusquedaCensoGeneralComponent implements OnInit {
   textFilter: String = "Elegir";

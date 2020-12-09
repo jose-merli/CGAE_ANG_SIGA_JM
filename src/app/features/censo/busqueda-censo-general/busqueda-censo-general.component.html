@@ -88,15 +88,21 @@
       <!--<div class="m-3 d-flex justify-content-end">
 
             </div>-->
-      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [(selection)]="selectedDatos" (onRowSelect)="irFichaColegial(selectedDatos)"
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [(selection)]="selectedDatos"
         [responsive]="true" selectionMode="single" #table class="tabla-listado" [value]="datos" [sortOrder]="1" [paginator]="true"
         paginatorPosition="both" [rows]="selectedItem" pageLinks="4">
+        
         <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
           filterPlaceholder="{{ 'general.boton.search' | translate }}" filterMatchMode="contains">
+          <ng-template let-dato="rowData" pTemplate="body">
           <span *ngIf="col.field=='nombre'"><a [routerLink]="" class="enlace"
-            (click)="getColegiado(selectedDatos)">{{dato.nombre}}</a></span>
+            (click)="irFichaColegial(dato)">{{dato.nombre}}</a></span>
             <span *ngIf="col.field=='apellidos'"><a [routerLink]="" class="enlace"
-              (click)="getColegiado(selectedDatos)">{{dato.apellidos}}</a></span>
+              (click)="irFichaColegial(dato)">{{dato.apellidos}}</a></span>
+              <div *ngIf="col.field != 'nombre' && col.field != 'apellidos'">
+                <span>{{ dato[col.field]}}</span>
+              </div>
+          </ng-template>
         </p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
