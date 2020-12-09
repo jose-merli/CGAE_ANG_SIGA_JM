@@ -585,4 +585,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     }, 300);
   }
 
+  navigateTo() {
+    this.router.navigate(["/fichaColegial"]);
+  }
+
 }

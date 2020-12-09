@@ -44,7 +44,7 @@ export class SubtipoCurricularComponent implements OnInit {
   inputDesc: ElementRef;
   @ViewChild("inputCdgoExt")
   inputCdgoExt: ElementRef;
-
+  institucionActual;
   @ViewChild("table")
   table;
   selectedDatos;
@@ -186,6 +186,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   // Para la creación de un nuevo elemento
   newElement() {
+    this.numSelected = 0;
     this.selectAll = false;
     this.selectMultiple = false;
 
@@ -355,11 +356,35 @@ export class SubtipoCurricularComponent implements OnInit {
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }
+    //Obtenemos la institucion actual
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+    //Recorremos el array de filas seleccionadas y los que coincidan se añaden al array para eliminar
+    let selectedDatosEliminar = [];
+    this.selectedDatos.forEach(element => {
+      if (element.idInstitucion == this.institucionActual) {
+        selectedDatosEliminar.push(element);
+      }
+    });
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.removeElement(selectedDatos);
+        if(selectedDatosEliminar.length > 0){
+          this.removeElement(selectedDatosEliminar);
+        }
+        else {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancelado",
+              detail: this.translateService.instant(
+                "messages.deleted.error.curricular"
+              )
+            }
+          ];   
+        }
       },
       reject: () => {
         this.msgs = [
