@@ -250,7 +250,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
           }
 
         } else {
-          saveAs(data, dato[0].pathDocumento);
+          saveAs(data, dato[0].nombreDocumento);
         }
         this.selectedDatos = [];
       });
