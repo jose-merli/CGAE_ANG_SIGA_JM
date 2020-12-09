@@ -94,9 +94,9 @@
         <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
           filterPlaceholder="{{ 'general.boton.search' | translate }}" filterMatchMode="contains">
           <span *ngIf="col.field=='nombre'"><a [routerLink]="" class="enlace"
-            (click)="navigateTo()">{{dato.nombre}}</a></span>
+            (click)="getColegiado(selectedDatos)">{{dato.nombre}}</a></span>
             <span *ngIf="col.field=='apellidos'"><a [routerLink]="" class="enlace"
-              (click)="navigateTo()">{{dato.apellidos}}</a></span>
+              (click)="getColegiado(selectedDatos)">{{dato.apellidos}}</a></span>
         </p-column>
         <ng-template pTemplate="paginatorLeft">
           <div class="mostrar">
