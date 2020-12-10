@@ -1652,6 +1652,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
+    if(!this.openFicha){
+      this.resaltadoDatosGenerales=true;
+    }
     if (
       key == "generales" &&
       !this.activacionTarjeta

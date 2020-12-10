@@ -115,6 +115,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   checkEditar() {
+    this.onlyCheckDatos();
     this.body.fechareconfiguracion = this.arreglarDate(this.fechareconfiguracion);
     this.comparacion =
       JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
@@ -129,6 +130,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   checkEditarGuardar() {
+    this.onlyCheckDatos();
     this.body.fechareconfiguracion = this.arreglarDate(this.fechareconfiguracion);
     this.comparacion =
       JSON.stringify(this.bodyPermanente) == JSON.stringify(this.body);
@@ -185,6 +187,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   isEditar() {
+    this.onlyCheckDatos();
     this.modificableToBody();
     if (this.body.nombre != null) {
       this.body.nombre = this.body.nombre.trim();
@@ -227,6 +230,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   confirmEdit() {
+    this.onlyCheckDatos();
     let mess = this.translateService.instant(
       "general.message.aceptar.y.volver"
     );
@@ -334,13 +338,12 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   }
 
   onlyCheckDatos() {
-    if (!this.checkEditar()) {}
       if ((this.body.nombre == undefined || this.body.nombre == null || this.body.nombre == "") ||
         (this.body.modo == undefined || this.body.modo == null || this.body.modo == "") ||
         (this.body.contador == undefined || this.body.contador == null || this.body.contador == "") ||
         (this.body.longitudcontador == undefined || this.body.longitudcontador == null || this.body.longitudcontador == "") ||
         (this.body.reconfiguracioncontador == undefined || this.body.reconfiguracioncontador == null || this.body.reconfiguracioncontador == "")) {
-        this.muestraCamposObligatorios();
+          this.resaltadoDatos=true;
       } 
     }
 }

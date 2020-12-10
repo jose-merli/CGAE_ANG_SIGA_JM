@@ -154,6 +154,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
 
   restablecer() {
+    this.onlyCheckDatos();
     this.resaltadoDatos=false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     if (this.body.fechaProgramada != null) {
@@ -163,6 +164,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
   }
 
   guardar() {
+    this.onlyCheckDatos();
     this.resaltadoDatos=false;
     if (this.currentDate > this.body.fechaProgramada) {
       this.showWarning(this.translateService.instant(
@@ -301,7 +303,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
 
   onlyCheckDatos(){
     if(this.isGuardarDisabled() && (this.body.fechaProgramada==undefined || this.body.fechaProgramada==null)){
-        this.muestraCamposObligatorios();
+      this.resaltadoDatos=true;
     }
   }
 }

@@ -64,7 +64,7 @@
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.calendario' | translate }} (*)</label>
               <p-dropdown [ngClass]="styleObligatorio('', newEvent.idTipoCalendario)" class="select-form" [options]="comboCalendars" [filter]="true" filterBy="label,labelSinTilde" placeholder="{{'tablas.literal.seleccionar' | translate}}"
-                name="type" (ngModelChange)="onChangeSelectCalendar($event)" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"
+                name="type" (ngModelChange)="onlyCheckDatos()" [(ngModel)]="newEvent.idTipoCalendario" [disabled]="modoTipoEventoInscripcion || isFormacionCalendar || modoEdicionEvento  || tipoAccesoLectura"
                 [showClear]="true"></p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -76,7 +76,7 @@
           <div class="row mb-3">
             <div class="col-lg-6 col-md-6">
               <label>{{'agenda.fichaEventos.datosGenerales.titulo' | translate}} (*)</label>
-              <input [ngClass]="styleObligatorio('', newEvent.title)" type="text" class="form-control" pInputText name="titulo" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
+              <input [ngClass]="styleObligatorio('', newEvent.title)" type="text" class="form-control" pInputText name="titulo" (ngModelChange)="onlyCheckDatos()" [(ngModel)]="newEvent.title" [disabled]="tipoAccesoLectura || isEventoCumplidoOrCancelado">
             </div>
             <div *ngIf="!selectedTipoLaboral" class="col-lg-6 col-md-6">
               <label>{{ 'form.busquedaCursos.literal.estado' | translate}}</label>
@@ -143,7 +143,7 @@
             </div>
             <div class="col-lg-6 col-md-6">
               <label class="pb-2">{{'agenda.fichaEventos.datosGenerales.fechaFin' | translate}} (*)</label>
-              <app-fecha [inputStyleClass]="styleObligatorioOpcional('opcional', newEvent.fechaFinRepeticion)" [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
+              <app-fecha [inputStyleClass]="styleObligatorioOpcional('opcional', newEvent.fechaFinRepeticion)"  [(value)]="newEvent.fechaFinRepeticion" (valueChangeInput)="isCheckFechaFinRepeticion($event)" [minDate]="newEvent.fechaInicioRepeticion"
                 [disabled]="tipoInscripcionEvento || tipoAccesoLectura || selectedTipoLaboral || modoTipoEventoInscripcion || isEventoCumplidoOrCancelado"
                 (valueChangeSelected)="isCheckFechaFinRepeticion($event)" [utc]="false"></app-fecha>
             </div>

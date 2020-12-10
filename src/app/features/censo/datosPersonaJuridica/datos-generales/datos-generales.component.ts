@@ -753,6 +753,9 @@ export class DatosGenerales implements OnInit {
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.tarjeta == '2' || this.tarjeta == '3') {
       // fichaPosible.activa = !fichaPosible.activa;
@@ -1443,5 +1446,27 @@ focusInputField() {
   setTimeout(() => {
     this.someDropdown.filterInputChild.nativeElement.focus();  
   }, 300);
+}
+
+onlyCheckDatos(){
+  if (!(
+    this.body.abreviatura != "" &&
+    this.body.abreviatura != undefined &&
+    !this.onlySpaces(this.body.abreviatura) &&
+    this.body.nif != "" &&
+    this.body.nif != undefined &&
+    !this.onlySpaces(this.body.nif) &&
+    this.body.denominacion != "" &&
+    this.body.denominacion != undefined &&
+    !this.onlySpaces(this.body.denominacion) &&
+    this.body.fechaConstitucion != undefined &&
+    !this.onlySpaces(this.body.nif) &&
+    this.idiomaPreferenciaSociedad != "" &&
+    this.idiomaPreferenciaSociedad != undefined)
+    //this.file != undefined
+  ) {
+    
+    this.resaltadoDatos=true;
+  }
 }
 }

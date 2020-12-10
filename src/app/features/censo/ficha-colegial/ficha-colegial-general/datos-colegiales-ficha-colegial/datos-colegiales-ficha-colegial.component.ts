@@ -371,6 +371,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   }
 
   abreCierraFicha(key) {
+    if(!this.openFicha){
+      this.resaltadoDatosColegiales=true;
+    }
     let fichaPosible = this.getFichaPosibleByKey(key);
 
     if (

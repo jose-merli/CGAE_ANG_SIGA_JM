@@ -133,6 +133,8 @@ export class SubtipoCurricularComponent implements OnInit {
 
   // Métodos
   search() {
+    this.numSelected = 0;
+    this.selectedDatos = [];
     this.progressSpinner = true;
     this.buscar = true;
     this.nuevo = false;
@@ -187,6 +189,7 @@ export class SubtipoCurricularComponent implements OnInit {
   // Para la creación de un nuevo elemento
   newElement() {
     this.numSelected = 0;
+    this.selectedDatos = [];
     this.selectAll = false;
     this.selectMultiple = false;
 
@@ -207,6 +210,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   cancelAction() {
     // Limpiar
+    this.numSelected = 0;
     this.body.codigoExterno = "";
     this.body.descripcion = "";
 
@@ -733,6 +737,7 @@ export class SubtipoCurricularComponent implements OnInit {
       );
 
     this.numSelected = 0;
+    this.selectedDatos = [];
   }
 
   return() {

@@ -108,6 +108,9 @@ export class ProgramacionComponent implements OnInit {
 
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    };
     if (sessionStorage.getItem("crearNuevaCom") == null) {
       this.openFicha = !this.openFicha;
       if (!this.body.fechaProgramada) {
@@ -154,6 +157,7 @@ export class ProgramacionComponent implements OnInit {
 
 
   restablecer() {
+    this.onlyCheckDatos();
     this.resaltadoDatos=false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     if (this.body.fechaProgramada != null) {
@@ -163,6 +167,7 @@ export class ProgramacionComponent implements OnInit {
   }
 
   guardar() {
+    this.onlyCheckDatos();
     this.arrayProgramar = [];
     this.resaltadoDatos=false;
     let objProgramar = {
@@ -248,10 +253,10 @@ export class ProgramacionComponent implements OnInit {
   onlyCheckDatos(){
     if(!this.isGuardarDisabled()){
       if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }else{
-      this.muestraCamposObligatorios();
+      this.resaltadoDatos=true;
     }
   }
 }

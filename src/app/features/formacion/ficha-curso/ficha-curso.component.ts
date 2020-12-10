@@ -875,6 +875,7 @@ export class FichaCursoComponent implements OnInit {
   }
 
   onChangeSelectVisibilidadObligate(colegio) {
+    this.onlyCheckDatos();
     if (colegio == 1) {
       this.deshabilitarCombCol = true;
       this.curso.colegio = this.authenticationService.getInstitucionSession();
@@ -3522,11 +3523,16 @@ export class FichaCursoComponent implements OnInit {
   }
 
   abrirFicha(key) {
+    this.onlyCheckDatos();
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = !fichaPosible.activa;
   }
 
   abreCierraFicha(key) {
+    
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.modoEdicion) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -3829,7 +3835,7 @@ export class FichaCursoComponent implements OnInit {
 
   onlyCheckDatos() {
     if (!this.validateCourse()) {
-      this.muestraCamposObligatorios();
+      this.resaltadoDatos=true;
     } 
   }
 }

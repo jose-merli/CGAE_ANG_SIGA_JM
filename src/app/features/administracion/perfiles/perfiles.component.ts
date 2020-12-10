@@ -568,6 +568,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   isEliminar(selectedDatos) {
+    this.selectedDatos = [];
+    this.numSelected = 0;
     console.log(selectedDatos);
     this.sigaServices.post("perfiles_delete", selectedDatos).subscribe(
       data => {
@@ -640,6 +642,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     ];
   }
   historico() {
+    this.selectedDatos = [];
+    this.numSelected = 0;
     sessionStorage.setItem("searchOrHistory", JSON.stringify("history"));
     this.historicoActive = true;
     this.selectMultiple = false;
@@ -697,6 +701,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     });
   }
   setItalic(dato) {
+    this.selectedDatos = [];
+      this.numSelected = 0;
     if (dato.fechaBaja == null) return false;
     else return true;
   }
@@ -716,7 +722,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.msgs = [];
   }
 
-  focusInputField() {
+  focusInputField(dato) {
     setTimeout(() => {
       this.someDropdown.filterInputChild.nativeElement.focus();  
     }, 300);

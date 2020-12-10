@@ -167,6 +167,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // let fichaPosible = this.getFichaPosibleByKey(key);
     // if (this.activacionEditar == true) {
     // fichaPosible.activa = !fichaPosible.activa;
@@ -268,6 +271,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.onlyCheckDatos();
     this.resaltadoDatos=false;
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
@@ -299,6 +303,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   onCancelar() {
+    this.onlyCheckDatos();
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant(
@@ -325,6 +330,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   confirmarCancelar() {
+    this.onlyCheckDatos();
     this.eliminarArray = [];
     let objCancelar = {
       idEstado: this.body.idEstado,
@@ -409,11 +415,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   onlyCheckDatos(){
     if(this.isGuardarDisabled()){
       if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }else{
       if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }
   }
