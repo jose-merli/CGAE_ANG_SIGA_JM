@@ -299,6 +299,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // fichaPosible.activa = !fichaPosible.activa;
     this.openFicha = !this.openFicha;
   }
@@ -401,6 +404,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   confirmEdit() {
+    this.onlyCheckDatos();
     let mess = this.translateService.instant("informesYcomunicaciones.consultas.datosGenerales.mensaje.cambio.modeloComunicacion");
     let icon = "fa fa-info";
     this.confirmationService.confirm({
@@ -460,7 +464,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-
+    this.onlyCheckDatos();
     this.body.generica = this.generica;
     if (this.bodyInicial.generica == undefined) {
       this.bodyInicial.generica = this.body.generica;
@@ -577,15 +581,15 @@ para poder filtrar el dato con o sin estos caracteres*/
   onlyCheckDatos(){
     if(!this.activaGuardar()){
       if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }else{
         if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
-          this.muestraCamposObligatorios();
+          this.resaltadoDatos=true;
         }
       }
     }else{
       if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }
   }

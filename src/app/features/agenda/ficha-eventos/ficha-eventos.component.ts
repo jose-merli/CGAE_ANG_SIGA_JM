@@ -1303,7 +1303,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   fillEndInput(event) {
-
+    this.onlyCheckDatos();
     let fecha = this.newEvent.end;
     if (event != null) {
       this.newEvent.end = event;
@@ -1424,7 +1424,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   isCheckFechaInicioRepeticion(event) {
-
+    this.onlyCheckDatos();
     this.newEvent.fechaInicioRepeticion = event;
 
     if (this.newEvent.fechaInicioRepeticion != null) {
@@ -1446,6 +1446,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   isCheckTipoRepeticion() {
+    this.onlyCheckDatos();
     this.newEvent.valoresRepeticion = [];
     if (this.newEvent.tipoRepeticion != null) {
       this.checkTipoRepeticion = true;
@@ -2596,6 +2597,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   abreCierraFicha(key) {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.createEvent) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -2675,6 +2679,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   guardarFormadores() {
+    this.onlyCheckDatos();
     let url = "";
 
     this.progressSpinner = true;
@@ -2827,12 +2832,12 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   onlyCheckDatos() {
     if (this.validateForm()) {
       if (this.newEvent.fechaInicioRepeticion == undefined && this.newEvent.fechaFinRepeticion == undefined && this.newEvent.valoresRepeticion == undefined) {
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       } else {
         if (this.newEvent.fechaInicioRepeticion != undefined || this.newEvent.fechaFinRepeticion != undefined || this.newEvent.valoresRepeticion != undefined) {
-          this.muestraCamposObligatoriosTodos();
+          this.resaltadoDatos=true;
         } else {
-          this.muestraCamposObligatoriosOpcionales();
+          this.resaltadoDatos=true;
         }
       }
     } 

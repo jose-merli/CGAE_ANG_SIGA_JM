@@ -87,6 +87,9 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.activacionEditar == true) {
       // fichaPosible.activa = !fichaPosible.activa;
@@ -153,6 +156,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
+    this.onlyCheckDatos();
     this.resaltadoDatos=false;
     if (this.bodyInicial.nombre != this.body.nombre) {
       this.sigaServices
@@ -497,15 +501,15 @@ para poder filtrar el dato con o sin estos caracteres*/
   onlyCheckDatos(){
     if(!this.activaGuardar()){
       if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }else{
         if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
-          this.muestraCamposObligatorios();
+          this.resaltadoDatos=true;
         }
       }
     }else{
       if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }
   }

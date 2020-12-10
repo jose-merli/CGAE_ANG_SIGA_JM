@@ -139,6 +139,9 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     if (this.activacionEditar == true) {
       this.openFicha = !this.openFicha;
     }
@@ -206,6 +209,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.onlyCheckDatos();
     this.resaltadoDatos = false;
 
     this.sigaServices
@@ -363,11 +367,11 @@ para poder filtrar el dato con o sin estos caracteres*/
   onlyCheckDatos() {
     if (this.isGuardarDisabled()) {
       if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos = true;
       } 
     } else {
       if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos = true;
       } 
     }
   }

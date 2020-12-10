@@ -472,6 +472,9 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   abreCierraFicha(key) {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = !fichaPosible.activa;
     this.openFicha = !this.openFicha;
@@ -566,6 +569,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   comprobarValidacion() {
+    this.onlyCheckDatos();
     if (
       (this.persona.tipoIdentificacion != undefined ||
         this.persona.tipoIdentificacion != null) &&
@@ -640,6 +644,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   guardarInscripcion() {
+    this.onlyCheckDatos();
     let url = "";
 
     // if (!this.modoEdicion && this.isAdministrador) {this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
@@ -755,6 +760,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   actualizaPersona() {
+    this.onlyCheckDatos();
     if (
       this.editar &&
       this.persona.nombre != undefined &&
@@ -1271,7 +1277,6 @@ export class FichaInscripcionComponent implements OnInit {
 
 
   fillFechaSolicitud(event) {
-    this.onlyCheckDatos();
     this.inscripcion.fechaSolicitud = event;
   }
 
@@ -1305,7 +1310,7 @@ export class FichaInscripcionComponent implements OnInit {
 
   onlyCheckDatos(){
     if(this.inscripcion.fechaSolicitud==null || this.inscripcion.fechaSolicitud==undefined){
-      this.muestraCamposObligatorios();
+      this.resaltadoDatos=true;
     }
   }
 }

@@ -698,7 +698,8 @@ export class DatosRegistralesComponent implements OnInit {
           this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
           this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
         }
-        this.muestraCamposObligatorios();
+        // this.muestraCamposObligatorios();
+        this.resaltadoDatos = true;
         return true;
       }
     } else if (
@@ -728,7 +729,8 @@ export class DatosRegistralesComponent implements OnInit {
         this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
         this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
       }
-      this.muestraCamposObligatorios();
+      // this.muestraCamposObligatorios();
+      this.resaltadoDatos = true;
       return true;
     }
   }
@@ -764,6 +766,9 @@ export class DatosRegistralesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
+    if(!fichaPosible.activa){
+      this.resaltadoDatos=true;
+    }
     // si no se esta creando una nueva sociedad && sessionStorage.getItem("crearnuevo") == null
     if (
       (this.tarjeta == '2' || this.tarjeta == '3') && sessionStorage.getItem("nuevoRegistro") == null

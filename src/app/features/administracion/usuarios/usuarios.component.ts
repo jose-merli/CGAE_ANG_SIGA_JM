@@ -248,6 +248,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   toHistorico() {
+    this.selectedDatos = [];
+    this.numSelected = 0;
     this.nuevo = false;
     this.progressSpinner = true;
     this.filtrosIniciales.activo = "N";
@@ -325,6 +327,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   toNotHistory() {
+    this.selectedDatos = [];
+    this.numSelected = 0;
     this.nuevo = false;
     this.historico = false;
     this.filtrosIniciales.activo = "S";

@@ -55,7 +55,7 @@
                 <p-multiSelect  #someDropdown *ngIf="dato.idGrupo != '' " [disabled]="!isforNew" [defaultLabel]="textFilter"
                   styleClass="widthAll" (onChange)="editRol($event, dato )" [(ngModel)]="dato.rolesAsignados"
                   [options]="usuarios_rol" optionLabel="label" [selectedItemsLabel]="textSelected"
-                  [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField()"></p-multiSelect>
+                  [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField(dato)"></p-multiSelect>
               </ng-template>
 
             </p-column>

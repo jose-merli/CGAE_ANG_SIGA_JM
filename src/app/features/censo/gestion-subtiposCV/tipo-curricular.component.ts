@@ -253,6 +253,7 @@ export class TipoCurricularComponent {
   // Para la creación de un nuevo elemento
   newElement() {
     this.numSelected = 0;
+    this.selectedDatos = [];
     this.selectAll = false;
     this.selectMultiple = false;
 
@@ -730,6 +731,7 @@ export class TipoCurricularComponent {
       );
 
     this.numSelected = 0;
+    this.selectedDatos = [];
   }
 
   return() {

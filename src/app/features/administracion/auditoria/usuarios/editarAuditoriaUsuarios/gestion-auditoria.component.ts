@@ -138,6 +138,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   }
 
   confirmEdit() {
+    this.onlyCheckDatos();
     let mess = this.translateService.instant(
       "general.message.aceptar.y.volver"
     );
@@ -265,11 +266,11 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   onlyCheckDatos(){
     if(this.isHabilitadoGuardarCerrar() || this.formGroup.invalid){
       if((this.itemBody.fechaEntrada == null || this.itemBody.fechaEntrada==undefined) || (this.itemBody.fechaEfectiva == null || this.itemBody.fechaEfectiva==undefined) || (this.itemBody.motivo == null || this.itemBody.motivo==undefined || this.itemBody.motivo=="")){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }else{
       if((this.itemBody.fechaEntrada == null || this.itemBody.fechaEntrada==undefined) || (this.itemBody.fechaEfectiva == null || this.itemBody.fechaEfectiva==undefined) || (this.itemBody.motivo == null || this.itemBody.motivo==undefined || this.itemBody.motivo=="")){
-        this.muestraCamposObligatorios();
+        this.resaltadoDatos=true;
       }
     }
   }
