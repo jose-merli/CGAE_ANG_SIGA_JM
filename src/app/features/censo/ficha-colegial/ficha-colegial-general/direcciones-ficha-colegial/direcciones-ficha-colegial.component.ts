@@ -67,6 +67,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   rowsPerPage;
   numSelectedCurriculares: number = 0;
   colsDirecciones;
+  mostrarNumero:Boolean = false;
+  message;
+  messageNoContent;
   bodyDirecciones: DatosDireccionesItem;
   @Input() esColegiado: boolean;
   selectMultipleDirecciones: boolean = false;
@@ -464,6 +467,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDirecciones() {
+    this.mostrarNumero = false;
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = "";
     this.progressSpinner = true;
@@ -495,6 +499,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           },
           err => {
             console.log(err);
+            this.mostrarNumero = true;
           },
           () => {
             if (this.datosDirecciones.length > 0) {
@@ -502,6 +507,18 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
               for (let i = 0; i <= this.datosDirecciones.length - 1; i++) {
                 this.DescripcionDatosDireccion = this.datosDirecciones[i];
               }
+            }
+            if (this.datosDirecciones.length == 0) {
+              this.message = this.datosDirecciones.length.toString();
+              this.messageNoContent = this.translateService.instant(
+                "general.message.no.registros"
+              );
+              this.mostrarNumero = true;
+  
+            } else {
+              this.message = this.datosDirecciones.length.toString();
+              this.mostrarNumero = true;
+  
             }
           }
         );

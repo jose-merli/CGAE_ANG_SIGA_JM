@@ -15,24 +15,44 @@
               <!-- <label class="registros-ficha">(0 registros)</label> -->
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
+              
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "busquedaSanciones.colegioSancionador.literal" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
                 <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
               </label>
 
-              <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
                 <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
               </label>
 
-              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
                 <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
               </label>
 
-              <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
                 <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
               </label>
 
-              <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
-                <span>{{ bodySearchSanciones.busquedaSancionesItem.length }}</span>
+              <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+                <span>{{ message }}</span>
+              </label>
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
               </label>
               <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
             </div>

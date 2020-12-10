@@ -15,34 +15,63 @@
           </div>
           <div class="d-flex justify-content-between">
             <!-- <div class="d-flex justify-content-between"> -->
-            <label>{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
+
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaDirecciones.literal.direccion" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosDireccion">{{ "censo.consultaDirecciones.literal.direccion" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.domicilioLista }}</span>
             </label>
 
-            <label>{{ "censo.ws.literal.codigopostal" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.ws.literal.codigopostal" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosDireccion">{{ "censo.ws.literal.codigopostal" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.codigoPostal }}</span>
             </label>
 
-            <label>{{ "censo.datosDireccion.literal.provincia" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.provincia" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosDireccion">{{ "censo.datosDireccion.literal.provincia" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.nombrePoblacion }}</span>
             </label>
 
-            <label>{{ "censo.datosDireccion.literal.correo" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.correo" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosDireccion">{{ "censo.datosDireccion.literal.correo" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.correoElectronico }}</span>
             </label>
 
-            <label>{{ "censo.ws.literal.telefono" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.ws.literal.telefono" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosDireccion">{{ "censo.ws.literal.telefono" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.telefono }}</span>
             </label>
 
-            <label>{{ "censo.datosDireccion.literal.movil" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.movil" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosDireccion">{{ "censo.datosDireccion.literal.movil" | translate }}:
               <span *ngIf="mostrarDatosDireccion">{{ DescripcionDatosDireccion.movil }}</span>
             </label>
 
-            <label>{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
-              <span>{{ searchDireccionIdPersona.datosDireccionesItem.length }}
-              </span>
+            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
+              <span>{{ message }}</span>
             </label>
+
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.direccion" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
             <i (click)="abreCierraFicha('direcciones')" [ngClass]="{
                 'fa fa-angle-up': esFichaActiva('direcciones'),
                 'fa fa-angle-down': !esFichaActiva('direcciones')

@@ -15,24 +15,44 @@
           </div>
           <div class="d-flex justify-content-between">
 
-            <label>{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosSociedades">{{ "censo.consultaComponentesJuridicos.literal.identificacionsociedad" | translate }}:
               <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.nif }}</span>
             </label>
 
-            <label>{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosSociedades">{{ "censo.consultaComponentesJuridicos.literal.tiposociedad" | translate }}:
               <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.tipoSociedad }}</span>
             </label>
 
-            <label>{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosSociedades">{{ "censo.consultaDatosGenerales.literal.denominacion" | translate }}:
               <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.denominacion }}</span>
             </label>
 
-            <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "administracion.usuarios.literal.fechaAlta" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosSociedades">{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
               <span *ngIf="mostrarDatosSociedades">{{ DescripcionSociedades.fechaConstitucion }}</span>
             </label>
 
-            <label>{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
-              <span>{{ sociedadesBody.busquedaJuridicaItems.length }}</span>
+            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
+              <span>{{ message }}</span>
+            </label>
+
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.sociedades" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
             </label>
             <i (click)="abreCierraFicha()" *ngIf="!esFichaActiva()" class="fa fa-angle-down float-right"></i>
           </div>

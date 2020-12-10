@@ -15,21 +15,39 @@
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
           <div class="d-flex justify-content-between">
-            <label>{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}:
+    
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosCurriculares">{{ "censo.busquedaClientesAvanzada.literal.categoriaCV" | translate }}:
               <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.categoriaCurricular }}</span>
             </label>
 
-            <label>{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}:
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosCurriculares">{{ "censo.busquedaClientesAvanzada.literal.subtiposCV" | translate }}:
               <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.tipoSubtipo }}</span>
             </label>
 
-            <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}:
-              <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde}}</span>
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
             </label>
 
-            <label>{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
-              <span>{{ datosCurriculares.length }}</span>
+            <label *ngIf="mostrarNumero && mostrarDatosCurriculares">{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}:
+              <span *ngIf="mostrarDatosCurriculares">{{ DescripcionDatosCurriculares.fechaDesde }}</span>
             </label>
+
+            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
+              <span>{{ message }}</span>
+            </label>
+
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.curriculares" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
             <i (click)="abreCierraFicha('curriculares')" *ngIf="!esFichaActiva('curriculares')" class="fa fa-angle-down float-right"></i>
           </div>
         </div>

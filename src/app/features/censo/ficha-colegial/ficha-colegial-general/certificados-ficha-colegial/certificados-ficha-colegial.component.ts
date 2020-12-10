@@ -39,13 +39,15 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   datosCertificados: any[] = [];
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
-
+  mostrarNumero: Boolean = false;
   fichasPosibles = [
     {
       key: "certificados",
       activa: false
     },
   ];
+  message;
+  messageNoContent;
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
   @Input() esColegiado: boolean = null;
@@ -158,6 +160,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchCertificados() {
+    this.mostrarNumero = false;
     this.sigaServices
       .postPaginado(
         "fichaDatosCertificados_datosCertificadosSearch",
@@ -173,12 +176,23 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
         err => {
           console.log(err);
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         }, () => {
           if (this.datosCertificados.length > 0) {
             this.mostrarDatosCertificados = true;
             for (let i = 0; i <= this.datosCertificados.length - 1; i++) {
               this.DescripcionCertificado = this.datosCertificados[i];
-            }
+            }          
+          }
+          if (this.datosCertificados.length == 0) {
+            this.message = this.datosCertificados.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+          } else {
+            this.message = this.datosCertificados.length.toString();
+            this.mostrarNumero = true;
           }
         }
       );

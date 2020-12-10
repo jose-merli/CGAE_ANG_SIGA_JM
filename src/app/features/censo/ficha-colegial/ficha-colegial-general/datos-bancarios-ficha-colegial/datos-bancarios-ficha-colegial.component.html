@@ -14,17 +14,31 @@
           </label>
         </div>
         <div class="d-flex justify-content-between">
-          <label>{{ "censo.mutualidad.literal.iban" | translate }}:
+        
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.mutualidad.literal.iban" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero && mostrarDatosBancarios">{{ "censo.mutualidad.literal.iban" | translate }}:
             <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.iban }}</span>
           </label>
 
-          <label>{{ "facturacion.cuentasBancarias.uso" | translate }}:
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "facturacion.cuentasBancarias.uso" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero && mostrarDatosBancarios">{{ "facturacion.cuentasBancarias.uso" | translate }}:
             <span *ngIf="mostrarDatosBancarios">{{ DescripcionDatosBancarios.uso }}</span>
           </label>
 
-          <label>{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
-            <span>{{ datosBancarios.length }}</span>
+          <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
+            <span>{{ message }}</span>
           </label>
+
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.cuentas" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
           <i (click)="abreCierraFicha('bancarios')" [ngClass]="{
               'fa fa-angle-up': esFichaActiva('bancarios'),
               'fa fa-angle-down': !esFichaActiva('bancarios')

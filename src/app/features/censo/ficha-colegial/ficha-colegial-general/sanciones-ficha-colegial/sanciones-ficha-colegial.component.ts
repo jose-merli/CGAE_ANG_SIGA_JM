@@ -42,9 +42,12 @@ export class SancionesFichaColegialComponent implements OnInit {
       activa: false
     },
   ];
+  message;
+  messageNoContent;
   progressSpinner: boolean = false;
   selectedItemSanciones: number = 10;
   colsSanciones;
+  mostrarNumero: Boolean = false;
   tarjetaSancionesNum: string;
   @Input() tarjetaSanciones: string;
   selectedDatosSanciones;
@@ -241,7 +244,7 @@ disabledAction:boolean = false;
 
   searchSanciones() {
     // Llamada al rest
-
+    this.mostrarNumero = false;
     this.bodySanciones.chkArchivadas = undefined;
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
@@ -266,12 +269,25 @@ disabledAction:boolean = false;
         },
         err => {
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         }, () => {
           if (this.dataSanciones.length > 0) {
             this.mostrarDatosSanciones = true;
             for (let i = 0; i <= this.dataSanciones.length - 1; i++) {
               this.DescripcionSanciones = this.dataSanciones[i];
             }
+          }
+          if (this.dataSanciones.length == 0) {
+            this.message = this.dataSanciones.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+
+          } else {
+            this.message = this.dataSanciones.length.toString();
+            this.mostrarNumero = true;
+
           }
           this.progressSpinner = false;
         }

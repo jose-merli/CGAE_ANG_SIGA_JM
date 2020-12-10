@@ -14,16 +14,31 @@
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
         <div class="d-flex justify-content-between">
-            <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
+            <!-- <label>{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
+              <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
+            </label> -->
+
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+
+            <label *ngIf="mostrarNumero && mostrarDatosCertificados">{{ "censo.consultaComponentesJuridicos.literal.descripcioncertificados" | translate }}:
               <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.descripcion }}</span>
             </label>
 
-            <label>{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
+            <label *ngIf="mostrarNumero && mostrarDatosCertificados">{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}:
               <span *ngIf="mostrarDatosCertificados">{{ DescripcionCertificado.fechaEmision }}</span>
             </label>
+
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaComponentesJuridicos.literal.fechaemision" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
             
-            <label>{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
-              <span>{{ datosCertificados.length }}</span>
+            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
+              <span class="registros-ficha-prueba">{{ message }}</span>
+            </label>
+            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.certificados" | translate }}
+              <span>{{ message }}</span>
             </label>
           <i (click)="abreCierraFicha('certificados')" *ngIf="!esFichaActiva('certificados')" class="fa fa-angle-down float-right"></i>
         </div>

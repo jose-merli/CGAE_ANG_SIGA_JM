@@ -44,6 +44,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       activa: false
     },
   ];
+  mostrarNumero: Boolean = false;
+  message;
+  messageNoContent;
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -326,6 +329,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
+    this.mostrarNumero = false;
     this.progressSpinner = true;
     let bodyCurricular = {
       idPersona: this.idPersona,
@@ -345,6 +349,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
         },
         err => {
           //   console.log(err);
+          this.mostrarNumero = true;
         }, () => {
           this.progressSpinner = false;
           if (this.datosCurriculares.length > 0) {
@@ -352,6 +357,18 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
             for (let i = 0; i <= this.datosCurriculares.length - 1; i++) {
               this.DescripcionDatosCurriculares = this.datosCurriculares[i];
             }
+          }
+          if (this.datosCurriculares.length == 0) {
+            this.message = this.datosCurriculares.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+
+          } else {
+            this.message = this.datosCurriculares.length.toString();
+            this.mostrarNumero = true;
+
           }
         }
       );

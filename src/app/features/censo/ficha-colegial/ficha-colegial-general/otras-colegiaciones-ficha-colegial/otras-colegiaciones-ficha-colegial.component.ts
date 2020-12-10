@@ -36,6 +36,9 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   desactivarVolver: boolean = true;
   colsColegiaciones;
   mostrarOtrasColegiaciones;
+  mostrarNumero: Boolean = false;
+  message;
+  messageNoContent;
   fichasPosibles = [
     {
       key: "colegiaciones",
@@ -170,6 +173,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   }
 
   searchOtherCollegues() {
+    this.mostrarNumero = false;
     this.sigaServices
       .postPaginado(
         "fichaColegialOtrasColegiaciones_searchOtherCollegues",
@@ -185,12 +189,23 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
         err => {
           console.log(err);
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         },()=>{
           if (this.datosColegiaciones.length > 0) {
             this.mostrarOtrasColegiaciones = true;
             for (let i = 0; i <= this.datosColegiaciones.length - 1; i++) {
               this.DescripcionOtrasColegiaciones = this.datosColegiaciones[i];
             }
+          }
+          if (this.datosColegiaciones.length == 0 || this.datosColegiaciones == undefined) {
+            this.message = this.datosColegiaciones.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+          } else {
+            this.message = this.datosColegiaciones.length.toString();
+            this.mostrarNumero = true;
           }
         }
       );

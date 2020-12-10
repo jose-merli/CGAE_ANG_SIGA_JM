@@ -23,6 +23,9 @@ export class SociedadesFichaColegialComponent implements OnInit {
   selectedItemSociedades: number = 10;
   activacionTarjeta: boolean = false;
   generalBody;
+  mostrarNumero: Boolean = false;
+  message;
+  messageNoContent;
   colsSociedades = [];
   @Input() tarjetaSociedades;
   checkGeneralBody;
@@ -137,6 +140,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   }
 
   searchSocieties() {
+    this.mostrarNumero = false;
     this.sigaServices
       .postPaginado(
         "fichaColegialSociedades_searchSocieties",
@@ -152,12 +156,25 @@ export class SociedadesFichaColegialComponent implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         }, () => {
           if (this.datosSociedades.length > 0) {
             this.mostrarDatosSociedades = true;
             for (let i = 0; i <= this.datosSociedades.length - 1; i++) {
               this.DescripcionSociedades = this.datosSociedades[i];
             }
+          }
+          if (this.datosSociedades.length == 0) {
+            this.message = this.datosSociedades.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+
+          } else {
+            this.message = this.datosSociedades.length.toString();
+            this.mostrarNumero = true;
+
           }
         }
       );

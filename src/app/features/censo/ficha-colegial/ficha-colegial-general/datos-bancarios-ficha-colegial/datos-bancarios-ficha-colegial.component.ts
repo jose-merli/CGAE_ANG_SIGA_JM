@@ -69,6 +69,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   permisos: boolean = true;
   colsBancarios;
   rowsPerPage;
+  mostrarNumero:Boolean = false;
+  message;
+  messageNoContent;
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openBanca;
@@ -366,6 +369,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.msgs.push({ severity: "success", summary: this.translateService.instant("general.message.correct"), detail: mensaje });
   }
   searchDatosBancarios() {
+    this.mostrarNumero = false;
     if (this.emptyLoadFichaColegial != true) {
       this.progressSpinner = true;
       this.sigaServices
@@ -381,6 +385,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
           },
           error => {
+            this.mostrarNumero = true;
             this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
             this.showFailDetalle(
               JSON.stringify(
@@ -396,6 +401,19 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
                 this.DescripcionDatosBancarios = this.datosBancarios[i];
               }
             }
+            if (this.datosBancarios.length == 0) {
+              this.message = this.datosBancarios.length.toString();
+              this.messageNoContent = this.translateService.instant(
+                "general.message.no.registros"
+              );
+              this.mostrarNumero = true;
+  
+            } else {
+              this.message = this.datosBancarios.length.toString();
+              this.mostrarNumero = true;
+  
+            }
+
           }
         );
 
