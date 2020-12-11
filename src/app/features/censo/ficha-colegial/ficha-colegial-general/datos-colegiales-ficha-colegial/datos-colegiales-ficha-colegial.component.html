@@ -436,12 +436,7 @@
   </p-footer>
 </p-confirmDialog>
 
-<div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
-  <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
-  <div class="loader"></div>
-</div>
-
-<div *ngIf="initSpinner" class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>

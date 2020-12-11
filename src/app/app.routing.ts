@@ -180,7 +180,6 @@ import { EditarCatalogosMaestrosComponent } from './features/administracion/cata
 import { GestionContadoresComponent } from './features/administracion/contadores/gestion-contadores/gestion-contadores.component';
 import { ContadoresComponent } from './features/administracion/contadores/contadores.component'; //new censo
 import { BusquedaColegiadosComponent } from './features/censo/busqueda-colegiados/busqueda-colegiados.component';
-import { FichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial.component';
 import { PerfilesComponent } from './features/administracion/perfiles/perfiles.component';
 import { EditarPerfilesComponent } from './features/administracion/perfiles/editarPerfiles/editarPerfiles.component';
 import { PermisosComponent } from './features/administracion/permisos/permisos.component';
