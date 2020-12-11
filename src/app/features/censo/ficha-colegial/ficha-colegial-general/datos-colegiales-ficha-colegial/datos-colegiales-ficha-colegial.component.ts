@@ -1635,7 +1635,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         // this.showGuardarAuditoria = false;
       },
       reject: () => {
-        this.showMessageInscripcion = false;
+        this.showMessageInscripcion = true;
         this.msgs = [
           {
             severity: "info",
