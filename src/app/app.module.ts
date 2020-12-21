@@ -89,7 +89,6 @@ import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-m
 import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
 import { BusquedaColegiadosComponent } from './features/censo/busqueda-colegiados/busqueda-colegiados.component';
 import { BusquedaColegiadosComponentI } from './features/censo/busqueda-colegiados-censoI/busqueda-colegiados.component';
-import { FichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial.component';
 import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component';
 import { BusquedaLetradosComponent } from './features/censo/busqueda-letrados/busqueda-letrados.component';
 import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
@@ -342,7 +341,6 @@ import { DestinatariosEnvioMasivoComponent } from './features/informes-comunicac
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
 import { CommonsService } from './_services/commons.service';
-import { TarjetaResumenFijaComponent } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.component';
 import { DescripcionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/descripcion-envio-masivo/descripcion-envio-masivo.component';
 import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/ficha-colegial-general/ficha-colegial-general.component';
 import { DatosGeneralesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-generales-ficha-colegial/datos-generales-ficha-colegial.component';
@@ -401,7 +399,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		BusquedaSancionesComponent,
 		BusquedaColegiadosComponent,
 		BusquedaColegiadosComponentI,
-		FichaColegialComponent,
 		EdicionCurricularesComponent,
 		BusquedaLetradosComponent,
 		MantenimientoDuplicadosComponent,
@@ -679,8 +676,8 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent,
-		TarjetaResumenFijaComponent
+		ServiciosInteresFichaColegialComponent//,
+		//TarjetaResumenFijaComponent
 	],
 	imports: [
 		BrowserModule,
@@ -725,7 +722,7 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 
 		KeyFilterModule,
 		StepsModule,
-
+		TarjetaResumenFijaModule,
 
 		SelectButtonModule,
 		ColorPickerModule,
