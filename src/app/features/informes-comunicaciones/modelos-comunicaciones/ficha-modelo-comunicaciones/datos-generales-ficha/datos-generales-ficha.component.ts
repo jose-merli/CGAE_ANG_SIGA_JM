@@ -61,7 +61,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resaltadoDatos=false;
+    this.resaltadoDatos=true;
 
     this.preseleccionar = [
       { label: "No", value: "NO" },
@@ -359,6 +359,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
   restablecer() {
+    this.onlyCheckDatos();
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.resaltadoDatos=false;
   }

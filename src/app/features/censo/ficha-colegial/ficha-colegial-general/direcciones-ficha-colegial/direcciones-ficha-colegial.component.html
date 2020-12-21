@@ -4,13 +4,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('direcciones')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('direcciones')">
             <i class="fa fa-map-marker icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('direcciones')" class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('direcciones')">
+            <label class="mr-auto title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
@@ -80,8 +80,8 @@
         </div>
       </div>
 
-      <div *ngIf="esFichaActiva('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('direcciones')" (click)="abreCierraFicha('direcciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('direcciones')">
           <i class="fa fa-map-marker icon-ficha"> </i>
         </div>
         <label (click)="abreCierraFicha('direcciones')" class="title-ficha">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate }}
@@ -206,7 +206,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>

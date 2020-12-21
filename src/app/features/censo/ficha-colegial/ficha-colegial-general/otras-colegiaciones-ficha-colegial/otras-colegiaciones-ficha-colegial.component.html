@@ -3,13 +3,13 @@
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
       <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
+        <div class="img-colegiado" (click)="abreCierraFicha('colegiaciones')">
           <i class="fa fa-graduation-cap icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-6">
-        <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('colegiaciones')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+        <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('colegiaciones')">
+          <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
@@ -59,8 +59,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('colegiaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-      <div class="img-colegiado">
+    <div *ngIf="esFichaActiva('colegiaciones')" (click)="abreCierraFicha('colegiaciones')"class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado" (click)="abreCierraFicha('colegiaciones')">
         <i class="fa fa-graduation-cap icon-ficha"></i>
       </div>
       <label (click)="abreCierraFicha('colegiaciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}

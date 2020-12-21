@@ -3,13 +3,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="fa fa-briefcase icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()"> 
+            <label  class="mr-auto title-ficha">{{ "censo.fichaColegial.titulo" | translate }}
             </label>
             <!-- <label class="registros-ficha">(0 registros)</label> -->
           </div>
@@ -58,8 +58,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva()" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha()">
           <i class="fa fa-briefcase icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha()" class="title-ficha">{{ "censo.fichaColegial.titulo" | translate }}

@@ -4,13 +4,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="fas fa-list-alt icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()"
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label 
               class="mr-auto title-ficha">{{ 'literal.informesYcomunicaciones.consultas.fichaConsulta.modelosComunicacion.cabecera' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
@@ -22,8 +22,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="openFicha" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha()">
           <i class="fas fa-list-alt icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha()"

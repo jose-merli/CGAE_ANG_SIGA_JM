@@ -19,6 +19,9 @@ import { CommonsService } from '../../../../_services/commons.service';
   styleUrls: ["./edicionCurriculares.component.scss"]
 })
 export class EdicionCurricularesComponent implements OnInit {
+  static onlyCheckDatosCV() {
+    throw new Error("Method not implemented.");
+  }
   isLetrado: boolean;
   cols: any = [];
   datos: any[];
@@ -96,7 +99,7 @@ disabledAction:boolean = false;
       this.permisos = JSON.parse(sessionStorage.getItem("permisos"));
     }
     this.progressSpinner = true;
-    this.resaltadoDatos=false;
+    this.resaltadoDatos=true;
     if (sessionStorage.getItem("nuevoCurriculo")) {
       this.body = new FichaColegialEdicionCurricularesItem();
       this.body.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
@@ -180,6 +183,7 @@ disabledAction:boolean = false;
     }
   }
   abrirFicha() {
+    this.onlyCheckDatos();
     this.openFicha = !this.openFicha;
   }
 
@@ -529,6 +533,7 @@ disabledAction:boolean = false;
   }
   
   restablecer() {
+    this.onlyCheckDatos();
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.resaltadoDatos=false;
 
@@ -812,6 +817,22 @@ disabledAction:boolean = false;
           this.comprobarAuditoria();
         }
       }
+    }
+  }
+
+  onlyCheckDatos(){
+    if((this.body.idTipoCv==null || this.body.idTipoCv==undefined || this.body.idTipoCv==="") || 
+    (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
+    (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+    this.resaltadoDatos=true;
+    }
+  }
+
+  onlyCheckDatosCV(){
+    if((this.body.idTipoCv==null || this.body.idTipoCv==undefined || this.body.idTipoCv==="") || 
+    (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
+    (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
+    this.resaltadoDatos=true;
     }
   }
 }

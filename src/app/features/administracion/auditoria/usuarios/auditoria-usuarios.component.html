@@ -67,17 +67,17 @@
     </div>
     <!--FIN CARD-->
     <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
-        <div class="card-body p-0">
+        <div class="card-body p-0"> 
             <p-dataTable #table emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosUsuarios" [responsive]="true"
                 class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both"
                 [rows]="selectedItem" selectionMode="single">
                 <p-column [style]="{'width': col.width}" *ngFor="let col of columnasTabla" [sortable]="true" [field]="col.field" [header]="col.header | translate"
                     [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}">
                     <ng-template let-dato="rowData" pTemplate="body">
-                        <div *ngIf="col.field != 'persona'">
+                        <div *ngIf="col.field != 'persona' && col.field != 'descTipoCambio'">
                             <span>{{dato[col.field]}}</span>
                         </div>
-                        <div *ngIf="col.field == 'persona'">
+                        <div *ngIf="col.field == 'persona' || col.field == 'descTipoCambio'">
                             <a [routerLink]="" (click)="irEditarUsuario(dato)" class="enlace">{{dato[col.field]}}</a>
                         </div>
                     </ng-template>

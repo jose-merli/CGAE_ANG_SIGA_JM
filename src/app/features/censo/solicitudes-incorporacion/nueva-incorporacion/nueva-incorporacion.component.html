@@ -516,7 +516,7 @@
                     <label>
                         {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
                     <input [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
-                        type="text" class="form-control" [(ngModel)]="solicitudEditar.correoElectronico"
+                        type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
                         (input)="changeEmail()" pInputText>
                     <div *ngIf="!emailValido">
                         <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>

@@ -84,10 +84,10 @@
                 <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
                     <td class="text-center" *ngFor="let col of columns">
                         <div>
-                            <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' && col.field != 'apeNom'">{{datoH[col.field]}}</span>
+                            <span *ngIf="col.field !== 'fechaEstado' && col.field !== 'fechaSolicitud' && col.field != 'apeNom' && col.field != 'numeroIdentificacion'">{{datoH[col.field]}}</span>
                             <span *ngIf="(col.field == 'fechaEstado' && col.field.fechaEstado !==null) || (col.field == 'fechaSolicitud' && col.field.fechaSolicitud !==null)">{{datoH[col.field] | date: 'dd/MM/yyyy'}}
                             </span>
-                            <div *ngIf="col.field == 'apeNom'">
+                            <div *ngIf="col.field == 'apeNom' || col.field == 'numeroIdentificacion'">
                                 <a [routerLink]="" (click)="irDetalleSolicitud(datoH)" class="enlace">{{datoH[col.field]}}</a>
                             </div>
                         </div>

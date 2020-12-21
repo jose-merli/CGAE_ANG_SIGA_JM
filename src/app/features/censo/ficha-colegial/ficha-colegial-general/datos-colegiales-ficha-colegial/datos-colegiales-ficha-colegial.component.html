@@ -4,13 +4,13 @@
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('colegiales')" class="form-row">
       <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
+        <div class="img-colegiado" (click)="abreCierraFicha('colegiales')">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('colegiales')" class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+        <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('colegiales')">
+          <label  class="mr-auto title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
@@ -38,8 +38,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('colegiales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-      <div class="img-colegiado">
+    <div *ngIf="esFichaActiva('colegiales')" (click)="abreCierraFicha('colegiales')"class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado" (click)="abreCierraFicha('colegiales')">
         <i class="far fa-address-book icon-ficha"></i>
       </div>
       <label (click)="abreCierraFicha('colegiales')" class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
@@ -436,12 +436,7 @@
   </p-footer>
 </p-confirmDialog>
 
-<div *ngIf="progressSpinner && !initSpinner" class="overlay-spinner">
-  <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
-  <div class="loader"></div>
-</div>
-
-<div *ngIf="initSpinner" class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <!-- <p-progressSpinner animationDuration="1s"></p-progressSpinner> -->
   <div class="loader"></div>
 </div>

@@ -174,7 +174,7 @@
                   <div *ngIf="!setItalic(dato)">
                     <p-multiSelect [disabled]="true" [defaultLabel]="textFilter" styleClass="widthAll"
                       (onChange)="editRol($event, dato )" [(ngModel)]="dato.rolesAsignados" [options]="usuarios_rol"
-                      optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="7"
+                      optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
                       [panelStyle]="{width:'100%'}"></p-multiSelect>
                   </div>
                 </ng-template>

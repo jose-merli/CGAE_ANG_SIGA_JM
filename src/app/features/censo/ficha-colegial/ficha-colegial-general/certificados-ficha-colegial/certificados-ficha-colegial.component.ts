@@ -180,9 +180,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
         }, () => {
           if (this.datosCertificados.length > 0) {
             this.mostrarDatosCertificados = true;
-            for (let i = 0; i <= this.datosCertificados.length - 1; i++) {
-              this.DescripcionCertificado = this.datosCertificados[i];
-            }          
+            this.DescripcionCertificado = this.datosCertificados[0];
           }
           if (this.datosCertificados.length == 0) {
             this.message = this.datosCertificados.length.toString();

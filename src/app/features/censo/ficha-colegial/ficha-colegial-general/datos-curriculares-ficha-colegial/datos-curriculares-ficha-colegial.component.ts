@@ -8,6 +8,7 @@ import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialG
 import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { Table } from 'primeng/table';
+import { EdicionCurricularesComponent } from '../../edicionDatosCurriculares/edicionCurriculares.component';
 
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',

@@ -5,13 +5,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="fa fa-user icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label  class="mr-auto title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
@@ -24,8 +24,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="openFicha" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha()">
           <i class="fa fa-user icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha()" class="title-ficha">{{'informesycomunicaciones.plantillasenvio.ficha.remitente' | translate}}</label>
@@ -124,7 +124,7 @@
 
 
               <p-multiSelect #someDropdown defaultLabel="{{ textFilter | translate}}" styleClass="widthAll" [(ngModel)]='direccion.idTipoDireccion' [options]="comboTipoDireccion"
-                [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="true" (onPanelShow)="focusInputField()">
+                [selectedItemsLabel]="textSelected" maxSelectedLabels="10" [disabled]="true" (onPanelShow)="focusInputField()">
               </p-multiSelect>
 
 

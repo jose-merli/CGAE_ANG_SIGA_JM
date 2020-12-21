@@ -160,10 +160,10 @@
                   {{ dato[col.field] }}
                 </label>
               </div>
-              <div *ngIf="col.field == 'nombre'">
+              <div *ngIf="col.field == 'nombre' || col.field == 'identificacion'">
                 <a [routerLink]="" (click)="irEditarInscripcion([dato])" class="enlace">{{ dato[col.field]}}</a>
               </div>
-              <div *ngIf="col.field != 'minimaAsistencia' && col.field != 'nombre' && col.field != 'calificacion'">
+              <div *ngIf="col.field != 'minimaAsistencia' && col.field != 'nombre' && col.field != 'calificacion' && col.field != 'identificacion'">
                 <label>
                   {{ dato[col.field] }}
                 </label>

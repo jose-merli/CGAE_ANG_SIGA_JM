@@ -6,13 +6,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('registrales')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="far fa-address-book icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('registrales')" class="mr-auto title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label  class="mr-auto title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{"censo.general.literal.FechaConstitucion" | translate}}
@@ -33,8 +33,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('registrales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('registrales')" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha()">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('registrales')" class="title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
@@ -94,7 +94,7 @@
               <br>
               <p-multiSelect #someDropdown [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [defaultLabel]="textFilter" styleClass="widthAll"
                 [(ngModel)]='selectActividad' [options]="actividadesDisponibles" optionLabel="label" [selectedItemsLabel]="textSelected"
-                maxSelectedLabels="1" [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField()"></p-multiSelect>
+                maxSelectedLabels="10" [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField()"></p-multiSelect>
             </div>
           </div>
         </div>

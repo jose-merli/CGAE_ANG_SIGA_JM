@@ -58,6 +58,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   sortO: number = 1;
   selectedItem: number = 10;
   cols: any = [];
+  colsADG: any = [];
   rowsPerPage: any = [];
   selectAll: boolean = false;
   selectMultiple: boolean = false;
@@ -116,7 +117,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
-
+  usuario: any[] = [];
+  isAdminGeneral: boolean = true;
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
@@ -172,6 +174,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
     sessionStorage.removeItem("busqueda");
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+      this.usuario = n.usuarioLogeadoItem;
+      if (this.usuario[0].idPerfiles.indexOf("ADG") == -1) {
+        this.isAdminGeneral = false;
+      }
+     
+    });
 
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
       this.fechaIncorporacionHastaSelect = new Date(
@@ -940,6 +949,52 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         header: "censo.busquedaClientesAvanzada.literal.colegio",
         width: "5%"
       },
+      {
+        field: "nif",
+        header: "censo.consultaDatosColegiacion.literal.numIden",
+        width: "8%"
+
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre",
+        width: "15%"
+      },
+      {
+        field: "numberColegiado",
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado",
+        width: "7%"
+      },
+      {
+        field: "estadoColegial",
+        header: "censo.fichaCliente.situacion.cabecera",
+        width: "7%"
+      },
+      {
+        field: "fechaEstadoDate",
+        header: "censo.consultaDatosGenerales.literal.fechaSituacion",
+        width: "7%"
+      },
+      {
+        field: "incorporacionDate",
+        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion",
+        width: "7%"
+      },
+      {
+        field: "situacionResidente",
+        header: "censo.busquedaClientes.noResidente",
+        filter: "situacionResidenteFilter",
+        width: "7%"
+      },
+      {
+        field: "noAparecerRedAbogacia2",
+        header: "censo.busquedaColegial.lopd",
+        filter: "noAparecerRedAbogaciaFilter",
+        width: "8%"
+      }
+    ];
+
+    this.colsADG = [
       {
         field: "nif",
         header: "censo.consultaDatosColegiacion.literal.numIden",

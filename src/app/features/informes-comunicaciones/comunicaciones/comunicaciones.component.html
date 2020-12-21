@@ -136,8 +136,12 @@
                 {{dato[col.field]}}</span>
               <span
                 *ngIf="
-                col.field=='fechaProgramada' || col.field=='fechaCreacion'">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}
+                col.field=='fechaProgramada'">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}
               </span>
+              <span
+              *ngIf="
+              col.field=='fechaCreacion'"><a [routerLink]="" (click)="navigateTo([dato])" class="enlace">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</a>
+            </span>
               <span *ngIf="dato[col.field]==null || dato[col.field]==''">-</span>
               <a [routerLink]="" (click)="navigateTo([dato])" class="enlace"
                 *ngIf="col.field == 'destinatario'">{{dato[col.field]}}</a>

@@ -161,8 +161,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatosBancarios=true;
     this.progressSpinner = true;
-    this.resaltadoDatosBancarios=false;
+    // this.resaltadoDatosBancarios=false;
     this.resaltadoFirma=false;
     this.resaltadoNuevo=false;
     this.migaPan = sessionStorage.getItem("migaPan");
@@ -659,6 +660,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   restablecer() {
+    this.resaltadoDatosBancarios=true;
     this.confirmationService.confirm({
       message: "¿Desea restablecer los datos?",
       icon: "fa fa-info",
@@ -2366,4 +2368,5 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.someDropdown.filterInputChild.nativeElement.focus();  
     }, 300);
   }
+
 }

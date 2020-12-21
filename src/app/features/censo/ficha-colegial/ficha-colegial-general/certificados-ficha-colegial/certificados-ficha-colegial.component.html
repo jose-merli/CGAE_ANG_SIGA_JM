@@ -3,13 +3,13 @@
   <div class="card-header header-ficha">
     <div *ngIf="!esFichaActiva('certificados')" class="form-row">
       <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
+        <div class="img-colegiado" (click)="abreCierraFicha('certificados')">
           <i class="fa fa-certificate icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mb-1">
-          <label (click)="abreCierraFicha('certificados')" class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
+        <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('certificados')">
+          <label class="mr-auto title-ficha">{{ "menu.certificados" | translate }}
           </label>
           <!-- <label class="registros-ficha">(0 registros)</label> -->
         </div>
@@ -44,8 +44,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="esFichaActiva('certificados')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-      <div class="img-colegiado">
+    <div *ngIf="esFichaActiva('certificados')" (click)="abreCierraFicha('certificados')"class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado" (click)="abreCierraFicha('certificados')">
         <i class="fa fa-certificate icon-ficha"></i>
       </div>
       <label (click)="abreCierraFicha('certificados')" class="title-ficha">{{ "menu.certificados" | translate }}</label>

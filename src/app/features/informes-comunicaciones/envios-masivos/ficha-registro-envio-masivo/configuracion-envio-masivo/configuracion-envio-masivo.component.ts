@@ -80,7 +80,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resaltadoDatos = false;
+    this.resaltadoDatos = true;
 
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
@@ -391,6 +391,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
+    this.resaltadoDatos = true;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.getPlantillas();
     this.resaltadoDatos = false;

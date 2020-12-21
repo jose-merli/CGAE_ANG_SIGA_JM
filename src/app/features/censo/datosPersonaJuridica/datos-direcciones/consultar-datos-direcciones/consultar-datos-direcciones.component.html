@@ -127,7 +127,7 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ 'censo.datosDireccion.literal.tipo.direccion' | translate }} (*)</label>
                 <p-multiSelect #someDropdown [ngClass]="styleObligatorio(body.idTipoDireccion)" [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion'
-                  [options]="comboTipoDireccion" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1"
+                  [options]="comboTipoDireccion" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
                   [disabled]="tipoDireccionDisable() || permisoTarjeta == '2'" (onChange)="onChangeTipoDireccion($event)" (onPanelShow)="focusInputField()"></p-multiSelect>
               </div>
             </div>
@@ -183,7 +183,7 @@
 
                       <div *ngIf="dato.tipo == 'Correo-Electrónico'">
                         <div *ngIf="edicionEmail" class="ui-inputgroup">
-                          <input [disabled]="historyDisable || permisoTarjeta == '2'" type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]"
+                          <input [disabled]="historyDisable || permisoTarjeta == '2'" type="text" class="form-control enlace" pInputText [(ngModel)]="dato[col.field]"
                             (input)="changeEmail(dato)" />
                           <button [disabled]="historyDisable || permisoTarjeta == '2'" (click)="editEmail()" pButton type="button" icon="fas fa-check"
                             class="ui-button-warn"></button>
@@ -192,7 +192,7 @@
                           <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
                         </div>
                         <div *ngIf="!edicionEmail" class="ui-inputgroup">
-                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
+                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11 enlace" target="_blank">{{dato[col.field]}}</a>
                           <span *ngIf="dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
                           <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit col-1"></button>
                         </div>

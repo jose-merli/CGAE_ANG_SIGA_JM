@@ -79,9 +79,9 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'&& col.field !='descripcion'">
+              <span *ngIf="col.field !='fechaCreacion'  && col.field !='fechaProgramada'&& col.field !='descripcion' && col.field != 'fechaCreacion'">
                 {{dato[col.field]}}</span>
-              <span *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
+              <span *ngIf="col.field=='fechaCreacion' && dato.fechaCreacion != null"> <a [routerLink]="" (click)="navigateTo([dato])" class="enlace">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</a></span>
               <span *ngIf="col.field=='fechaProgramada' && dato.fechaProgramada!=null">{{ dato[col.field] | date: 'dd/MM/yyyy, H:mm '}}</span>
               <span *ngIf="dato[col.field]==null ||dato[col.field]==''">-</span>
               <a [routerLink]="" (click)="navigateTo([dato])" class="enlace" *ngIf="col.field == 'descripcion'">{{dato[col.field]}}</a>

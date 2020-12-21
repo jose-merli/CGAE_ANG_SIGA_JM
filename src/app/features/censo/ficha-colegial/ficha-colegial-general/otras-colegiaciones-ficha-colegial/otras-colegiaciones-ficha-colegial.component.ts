@@ -193,9 +193,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
         },()=>{
           if (this.datosColegiaciones.length > 0) {
             this.mostrarOtrasColegiaciones = true;
-            for (let i = 0; i <= this.datosColegiaciones.length - 1; i++) {
-              this.DescripcionOtrasColegiaciones = this.datosColegiaciones[i];
-            }
+            this.DescripcionOtrasColegiaciones = this.datosColegiaciones[0];
           }
           if (this.datosColegiaciones.length == 0 || this.datosColegiaciones == undefined) {
             this.message = this.datosColegiaciones.length.toString();

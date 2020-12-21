@@ -22,13 +22,13 @@
       <div class="card-header header-ficha">
         <div *ngIf="!openFichaCuentaBancaria" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abrirFichaCuentaBancaria()">
               <i class="fa fa-credit-card icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abrirFichaCuentaBancaria()"
+            <div class="d-flex justify-content-start mb-1" (click)="abrirFichaCuentaBancaria()">
+              <label 
                 class="mr-auto title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
@@ -46,8 +46,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="openFichaCuentaBancaria" class="header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
+        <div *ngIf="openFichaCuentaBancaria" (click)="abrirFichaCuentaBancaria()" class="header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abrirFichaCuentaBancaria()">
             <i (click)="abrirFichaCuentaBancaria()" class="fa fa-credit-card icon-ficha"></i>
           </div>
           <label (click)="abrirFichaCuentaBancaria()"
@@ -92,7 +92,7 @@
                 <input [ngClass]="styleObligatorio('datosBancarios', body.bic)" [(ngModel)]="body.bic" type="text"
                   class="form-control" (ngModelChange)="recuperarBicBanco()"
                   [disabled]="body.banco!='BANCO EXTRANJERO' ||!editar || !permisos || disabledAction"
-                  [attr.maxlength]="11" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" [attr.minlength]="8" pInputText>
+                  [attr.maxlength]="11" (ngModelChange)="onlyCheckDatos()" [attr.minlength]="8" pInputText>
                 <div *ngIf="bicValido == false">
                   <label
                     class="labelError">{{"censo.datosBancarios.mensaje.control.bicIncorrecto" | translate }}</label>
@@ -106,8 +106,8 @@
                 <label>{{"censo.datosCuentaBancaria.literal.tipoCuenta" | translate}} (*)</label>
                 <p-multiSelect #someDropdown [ngClass]="styleObligatorio('datosBancarios', selectedTipo)" [defaultLabel]="textFilter"
                   styleClass="widthAll" [(disabled)]="!permisos || disabledAction" [(ngModel)]='selectedTipo'
-                  [options]="tipoCuenta" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false"
-                  defaultLabel="" maxSelectedLabels="1" optionLabel="name" (onPanelShow)="focusInputField()"></p-multiSelect>
+                  [options]="tipoCuenta" (ngModelChange)="onlyCheckDatos()" [selectedItemsLabel]="textSelected" autoWidth="false"
+                  defaultLabel="" maxSelectedLabels="10" optionLabel="name" (onPanelShow)="focusInputField()"></p-multiSelect>
                 <div *ngIf="tipoCuentaSeleccionado == false">
                   <label
                     class="labelError">{{ "censo.datosBancarios.mensaje.seleccionar.almenosUno" | translate }}</label>
@@ -151,13 +151,13 @@
       <div class="card-header header-ficha">
         <div *ngIf="!openFichaDatosMandatos" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abrirFichaDatosMandatos()">
               <i class="fa fa-hand-o-right icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10 ">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abrirFichaDatosMandatos()"
+            <div class="d-flex justify-content-start mb-1" (click)="abrirFichaDatosMandatos()">
+              <label 
                 class="mr-auto title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
@@ -167,8 +167,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="openFichaDatosMandatos" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
+        <div *ngIf="openFichaDatosMandatos" (click)="abrirFichaDatosMandatos()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abrirFichaDatosMandatos()">
             <i (click)="abrirFichaDatosMandatos()" class="fa fa-hand-o-right icon-ficha"></i>
           </div>
           <label (click)="abrirFichaDatosMandatos()"
@@ -318,13 +318,13 @@
       <div class="card-header header-ficha">
         <div *ngIf="!openFichaListadoFicherosAnexos" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abrirFichaListadoFicherosAnexos()">
               <i class="fa fa-list-ul icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abrirFichaListadoFicherosAnexos()"
+            <div class="d-flex justify-content-start mb-1" (click)="abrirFichaListadoFicherosAnexos()">
+              <label 
                 class="mr-auto title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
@@ -334,9 +334,9 @@
             </div>
           </div>
         </div>
-        <div *ngIf="openFichaListadoFicherosAnexos"
+        <div *ngIf="openFichaListadoFicherosAnexos" (click)="abrirFichaListadoFicherosAnexos()"
           class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado ">
+          <div class="img-colegiado " (click)="abrirFichaListadoFicherosAnexos()">
             <i class="fa fa-list-ul icon-ficha"></i>
           </div>
           <label (click)="abrirFichaListadoFicherosAnexos()"
