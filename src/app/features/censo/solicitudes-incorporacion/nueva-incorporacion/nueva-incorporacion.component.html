@@ -27,14 +27,14 @@
         <div class="card-header header-ficha">
             <div [hidden]="fichaColegiacion" class="form-row">
                 <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+                    <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
                         <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
                 </div>
                 <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label (click)="abreCierraFichaColegiacion()"
+                    <div class="d-flex justify-content-start mb-1" (click)="abreCierraFichaColegiacion()">
+                        <label 
                             class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -52,8 +52,8 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="fichaColegiacion" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
+            <div *ngIf="fichaColegiacion" (click)="abreCierraFichaColegiacion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
                     <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
@@ -106,14 +106,14 @@
         <div class="card-header header-ficha">
             <div [hidden]="fichaSolicitud" class="form-row">
                 <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+                    <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
                         <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
                 </div>
                 <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label (click)="abreCierraFichaSolicitud()"
+                    <div class="d-flex justify-content-start mb-1" (click)="abreCierraFichaSolicitud()">
+                        <label 
                             class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -128,8 +128,8 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="fichaSolicitud" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
+            <div *ngIf="fichaSolicitud" (click)="abreCierraFichaSolicitud()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
                     <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
@@ -202,14 +202,14 @@
         <div class="card-header header-ficha">
             <div [hidden]="fichaPersonal" class="form-row">
                 <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+                    <div class="img-colegiado" (click)="abreCierraFichaPersonal()">
                         <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
                 </div>
                 <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label (click)="abreCierraFichaPersonal()"
+                    <div class="d-flex justify-content-start mb-1" (click)="abreCierraFichaPersonal()">
+                        <label 
                             class="mr-auto title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -241,8 +241,8 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="fichaPersonal" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
+            <div *ngIf="fichaPersonal" (click)="abreCierraFichaPersonal()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado" (click)="abreCierraFichaPersonal()">
                     <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
@@ -351,14 +351,14 @@
         <div class="card-header header-ficha">
             <div [hidden]="fichaDireccion" class="form-row">
                 <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+                    <div class="img-colegiado" (click)="abreCierraFichaDireccion()">
                         <i *ngIf="!existeImagen" class="fa fa-map-marker icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
                 </div>
                 <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label (click)="abreCierraFichaDireccion()"
+                    <div class="d-flex justify-content-start mb-1" (click)="abreCierraFichaDireccion()">
+                        <label 
                             class="mr-auto title-ficha">{{"envios.definir.literal.datosdestino" | translate}}
                             <!--{{ "general.message.datos.generales" | translate}}-->
                         </label>
@@ -382,8 +382,8 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="fichaDireccion" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
+            <div *ngIf="fichaDireccion" (click)="abreCierraFichaDireccion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado" (click)="abreCierraFichaDireccion()">
                     <i *ngIf="!existeImagen" class="fa fa-map-marker icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
@@ -512,16 +512,20 @@
                         <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
                     </div>
                 </div>
+                
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
+                        <a [href]="'mailto:'+solicitudEditar.correoElectronico">
                     <input [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
                         type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
                         (input)="changeEmail()" pInputText>
                     <div *ngIf="!emailValido">
                         <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
                     </div>
+                </a>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -532,14 +536,14 @@
         <div class="card-header header-ficha">
             <div [hidden]="fichaBancaria" class="form-row">
                 <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+                    <div class="img-colegiado" (click)="abreCierraFichaBancaria()">
                         <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
                 </div>
                 <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label (click)="abreCierraFichaBancaria()" class="mr-auto title-ficha">
+                    <div class="d-flex justify-content-start mb-1" (click)="abreCierraFichaBancaria()">
+                        <label  class="mr-auto title-ficha">
                             {{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
                         <!--<label class="registros-ficha">(0 registros)</label>-->
                     </div>
@@ -574,8 +578,8 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="fichaBancaria" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
+            <div *ngIf="fichaBancaria" (click)="abreCierraFichaBancaria()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                <div class="img-colegiado" (click)="abreCierraFichaBancaria()">
                     <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
                     <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                 </div>
