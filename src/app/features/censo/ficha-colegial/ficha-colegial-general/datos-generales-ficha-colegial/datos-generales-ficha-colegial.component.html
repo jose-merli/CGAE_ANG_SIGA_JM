@@ -194,9 +194,9 @@
               </label>
 
               <br />
-              <p-multiSelect #someDropdown [defaultLabel]="textFilter" filter="true" filterBy="label,labelSinTilde" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
+              <p-multiSelect #someDropdown  [defaultLabel]="textFilter" filter="true" filterBy="label,labelSinTilde" [(ngModel)]='etiquetasPersonaJuridicaSelecionados'
                 [options]="comboEtiquetas" [disabled]="isLetrado || (tarjetaGenerales == 2) || !autocompletar || disabledAction"
-                styleClass="widthAll" [panelStyle]="{width:'100%'}"  (click)="disabledAutocomplete()" (onPanelShow)="focusInputField()"></p-multiSelect>
+                styleClass="widthAll" [panelStyle]="{width:'100%'}" maxSelectedLabels="10"  (click)="disabledAutocomplete()" (onPanelShow)="focusInputField()"></p-multiSelect>
             </div>
           </div>
         </div>
