@@ -19,13 +19,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('generales')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('generales')">
             <i class="fa fa-file-pdf icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('generales')" class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('generales')">
+            <label  class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
@@ -48,9 +48,9 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="esFichaActiva('generales')" (click)="abreCierraFicha('generales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
 
-        <div class="img-colegiado">
+        <div class="img-colegiado" (click)="abreCierraFicha('generales')">
           <i class="fa fa-file-pdf icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('generales')" class="title-ficha">{{ "general.message.datos.generales" | translate }}
@@ -307,13 +307,13 @@
         <div class="card-header header-ficha">
           <div *ngIf="esFichaActiva('descripcion')" class="form-row">
             <div class="col-lg-1 col-md-2">
-              <div class="img-colegiado">
+              <div class="img-colegiado" (click)="abreCierraFicha('descripcion')">
                 <i class="fas fa-file icon-ficha"></i>
               </div>
             </div>
             <div class="col-lg-11 col-md-10">
-              <div class="d-flex justify-content-start mb-1">
-                <label (click)="abreCierraFicha('descripcion')" class="mr-auto title-ficha">{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
+              <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('descripcion')">
+                <label  class="mr-auto title-ficha">{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
               </div>
               <div class="d-flex justify-content-between">
                 <label>
@@ -323,8 +323,8 @@
             </div>
           </div>
     
-          <div *ngIf="!esFichaActiva('descripcion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-            <div class="img-colegiado">
+          <div *ngIf="!esFichaActiva('descripcion')" (click)="abreCierraFicha('descripcion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+            <div class="img-colegiado" (click)="abreCierraFicha('descripcion')">
               <i class="fas fa-file icon-ficha"></i>
             </div>
             <label (click)="abreCierraFicha('descripcion')" class="title-ficha">{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
@@ -355,13 +355,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('price')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('price')">
             <i class="fa fa-usd icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('price')" class="mr-auto title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('price')">
+            <label  class="mr-auto title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
           </div>
           <div *ngIf="datosPrices.length < 5 && datosPrices.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let precio of datosPrices">
@@ -386,8 +386,8 @@
         </div>
       </div>
 
-      <div *ngIf="esFichaActiva('price')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('price')" (click)="abreCierraFicha('price')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('price')">
           <i class="fa fa-usd icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('price')" class="title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
@@ -444,13 +444,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('formadores')" id="fichaFormadores" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('formadores')">
             <i class="fa fa-users icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('formadores')" class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('formadores')">
+            <label  class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosFormadores.length < 4 && datosFormadores.length != 0" class="d-flex justify-content-between">
             <label *ngFor="let formador of datosFormadores">
@@ -476,8 +476,8 @@
         </div>
       </div>
 
-      <div *ngIf="esFichaActiva('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('formadores')" (click)="abreCierraFicha('formadores')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('formadores')">
           <i class="fa fa-users icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('formadores')" class="title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
@@ -800,13 +800,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('certificate')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('certificate')" >
             <i class="fa fa-certificate icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('certificate')" class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('certificate')" >
+            <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between">
             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}:
@@ -834,8 +834,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('certificate')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('certificate')" (click)="abreCierraFicha('certificate')"  class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('certificate')" >
           <i class="fa fa-certificate icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('certificate')" class="title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
@@ -1061,13 +1061,13 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('session')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('session')">
             <i class="fa fa-user icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha('session')" class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('session')">
+            <label  class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosSessions.length >= 1" class="d-flex justify-content-between">
             <label>{{ 'formacion.fichaCursos.tarjetaSesiones.resumen.numSesiones' | translate }}:
@@ -1092,8 +1092,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('session')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
+      <div *ngIf="esFichaActiva('session')" (click)="abreCierraFicha('session')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('session')">
           <i class="fa fa-user icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('session')" class="title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
@@ -1186,13 +1186,13 @@
       <div class="card-header header-ficha">
         <div *ngIf="!esFichaActiva('carga')" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abreCierraFicha('carga')">
               <i class="fa fa-upload icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label (click)="abreCierraFicha('carga')" class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
+            <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('carga')">
+              <label  class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
 
             </div>
             <div class="d-flex justify-content-between">
@@ -1203,9 +1203,9 @@
             </div>
           </div>
         </div>
-        <div *ngIf="esFichaActiva('carga')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div *ngIf="esFichaActiva('carga')" (click)="abreCierraFicha('carga')" class=" header-ficha-open d-flex justify-content-start align-items-center">
 
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraFicha('carga')">
             <i class="fa fa-upload icon-ficha"></i>
           </div>
           <label (click)="abreCierraFicha('carga')" class="title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>

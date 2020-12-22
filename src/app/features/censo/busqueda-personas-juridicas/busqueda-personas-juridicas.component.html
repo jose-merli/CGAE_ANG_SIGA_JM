@@ -102,10 +102,10 @@
               <div *ngIf="col.field == 'fechaConstitucion'">
                 <label>{{ dato.fechaConstitucion | date: 'dd/MM/yyyy'}}</label>
               </div>
-              <div *ngIf="col.field =='denominacion'">
+              <div *ngIf="col.field =='denominacion' || col.field =='nif'">
                 <a [routerLink]="" (click)="irEditarPersona(dato)" class="enlace">{{ dato[col.field]}}</a>
               </div>
-              <div *ngIf="col.field != 'fechaConstitucion' && col.field != 'numeroIntegrantes' && col.field != 'denominacion'">
+              <div *ngIf="col.field != 'fechaConstitucion' && col.field != 'numeroIntegrantes' && col.field != 'denominacion' && col.field != 'nif'">
                 <label>{{ dato[col.field]}}</label>
               </div>
             </td>
