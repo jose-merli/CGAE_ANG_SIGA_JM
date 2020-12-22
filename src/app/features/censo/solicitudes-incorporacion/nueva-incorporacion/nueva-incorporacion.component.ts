@@ -129,9 +129,9 @@ export class NuevaIncorporacionComponent implements OnInit {
   dropdown: Dropdown;
 
   ngOnInit() {
-    this.resaltadoDatos = false;
-    this.resaltadoDatosAprobar = false;
-    this.resaltadoDatosBancos = false;
+    this.resaltadoDatos = true;
+    this.resaltadoDatosAprobar = true;
+    this.resaltadoDatosBancos = true;
 
     sessionStorage.removeItem("esNuevoNoColegiado");
     this.fechaActual = new Date();
