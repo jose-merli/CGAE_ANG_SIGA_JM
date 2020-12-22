@@ -31,6 +31,7 @@ import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
 import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
 import { OverlayPanelModule, OverlayPanel, MultiSelect } from 'primeng/primeng';
 import { CommonsService } from '../../../_services/commons.service';
+import { AuthenticationService } from "../../../_services/authentication.service";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -118,7 +119,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   idClaseComunicacion: String;
   keys: any[] = [];
   usuario: any[] = [];
-  isAdminGeneral: boolean = true;
+  isConsejo: boolean = false;
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
@@ -143,7 +144,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private authenticationService: AuthenticationService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -174,13 +176,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
     sessionStorage.removeItem("busqueda");
-    this.sigaServices.get("usuario_logeado").subscribe(n => {
-      this.usuario = n.usuarioLogeadoItem;
-      if (this.usuario[0].idPerfiles.indexOf("ADG") == -1) {
-        this.isAdminGeneral = false;
-      }
-     
-    });
+
+    let idInstitucion = this.authenticationService.getInstitucionSession();
+    console.log(idInstitucion);
+    if (idInstitucion > 3000 || idInstitucion == 2000) {
+       this.isConsejo = true;
+       console.log(idInstitucion);
+    }
 
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
       this.fechaIncorporacionHastaSelect = new Date(

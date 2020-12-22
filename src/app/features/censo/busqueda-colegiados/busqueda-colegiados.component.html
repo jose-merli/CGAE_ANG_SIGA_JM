@@ -252,7 +252,7 @@
         </div>
     </div>
     <!--FIN CARD-->
-    <div *ngIf="buscar == true &&  isAdminGeneral == true" class="card mt-3">
+    <div *ngIf="buscar == true &&  isConsejo == true" class="card mt-3">
         <div class="card-body p-0">
             <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                 (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="cols"
@@ -407,7 +407,7 @@
 
     </div>
 
-    <div *ngIf="buscar == true &&  isAdminGeneral == false" class="card mt-3">
+    <div *ngIf="buscar == true &&  isConsejo == false" class="card mt-3">
             <div class="card-body p-0">
                 <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                     (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="colsADG"
