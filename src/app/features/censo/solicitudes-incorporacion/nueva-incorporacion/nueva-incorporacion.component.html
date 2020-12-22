@@ -516,8 +516,8 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
-                        <a [href]="'mailto:'+solicitudEditar.correoElectronico">
-                    <input [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
+                        <a  class="enlace"[href]="'mailto:'+solicitudEditar.correoElectronico">
+                    <input style="cursor:pointer !important; color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
                         type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
                         (input)="changeEmail()" pInputText>
                     <div *ngIf="!emailValido">
