@@ -156,7 +156,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   isCrearColegial: boolean = false;
   file: File = undefined;
-  comboEtiquetas: any[];
+  comboEtiquetas: any[] = [];
   numSelectedColegiales: number = 0;
   numSelectedDatosRegtel: number = 0;
   progressSpinner: boolean = false;
@@ -199,7 +199,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
     sessionStorage.setItem("permisos", JSON.stringify(this.permisos)); // No se si esto hace falta
-    this.getComboEtiquetas();
+
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
     } else {
@@ -1303,13 +1303,12 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   private sortOptions() {
     if (this.comboEtiquetas && this.etiquetasPersonaJuridicaSelecionados) {
       this.comboEtiquetas.sort((a, b) => {
-        const includeA = this.etiquetasPersonaJuridicaSelecionados.indexOf(a.value);
-        // includes(a.value);
-        const includeB = this.etiquetasPersonaJuridicaSelecionados.indexOf(b.value);
-        if ((includeA != -1) && (includeB == -1)) {
+        const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a.value);
+        const includeB = this.etiquetasPersonaJuridicaSelecionados.includes(b.value);
+        if (includeA && !includeB) {
           return -1;
         }
-        else if ((includeA == -1) && (includeB != -1)) {
+        else if (!includeA && includeB) {
           return 1;
         }
         return a.label.localeCompare(b.label);
@@ -1441,19 +1440,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   // Evento para detectar una etiqueta existente
-  onSelect(etiquetasPersonaJuridicaSelecionados, conjuntoEtiquetas) {
-    let event = new ComboEtiquetasItem();
-    let idInstitucion = this.generalBody.idInstitucion;
-    let ultimaEtiqueta = etiquetasPersonaJuridicaSelecionados[etiquetasPersonaJuridicaSelecionados.length - 1];
-
-    conjuntoEtiquetas.forEach(element => {
-      if(element.value == ultimaEtiqueta && element.idInstitucion == idInstitucion){
-        event.idGrupo = element.value;
-        event.label = element.label;
-        event.idInstitucion = element.idInstitucion;
-      }
-    }); 
-
+  onSelect(event) {
     this.activacionGuardarGenerales();
     if (event) {
       if (this.isNotContains(event)) {
@@ -1564,11 +1551,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
-          this.etiquetasPersonaJuridica.forEach(element => {
-          let e = { label: element.label, value:
-		  { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
-          
-            this.etiquetasPersonaJuridicaSelecionados.push(e);
+          this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
+            this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
             // this.generalBody.
           });
 
@@ -1668,9 +1652,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
-    if(!this.openFicha){
-      this.resaltadoDatosGenerales=true;
-    }
     if (
       key == "generales" &&
       !this.activacionTarjeta
@@ -2764,36 +2745,5 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.someDropdown.filterInputChild.nativeElement.focus();  
     }, 300);
   }
-
-  getComboEtiquetas() {
-    // obtener etiquetas
-    this.sigaServices
-    .post("fichaDatosGenerales_etiquetasPersona", this.generalBody)
-    .subscribe(
-      n => {
-        // coger etiquetas de una persona juridica
-        // this.comboEtiquetas = JSON.parse(
-        //   n["body"]
-        // ).comboEtiquetasItems;
-        let array = n.comboItems;
-
-        // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
-        this.comboEtiquetas = [];
-        array.forEach(element => {
-        let e = { label: element.label, value:
-    { label: element.label, value: element.value, idInstitucion: element.idInstitucion } };
-        
-          this.comboEtiquetas.push(e);
-          // this.generalBody.
-        });
-
-        this.arregloTildesCombo(this.comboEtiquetas);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
 }
 
