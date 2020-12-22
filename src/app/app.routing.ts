@@ -1013,7 +1013,7 @@ const appRoutes: Routes = [
 	},
 
 	{
-		path: 'fichaColegialClassique',
+		path: 'turnoOficioCenso',
 		component: TurnoOficioComponent,
 		canActivate: [ AuthGuard ]
 	},
