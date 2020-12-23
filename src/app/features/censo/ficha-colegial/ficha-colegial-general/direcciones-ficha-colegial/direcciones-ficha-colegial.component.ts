@@ -504,9 +504,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           () => {
             if (this.datosDirecciones.length > 0) {
               this.mostrarDatosDireccion = true;
-              for (let i = 0; i <= this.datosDirecciones.length - 1; i++) {
-                this.DescripcionDatosDireccion = this.datosDirecciones[i];
-              }
+              this.DescripcionDatosDireccion = this.datosDirecciones[0];
+              
             }
             if (this.datosDirecciones.length == 0) {
               this.message = this.datosDirecciones.length.toString();

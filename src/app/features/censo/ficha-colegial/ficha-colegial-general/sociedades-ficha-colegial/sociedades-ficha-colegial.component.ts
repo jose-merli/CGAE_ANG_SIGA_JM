@@ -160,9 +160,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
         }, () => {
           if (this.datosSociedades.length > 0) {
             this.mostrarDatosSociedades = true;
-            for (let i = 0; i <= this.datosSociedades.length - 1; i++) {
-              this.DescripcionSociedades = this.datosSociedades[i];
-            }
+            this.DescripcionSociedades = this.datosSociedades[0];
           }
           if (this.datosSociedades.length == 0) {
             this.message = this.datosSociedades.length.toString();

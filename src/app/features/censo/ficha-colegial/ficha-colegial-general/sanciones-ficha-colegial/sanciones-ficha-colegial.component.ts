@@ -273,9 +273,7 @@ disabledAction:boolean = false;
         }, () => {
           if (this.dataSanciones.length > 0) {
             this.mostrarDatosSanciones = true;
-            for (let i = 0; i <= this.dataSanciones.length - 1; i++) {
-              this.DescripcionSanciones = this.dataSanciones[i];
-            }
+            this.DescripcionSanciones = this.dataSanciones[0];
           }
           if (this.dataSanciones.length == 0) {
             this.message = this.dataSanciones.length.toString();
