@@ -643,9 +643,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         etiCopia.label = encEtiqueta.value.label;
         etiCopia.idInstitucion = encEtiqueta.value.idInstitucion;
         etiCopia.idGrupo = encEtiqueta.value.idGrupo;
-        etiCopia.value = encEtiqueta.value.idGrupo;
-        //Object.assign(etiCopia, encEtiqueta);
-        //etiCopia.idGrupo = etiCopia.value;
         this.generalBody.etiquetas[i] = etiCopia;
       }
       /*this.generalBody.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
@@ -1528,10 +1525,10 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     this.activacionGuardarGenerales();
     if (event) {
       if (event.value == undefined) {
-        this.updateItems.delete(event.idInstitucion+event.idGrupo);
+        this.updateItems.delete(event.value.value);
         this.showGuardar = true;
       } else {
-        this.updateItems.delete(event.idInstitucion+event.idGrupo);
+        this.updateItems.delete(event.value.value);
         this.showGuardar = true;
       }
     }
@@ -1540,30 +1537,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   deleteLabel(event) {
     this.activacionGuardarGenerales();
     for (let i = 0; i < this.etiquetasPersonaJuridicaSelecionados.length; i++) {
-      if (this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == undefined) {
-        if (this.etiquetasPersonaJuridicaSelecionados[i].label == event.label &&
-          this.etiquetasPersonaJuridicaSelecionados[i].idInstitucion == event.idInstitucion) {
-          this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
-        }
-      } else {
-        if (
-          this.etiquetasPersonaJuridicaSelecionados[i].idGrupo == event.value &&
-          this.etiquetasPersonaJuridicaSelecionados[i].idInstitucion == event.idInstitucion
-        ) {
+      if (this.etiquetasPersonaJuridicaSelecionados[i].value == event.value.value) {
           this.etiquetasPersonaJuridicaSelecionados.splice(i, 1);
           this.onUnselect(event);
-        }
       }
     }
-    // if (event) {
-    //   if (event.value == undefined) {
-    //     this.updateItems.delete(event.idGrupo);
-    //     this.showGuardar = true;
-    //   } else {
-    //     this.updateItems.delete(event.value);
-    //     this.showGuardar = true;
-    //   }
-    // }
   }
 
   obtenerEtiquetasPersonaJuridicaConcreta() {
