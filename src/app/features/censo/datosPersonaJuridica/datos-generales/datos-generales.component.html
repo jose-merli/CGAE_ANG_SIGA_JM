@@ -169,7 +169,7 @@
                 <br>
 
                 <p-multiSelect  #someDropdown [defaultLabel]="textFilter" filterBy="label"
-                  [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [options]="comboEtiquetas"
+                  [(ngModel)]="etiquetasPersonaJuridicaSelecionados" [options]="comboEtiquetas" maxSelectedLabels="10" [selectedItemsLabel]="'{0} elementos seleccionados'"
                   [disabled]="!autocompletar || disabledAction || tarjeta == '2'" styleClass="widthAll"
                   [panelStyle]="{width:'100%'}" (ngModelChange)="onChangeForm()" (onSelect)="onSelect($event)"
                   (onUnselect)="onUnselect($event)" (click)="disabledAutocomplete()" defaultLabel="Seleccionar" (onPanelShow)="focusInputField()"></p-multiSelect>
