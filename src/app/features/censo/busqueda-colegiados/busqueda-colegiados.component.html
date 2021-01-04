@@ -43,8 +43,8 @@
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
                         <p-multiSelect #someDropdown [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false"
-                            [(ngModel)]='body.idgrupo' [options]="comboEtiquetas" [selectedItemsLabel]="textSelected"
-                            maxSelectedLabels="10" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField()">
+                            [(ngModel)]='body.idgrupo' [options]="comboEtiquetas"
+                            maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField()">
                         </p-multiSelect>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                         <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
                         <p-multiSelect #someDropdown2 [disabled]="deshabilitarCombCol" [defaultLabel]="textFilter" filterBy="label"
                             [(ngModel)]='colegiosSeleccionados' [options]="comboColegios" optionLabel="label"
-                            [selectedItemsLabel]="textSelected" maxSelectedLabels="10" styleClass="widthAll"
+                            maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
                             [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField2()"></p-multiSelect>
                     </div>
                     
@@ -98,7 +98,7 @@
                         <!--    <p-dropdown class="select-form" [(ngModel)]='body.situacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSituacion"
                             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>-->
                         <p-multiSelect #someDropdown3 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.situaciones'
-                            [options]="comboSituacion" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
+                            [options]="comboSituacion" maxSelectedLabels="10" [selectedItemsLabel]="textSelected"
                             styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
                     </div>
 
@@ -254,7 +254,7 @@
     <!--FIN CARD-->
     <div *ngIf="buscar == true &&  isConsejo == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
+            <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                 (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="cols"
              [(selectionMode)]="selection" #table class="tabla-listado" [value]="datos"
                 [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
@@ -409,7 +409,7 @@
 
     <div *ngIf="buscar == true &&  isConsejo == false" class="card mt-3">
             <div class="card-body p-0">
-                <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
+                <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                     (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="colsADG"
                  [(selectionMode)]="selection" #table class="tabla-listado" [value]="datos"
                     [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
