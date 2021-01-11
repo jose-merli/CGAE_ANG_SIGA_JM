@@ -194,6 +194,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatosGenerales = true;
     this.getLetrado();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
@@ -1665,6 +1666,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     return this.fichaPosible.activa;
   }
   abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
     if (
       key == "generales" &&
       !this.activacionTarjeta

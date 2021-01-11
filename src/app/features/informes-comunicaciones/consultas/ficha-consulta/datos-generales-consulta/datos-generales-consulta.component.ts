@@ -78,7 +78,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resaltadoDatos=false;
+    this.resaltadoDatos=true;
     this.getMode();
     this.getInstitucion();
     this.getDatos();

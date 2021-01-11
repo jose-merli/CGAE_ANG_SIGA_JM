@@ -184,7 +184,7 @@ export class SolicitudesIncorporacionComponent implements OnInit {
             element.fechaEstado = new Date(element.fechaEstado);
           });
           this.datos = this.datos.map(it => {
-            it.apeNom = it.apellidos + " " + it.nombre;
+            it.apeNom = it.apellidos.trim() + ", " + it.nombre;
             return it;
           });
           this.progressSpinner = false;

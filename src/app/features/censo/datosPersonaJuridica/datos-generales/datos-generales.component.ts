@@ -217,6 +217,7 @@ export class DatosGenerales implements OnInit {
 
     this.getComboIdentificacion();
 
+    this.resaltadoDatos = true;
 
   }
   ngOnChanges(changes: SimpleChanges) {
@@ -753,6 +754,7 @@ export class DatosGenerales implements OnInit {
   }
 
   abreCierraFicha() {
+    this.resaltadoDatos = true;
     if(!this.openFicha){
       this.onlyCheckDatos();
     }
