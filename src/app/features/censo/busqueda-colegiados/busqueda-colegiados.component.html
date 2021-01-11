@@ -256,7 +256,7 @@
         <div class="card-body p-0">
             <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                 (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="cols"
-             [(selectionMode)]="selection" #table class="tabla-listado" [value]="datos"
+             [(selectionMode)]="selection" #table class="tabla-listado overflow" [value]="datos"
                 [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
 
                 <ng-template pTemplate="colgroup" let-columns>
@@ -411,7 +411,7 @@
             <div class="card-body p-0">
                 <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
                     (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="colsADG"
-                 [(selectionMode)]="selection" #table class="tabla-listado" [value]="datos"
+                 [(selectionMode)]="selection" #table class="tabla-listado overflow" [value]="datos"
                     [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
     
                     <ng-template pTemplate="colgroup" let-columns>
@@ -432,7 +432,7 @@
                         </tr>
                     </ng-template>
     
-                    <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                    <ng-template pTemplate="body" let-dato let-columns="columns"  let-rowIndex="rowIndex">
                         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                             <td class="text-center" *ngFor="let col of columns">
                                 <div *ngIf="col.field !='nombre' && 
