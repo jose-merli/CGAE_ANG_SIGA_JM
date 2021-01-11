@@ -104,6 +104,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   editar: boolean = false;
   isSave: boolean = true;
 
+  mailClicable: boolean = false;
+
   emailValido: boolean = true;
   tlf1Valido: boolean = true;
   tlf2Valido: boolean = true;
@@ -246,7 +248,6 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.estadoSolicitudSelected = "20";
       this.vieneDeBusqueda = true;
       this.dniDisponible = false;
-
 
     }
 
@@ -1407,6 +1408,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           ];
         }
       );
+
   }
 
   onChangeCodigoPostal() {
@@ -1684,6 +1686,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.fichaPersonal = !this.fichaPersonal;
   }
   abreCierraFichaDireccion() {
+    if(((<HTMLInputElement>document.getElementById("mailNuevaIncorporacion")) != null) 
+      && ((<HTMLInputElement>document.getElementById("mailNuevaIncorporacion")).value != '')
+      && (this.commonsService.validateEmail(this.solicitudEditar.correoElectronico))
+      && (this.consulta)){
+        document.getElementById('mailNuevaIncorporacion').setAttribute('style', 'color: #0000EE');
+        document.getElementById('mailNuevaIncorporacion').setAttribute('style', 'cursor:pointer !important');
+        document.getElementById('mailHref').setAttribute('href', 'mailto:'+((<HTMLInputElement>document.getElementById("mailNuevaIncorporacion")).value));
+      }
     this.fichaDireccion = !this.fichaDireccion;
   }
   abreCierraFichaBancaria() {

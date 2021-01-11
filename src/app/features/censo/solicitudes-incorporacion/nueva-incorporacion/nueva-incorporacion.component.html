@@ -516,10 +516,10 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <label>
                         {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
-                        <a  class="enlace"[href]="'mailto:'+solicitudEditar.correoElectronico">
-                    <input style="cursor:pointer !important; color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
+                    <a id = "mailHref" class="enlace">
+                    <input id = "mailNuevaIncorporacion" style="color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
                         type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
-                        (input)="changeEmail()" pInputText>
+                        pInputText>
                     <div *ngIf="!emailValido">
                         <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
                     </div>
@@ -720,7 +720,7 @@
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
             label="{{ 'general.boton.volver' | translate}}"></button>
-        <button *ngIf="!consulta" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
+        <button *ngIf="!consulta" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
             label="Guardar" [disabled]="consulta"></button>
         <button (click)="checkDatosAprobar()" [disabled]="isLetrado"
             *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
