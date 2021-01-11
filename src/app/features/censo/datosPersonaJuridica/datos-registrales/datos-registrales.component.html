@@ -6,12 +6,12 @@
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('registrales')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado" (click)="abreCierraFicha()">
+          <div class="img-colegiado" (click)="abreCierraFicha('registrales')">
             <i class="far fa-address-book icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('registrales')">
             <label  class="mr-auto title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
@@ -33,8 +33,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('registrales')" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado" (click)="abreCierraFicha()">
+      <div *ngIf="esFichaActiva('registrales')" (click)="abreCierraFicha('registrales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('registrales')">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label (click)="abreCierraFicha('registrales')" class="title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
