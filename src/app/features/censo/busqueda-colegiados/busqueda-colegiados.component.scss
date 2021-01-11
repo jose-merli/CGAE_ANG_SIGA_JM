@@ -13,6 +13,12 @@
   width: 5%;
  }
 
+ .overflow{
+  // overflow: hidden !important;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+ }
+
  .overlayPanelPrueba > .ui-overlaypanel{
 //   top: 50% !important;
 //   left: 40% !important;
