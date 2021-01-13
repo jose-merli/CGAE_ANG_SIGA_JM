@@ -131,16 +131,16 @@
               <!-- <label class="registros-ficha">(0 registros)</label> -->
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}:
                 <span>{{ generalBody.nif }}</span>
               </label>
-              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
+              <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}:
                 <span>{{ generalBody.apellidos1 }} {{ generalBody.apellidos2 }}</span>
               </label>
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
                 <span>{{ generalBody.soloNombre }}</span>
               </label>
-              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}:
                 <span *ngIf="!fechaNacCambiada">{{ generalBody.fechaNacimiento }}</span>
                 <span *ngIf="fechaNacCambiada">{{ fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
 
@@ -434,22 +434,22 @@
               <!-- <label class="registros-ficha">(0 registros)</label> -->
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}:
                 <span>{{ colegialesBody.colegioResultado }}</span>
               </label>
-              <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}
+              <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}:
                 <span>{{ colegialesBody.estadoColegial }}</span>
               </label>
-              <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+              <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}:
                 <span>{{ colegialesBody.numColegiado }}</span>
               </label>
-              <label>{{ "censo.ws.literal.residente" | translate }}
+              <label>{{ "censo.ws.literal.residente" | translate }}:
                 <span>{{ residente }}</span>
               </label>
-              <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }}
+              <label>{{ "censo.fusionDuplicados.colegiaciones.inscrito" | translate }}:
                 <span>{{ inscrito }}</span>
               </label>
-              <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }}
+              <label>{{ "censo.consultaDatosGenerales.literal.fechaIncorporacion" | translate }}:
                 <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
                 <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
               </label>

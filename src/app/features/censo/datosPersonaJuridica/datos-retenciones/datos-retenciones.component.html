@@ -18,14 +18,14 @@
                             <label  class="mr-auto title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <label>{{"facturacion.seriesFacturacion.literal.fInicio" | translate}}
+                            <label>{{"facturacion.seriesFacturacion.literal.fInicio" | translate}}:
                                 <span>{{retencionNow.fechaInicio}}</span>
                             </label>
 
-                            <label>{{"general.description" | translate}}
+                            <label>{{"general.description" | translate}}:
                                 <span>{{retencionNow.descripcionRetencion}}</span>
                             </label>
-                            <label>{{"FactSJCS.mantRetencionesJ.literal.tramoLec" | translate}}
+                            <label>{{"FactSJCS.mantRetencionesJ.literal.tramoLec" | translate}}:
                                 <span>{{retencionNow.porcentajeRetencion}} %</span>
                             </label>
                             <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
