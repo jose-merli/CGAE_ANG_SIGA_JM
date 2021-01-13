@@ -13,6 +13,12 @@
   font-weight: bold;
 }
 
+.overflow{
+  // overflow: hidden !important;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+ }
+
 .ui-tooltip .ui-tooltip-text {
   white-space: pre-line !important;
 }

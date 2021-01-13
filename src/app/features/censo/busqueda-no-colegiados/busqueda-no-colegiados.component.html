@@ -139,8 +139,8 @@
     </div>
     <div *ngIf="!historico && buscar" class="card mt-3" id="tablaFoco">
         <div class="card-body p-0">
-            <p-table styleClass="inheritTable" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4"
-                dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" [paginator]="true"
+            <p-table [autoLayout]="true" styleClass="inheritTable" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4"
+                dataKey="nif" [responsive]="true" selectionMode="multiple" #table class="tabla-listado overflow" [value]="datos" [paginator]="true"
                 paginatorPosition="both" [columns]="cols" [rows]="selectedItem">
                 <!-- <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate"  [filter]="true" filterMatchMode="contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column> -->
 
@@ -229,8 +229,8 @@
     <div *ngIf="historico" class="card mt-3">
         <div class="card-body p-0">
 
-            <p-table [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4" [responsive]="true" selectionMode="multiple"
-                #table class="tabla-listado" (onRowSelect)="clickFila($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+            <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" pageLinks="4" [responsive]="true" selectionMode="multiple"
+                #table class="tabla-listado overflow" (onRowSelect)="clickFila($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
                 [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [columns]="cols">
                 <ng-template pTemplate="colgroup" let-columns>
                     <colgroup>

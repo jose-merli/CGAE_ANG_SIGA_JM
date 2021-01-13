@@ -131,8 +131,8 @@
   <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
     <!-- <div class="card mt-3"> -->
     <div class="card-body p-0">
-      <p-table [columns]="cols" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{'customCursor': selectMultiple}"
-        [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable"
+      <p-table [autoLayout]="true" [columns]="cols" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{'customCursor': selectMultiple}"
+        [(selection)]="selectedDatos" [responsive]="true" selectionMode="multiple" #table class="tabla-listado inheritTable overflow"
         [value]="datos" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
         <ng-template pTemplate="colgroup" let-columns id="tablaFoco">
           <colgroup>

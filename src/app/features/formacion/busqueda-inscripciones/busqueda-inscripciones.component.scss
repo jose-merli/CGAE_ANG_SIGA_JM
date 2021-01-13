@@ -10,3 +10,9 @@
 .enlace {
 	color: #0000EE !important;
   }
+
+  .overflow{
+	// overflow: hidden !important;
+	  -ms-overflow-style: none;  /* IE and Edge */
+	  scrollbar-width: none;  /* Firefox */
+   }
