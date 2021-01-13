@@ -593,7 +593,7 @@
             <div class="row">
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
-                    <input [ngClass]="styleObligatorioBanco(solicitudEditar.titular)" [disabled]="consulta" type="text"
+                    <input  [disabled]="consulta" type="text"
                         class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
                 </div>
                 <!--<div class="form-group col-lg-3 col-md-3">
@@ -604,7 +604,7 @@
                 </div>-->
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
-                    <input [ngClass]="styleObligatorioBanco(solicitudEditar.iban)" type="text" class="form-control"
+                    <input  type="text" class="form-control"
                         [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
                         pInputText>
                     <div
@@ -615,7 +615,7 @@
                 <div class="form-group col-lg-3 col-md-3">
                     <!-- (ngModelChange)="recuperarBicBanco()" -->
                     <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
-                    <input [ngClass]="styleObligatorioBanco(solicitudEditar.bic)" [(ngModel)]="solicitudEditar.bic"
+                    <input  [(ngModel)]="solicitudEditar.bic"
                         type="text" class="form-control" (ngModelChange)="recuperarBicBanco()"
                         [disabled]="!editarExt || consulta" [attr.maxlength]="11" [attr.minlength]="8" pInputText>
                     <div *ngIf="bicValido == false">
@@ -624,7 +624,7 @@
                 </div>
                 <div class="form-group col-lg-3 col-md-3">
                     <label>{{"censo.tipoAbono.banco" | translate}}</label>
-                    <input disabled [ngClass]="styleObligatorioBanco(solicitudEditar.banco)" type="text"
+                    <input disabled type="text"
                         class="form-control" [(ngModel)]="solicitudEditar.banco" [disabled]="consulta" pInputText>
                 </div>
 
