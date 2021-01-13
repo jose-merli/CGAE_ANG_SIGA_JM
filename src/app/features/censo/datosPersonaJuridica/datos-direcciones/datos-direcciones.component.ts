@@ -114,10 +114,10 @@ export class DatosDireccionesComponent implements OnInit {
         field: "telefono",
         header: "censo.ws.literal.telefono"
       },
-      {
-        field: "fax",
-        header: "censo.ws.literal.fax"
-      },
+      // {
+      //   field: "fax",
+      //   header: "censo.ws.literal.fax"
+      // },
       {
         field: "movil",
         header: "censo.datosDireccion.literal.movil"
