@@ -6,14 +6,13 @@
       <div class="card-header header-ficha">
         <div *ngIf="!openFicha" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abreCierraFicha()">
               <i class="fas fa-cog icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1 pointer">
-              <label (click)="abreCierraFicha()"
-                class="mr-auto title-ficha">{{ 'enviosMasivos.literal.configComunicacion' | translate }}</label>
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
+              <label class="mr-auto title-ficha">{{ 'enviosMasivos.literal.configComunicacion' | translate }}</label>
             </div>
             <div class="d-flex justify-content-between">
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicacion' | translate
@@ -28,8 +27,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
+        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="fas fa-cog icon-ficha"></i>
           </div>
           <label (click)="abreCierraFicha()"
