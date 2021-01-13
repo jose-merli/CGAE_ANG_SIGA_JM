@@ -18,22 +18,22 @@
               <!--<label class="registros-ficha">(0 registros)</label>-->
             </div>
             <div class="d-flex justify-content-between">
-              <label>{{"censo.fichaCliente.literal.identificacion" | translate}}
+              <label>{{"censo.fichaCliente.literal.identificacion" | translate}}:
                 <span>{{body.nif}}</span>
               </label>
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}
+              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}}:
                 <span>{{tipoPersonaJuridica}}</span>
               </label>
-              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}
+              <label>{{"administracion.usuarios.literal.fechaAlta" | translate}}:
                 <span>{{body.fechaConstitucion}}</span>
               </label>
-              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}
+              <label>{{"censo.consultaDatos.literal.fechaBaja" | translate}}:
                 <span>{{body.fechaBaja}}</span>
               </label>
-              <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}
+              <label>{{"censo.consultaDatosGenerales.literal.denominacion" | translate}}:
                 <span>{{body.denominacion}}</span>
               </label>
-              <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}
+              <label>{{"gratuita.definirTurnosIndex.literal.abreviatura" | translate}}:
                 <span>{{body.abreviatura}}</span>
               </label>
               <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
