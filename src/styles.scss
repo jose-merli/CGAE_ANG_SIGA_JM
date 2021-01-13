@@ -1470,3 +1470,50 @@ tr:hover {
   .ui-inputtext .camposObligatorios{
     border: 1px solid red !important;
   }
+
+.pointer {
+	cursor: pointer !important;
+}
+
+#cabeza, #sInteres, #alterMutua, #mutualidad, #nueIncoDatosAltMut, #nueIncoMutAbo, #detaSanDatosGene, #inscripciones, #formaFichInsDatosCur {
+
+	div {
+    	cursor: default;
+	}
+
+	div > label, div > label > b, div > span {
+    	cursor: text;
+	}
+
+	div > label > a {
+    	cursor: pointer !important;
+	}
+
+}
+
+#datosGen, #datosCol, #otrasColegiaciones, #certif, #sancio, #socied, #datosCurriculares, #direcciones, #datosBanc, #regtel, #sregistrales, 
+#snotario, #sintegrantes, #sdatosBancarios, #sretenciones, #sdirecciones, #nueIncoDatosSoli, #nueIncoDatosCole, #nueIncoDatosPer, #nueIncoDatosDir, 
+#nueIncoDatosBan, #descripcion, #precios, #formadores, #certificados, #sesiones, #carga, #formaFichInsDatosIns, #formaFichInsDatosPer, #formaFichInsDatosCer, 
+#infoYComuModeComuFicMolComDatosGenr, #infoYComuModeComuFicMolComConfPer, #infoYComuModeComuFicMolComPlaDoc, #infoYComuPlaEnvFicPlaEnvDatosGen, 
+#infoYComuPlaEnvFicPlaEnvCueMsg, #infoYComuPlaEnvFicPlaEnvCons, #infoYComuPlaEnvFicPlaEnvRemi, #infoYComuConFicConDatosGen, #infoYComuConFicConConsul, 
+#infoYComuConFicConModCom, #infoYComuConFicConPlaEnv, #infoYComuComuFichaComuConfComu, #infoYComuComuFichaComuDest, #infoYComuComuFichaComuProg, 
+#infoYComuComuFichaComuDocs, #infoYComuEnvMasFichEnvMasConfCom, #infoYComuEnvMasFichEnvMasProg, #infoYComuEnvMasFichEnvMasDesInd, #infoYComuEnvMasFichEnvMasListDes, 
+#infoYComuEnvMasFichEnvMasEtiq, #infoYComuEnvMasFichEnvMasDocs {
+
+	div {
+		cursor: default;
+	}
+	  
+	div > label, div > label > span {
+		cursor: text;
+	}
+	  
+	div > label > a, div > i, div > label.title-ficha {
+		cursor: pointer !important;
+	}
+
+}
+
+
+  
+

@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('generales')">
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('generales')">
             <label  class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
             </label>
           </div>
@@ -312,7 +312,7 @@
               </div>
             </div>
             <div class="col-lg-11 col-md-10">
-              <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('descripcion')">
+              <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('descripcion')">
                 <label  class="mr-auto title-ficha">{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
               </div>
               <div class="d-flex justify-content-between">
@@ -360,7 +360,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('price')">
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('price')">
             <label  class="mr-auto title-ficha">{{'formacion.fichaCurso.tarjetaPrecios.precios' | translate}}</label>
           </div>
           <div *ngIf="datosPrices.length < 5 && datosPrices.length != 0" class="d-flex justify-content-between">
@@ -449,7 +449,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('formadores')">
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('formadores')">
             <label  class="mr-auto title-ficha">{{'agenda.fichaEventos.datosFormadores.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosFormadores.length < 4 && datosFormadores.length != 0" class="d-flex justify-content-between">
@@ -805,7 +805,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('certificate')" >
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('certificate')" >
             <label class="mr-auto title-ficha">{{'formacion.fichaInscripcion.datosCertificados.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosCertificates.length == 1" class="d-flex justify-content-between">
@@ -1066,7 +1066,7 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('session')">
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('session')">
             <label  class="mr-auto title-ficha">{{'formacion.fichaCursos.sesiones.cabecera' | translate}}</label>
           </div>
           <div *ngIf="datosSessions.length >= 1" class="d-flex justify-content-between">
@@ -1191,7 +1191,7 @@
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('carga')">
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('carga')">
               <label  class="mr-auto title-ficha">{{ 'formacion.fichaCurso.cargaMasivaInscripciones.cabecera' | translate }}</label>
 
             </div>

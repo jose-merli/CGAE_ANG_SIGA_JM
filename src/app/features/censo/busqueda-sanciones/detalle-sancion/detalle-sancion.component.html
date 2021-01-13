@@ -8,33 +8,35 @@
       <i class="fa fa-angle-right"></i>{{ "busquedaSanciones.datosSancion.literal" | translate }}
     </p>
   </div>
-  <div class="card">
-    <div class="card-header header-ficha">
-      <div class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+  <div id="detaSanDatosGene">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+              <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+            </div>
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
-            </label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
-              <span>{{ body.nif }}</span>
-            </label>
-            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-              <span>{{ body.nombre }}</span>
-            </label>
-            <label *ngIf="!isPersona">{{ "censo.general.literal.FechaConstitucion" | translate }}
-              <span>{{ body.fechaNacimiento }}</span>
-            </label>
-            <label *ngIf="isPersona">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
-              <span>{{ body.fechaNacimiento }}</span>
-            </label>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1">
+              <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+              </label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+                <span>{{ body.nif }}</span>
+              </label>
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                <span>{{ body.nombre }}</span>
+              </label>
+              <label *ngIf="!isPersona">{{ "censo.general.literal.FechaConstitucion" | translate }}
+                <span>{{ body.fechaNacimiento }}</span>
+              </label>
+              <label *ngIf="isPersona">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+                <span>{{ body.fechaNacimiento }}</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
