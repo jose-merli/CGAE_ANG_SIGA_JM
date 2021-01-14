@@ -120,12 +120,8 @@ export class DatosIntegrantesComponent implements OnInit {
     this.cols = [
       { field: "nifCif", header: "administracion.usuarios.literal.NIF" },
       {
-        field: "nombre",
+        field: "nombreApel",
         header: "administracion.parametrosGenerales.literal.nombre"
-      },
-      {
-        field: "apellidos",
-        header: "gratuita.mantenimientoTablasMaestra.literal.apellidos"
       },
       {
         field: "fechaHistorico",
@@ -257,6 +253,10 @@ export class DatosIntegrantesComponent implements OnInit {
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
             // console.log(this.datos);
+            this.datos = this.datos.map(it => {
+              it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
+              return it;
+            });
             this.comprobarValidacion();
             if (this.datos.length == 1) {
               this.body = this.datos[0];

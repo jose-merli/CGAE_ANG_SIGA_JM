@@ -122,14 +122,14 @@
           <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="setItalic(datoH) && col.field != 'correoElectronico' && col.field != 'nombre' && col.field != 'fechaHistorico'">
+                <div *ngIf="setItalic(datoH) && col.field != 'correoElectronico' && col.field != 'nombreApel' && col.field != 'fechaHistorico' && col.field != 'nifCif'">
                   <span [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }">{{ datoH[col.field] }}</span>
                 </div>
-                <div *ngIf="!setItalic(datoH) && col.field != 'correoElectronico' && col.field != 'nombre' && col.field != 'fechaHistorico'">
+                <div *ngIf="!setItalic(datoH) && col.field != 'correoElectronico' && col.field != 'nombreApel' && col.field != 'fechaHistorico' && col.field != 'nifCif'">
                   <span>{{ datoH[col.field] }}</span>
                 </div>
                 <div *ngIf="!setItalic(datoH) && col.field == 'fechaHistorico'">
@@ -145,14 +145,24 @@
                 <div *ngIf="!setItalic(datoH)  && col.field == 'correoElectronico'">
                   <a [href]="'mailto:'+datoH[col.field]" class="enlace" target="_blank">{{datoH[col.field]}}</a>
                 </div>
-                <div *ngIf="setItalic(datoH) && col.field == 'nombre'">
+                <div *ngIf="setItalic(datoH) && col.field == 'nombreApel'">
                   <a [ngStyle]="{
                     'font-style': 'italic',
                     'font-weight': 'bold',
                     'text-decoration': 'line-through'
                   }" [routerLink]="" class="enlace" (click)="consultarIntegrante([datoH])">{{ datoH[col.field] }}</a>
                 </div>
-                <div *ngIf="!setItalic(datoH)  && col.field == 'nombre'">
+                <div *ngIf="!setItalic(datoH)  && col.field == 'nombreApel'">
+                  <a [routerLink]="" class="enlace" (click)="consultarIntegrante([datoH])">{{ datoH[col.field] }}</a>
+                </div>
+                <div *ngIf="setItalic(datoH) && col.field == 'nifCif'">
+                  <a [ngStyle]="{
+                    'font-style': 'italic',
+                    'font-weight': 'bold',
+                    'text-decoration': 'line-through'
+                  }" [routerLink]="" class="enlace" (click)="consultarIntegrante([datoH])">{{datoH[col.field]}}</a>
+                </div>
+                <div *ngIf="!setItalic(datoH) && col.field == 'nifCif'">
                   <a [routerLink]="" class="enlace" (click)="consultarIntegrante([datoH])">{{datoH[col.field]}}</a>
                 </div>
               </td>
