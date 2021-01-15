@@ -1,5 +1,5 @@
 import { DatePipe, Location } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from "primeng/components/common/api";
@@ -95,6 +95,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openDirec;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   disabledAction: boolean = false;
   constructor(
     private sigaServices: SigaServices,
@@ -273,6 +275,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   getFichaPosibleByKey(key): any {

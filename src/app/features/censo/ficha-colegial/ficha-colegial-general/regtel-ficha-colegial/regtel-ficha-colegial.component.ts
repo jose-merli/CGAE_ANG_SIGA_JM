@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -52,6 +52,8 @@ export class RegtelFichaColegialComponent implements OnInit {
   msgs = [];
   colsRegtel;
   @Input() openRegtel;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService) { }
@@ -556,6 +558,8 @@ export class RegtelFichaColegialComponent implements OnInit {
         this.openFicha = !this.openFicha;
       }
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   callConfirmationServiceRegtel() {
     let mess = this.translateService.instant("messages.creaCollection");

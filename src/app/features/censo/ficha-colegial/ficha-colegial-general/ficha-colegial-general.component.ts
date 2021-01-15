@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../_services/authentication.service';
@@ -390,6 +390,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   displayDelete: boolean;
   datosTarjetaResumen;
   disabledTarjetaResumen:Boolean = false;
+  manuallyOpened:Boolean;
+  idManuallyOpened: any;
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -408,6 +410,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     this.enviarEnlacesTarjeta();
   }
+  //Resto de tarjetas
+ 
+
 
   OnInit() {
     sessionStorage.removeItem("direcciones");
@@ -819,7 +824,46 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.datosTarjetaResumen = event;
     }
   }
+
+  isCloseReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "generales":
+          this.openGen = this.manuallyOpened;
+          break;
+        case "colegiales":
+          this.openColegia = this.manuallyOpened;
+          break;
+        case "colegiaciones":
+          this.openOtrasCole = this.manuallyOpened;
+          break;
+        case "certificados":
+          this.openCertifi = this.manuallyOpened;
+          break;
+        case "sanciones":
+          this.openSanci = this.manuallyOpened;
+          break;
+        case "sociedades":
+          this.openSocie = this.manuallyOpened;
+          break;
+        case "curriculares":
+          this.openCurricu = this.manuallyOpened;
+          break;
+        case "direcciones":
+          this.openDirec = this.manuallyOpened;
+          break;
+        case "bancarios":
+          this.openBanca = this.manuallyOpened;
+          break;
+        case "regtel":
+          this.openRegtel = this.manuallyOpened;
+          break;
+      }
+    }
+  }
+
   isOpenReceive(event) {
+
     if (event != undefined) {
       switch (event) {
         case "generales":

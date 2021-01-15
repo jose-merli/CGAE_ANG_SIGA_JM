@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ChangeDetectorRef, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
@@ -68,6 +68,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   tableCurriculares: Table;
   @Input() idPersona;
   @Input() openCurricu;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -459,6 +461,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   clear() {

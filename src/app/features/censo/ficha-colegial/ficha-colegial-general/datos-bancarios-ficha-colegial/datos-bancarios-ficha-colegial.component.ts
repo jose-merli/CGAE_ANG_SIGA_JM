@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -75,6 +75,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   @Input() isLetrado;
   @Input() idPersona;
   @Input() openBanca;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   @ViewChild("tableBancarios")
   tableBancarios: Table;
   disabledAction: boolean = false;
@@ -244,6 +246,8 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   activarPaginacionBancarios() {

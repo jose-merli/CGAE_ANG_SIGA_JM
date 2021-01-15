@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -63,6 +63,9 @@ export class SancionesFichaColegialComponent implements OnInit {
   @ViewChild("tableSanciones")
   tableSanciones: DataTable;
 @Input() openSanci;
+@Output() opened = new EventEmitter<Boolean>();
+@Output() idOpened = new EventEmitter<Boolean>();
+
 disabledAction:boolean = false;
   constructor(
     private sigaServices: SigaServices,
@@ -140,7 +143,6 @@ disabledAction:boolean = false;
   }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-
     if (
       key == "generales" &&
       !this.activacionTarjeta &&
@@ -153,6 +155,9 @@ disabledAction:boolean = false;
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+
   }
   getCols() {
     this.colsSanciones = [

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -32,6 +32,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   activateNumColegiado: boolean = false;
   @Input() esColegiado: boolean = null;
   @Input() tarjetaColegiales;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   resaltadoDatosColegiales: boolean = false;
 
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -388,6 +390,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   pasarFechas() {
 

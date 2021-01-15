@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersonaJuridicaObject } from '../../../../../models/PersonaJuridicaObject';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -32,15 +32,20 @@ export class SociedadesFichaColegialComponent implements OnInit {
   openFicha: boolean = false;
   @ViewChild("tableSociedades")
   tableSociedades: DataTable;
-  fichaPosible = {
-    key: "sociedades",
-    activa: false
-  };
+  fichasPosibles = [
+    {
+      key: "sociedades",
+      activa: false
+    },
+  ];
   selectedDatosSociedades;
   rowsPerPage = [];
   disabledAction:boolean = false;
+  emptyLoadFichaColegial: boolean = false;
   @Input() idPersona;
   @Input() openSocie;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
@@ -55,6 +60,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
       this.disabledAction = false;
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.emptyLoadFichaColegial = false;
       this.activacionTarjeta = false;
     } else {
       this.activacionTarjeta = true;
@@ -77,11 +83,12 @@ export class SociedadesFichaColegialComponent implements OnInit {
     }
     if (this.openSocie == true) {
       if (this.openFicha == false) {
-        this.abreCierraFicha();
+        this.abreCierraFicha('sociedades');
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.activacionTarjeta = false;
+      this.emptyLoadFichaColegial = false;
 
       // sessionStorage.removeItem("esNuevoNoColegiado");
       // this.onInitGenerales();
@@ -190,22 +197,53 @@ export class SociedadesFichaColegialComponent implements OnInit {
     this.tableSociedades.reset();
   }
 
-  abreCierraFicha() {
+  /*abreCierraFicha() {
     if (this.activacionTarjeta) {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+
+  }*/
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
+  }
+
+  abreCierraFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+
+    if (
+      key == "generales" &&
+      !this.activacionTarjeta &&
+      !this.emptyLoadFichaColegial
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
 
-  esFichaActiva() {
-    return this.fichaPosible.activa;
+
+  esFichaActiva(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    return fichaPosible.activa;
   }
 
   isOpenReceive(event) {
-    let fichaPosible = this.esFichaActiva();
+    let fichaPosible = this.esFichaActiva(event);
     if (fichaPosible == false) {
-      this.abreCierraFicha();
+      this.abreCierraFicha(event);
     }
     // window.scrollTo(0,0);
   }

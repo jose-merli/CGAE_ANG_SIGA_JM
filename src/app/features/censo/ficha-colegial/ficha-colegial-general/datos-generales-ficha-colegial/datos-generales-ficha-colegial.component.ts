@@ -185,6 +185,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   @Output() idPersonaNuevo = new EventEmitter<any>();
   @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
   @Input() openGen;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
@@ -1679,6 +1681,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
 
