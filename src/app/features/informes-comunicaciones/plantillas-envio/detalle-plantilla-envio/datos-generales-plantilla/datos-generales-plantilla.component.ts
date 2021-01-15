@@ -98,6 +98,8 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
     }else{
       this.disabledPlantilla = false;
     }
+
+      this.resaltadoDatos = true;
   }
 
   getInstitucion() {

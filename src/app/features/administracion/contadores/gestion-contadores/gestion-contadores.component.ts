@@ -56,7 +56,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   @ViewChild("table")
   table;
   ngOnInit() {
-    this.resaltadoDatos = false;
+    this.resaltadoDatos = true;
 
     console.log(sessionStorage);
     this.checkAcceso();

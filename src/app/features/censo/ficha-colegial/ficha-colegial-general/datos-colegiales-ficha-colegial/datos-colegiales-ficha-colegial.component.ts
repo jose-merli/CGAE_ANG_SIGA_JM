@@ -176,6 +176,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     private commonService: CommonsService, ) { }
 
   ngOnInit() {
+    this.resaltadoDatosColegiales =true;
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -243,6 +244,12 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     if (!this.esNewColegiado && this.generalBody.idPersona != null && this.generalBody.idPersona != undefined) {
       this.onInitDirecciones(); // Direcciones
     }
+    if((this.colegialesBody.numColegiado == null || this.colegialesBody.numColegiado == undefined || this.colegialesBody.numColegiado === "") ||
+    (this.colegialesBody.incorporacion == null || this.colegialesBody.incorporacion == undefined) ||
+    (this.colegialesBody.fechapresentacion == null || this.colegialesBody.fechapresentacion == undefined)){
+      this.resaltadoDatosColegiales=true;
+        this.abreCierraFicha('colegiales');
+      }
   }
 
   ngOnChanges() {

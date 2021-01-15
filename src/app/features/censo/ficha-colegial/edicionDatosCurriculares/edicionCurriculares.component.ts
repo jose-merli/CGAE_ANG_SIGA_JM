@@ -181,6 +181,8 @@ disabledAction:boolean = false;
       this.getComboSubtipoCurricular(this.body.idTipoCv);
       this.getComboTipoCurricular(this.body.idTipoCv);
     }
+
+    this.onlyCheckDatos();
   }
   abrirFicha() {
     this.onlyCheckDatos();
@@ -825,6 +827,7 @@ disabledAction:boolean = false;
     (this.body.fechaDesde==null || this.body.fechaDesde==undefined) ||
     (this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion==="")){
     this.resaltadoDatos=true;
+    this.abrirFicha();
     }
   }
 

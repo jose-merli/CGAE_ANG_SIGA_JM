@@ -245,8 +245,9 @@ export class FichaInscripcionComponent implements OnInit {
 
     // Guardamos la inscripcion para la funcioanlidad de "restablecer"
     this.checkBody = JSON.parse(JSON.stringify(this.inscripcion));
-  }
-
+    this.resaltadoDatos = true;
+    
+}
   // control de permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
@@ -384,6 +385,9 @@ export class FichaInscripcionComponent implements OnInit {
               this.obtenerTiposIdentificacion();
 
               this.guardarPersona = true;
+              if((this.persona.nif == undefined || this.persona.nif == null || this.persona.nif == "") || (this.persona.tipoIdentificacion == undefined || this.persona.tipoIdentificacion == null || this.persona.tipoIdentificacion == "")) {
+                this.abreCierraFicha('personales');
+              }
             }
           },
           error => {
