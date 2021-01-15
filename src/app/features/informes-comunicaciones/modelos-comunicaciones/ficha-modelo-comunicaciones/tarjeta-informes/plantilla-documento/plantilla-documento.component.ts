@@ -112,7 +112,7 @@ export class PlantillaDocumentoComponent implements OnInit {
   ngOnInit() {
     this.commonsService.scrollTop();
     this.checkCamposDatosSalida();
-    this.resaltadoDatos = false;
+    this.resaltadoDatos = true;
 
     this.getInstitucionActual();
 

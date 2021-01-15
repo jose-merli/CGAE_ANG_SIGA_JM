@@ -137,6 +137,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
     }
 
     this.permisoTarjeta = sessionStorage.getItem("permisoTarjeta");
+    this.resaltadoDatos= true;
   }
 
   controlFechas() {

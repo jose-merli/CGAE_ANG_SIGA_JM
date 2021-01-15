@@ -285,7 +285,31 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
 
     this.cargarDatos = true;
-    this.tratarDatos()
+    this.tratarDatos();
+
+    if (this.solicitudEditar.fechaSolicitud == undefined || this.solicitudEditar.fechaSolicitud == null) {
+      this.abreCierraFichaSolicitud();
+    }
+    if((this.tipoSolicitudSelected == "" || this.tipoSolicitudSelected == undefined || this.tipoSolicitudSelected == null) ||
+    (this.tipoColegiacionSelected == "" || this.tipoColegiacionSelected == undefined || this.tipoColegiacionSelected == null) ||
+    (this.modalidadDocumentacionSelected == "" ||  this.modalidadDocumentacionSelected == undefined ||this.modalidadDocumentacionSelected == null)){
+      this.abreCierraFichaColegiacion();
+    }
+    if((this.tipoIdentificacionSelected == "" || this.tipoIdentificacionSelected == undefined || this.solicitudEditar.numeroIdentificacion == null) ||
+    (this.solicitudEditar.numeroIdentificacion == "" || this.solicitudEditar.numeroIdentificacion == undefined || this.solicitudEditar.numeroIdentificacion == null) ||
+    (this.tratamientoSelected == "" || this.tratamientoSelected == undefined || this.tratamientoSelected == null) ||
+    (this.solicitudEditar.nombre == null || this.solicitudEditar.nombre == undefined || this.solicitudEditar.nombre == "") ||
+    (this.solicitudEditar.apellido1 == null || this.solicitudEditar.apellido1 == "" || this.solicitudEditar.apellido1 == undefined) ||
+    (this.solicitudEditar.fechaNacimiento == null || this.solicitudEditar.fechaNacimiento == undefined || this.solicitudEditar.fechaNacimiento == null)){
+      this.abreCierraFichaPersonal();
+    }
+    if((this.paisSelected == undefined || this.paisSelected == null || this.paisSelected == "") ||
+      (this.solicitudEditar.domicilio == null || this.solicitudEditar.domicilio == "" || this.solicitudEditar.domicilio == undefined) ||
+      (this.solicitudEditar.codigoPostal == null ||this.solicitudEditar.codigoPostal == undefined || this.solicitudEditar.codigoPostal == "") ||
+      (this.solicitudEditar.telefono1 == null || this.solicitudEditar.telefono1 == "" || this.solicitudEditar.telefono1 == undefined) ||
+      (this.solicitudEditar.correoElectronico == null || this.solicitudEditar.correoElectronico == undefined || this.solicitudEditar.correoElectronico == "")){
+        this.abreCierraFichaDireccion();
+    }
 
   }
 

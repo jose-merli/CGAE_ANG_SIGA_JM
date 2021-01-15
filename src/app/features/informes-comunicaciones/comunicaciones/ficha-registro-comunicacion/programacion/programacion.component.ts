@@ -76,12 +76,15 @@ export class ProgramacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resaltadoDatos=false;
+    this.resaltadoDatos=true;
 
     this.getEstadosEnvios();
 
     this.getDatos();
 
+    if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
+      this.abreCierraFicha();
+    }
 
   }
 

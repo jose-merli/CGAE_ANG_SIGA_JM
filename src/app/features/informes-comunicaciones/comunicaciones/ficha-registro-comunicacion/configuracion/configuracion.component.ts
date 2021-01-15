@@ -75,7 +75,8 @@ export class ConfiguracionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resaltadoDatos=false;
+    this.resaltadoDatos=true;
+    
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
@@ -84,6 +85,10 @@ export class ConfiguracionComponent implements OnInit {
     this.getClasesComunicaciones();
     this.getModelosComunicacion();
     this.getTipoEnvios();
+
+    if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+      this.abreCierraFicha();
+    }
   }
 
   // Mensajes
