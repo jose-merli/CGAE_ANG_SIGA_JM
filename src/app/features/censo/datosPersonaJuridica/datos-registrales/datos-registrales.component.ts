@@ -215,6 +215,7 @@ export class DatosRegistralesComponent implements OnInit {
             if (this.bodyAnterior[0] != null) {
               this.body.idPersona = this.bodyAnterior[0].idPersona;
               this.idPersonaEditar = this.bodyAnterior[0].idPersona;
+              
             }
             this.search();
             this.getActividadesPersona();
@@ -345,7 +346,16 @@ export class DatosRegistralesComponent implements OnInit {
         data => {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
-          console.log(this.body);
+          if((this.body.objetoSocial == null || this.body.objetoSocial == undefined || this.body.objetoSocial == "")||
+          (this.body.resena == null || this.body.resena == undefined || this.body.resena == "")||
+          (this.body.fechaConstitucion == null || this.body.fechaConstitucion == undefined)||
+          (this.body.numRegistro == null || this.body.numRegistro == undefined || this.body.numRegistro == "")||
+          (this.body.identificacionReg == null || this.body.numRegistro == undefined || this.body.numRegistro == "")||
+          (this.body.prefijoNumsspp == null || this.body.prefijoNumsspp == undefined || this.body.prefijoNumsspp == "")||
+          (this.body.sufijoNumsspp == null || this.body.sufijoNumsspp == undefined || this.body.sufijoNumsspp == "")||
+          (this.body.contadorNumsspp == null || this.body.contadorNumsspp == undefined || this.body.contadorNumsspp == "")){
+            this.abreCierraFicha('registrales');
+          }
           this.progressSpinner = false;
           // if (this.body.identificacionReg == undefined) {
           //   this.body.fechaConstitucion = null;
