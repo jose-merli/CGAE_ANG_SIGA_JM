@@ -361,7 +361,7 @@ export class DatosGenerales implements OnInit {
 
   datosGeneralesSearch() {
     this.progressSpinner = true;
-
+    console.log("entra");
     this.body.idPersona = this.idPersona;
     this.body.idLenguaje = "";
     this.body.idInstitucion = "";
@@ -382,6 +382,14 @@ export class DatosGenerales implements OnInit {
             this.body = new DatosGeneralesItem();
           }
           this.comprobarValidacion();
+          if((this.body.nif == null || this.body.nif == undefined || this.body.nif == "")||
+            (this.body.tipo == null || this.body.tipo == undefined || this.body.tipo == "")||
+            (this.body.fechaAlta == null || this.body.fechaAlta == undefined)||
+            (this.body.denominacion == null || this.body.denominacion == undefined || this.body.denominacion == "")||
+            (this.body.abreviatura == null || this.body.abreviatura == undefined || this.body.abreviatura == "")||
+            (this.body.idLenguajeSociedad == null || this.body.idLenguajeSociedad == undefined || this.body.idLenguajeSociedad == "")){
+              this.abreCierraFicha();
+          }
         },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
