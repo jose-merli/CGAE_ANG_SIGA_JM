@@ -26,15 +26,15 @@
     <div id="nueIncoDatosSoli">
         <div class="card">
             <div class="card-header header-ficha">
-                <div [hidden]="fichaColegiacion" class="form-row">
+                <div [hidden]="fichaSolicitud" class="form-row">
                     <div class="col-lg-1 col-md-2">
-                        <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
+                        <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
                             <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                         </div>
                     </div>
                     <div class="col-lg-11 col-md-10">
-                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaColegiacion()">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaSolicitud()">
                             <label 
                                 class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
                         </div>
@@ -48,24 +48,24 @@
                             <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }}
                                 <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
                             </label>
-                            <i (click)="abreCierraFichaColegiacion()" [hidden]="fichaColegiacion"
+                            <i (click)="abreCierraFichaSolicitud()" [hidden]="fichaSolicitud"
                                 class="fa fa-angle-down float-right"></i>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="fichaColegiacion" (click)="abreCierraFichaColegiacion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                    <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
+                <div *ngIf="fichaSolicitud" (click)="abreCierraFichaSolicitud()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
                         <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
-                    <label (click)="abreCierraFichaColegiacion()"
+                    <label (click)="abreCierraFichaSolicitud()"
                         class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
-                    <i (click)="abreCierraFichaColegiacion()" class="fa fa-angle-up ml-auto"></i>
+                    <i (click)="abreCierraFichaSolicitud()" class="fa fa-angle-up ml-auto"></i>
                 </div>
             </div>
 
             <!--cuerpo datos colegiación-->
-            <div [hidden]="!fichaColegiacion" class="card-body card-body-ficha">
+            <div [hidden]="!fichaSolicitud" class="card-body card-body-ficha">
                 <div class="row">
                     <div class="bloque col-lg-5 col-md-5">
                         <div class="row">
@@ -106,15 +106,15 @@
     <div id="nueIncoDatosCole">
         <div class="card">
             <div class="card-header header-ficha">
-                <div [hidden]="fichaSolicitud" class="form-row">
+                <div [hidden]="fichaColegiacion" class="form-row">
                     <div class="col-lg-1 col-md-2">
-                        <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
+                        <div class="img-colegiado" (click)="abreci()">
                             <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                         </div>
                     </div>
                     <div class="col-lg-11 col-md-10">
-                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaSolicitud()">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaColegiacion()">
                             <label 
                                 class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
                         </div>
@@ -125,23 +125,23 @@
                             <label>{{"censo.nuevaSolicitud.modalidad" | translate}}
                                 <span>{{solicitudEditar.modalidad}}</span>
                             </label>
-                            <i (click)="abreCierraFichaSolicitud()" *ngIf="!fichaSolicitud"
+                            <i (click)="abreCierraFichaColegiacion()" *ngIf="!fichaColegiacion"
                                 class="fa fa-angle-down float-right"></i>
                         </div>
                     </div>
                 </div>
-                <div *ngIf="fichaSolicitud" (click)="abreCierraFichaSolicitud()" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                    <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
+                <div *ngIf="fichaColegiacion" (click)="abreCierraFichaColegiacion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
                         <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
-                    <label (click)="abreCierraFichaSolicitud()"
+                    <label (click)="abreCierraFichaColegiacion()"
                         class="title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
-                    <i (click)="abreCierraFichaSolicitud()" class="fa fa-angle-up ml-auto"></i>
+                    <i (click)="abreCierraFichaColegiacion()" class="fa fa-angle-up ml-auto"></i>
                 </div>
             </div>
             <!--cuerpo datos modalidad-->
-            <div [hidden]="!fichaSolicitud" class="card-body card-body-ficha">
+            <div [hidden]="!fichaColegiacion" class="card-body card-body-ficha">
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
@@ -601,8 +601,10 @@
                 <div class="row">
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
-                        <input [disabled]="consulta" type="text"
+                        <input *ngIf="solicitudEditar.iban == undefined || solicitudEditar.iban == ''" [disabled]="consulta" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
+                        <input *ngIf="solicitudEditar.iban != undefined && solicitudEditar.iban != ''" [ngClass]="styleObligatorioBanco(solicitudEditar.titular)" [disabled]="consulta" type="text"
+                        class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
                     </div>
                     <!--<div class="form-group col-lg-3 col-md-3">
                         <label>Tipo de cuenta</label>

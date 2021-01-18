@@ -290,20 +290,23 @@ export class NuevaIncorporacionComponent implements OnInit {
     if (this.solicitudEditar.fechaSolicitud == undefined || this.solicitudEditar.fechaSolicitud == null) {
       this.abreCierraFichaSolicitud();
     }
-    if((this.tipoSolicitudSelected == "" || this.tipoSolicitudSelected == undefined || this.tipoSolicitudSelected == null) ||
-    (this.tipoColegiacionSelected == "" || this.tipoColegiacionSelected == undefined || this.tipoColegiacionSelected == null) ||
-    (this.modalidadDocumentacionSelected == "" ||  this.modalidadDocumentacionSelected == undefined ||this.modalidadDocumentacionSelected == null)){
+    if((this.solicitudEditar.tipoSolicitud == "" || this.solicitudEditar.tipoSolicitud == undefined || this.solicitudEditar.tipoSolicitud == null) ||
+    (this.solicitudEditar.fechaEstado == undefined || this.solicitudEditar.fechaEstado == null) ||
+    (this.solicitudEditar.fechaIncorporacion == undefined || this.solicitudEditar.fechaIncorporacion == null) ||
+    (this.solicitudEditar.tipoColegiacion == "" || this.solicitudEditar.tipoColegiacion == undefined || this.solicitudEditar.tipoColegiacion == null) ||
+    (this.solicitudEditar.modalidad == "" ||  this.solicitudEditar.modalidad == undefined ||this.solicitudEditar.modalidad == null)){
       this.abreCierraFichaColegiacion();
+      // this.fichaColegiacion = false;
     }
-    if((this.tipoIdentificacionSelected == "" || this.tipoIdentificacionSelected == undefined || this.solicitudEditar.numeroIdentificacion == null) ||
+    if((this.solicitudEditar.tipoIdentificacion == "" || this.solicitudEditar.tipoIdentificacion  == undefined || this.solicitudEditar.tipoIdentificacion  == null) ||
     (this.solicitudEditar.numeroIdentificacion == "" || this.solicitudEditar.numeroIdentificacion == undefined || this.solicitudEditar.numeroIdentificacion == null) ||
-    (this.tratamientoSelected == "" || this.tratamientoSelected == undefined || this.tratamientoSelected == null) ||
+    (this.solicitudEditar.tratamiento == "" || this.solicitudEditar.tratamiento == undefined || this.solicitudEditar.tratamiento == null) ||
     (this.solicitudEditar.nombre == null || this.solicitudEditar.nombre == undefined || this.solicitudEditar.nombre == "") ||
     (this.solicitudEditar.apellido1 == null || this.solicitudEditar.apellido1 == "" || this.solicitudEditar.apellido1 == undefined) ||
     (this.solicitudEditar.fechaNacimiento == null || this.solicitudEditar.fechaNacimiento == undefined || this.solicitudEditar.fechaNacimiento == null)){
       this.abreCierraFichaPersonal();
     }
-    if((this.paisSelected == undefined || this.paisSelected == null || this.paisSelected == "") ||
+    if((this.solicitudEditar.pais == undefined || this.solicitudEditar.pais == null || this.solicitudEditar.pais == "") ||
       (this.solicitudEditar.domicilio == null || this.solicitudEditar.domicilio == "" || this.solicitudEditar.domicilio == undefined) ||
       (this.solicitudEditar.codigoPostal == null ||this.solicitudEditar.codigoPostal == undefined || this.solicitudEditar.codigoPostal == "") ||
       (this.solicitudEditar.telefono1 == null || this.solicitudEditar.telefono1 == "" || this.solicitudEditar.telefono1 == undefined) ||
