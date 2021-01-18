@@ -108,7 +108,7 @@
             <div class="card-header header-ficha">
                 <div [hidden]="fichaColegiacion" class="form-row">
                     <div class="col-lg-1 col-md-2">
-                        <div class="img-colegiado" (click)="abreci()">
+                        <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
                             <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                             <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                         </div>
