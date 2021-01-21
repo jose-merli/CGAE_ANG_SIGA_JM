@@ -165,6 +165,56 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   table: DataTable;
   selectedDatos;
 
+  sessionInfo(){
+    console.log("ENTRA")
+    console.log("1 -", this.fechaIncorporacionDesdeSelect)
+    console.log("2 -", this.fechaIncorporacionHastaSelect)
+    console.log("3 -", this.fechaNacimientoDesdeSelect)
+    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
+      sessionStorage.removeItem("personaBody");
+      sessionStorage.setItem("esColegiado", "true");
+      sessionStorage.setItem(
+        "filtrosBusquedaColegiados",
+        JSON.stringify(this.body)
+      );
+      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
+      if (
+        this.fechaIncorporacionDesdeSelect != null ||
+        this.fechaIncorporacionDesdeSelect != undefined
+      ) {
+        sessionStorage.setItem(
+          "fechaIncorporacionDesdeSelect",
+          JSON.stringify(this.fechaIncorporacionDesdeSelect)
+        );
+      }
+      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
+      if (
+        this.fechaIncorporacionHastaSelect != null ||
+        this.fechaIncorporacionHastaSelect != undefined
+      ) {
+        sessionStorage.setItem(
+          "fechaIncorporacionHastaSelect",
+          JSON.stringify(this.fechaIncorporacionHastaSelect)
+        );
+      }
+
+
+      if (this.fechaNacimientoDesdeSelect != null ||
+        this.fechaNacimientoDesdeSelect != undefined) {
+        sessionStorage.setItem(
+          "fechaNacimientoDesdeSelect",
+          JSON.stringify(this.fechaNacimientoDesdeSelect)
+        );
+      }
+      if (this.fechaNacimientoHastaSelect != null ||
+        this.fechaNacimientoHastaSelect != undefined) {
+        sessionStorage.setItem(
+          "fechaNacimientoHastaSelect",
+          JSON.stringify(this.fechaNacimientoHastaSelect)
+        );
+      }
+    
+  }
   ngOnInit() {
 
     sessionStorage.removeItem('consultasSearch');
@@ -297,51 +347,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   irEditarColegiado(id) {
     id = [id]
-    sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
-    if (id.length >= 1) {
-      sessionStorage.removeItem("personaBody");
-      sessionStorage.setItem("esColegiado", "true");
-      sessionStorage.setItem(
-        "filtrosBusquedaColegiados",
-        JSON.stringify(this.body)
-      );
-      sessionStorage.removeItem("fechaIncorporacionDesdeSelect");
-      if (
-        this.fechaIncorporacionDesdeSelect != null ||
-        this.fechaIncorporacionDesdeSelect != undefined
-      ) {
-        sessionStorage.setItem(
-          "fechaIncorporacionDesdeSelect",
-          JSON.stringify(this.fechaIncorporacionDesdeSelect)
-        );
-      }
-      sessionStorage.removeItem("fechaIncorporacionHastaSelect");
-      if (
-        this.fechaIncorporacionHastaSelect != null ||
-        this.fechaIncorporacionHastaSelect != undefined
-      ) {
-        sessionStorage.setItem(
-          "fechaIncorporacionHastaSelect",
-          JSON.stringify(this.fechaIncorporacionHastaSelect)
-        );
-      }
-
-
-      if (this.fechaNacimientoDesdeSelect != null ||
-        this.fechaNacimientoDesdeSelect != undefined) {
-        sessionStorage.setItem(
-          "fechaNacimientoDesdeSelect",
-          JSON.stringify(this.fechaNacimientoDesdeSelect)
-        );
-      }
-      if (this.fechaNacimientoHastaSelect != null ||
-        this.fechaNacimientoHastaSelect != undefined) {
-        sessionStorage.setItem(
-          "fechaNacimientoHastaSelect",
-          JSON.stringify(this.fechaNacimientoHastaSelect)
-        );
-      }
-
+     if (id.length >= 1) {
       // orden es, fallecido, colegiado, de baja, no colegiado
       this.getSituacion(id);
 
@@ -366,13 +372,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           },
 
         );
-
-
-
-
-    }
-
-    else {
+    } else {
       this.actualizaSeleccionados(this.selectedDatos);
     }
 
@@ -853,6 +853,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           }
         );
     }
+    this.sessionInfo();
   }
 
   convertirStringADate(datos) {
