@@ -7,5 +7,6 @@ export class HistoricoUsuarioRequestDto {
   fechaHasta: Date;
   idInstitucion: String;
   idLenguaje: String;
-  constructor() {}
+  idPersonaReal: String;
+  constructor() { }
 }

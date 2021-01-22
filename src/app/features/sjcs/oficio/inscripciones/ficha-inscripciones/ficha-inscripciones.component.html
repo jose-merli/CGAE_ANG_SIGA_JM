@@ -1,4 +1,5 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
+<p-growl [(value)]="msgs" life="30000"></p-growl>
 <div class="consultas-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
@@ -30,7 +31,10 @@
         <label>
           {{"censo.resultadosSolicitudesModificacion.literal.fecha" | translate}}
         </label>
-        <app-fecha [(value)]="datosSelected.fechaActual" *ngIf="!historico" [disabledDelete]="true"
+        <!-- <app-fecha [(value)]="datosSelected.fechaActual" *ngIf="!historico" [disabledDelete]="true"
+          (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
+      </div> -->
+      <app-fecha [(value)]="datosSelected.fechaActual" [disabledDelete]="true"
           (valueChangeInput)="fillFechaCalendar($event)" (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
       </div>
 
@@ -38,14 +42,21 @@
         <label>
           {{"gratuita.mantenimientoLG.literal.observaciones" | translate}}
         </label>
-        <textarea [(ngModel)]="datosSelected.observaciones" class="textareains" name="observaciones"
+        <!-- <textarea [(ngModel)]="datosSelected.observaciones" class="textareains" name="observaciones"
           [disabled]="disableAll || historico" class="form-control" pInputTextarea autoResize="autoResize"
+          maxLength="1024"></textarea> -->
+        <textarea [(ngModel)]="datosSelected.observaciones" class="textareains" name="observaciones"
+          class="form-control" pInputTextarea autoResize="autoResize"
           maxLength="1024"></textarea>
       </div>
       <div class="form-group prueba">
         <label>
         </label>
-        <button *ngIf="!historico" pButton
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledValidar || !isLetrado)"
+          (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.validar' | translate}}"></button> -->
+        <button pButton
           [disabled]="!permisos || (selectedDatos.length == 0 || disabledValidar || !isLetrado)"
           (click)="validar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.validar' | translate}}"></button>
@@ -54,7 +65,11 @@
       <div class="form-group">
         <label>
         </label>
-        <button *ngIf="!historico" pButton
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledDenegar || !isLetrado)"
+          (click)="denegar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.denegar' | translate}}"></button> -->
+        <button pButton
           [disabled]="!permisos || (selectedDatos.length == 0 || disabledDenegar || !isLetrado)"
           (click)="denegar(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.denegar' | translate}}"></button>
@@ -62,7 +77,11 @@
       <div class="form-group">
         <label>
         </label>
-        <button *ngIf="!historico" pButton
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0 || disabledSolicitarBaja)"
+          (click)="solicitarBaja(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'general.boton.solicitarbaja' | translate}}"></button> -->
+        <button pButton
           [disabled]="!permisos || (selectedDatos.length == 0 || disabledSolicitarBaja)"
           (click)="solicitarBaja(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
@@ -70,7 +89,11 @@
       <div class="form-group">
         <label>
         </label>
-        <button *ngIf="!historico" pButton
+        <!-- <button *ngIf="!historico" pButton
+          [disabled]="!permisos || (selectedDatos.length == 0)"
+          (click)="cambiarFecha(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
+          label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button> -->
+        <button pButton
           [disabled]="!permisos || (selectedDatos.length == 0)"
           (click)="cambiarFecha(selectedDatos)" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>

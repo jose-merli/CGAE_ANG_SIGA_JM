@@ -5,13 +5,17 @@
         <i class="fa fa-angle-right"></i>{{"menu.solicitudIncorporacion" | translate}}
     </p>
 </div>
-<div *ngIf="!dniDisponible && !noExistePersona && !pendienteAprobacion" class="info-limit d-flex justify-content-center align-items-center mb-1">
+<div *ngIf="!dniDisponible && !noExistePersona && !pendienteAprobacion"
+    class="info-limit d-flex justify-content-center align-items-center mb-1">
     <i class="fa fa-info-circle pr-2"></i>
     <div class="d-inline-block">
         <div>
-            <span *ngIf="!vieneDeBusqueda" class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
-            <span *ngIf="vieneDeBusqueda && noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente.sistema" | translate}}.</span>
-            <span *ngIf="vieneDeBusqueda && !noEsColegiado" class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
+            <span *ngIf="!vieneDeBusqueda"
+                class="pr-2 text-left">{{"censo.solicitudIncorporacion.literal.seUsaDniIntroducido" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda && noEsColegiado"
+                class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente.sistema" | translate}}.</span>
+            <span *ngIf="vieneDeBusqueda && !noEsColegiado"
+                class="pr-2 text-left">{{"censo.SolicitudIncorporacion.literal.cargaPersonaExistente" | translate}}.</span>
             <!-- <span *ngIf="vieneDeBusqueda && pendienteAprobacion" class="pr-2 text-left">Para aprobar una solicitud debe rellenar los datos bancarios.</span> -->
         </div>
     </div>
@@ -19,440 +23,514 @@
 
 <div class="busqueda-container">
     <!--FICHA DATOS SOLICITUD-->
-    <div class="card">
-        <div class="card-header header-ficha" (click)="abreCierraFichaColegiacion()">
-            <div [hidden]="fichaColegiacion" class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+    <div id="nueIncoDatosSoli">
+        <div class="card">
+            <div class="card-header header-ficha">
+                <div [hidden]="fichaSolicitud" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
+                            <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
+                            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaSolicitud()">
+                            <label 
+                                class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>{{"censo.nuevaSolicitud.estado" | translate }}
+                                <span>{{solicitudEditar.estadoSolicitud}}</span>
+                            </label>
+                            <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }}
+                                <span>{{solicitudEditar.fechaEstadoSolicitud | date: 'dd/MM/yyyy'}}</span>
+                            </label>
+                            <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }}
+                                <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
+                            </label>
+                            <i (click)="abreCierraFichaSolicitud()" [hidden]="fichaSolicitud"
+                                class="fa fa-angle-down float-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="fichaSolicitud" (click)="abreCierraFichaSolicitud()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaSolicitud()">
                         <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
-                </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <label>{{"censo.nuevaSolicitud.estado" | translate }}
-                            <span>{{solicitudEditar.estadoSolicitud}}</span>
-                        </label>
-                        <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }}
-                            <span>{{solicitudEditar.fechaEstadoSolicitud | date: 'dd/MM/yyyy'}}</span>
-                        </label>
-                        <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }}
-                            <span>{{solicitudEditar.fechaSolicitud | date: 'dd/MM/yyyy'}}</span>
-                        </label>
-                        <i [hidden]="fichaColegiacion" class="fa fa-angle-down float-right"></i>
-                    </div>
+                    <label (click)="abreCierraFichaSolicitud()"
+                        class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
+                    <i (click)="abreCierraFichaSolicitud()" class="fa fa-angle-up ml-auto"></i>
                 </div>
             </div>
-            <div *ngIf="fichaColegiacion" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
-                    <i *ngIf="!existeImagen" class="far fa-address-book icon-ficha"></i>
-                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-                </div>
-                <label class="title-ficha">{{"censo.nuevaSolicitud.headerSolicitud" | translate}}</label>
-                <i class="fa fa-angle-up ml-auto"></i>
-            </div>
-        </div>
 
-        <!--cuerpo datos colegiación-->
-        <div [hidden]="!fichaColegiacion" class="card-body card-body-ficha">
-            <div class="row">
-                <div class="bloque col-lg-5 col-md-5">
-                    <div class="row">
-                        <div class="form-group col-lg-4 col-md-5">
-                            <label>{{"censo.nuevaSolicitud.estado" | translate }}</label>
-                            <p-dropdown [disabled]="true" class="select-form" [(ngModel)]="estadoSolicitudSelected" [options]="estadosSolicitud" [showClear]="true"
-                                placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-                        </div>
-                        <div class="form-group col-lg-3 col-md-4">
-                            <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }}</label>
-                            <app-fecha [(value)]="solicitudEditar.fechaEstadoSolicitud" [disabled]="true" [utc]="false" (valueChangeSelected)="fillFechaEstadoSolicitud($event)"
-                                (valueChangeInput)="fillFechaEstadoSolicitud($event)"></app-fecha>
-                        </div>
-                        <div class="form-group col-lg-4 col-md-5" style="float:right">
-                            <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
-                            <app-fecha [(value)]="solicitudEditar.fechaSolicitud" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaSolicitud($event)"
-                                (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
+            <!--cuerpo datos colegiación-->
+            <div [hidden]="!fichaSolicitud" class="card-body card-body-ficha">
+                <div class="row">
+                    <div class="bloque col-lg-5 col-md-5">
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-5">
+                                <label>{{"censo.nuevaSolicitud.estado" | translate }}</label>
+                                <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+                                    [disabled]="true" class="select-form" [(ngModel)]="estadoSolicitudSelected"
+                                    [options]="estadosSolicitud" placeholder="{{'general.boton.seleccionar' | translate}}">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group col-lg-3 col-md-4">
+                                <label>{{"censo.nuevaSolicitud.fechaEstado" | translate }}</label>
+                                <app-fecha [(value)]="solicitudEditar.fechaEstadoSolicitud" [disabled]="true" [utc]="false"
+                                    (valueChangeSelected)="fillFechaEstadoSolicitud($event)"
+                                    (valueChangeInput)="fillFechaEstadoSolicitud($event)"></app-fecha>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-5" style="float:right">
+                                <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
+                                <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaSolicitud)"
+                                    [(value)]="solicitudEditar.fechaSolicitud" [disabled]="consulta" [utc]="false"
+                                    (valueChangeSelected)="fillFechaSolicitud($event)"
+                                    (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="bloque col-lg-7 col-md-7">
-                    <div class="form-group col-lg-12 col-md-12">
-                        <label>{{"censo.nuevaSolicitud.observaciones" | translate}}</label>
-                        <textarea [disabled]="consulta" [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="solicitudEditar.observaciones"></textarea>
+                    <div class="bloque col-lg-7 col-md-7">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <label>{{"censo.nuevaSolicitud.observaciones" | translate}}</label>
+                            <textarea [disabled]="consulta" [rows]="10" [cols]="10" pInputTextarea
+                                [(ngModel)]="solicitudEditar.observaciones"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!--DATOS COLEGIACIÓN-->
-    <div class="card">
-        <div class="card-header header-ficha" (click)="abreCierraFichaSolicitud()">
-            <div [hidden]="fichaSolicitud" class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+    <div id="nueIncoDatosCole">
+        <div class="card">
+            <div class="card-header header-ficha">
+                <div [hidden]="fichaColegiacion" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
+                            <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
+                            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaColegiacion()">
+                            <label 
+                                class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>{{ "censo.nuevaSolicitud.tipoSolicitud" | translate}}
+                                <span>{{solicitudEditar.tipoSolicitud}}</span>
+                            </label>
+                            <label>{{"censo.nuevaSolicitud.modalidad" | translate}}
+                                <span>{{solicitudEditar.modalidad}}</span>
+                            </label>
+                            <i (click)="abreCierraFichaColegiacion()" *ngIf="!fichaColegiacion"
+                                class="fa fa-angle-down float-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="fichaColegiacion" (click)="abreCierraFichaColegiacion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaColegiacion()">
                         <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
-                </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <label>{{ "censo.nuevaSolicitud.tipoSolicitud" | translate}}
-                            <span>{{solicitudEditar.tipoSolicitud}}</span>
-                        </label>
-                        <label>{{"censo.nuevaSolicitud.modalidad" | translate}}
-                            <span>{{solicitudEditar.modalidad}}</span>
-                        </label>
-                        <i *ngIf="!fichaSolicitud" class="fa fa-angle-down float-right"></i>
-                    </div>
+                    <label (click)="abreCierraFichaColegiacion()"
+                        class="title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
+                    <i (click)="abreCierraFichaColegiacion()" class="fa fa-angle-up ml-auto"></i>
                 </div>
             </div>
-            <div *ngIf="fichaSolicitud" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
-                    <i *ngIf="!existeImagen" class="fas fa-file-alt icon-ficha"></i>
-                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-                </div>
-                <label class="title-ficha">{{"censo.nuevaSolicitud.headerColegiacion" | translate}}</label>
-                <i class="fa fa-angle-up ml-auto"></i>
-            </div>
-        </div>
-        <!--cuerpo datos modalidad-->
-        <div [hidden]="!fichaSolicitud" class="card-body card-body-ficha">
-            <div class="form-row">
-                <div class="form-group col-lg-3 col-md-4">
-                    <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud" [showClear]="true"
-                        placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-4">
-                    <label>{{"censo.nuevaSolicitud.tipoColegiacion" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tipoColegiacionSelected" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [options]="tipoColegiacion"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-4">
-                    <label>{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="modalidadDocumentacionSelected" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [options]="modalidadDocumentacion"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.nuevaIncorporacion.literal.fechaPrimerEstado" | translate}} (*)</label>
-                    <app-fecha [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaEstado($event)"
-                        (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
-                </div>
-                <div class="form-group col-lg-3 col-md-4">
-                    <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}}</label>
-                    <app-fecha [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaIncorporacion($event)"
-                        (valueChangeInput)="fillFechaIncorporacion($event)"></app-fecha>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.nuevaSolicitud.numColegiado" | translate}}</label>
-                    <input [(ngModel)]="solicitudEditar.numColegiado" [disabled]="consulta" type="text" class="form-control" [maxLength]="20"
-                        (input)="onChangeNColegiado($event)" pInputText>
-                    <div *ngIf="numColegiadoDisponible == false">
-                        <small class="input-error" *ngIf="!numColegiadoDisponible">
-                            <!-- {{"IBAN incorrecto"}} -->
-                            {{"censo.resultadoDuplicados.numeroColegiadoUtilizado" | translate}}
-                        </small>
+            <!--cuerpo datos modalidad-->
+            <div [hidden]="!fichaColegiacion" class="card-body card-body-ficha">
+                <div class="form-row">
+                    <div class="form-group col-lg-3 col-md-4">
+                        <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
+                        <p-dropdown [ngClass]="styleObligatorio(tipoSolicitudSelected)" [filter]="true" [showClear]="true"
+                            filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
+                            [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
+                            placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
                     </div>
-                </div>
-                <div class="form-group col-lg-2 col-md-2">
-                    <br>
-                    <p-checkbox [disabled]="consulta" binary="true" label="{{'censo.ws.literal.residente' | translate}}" (onChange)="onChangeResidente()"
-                        [(ngModel)]="residente"></p-checkbox>
+                    <div class="form-group col-lg-3 col-md-4">
+                        <label>{{"censo.nuevaSolicitud.tipoColegiacion" | translate}} (*)</label>
+                        <p-dropdown [ngClass]="styleObligatorio(tipoColegiacionSelected)" [filter]="true" [showClear]="true"
+                            filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
+                            [(ngModel)]="tipoColegiacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="tipoColegiacion"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-4">
+                        <label>{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
+                        <p-dropdown [ngClass]="styleObligatorio(modalidadDocumentacionSelected)" [filter]="true"
+                            [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
+                            [(ngModel)]="modalidadDocumentacionSelected"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="modalidadDocumentacion">
+                        </p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.nuevaIncorporacion.literal.fechaPrimerEstado" | translate}} (*)</label>
+                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaEstado)"
+                            [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false"
+                            (valueChangeSelected)="fillFechaEstado($event)" (valueChangeInput)="fillFechaEstado($event)">
+                        </app-fecha>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-4">
+                        <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}}</label>
+                        <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaIncorporacion)"
+                            [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false"
+                            (valueChangeSelected)="fillFechaIncorporacion($event)"
+                            (valueChangeInput)="fillFechaIncorporacion($event)"></app-fecha>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.nuevaSolicitud.numColegiado" | translate}}</label>
+                        <input [(ngModel)]="solicitudEditar.numColegiado" [disabled]="consulta" type="text"
+                            class="form-control" [maxLength]="20" (input)="onChangeNColegiado($event)" pInputText>
+                        <div *ngIf="numColegiadoDisponible == false">
+                            <small class="input-error" *ngIf="!numColegiadoDisponible">
+                                <!-- {{"IBAN incorrecto"}} -->
+                                {{"censo.resultadoDuplicados.numeroColegiadoUtilizado" | translate}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-2 col-md-2">
+                        <br>
+                        <p-checkbox [disabled]="consulta" binary="true" label="{{'censo.ws.literal.residente' | translate}}"
+                            (onChange)="onChangeResidente()" [(ngModel)]="residente"></p-checkbox>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!--FICHA DATOS PERSONALES-->
-    <div class="card">
-        <div class="card-header header-ficha" (click)="abreCierraFichaPersonal()">
-            <div [hidden]="fichaPersonal" class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+    <div id="nueIncoDatosPer">
+        <div class="card">
+            <div class="card-header header-ficha">
+                <div [hidden]="fichaPersonal" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abreCierraFichaPersonal()">
+                            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaPersonal()">
+                            <label 
+                                class="mr-auto title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>
+                                {{"censo.consultaDatosColegiacion.literal.numIden" | translate}}
+                                <span>{{solicitudEditar.numeroIdentificacion}}</span>
+                            </label>
+                            <label>
+                                {{"administracion.parametrosGenerales.literal.nombre" | translate}}
+                                <span>{{solicitudEditar.nombre}}</span>
+                            </label>
+                            <label>
+                                {{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
+                                <span>{{solicitudEditar.apellidos}}</span>
+
+                            </label>
+                            <label class="mr-8"
+                                *ngIf="solicitudEditar.idEstado == '50'&& solicitudEditar.fechaEstado < fechaActual">
+                                <i (click)="searchSolicitante();$event.stopPropagation();"
+                                    class="fas fa-external-link-alt mr-2"></i>
+                                <a (click)="searchSolicitante();$event.stopPropagation();">
+                                    <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                                        {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                                    </span>
+                                </a>
+                            </label>
+                            <i (click)="abreCierraFichaPersonal()" *ngIf="!fichaPersonal"
+                                class="fa fa-angle-down float-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="fichaPersonal" (click)="abreCierraFichaPersonal()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaPersonal()">
                         <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
-                </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <label>
-                            {{"censo.consultaDatosColegiacion.literal.numIden" | translate}}
-                            <span>{{solicitudEditar.numeroIdentificacion}}</span>
-                        </label>
-                        <label>
-                            {{"administracion.parametrosGenerales.literal.nombre" | translate}}
-                            <span>{{solicitudEditar.nombre}}</span>
-                        </label>
-                        <label>
-                            {{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}
-                            <span>{{solicitudEditar.apellidos}}</span>
+                    <label (click)="abreCierraFichaPersonal()"
+                        class="title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
 
-                        </label>
-                        <label class="mr-8" *ngIf="solicitudEditar.idEstado == '50'">
-                            <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
+                    <div class="ml-auto">
+                        <label class="mr-3"
+                            *ngIf="solicitudEditar.idEstado == '50' && solicitudEditar.fechaEstado < fechaActual">
+                            <i (click)="searchSolicitante();$event.stopPropagation();"
+                                class="fas fa-external-link-alt mr-2"></i>
                             <a (click)="searchSolicitante();$event.stopPropagation();">
-                                <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                                    {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                                 </span>
                             </a>
                         </label>
-                        <i *ngIf="!fichaPersonal" class="fa fa-angle-down float-right"></i>
+                        <i (click)="abreCierraFichaPersonal()" class="fa fa-angle-up"></i>
+                    </div>
+
+                </div>
+            </div>
+            <!--cuerpo datos personales-->
+            <div [hidden]="!fichaPersonal" class="card-body card-body-ficha">
+                <div class="row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}} (*)</label>
+                        <p-dropdown [ngClass]="styleObligatorio(tipoIdentificacionSelected)" [filter]="true"
+                            [showClear]="true" filterBy="label,labelSinTilde" disabled="true" class="select-form"
+                            [(ngModel)]="tipoIdentificacionSelected"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="tipoIdentificacion">
+                        </p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}} (*)</label>
+                        <input [ngClass]="styleObligatorio(solicitudEditar.numeroIdentificacion)" [disabled]="consulta"
+                            type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numeroIdentificacion"
+                            (ngModelChange)="onChangeNifCif()">
+                        <!-- <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
+                        && solicitudEditar.numeroIdentificacion.length > 0">Documento no válido</small> -->
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
+                        <p-dropdown [ngClass]="styleObligatorio(tratamientoSelected)" [disabled]="consulta"
+                            class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [showClear]="true"
+                            filterBy="label,labelSinTilde" filterMatchMode="contains"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)
+                        </label>
+                        <input [ngClass]="styleObligatorio(solicitudEditar.nombre)" [disabled]="consulta" type="text"
+                            class="form-control" pInputText [(ngModel)]="solicitudEditar.nombre">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
+                        <input [ngClass]="styleObligatorio(solicitudEditar.apellido1)" [disabled]="consulta" type="text"
+                            class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido1">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
+                        <input [disabled]="consulta" type="text" class="form-control" pInputText
+                            [(ngModel)]="solicitudEditar.apellido2">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
+                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta"
+                            class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo"
+                            placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
+                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta"
+                            class="select-form" [(ngModel)]="estadoCivilSelected"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="estadoCivil"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.SolicitudIncorporacion.literal.naturalDe" | translate}}</label>
+                        <input [disabled]="consulta" type="text" class="form-control" pInputText
+                            [(ngModel)]="solicitudEditar.naturalDe">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
+                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaNacimiento)"
+                            [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta" [utc]="false"
+                            (valueChangeSelected)="fillFechaNacimiento($event)"
+                            (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
                     </div>
                 </div>
             </div>
-            <div *ngIf="fichaPersonal" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
-                    <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-                </div>
-                <label class="title-ficha">{{ "formacion.fichaInscripcion.datosPersonales.cabecera" | translate}}</label>
 
-                <div class="ml-auto">
-                    <label class="mr-3" *ngIf="solicitudEditar.idEstado == '50'">
-                        <i (click)="searchSolicitante();$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
-                        <a (click)="searchSolicitante();$event.stopPropagation();">
-                            <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
-                            </span>
-                        </a>
-                    </label>
-                    <i class="fa fa-angle-up"></i>
-                </div>
-
-            </div>
         </div>
-        <!--cuerpo datos personales-->
-        <div [hidden]="!fichaPersonal" class="card-body card-body-ficha">
-            <div class="row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}} (*)</label>
-                    <p-dropdown disabled="true" class="select-form" [(ngModel)]="tipoIdentificacionSelected" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [options]="tipoIdentificacion"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}} (*)</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numeroIdentificacion"
-                        (ngModelChange)="onChangeNifCif()">
-                    <!-- <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
-                     && solicitudEditar.numeroIdentificacion.length > 0">Documento no válido</small> -->
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos" [showClear]="true"
-                        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
-                        filterMatchMode="contains"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)
-                    </label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombre">
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido1">
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido2">
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo" [showClear]="true"
-                        placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
-                    <p-dropdown [disabled]="consulta" class="select-form" [(ngModel)]="estadoCivilSelected" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        [options]="estadoCivil"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.SolicitudIncorporacion.literal.naturalDe" | translate}}</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.naturalDe">
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
-                    <app-fecha [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta" [utc]="false" (valueChangeSelected)="fillFechaNacimiento($event)"
-                        (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-
     <!--FICHA DATOS DIRECCIÓN-->
-    <div class="card">
-        <div class="card-header header-ficha" (click)="abreCierraFichaDireccion()">
-            <div [hidden]="fichaDireccion" class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+    <div id="nueIncoDatosDir">
+        <div class="card">
+            <div class="card-header header-ficha">
+                <div [hidden]="fichaDireccion" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abreCierraFichaDireccion()">
+                            <i *ngIf="!existeImagen" class="fa fa-map-marker icon-ficha"></i>
+                            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaDireccion()">
+                            <label 
+                                class="mr-auto title-ficha">{{"envios.definir.literal.datosdestino" | translate}}
+                                <!--{{ "general.message.datos.generales" | translate}}-->
+                            </label>
+                            <!--<label class="registros-ficha">(0 registros)</label>-->
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>
+                                {{"censo.datosDireccion.literal.pais2" | translate}}
+                                <span>{{solicitudEditar.pais}}</span>
+                            </label>
+                            <label>
+                                {{"censo.consultaDirecciones.literal.direccion" | translate}}
+                                <span>{{solicitudEditar.domicilio}}</span>
+                            </label>
+                            <label>
+                                {{"censo.consultaDirecciones.literal.poblacion" | translate}}
+                                <span>{{solicitudEditar.nombrePoblacion}}</span>
+                            </label>
+                            <i (click)="abreCierraFichaDireccion()" *ngIf="!fichaDireccion"
+                                class="fa fa-angle-down float-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="fichaDireccion" (click)="abreCierraFichaDireccion()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaDireccion()">
                         <i *ngIf="!existeImagen" class="fa fa-map-marker icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
+                    <label (click)="abreCierraFichaDireccion()" class="title-ficha">
+                        {{ "envios.definir.literal.datosdestino" | translate}}</label>
+                    <i (click)="abreCierraFichaDireccion()" class="fa fa-angle-up ml-auto"></i>
                 </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">{{"envios.definir.literal.datosdestino" | translate}}
-                            <!--{{ "general.message.datos.generales" | translate}}-->
+            </div>
+            <!--cuerpo datos dirección-->
+            <div [hidden]="!fichaDireccion" class="card-body card-body-ficha">
+                <div class="row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.datosDireccion.literal.pais2" | translate}} (*)
                         </label>
-                        <!--<label class="registros-ficha">(0 registros)</label>-->
+                        <p-dropdown [ngClass]="styleObligatorio(paisSelected)" [filter]="true" [showClear]="true"
+                            filterBy="label,labelSinTilde" [disabled]="consulta"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
+                            [(ngModel)]="paisSelected" [options]="paises"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangePais($event)">
+                        </p-dropdown>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>
-                            {{"censo.datosDireccion.literal.pais2" | translate}}
-                            <span>{{solicitudEditar.pais}}</span>
+                            {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
                         </label>
+                        <input [ngClass]="styleObligatorio(solicitudEditar.domicilio)" [disabled]="consulta" type="text"
+                            class="form-control" pInputText [(ngModel)]="solicitudEditar.domicilio">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
                         <label>
-                            {{"censo.consultaDirecciones.literal.direccion" | translate}}
-                            <span>{{solicitudEditar.domicilio}}</span>
+                            {{"censo.ws.literal.codigopostal" | translate}} (*)
                         </label>
+                        <input *ngIf="!isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal)"
+                            [disabled]="consulta" type="text" class="form-control" [maxLength]="5"
+                            [(ngModel)]="solicitudEditar.codigoPostal" (ngModelChange)="onChangeCodigoPostal()" pInputText>
+                        <input *ngIf="isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal)"
+                            [(ngModel)]="solicitudEditar.codigoPostal" type="text" class="form-control" [maxLength]="5"
+                            [disabled]="consulta" pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.datosDireccion.literal.provincia" | translate}}
+                        </label>
+                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" class="select-form"
+                            [(ngModel)]='provinciaSelected' [options]="provincias"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" filterMatchMode="contains" disabled>
+                        </p-dropdown>
+
+                        <!--<input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombreProvincia">-->
+                    </div>
+                    <!-- <div class="form-group col-lg-3 col-md-3"> -->
+                    <!-- <label>
+                            {{"censo.consultaDirecciones.literal.poblacion" | translate}}
+                        </label> -->
+                    <!-- <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
+                            [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
+                            [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"></p-dropdown> -->
+
+                    <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
+                    <!-- </div> -->
+                    <div *ngIf="!isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDirecciones.literal.poblacion" | translate}}
-                            <span>{{solicitudEditar.nombrePoblacion}}</span>
                         </label>
-                        <i *ngIf="!fichaDireccion" class="fa fa-angle-down float-right"></i>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="fichaDireccion" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
-                    <i *ngIf="!existeImagen" class="fa fa-map-marker icon-ficha"></i>
-                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-                </div>
-                <label class="title-ficha">
-                    {{ "envios.definir.literal.datosdestino" | translate}}</label>
-                <i class="fa fa-angle-up ml-auto"></i>
-            </div>
-        </div>
-        <!--cuerpo datos dirección-->
-        <div [hidden]="!fichaDireccion" class="card-body card-body-ficha">
-            <div class="row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.datosDireccion.literal.pais2" | translate}} (*)
-                    </label>
-                    <p-dropdown [disabled]="consulta" placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form" [(ngModel)]="paisSelected"
-                        [options]="paises" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangePais($event)"></p-dropdown>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
-                    </label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.domicilio">
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.ws.literal.codigopostal" | translate}} (*)
-                    </label>
-                    <input *ngIf="!isPoblacionExtranjera" [disabled]="consulta" type="text" class="form-control" [maxLength]="5" [(ngModel)]="solicitudEditar.codigoPostal"
-                        (ngModelChange)="onChangeCodigoPostal()" pInputText>
-                    <input *ngIf="isPoblacionExtranjera" [(ngModel)]="solicitudEditar.codigoPostal" type="text" class="form-control" [maxLength]="5"
-                        [disabled]="consulta" pInputText>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.datosDireccion.literal.provincia" | translate}}
-                    </label>
-                    <p-dropdown class="select-form" [(ngModel)]='provinciaSelected' [options]="provincias" [filter]="true" [showClear]="true"
-                        placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" filterMatchMode="contains"
-                        disabled></p-dropdown>
+                        <p-dropdown #input2 class="select-form" [(ngModel)]='poblacionSelected' [filter]="true"
+                            [showClear]="true" filterBy="label,labelSinTilde"
+                            [disabled]="consulta || deshabilitarDireccion()"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
+                            (input)="buscarPoblacion($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
+                            id="dropdown">
+                        </p-dropdown>
 
-                    <!--<input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombreProvincia">-->
-                </div>
-                <!-- <div class="form-group col-lg-3 col-md-3"> -->
-                <!-- <label>
-                        {{"censo.consultaDirecciones.literal.poblacion" | translate}}
-                    </label> -->
-                <!-- <p-dropdown #poblacion [disabled]="consulta || deshabilitarDireccion()" (input)="buscarPoblacion($event)" class="select-form"
-                        [(ngModel)]="poblacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="poblaciones"
-                        [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"></p-dropdown> -->
+                    </div>
 
-                <!-- <input type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.nombrePoblacion">-->
-                <!-- </div> -->
-                <div *ngIf="!isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.consultaDirecciones.literal.poblacion" | translate}}
-                    </label>
-                    <p-dropdown #input2 class="select-form" [(ngModel)]='poblacionSelected' [filter]="true" filterBy="label,labelSinTilde" [disabled]="consulta || deshabilitarDireccion()"
-                        [options]="poblaciones" (input)="buscarPoblacion($event)" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                        emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" id="dropdown">
-                    </p-dropdown>
+                    <div *ngIf="isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)</label>
+                        <input [ngClass]="styleObligatorio(poblacionExtranjeraSelected)"
+                            [(ngModel)]="poblacionExtranjeraSelected" type="text" class="form-control" [maxLength]="99"
+                            pInputText>
+                    </div>
 
-                </div>
-
-                <div *ngIf="isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)</label>
-                    <input [(ngModel)]="poblacionExtranjeraSelected" type="text" class="form-control" [maxLength]="99" pInputText>
-                </div>
-
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                    <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.telefono1" (input)="changeTelefono1()"
-                        pInputText>
-                    <div *ngIf="!tlf1Valido">
-                        <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
+                        <input [ngClass]="styleObligatorio(solicitudEditar.telefono1)" [disabled]="consulta" type="text"
+                            class="form-control" [(ngModel)]="solicitudEditar.telefono1" (input)="changeTelefono1()"
+                            pInputText>
+                        <div *ngIf="!tlf1Valido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.ws.literal.telefono" | translate}} 2</label>
-                    <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.telefono2" (input)="changeTelefono2()"
-                        pInputText>
-                    <div *ngIf="!tlf2Valido">
-                        <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.ws.literal.telefono" | translate}} 2</label>
+                        <input [disabled]="consulta" type="text" class="form-control"
+                            [(ngModel)]="solicitudEditar.telefono2" (input)="changeTelefono2()" pInputText>
+                        <div *ngIf="!tlf2Valido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.ws.literal.fax" | translate}} 1</label>
-                    <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.fax1" (input)="changeFax1()" pInputText>
-                    <div *ngIf="!fax1Valido">
-                        <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.ws.literal.fax" | translate}} 1</label>
+                        <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.fax1"
+                            (input)="changeFax1()" pInputText>
+                        <div *ngIf="!fax1Valido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.ws.literal.fax" | translate}} 2</label>
-                    <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.fax2" (input)="changeFax2()" pInputText>
-                    <div *ngIf="!fax2Valido">
-                        <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.ws.literal.fax" | translate}} 2</label>
+                        <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.fax2"
+                            (input)="changeFax2()" pInputText>
+                        <div *ngIf="!fax2Valido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
-                    <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.movil" (input)="changeMovil()"
-                        pInputText>
-                    <div *ngIf="!mvlValido">
-                        <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
+                        <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.movil"
+                            (input)="changeMovil()" pInputText>
+                        <div *ngIf="!mvlValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>
-                        {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
-                    <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.correoElectronico" (input)="changeEmail()"
-                        pInputText>
-                    <div *ngIf="!emailValido">
-                        <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                    
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>
+                            {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
+                        <a id = "mailHref" class="enlace">
+                        <input id = "mailNuevaIncorporacion" style="color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
+                            type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
+                            pInputText>
+                        <div *ngIf="!emailValido">
+                            <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                        </div>
+                    </a>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -460,134 +538,159 @@
 
 
     <!--FICHA DATOS BANCARIOS-->
-    <div class="card">
-        <div class="card-header header-ficha" (click)="abreCierraFichaBancaria()">
-            <div [hidden]="fichaBancaria" class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
+    <div id="nueIncoDatosBan">
+        <div class="card">
+            <div class="card-header header-ficha">
+                <div [hidden]="fichaBancaria" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abreCierraFichaBancaria()">
+                            <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
+                            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFichaBancaria()">
+                            <label  class="mr-auto title-ficha">
+                                {{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
+                            <!--<label class="registros-ficha">(0 registros)</label>-->
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>
+                                {{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
+                                <span>{{solicitudEditar.titular}}</span>
+                            </label>
+                            <label>
+                                {{"pys.gestionSolicitudes.literal.nCuenta" | translate}}
+                                <span>{{solicitudEditar.iban}}</span>
+                            </label>
+                            <label>
+                                {{"facturacion.cuentasBancarias.uso" | translate}}
+                                <span
+                                    *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='C'">Cargo</span>
+                                <span
+                                    *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='A'">Abono</span>
+                                <span
+                                    *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='T'">Todas</span>
+                                <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo !='T'
+                                && solicitudEditar.abonoCargo !='C' && solicitudEditar.abonoCargo !='A'">Cuenta SJCS</span>
+                                <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='C'">Cargo,
+                                    Cuenta SJCS</span>
+                                <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='A'">Abono,
+                                    Cuenta SJCS</span>
+                                <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='T'">Cargo,
+                                    Abono</span>
+                            </label>
+                            <i (click)="abreCierraFichaBancaria()" *ngIf="!fichaBancaria"
+                                class="fa fa-angle-down float-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="fichaBancaria" (click)="abreCierraFichaBancaria()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abreCierraFichaBancaria()">
                         <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
                         <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
                     </div>
-                </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha"> {{"censo.consultaDatosBancarios.cabecera" | translate}}</label>
-                        <!--<label class="registros-ficha">(0 registros)</label>-->
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <label>
-                            {{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
-                            <span>{{solicitudEditar.titular}}</span>
-                        </label>
-                        <label>
-                            {{"pys.gestionSolicitudes.literal.nCuenta" | translate}}
-                            <span>{{solicitudEditar.iban}}</span>
-                        </label>
-                        <label>
-                            {{"facturacion.cuentasBancarias.uso" | translate}}
-                            <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='C'">Cargo</span>
-                            <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='A'">Abono</span>
-                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='T'">Todas</span>
-                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo !='T'
-                            && solicitudEditar.abonoCargo !='C' && solicitudEditar.abonoCargo !='A'">Cuenta SJCS</span>
-                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='C'">Cargo, Cuenta SJCS</span>
-                            <span *ngIf="solicitudEditar.abonoJCS =='1' && solicitudEditar.abonoCargo =='A'">Abono, Cuenta SJCS</span>
-                            <span *ngIf="solicitudEditar.abonoJCS !='1' && solicitudEditar.abonoCargo =='T'">Cargo, Abono</span>
-                        </label>
-                        <i *ngIf="!fichaDireccion" class="fa fa-angle-down float-right"></i>
-                    </div>
+                    <label (click)="abreCierraFichaBancaria()" class="title-ficha">
+                        {{ "censo.consultaDatosBancarios.cabecera" | translate}}</label>
+                    <i (click)="abreCierraFichaBancaria()" class="fa fa-angle-up ml-auto"></i>
                 </div>
             </div>
-            <div *ngIf="fichaBancaria" class=" header-ficha-open d-flex justify-content-start align-items-center">
-                <div class="img-colegiado">
-                    <i *ngIf="!existeImagen" class="fa fa-credit-card icon-ficha"></i>
-                    <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
-                </div>
-                <label class="title-ficha">
-                    {{ "censo.consultaDatosBancarios.cabecera" | translate}}</label>
-                <i class="fa fa-angle-up ml-auto"></i>
-            </div>
-        </div>
-        <!--cuerpo datos bancarios-->
-        <div [hidden]="!fichaBancaria" class="card-body card-body-ficha">
-            <div class="row">
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
-                    <input [disabled]="consulta" type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
-                </div>
-                <!--<div class="form-group col-lg-3 col-md-3">
-                    <label>Tipo de cuenta</label>
-                    <p-multiSelect styleClass="widthAll" [filter]="false" [(ngModel)]="selectedTipoCuenta" [options]="tipoCuenta"
-                        selectedItemsLabel="{0} grupos seleccionados" maxSelectedLabels="1" autoWidth="false"
-                        defaultLabel="Elegir" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
-                </div>-->
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
-                    <input type="text" class="form-control" [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
-                        pInputText>
-                    <div *ngIf="ibanValido == false">
-                        <small class="input-error">IBAN incorrecto</small>
-                    </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <!-- (ngModelChange)="recuperarBicBanco()" -->
-                    <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
-                    <input [(ngModel)]="solicitudEditar.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editarExt || consulta"
-                        [attr.maxlength]="11" [attr.minlength]="8" pInputText>
-                    <div *ngIf="bicValido == false">
-                        <small class="input-error">BIC incorrecto</small>
-                    </div>
-                </div>
-                <div class="form-group col-lg-3 col-md-3">
-                    <label>{{"censo.tipoAbono.banco" | translate}}</label>
-                    <input type="text" class="form-control" [(ngModel)]="solicitudEditar.banco" [disabled]="consulta" pInputText>
-                </div>
 
-                <div class="form-group col-lg-3 col-md-2">
-                    <br>
-                    <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Cargo" [(ngModel)]="cargo"></p-checkbox>
-                </div>
-                <div class="form-group col-lg-3 col-md-2">
-                    <br>
-                    <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Abono" [(ngModel)]="abono"></p-checkbox>
-                </div>
-                <div class="form-group col-lg-3 col-md-2">
-                    <br>
-                    <p-checkbox [disabled]="consulta" (onChange)="onChangeAbonoSJCS()" binary="true" label="Cuenta SJCS" [(ngModel)]="abonoJCS"></p-checkbox>
+            <!--cuerpo datos bancarios-->
+            <div [hidden]="!fichaBancaria" class="card-body card-body-ficha">
+                <div class="row">
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
+                        <input *ngIf="solicitudEditar.iban == undefined || solicitudEditar.iban == ''" [disabled]="consulta" type="text"
+                            class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
+                        <input *ngIf="solicitudEditar.iban != undefined && solicitudEditar.iban != ''" [ngClass]="styleObligatorioBanco(solicitudEditar.titular)" [disabled]="consulta" type="text"
+                        class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
+                    </div>
+                    <!--<div class="form-group col-lg-3 col-md-3">
+                        <label>Tipo de cuenta</label>
+                        <p-multiSelect styleClass="widthAll" [filter]="false" [(ngModel)]="selectedTipoCuenta" [options]="tipoCuenta"
+                            selectedItemsLabel="{0} grupos seleccionados" maxSelectedLabels="1" autoWidth="false"
+                            defaultLabel="Elegir" maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
+                    </div>-->
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.mutualidad.literal.iban" | translate}}</label>
+                        <input type="text" class="form-control"
+                            [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
+                            pInputText>
+                        <div
+                            *ngIf="(ibanValido == false || solicitudEditar.banco == '' || solicitudEditar.banco == undefined) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
+                            <small class="input-error">IBAN incorrecto</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <!-- (ngModelChange)="recuperarBicBanco()" -->
+                        <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
+                        <input [(ngModel)]="solicitudEditar.bic"
+                            type="text" class="form-control" (ngModelChange)="recuperarBicBanco()"
+                            [disabled]="!editarExt || consulta" [attr.maxlength]="11" [attr.minlength]="8" pInputText>
+                        <div *ngIf="bicValido == false">
+                            <small class="input-error">BIC incorrecto</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.tipoAbono.banco" | translate}}</label>
+                        <input disabled type="text"
+                            class="form-control" [(ngModel)]="solicitudEditar.banco" [disabled]="consulta" pInputText>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-2">
+                        <br>
+                        <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Cargo"
+                            [(ngModel)]="cargo"></p-checkbox>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-2">
+                        <br>
+                        <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Abono"
+                            [(ngModel)]="abono"></p-checkbox>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-2">
+                        <br>
+                        <p-checkbox [disabled]="consulta" (onChange)="onChangeAbonoSJCS()" binary="true" label="Cuenta SJCS"
+                            [(ngModel)]="abonoJCS"></p-checkbox>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!--FICHA DATOS ALTER MUTUA-->
-    <div *ngIf="consulta" class="card">
-        <div class="card-header header-ficha">
-            <div *ngIf="!fichaMutua" class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
-                        <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-                        <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+    <div id="nueIncoDatosAltMut">
+        <div *ngIf="consulta" class="card">
+            <div class="card-header header-ficha">
+                <div *ngIf="!fichaMutua" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado">
+                            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+                            <img *ngIf="existeImagen" [src]="imagenPersonaJuridica" class="icon-ficha">
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">Alter Mutua
-                            <!--{{ "general.message.datos.generales" | translate}}-->
-                        </label>
-                        <!--<label class="registros-ficha">(0 registros)</label>-->
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <label>
-                            <a (click)="irAlterMutuaReta()">
-                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.alternativa" | translate}}</span>
-                            </a>
-                        </label>
-                        <label>
-                            <a (click)="irOfertas()">
-                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.oferta" | translate}}</span>
-                            </a>
-                        </label>
-                        <i class="float-right"></i>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1">
+                            <label class="mr-auto title-ficha">Alter Mutua
+                                <!--{{ "general.message.datos.generales" | translate}}-->
+                            </label>
+                            <!--<label class="registros-ficha">(0 registros)</label>-->
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>
+                                <a (click)="irAlterMutuaReta()">
+                                    <span
+                                        style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.alternativa" | translate}}</span>
+                                </a>
+                            </label>
+                            <label>
+                                <a (click)="irOfertas()">
+                                    <span
+                                        style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.alterMutua.oferta" | translate}}</span>
+                                </a>
+                            </label>
+                            <i class="float-right"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -595,30 +698,34 @@
     </div>
 
     <!--MUTUALIDAD DE LA ABOGACÍA-->
-    <div *ngIf="consulta" class="card">
-        <div class="card-header header-ficha">
-            <div class="form-row">
-                <div class="col-lg-1 col-md-2">
-                    <div class="img-colegiado">
-                        <i class="fas fa-link icon-ficha"></i>
+    <div id="nueIncoMutAbo">
+        <div *ngIf="consulta" class="card">
+            <div class="card-header header-ficha">
+                <div class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado">
+                            <i class="fas fa-link icon-ficha"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-11 col-md-10">
-                    <div class="d-flex justify-content-start mb-1">
-                        <label class="mr-auto title-ficha">Mutualidad de la abogacía</label>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <label>
-                            <a (click)="irPlanUniversal()">
-                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.planProfesional" | translate}}</span>
-                            </a>
-                        </label>
-                        <label>
-                            <a (click)="irSegAccidentes()">
-                                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.seguroUniversal" | translate}}</span>
-                            </a>
-                        </label>
-                        <i class="float-right"></i>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1">
+                            <label class="mr-auto title-ficha">Mutualidad de la abogacía</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>
+                                <a (click)="irPlanUniversal()">
+                                    <span
+                                        style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.planProfesional" | translate}}</span>
+                                </a>
+                            </label>
+                            <label>
+                                <a (click)="irSegAccidentes()">
+                                    <span
+                                        style="color: blue; text-decoration: underline; cursor: pointer;">{{"pestana.fichaCliente.mutualidad.seguroUniversal" | translate}}</span>
+                                </a>
+                            </label>
+                            <i class="float-right"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -626,15 +733,18 @@
     </div>
 
     <div class="mt-3 text-right main-button ">
-        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
-        <button (click)="guardar(true); isSave = true" *ngIf="!consulta" [disabled]="!isGuardar()" pButton type="button " icon="fa fa-save"
-            iconPos="left" label="Guardar"></button>
-        <button (click)="aprobarSolicitud()" [disabled]="isLetrado" *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
+        <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+            label="{{ 'general.boton.volver' | translate}}"></button>
+        <button *ngIf="!consulta" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
+            label="Guardar" [disabled]="consulta"></button>
+        <button (click)="checkDatosAprobar()" [disabled]="isLetrado"
+            *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
-        <button (click)="denegarSolicitud()" [disabled]="isLetrado" *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
+        <button (click)="denegarSolicitud()" [disabled]="isLetrado"
+            *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
-        <button (click)="SolicitarCertificado()" *ngIf="consulta" disabled pButton type="button " icon="fas fa-certificate" iconPos="left"
-            label="Solicitar certificado"></button>
+        <button (click)="SolicitarCertificado()" *ngIf="consulta" disabled pButton type="button "
+            icon="fas fa-certificate" iconPos="left" label="Solicitar certificado"></button>
     </div>
     <app-dialog></app-dialog>
 </div>

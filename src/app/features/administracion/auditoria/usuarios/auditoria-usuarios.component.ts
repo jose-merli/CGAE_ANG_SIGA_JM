@@ -20,6 +20,7 @@ import { esCalendar } from "./../../../../utils/calendar";
 import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
 import { DataTable } from "primeng/datatable";
+import { CommonsService } from '../../../../_services/commons.service';
 
 
 export enum KEY_CODE {
@@ -62,12 +63,14 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   volver: boolean = false;
   pButton;
   first: number = 0;
+  idPerReal: any;
 
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -85,6 +88,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     if (sessionStorage.getItem("tarjeta") != null) {
       this.volver = true;
     }
+    if (sessionStorage.getItem("idPersonaReal") != null) {
+      this.idPerReal = JSON.parse(sessionStorage.getItem("idPersonaReal"));
+      this.isBuscar();
+    }
+
     this.sigaServices.get("auditoriaUsuarios_tipoAccion").subscribe(
       n => {
         this.tipoAcciones = n.combooItems;
@@ -234,6 +242,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
             this.table.first = first;
             sessionStorage.removeItem("first");
           }
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -241,24 +252,29 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
   arreglarFechas() {
     this.returnDesde = JSON.stringify(this.bodySearch.fechaDesde);
     this.returnHasta = JSON.stringify(this.bodySearch.fechaHasta);
-    this.returnDesde = this.returnDesde.substring(1, 11);
-    this.returnHasta = this.returnHasta.substring(1, 11);
-    this.arrayDesde = this.returnDesde.split("-");
-    this.arrayHasta = this.returnHasta.split("-");
-    this.arrayDesde[2] = parseInt(this.arrayDesde[2]) + 1;
-    this.arrayHasta[2] = parseInt(this.arrayHasta[2]) + 1;
-    this.returnDesde =
-      this.arrayDesde[1] + "/" + this.arrayDesde[2] + "/" + this.arrayDesde[0];
-    this.returnHasta =
-      this.arrayHasta[1] + "/" + this.arrayHasta[2] + "/" + this.arrayHasta[0];
-    this.fechaDesdeCalendar = new Date(this.returnDesde);
-    this.fechaHastaCalendar = new Date(this.returnHasta);
+    
+    this.fechaDesdeCalendar = this.transformaFecha(this.bodySearch.fechaDesde);
+    this.fechaHastaCalendar = this.transformaFecha(this.bodySearch.fechaHasta);
+
+  }
+
+  transformaFecha(fecha) {
+    let jsonDate = JSON.stringify(fecha);
+    let rawDate = jsonDate.slice(1, -1);
+    if (rawDate.length < 14) {
+      let splitDate = rawDate.split("/");
+      let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+      fecha = new Date((arrayDate += "T00:00:00.001Z"));
+    } else {
+      fecha = new Date(fecha);
+    }
+    return fecha;
   }
 
   construirObjetoBodySearch() {
     if (this.usuario != undefined) this.bodySearch.usuario = this.usuario;
     else this.usuario = undefined;
-
+    if (this.idPerReal != undefined) this.bodySearch.idPersonaReal = this.idPerReal;
     if (this.persona != undefined) this.bodySearch.idPersona = this.persona;
     else this.persona = undefined;
 
@@ -462,4 +478,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     this.fechaHastaCalendar = event;
   }
 
+  ngOnDestroy() {
+    sessionStorage.removeItem("idPersonaReal");
+  }
 }

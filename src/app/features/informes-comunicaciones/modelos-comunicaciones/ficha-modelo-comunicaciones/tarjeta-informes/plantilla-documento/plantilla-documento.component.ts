@@ -18,6 +18,7 @@ import { TranslateService } from "../../../../../../commons/translate/translatio
 import { MenuItem } from "primeng/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: "app-plantilla-documento",
@@ -51,7 +52,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   consultasComboMulti: any[];
   consultasComboCondicional: any[];
   consulta: any;
-
+  selectionMode: any;
+  disabledGuardar: any;
   consultas: any = [];
   textSelected: any;
   showHistorico: boolean = false;
@@ -63,9 +65,10 @@ export class PlantillaDocumentoComponent implements OnInit {
   progressSpinner: boolean = false;
   finalidad: string;
   showDatosGenerales: boolean = true;
+  showDatosSalida: boolean = true;
   showConsultas: boolean = false;
   file: any;
-  eliminarDisabled: boolean = false;
+  eliminarDisabled: boolean = true;
   eliminarArray: any = [];
   eliminarArrayPlantillas: any = [];
   nuevoDocumento: boolean = false;
@@ -83,12 +86,18 @@ export class PlantillaDocumentoComponent implements OnInit {
   esPorDefecto: boolean = false;
   label1: string;
   controlSelectionMode: string;
-
+  resaltadoDatos: boolean = false;
+  nombreCompletoArchivo: any;
+  extensionArchivo: any;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
   @ViewChild("tableDocs") tableDocs: DataTable;
   selectedDocs;
+
+  VALOR_FORMATO_XLS: string = "1";
+  VALOR_FORMATO_DOC: string = "2";
+  VALOR_FORMATO_PDF: string = "3";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -96,10 +105,15 @@ export class PlantillaDocumentoComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+    this.commonsService.scrollTop();
+    this.checkCamposDatosSalida();
+    this.resaltadoDatos = true;
+
     this.getInstitucionActual();
 
     //sessionStorage.removeItem('esPorDefecto');
@@ -169,6 +183,9 @@ export class PlantillaDocumentoComponent implements OnInit {
       { consulta: "", finalidad: "", objetivo: "Datos", idObjetivo: "4" }
     ];
     // this.body.idConsulta = this.consultas[1].value;
+
+    this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+
   }
 
   busquedaIdioma() {
@@ -194,9 +211,11 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.selectMultiple = !this.selectMultiple;
 
       if (!this.selectMultiple) {
+        this.selectionMode = "single";
         this.selectedDatos = [];
         this.numSelected = 0;
       } else {
+        this.selectionMode = "multiple";
         this.selectAll = false;
         this.selectedDatos = [];
         this.numSelected = 0;
@@ -205,26 +224,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   }
-
-  isSelectMultipleDocs() {
-    if (!this.nuevoDocumento) {
-
-      if (!this.esPorDefecto) {
-        this.selectMultipleDocs = !this.selectMultipleDocs;
-        if (!this.selectMultipleDocs) {
-          // this.controlSelectionMode = "none";
-          this.selectedDocs = [];
-        } else {
-          this.selectAllDocs = false;
-          this.controlSelectionMode = "multiple";
-          this.selectedDocs = [];
-        }
-      }
-    } else {
-      this.selectMultiple = false;
-    }
-  }
-
   onChangeSelectAll(key) {
     if (key != "docs") {
       if (this.selectAll === true) {
@@ -247,29 +246,65 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
   }
 
+  onChangeSelectAllConsultas() {
+    if (this.selectAll) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+
+      this.eliminarDisabled = false;
+
+      this.datos.forEach(element => {
+
+        if ((element.idConsulta == "" ||
+          element.idConsulta == null ||
+          element.idConsulta == undefined ||
+          element.nombre == null ||
+          element.nombre == undefined)) {
+          this.eliminarDisabled = true;
+        }
+      });
+
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
   onSelectConsulta(event, dato) {
     console.log(dato);
     if (!this.esPorDefecto) {
       if (!this.selectMultiple && event.originalEvent.target != null && event.originalEvent.target.className.indexOf("dropdown") == -1 && event.originalEvent.target.parentElement.className.indexOf("dropdown") == -1
       ) {
-        this.navigateTo(dato);
-      } else if (this.selectMultiple && dato[0].idObjetivo != "4") {
+        if (dato.nombre != undefined && dato.nombre != null) {
+          this.navigateTo(dato);
+        }
+        this.numSelected = 1;
         this.eliminarDisabled = true;
+
       } else if (
-        this.selectMultiple &&
-        dato[0].idObjetivo == "4" &&
-        dato[0].idConsulta != "" &&
-        dato[0].idConsulta != null
-      ) {
+        this.selectMultiple) {
         this.eliminarDisabled = false;
-      } else if (
-        this.selectMultiple &&
-        dato[0].idObjetivo == "4" &&
-        (dato[0].idConsulta == "" || dato[0].idConsulta == null)
-      ) {
-        this.eliminarDisabled = true;
+
+        dato.forEach(element => {
+
+          if ((element.idConsulta == "" ||
+            element.idConsulta == null ||
+            element.idConsulta == undefined ||
+            element.nombre == null ||
+            element.nombre == undefined)) {
+            this.eliminarDisabled = true;
+          }
+
+        });
+
+        this.numSelected = this.selectedDatos.length;
+
       }
+
     }
+
+
   }
 
   onRowSelect(dato) {
@@ -279,6 +314,38 @@ export class PlantillaDocumentoComponent implements OnInit {
     }
 
   }
+
+  actualizaSeleccionados(selectedDatos) {
+
+    if (this.selectMultiple) {
+
+      if (selectedDatos != undefined && selectedDatos != null && selectedDatos.length > 0) {
+        this.eliminarDisabled = false;
+
+        selectedDatos.forEach(element => {
+
+          if ((element.idConsulta == "" ||
+            element.idConsulta == null ||
+            element.idConsulta == undefined ||
+            element.nombre == null ||
+            element.nombre == undefined)) {
+            this.eliminarDisabled = true;
+          }
+
+        });
+      }
+
+      this.numSelected = selectedDatos.length;
+    } else {
+
+      if (selectedDatos != null && selectedDatos != undefined) {
+        this.numSelected = 1;
+      } else {
+        this.numSelected = 0;
+      }
+    }
+  }
+
   addDocumento() {
     let obj = {
       plantilla: "",
@@ -296,7 +363,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       consulta: null,
       finalidad: null,
       objetivo: "DATOS",
-      idObjetivo: 4,
+      idObjetivo: "4",
       idInstitucion: ""
     };
     this.datos.push(obj);
@@ -437,6 +504,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   restablecerDatosGenerales() {
+    this.disabledGuardar = true;
+    this.resaltadoDatos = false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
     this.selectedSufijos = JSON.parse(
@@ -446,6 +515,16 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.body.consultas = this.datos;
     this.nuevoDocumento = false;
+  }
+
+  restablecerDatosSalida() {
+    let body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.formatoSalida = body.formatoSalida;
+    this.body.nombreFicheroSalida = body.nombreFicheroSalida;
+    this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
+    this.selectedSufijos = JSON.parse(
+      JSON.stringify(this.selectedSufijosInicial)
+    );
   }
 
   getResultados() {
@@ -556,9 +635,9 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
 
         this.datos.sort(function (a, b) {
-          if (a.idObjetivo == 3) {
+          if (a.idObjetivo == "3") {
             return -1;
-          } else if (a.idObjetivo == 4) {
+          } else if (a.idObjetivo == "4") {
             return 1;
           } else {
             if (a.idObjetivo > b.idObjetivo) {
@@ -587,39 +666,41 @@ export class PlantillaDocumentoComponent implements OnInit {
     let fileList: FileList = event.files;
     this.file = fileList[0];
 
-    let nombreCompletoArchivo = fileList[0].name;
-    let extensionArchivo = nombreCompletoArchivo.substring(
-      nombreCompletoArchivo.lastIndexOf("."),
-      nombreCompletoArchivo.length
+    this.nombreCompletoArchivo = fileList[0].name;
+    this.extensionArchivo = this.nombreCompletoArchivo.substring(
+      this.nombreCompletoArchivo.lastIndexOf("."),
+      this.nombreCompletoArchivo.length
     );
 
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      (!/\.(xls|xlsx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
-        this.body.idFormatoSalida == "1")
-    ) {
-      this.file = undefined;
-      this.showMessage(
-        "info",
-        this.translateService.instant("general.message.informacion"),
-        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
-      );
-    } else if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      (!/\.(doc|docx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
-        this.body.idFormatoSalida == "2")
-    ) {
-      this.file = undefined;
-      this.showMessage(
-        "info",
-        this.translateService.instant("general.message.informacion"),
-        this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
-      );
-    } else {
-      this.validateSizeFile(dato);
-    }
+
+
+    // if (
+    //   extensionArchivo == null ||
+    //   extensionArchivo.trim() == "" ||
+    //   (!/\.(xls|xlsx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
+    //     this.body.idFormatoSalida == "1")
+    // ) {
+    //   this.file = undefined;
+    //   this.showMessage(
+    //     "info",
+    //     this.translateService.instant("general.message.informacion"),
+    //     this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
+    //   );
+    // } else if (
+    //   extensionArchivo == null ||
+    //   extensionArchivo.trim() == "" ||
+    //   (!/\.(doc|docx)$/i.test(extensionArchivo.trim().toUpperCase()) &&
+    //     this.body.idFormatoSalida == "2")
+    // ) {
+    //   this.file = undefined;
+    //   this.showMessage(
+    //     "info",
+    //     this.translateService.instant("general.message.informacion"),
+    //     this.translateService.instant("formacion.mensaje.extesion.fichero.erronea")
+    //   );
+    // } else {
+    this.validateSizeFile(dato);
+    // }
   }
 
   validateSizeFile(dato) {
@@ -668,8 +749,137 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
       );
   }
+
+  checkCamposDatosSalida() {
+
+    if (this.body.nombreFicheroSalida != undefined && this.body.nombreFicheroSalida != null && this.body.nombreFicheroSalida != "" &&
+      this.body.idFormatoSalida != undefined && this.body.idFormatoSalida != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  guardarDatosSalida() {
+
+    if (this.checkCamposDatosSalida()) {
+      this.progressSpinner = true;
+      this.body.sufijos = [];
+      let orden: number = 1;
+      this.selectedSufijos.forEach(element => {
+        let ordenString = orden.toString();
+        let objSufijo = {
+          idSufijo: element.idSufijo,
+          orden: ordenString,
+          nombreSufijo: element.nombreSufijo
+        };
+        this.body.sufijos.push(objSufijo);
+        orden = orden + 1;
+      });
+
+      this.sigaServices.post("plantillasDoc_guardar_datosSalida", this.body).subscribe(
+        data => {
+          this.showSuccess("Guardar datos de salida correctos");
+          this.body.idInforme = JSON.parse(data["body"]).data;
+          this.getDocumentos();
+          sessionStorage.setItem(
+            "modelosInformesSearch",
+            JSON.stringify(this.body)
+          );
+
+          sessionStorage.removeItem("crearNuevaPlantillaDocumento");
+
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
+          this.selectedSufijosInicial = JSON.parse(
+            JSON.stringify(this.selectedSufijos)
+          );
+
+          this.progressSpinner = false;
+
+        },
+        err => {
+          this.showFail("Error guardar datos Salida");
+          console.log(err);
+          this.progressSpinner = false;
+
+        },
+        () => {
+          this.progressSpinner = false;
+
+        }
+      );
+    }
+
+  }
+
   guardarDatosGenerales() {
     this.progressSpinner = true;
+    // this.body.sufijos = [];
+    // let orden: number = 1;
+    // this.selectedSufijos.forEach(element => {
+    //   let ordenString = orden.toString();
+    //   let objSufijo = {
+    //     idSufijo: element.idSufijo,
+    //     orden: ordenString,
+    //     nombreSufijo: element.nombreSufijo
+    //   };
+    //   this.body.sufijos.push(objSufijo);
+    //   orden = orden + 1;
+    // });
+
+    if (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida.trim() == "") {
+
+      if (this.nombreCompletoArchivo != null && this.nombreCompletoArchivo != undefined && this.nombreCompletoArchivo.trim() != "") {
+
+        let nombreFichero = this.nombreCompletoArchivo.split(".");
+
+        if (nombreFichero.length > 2) {
+
+          nombreFichero.pop();
+          let nombreFicheroCompleto = "";
+
+          for (let index = 0; index < nombreFichero.length; index++) {
+
+            if (nombreFichero.length - 1 == index) {
+              nombreFicheroCompleto += nombreFichero[index];
+
+            } else {
+              nombreFicheroCompleto += nombreFichero[index] + ".";
+
+            }
+
+          }
+
+          this.body.nombreFicheroSalida = nombreFicheroCompleto;
+
+        } else {
+          this.body.nombreFicheroSalida = nombreFichero[0];
+
+        }
+
+      }
+
+    }
+
+    if (this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined) {
+
+      if (
+        this.extensionArchivo != null &&
+        this.extensionArchivo.trim() != "") {
+
+        if (/\.(xls)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
+        } else if (/\.(doc)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_DOC;
+        } else if (/\.(pdf)$/i.test(this.extensionArchivo.trim().toUpperCase())) {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_PDF;
+        } else {
+          this.body.idFormatoSalida = this.VALOR_FORMATO_XLS;
+        }
+      }
+    }
+    this.resaltadoDatos = false;
     this.body.sufijos = [];
     let orden: number = 1;
     this.selectedSufijos.forEach(element => {
@@ -685,6 +895,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
+
         this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"));
         this.nuevoDocumento = false;
         this.body.idInforme = JSON.parse(data["body"]).data;
@@ -695,14 +906,15 @@ export class PlantillaDocumentoComponent implements OnInit {
         sessionStorage.removeItem("crearNuevaPlantillaDocumento");
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
-        this.selectedSufijosInicial = JSON.parse(
-          JSON.stringify(this.selectedSufijos)
-        );
+        // this.selectedSufijosInicial = JSON.parse(
+        //   JSON.stringify(this.selectedSufijos)
+        // );
         this.docsInicial = JSON.parse(JSON.stringify(this.documentos));
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"));
         console.log(err);
+        this.progressSpinner = false;
       },
       () => {
         this.getDocumentos();
@@ -717,6 +929,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       .subscribe(
         data => {
           this.showInfo(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.plantillaCargada"));
+          this.disabledGuardar = false;
           plantilla.idPlantillaDocumento = JSON.parse(
             data["body"]
           ).idPlantillaDocumento;
@@ -750,6 +963,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   guardarConsultasOk() {
+
+    this.progressSpinner = true;
     this.body.consultas = [];
     this.datos.map(e => {
       let obj = {
@@ -769,12 +984,16 @@ export class PlantillaDocumentoComponent implements OnInit {
         data => {
           this.showSuccess(this.translateService.instant("informesycomunicaciones.consultas.ficha.correctGuardadoConsulta"));
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+          this.progressSpinner = false;
+
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.ficha.errorGuardadoConsulta"));
+          this.progressSpinner = false;
           console.log(err);
         },
         () => {
+          this.progressSpinner = false;
           this.getResultados();
           this.consultasGuardadas = true;
         }
@@ -872,6 +1091,10 @@ export class PlantillaDocumentoComponent implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
+  onShowDatosSalida() {
+    this.showDatosSalida = !this.showDatosSalida;
+  }
+
   onShowConsultas() {
     if (sessionStorage.getItem("crearNuevaPlantillaDocumento") == null) {
       this.showConsultas = !this.showConsultas;
@@ -920,6 +1143,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         data => {
           this.showSuccess(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.correctConsultaEliminado"));
           this.selectedDatos = [];
+          this.numSelected = 0;
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.errorEliminarConsulta"));
@@ -1092,10 +1316,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   isGuardarDisabled() {
     if (
-      this.body.idFormatoSalida != "" &&
-      this.body.idFormatoSalida != null &&
-      this.body.nombreFicheroSalida != "" &&
-      this.body.nombreFicheroSalida != null &&
       this.documentos &&
       this.documentos.length > 0 && (!this.esPorDefecto && (this.institucionActual != 2000 || this.institucionActual == 2000))
     ) {
@@ -1141,22 +1361,22 @@ export class PlantillaDocumentoComponent implements OnInit {
   }
 
   confirmarNavegar(dato) {
-    let idConsulta = dato[0].idConsulta;
+    let idConsulta = dato.idConsulta;
     console.log(dato);
     if (!this.selectMultiple && idConsulta) {
-      if (!dato[0].sentencia || dato[0].sentencia == null || dato[0].sentencia == "") {
+      if (!dato.sentencia || dato.sentencia == null || dato.sentencia == "") {
         // Obtenemos la consulta para ir a ella
-        this.getConsulta(dato[0]);
+        this.getConsulta(dato);
       } else {
         if (
-          dato[0].generica == "No" ||
-          (this.institucionActual == 2000 && dato[0].generica == "Si")
+          dato.generica == "No" ||
+          (this.institucionActual == 2000 && dato.generica == "Si")
         ) {
           sessionStorage.setItem("consultaEditable", "S");
         } else {
           sessionStorage.setItem("consultaEditable", "N");
         }
-        sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
+        sessionStorage.setItem("consultasSearch", JSON.stringify(dato));
         this.router.navigate(["/fichaConsulta"]);
       }
     }
@@ -1198,7 +1418,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (sessionStorage.getItem("permisoModoLectura") == 'true' || sessionStorage.getItem("soloLectura") == 'true') {
         this.esPorDefecto = true;
       }
 
@@ -1244,6 +1464,7 @@ export class PlantillaDocumentoComponent implements OnInit {
           saveAs(data, dato[0].nombreDocumento);
         }
         this.selectedDatos = [];
+        this.numSelected = 0;
       },
         err => {
           console.log(err);
@@ -1252,5 +1473,32 @@ export class PlantillaDocumentoComponent implements OnInit {
         }, () => {
           this.progressSpinner = false
         });
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (this.isGuardarDisabled()) {
+      if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardarDatosSalida();
+      }
+    } else {
+      if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardarDatosSalida();
+      }
+    }
   }
 }

@@ -8,6 +8,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { InputMaskModule } from "primeng/inputmask";
 import { isNumber } from "util";
 import { ModelosComunicacionesItem } from "../../../../../models/ModelosComunicacionesItem";
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-datos-generales-ficha",
@@ -34,6 +35,9 @@ export class DatosGeneralesFichaComponent implements OnInit {
   editar: boolean = true;
   plantillas: any = [];
   isEdicion: boolean = false;
+  selectedClaseCom: boolean = false;
+  progressSpinner: boolean = false;
+  resaltadoDatos: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -52,10 +56,13 @@ export class DatosGeneralesFichaComponent implements OnInit {
   constructor(
     private router: Router,
     private translateService: TranslateService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatos=true;
+
     this.preseleccionar = [
       { label: "No", value: "NO" },
       { label: "Sí", value: "SI" }
@@ -70,12 +77,19 @@ export class DatosGeneralesFichaComponent implements OnInit {
 
     this.getClasesComunicaciones();
 
-    this.getPlantillas();
-
+    if(this.body.idClaseComunicacion != null && this.body.idClaseComunicacion != undefined){
+      this.selectedClaseCom = true;
+      this.getPlantillas(this.body.idClaseComunicacion);
+    }else{
+      this.selectedClaseCom = false;
+    }
 
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.activacionEditar == true) {
       // fichaPosible.activa = !fichaPosible.activa;
@@ -128,6 +142,12 @@ export class DatosGeneralesFichaComponent implements OnInit {
     if (sessionStorage.getItem("modelosSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("modelosSearch"));
       this.bodyInicial = JSON.parse(sessionStorage.getItem("modelosSearch"));
+      if(this.body.idClaseComunicacion != null && this.body.idClaseComunicacion != undefined){
+        this.selectedClaseCom = true;
+        this.getPlantillas(this.body.idClaseComunicacion);
+      }else{
+        this.selectedClaseCom = false;
+      }
       this.habilitarBotones();
       this.isEdicion = true;
     } else {
@@ -136,6 +156,8 @@ export class DatosGeneralesFichaComponent implements OnInit {
   }
 
   guardar() {
+    this.onlyCheckDatos();
+    this.resaltadoDatos=false;
     if (this.bodyInicial.nombre != this.body.nombre) {
       this.sigaServices
         .post("modelos_detalle_datosGeneralesComprobarNom", this.body)
@@ -219,7 +241,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (this.institucionActual != '2000' && sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (this.institucionActual != '2000' && sessionStorage.getItem("soloLectura") == 'true') {
         this.soloLectura = true;
       }
 
@@ -337,7 +359,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
   restablecer() {
+    this.onlyCheckDatos();
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos=false;
   }
 
   showFail(mensaje: string) {
@@ -370,23 +394,64 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
-  getPlantillas() {
-    this.sigaServices.get("modelos_detalle_plantillasComunicacion").subscribe(
+  getPlantillas(idClaseComunicacion) {
+    this.progressSpinner = true;
+    this.sigaServices.getParam(
+      "modelos_detalle_plantillasComunicacionByIdClase",
+      "?idClase=" +
+      idClaseComunicacion
+    ).subscribe(
       data => {
+        
         this.plantillas = data.combooItems;
-        // this.plantillas.unshift({ label: "Seleccionar", value: "" });
+        this.progressSpinner = false;
+
+        this.plantillas.map(e => {
+          let accents =
+            "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+          let accentsOut =
+            "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
+
       },
       () => { }
     );
   };
 
+
+  onChangeClaseComunicaciones(e){
+    this.onlyCheckDatos();
+    let idClaseComunicacion = e.value; 
+    if (idClaseComunicacion != "" && idClaseComunicacion != null && idClaseComunicacion != undefined) {
+      this.selectedClaseCom = true;
+      this.body.idPlantillaEnvio = undefined;
+      this.body.tipoEnvio = undefined;
+      this.getPlantillas(idClaseComunicacion);
+    }else{
+      this.selectedClaseCom = false;
+      this.body.tipoEnvio = undefined;
+      this.body.idPlantillaEnvio = undefined;
+    }
+  }
+
   onChangePlantilla(e) {
     let idPlantillaEnvios = e.value;
-    if (idPlantillaEnvios != "") {
+    if (idPlantillaEnvios != undefined) {
       this.getTipoEnvios(idPlantillaEnvios);
+    }else{
+      this.body.tipoEnvio = "";
     }
   }
 
@@ -402,5 +467,51 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         }
       );
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento==="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.guardar();
+        }
+      }
+    }else{
+      if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.resaltadoDatos=true;
+      }else{
+        if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+          this.resaltadoDatos=true;
+        }
+      }
+    }else{
+      if((this.body.idClaseComunicacion==undefined || this.body.idClaseComunicacion==null || this.body.idClaseComunicacion==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idInstitucion==undefined || this.body.idInstitucion==null || this.body.idInstitucion==="") || (this.body.orden==undefined || this.body.orden==null || this.body.orden==="")){
+        this.resaltadoDatos=true;
+      }
+    }
   }
 }

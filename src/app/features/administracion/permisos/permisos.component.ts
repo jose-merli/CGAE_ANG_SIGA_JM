@@ -102,9 +102,9 @@ export class PermisosComponent implements OnInit {
     this.sigaServices.get("usuarios_perfil").subscribe(
       n => {
         this.grupos = n.combooItems;
-        this.first = { label: "", value: "" };
-        console.log(this.first);
-        this.grupos.unshift(this.first);
+        // this.first = { label: "", value: "" };
+        // console.log(this.first);
+        // this.grupos.unshift(this.first);
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/

@@ -176,26 +176,26 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         });
     }
 
-    navigateTo(dato) {
-        let idConsulta = dato[0].idConsulta;
-        console.log(dato);
-        if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
+    navigateTo() {
+        if (!this.selectMultiple && !this.nuevaConsulta) {
             if (
-                dato[0].generica == "No" ||
-                (this.institucionActual == 2000 && dato[0].generica == "Si")
-            ) {
+                this.institucionActual == 2000 )
+            {
                 sessionStorage.setItem("consultaEditable", "S");
             } else {
                 sessionStorage.setItem("consultaEditable", "N");
             }
-            sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
             this.router.navigate(["/fichaConsulta"]);
         }
         this.numSelected = this.selectedDatos.length;
     }
+    
     actualizaSeleccionados(selectedDatos) {
-        this.numSelected = selectedDatos.length;
-    }
+        if (this.selectedDatos != undefined) {
+          
+          this.numSelected = this.selectedDatos.length;
+        }
+      }
 
     getDatos() {
         if (sessionStorage.getItem("enviosMasivosSearch") != null) {
@@ -264,6 +264,22 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         this.sigaServices.get("enviosMasivos_consultasDestinatarios").subscribe(
             data => {
                 this.consultas = data.consultas;
+                /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+						para poder filtrar el dato con o sin estos caracteres*/
+						this.consultas.map(e => {
+							let accents =
+							"ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+							let accentsOut =
+							"AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+							let i;
+							let x;
+							for (i = 0; i < e.label.length; i++) {
+							if ((x = accents.indexOf(e.label[i])) != -1) {
+								e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+								return e.labelSinTilde;
+							}
+							}
+						});
                 //console.log("consultas combo", this.consultas);
             },
             err => {
@@ -275,6 +291,7 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
     }
 
     addConsulta() {
+        this.numSelected = 0;
         let objNewConsulta = {
             idConsulta: "",
             nombre: "",
@@ -421,6 +438,22 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
                     if (this.consultas != undefined || this.consultas.length == 0) {
                         this.resultadosConsultas = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
                     }
+                    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+						para poder filtrar el dato con o sin estos caracteres*/
+						this.consultas.map(e => {
+							let accents =
+							"ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+							let accentsOut =
+							"AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+							let i;
+							let x;
+							for (i = 0; i < e.label.length; i++) {
+							if ((x = accents.indexOf(e.label[i])) != -1) {
+								e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+								return e.labelSinTilde;
+							}
+							}
+						});
                     // console.log(this.consultas);
                 },
                 err => {
@@ -437,18 +470,17 @@ export class DestinatarioListEnvioMasivoComponent implements OnInit {
         this.table.reset();
     }
 
-    isSelectMultiple() {
-        this.selectMultiple = !this.selectMultiple;
-        this.nuevaConsulta = false;
-        if (!this.selectMultiple) {
-            this.selectedDatos = [];
-            this.numSelected = 0;
+    isSelectMultiple(selectedDatos) {
+    
+        if (this.selectedDatos != undefined) {
+          if(this.selectedDatos.length == 1){
+            // this.activacionEditar = true;
+          }
+          this.numSelected = this.selectedDatos.length;
         } else {
-            this.selectAll = false;
-            this.selectedDatos = [];
-            this.numSelected = 0;
+          this.selectedDatos = [];
         }
-    }
+      }
 
     onChangeSelectAll() {
         if (this.selectAll === true) {

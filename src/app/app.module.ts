@@ -35,6 +35,9 @@ import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
+import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
+import { LogoutComponent } from './commons/logout/logout.component';
+import { TranslatePipe, TranslateService } from './commons/translate';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
@@ -85,7 +88,6 @@ import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-m
 import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
 import { BusquedaColegiadosComponent } from './features/censo/busqueda-colegiados/busqueda-colegiados.component';
 import { BusquedaColegiadosComponentI } from './features/censo/busqueda-colegiados-censoI/busqueda-colegiados.component';
-import { FichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial.component';
 import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component';
 import { BusquedaLetradosComponent } from './features/censo/busqueda-letrados/busqueda-letrados.component';
 import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
@@ -271,7 +273,7 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
 import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
-import { SelectButtonModule, ColorPickerModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
@@ -332,10 +334,8 @@ import { DialogoComunicacionesComponent } from './features/informes-comunicacion
 import { DestinatarioIndvEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/destinatario-indv-envio-masivo/destinatario-indv-envio-masivo.component';
 import { CommonsService } from './_services/commons.service';
 import { SjcsModule } from './features/sjcs/sjcs.module';
-import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
 
-import { TranslateService } from './commons/translate/translation.service';
 import { PersistenceService } from './_services/persistence.service';
 import { FechaModule } from './commons/fecha/fecha.module';
 import { PrecioModule } from './commons/precio/precio.module';
@@ -350,6 +350,23 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 
 
 
+import { DescripcionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/descripcion-envio-masivo/descripcion-envio-masivo.component';
+import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/ficha-colegial-general/ficha-colegial-general.component';
+import { DatosGeneralesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-generales-ficha-colegial/datos-generales-ficha-colegial.component';
+import { DatosColegialesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-colegiales-ficha-colegial/datos-colegiales-ficha-colegial.component';
+import { CertificadosFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/certificados-ficha-colegial/certificados-ficha-colegial.component';
+import { SancionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/sanciones-ficha-colegial/sanciones-ficha-colegial.component';
+import { SociedadesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/sociedades-ficha-colegial/sociedades-ficha-colegial.component';
+import { DatosCurricularesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-curriculares-ficha-colegial/datos-curriculares-ficha-colegial.component';
+import { DireccionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/direcciones-ficha-colegial/direcciones-ficha-colegial.component';
+import { DatosBancariosFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-bancarios-ficha-colegial/datos-bancarios-ficha-colegial.component';
+import { RegtelFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/regtel-ficha-colegial/regtel-ficha-colegial.component';
+import { AlterMutuaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/alter-mutua-ficha-colegial/alter-mutua-ficha-colegial.component';
+import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/mutualidad-abogacia-ficha-colegial/mutualidad-abogacia-ficha-colegial.component';
+import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
+import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
+import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 
 
 @NgModule({
@@ -361,6 +378,8 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		MenuComponent,
 		LoginComponent,
 		LoginDevelopComponent,
+		LoginMultipleComponent,
+		LogoutComponent,
 		HeaderComponent,
 		HomeComponent,
 		// Censo
@@ -388,7 +407,6 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		BusquedaSancionesComponent,
 		BusquedaColegiadosComponent,
 		BusquedaColegiadosComponentI,
-		FichaColegialComponent,
 		EdicionCurricularesComponent,
 		BusquedaLetradosComponent,
 		MantenimientoDuplicadosComponent,
@@ -612,6 +630,7 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		EnviosMasivosComponent,
 		FichaRegistroEnvioMasivoComponent,
 		ConfiguracionEnvioMasivoComponent,
+		DescripcionEnvioMasivoComponent,
 		DocumentosEnvioMasivoComponent,
 		DestinatariosEnvioMasivoComponent,
 		ProgramacionEnvioMasivoComponent,
@@ -644,6 +663,22 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		BuscadorProcuradoresComponent,
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
+		FichaColegialGeneralComponent,
+		DatosGeneralesFichaColegialComponent,
+		DatosColegialesFichaColegialComponent,
+		CertificadosFichaColegialComponent,
+		SancionesFichaColegialComponent,
+		SociedadesFichaColegialComponent,
+		DatosCurricularesFichaColegialComponent,
+		DireccionesFichaColegialComponent,
+		DatosBancariosFichaColegialComponent,
+		RegtelFichaColegialComponent,
+		AlterMutuaFichaColegialComponent,
+		MutualidadAbogaciaFichaColegialComponent,
+		DatosColegialesFichaColegialComponent,
+		OtrasColegiacionesFichaColegialComponent,
+		ServiciosInteresFichaColegialComponent//,
+		//TarjetaResumenFijaComponent
 	],
 	imports: [
 		BrowserModule,
@@ -657,19 +692,20 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		DropdownModule,
 		ButtonModule,
 		DataTableModule,
+		TableModule,
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,
-
+		DialogModule,
 		RadioButtonModule,
 		ConfirmDialogModule,
 		ValidationModule,
 		GrowlModule,
 		CommonModule,
 		CalendarModule,
-
+		OverlayPanelModule,
 		ScheduleModule,
-
+		PipeTranslationModule,
 		AutoCompleteModule,
 		TooltipModule,
 		ListboxModule,
@@ -692,6 +728,8 @@ import { OficioModule } from './features/sjcs/oficio/oficio.module';
 		StepsModule,
 		BusquedaColegiadoExpressModule,
 		GeneralSJCSModule,
+		TarjetaResumenFijaModule,
+
 		SelectButtonModule,
 		ColorPickerModule,
 		// BusquedaAsuntosModule,

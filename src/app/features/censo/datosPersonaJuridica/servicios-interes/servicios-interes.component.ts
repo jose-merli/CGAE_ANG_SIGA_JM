@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -7,7 +7,7 @@ import { AuthenticationService } from '../../../../_services/authentication.serv
 @Component({
 	selector: 'app-servicios-interes',
 	templateUrl: './servicios-interes.component.html',
-	styleUrls: [ './servicios-interes.component.scss' ]
+	styleUrls: ['./servicios-interes.component.scss']
 })
 export class ServiciosInteresComponent implements OnInit {
 	@ViewChild(ServiciosInteresComponent) serviciosInteresComponent: ServiciosInteresComponent;
@@ -16,14 +16,16 @@ export class ServiciosInteresComponent implements OnInit {
 	tipoSociedad: String;
 	usuarioBody: any[];
 	@ViewChild('table') table;
-
+	@Input() userBody;
+	@Input() openTarjeta;
 	tarjeta: string;
+	@Output() permisosEnlace = new EventEmitter<any>();
 
 	constructor(
 		private router: Router,
 		private sigaServices: SigaServices,
 		private authenticationService: AuthenticationService
-	) {}
+	) { }
 
 	ngOnInit() {
 		this.checkAcceso();
@@ -54,11 +56,15 @@ export class ServiciosInteresComponent implements OnInit {
 		sessionStorage.setItem('reload', 'si');
 		sessionStorage.setItem('idInstitucionFichaColegial', idInstitucion.toString());
 
-		this.router.navigate([ '/facturasSociedad' ]);
+		this.router.navigate(['/facturasSociedad']);
 	}
 	irAuditoria() {
-		this.router.navigate([ '/auditoriaUsuarios' ]);
+		this.router.navigate(['/auditoriaUsuarios']);
 		sessionStorage.setItem('tarjeta', '/fichaPersonaJuridica');
+		if (sessionStorage.getItem("usuarioBody") != null) {
+			let Real = JSON.parse(sessionStorage.getItem("usuarioBody"));
+			sessionStorage.setItem("idPersonaReal", JSON.stringify(Real[0].idPersona));;
+		}
 	}
 	irComunicaciones() {
 		let idInstitucion = this.authenticationService.getInstitucionSession();
@@ -85,7 +91,7 @@ export class ServiciosInteresComponent implements OnInit {
 		sessionStorage.setItem('reload', 'si');
 		sessionStorage.setItem('idInstitucionFichaColegial', idInstitucion.toString());
 
-		this.router.navigate([ '/comunicacionesSociedades' ]);
+		this.router.navigate(['/comunicacionesSociedades']);
 		//this.router.navigate([ '/informesGenericos' ]);
 	}
 
@@ -102,7 +108,12 @@ export class ServiciosInteresComponent implements OnInit {
 			(err) => {
 				console.log(err);
 			},
-			() => {}
+			() => { 
+				if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "interes";
+					this.permisosEnlace.emit(permisos);
+				  }
+			 }
 		);
 	}
 }

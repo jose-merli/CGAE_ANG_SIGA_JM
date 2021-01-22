@@ -6,7 +6,7 @@ import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
 import { Router } from "@angular/router";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-remitente-plantilla",
   templateUrl: "./remitente-plantilla.component.html",
@@ -44,9 +44,11 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
   progressSpinner: boolean = false;
   showDirecciones: boolean = false;
   soloLectura: boolean = false;
+  disabledPlantilla: boolean = false;
   cols2: any = [];
   textFilter: String;
   textSelected: String = this.translateService.instant("general.mensaje.0.etiquetas.seleccionadas");
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -76,6 +78,10 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
 
     this.textFilter = this.translateService.instant("general.boton.seleccionar");
 
+    if(sessionStorage.getItem("direccionesInicial") != undefined ){
+      this.direccionesInicial = JSON.parse(sessionStorage.getItem("direccionesInicial"));
+      sessionStorage.removeItem("direccionesInicial");
+    }
     this.getDatos();
     this.getInstitucion();
     this.getComboPais();
@@ -153,6 +159,12 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       this.textFilter = "censo.busquedaClientesAvanzada.literal.sinResultados";
     }
     // this.body.idTipoEnvio = this.tiposEnvio[1].value;
+
+    if(sessionStorage.getItem("disabledPlantillaEnvio") == "true"){
+      this.disabledPlantilla  = true;
+    }else{
+      this.disabledPlantilla = false;
+    }
   }
 
   abreCierraFicha() {
@@ -229,7 +241,8 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
         this.direccion.idPersona = this.body.idPersona;
       }
       this.body = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-      if (this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
+      if (this.body != undefined && this.body != null && 
+        this.body.idInstitucion == '2000' && this.institucionActual != '2000') {
         if (
           sessionStorage.getItem("soloLectura") != null &&
           sessionStorage.getItem("soloLectura") != undefined &&
@@ -337,6 +350,12 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
             let filtro = "";
             this.getComboPoblacionInicial(filtro);
           }
+
+          if(this.direccionesInicial == undefined || this.direccionesInicial == null || this.direccionesInicial.length > 0){
+            this.direccionesInicial = JSON.parse(JSON.stringify(
+              this.direccion));
+          }
+         
           // this.direcciones = this.remitente.direccion;
         },
         err => {
@@ -371,6 +390,11 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       }
     }
 
+    sessionStorage.setItem(
+      "direccionesInicial",
+      JSON.stringify(this.direccionesInicial)
+    );
+
     sessionStorage.removeItem("menuProcede");
     sessionStorage.removeItem("migaPan");
     sessionStorage.removeItem("migaPan2");
@@ -398,8 +422,8 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
       this.direccion = dir;
       // this.remitente = dir;
       this.showDirecciones = false;
-      this.direccionesInicial = dir;
-      this.remitenteInicial = this.remitente;
+      // this.direccionesInicial = dir;
+      // this.remitenteInicial = this.remitente;
     }
   }
 
@@ -538,5 +562,11 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
     //     this.direccion = this.remitente.direccion[0];
     //   }
     // }
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

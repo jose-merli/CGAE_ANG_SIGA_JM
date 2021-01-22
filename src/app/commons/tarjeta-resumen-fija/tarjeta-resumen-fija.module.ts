@@ -15,7 +15,7 @@ import { TarjetaResumenFijaComponent } from './tarjeta-resumen-fija.component';
         CalendarModule,
     ],
     declarations: [
-        TarjetaResumenFijaComponent
+        TarjetaResumenFijaComponent,
     ],
     exports: [
         TarjetaResumenFijaComponent

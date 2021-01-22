@@ -9,6 +9,7 @@ import { UsuarioItem } from "../../../../../app/models/UsuarioItem";
 import { UsuarioUpdate } from "../../../../../app/models/UsuarioUpdate";
 import { ComboItem } from "../../../../../app/models/ComboItem";
 import { Location } from "@angular/common";
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-editarUsuario",
   templateUrl: "./editarUsuario.component.html",
@@ -35,6 +36,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
   showDatosGenerales: boolean = true;
   activacionEditar: boolean = true;
   edicion: boolean = true;
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -208,5 +210,11 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

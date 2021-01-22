@@ -131,10 +131,14 @@
       <button *ngIf="historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)"
         (click)="checkPermisosActivate(selectedDatos)" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
 
-      <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
+      <!-- <button pButton [disabled]="disabledSave()" (click)="checkPermisosSave()" type="button" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button> -->
+      <button pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
 
-      <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="checkPermisosNewPartidaPresupuestaria()"
+      <!-- <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos" (click)="checkPermisosNewPartidaPresupuestaria()"
+        type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
+      <button pButton [disabled]="selectMultiple || selectAll || nuevo || historico || editMode || !permisos"
         type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>

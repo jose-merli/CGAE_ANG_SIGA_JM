@@ -10,6 +10,7 @@ import { SigaServices } from "../../../_services/siga.service";
 import { TipoCurricularItem } from "../../../models/TipoCurricularItem";
 import { TipoCurricularObject } from "../../../models/TipoCurricularObject";
 import { TranslateService } from "../../../commons/translate/translation.service";
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -41,10 +42,10 @@ export class TipoCurricularComponent {
   inputDesc: ElementRef;
   @ViewChild("inputCdgoExt")
   inputCdgoExt: ElementRef;
-
+  institucionActual;
   @ViewChild("table")
   table;
-  selectedDatos = [];
+  selectedDatos;
   cols: any = [];
   colsCurricular: any = [];
   rowsPerPage: any = [];
@@ -56,7 +57,7 @@ export class TipoCurricularComponent {
   selectMultiple: boolean = false;
   selectAll: boolean = false;
   msgs: any = [];
-
+  editable: boolean = false;
   showTipoCurricular: boolean = true;
   progressSpinner: boolean = false;
   buscar: boolean = false;
@@ -74,6 +75,7 @@ export class TipoCurricularComponent {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) { }
 
@@ -137,10 +139,21 @@ export class TipoCurricularComponent {
       element.isMod = false;
     });
 
-    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo1 ==
-      selectedDatos.idTipoCvSubtipo1 && x.idInstitucion == selectedDatos.idInstitucion);
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos[0].idTipoCV && x.idTipoCvSubtipo1 ==
+      selectedDatos[0].idTipoCvSubtipo1 && x.idInstitucion == selectedDatos[0].idInstitucion);
     this.datos[id].isMod = true;
 
+    this.numSelected = this.selectedDatos.length;
+
+    if(this.selectedDatos.length > 1){
+      this.datos.forEach(element => {
+        element.isMod = false;
+      });
+     
+    }
+    else{
+      this.editable = true;
+    }
   }
 
   changeInput(selectedDatos) {
@@ -167,13 +180,20 @@ export class TipoCurricularComponent {
 
 
   actualizaSeleccionados(selectedDatos) {
-    this.datos.forEach(element => {
-      element.isMod = false;
-    });
-
-    this.selectedDatos = [];
+    
     this.table.reset();
-
+    this.numSelected = selectedDatos.length;
+    if(this.numSelected <= 1){
+      this.editable = true;
+      this.selectedDatos.forEach(element => {
+        element.isMod = true;
+      });
+    }
+    if(this.numSelected == 0){
+      this.datos.forEach(element => {
+        element.isMod = false;
+      });
+    }
   }
 
   search() {
@@ -214,6 +234,12 @@ export class TipoCurricularComponent {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -226,6 +252,8 @@ export class TipoCurricularComponent {
 
   // Para la creación de un nuevo elemento
   newElement() {
+    this.numSelected = 0;
+    this.selectedDatos = [];
     this.selectAll = false;
     this.selectMultiple = false;
 
@@ -386,11 +414,37 @@ export class TipoCurricularComponent {
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }
+
+    //Obtenemos la institucion actual
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+    //Recorremos el array de filas seleccionadas y los que coincidan se añaden al array para eliminar
+    let selectedDatosEliminar = [];
+    this.selectedDatos.forEach(element => {
+      if (element.idInstitucion == this.institucionActual) {
+        selectedDatosEliminar.push(element);
+      }
+    });
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.removeElement(selectedDatos);
+        if(selectedDatosEliminar.length > 0){
+          this.removeElement(selectedDatosEliminar);
+        }
+        else {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancelado",
+              detail: this.translateService.instant(
+                "messages.deleted.error.curricular"
+              )
+            }
+          ];   
+        }
+        
       },
       reject: () => {
         this.msgs = [
@@ -640,6 +694,7 @@ export class TipoCurricularComponent {
           },
           () => {
             this.search();
+            this.selectedDatos = [];
           }
         );
     }
@@ -676,12 +731,15 @@ export class TipoCurricularComponent {
       );
 
     this.numSelected = 0;
+    this.selectedDatos = [];
   }
 
   return() {
     this.editar = false;
     this.datosEditar = [];
     this.search();
+    this.selectedDatos = [];
+    this.numSelected = 0;
   }
 
   // Métodos creados para mostrar mensajes al usuario

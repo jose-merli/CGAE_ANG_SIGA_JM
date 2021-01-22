@@ -43,5 +43,6 @@ export class FichaColegialGeneralesItem {
   temas: string[];
   numColegiado: String;
   identificadords: string;
+  situacionResidente:string;
   constructor() { }
 }

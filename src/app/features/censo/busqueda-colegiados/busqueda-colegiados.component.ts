@@ -4,7 +4,8 @@ import {
   HostListener,
   OnInit,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ElementRef
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { ConfirmationService } from "primeng/api";
@@ -25,7 +26,12 @@ import { esCalendar } from "./../../../utils/calendar";
 import { SigaServices } from "./../../../_services/siga.service";
 import { DialogoComunicacionesItem } from "../../../models/DialogoComunicacionItem";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
-
+import { saveAs } from 'file-saver/FileSaver';
+import { DatosDireccionesItem } from '../../../models/DatosDireccionesItem';
+import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
+import { OverlayPanelModule, OverlayPanel, MultiSelect } from 'primeng/primeng';
+import { CommonsService } from '../../../_services/commons.service';
+import { AuthenticationService } from "../../../_services/authentication.service";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -45,24 +51,29 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-
+  datosDirecciones: DatosDireccionesItem[] = [];
+  datosDireccionesHist = new DatosDireccionesObject();
   formBusqueda: FormGroup;
   numSelected: number = 0;
-  datos: any[];
+  datos: any[] = [];
   sortO: number = 1;
   selectedItem: number = 10;
   cols: any = [];
+  colsADG: any = [];
   rowsPerPage: any = [];
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
+  @ViewChild('someDropdown2') someDropdown2: MultiSelect;
+  @ViewChild('someDropdown3') someDropdown3: MultiSelect;
   es: any = esCalendar;
-
+  publicarDatosContacto: boolean;
   editar: boolean = true;
   noResultsSubtipos: boolean = true;
-
+  displayBoolean: boolean = false;
+  display: boolean = false;
   comboEtiquetas: any[];
   comboSituacion: any[];
   comboResidencia: any[] = [];
@@ -76,12 +87,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   comboTiposDireccion: any[];
   comboTipoCV: any[];
   comboColegios: any[];
-
+  colsDirecciones: any = [];
+  selection: String = "multiple";
   textSelected: String = "{0} etiquetas seleccionadas";
   body: DatosColegiadosItem = new DatosColegiadosItem();
   colegiadoSearch = new DatosColegiadosObject();
   subtipoCurricular: SubtipoCurricularItem = new SubtipoCurricularItem();
-
+  @ViewChild('inputNumColegiado') inputNumColegiado: ElementRef;
   siNoResidencia: any;
   siNoInscrito: any;
   selectedEstadoCivil: any;
@@ -92,7 +104,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   selectedTipoDireccion: any;
   resultadosPoblaciones: any;
   historico: boolean;
-
+  @ViewChild('multiSelectSituacion') multiSelectSituacion: MultiSelect;
   fechaIncorporacionHastaSelect: Date;
   fechaIncorporacionDesdeSelect: Date;
   fechaNacimientoHastaSelect: Date;
@@ -106,11 +118,23 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
-
+  usuario: any[] = [];
+  isConsejo: boolean = false;
   institucionActual: any;
   deshabilitarCombCol: boolean = false;
   colegiosSeleccionados: any[] = [];
+  count: string = "";
+  countClicado: boolean = false;
 
+  @HostListener('document:click', ['$event'])
+  documentClick(event: MouseEvent) {
+    if (!this.countClicado) {
+      this.opcount.hide();
+      this.countClicado = false;
+    } else {
+      this.countClicado = false;
+    }
+  }
 
   constructor(
     private sigaServices: SigaServices,
@@ -118,7 +142,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     private formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private _elementRef: ElementRef,
+    private authenticationService: AuthenticationService
   ) {
     super(USER_VALIDATIONS);
     this.formBusqueda = this.formBuilder.group({
@@ -128,6 +155,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       numeroColegiado: new FormControl(null, Validators.minLength(3))
     });
   }
+  @ViewChild("op")
+  op: OverlayPanel;
+
+  @ViewChild("opcount")
+  opcount: OverlayPanel;
 
   @ViewChild("table")
   table: DataTable;
@@ -144,6 +176,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
     sessionStorage.removeItem("busqueda");
+
+    let idInstitucion = this.authenticationService.getInstitucionSession();
+    console.log(idInstitucion);
+    if (idInstitucion > 3000 || idInstitucion == 2000) {
+       this.isConsejo = true;
+       console.log(idInstitucion);
+    }
 
     if (sessionStorage.getItem("fechaIncorporacionHastaSelect") != null) {
       this.fechaIncorporacionHastaSelect = new Date(
@@ -177,12 +216,62 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       this.body = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial")
       );
+
+      sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
+
     }
 
     if (this.body.tipoCV != undefined) {
       this.getComboSubtipoCurricular(this.body.tipoCV);
       this.getComboTipoCurricular(this.body.tipoCV);
     }
+    this.colsDirecciones = [
+      {
+        field: "tipoDireccion",
+        header: "censo.datosDireccion.literal.tipo.direccion",
+        width: "25%"
+      },
+      {
+        field: "domicilioLista",
+        header: "censo.consultaDirecciones.literal.direccion",
+        width: "20%"
+      },
+      {
+        field: "codigoPostal",
+        header: "censo.ws.literal.codigopostal",
+        width: "8%"
+      },
+      {
+        field: "nombrePoblacion",
+        header: "censo.consultaDirecciones.literal.poblacion",
+        width: "8%"
+      },
+      {
+        field: "nombreProvincia",
+        header: "censo.datosDireccion.literal.provincia",
+        width: "11%"
+      },
+      {
+        field: "telefono",
+        header: "censo.ws.literal.telefono",
+        width: "7%"
+      },
+      {
+        field: "movil",
+        header: "censo.datosDireccion.literal.movil",
+        width: "7%"
+      },
+      {
+        field: "correoElectronico",
+        header: "censo.datosDireccion.literal.correo",
+        width: "14%"
+      }
+    ];
+    this.selection = "multiple";
+
+    setTimeout(() => {
+      this.inputNumColegiado.nativeElement.focus();  
+    }, 300);
   }
 
   onHideDatosGenerales() {
@@ -191,6 +280,11 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   onHideDatosColegiales() {
     this.showDatosColegiales = !this.showDatosColegiales;
+    if(this.showDatosColegiales){
+      setTimeout(() => {
+        this.inputNumColegiado.nativeElement.focus();  
+      }, 300);
+    }
   }
 
   onHideDatosGeneralesAvanzados() {
@@ -202,8 +296,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   irEditarColegiado(id) {
+    id = [id]
     sessionStorage.setItem("esNuevoNoColegiado", JSON.stringify(false));
-    if (id.length >= 1 && this.selectMultiple == false) {
+    if (id.length >= 1) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem("esColegiado", "true");
       sessionStorage.setItem(
@@ -231,6 +326,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         );
       }
 
+
       if (this.fechaNacimientoDesdeSelect != null ||
         this.fechaNacimientoDesdeSelect != undefined) {
         sessionStorage.setItem(
@@ -248,18 +344,38 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
       // orden es, fallecido, colegiado, de baja, no colegiado
       this.getSituacion(id);
-      sessionStorage.setItem("personaBody", JSON.stringify(id[0]));
 
-      // if (id[0].situacion == 30) {
-      //   sessionStorage.setItem("disabledAction", "true");
-      // } else {
-      sessionStorage.setItem("disabledAction", "false");
-      // }
+      this.sigaServices
+        .post("busquedaColegiados_searchColegiadoFicha", id[0])
+        .subscribe(
+          data => {
+            // this.colegiadoItem = datosColegiadosItem = new DatosColegiadosItem();
+            let colegiadoItem = JSON.parse(data.body);
+            sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
 
-      this.router.navigate(["/fichaColegial"]);
-    } else {
+            // if (id[0].situacion == 30) {
+            //   sessionStorage.setItem("disabledAction", "true");
+            // } else {
+            sessionStorage.setItem("disabledAction", "false");
+            // }
+
+            this.router.navigate(["/fichaColegial"]);
+          },
+          err => {
+            console.log(err);
+          },
+
+        );
+
+
+
+
+    }
+
+    else {
       this.actualizaSeleccionados(this.selectedDatos);
     }
+
   }
 
   getSituacion(id) {
@@ -420,8 +536,8 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
             // this.arregloTildesCombo(this.comboColegios);
 
             if (
-              sessionStorage.getItem("filtrosBusquedaColegiadosFichaColegial") !=
-              null
+              this.body != undefined && this.body != null && this.body.colegio != undefined &&
+              this.body.colegio != null
             ) {
               this.body.colegio.forEach(element => {
 
@@ -438,7 +554,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
                 this.progressSpinner = false;
               });
               this.isBuscar();
-              sessionStorage.removeItem("filtrosBusquedaColegiadosFichaColegial");
 
             }
             else {
@@ -607,8 +722,71 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       );
   }
 
+  isBuscarCount(event) {
+
+    this.body.searchCount = true;
+    if (this.checkFilters()) {
+      this.selectAll = false;
+      this.historico = false;
+      this.selectMultiple = false;
+
+      this.selectedDatos = "";
+      this.getColsResults();
+      this.filtrosTrim();
+      this.progressSpinner = true;
+
+      this.body.fechaIncorporacion = [];
+      this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
+      this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
+
+      this.body.fechaNacimientoRango = [];
+      this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
+      this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
+
+      this.body.colegio = [];
+      this.colegiosSeleccionados.forEach(element => {
+        this.body.colegio.push(element.value);
+      });
+
+      this.sigaServices
+        .postPaginado(
+          "busquedaColegiados_searchColegiado",
+          "?numPagina=1",
+          this.body
+        )
+        .subscribe(
+          data => {
+            let colegiadoSearch = JSON.parse(data["body"]);
+            let datos = colegiadoSearch.colegiadoItem;
+            this.body.searchCount = false;
+            this.progressSpinner = false;
+
+            this.msgs = [];
+            this.count = datos[0].count.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+            this.opcount.toggle(event);
+            // this.msgCount.push({
+            //   severity: "info",
+            //   summary: this.translateService.instant("general.message.informacion"),
+            //   detail: this.translateService.instant("general.texto.encontrados") + " " + datos[0].count.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " " + this.translateService.instant("general.texto.colegiados")
+            // });
+          },
+          err => {
+            this.body.searchCount = false;
+            console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.body.searchCount = false;
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
   //Busca colegiados según los filtros
   isBuscar() {
+    this.opcount.hide();
+    this.body.searchCount = false;
     if (this.checkFilters()) {
       this.selectAll = false;
       this.historico = false;
@@ -652,11 +830,16 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         .subscribe(
           data => {
             this.progressSpinner = false;
+            let error = JSON.parse(data["body"]).error;
             this.colegiadoSearch = JSON.parse(data["body"]);
             this.datos = this.colegiadoSearch.colegiadoItem;
             this.convertirStringADate(this.datos);
-            this.table.paginator = true;
+            // this.table.paginator = true;
             this.body.fechaIncorporacion = [];
+            if (error != null && error.description != null) {
+              this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
+
           },
           err => {
             console.log(err);
@@ -664,6 +847,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(() => {
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }
@@ -682,10 +868,35 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         element.fechaNacimientoDate = new Date(year, month - 1, day);
         element.fechaNacimiento = day + "/" + month + "/" + year;
       }
+      if (element.incorporacion == "" || element.incorporacion == null) {
+        element.incorporacion = null;
+      } else {
+        var posIni = element.incorporacion.indexOf("/");
+        var posFin = element.incorporacion.lastIndexOf("/");
+        var year = element.incorporacion.substring(posFin + 1);
+        var day = element.incorporacion.substring(0, posIni);
+        var month = element.incorporacion.substring(posIni + 1, posFin);
+        element.incorporacionDate = new Date(year, month - 1, day);
+        element.incorporacion = day + "/" + month + "/" + year;
+      }
+      if (element.fechaEstadoStr == "" || element.fechaEstadoStr == null) {
+        element.fechaEstadoStr = null;
+      } else {
+        var posIni = element.fechaEstadoStr.indexOf("-");
+        var posFin = element.fechaEstadoStr.lastIndexOf("-");
+        var day = element.fechaEstadoStr.substring(posFin+1, posFin+3);
+        var year = element.fechaEstadoStr.substring(0, posIni);
+        var month = element.fechaEstadoStr.substring(posIni + 1, posFin);
+        element.fechaEstadoDate = new Date(year, month - 1, day);
+        element.fechaEstadoStr = day + "/" + month + "/" + year;
+      }
+
     });
+
   }
 
   isLimpiar() {
+    this.opcount.hide();
     this.body = new DatosColegiadosItem();
     this.comboSubtipoCV = [];
     this.fechaIncorporacionDesdeSelect = undefined;
@@ -737,49 +948,100 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.cols = [
       {
         field: "colegioResultado",
-        header: "censo.busquedaClientesAvanzada.literal.colegio"
+        header: "censo.busquedaClientesAvanzada.literal.colegio",
+        width: "5%"
       },
       {
         field: "nif",
-        header: "censo.consultaDatosColegiacion.literal.numIden"
+        header: "censo.consultaDatosColegiacion.literal.numIden",
+        width: "8%"
+
       },
       {
         field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
+        header: "administracion.parametrosGenerales.literal.nombre",
+        width: "15%"
       },
       {
         field: "numberColegiado",
-        header: "censo.busquedaClientesAvanzada.literal.nColegiado"
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado",
+        width: "7%"
       },
       {
         field: "estadoColegial",
-        header: "censo.fichaCliente.situacion.cabecera"
+        header: "censo.fichaCliente.situacion.cabecera",
+        width: "7%"
+      },
+      {
+        field: "fechaEstadoDate",
+        header: "censo.consultaDatosGenerales.literal.fechaSituacion",
+        width: "7%"
+      },
+      {
+        field: "incorporacionDate",
+        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion",
+        width: "7%"
       },
       {
         field: "situacionResidente",
-        header: "censo.busquedaClientes.noResidente"
-      },
-      {
-        field: "fechaNacimientoDate",
-        header: "censo.consultaDatosColegiacion.literal.fechaNac"
-      },
-      {
-        field: "correo",
-        header: "censo.datosDireccion.literal.correo"
-      },
-      {
-        field: "telefono",
-        header: "censo.ws.literal.telefono"
-      },
-      {
-        field: "movil",
-        header: "censo.datosDireccion.literal.movil"
+        header: "censo.busquedaClientes.noResidente",
+        filter: "situacionResidenteFilter",
+        width: "7%"
       },
       {
         field: "noAparecerRedAbogacia2",
-        header: "censo.busquedaColegial.lopd"
+        header: "censo.busquedaColegial.lopd",
+        filter: "noAparecerRedAbogaciaFilter",
+        width: "8%"
       }
     ];
+
+    this.colsADG = [
+      {
+        field: "nif",
+        header: "censo.consultaDatosColegiacion.literal.numIden",
+        width: "8%"
+
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre",
+        width: "15%"
+      },
+      {
+        field: "numberColegiado",
+        header: "censo.busquedaClientesAvanzada.literal.nColegiado",
+        width: "7%"
+      },
+      {
+        field: "estadoColegial",
+        header: "censo.fichaCliente.situacion.cabecera",
+        width: "7%"
+      },
+      {
+        field: "fechaEstadoDate",
+        header: "censo.consultaDatosGenerales.literal.fechaSituacion",
+        width: "7%"
+      },
+      {
+        field: "incorporacionDate",
+        header: "censo.consultaDatosGenerales.literal.fechaIncorporacion",
+        width: "7%"
+      },
+      {
+        field: "situacionResidente",
+        header: "censo.busquedaClientes.noResidente",
+        filter: "situacionResidenteFilter",
+        width: "7%"
+      },
+      {
+        field: "noAparecerRedAbogacia2",
+        header: "censo.busquedaColegial.lopd",
+        filter: "noAparecerRedAbogaciaFilter",
+        width: "8%"
+      }
+    ];
+
 
     this.rowsPerPage = [
       {
@@ -810,6 +1072,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       (this.body.nombre == null ||
         this.body.nombre == null ||
         this.body.nombre.trim().length < 3) &&
+      (this.body.domicilio == null ||
+        this.body.domicilio == null ||
+        this.body.domicilio.trim().length < 3) &&
       (this.body.apellidos == null ||
         this.body.apellidos == null ||
         this.body.apellidos.trim().length < 3) &&
@@ -837,7 +1102,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
         this.fechaIncorporacionDesdeSelect == null) &&
       (this.fechaIncorporacionHastaSelect == undefined ||
         this.fechaIncorporacionHastaSelect == null) &&
-      (this.body.situacion == undefined || this.body.situacion == null) &&
+      (this.body.situaciones == undefined || this.body.situaciones == null || this.body.situaciones.length == 0) &&
       (this.body.residencia == undefined || this.body.residencia == null) &&
       (this.body.inscrito == undefined || this.body.inscrito == null) &&
       (this.body.sexo == undefined || this.body.sexo == null) &&
@@ -861,6 +1126,9 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       if (this.body.nombre != undefined) {
         this.body.nombre = this.body.nombre.trim();
       }
+      if (this.body.domicilio != undefined) {
+        this.body.domicilio = this.body.domicilio.trim();
+      }
       if (this.body.apellidos != undefined) {
         this.body.apellidos = this.body.apellidos.trim();
       }
@@ -875,6 +1143,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   }
 
   showSearchIncorrect() {
+
     this.msgs = [];
     this.msgs.push({
       severity: "error",
@@ -999,4 +1268,141 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.fechaNacimientoHastaSelect = event;
   }
 
+
+  generarExcels() {
+
+    this.progressSpinner = true;
+
+    this.body.fechaIncorporacion = [];
+    this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
+    this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
+
+    this.body.fechaNacimientoRango = [];
+    this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
+    this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
+
+    this.sigaServices
+      .postDownloadFiles("busquedaColegiados_generarExcel", this.body)
+      .subscribe(data => {
+        this.progressSpinner = false;
+        if (data == null) {
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+        } else {
+          let nombre = this.translateService.instant("censo.nombre.fichero.generarexcel") + new Date().getTime() + ".xlsx";
+          saveAs(data, nombre);
+        }
+      }, error => {
+        console.log(error);
+        this.progressSpinner = false;
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
+      }, () => {
+        this.progressSpinner = false;
+      });
+
+  }
+
+  // Mensajes
+  showFail(mensaje: string) {
+
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  showSuccess(mensaje: string) {
+
+    this.msgs = [];
+    this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+  }
+
+  showInfo(mensaje: string) {
+
+    this.msgs = [];
+    this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+  }
+
+
+  showDialog() {
+    this.displayBoolean = true;
+    // this.display = true;
+  }
+
+  searchHistoricoDatosDirecciones(dato) {
+    // this.bodyDirecciones.historico = true;
+    this.progressSpinner = true;
+    // this.historico = true;
+    let searchObject = new DatosDireccionesItem();
+    searchObject.idPersona = dato.idPersona;
+    searchObject.historico = false;
+    // this.buscar = false;
+    this.selectMultiple = false;
+    // this.selectedDatosDirecciones = "";
+    this.selectAll = false;
+    this.sigaServices
+      .postPaginado("direcciones_search", "?numPagina=1", searchObject)
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          this.datosDireccionesHist = JSON.parse(data["body"]);
+          this.datosDirecciones = this.datosDireccionesHist.datosDireccionesItem;
+          // this.tableDirecciones.paginator = true;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.display = true;
+        }
+      );
+  }
+
+  closeCount() {
+
+  }
+
+  showCount(event) {
+    this.isBuscarCount(event);
+  }
+
+  show(event, dato) {
+    this.selection = "single";
+    this.datosDirecciones = [];
+    this.op.toggle(event);
+    if (dato.noAparecerRedAbogacia2 == '1') {
+      this.publicarDatosContacto = true;
+    }
+    else {
+      this.publicarDatosContacto = false;
+    }
+  }
+  hideOverlay(event) {
+    this.displayBoolean = false;
+    this.selection = "multiple";
+    this.selectedDatos = [];
+  }
+  showMessageError(severity, summary, msg) {
+
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+  focusInputField2() {
+    setTimeout(() => {
+      this.someDropdown2.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+  focusInputField3() {
+    setTimeout(() => {
+      this.someDropdown3.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

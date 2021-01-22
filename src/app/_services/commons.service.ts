@@ -1,7 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  Http
-} from "@angular/http";
+import { Http } from "@angular/http";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
 import { HttpBackend, HttpClient } from "@angular/common/http";
@@ -11,9 +9,7 @@ import { TranslateService } from '../commons/translate/translation.service';
 
 @Injectable()
 export class CommonsService {
-
   DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
-
   constructor(
     private http: HttpClient,
     handler: HttpBackend,
@@ -23,7 +19,6 @@ export class CommonsService {
   ) {
     this.httpbackend = new HttpClient(handler);
   }
-
 
   validateEmail(value) {
     let correo = value;
@@ -179,10 +174,9 @@ export class CommonsService {
     }
 
   }
-
+  
   scrollTop() {
-
-    let top = document.getElementById('mainContainer');
+    let top = document.getElementById("mainContainer");
     if (top !== null) {
       top.scrollIntoView();
       top = null;
@@ -271,4 +265,49 @@ export class CommonsService {
     return this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No puede realizar esa acción");
   }
 
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+	para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      "ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ";
+    let accentsOut =
+      "aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz";
+    let i;
+    let x;
+    for (i = 0; i < labelSinTilde.length; i++) {
+      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
+        labelSinTilde = labelSinTilde.replace(
+          labelSinTilde.charAt(i),
+          accentsOut[x]
+        );
+      }
+    }
+
+    return labelSinTilde;
+  }
+
+  getLabelsSinTilde(array) {
+    // Recorremos un array (combos) y le ponemos el labelSinTilde para los filtros.
+    for (let i in array) {
+      array[i].labelSinTilde = this.getLabelbyFilter(array[i].label);
+    }
+    return array;
+  }
+
+
+
+  scrollTablaFoco(idFoco)  {
+    let top = document.getElementById(idFoco);
+    if (top !== null) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (evento == null || evento == undefined || evento == "") {
+      return "camposObligatorios";
+    }
+  }
 }
