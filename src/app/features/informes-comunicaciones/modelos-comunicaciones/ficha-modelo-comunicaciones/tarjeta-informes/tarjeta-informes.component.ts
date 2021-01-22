@@ -38,6 +38,8 @@ export class TarjetaInformesComponent implements OnInit {
   continuar: boolean;
   editar: boolean = true;
 
+  progressSpinner: boolean = false;
+
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -115,7 +117,7 @@ export class TarjetaInformesComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (sessionStorage.getItem("soloLectura") == 'true') {
         this.soloLectura = true;
       }
 
@@ -123,7 +125,7 @@ export class TarjetaInformesComponent implements OnInit {
         this.soloLectura = true;
       } else {
         this.modelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.modelo.porDefecto == 'SI' && this.institucionActual != 2000) {
+        if (this.modelo != undefined && this.modelo != null && this.modelo.porDefecto == 'SI' && this.institucionActual != 2000) {
           if (
             sessionStorage.getItem("soloLectura") != null &&
             sessionStorage.getItem("soloLectura") != undefined &&
@@ -257,7 +259,11 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   eliminar(dato) {
+
+    let keyConfirmation = "deletePlantillaDoc";
+
     this.confirmationService.confirm({
+      key: keyConfirmation,
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.mensajeEliminar') + ' ' + dato.length + ' ' + this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.informesSeleccionados'),
       icon: "fa fa-trash-alt",
@@ -279,6 +285,7 @@ export class TarjetaInformesComponent implements OnInit {
   }
 
   confirmarEliminar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -290,13 +297,28 @@ export class TarjetaInformesComponent implements OnInit {
     });
     this.sigaServices.post("modelos_detalle_informes_borrar", this.eliminarArray).subscribe(
       data => {
+        this.progressSpinner = false;
+        this.selectedDatos = [];
         this.showSuccess(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.correctInformeEliminado'));
       },
       err => {
-        this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
-        console.log(err);
+        let error = JSON.parse(err.error).description;
+        this.progressSpinner = false;
+
+        if (error == "ultimo")
+          this.showFail(
+            this.translateService.instant(
+              "censo.modelosComunicaciones.gestion.errorUltimaPlantilla"
+            )
+          );
+        else {
+          this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
+          console.log(err);
+        }
+
       },
       () => {
+        this.progressSpinner = false;
         this.getInformes();
       }
     );

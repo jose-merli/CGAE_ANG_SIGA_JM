@@ -1,122 +1,144 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="ficha-container">
   <!--DATOS GENERALES-->
-  <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+  <div id="infoYComuModeComuFicMolComDatosGenr">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado" (click)="abreCierraFicha()"> 
+              <i class="fas fa-align-left icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
+              <label 
+                class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+              </label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>{{ "informesycomunicaciones.modelosdecomunicacion.ficha.claseComunicacion" | translate }}:
+                <span>{{ body.claseComunicacion }}</span>
+              </label>
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
+                <span>{{ body.nombre }}</span>
+              </label>
+              <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFicha" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="fas fa-align-left icon-ficha"></i>
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
-            </label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>{{ "informesycomunicaciones.modelosdecomunicacion.ficha.claseComunicacion" | translate }}:
-              <span>{{ body.claseComunicacion }}</span>
-            </label>
-            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
-              <span>{{ body.nombre }}</span>
-            </label>
-            <i *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
-          </div>
+          <label (click)="abreCierraFicha()" class="title-ficha">{{ "general.message.datos.generales" | translate }}
+          </label>
+          <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fas fa-align-left icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{ "general.message.datos.generales" | translate }}
-        </label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--cuerpo datos generales-->
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="col-lg-9 col-md-9">
-          <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones" | translate }} (*)
-              </label>
-              <p-dropdown [filter]="true" filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
-                class="select-form" [disabled]='soloLectura || isEdicion'>
-              </p-dropdown>
+      <!--cuerpo datos generales-->
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="col-lg-9 col-md-9">
+            <div class="form-row">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "informesycomunicaciones.modelosdecomunicacion.clasecomunicaciones" | translate }} (*)
+                </label>
+                <p-dropdown [ngClass]="styleObligatorio(body.idClaseComunicacion)"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
+                  filterBy="label,labelSinTilde" [options]="clasesComunicaciones" [(ngModel)]="body.idClaseComunicacion"
+                  class="select-form" [disabled]='soloLectura || isEdicion'
+                  (onChange)="onChangeClaseComunicaciones($event)">
+                </p-dropdown>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+                </label>
+                <input [ngClass]="styleObligatorio(body.nombre)" type="text" class="form-control" 
+                  [(ngModel)]="body.nombre" pInputText [disabled]='soloLectura' (ngModelChange)="onlyCheckDatos()" />
+              </div>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText [disabled]='soloLectura' />
-            </div>
-          </div>
-          <div class="form-row d-flex align-items-end">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)</label>
-              <p-dropdown *ngIf="editar" [showClear]="true" [options]="colegios" [(ngModel)]="body.idInstitucion" class="select-form" [disabled]='soloLectura'></p-dropdown>
-              <input *ngIf="!editar" type="text" class="form-control" value="POR DEFECTO" pInputText [disabled]='true' />
-            </div>
-            <div class="form-group col-lg-1 col-md-1">
-              <label>{{ "administracion.informes.literal.orden" | translate }} (*)
-              </label>
-              <input type="number" class="form-control" min="0" max="999" [(ngModel)]="body.orden" pInputText [disabled]='soloLectura'
-                (input)='editarCompleto($event,body.orden)' />
-            </div>
-            <div class="form-group col-lg-2 col-md-3">
-              <label class="d-block">{{ "administracion.informes.literal.preseleccionado" | translate }}
-              </label>
-              <p-dropdown [options]="preseleccionar" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.preseleccionar"
-                class="select-form" [disabled]='soloLectura'></p-dropdown>
-              <!-- <p-radioButton class="mr-2" name="groupname" value="SI" [(ngModel)]="body.preseleccionar" label="Sí"></p-radioButton>
-              <p-radioButton name="groupname" value="NO" [(ngModel)]="body.preseleccionar" label="No"></p-radioButton> -->
-            </div>
+            <div class="form-row d-flex align-items-end">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)</label>
+                <p-dropdown [ngClass]="styleObligatorio(body.idInstitucion)"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
+                  filterBy="label,labelSinTilde" *ngIf="editar" [options]="colegios" [(ngModel)]="body.idInstitucion" 
+                  class="select-form" [disabled]='soloLectura' (onChange)="onlyCheckDatos()"></p-dropdown>
+                <input *ngIf="!editar" type="text" class="form-control" value="POR DEFECTO" pInputText
+                  [disabled]='true' />
+              </div>
+              <div class="form-group col-lg-1 col-md-1">
+                <label>{{ "administracion.informes.literal.orden" | translate }} (*)
+                </label>
+                <input [ngClass]="styleObligatorio(body.orden)" type="number" class="form-control" min="0" max="999"
+                  [(ngModel)]="body.orden" pInputText [disabled]='soloLectura' (ngModelChange)="onlyCheckDatos()" 
+                  (input)='editarCompleto($event,body.orden)' />
+              </div>
+              <div class="form-group col-lg-2 col-md-3">
+                <label class="d-block">{{ "administracion.informes.literal.preseleccionado" | translate }}
+                </label>
+                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
+                  filterBy="label,labelSinTilde" [options]="preseleccionar" [(ngModel)]="body.preseleccionar"
+                  class="select-form" [disabled]='soloLectura'></p-dropdown>
+                <!-- <p-radioButton class="mr-2" name="groupname" value="SI" [(ngModel)]="body.preseleccionar" label="Sí"></p-radioButton>
+                <p-radioButton name="groupname" value="NO" [(ngModel)]="body.preseleccionar" label="No"></p-radioButton> -->
+              </div>
 
-            <div class="form-group col-lg-2 col-md-2">
-              <label class="d-block">{{ "administracion.informes.literal.visible" | translate }}
-              </label>
-              <p-dropdown [options]="visible" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="body.visible" class="select-form"
-                [disabled]='soloLectura'>
-              </p-dropdown>
+              <div class="form-group col-lg-2 col-md-2">
+                <label class="d-block">{{ "administracion.informes.literal.visible" | translate }}
+                </label>
+                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true" [showClear]="true"
+                  filterBy="label,labelSinTilde" [options]="visible" [(ngModel)]="body.visible" class="select-form"
+                  [disabled]='soloLectura'>
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3">
+            <div class="form-row d-flex align-items-start">
+              <div class="form-group col-lg-12 col-md-12">
+                <label>{{ "general.description" | translate }}</label>
+                <textarea style="height:95px" autoResize="autoResize" [(ngModel)]="body.descripcion" pInputTextarea
+                  [disabled]='soloLectura'></textarea>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-3 col-md-3">
-          <div class="form-row d-flex align-items-start">
-            <div class="form-group col-lg-12 col-md-12">
-              <label>{{ "general.description" | translate }}</label>
-              <textarea style="height:95px" autoResize="autoResize" [(ngModel)]="body.descripcion" pInputTextarea [disabled]='soloLectura'></textarea>
+        <div class="row">
+          <div class="col-lg-9 col-md-9">
+            <div class="form-row">
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "enviosMasivos.literal.plantillasEnvio" | translate }}</label>
+                <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde"
+                  [disabled]='soloLectura || !selectedClaseCom' [(ngModel)]="body.idPlantillaEnvio" [options]="plantillas"
+                  class="select-form" (onChange)="onChangePlantilla($event)"
+                  placeholder="{{ 'general.boton.seleccionar' | translate }}"></p-dropdown>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <label>{{ "enviosMasivos.literal.tipoEnvio" | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]="body.tipoEnvio" pInputText [disabled]='true' />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-9 col-md-9">
-          <div class="form-row">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "enviosMasivos.literal.plantillasEnvio" | translate }}</label>
-              <p-dropdown [filter]="true" [showClear]="true" filterBy="label" [disabled]='soloLectura' [(ngModel)]="body.idPlantillaEnvio"
-                [options]="plantillas" class="select-form" (onChange)="onChangePlantilla($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "enviosMasivos.literal.tipoEnvio" | translate }}</label>
-              <input type="text" class="form-control" [(ngModel)]="body.tipoEnvio" pInputText [disabled]='true' />
-            </div>
-          </div>
+      <div *ngIf="openFicha" class="card-footer ">
+        <div class="text-right main-button ">
+          <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+            label="{{ 'general.boton.restablecer' | translate }}"
+            [disabled]='soloLectura || !editar || !activaRestablecer()'></button>
+          <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
+            label="{{ 'general.boton.guardar' | translate }}" [disabled]='soloLectura || !editar'></button>
         </div>
-      </div>
-    </div>
-    <div *ngIf="openFicha" class="card-footer ">
-      <div class="text-right main-button ">
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"
-          [disabled]='soloLectura || !editar || !activaRestablecer()'></button>
-        <button (click)="guardar()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"
-          [disabled]='soloLectura || !editar || !activaGuardar()'></button>
       </div>
     </div>
   </div>
   <!--END DATOS GENERALES-->
   <app-dialog></app-dialog>
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+  </div>
 
 </div>

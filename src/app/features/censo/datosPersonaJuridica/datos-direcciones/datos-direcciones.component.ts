@@ -4,7 +4,7 @@ import { Message } from "primeng/components/common/api";
 import { SigaServices } from "./../../../../_services/siga.service";
 import { DatosDireccionesItem } from "./../../../../../app/models/DatosDireccionesItem";
 import { DatosDireccionesObject } from "./../../../../../app/models/DatosDireccionesObject";
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../models/DatosIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../models/DatosIntegrantesObject";
@@ -69,8 +69,11 @@ export class DatosDireccionesComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private router: Router,
     private translateService: TranslateService,
@@ -111,10 +114,10 @@ export class DatosDireccionesComponent implements OnInit {
         field: "telefono",
         header: "censo.ws.literal.telefono"
       },
-      {
-        field: "fax",
-        header: "censo.ws.literal.fax"
-      },
+      // {
+      //   field: "fax",
+      //   header: "censo.ws.literal.fax"
+      // },
       {
         field: "movil",
         header: "censo.datosDireccion.literal.movil"
@@ -165,6 +168,13 @@ export class DatosDireccionesComponent implements OnInit {
       this.disabledAction = false;
     }
   }
+  ngOnChanges(changes: SimpleChanges){
+    let fichaPosible = this.esFichaActiva(this.openTarjeta);
+    if(fichaPosible == false){
+      this.abreCierraFicha(this.openTarjeta);
+    }
+    
+  }
   activarPaginacion() {
     if (!this.datos || this.datos.length == 0) return false;
     else return true;
@@ -196,7 +206,13 @@ export class DatosDireccionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => { 
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "direcciones";
+					this.permisosEnlace.emit(permisos);
+				  }
+
+      }
     );
   }
 
@@ -209,7 +225,7 @@ export class DatosDireccionesComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     // si no se esta creando una nueva sociedad
     if (sessionStorage.getItem("nuevoRegistro") == null) {
-    fichaPosible.activa = !fichaPosible.activa;
+      fichaPosible.activa = !fichaPosible.activa;
     }
   }
 
@@ -279,6 +295,7 @@ export class DatosDireccionesComponent implements OnInit {
   }
 
   redireccionar(dato) {
+    dato = [dato]
     if (this.camposDesactivados != true) {
       if (!this.selectMultiple) {
         if (dato[0].fechaBaja != null) {
@@ -305,9 +322,15 @@ export class DatosDireccionesComponent implements OnInit {
   }
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      if(this.historico){
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined)
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }    
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -412,5 +435,15 @@ export class DatosDireccionesComponent implements OnInit {
       });
       console.log(data);
     });
+  }
+  clickFilaDirecciones(event) {
+    if (event.data && !event.data.fechaBaja && this.historico) {
+      this.selectedDatos.pop();
+    }
+  }
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 }

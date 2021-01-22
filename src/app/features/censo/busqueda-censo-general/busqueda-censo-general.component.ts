@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener, ChangeDetectorRef, ViewEncapsulation } from "@angular/core";
 import { SigaServices } from "../../../_services/siga.service";
 import { Location } from "@angular/common";
 import { BusquedaFisicaItem } from "../../../models/BusquedaFisicaItem";
@@ -12,6 +12,8 @@ import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { TranslateService } from "../../../commons/translate";
 import { ConfirmationService } from "../../../../../node_modules/primeng/primeng";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
+import { CommonsService } from '../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -20,7 +22,8 @@ export enum KEY_CODE {
 @Component({
   selector: "app-busqueda-censo-general",
   templateUrl: "./busqueda-censo-general.component.html",
-  styleUrls: ["./busqueda-censo-general.component.scss"]
+  styleUrls: ["./busqueda-censo-general.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class BusquedaCensoGeneralComponent implements OnInit {
   textFilter: String = "Elegir";
@@ -52,6 +55,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   modoBusqueda: string = "aprox";
   modoBusquedaAprox: boolean = true;
   selectedItem: number = 10;
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   @ViewChild("table")
   table;
   selectedDatos;
@@ -62,7 +66,9 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -162,7 +168,11 @@ export class BusquedaCensoGeneralComponent implements OnInit {
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
-
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
   // Métodos
   isBuscar() {
 
@@ -212,6 +222,12 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           err => {
             console.log(err);
             this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            setTimeout(() => {
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
 
@@ -246,6 +262,12 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -556,6 +578,16 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     } else if (this.modoBusqueda == "exacta") {
       this.modoBusquedaAprox = false;
     }
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+
+  navigateTo() {
+    this.router.navigate(["/fichaColegial"]);
   }
 
 }

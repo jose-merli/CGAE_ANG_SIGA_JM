@@ -11,7 +11,7 @@ export class CatalogosMaestrosComponent {
   url;
 
   constructor(public sigaServices: OldSigaServices) {
-    // this.url = sigaServices.getOldSigaUrl("catalogosMaestros");
+    this.url = sigaServices.getOldSigaUrl("catalogosMaestros");
   }
 
   ngOnInit() {

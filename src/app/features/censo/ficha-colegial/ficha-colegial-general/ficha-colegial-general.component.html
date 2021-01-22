@@ -1,0 +1,44 @@
+<div class="busqueda-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p *ngIf="esColegiado">
+      {{ "menu.censo" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaColegial" | translate }}
+    </p>
+    <p *ngIf="!esColegiado">
+      {{ "menu.censo" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.censo.fichaNoColegial" | translate }}
+    </p>
+  </div>
+  <div>
+    <app-tarjeta-resumen-fija class="pb-50"  [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" *ngIf="idPersona != undefined" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
+        (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened] = "manuallyOpened"></app-tarjeta-resumen-fija>
+    <app-servicios-interes-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInteres]="tarjetaInteres" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
+    <app-datos-generales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGenerales]="tarjetaGenerales" [esColegiado]="esColegiado" (datosTarjetaResumenEmit)= "datosTarjetaResumenEvent($event)" (idPersonaNuevo)="idPersonaNuevoEvent($event)" [openGen]="openGen"></app-datos-generales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColegiales]="tarjetaColegiales" [esColegiado]="esColegiado" [openColegia]="openColegia"></app-datos-colegiales-ficha-colegial>
+    <app-otras-colegiaciones-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaOtrasColegiaciones]="tarjetaOtrasColegiaciones" 
+      [esColegiado]="esColegiado" [openOtrasCole]="openOtrasCole"></app-otras-colegiaciones-ficha-colegial>
+    <app-certificados-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [idPersona]="idPersona" [tarjetaCertificados]="tarjetaCertificados"  [esColegiado]="esColegiado" [openCertifi]="openCertifi"></app-certificados-ficha-colegial>
+    <app-sanciones-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaSanciones]="tarjetaSanciones" [openSanci]="openSanci"></app-sanciones-ficha-colegial>
+    <app-sociedades-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaSociedades]="tarjetaSociedades" [idPersona]="idPersona" [openSocie]="openSocie"></app-sociedades-ficha-colegial>
+    <app-datos-curriculares-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCurriculares]="tarjetaCurriculares"
+      [esColegiado]="esColegiado" [idPersona]="idPersona" [openCurricu]="openCurricu"></app-datos-curriculares-ficha-colegial>
+    <app-direcciones-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDirecciones]="tarjetaDirecciones" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado" [idPersona]="idPersona" [openDirec]="openDirec"></app-direcciones-ficha-colegial>
+    <app-datos-bancarios-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaBancarios]="tarjetaBancarios" [esColegiado]="esColegiado"
+      [isLetrado]="isLetrado" [idPersona]="idPersona" [openBanca]="openBanca"></app-datos-bancarios-ficha-colegial>
+    <app-regtel-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel" [openRegtel]="openRegtel"></app-regtel-ficha-colegial>
+    <app-alter-mutua-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaAlterMutua]="tarjetaAlterMutua"></app-alter-mutua-ficha-colegial>
+    <app-mutualidad-abogacia-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaMutualidad]="tarjetaMutualidad" [datosBancarios]="datosBancarios"
+      [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
+
+  </div>
+  <!--END DATOS GENERALES-->
+  <!--DATOS COLEGIALES-->
+  <!--DATOS RETENCIONES-->
+  <!--END DATOS RETENCIONES-->
+  <div *ngIf="!desactivarVolver" class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>
+  <app-dialog></app-dialog>
+</div>

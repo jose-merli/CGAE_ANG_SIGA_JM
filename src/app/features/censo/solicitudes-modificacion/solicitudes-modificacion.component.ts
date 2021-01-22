@@ -19,6 +19,8 @@ import { Router } from "@angular/router";
 import { SolicitudesModificacionObject } from "../../../models/SolicitudesModificacionObject";
 import { ComboItem } from "../../../models/ComboItem";
 import { StringObject } from "../../../models/StringObject";
+import { CommonsService } from '../../../_services/commons.service';
+import { ControlAccesoDto } from '../../../models/ControlAccesoDto';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -54,7 +56,7 @@ export class SolicitudesModificacionComponent implements OnInit {
   tipoModificacionSolGeneral: String;
   motivoSolGeneral: String;
   resultado: String;
-
+  tarjeta: String;
   bodySearch: SolicitudesModificacionObject = new SolicitudesModificacionObject();
   bodyMultiple: any = [];
   bodyMultipleEspecifica: any = [];
@@ -65,7 +67,7 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   @ViewChild("table")
   table;
-  selectedDatos;
+  selectedDatos = [];
   cols: any = [];
   rowsPerPage: any = [];
   data: any[] = [];
@@ -80,12 +82,14 @@ export class SolicitudesModificacionComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
   ngOnInit() {
     // Comprobamos si es colegiado o no
     this.getLetrado();
+    this.checkAcceso();
 
     // Llamada al rest de tipo modificación
     this.sigaServices.get("solicitudModificacion_tipoModificacion").subscribe(
@@ -123,7 +127,6 @@ export class SolicitudesModificacionComponent implements OnInit {
       if (sessionStorage.getItem("processingPerformed") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
         this.isSearch = true;
-        this.search();
 
         if (this.body.fechaDesde != null) {
           this.body.fechaDesde = new Date(this.body.fechaDesde);
@@ -142,6 +145,8 @@ export class SolicitudesModificacionComponent implements OnInit {
         }
       }
       sessionStorage.removeItem("saveFilters");
+      this.search();
+
     } else {
       if (sessionStorage.getItem("search") != null) {
         this.isSearch = true;
@@ -162,31 +167,38 @@ export class SolicitudesModificacionComponent implements OnInit {
     this.cols = [
       {
         field: "estado",
-        header: "censo.busquedaSolicitudesModificacion.literal.estado"
+        header: "censo.busquedaSolicitudesModificacion.literal.estado",
+        width: "10%"
       },
       {
         field: "numIdSolicitud",
-        header: "censo.resultadosSolicitudesModificacion.literal.idSolicitud"
+        header: "censo.resultadosSolicitudesModificacion.literal.idSolicitud",
+        width: "10%"
       },
       {
         field: "tipoModificacion",
-        header: "censo.resultadosSolicitudesTextoLibre.literal.tipoModificacion"
+        header: "censo.resultadosSolicitudesTextoLibre.literal.tipoModificacion",
+        width: "10%"
       },
       {
         field: "numColegiado",
-        header: "censo.resultadosSolicitudesModificacion.literal.nColegiado"
+        header: "censo.resultadosSolicitudesModificacion.literal.nColegiado",
+        width: "10%"
       },
       {
         field: "nombre",
-        header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
+        header: "censo.resultadosSolicitudesModificacion.literal.Nombre",
+        width: "10%"
       },
       {
         field: "fechaAlta",
-        header: "censo.resultadosSolicitudesModificacion.literal.fecha"
+        header: "censo.resultadosSolicitudesModificacion.literal.fecha",
+        width: "10%"
       },
       {
         field: "motivo",
-        header: "censo.resultadosSolicitudesModificacion.literal.descripcion"
+        header: "censo.resultadosSolicitudesModificacion.literal.descripcion",
+        width: "40%"
       }
     ];
 
@@ -326,6 +338,12 @@ export class SolicitudesModificacionComponent implements OnInit {
       err => {
         console.log(err);
         this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       }
     );
   }
@@ -592,43 +610,43 @@ export class SolicitudesModificacionComponent implements OnInit {
   }
 
   onSelectRow(selectedDatos) {
-    if (!this.selectMultiple) {
-      if (selectedDatos[0].especifica == "1") {
-        sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
-        sessionStorage.setItem("search", JSON.stringify(this.data));
-        sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
-        sessionStorage.setItem("isLetrado", JSON.stringify(this.isLetrado));
-        this.router.navigate(["/nuevaSolicitudesModificacion"]);
-      } else {
-        // abrir popup MODO CONSULTA
-        this.displayGeneralRequest = true;
-        this.isNew = false;
-        this.disableNew = true;
-
-        // Rellenamos los datos
-        this.tipoModificacionSolGeneral = selectedDatos[0].tipoModificacion;
-        this.tipoSolGeneral = [
-          {
-            label: selectedDatos[0].tipoModificacion,
-            value: selectedDatos[0].idTipoModificacion
-          }
-        ];
-
-        this.motivoSolGeneral = selectedDatos[0].motivo;
-
-        if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
-          this.disableButton = false;
-        } else {
-          this.disableButton = true;
-        }
-      }
+    if (selectedDatos[0].especifica == "1") {
+      sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
+      sessionStorage.setItem("search", JSON.stringify(this.data));
+      sessionStorage.setItem("rowData", JSON.stringify(selectedDatos[0]));
+      sessionStorage.setItem("isLetrado", JSON.stringify(this.isLetrado));
+      this.router.navigate(["/nuevaSolicitudesModificacion"]);
     } else {
-      if (
-        // selectedDatos[selectedDatos.length - 1].especifica == "1" ||
-        selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
-      ) {
-        this.selectedDatos.splice(selectedDatos.length - 1, 1);
+      // abrir popup MODO CONSULTA
+      this.displayGeneralRequest = true;
+      this.isNew = false;
+      this.disableNew = true;
+
+      // Rellenamos los datos
+      this.tipoModificacionSolGeneral = selectedDatos[0].tipoModificacion;
+      this.tipoSolGeneral = [
+        {
+          label: selectedDatos[0].tipoModificacion,
+          value: selectedDatos[0].idTipoModificacion
+        }
+      ];
+
+      this.motivoSolGeneral = selectedDatos[0].motivo;
+
+      if (selectedDatos[0].estado == "PENDIENTE" && !this.isLetrado) {
+        this.disableButton = false;
+      } else {
+        this.disableButton = true;
       }
+    }
+  }
+
+  procesar(selectedDatos) {
+    if (
+      // selectedDatos[selectedDatos.length - 1].especifica == "1" ||
+      selectedDatos[selectedDatos.length - 1].estado != "PENDIENTE"
+    ) {
+      this.selectedDatos.splice(selectedDatos.length - 1, 1);
     }
   }
 
@@ -745,7 +763,27 @@ export class SolicitudesModificacionComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  checkAcceso() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = "01";
 
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        let permisos = JSON.parse(data.body);
+        let permisosArray = permisos.permisoItems;
+        this.tarjeta = permisosArray[0].derechoacceso;
+      },
+      err => {
+        console.log(err);
+      },
+      () => {
+        // if (this.tarjeta == "3" || this.tarjeta == "2") {
+        //   let permisos = "registrales";
+        //   this.permisosEnlace.emit(permisos);
+        // }
+      }
+    );
+  }
   obtenerMostrarAuditoria() {
     let parametro = {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
@@ -816,14 +854,10 @@ export class SolicitudesModificacionComponent implements OnInit {
 
   checkFilters() {
     if (
-      (this.body.tipoModificacion == null ||
-        this.body.tipoModificacion == undefined) &&
-      (this.body.estado == null ||
-        this.body.estado == undefined) &&
-      (this.body.fechaDesde == null ||
-        this.body.fechaDesde == undefined) &&
-      (this.body.fechaHasta == null ||
-        this.body.fechaHasta == undefined)
+      !this.body.tipoModificacion &&
+      !this.body.estado &&
+      !this.body.fechaDesde &&
+      !this.body.fechaHasta
     ) {
       this.showSearchIncorrect();
       this.progressSpinner = false;
@@ -833,6 +867,10 @@ export class SolicitudesModificacionComponent implements OnInit {
     }
   }
 
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
   showSearchIncorrect() {
     this.msgs = [];
     this.msgs.push({

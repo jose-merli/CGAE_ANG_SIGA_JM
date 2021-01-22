@@ -71,6 +71,7 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
+    sessionStorage.removeItem("disabledPlantillaEnvio");
     this.persistenceService.clearPersistence();
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {

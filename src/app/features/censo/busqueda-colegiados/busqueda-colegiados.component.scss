@@ -1,3 +1,84 @@
 .inheritTable .ui-datatable-tablewrapper table {
   table-layout: inherit !important;
 }
+
+
+.width20{
+ width: 20%;
+}
+.width10{
+  width: 10%;
+ }
+ .width5{
+  width: 5%;
+ }
+
+ .overflow{
+  // overflow: hidden !important;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+ }
+
+ .overlayPanelPrueba > .ui-overlaypanel{
+//   top: 50% !important;
+//   left: 40% !important;
+  // width: 30em !important;
+  left: 5% !important;
+  // border-radius: 2em;
+  width: 90%;
+ }
+
+ .overlayPanelCount > .ui-overlaypanel > .ui-overlaypanel-content{
+  text-align: center;
+  // vertical-align: middle;
+  // line-height: 4em;
+ }
+
+.overlayPanelPrueba{
+  max-width: 60%;
+  max-height: 60%;
+  margin-right: 40%;
+  // position:absolute;
+  // margin-left:50%;
+  text-align: center;
+}
+
+.ui-overlaypanel{
+  // left: 5% !important;
+  border-radius: 2em;
+  // width: 90%;
+}
+.imagenEye{
+  width: 1.7em;
+  height: 1.2em;
+}
+
+.filtros{
+  border: 1px solid #d6d6d6 !important;
+  background: #ffffff !important;
+  color: #555555 !important;
+}
+.enlace {
+  color: #0000EE !important
+}
+.correo{
+  color:black !important;
+}
+
+#numero{
+  font-weight: bold;
+  font-size: 1.3em;
+}
+
+#dirIcon{
+  font-size: 2em;
+}
+
+#lopdColumn{
+  text-align: center;
+  vertical-align: middle;
+}
+
+#imageLOPD{
+  margin-top: -10px;
+}

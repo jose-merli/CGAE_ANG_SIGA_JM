@@ -82,8 +82,9 @@
                 <label>
                   {{"censo.ws.literal.codigopostal" | translate}} (*)
                 </label>
-                <input *ngIf="!poblacionExtranjera" [disabled]="isDisabledCodigoPostal || permisoTarjeta == '2'" type="text" class="form-control"
-                  [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()" pInputText>
+                <input [ngClass]="styleObligatorio(body.codigoPostal)" *ngIf="!poblacionExtranjera" [disabled]="isDisabledCodigoPostal || permisoTarjeta == '2'"
+                  type="text" class="form-control" [maxLength]="5" [(ngModel)]="body.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+                  pInputText>
                 <input *ngIf="poblacionExtranjera" [(ngModel)]="body.codigoPostal" type="text" class="form-control" [maxLength]="5" [disabled]="isDisabledCodigoPostal || permisoTarjeta == '2'"
                   pInputText>
               </div>
@@ -109,9 +110,9 @@
                 <label>
                   {{"censo.consultaDirecciones.literal.poblacion" | translate}}
                 </label>
-                <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" #input2 class="select-form" [(ngModel)]='body.idPoblacion'
+                <p-dropdown placeholder="{{ 'general.boton.seleccionar' | translate }}" #input2 class="select-form" [(ngModel)]='body.idPoblacion'
                   [showClear]="true" [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || permisoTarjeta == '2'"
-                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones"
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
                   id="dropdown">
                 </p-dropdown>
 
@@ -119,14 +120,15 @@
 
               <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)</label>
-                <input [(ngModel)]="body.poblacionExtranjera" type="text" class="form-control" [maxLength]="99" pInputText>
+                <input [ngClass]="styleObligatorio(body.poblacionExtranjera)" [(ngModel)]="body.poblacionExtranjera" type="text" class="form-control"
+                  [maxLength]="99" pInputText>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ 'censo.datosDireccion.literal.tipo.direccion' | translate }} (*)</label>
-                <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion' [options]="comboTipoDireccion"
-                  [selectedItemsLabel]="textSelected" maxSelectedLabels="1" maxSelectedLabels="1" [disabled]="tipoDireccionDisable() || permisoTarjeta == '2'"
-                  (onChange)="onChangeTipoDireccion($event)"></p-multiSelect>
+                <p-multiSelect #someDropdown [ngClass]="styleObligatorio(body.idTipoDireccion)" [defaultLabel]="textFilter" styleClass="widthAll" [(ngModel)]='body.idTipoDireccion'
+                  [options]="comboTipoDireccion" [selectedItemsLabel]="textSelected" maxSelectedLabels="10"
+                  [disabled]="tipoDireccionDisable() || permisoTarjeta == '2'" (onChange)="onChangeTipoDireccion($event)" (onPanelShow)="focusInputField()"></p-multiSelect>
               </div>
             </div>
           </div>
@@ -181,14 +183,16 @@
 
                       <div *ngIf="dato.tipo == 'Correo-Electrónico'">
                         <div *ngIf="edicionEmail" class="ui-inputgroup">
-                          <input type="text" class="form-control" pInputText [(ngModel)]="dato[col.field]" (input)="changeEmail(dato)" />
-                          <button (click)="editEmail()" pButton type="button" icon="fas fa-check" class="ui-button-warn"></button>
+                          <input [disabled]="historyDisable || permisoTarjeta == '2'" type="text" class="form-control enlace" pInputText [(ngModel)]="dato[col.field]"
+                            (input)="changeEmail(dato)" />
+                          <button [disabled]="historyDisable || permisoTarjeta == '2'" (click)="editEmail()" pButton type="button" icon="fas fa-check"
+                            class="ui-button-warn"></button>
                         </div>
                         <div *ngIf="!emailValido">
                           <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
                         </div>
                         <div *ngIf="!edicionEmail" class="ui-inputgroup">
-                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11" target="_blank">{{dato[col.field]}}</a>
+                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11 enlace" target="_blank">{{dato[col.field]}}</a>
                           <span *ngIf="dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
                           <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit col-1"></button>
                         </div>
@@ -215,11 +219,11 @@
           <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="igualInicio() || permisoTarjeta == '2'"
             label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-          <button *ngIf="!isLetrado" (click)="comprobarAuditoria('noletrado')" pButton type="button" icon="far fa-save" iconPos="left"
-            [disabled]="desactivaGuardar() || permisoTarjeta == '2'" label="{{ 'general.boton.guardar' | translate}}"></button>
+          <button *ngIf="!isLetrado" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaDuplicar() || permisoTarjeta == '2'"
+            label="{{ 'general.boton.guardar' | translate}}"></button>
 
-          <button *ngIf="isLetrado" (click)="comprobarAuditoria('letrado')" pButton type="button" icon="far fa-save" iconPos="left"
-            [disabled]="desactivaGuardar() || permisoTarjeta == '2'" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+          <button *ngIf="isLetrado" (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="permisoTarjeta == '2'"
+            label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
 
           <!-- <button *ngIf="isLetrado && nuevo" (click)="comprobarAuditoria()" pButton type="button" icon="far fa-save" iconPos="left" [disabled]="desactivaGuardar()"
             label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->
