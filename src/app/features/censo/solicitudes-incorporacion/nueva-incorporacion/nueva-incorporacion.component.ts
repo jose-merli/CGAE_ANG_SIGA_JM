@@ -2007,8 +2007,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
   }
 
-  styleObligatorio(evento) {
-    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+  styleObligatorio(evento, campo) {
+    console.log('this.solicitudEditar.telefono1 ', this.solicitudEditar.telefono1)
+    if ((campo == 'telefono1' && (this.solicitudEditar.telefono1 == "" || this.solicitudEditar.telefono1 == undefined) )|| ( campo == 'movil' && ( this.solicitudEditar.movil == "" ||  this.solicitudEditar.movil == undefined)) || (campo != 'movil' && campo != 'telefono1') && this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
