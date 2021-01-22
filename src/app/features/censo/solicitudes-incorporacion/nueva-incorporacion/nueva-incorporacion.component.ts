@@ -1665,9 +1665,14 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.solicitudEditar.codigoPostal != null &&
         this.solicitudEditar.codigoPostal != undefined &&
         this.solicitudEditar.codigoPostal != "" &&
-        this.solicitudEditar.telefono1 != null &&
-        this.solicitudEditar.telefono1 != "" &&
-        this.solicitudEditar.telefono1 != undefined &&
+        (
+          (this.solicitudEditar.telefono1 != null &&
+            this.solicitudEditar.telefono1 != "" &&
+            this.solicitudEditar.telefono1 != undefined) || 
+          (this.solicitudEditar.movil != null &&
+            this.solicitudEditar.movil != "" &&
+            this.solicitudEditar.movil != undefined)
+        ) &&
         this.tlf1Valido && this.tlf2Valido && this.fax1Valido &&
         this.fax2Valido && this.mvlValido &&
         this.solicitudEditar.correoElectronico != null &&
@@ -2007,11 +2012,17 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.fax2Valido = this.commonsService.validateFax(this.solicitudEditar.fax2);
   }
 
-  styleObligatorio(evento, campo) {
-    console.log('this.solicitudEditar.telefono1 ', this.solicitudEditar.telefono1)
-    if ((campo == 'telefono1' && (this.solicitudEditar.telefono1 == "" || this.solicitudEditar.telefono1 == undefined) )|| ( campo == 'movil' && ( this.solicitudEditar.movil == "" ||  this.solicitudEditar.movil == undefined)) || (campo != 'movil' && campo != 'telefono1') && this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  styleObligatorioTlf(evento) {
+    if (this.resaltadoDatos && (this.solicitudEditar.telefono1 == undefined || this.solicitudEditar.telefono1 == "") && (this.solicitudEditar.movil == undefined || this.solicitudEditar.movil == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+    
   }
 
   styleObligatorioAprobar(evento) {
