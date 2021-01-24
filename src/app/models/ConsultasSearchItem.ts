@@ -6,5 +6,6 @@ export class ConsultasSearchItem {
     idObjetivo: String;
     generica: String;
     idInstitucion:String;
+    historico: boolean;
     constructor() { }
 }

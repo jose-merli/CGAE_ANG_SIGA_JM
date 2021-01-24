@@ -1,17 +1,21 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { DatosGeneralesPlantillaItem } from "../../../../../models/DatosGeneralesPlantillaItem";
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { PlantillaEnvioItem } from "../../../../../models/PlantillaEnvioItem";
+import { CommonsService } from "../../../../../_services/commons.service";
+
 
 @Component({
   selector: "app-datos-generales-plantilla",
   templateUrl: "./datos-generales-plantilla.component.html",
-  styleUrls: ["./datos-generales-plantilla.component.scss"]
+  styleUrls: ["./datos-generales-plantilla.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGeneralesPlantillaComponent implements OnInit {
   openFicha: boolean = true;
+  openDesc: boolean = true;
   activacionEditar: boolean = true;
   body: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
   bodyInicial: DatosGeneralesPlantillaItem = new DatosGeneralesPlantillaItem();
@@ -22,6 +26,11 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   nuevo: boolean = false;
   soloLectura: boolean = false;
   apiKey: string = "";
+  disabledPlantilla: boolean = false;
+
+  resaltadoDatos: boolean = false;
+
+  @Input() claseComunicacion;
 
   institucionActual: any;
   editorConfig: any = {
@@ -55,6 +64,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -73,10 +83,6 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
 
     this.tiposEnvio = [
       {
-        label: "seleccione..",
-        value: null
-      },
-      {
         label: "Email",
         value: "1"
       },
@@ -85,6 +91,15 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
         value: "2"
       }
     ];
+    this.openDesc = false;
+
+    if(sessionStorage.getItem("disabledPlantillaEnvio") == "true"){
+      this.disabledPlantilla  = true;
+    }else{
+      this.disabledPlantilla = false;
+    }
+
+      this.resaltadoDatos = true;
   }
 
   getInstitucion() {
@@ -92,7 +107,7 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       this.institucionActual = n.value;
 
       this.bodyPlantilla = JSON.parse(sessionStorage.getItem('plantillasEnvioSearch'));
-      if (this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
+      if (this.bodyPlantilla != undefined && this.bodyPlantilla != null && this.bodyPlantilla.idInstitucion == '2000' && this.institucionActual != '2000') {
         if (
           sessionStorage.getItem("soloLectura") != null &&
           sessionStorage.getItem("soloLectura") != undefined &&
@@ -126,6 +141,9 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     if (this.activacionEditar == true) {
       this.openFicha = !this.openFicha;
     }
@@ -151,6 +169,13 @@ export class DatosGeneralesPlantillaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("plantillasEnvioSearch"));
       console.log(this.body);
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+      if (this.body.claseComunicacion != undefined) {
+        this.claseComunicacion = this.body.claseComunicacion;
+      } else {
+        this.claseComunicacion = "";
+      }
+
       this.editar = true;
     } else {
       this.editar = false;
@@ -186,6 +211,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.onlyCheckDatos();
+    this.resaltadoDatos = false;
+
     this.sigaServices
       .postPaginado(
         "plantillasEnvio_guardarDatosGenerales",
@@ -202,6 +230,44 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           sessionStorage.removeItem("crearNuevaPlantilla");
+          this.nuevo = false;
+          this.showSuccess(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
+            )
+          );
+        },
+        err => {
+          console.log(err);
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
+            )
+          );
+        },
+        () => { }
+      );
+  }
+
+
+  guardarDesc() {
+    let description = new DatosGeneralesPlantillaItem();
+    description = JSON.parse(JSON.stringify(this.bodyInicial));
+    description.cuerpo = this.body.cuerpo;
+    description.asunto = this.body.asunto;
+    this.sigaServices
+      .postPaginado(
+        "plantillasEnvio_guardarDatosGenerales",
+        "?numPagina=1",
+        description
+      )
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          this.body.idPlantillaEnvios = result.message;
+          this.bodyInicial.cuerpo = JSON.parse(JSON.stringify(this.body.cuerpo));
+          this.bodyInicial.asunto = JSON.parse(JSON.stringify(this.body.asunto));
+          this.bodyInicial.idPlantillaEnvios = JSON.parse(JSON.stringify(this.body.idPlantillaEnvios));
 
           this.showSuccess(
             this.translateService.instant(
@@ -221,6 +287,24 @@ para poder filtrar el dato con o sin estos caracteres*/
       );
   }
 
+  abreCierraDesc() {
+    if (this.activacionEditar == true && (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '7')) {
+      this.openDesc = !this.openDesc;
+    } else {
+      this.openDesc = false;
+    }
+  }
+
+  cambiaDesc() {
+    this.onlyCheckDatos();
+    this.body.cuerpo = "";
+    this.body.asunto = "";
+    if (this.activacionEditar == true && (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5' || this.body.idTipoEnvios == '1' || this.body.idTipoEnvios == '7')) {
+      this.openDesc = true;
+    } else {
+      this.openDesc = false;
+    }
+  }
   isGuardarDisabled() {
     if (
       this.body.idTipoEnvios != "" &&
@@ -236,6 +320,61 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
+    if (this.body.idTipoEnvios == '4' || this.body.idTipoEnvios == '5') {
+      this.openDesc = false;
+    }
+    let asunto = this.body.asunto;
+    let cuerpo = this.body.cuerpo;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.asunto = asunto;
+    this.body.cuerpo = cuerpo;
+  }
+
+  restablecerDesc() {
+    if (this.nuevo) {
+      this.body.cuerpo = "";
+      this.body.asunto = "";
+    } else {
+      this.body.cuerpo = JSON.parse(JSON.stringify(this.bodyInicial.cuerpo));
+      this.body.asunto = JSON.parse(JSON.stringify(this.bodyInicial.asunto));
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (this.isGuardarDisabled()) {
+      if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardar();
+      }
+    } else {
+      if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos() {
+    if (this.isGuardarDisabled()) {
+      if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.resaltadoDatos = true;
+      } 
+    } else {
+      if ((this.body.nombre == null || this.body.nombre == undefined || this.body.nombre === "") || (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.resaltadoDatos = true;
+      } 
+    }
   }
 }

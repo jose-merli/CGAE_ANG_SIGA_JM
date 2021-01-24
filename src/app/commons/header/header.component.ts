@@ -80,15 +80,23 @@ export class HeaderComponent implements OnInit {
     if (sessionStorage.getItem('loginDevelop') === 'true') {
       sessionStorage.setItem('loginDevelop', '0');
     }
+    
+    let tipoLogin = sessionStorage.getItem('tipoLogin');
 
-    this.httpExit = this.menuUser[0].rutaLogout;
-    window.location.href = this.httpExit;
-    //});
-
-    // this.router.navigate(["/"]).then(result => {
-    //   window.location.href =
-    //     "http://demo.redabogacia.org/pra/accesoSeleccionaColegio/";
-    // });
+    if(tipoLogin==="loginDevelop" || tipoLogin==="login"){
+      this.sigaServices.get("eliminaCookie").subscribe(response => {
+        let responseStatus = response[0].status;
+        if (responseStatus == 200) {
+          console.log("Cookies eliminadas para cerrar la sesión");
+        }
+      });
+      this.httpExit = this.menuUser[0].rutaLogoutCAS;
+      window.location.href = this.httpExit;
+    }else{
+      //this.httpExit = this.menuUser[0].rutaLogout;
+      this.router.navigate(["/logout"]);
+    }
+      //window.location.href = this.httpExit;
   }
 
   navigateTo() {

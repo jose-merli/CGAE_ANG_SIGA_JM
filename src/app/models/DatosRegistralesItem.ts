@@ -1,9 +1,9 @@
 import { ComboItem } from "./ComboItem";
 export class DatosRegistralesItem {
   anotaciones: String;
-  prefijoNumsspp: String;
-  sufijoNumsspp: String;
-  contadorNumsspp: String;
+  prefijoNumsspp: string;
+  sufijoNumsspp: string;
+  contadorNumsspp: string;
   idPersona: String;
   actividades: String[];
   objetoSocial: String;

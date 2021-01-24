@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DatePipe } from "@angular/common";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
@@ -22,11 +22,13 @@ import { Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { NullAstVisitor } from "../../../../../../node_modules/@angular/compiler";
 import { ComboEtiquetasItem } from "../../../../models/ComboEtiquetasItem";
-
+import { CommonsService } from '../../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-datos-generales",
   templateUrl: "./datos-generales.component.html",
-  styleUrls: ["./datos-generales.component.scss"]
+  styleUrls: ["./datos-generales.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosGenerales implements OnInit {
   uploadedFiles: any[] = [];
@@ -55,13 +57,13 @@ export class DatosGenerales implements OnInit {
   progressSpinner: boolean = false;
   openFicha: boolean = false;
   displayAuditoria: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   selectedItem: number = 10;
   selectedDoc: string = "NIF";
   newDireccion: boolean = false;
   nuevo: boolean = false;
   identificacionValida: boolean;
-
+  resaltadoDatos: boolean = false;
   editar: boolean = false;
   archivoDisponible: boolean = false;
   file: File = undefined;
@@ -114,10 +116,9 @@ export class DatosGenerales implements OnInit {
   historico: boolean = false;
   isClose: boolean = false;
   disabledAction: boolean = false;
-
   etiqueta: String;
   arrayInicial: String[] = [];
-
+  enlaces;
   fechaDesde: Date;
   fechaHasta: Date;
   fechaHoy: Date;
@@ -167,8 +168,15 @@ export class DatosGenerales implements OnInit {
       activa: false
     }
   ];
-
+  datosTarjetaResumen;
+  enlacesTarjetaResumen;
   tarjeta: string;
+  @Output() datosTarjeta = new EventEmitter<any>();
+
+  @Output() enlacesTarjeta = new EventEmitter<any>();
+  @Output() permisosEnlace = new EventEmitter<any>();
+
+  @Input() openTarjeta;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -179,7 +187,9 @@ export class DatosGenerales implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private commonsService: CommonsService,
+
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -206,6 +216,15 @@ export class DatosGenerales implements OnInit {
     this.checkAcceso();
 
     this.getComboIdentificacion();
+
+    this.resaltadoDatos = true;
+
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.openTarjeta == "datosGen") {
+      this.openFicha = true;
+    }
+
   }
   continueOnInit() {
     this.busquedaIdioma();
@@ -230,6 +249,7 @@ export class DatosGenerales implements OnInit {
         this.editar = true;
         this.datosGeneralesSearch();
         this.cargarImagen(this.body.idPersona);
+        
       }
       this.textFilter = "Elegir";
 
@@ -241,6 +261,10 @@ export class DatosGenerales implements OnInit {
       this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
       this.body.denominacion = this.usuarioBody[0].denominacion;
       this.body.abreviatura = this.usuarioBody[0].abreviatura;
+      this.body.fechaConstitucion = this.usuarioBody[0].fechaConstitucion;
+      if (this.usuarioBody[0].fechaBaja != null) {
+        this.body.fechaBaja = this.usuarioBody[0].fechaBaja;
+      }
 
       this.getComboIdentificacion();
     }
@@ -265,8 +289,12 @@ export class DatosGenerales implements OnInit {
         },
         err => {
           console.log(err);
+        },()=>{
+          
         }
       );
+    this.filterLabelsMultiple();
+    this.textFilter = "Elegir";
   }
 
   getComboIdentificacion() {
@@ -298,7 +326,7 @@ export class DatosGenerales implements OnInit {
           // en cada busqueda vaciamos el vector para añadir las nuevas etiquetas
           this.etiquetasPersonaJuridicaSelecionados = [];
           this.etiquetasPersonaJuridica.forEach((value: any, index: number) => {
-            this.etiquetasPersonaJuridicaSelecionados.push(value);
+            this.etiquetasPersonaJuridicaSelecionados.push(value.idGrupo);
             // this.generalBody.
           });
 
@@ -309,6 +337,8 @@ export class DatosGenerales implements OnInit {
               this.updateItems.set(value.idGrupo, pruebaComboE);
             }
           );
+
+          this.sortOptions();
 
           this.createItems = this.etiquetasPersonaJuridicaSelecionados;
         },
@@ -331,7 +361,7 @@ export class DatosGenerales implements OnInit {
 
   datosGeneralesSearch() {
     this.progressSpinner = true;
-
+    console.log("entra");
     this.body.idPersona = this.idPersona;
     this.body.idLenguaje = "";
     this.body.idInstitucion = "";
@@ -352,6 +382,14 @@ export class DatosGenerales implements OnInit {
             this.body = new DatosGeneralesItem();
           }
           this.comprobarValidacion();
+          if((this.body.nif == null || this.body.nif == undefined || this.body.nif == "")||
+            (this.body.tipo == null || this.body.tipo == undefined || this.body.tipo == "")||
+            (this.body.fechaAlta == null || this.body.fechaAlta == undefined)||
+            (this.body.denominacion == null || this.body.denominacion == undefined || this.body.denominacion == "")||
+            (this.body.abreviatura == null || this.body.abreviatura == undefined || this.body.abreviatura == "")||
+            (this.body.idLenguajeSociedad == null || this.body.idLenguajeSociedad == undefined || this.body.idLenguajeSociedad == "")){
+              this.abreCierraFicha();
+          }
         },
         error => {
           this.personaSearch = JSON.parse(error["error"]);
@@ -365,7 +403,6 @@ export class DatosGenerales implements OnInit {
           // si esta en modo edicion y guarda => rellenar tipo
           if (this.editar) {
             this.comboTipo = [];
-
             if (this.body.tipo != undefined) {
               let newTipo = this.comboIdentificacion.find(
                 item => item.value == this.body.tipo
@@ -373,12 +410,30 @@ export class DatosGenerales implements OnInit {
               this.comboTipo.push(newTipo.label);
             }
           }
-          this.showGuardar = false;
+          this.showGuardar = true;
           this.editar = false;
           // restablece motivo de auditoria
           this.body.motivo = undefined;
+          this.datosTarjetaResumen = [
+            {
+              label: "Identificación",
+              value: this.body.nif
+            },
+            {
+              label: "Tipo",
+              value: this.tipoPersonaJuridica
+            },
+
+            {
+              label: "Denominación",
+              value: this.body.denominacion
+            },
+          ];
+          this.datosTarjeta.emit(this.datosTarjetaResumen);
         }
+
       );
+
   }
 
   getTipo(event) {
@@ -404,28 +459,55 @@ export class DatosGenerales implements OnInit {
     if (sessionStorage.getItem("nuevoRegistro") != null) {
       // comprobacion de cif
       if (this.isValidCIF(this.body.nif)) {
+        // let newBody = new DatosGeneralesItem();
         this.body.idPersona = this.idPersona;
         this.body.idioma = this.idiomaPreferenciaSociedad;
         this.body.tipo = this.selectedTipo.value;
-        this.body.etiquetas = this.createItems;
+        this.body.fechaConstitucion = this.transformaFecha(this.body.fechaConstitucion);
+        // newBody.idPersona = this.idPersona;
+        // newBody.idioma = this.idiomaPreferenciaSociedad;
+        // newBody.tipo = this.selectedTipo.value;
+        // newBody.idInstitucion = this.body.idInstitucion;
+        // newBody.fechaConstitucion = this.body.fechaConstitucion;
+        // newBody.nif = this.body.nif;
+        // newBody.denominacion = this.body.denominacion;
+        // newBody.abreviatura = this.body.abreviatura;
+        // newBody.idioma = this.body.idioma;
+        if (this.createItems.length != 0) {
+          this.body.etiquetas = this.createItems;
+          // newBody.etiquetas = this.createItems;
+        }
+        // else {
+        //   this.body.etiquetas = undefined;
+        //   newBody.etiquetas = [];
+        // }
+
         // this.body.motivo = "registro creado";
 
         console.log("BODY", this.body);
-
+        // console.log("NEWBODY", newBody);
         this.sigaServices
           .post("busquedaPerJuridica_create", this.body)
           .subscribe(
             data => {
               let respuesta = JSON.parse(data["body"]);
               this.idPersona = respuesta.id;
+
             },
             error => {
-              let e = JSON.parse(error["error"]).error;
-              if (e.message == "messages.censo.nifcifExiste2") {
-                this.showFail(e.message);
-                this.progressSpinner = false;
-                this.showGuardar = false;
+
+              if (JSON.parse(error.error) != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
+                let e = JSON.parse(error.error).error;
+                if (e.message == "messages.censo.nifcifExiste2") {
+                  this.showFail(e.message);
+                }
+              } else {
+                this.showError();
               }
+
+              this.progressSpinner = false;
+              this.showGuardar = true;
+
             },
             () => {
 
@@ -440,12 +522,12 @@ export class DatosGenerales implements OnInit {
               );
               this.bodyPersonaJuridica.tipo = selectedComboTipo.label;
               arrayPersonaJuridica.push(this.bodyPersonaJuridica);
-
+                this.resaltadoDatos = false;
               sessionStorage.setItem(
                 "usuarioBody",
                 JSON.stringify(arrayPersonaJuridica)
               );
-
+              sessionStorage.removeItem("crearnuevo");
               // pasamos el idPersona creado para la nueva sociedad
               if (this.file != undefined) {
                 this.guardarImagen(this.idPersona);
@@ -461,6 +543,23 @@ export class DatosGenerales implements OnInit {
               this.showSuccess();
               this.cardService.searchNewAnnounce.next(this.idPersona);
               this.autocompletar = false;
+              this.tipoPersonaJuridica = selectedComboTipo.label
+              this.datosTarjetaResumen = [
+                {
+                  label: "Identificación",
+                  value: this.body.nif
+                },
+                {
+                  label: "Tipo",
+                  value: this.tipoPersonaJuridica
+                },
+      
+                {
+                  label: "Denominación",
+                  value: this.body.denominacion
+                },
+              ];
+              this.datosTarjeta.emit(this.datosTarjetaResumen);
               this.progressSpinner = false;
             }
           );
@@ -470,9 +569,16 @@ export class DatosGenerales implements OnInit {
       this.body.idioma = this.idiomaPreferenciaSociedad;
 
       for (let i in this.etiquetasPersonaJuridicaSelecionados) {
-        this.body.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
+        const encEtiqueta = this.comboEtiquetas.find(item => item.value == this.etiquetasPersonaJuridicaSelecionados[i]);
+        if (encEtiqueta) {
+          let etiCopia: ComboEtiquetasItem = new ComboEtiquetasItem();
+          Object.assign(etiCopia, encEtiqueta);
+          etiCopia.idGrupo = etiCopia.value;
+          this.body.etiquetas[i] = etiCopia;
+        }
+        /*this.body.etiquetas[i] = this.etiquetasPersonaJuridicaSelecionados[
           i
-        ];
+        ];*/
 
         if (this.body.etiquetas[i].value != "" && this.body.etiquetas[i].value != null &&
           this.body.etiquetas[i].value != undefined) {
@@ -525,14 +631,31 @@ export class DatosGenerales implements OnInit {
           this.obtenerEtiquetasPersonaJuridicaConcreta();
           this.showSuccess();
           this.autocompletar = false;
+          this.tipoPersonaJuridica = this.usuarioBody[0].tipo;
+          this.datosTarjetaResumen = [
+            {
+              label: "Identificación",
+              value: this.body.nif
+            },
+            {
+              label: "Tipo",
+              value: this.tipoPersonaJuridica
+            },
+  
+            {
+              label: "Denominación",
+              value: this.body.denominacion
+            },
+          ];
+          this.datosTarjeta.emit(this.datosTarjetaResumen);
           this.progressSpinner = false;
+          this.resaltadoDatos = false;
         }
       );
     }
 
     //sessionStorage.removeItem("crearnuevo");
-  }
-
+}
   restablecer() {
     // si ya existe la sociedad
     if (sessionStorage.getItem("crearnuevo") == null) {
@@ -540,10 +663,11 @@ export class DatosGenerales implements OnInit {
       this.obtenerEtiquetasPersonaJuridicaConcreta();
       this.cargarImagen(this.body.idPersona);
       this.file = undefined;
+      this.resaltadoDatos = false;
       // Para las etiquetas
       this.autocompletar = false;
     } else {
-      this.body.nif = "";
+      // this.body.nif = "";
       this.selectedTipo = [];
       this.body.fechaConstitucion = null;
       this.body.fechaBaja = null;
@@ -553,8 +677,8 @@ export class DatosGenerales implements OnInit {
       this.body.cuentaContable = "";
       this.body.anotaciones = "";
       this.etiquetasPersonaJuridicaSelecionados = [];
-
-      this.showGuardar = false;
+      this.resaltadoDatos = false
+      this.showGuardar = true;
       // Para las etiquetas
       this.autocompletar = false;
     }
@@ -638,6 +762,10 @@ export class DatosGenerales implements OnInit {
   }
 
   abreCierraFicha() {
+    this.resaltadoDatos = true;
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.tarjeta == '2' || this.tarjeta == '3') {
       // fichaPosible.activa = !fichaPosible.activa;
@@ -715,15 +843,50 @@ export class DatosGenerales implements OnInit {
         this.showGuardar = true;
       }
     } else {
-      this.showGuardar = false;
+      this.showGuardar = true;
     }
-
+    this.sortOptions();
     this.comprobarValidacion();
   }
-
+  checkDatos(){
+    if (
+      this.body.abreviatura != "" &&
+      this.body.abreviatura != undefined &&
+      !this.onlySpaces(this.body.abreviatura) &&
+      this.body.nif != "" &&
+      this.body.nif != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.body.denominacion != "" &&
+      this.body.denominacion != undefined &&
+      !this.onlySpaces(this.body.denominacion) &&
+      this.body.fechaConstitucion != undefined &&
+      !this.onlySpaces(this.body.nif) &&
+      this.idiomaPreferenciaSociedad != "" &&
+      this.idiomaPreferenciaSociedad != undefined
+      //this.file != undefined
+    ) {
+      if (
+        this.editar &&
+        (this.body.fechaConstitucion != undefined ||
+          this.body.fechaConstitucion != null)
+      ) {
+        if (this.body.nif.length == 9 && this.isValidCIF(this.body.nif)) {
+          this.showGuardar = true;
+        }
+      } else {
+        this.showGuardar = true;
+      }
+      return true;
+    } else {
+      this.muestraCamposObligatorios();
+      this.showGuardar = true;
+      return false;
+    }
+  }
   comprobarAuditoria() {
     // modo creación
     if (sessionStorage.getItem("crearnuevo") != null) {
+      if(this.checkDatos())
       this.guardar();
     }
     // modo edición
@@ -732,10 +895,13 @@ export class DatosGenerales implements OnInit {
       this.body.motivo = undefined;
 
       if (this.ocultarMotivo) {
+        if(this.checkDatos())
         this.guardar();
       } else {
-        this.displayAuditoria = true;
-        this.showGuardarAuditoria = false;
+        if(this.checkDatos()){
+          this.displayAuditoria = true;
+          this.showGuardarAuditoria = false;
+        }   
       }
     }
   }
@@ -872,7 +1038,7 @@ export class DatosGenerales implements OnInit {
 
   // ETIQUETAS
 
-  filterLabelsMultiple(event) {
+  filterLabelsMultiple() {
     let etiquetasPuestas = [];
     if (this.etiquetasPersonaJuridicaSelecionados) {
       etiquetasPuestas = this.etiquetasPersonaJuridicaSelecionados;
@@ -880,7 +1046,7 @@ export class DatosGenerales implements OnInit {
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
       n => {
         // coger todas las etiquetas
-        let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
+        /*let etiquetasSugerencias = this.filterLabel(event.query, n.comboItems);
 
         if (etiquetasPuestas.length > 0) {
           this.comboEtiquetas = [];
@@ -893,10 +1059,29 @@ export class DatosGenerales implements OnInit {
           });
         } else {
           this.comboEtiquetas = etiquetasSugerencias;
-        }
+        }*/
+        this.comboEtiquetas = n.comboItems;
+        this.sortOptions();
       },
       err => {
         console.log(err);
+      },()=>{
+        // this.datosTarjetaResumen = [
+        //   {
+        //     label: "Identificación",
+        //     value: this.body.nif
+        //   },
+        //   {
+        //     label: "Tipo",
+        //     value: this.tipoPersonaJuridica
+        //   },
+
+        //   {
+        //     label: "Denominación",
+        //     value: this.body.denominacion
+        //   },
+        // ];
+        // this.datosTarjeta.emit(this.datosTarjetaResumen);
       }
     );
   }
@@ -1218,8 +1403,80 @@ export class DatosGenerales implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let datosGenerales = "datosGenerales";
+          this.permisosEnlace.emit(datosGenerales);
+        }
         this.continueOnInit();
       }
     );
   }
+  private sortOptions() {
+    if (this.comboEtiquetas && this.etiquetasPersonaJuridicaSelecionados) {
+      this.comboEtiquetas.sort((a, b) => {
+        const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a.value);
+        const includeB = this.etiquetasPersonaJuridicaSelecionados.includes(b.value);
+        if (includeA && !includeB) {
+          return -1;
+        }
+        else if (!includeA && includeB) {
+          return 1;
+        }
+        return a.label.localeCompare(b.label);
+      });
+    }
+  }
+   styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    if (
+      this.body.abreviatura == "" ||
+      this.body.abreviatura == undefined ||
+      !this.onlySpaces(this.body.abreviatura) ||
+      this.body.nif == "" ||
+      this.body.nif == undefined ||
+      !this.onlySpaces(this.body.nif) ||
+      this.body.denominacion == "" ||
+      this.body.denominacion == undefined ||
+      !this.onlySpaces(this.body.denominacion) ||
+      this.body.fechaConstitucion == undefined ||
+      !this.onlySpaces(this.body.nif) ||
+      this.idiomaPreferenciaSociedad == "" ||
+      this.idiomaPreferenciaSociedad == undefined
+      //this.file != undefined
+    ) {
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+}
+focusInputField() {
+  setTimeout(() => {
+    this.someDropdown.filterInputChild.nativeElement.focus();  
+  }, 300);
+}
+
+onlyCheckDatos(){
+  if (!(
+    this.body.abreviatura != "" &&
+    this.body.abreviatura != undefined &&
+    !this.onlySpaces(this.body.abreviatura) &&
+    this.body.nif != "" &&
+    this.body.nif != undefined &&
+    !this.onlySpaces(this.body.nif) &&
+    this.body.denominacion != "" &&
+    this.body.denominacion != undefined &&
+    !this.onlySpaces(this.body.denominacion) &&
+    this.body.fechaConstitucion != undefined &&
+    !this.onlySpaces(this.body.nif) &&
+    this.idiomaPreferenciaSociedad != "" &&
+    this.idiomaPreferenciaSociedad != undefined)
+    //this.file != undefined
+  ) {
+    
+    this.resaltadoDatos=true;
+  }
+}
 }

@@ -1,0 +1,30 @@
+<div id="sInteres">
+<div *ngIf="activacionTarjeta">
+<div *ngIf="tarjetaInteres == '3' || tarjetaInteres == '2'" class="card">
+  <div class="card-header header-ficha">
+    <div class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i class="fas fa-link icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha">{{ "facturacion.tarjetas.literal.serviciosInteres" | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label>
+            <a (click)="irTurnoOficio()">
+              <span style="color: blue; text-decoration: underline">{{ "gratuita.personaJG.literal.masInfo" | translate }}
+              </span>
+            </a>
+          </label>
+          <i class="float-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>

@@ -145,6 +145,11 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
 
   navigateTo(dato) {
     let id = dato[0].id;
+    if(sessionStorage.getItem("soloLectura") == "true"){
+      sessionStorage.setItem('disabledPlantillaEnvio', "true");
+    }else{
+      sessionStorage.setItem('disabledPlantillaEnvio', "false");
+    }
     this.router.navigate(['/fichaPlantilla']);
     sessionStorage.setItem('plantillasEnvioSearch', JSON.stringify(dato[0]));
   }

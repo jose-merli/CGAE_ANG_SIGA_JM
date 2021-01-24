@@ -8,7 +8,7 @@
                 <div class="col-12">
                     <p-radioButton value="ejg" name="tarj" (click)="changeFilters()" label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}"
                         [(ngModel)]='radioTarjeta'></p-radioButton>
-                    <p-radioButton value="des" name="tarj" (click)="changeFilters()" [disabled]="esSociedad" label="{{'menu.justiciaGratuita.designas' | translate}}"
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters()"  label="{{'menu.justiciaGratuita.designas' | translate}}"
                         [(ngModel)]='radioTarjeta'></p-radioButton>
                     <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta' (click)="changeFilters()"></p-radioButton>
                     <p-radioButton value="asi" name="tarj" (click)="changeFilters()" label="{{'menu.justiciaGratuita.asistencia' | translate}}"

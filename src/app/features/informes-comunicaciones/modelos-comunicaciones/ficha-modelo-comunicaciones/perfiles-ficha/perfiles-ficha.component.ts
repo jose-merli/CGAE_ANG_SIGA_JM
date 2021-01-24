@@ -65,7 +65,7 @@ export class PerfilesFichaComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (sessionStorage.getItem("soloLectura") == 'true') {
         this.soloLectura = true;
       }
 
@@ -73,7 +73,7 @@ export class PerfilesFichaComponent implements OnInit {
         this.soloLectura = true;
       } else {
         this.body = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.body.porDefecto == 'SI' && this.institucionActual != 2000) {
+        if (this.body != null && this.body != undefined && this.body.porDefecto == 'SI' && this.institucionActual != 2000) {
           if (
             sessionStorage.getItem("soloLectura") != null &&
             sessionStorage.getItem("soloLectura") != undefined &&
@@ -151,32 +151,38 @@ export class PerfilesFichaComponent implements OnInit {
   }
 
   getPerfilesSeleccionados() {
-    this.body.idInstitucion = this.institucionActual.toString();
-    this.sigaServices
-      .post("modelos_detalle_perfilesModelo", this.body)
-      .subscribe(
-        n => {
-          // coger etiquetas de una persona juridica
-          this.perfilesSeleccionados = JSON.parse(n["body"]).combooItems;
-          this.perfilesSeleccionadosInicial = JSON.parse(
-            JSON.stringify(this.perfilesSeleccionados)
-          );
+    
+    if(this.body != null && this.body != undefined){
 
-          //por cada perfil seleccionado lo eliminamos de la lista de existentes
-          if (this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial) {
-            this.perfilesSeleccionados.forEach(element => {
-              let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados, element);
-              if (x > -1) {
-                this.perfilesNoSeleccionados.splice(x, 1);
-              }
-            });
-            this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
+      this.body.idInstitucion = this.institucionActual.toString();
+      this.sigaServices
+        .post("modelos_detalle_perfilesModelo", this.body)
+        .subscribe(
+          n => {
+            // coger etiquetas de una persona juridica
+            this.perfilesSeleccionados = JSON.parse(n["body"]).combooItems;
+            this.perfilesSeleccionadosInicial = JSON.parse(
+              JSON.stringify(this.perfilesSeleccionados)
+            );
+
+            //por cada perfil seleccionado lo eliminamos de la lista de existentes
+            if (this.perfilesSeleccionados && this.perfilesSeleccionados.length && this.perfilesNoSeleccionadosInicial) {
+              this.perfilesSeleccionados.forEach(element => {
+                let x = this.arrayObjectIndexOf(this.perfilesNoSeleccionados, element);
+                if (x > -1) {
+                  this.perfilesNoSeleccionados.splice(x, 1);
+                }
+              });
+              this.perfilesNoSeleccionados = [...this.perfilesNoSeleccionados]
+            }
+          },
+          err => {
+            console.log(err);
           }
-        },
-        err => {
-          console.log(err);
-        }
-      );
+        );
+    
+      }
+    
   }
 
   guardar() {
