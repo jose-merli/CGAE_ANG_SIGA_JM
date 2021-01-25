@@ -5,31 +5,31 @@
   <!-- <div *ngIf="!fichaMisDatos" class="header-title">
     <i class="fa fa-square"></i>
     <p>{{ 'menu.censo' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.censo.buscarSociedades' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>
+      <i class="fa fa-angle-right"></i>{{ 'menu.censo.buscarSociedades' | translate}}
+      <i class="fa fa-angle-right"></i>
       {{"censo.consultaDatosBancarios.cabecera" | translate}}</p>
   </div> -->
 
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{ 'menu.censo' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ migaPan }}
-      <i class="pl-1 fa fa-angle-right"></i>
+    <p>{{ 'menu.censo' | translate}} <i class="fa fa-angle-right"></i>
+      {{ migaPan }} <i class="fa fa-angle-right"></i>
       {{"censo.consultaDatosBancarios.cabecera" | translate}}</p>
   </div>
   <!-- Datos cuenta bancaria -->
   <div class="busqueda-container">
     <div class="card">
-      <div class="card-header header-ficha" (click)="abrirFichaCuentaBancaria()">
+      <div class="card-header header-ficha">
         <div *ngIf="!openFichaCuentaBancaria" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abrirFichaCuentaBancaria()">
               <i class="fa fa-credit-card icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
+            <div class="d-flex justify-content-start mb-1" (click)="abrirFichaCuentaBancaria()">
+              <label 
+                class="mr-auto title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
               <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}
@@ -41,16 +41,18 @@
               <label>{{"censo.mutualidad.literal.iban" | translate}}
                 <span>{{ body.iban }}</span>
               </label>
-              <i [ngClass]="{ 'fa fa-angle-up': openFichaCuentaBancaria, 'fa fa-angle-down': !openFichaCuentaBancaria} "></i>
+              <i (click)="abrirFichaCuentaBancaria()"
+                [ngClass]="{ 'fa fa-angle-up': openFichaCuentaBancaria, 'fa fa-angle-down': !openFichaCuentaBancaria} "></i>
             </div>
           </div>
         </div>
-        <div *ngIf="openFichaCuentaBancaria" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-credit-card icon-ficha"></i>
+        <div *ngIf="openFichaCuentaBancaria" (click)="abrirFichaCuentaBancaria()" class="header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abrirFichaCuentaBancaria()">
+            <i (click)="abrirFichaCuentaBancaria()" class="fa fa-credit-card icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
-          <i class="fa fa-angle-up ml-auto"></i>
+          <label (click)="abrirFichaCuentaBancaria()"
+            class="title-ficha">{{"configuracion.literal.cuentas" | translate}}</label>
+          <i (click)="abrirFichaCuentaBancaria()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 
@@ -59,8 +61,9 @@
           <div class="bloque col-lg-12 col-md-12">
             <div class="row">
               <div class="form-group col-lg-3 col-md-6">
-                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
-                <input type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="body.titular" pInputText>
+                <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}} (*)</label>
+                <input [ngClass]="styleObligatorio('datosBancarios', body.titular)" type="text" class="form-control"
+                  [(disabled)]="!permisos || disabledAction" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" [(ngModel)]="body.titular" pInputText>
                 <div *ngIf="titularValido == false">
                   <label class="labelError">{{"El campo no puede estar vacío"}}</label>
                 </div>
@@ -74,39 +77,46 @@
               </div>-->
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.mutualidad.literal.iban" | translate}} (*)</label>
-                <input type="text" class="form-control" [(disabled)]="!permisos" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()"
-                  pInputText>
-                <div *ngIf="ibanValido == false">
-                  <label class="labelError">{{ "censo.datosBancarios.mensaje.control.ibanIncorrecto" | translate }}</label>
+                <input [ngClass]="styleObligatorio('datosBancarios', iban)" type="text" class="form-control"
+                  [(disabled)]="!permisos || disabledAction" [(ngModel)]="iban" (ngModelChange)="autogenerarDatos()" pInputText>
+                <div
+                  *ngIf="(ibanValido == false || body.banco == '' || body.banco == undefined) && iban != undefined && iban != '' && iban != ' '">
+                  <label
+                    class="labelError">{{ "censo.datosBancarios.mensaje.control.ibanIncorrecto" | translate }}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
 
                 <!-- (ngModelChange)="recuperarBicBanco()" -->
                 <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate }} (*)</label>
-                <input [(ngModel)]="body.bic" type="text" class="form-control" (ngModelChange)="recuperarBicBanco()" [disabled]="!editar || !permisos || disabledAction"
-                  [attr.maxlength]="11" [attr.minlength]="8" pInputText>
+                <input [ngClass]="styleObligatorio('datosBancarios', body.bic)" [(ngModel)]="body.bic" type="text"
+                  class="form-control" (ngModelChange)="recuperarBicBanco()"
+                  [disabled]="body.banco!='BANCO EXTRANJERO' ||!editar || !permisos || disabledAction"
+                  [attr.maxlength]="11" (ngModelChange)="onlyCheckDatos()" [attr.minlength]="8" pInputText>
                 <div *ngIf="bicValido == false">
-                  <label class="labelError">{{"censo.datosBancarios.mensaje.control.bicIncorrecto" | translate }}</label>
+                  <label
+                    class="labelError">{{"censo.datosBancarios.mensaje.control.bicIncorrecto" | translate }}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.tipoAbono.banco" | translate}}</label>
-                <input [(ngModel)]="body.banco" type="text" class="form-control" [disabled]="!editar || !permisos || disabledAction" pInputText>
+                <input [(ngModel)]="body.banco" type="text" class="form-control" disabled pInputText>
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.datosCuentaBancaria.literal.tipoCuenta" | translate}} (*)</label>
-                <p-multiSelect [defaultLabel]="textFilter" styleClass="widthAll" [(disabled)]="!permisos || disabledAction" [(ngModel)]='selectedTipo'
-                  [options]="tipoCuenta" [selectedItemsLabel]="textSelected" maxSelectedLabels="1" autoWidth="false" defaultLabel=""
-                  maxSelectedLabels="1" optionLabel="name"></p-multiSelect>
+                <p-multiSelect #someDropdown [ngClass]="styleObligatorio('datosBancarios', selectedTipo)" [defaultLabel]="textFilter"
+                  styleClass="widthAll" [(disabled)]="!permisos || disabledAction" [(ngModel)]='selectedTipo'
+                  [options]="tipoCuenta" (ngModelChange)="onlyCheckDatos()" [selectedItemsLabel]="textSelected" autoWidth="false"
+                  defaultLabel="" maxSelectedLabels="10" optionLabel="name" (onPanelShow)="focusInputField()"></p-multiSelect>
                 <div *ngIf="tipoCuentaSeleccionado == false">
-                  <label class="labelError">{{ "censo.datosBancarios.mensaje.seleccionar.almenosUno" | translate }}</label>
+                  <label
+                    class="labelError">{{ "censo.datosBancarios.mensaje.seleccionar.almenosUno" | translate }}</label>
                 </div>
               </div>
               <div class="form-group col-lg-3 col-md-6">
                 <label>{{"censo.consultaDatosGenerales.literal.cuentaContable" | translate}}</label>
-                <input type="text" class="form-control " [(disabled)]="!permisos || disabledAction" [(ngModel)]="body.cuentaContable" [maxLength]="20"
-                  pInputText>
+                <input type="text" class="form-control " [(disabled)]="!permisos || disabledAction"
+                  [(ngModel)]="body.cuentaContable" [maxLength]="20" pInputText>
               </div>
             </div>
           </div>
@@ -115,14 +125,19 @@
       </div>
       <div *ngIf="openFichaCuentaBancaria" class="card-footer ">
         <div class="text-right main-button ">
-          <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button" [disabled]="igualInicio() || !permisos || disabledAction"
-            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button" [disabled]="igualInicio() || !permisos || disabledAction"
-            icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-          <button *ngIf="!isLetrado" (click)="validarFormulario()" [disabled]="igualInicio() || condiciones() || !permisos || disabledAction"
-            pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-          <button *ngIf="isLetrado" (click)="validarFormulario()" [disabled]="igualInicio() || condiciones() || !permisos || disabledAction"
-            pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
+          <button *ngIf="!nuevo" (click)="restablecer()" pButton type="button"
+            [disabled]="igualInicio() || !permisos || disabledAction" icon="fa fa-undo" iconPos="left"
+            label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="nuevo" (click)="restablecerNuevo()" pButton type="button"
+            [disabled]="igualInicio() || !permisos || disabledAction" icon="fa fa-undo" iconPos="left"
+            label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button *ngIf="!isLetrado" (click)="checkDatos('datosBancarios')" [disabled]="!permisos || disabledAction"
+            pButton type="button" icon="far fa-save" iconPos="left"
+            label="{{ 'general.boton.guardar' | translate}}"></button>
+
+          <button *ngIf="isLetrado" (click)="checkDatos('datosBancarios')" [disabled]="!permisos || disabledAction"
+            pButton type="button" icon="far fa-save" iconPos="left"
+            label="{{ 'general.boton.solicitarModificacion' | translate}}"></button>
           <!-- <button *ngIf="isLetrado && nuevo"(click)="validarFormulario()" [disabled]="condiciones()" pButton type="button" icon="far fa-save" iconPos="left"
             label="{{ 'general.boton.solicitarNuevo' | translate}}"></button> -->
         </div>
@@ -133,29 +148,32 @@
   <!-- Datos Mandatos -->
   <div *ngIf="!isLetrado" class="busqueda-container">
     <div class="card">
-      <div class="card-header header-ficha" (click)="abrirFichaDatosMandatos()">
+      <div class="card-header header-ficha">
         <div *ngIf="!openFichaDatosMandatos" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abrirFichaDatosMandatos()">
               <i class="fa fa-hand-o-right icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10 ">
-            <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
+            <div class="d-flex justify-content-start mb-1" (click)="abrirFichaDatosMandatos()">
+              <label 
+                class="mr-auto title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
               <br>
-              <i [ngClass]="{ 'fa fa-angle-up': openFichaDatosMandatos, 'fa fa-angle-down': !openFichaDatosMandatos} "></i>
+              <i (click)="abrirFichaDatosMandatos()"
+                [ngClass]="{ 'fa fa-angle-up': openFichaDatosMandatos, 'fa fa-angle-down': !openFichaDatosMandatos} "></i>
             </div>
           </div>
         </div>
-        <div *ngIf="openFichaDatosMandatos" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado">
-            <i class="fa fa-hand-o-right icon-ficha"></i>
+        <div *ngIf="openFichaDatosMandatos" (click)="abrirFichaDatosMandatos()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abrirFichaDatosMandatos()">
+            <i (click)="abrirFichaDatosMandatos()" class="fa fa-hand-o-right icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
-          <i class="fa fa-angle-up ml-auto"></i>
+          <label (click)="abrirFichaDatosMandatos()"
+            class="title-ficha">{{"administracion.catalogos.titulo.datos.mandatos" | translate}}</label>
+          <i (click)="abrirFichaDatosMandatos()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 
@@ -166,47 +184,57 @@
             <div class="form-row">
 
               <div class="form-group col-lg-12 col-md-12">
-                <label style="font-weight: bold;">{{ "general.message.datos.generales" | translate}} {{"menu.productosYServicios.categorias.productos" | translate}}</label>
+                <label style="font-weight: bold;">{{ "general.message.datos.generales" | translate}}
+                  {{"menu.productosYServicios.categorias.productos" | translate}}</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} </label>
-                <p-dropdown class="select-form" [options]="tipoIdentificacion" [showClear]="true" [disabled]="!activaProductos" placeholder="{{'general.boton.seleccionar' | translate}}"
+                <p-dropdown class="select-form" [options]="tipoIdentificacion" [showClear]="true"
+                  [disabled]="!activaProductos || !permisos || disabledAction"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
                   [(ngModel)]="bodyDatosMandatos.tipoIdProducto" (onChange)="editarMandato = true"></p-dropdown>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.identifProducto" type="text" class="form-control" (ngModelChange)="editarMandato = true"
-                  [disabled]="!activaProductos || !permisos || disabledAction" pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.identifProducto" type="text" class="form-control"
+                  (ngModelChange)="editarMandato = true" [disabled]="!activaProductos || !permisos || disabledAction"
+                  pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{"factSJCS.detalleFacturacion.literal.referencia" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control" (ngModelChange)="editarMandato = true"
-                  [disabled]="!activaProductos || !permisos || disabledAction" pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.referenciaProducto" type="text" class="form-control"
+                  (ngModelChange)="editarMandato = true" [disabled]="!activaProductos || !permisos || disabledAction"
+                  pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.tipoPago" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" disabled pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.tipoPagoProducto" type="text" class="form-control" disabled
+                  pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.esquemaUtil" | translate}}</label>
-                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" [(ngModel)]='selectedEsquemaProducto'
-                  optionLabel="label" *ngIf="nuevo" [disabled]="!activaProductos || !permisos || disabledAction" [options]="combooItemsProducto"
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="nuevo"
+                  [disabled]="!activaProductos || !permisos || disabledAction" [options]="combooItemsProducto"
                   (onChange)="onChangeEsquemaProducto($event); editarMandato = true">
                 </p-dropdown>
 
-                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" [(ngModel)]='selectedEsquemaProducto'
-                  optionLabel="label" *ngIf="!nuevo" [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event); editarMandato = true"
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" [(ngModel)]='selectedEsquemaProducto' optionLabel="label" *ngIf="!nuevo"
+                  [options]="combooItemsProducto" (onChange)="onChangeEsquemaProducto($event); editarMandato = true"
                   [disabled]="mandatoAnexoVacio || !permisos || !activaProductos || disabledAction">
                 </p-dropdown>
               </div>
-              <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true" [(disabled)]="!permisos || disabledAction"
-                (ngModelChange)="validarCheckProducto()"></p-checkbox>
-              <label *ngIf="isSelectedProducto == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b" | translate}}</label>
+              <p-checkbox *ngIf="isSelectedProducto == true" [(ngModel)]='checkProducto' binary="true"
+                [(disabled)]="!permisos || disabledAction" (ngModelChange)="validarCheckProducto()"></p-checkbox>
+              <label
+                *ngIf="isSelectedProducto == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b" | translate}}</label>
 
 
             </div>
             <div *ngIf="activarMsgErrorProd == true && checkProducto == false">
-              <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
+              <label
+                class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
             </div>
           </div>
 
@@ -215,50 +243,59 @@
             <div class="form-row">
 
               <div class="form-group col-lg-12 col-md-12">
-                <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate}} {{"menu.productosYServicios.categorias.servicios" | translate}}</label>
+                <label style="text-align:center; font-weight: bold;">{{ "general.message.datos.generales" | translate}}
+                  {{"menu.productosYServicios.categorias.servicios" | translate}}</label>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }} </label>
-                <p-dropdown class="select-form" [showClear]="true" [options]="tipoIdentificacion" [disabled]="!activaServicios || !permisos || disabledAction"
-                  placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyDatosMandatos.tipoIdServicio"
-                  (onChange)="editarMandato = true"></p-dropdown>
+                <p-dropdown class="select-form" [showClear]="true" [options]="tipoIdentificacion"
+                  [disabled]="!activaServicios || !permisos || disabledAction"
+                  placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [(ngModel)]="bodyDatosMandatos.tipoIdServicio" (onChange)="editarMandato = true"></p-dropdown>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{"censo.fichaCliente.literal.identificacion" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.identifServicio" type="text" class="form-control" (ngModelChange)="editarMandato = true"
-                  [disabled]="!activaServicios || !permisos || disabledAction" pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.identifServicio" type="text" class="form-control"
+                  (ngModelChange)="editarMandato = true" [disabled]="!activaServicios || !permisos || disabledAction"
+                  pInputText>
               </div>
               <div class="form-group col-lg-4 col-md-4">
                 <label>{{"factSJCS.detalleFacturacion.literal.referencia" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control" (ngModelChange)="editarMandato = true"
-                  [disabled]="!activaServicios || !permisos || disabledAction" pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.referenciaServicio" type="text" class="form-control"
+                  (ngModelChange)="editarMandato = true" [disabled]="!activaServicios || !permisos || disabledAction"
+                  pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.tipoPago" | translate}}</label>
-                <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" disabled pInputText>
+                <input [(ngModel)]="bodyDatosMandatos.tipoPagoServicio" type="text" class="form-control" disabled
+                  pInputText>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{"censo.fichaCliente.datosBancarios.esquemaUtil" | translate}}</label>
-                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" [(ngModel)]='selectedEsquemaServicio'
-                  optionLabel="label" *ngIf="nuevo" [disabled]="!activaServicios || !permisos || disabledAction" [options]="combooItemsServicio"
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="nuevo"
+                  [disabled]="!activaServicios || !permisos || disabledAction" [options]="combooItemsServicio"
                   (onChange)="onChangeEsquemaServicio($event); editarMandato = true">
 
                 </p-dropdown>
-                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true" [(ngModel)]='selectedEsquemaServicio'
-                  optionLabel="label" *ngIf="!nuevo" [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event); editarMandato = true"
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+                  [showClear]="true" [(ngModel)]='selectedEsquemaServicio' optionLabel="label" *ngIf="!nuevo"
+                  [options]="combooItemsServicio" (onChange)="onChangeEsquemaServicio($event); editarMandato = true"
                   [disabled]="mandatoAnexoVacio || !permisos || !activaServicios || disabledAction">
 
                 </p-dropdown>
 
               </div>
-              <p-checkbox *ngIf="isSelectedServicio == true" [(ngModel)]='checkServicio' binary="true" [(disabled)]="!permisos || disabledAction"
-                (ngModelChange)="validarCheckServicio()"></p-checkbox>
-              <label *ngIf="isSelectedServicio == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b" | translate}}</label>
+              <p-checkbox *ngIf="isSelectedServicio == true" [(ngModel)]='checkServicio' binary="true"
+                [(disabled)]="!permisos || disabledAction" (ngModelChange)="validarCheckServicio()"></p-checkbox>
+              <label
+                *ngIf="isSelectedServicio == true">{{"censo.fichaCliente.datosBancarios.autorizacion.b2b" | translate}}</label>
 
 
             </div>
             <div *ngIf="activarMsgErrorServ == true && checkServicio == false">
-              <label class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
+              <label
+                class="labelError">{{"facturacion.ficheroBancarioPagos.errorMandatos.mensajeMandatoB2BNoAutorizado" | translate}}</label>
             </div>
           </div>
         </div>
@@ -267,8 +304,9 @@
       </div>
       <div *ngIf="openFichaDatosMandatos && !nuevo" class="card-footer">
         <div class="text-right main-button">
-          <button (click)="validarGuardarMandato(); editarMandato = false" pButton type="button" icon="far fa-save" iconPos="left"
-            label="{{ 'general.boton.guardar' | translate}}" [disabled]="!editarMandato || !permisos || disabledAction"></button>
+          <button (click)="validarGuardarMandato(); editarMandato = false" pButton type="button" icon="far fa-save"
+            iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
+            [disabled]="!editarMandato || !permisos || disabledAction"></button>
         </div>
       </div>
     </div>
@@ -277,111 +315,145 @@
   <!--Listado ficheros anexo -->
   <div *ngIf="!isLetrado" class="busqueda-container">
     <div class="card">
-      <div class="card-header header-ficha" (click)="abrirFichaListadoFicherosAnexos()">
+      <div class="card-header header-ficha">
         <div *ngIf="!openFichaListadoFicherosAnexos" class="form-row">
           <div class="col-lg-1 col-md-2">
-            <div class="img-colegiado">
+            <div class="img-colegiado" (click)="abrirFichaListadoFicherosAnexos()">
               <i class="fa fa-list-ul icon-ficha"></i>
             </div>
           </div>
           <div class="col-lg-11 col-md-10">
-            <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
+            <div class="d-flex justify-content-start mb-1" (click)="abrirFichaListadoFicherosAnexos()">
+              <label 
+                class="mr-auto title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
               <br>
-              <i [ngClass]="{ 'fa fa-angle-up': openFichaListadoFicherosAnexos, 'fa fa-angle-down': !openFichaListadoFicherosAnexos} "></i>
+              <i (click)="abrirFichaListadoFicherosAnexos()"
+                [ngClass]="{ 'fa fa-angle-up': openFichaListadoFicherosAnexos, 'fa fa-angle-down': !openFichaListadoFicherosAnexos} "></i>
             </div>
           </div>
         </div>
-        <div *ngIf="openFichaListadoFicherosAnexos" class=" header-ficha-open d-flex justify-content-start align-items-center">
-          <div class="img-colegiado ">
+        <div *ngIf="openFichaListadoFicherosAnexos" (click)="abrirFichaListadoFicherosAnexos()"
+          class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado " (click)="abrirFichaListadoFicherosAnexos()">
             <i class="fa fa-list-ul icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
-          <i class="fa fa-angle-up ml-auto"></i>
+          <label (click)="abrirFichaListadoFicherosAnexos()"
+            class="title-ficha">{{"censo.fichaCliente.bancos.mandatos.ficheros.listado" | translate}}</label>
+          <i (click)="abrirFichaListadoFicherosAnexos()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
 
       <div *ngIf="openFichaListadoFicherosAnexos" class="card-body card-body-ficha">
         <div *ngIf="selectMultiple == true">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-            [(selection)]="selectedDatos" [paginator]="activarPaginacion()" selectionMode="single" [responsive]="true" #table
-            class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1" (onRowSelect)="controlarEdicion($event)"
-            [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="true" pageLinks="4">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
+            [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" [paginator]="activarPaginacion()"
+            selectionMode="single" [responsive]="true" #table class="tabla-listado"
+            [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [sortOrder]="1"
+            (onRowSelect)="controlarEdicion($event)" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
+            [editable]="true" pageLinks="4">
 
-            <p-column field="descripcion" header="{{'general.description' | translate}}" [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+            <p-column field="descripcion" header="{{'general.description' | translate}}" [sortable]="true"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+            </p-column>
+            <p-column field="tipo" header="{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}"
+              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
               filterMatchMode="contains"></p-column>
-            <p-column field="tipo" header="{{'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="tipoMandato" header="{{'censo.sociedades.datosBancarios.tipoMandato' | translate}}" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="fechaUso" header="{{'censo.sociedades.datosBancarios.fechaUso' | translate}}" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="firmaFecha" header="{{'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}" [sortable]="true"
-              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="firmaLugar" header="{{'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}" [sortable]="true"
-              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="tipoMandato" header="{{'censo.sociedades.datosBancarios.tipoMandato' | translate}}"
+              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains"></p-column>
+            <p-column field="fechaUso" header="{{'censo.sociedades.datosBancarios.fechaUso' | translate}}"
+              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains"></p-column>
+            <p-column field="firmaFecha"
+              header="{{'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}" [sortable]="true"
+              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+            </p-column>
+            <p-column field="firmaLugar" header="{{'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}"
+              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+              filterMatchMode="contains"></p-column>
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al
+                <label
+                  class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+                  {{table.first + 1}} al
                   {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
                   }} {{table.totalRecords}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                  (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
+                  (click)="isSelectMultiple(); selectedDatos=false">
                   <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
               </div>
             </ng-template>
             <p-footer *ngIf="selectedDatos && selectedDatos !=''">
               <div class="text-right main-button">
-                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="deshabilitaDescarga || !permisos || disabledAction" (click)="downloadAnexo(selectedDatos)"
-                  pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
-                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction" (click)="mostrarDialogoFirmar(selectedDatos)"
-                  pButton type="button" icon="fa fa-rupee" iconPos="left" label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
-                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction" (click)="onComunicar(selectedDatos)"
-                  pButton type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
+                <button *ngIf="selectedDatos && selectedDatos !=''"
+                  [(disabled)]="deshabilitaDescarga || !permisos || disabledAction"
+                  (click)="downloadAnexo(selectedDatos)" pButton type="button" icon="fa fa-download" iconPos="left"
+                  label="{{ 'general.boton.download' | translate}}"></button>
+                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction"
+                  (click)="mostrarDialogoFirmar(selectedDatos)" pButton type="button" icon="fa fa-rupee" iconPos="left"
+                  label="{{ 'censo.sociedades.datosBancarios.firmar' | translate}}"></button>
+                <button *ngIf="selectedDatos && selectedDatos !=''" [(disabled)]="!permisos || disabledAction"
+                  (click)="onComunicar(selectedDatos)" pButton type="button" icon="fa fa-comment" iconPos="left"
+                  label="{{ 'general.boton.comunicar' | translate}}"></button>
                 <!-- <button *ngIf="!nuevo"  [(disabled)]="!permisos" (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button> -->
               </div>
             </p-footer>
           </p-dataTable>
         </div>
         <div *ngIf="selectMultiple==false">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-            [paginator]="activarPaginacion()" #table class="tabla-listado" [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem"
-            [paginator]="true" paginatorPosition="both" [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
+            [ngClass]="{'customCursor': selectMultiple}" [paginator]="activarPaginacion()" #table class="tabla-listado"
+            [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [paginator]="true" paginatorPosition="both"
+            [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
             (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
 
 
 
 
-            <p-column field="descripcion" header="{{ 'general.description' | translate}}" [sortable]="true" [editable]="permisos && !selectMultiple"
-              [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+            <p-column field="descripcion" header="{{ 'general.description' | translate}}" [sortable]="true"
+              [editable]="permisos && !selectMultiple" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
 
             </p-column>
-            <p-column field="tipo" header="{{ 'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}" [editable]="selectMultiple"
-              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
+            <p-column field="tipo" header="{{ 'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}"
+              [editable]="selectMultiple" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
             </p-column>
-            <p-column field="tipoMandato" header="{{ 'censo.sociedades.datosBancarios.tipoMandato' | translate}}" [editable]="selectMultiple"
-              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="fechaUso" header="{{ 'censo.sociedades.datosBancarios.fechaUso' | translate}}" [editable]="selectMultiple"
-              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="firmaFecha" header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}" [editable]="selectMultiple"
-              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="firmaLugar" header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}" [editable]="selectMultiple"
-              [sortable]="true" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="tipoMandato" header="{{ 'censo.sociedades.datosBancarios.tipoMandato' | translate}}"
+              [editable]="selectMultiple" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="fechaUso" header="{{ 'censo.sociedades.datosBancarios.fechaUso' | translate}}"
+              [editable]="selectMultiple" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="firmaFecha"
+              header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}"
+              [editable]="selectMultiple" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
+            <p-column field="firmaLugar"
+              header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}"
+              [editable]="selectMultiple" [sortable]="true" [filter]="true"
+              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
 
             <ng-template pTemplate="paginatorLeft">
               <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first + 1}} al
+                <label
+                  class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+                  {{table.first + 1}} al
                   {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
                   }} {{table.totalRecords}}</label>
                 <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                  (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
+                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
+                  (click)="isSelectMultiple(); selectedDatos=false">
                   <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
               </div>
             </ng-template>
@@ -396,16 +468,18 @@
 
       <div *ngIf="openFichaListadoFicherosAnexos" class="card-footer">
         <div class="text-right main-button ">
-          <div *ngIf="editar == true" class="text-right main-button">
-            <button (click)="editarDescripcion()" [(disabled)]="!permisos || disabledAction" pButton type="button" icon="far fa-save"
-              iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction" (click)="mostrarDialogoNuevo()" pButton
-              type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+          <div  class="text-right main-button">
+            <button  (click)="editarDescripcion()" [(disabled)]="!permisos || disabledAction" pButton type="button"
+              icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction"
+              (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
+              label="{{ 'general.boton.new' | translate}}"></button>
           </div>
-          <div *ngIf="editar == false" class="text-right main-button">
-            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction" (click)="mostrarDialogoNuevo()" pButton
-              type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
-          </div>
+          <!-- <div *ngIf="editar == false" class="text-right main-button">
+            <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction"
+              (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
+              label="{{ 'general.boton.new' | translate}}"></button>
+          </div> -->
 
         </div>
       </div>
@@ -413,22 +487,27 @@
   </div>
 
   <!--FIRMA-->
-  <p-dialog [(visible)]="displayFirmar" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayFirmar" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
-      <label>{{"general.ventana.cgae" | translate}} - {{"pestana.fichaCliente.datosBancarios.ficherosAnexos" | translate}}</label>
+      <label>{{"general.ventana.cgae" | translate}} -
+        {{"pestana.fichaCliente.datosBancarios.ficherosAnexos" | translate}}</label>
     </p-header>
 
     <div class="bloque col-lg-12 col-md-12">
       <div class="row">
         <div class="form-group col-lg-6 col-md-6">
           <br>
-          <p-checkbox name="groupname" binary="true" [(disabled)]="!permisos  || disabledFirma" label="{{ 'censo.fichaCliente.bancos.mandatos.anexos.documentoFirmado' | translate}} (*)"
+          <p-checkbox name="groupname" binary="true" [(disabled)]="!permisos  || disabledFirma"
+            label="{{ 'censo.fichaCliente.bancos.mandatos.anexos.documentoFirmado' | translate}} (*)"
             [(ngModel)]="checkFirma"></p-checkbox>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada" | translate}} (*)</label>
-          <app-fecha [(value)]="firmaFechaDate" [utc]="false" [disabled]="!permisos || disabledAction  || disabledFirma" (valueChangeSelected)="fillFechaFirmada($event)"
-            (valueChangeInput)="detectFechaFirmadaInput($event)"></app-fecha>
+          <app-fecha [inputStyleClass]="styleObligatorio('firma', firmaFechaDate)" [(value)]="firmaFechaDate"
+            [utc]="false" [disabled]="!permisos || disabledAction  || disabledFirma"
+            (valueChangeSelected)="fillFechaFirmada($event)" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" (valueChangeInput)="detectFechaFirmadaInput($event)">
+          </app-fecha>
 
           <!-- <p-calendar [(ngModel)]="firmaFechaDate" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" [(disabled)]="!permisos || disabledAction"
             showIcon="true" [style]="{ 'position': 'relative', 'z-index': '1000' }"></p-calendar> -->
@@ -437,22 +516,23 @@
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.fichaCliente.bancos.mandatos.anexos.lugarFirma" | translate}} (*)</label>
-          <input type="text" [(ngModel)]="firmaLugar" [(disabled)]="!permisos || disabledAction || disabledFirma" class="form-control"
-            pInputText>
+          <input [ngClass]="styleObligatorio('firma', firmaLugar)" type="text" [(ngModel)]="firmaLugar"
+            [(disabled)]="!permisos || disabledAction || disabledFirma" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" class="form-control" pInputText />
         </div>
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.sociedades.datosBancarios.adjuntar" | translate}}</label>
           <br>
-          <p-fileUpload #fubauto mode="basic" name="file" [(disabled)]="!permisos || disabledAction" (onSelect)="uploadFile($event)"
-            auto="true" chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"></p-fileUpload>
+          <p-fileUpload #fubauto mode="basic" name="file" [(disabled)]="!permisos || disabledAction"
+            (onSelect)="uploadFile($event)" auto="true"
+            chooseLabel="{{ 'censo.sociedades.datosBancarios.seleccionarArchivo' | translate}}"></p-fileUpload>
         </div>
       </div>
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="restablecerDatosFirma()" [(disabled)]="!permisos" pButton type="button" icon="fa fa-repeat" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="firmarFicheroAnexo()" [disabled]="!validarFirma() || !permisos || disabledAction" pButton type="button"
+        <button (click)="restablecerDatosFirma()" [(disabled)]="!permisos" pButton type="button" icon="fa fa-repeat"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkDatos('firma')" [disabled]="!permisos || disabledAction" pButton type="button"
           icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </p-footer>
@@ -460,9 +540,11 @@
 
 
   <!--NUEVO-->
-  <p-dialog [(visible)]="displayNuevo" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayNuevo" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
-      <label>{{"general.ventana.cgae" | translate}} - {{"censo.sociedades.datosBancarios.insertarAnexo" | translate}}</label>
+      <label>{{"general.ventana.cgae" | translate}} -
+        {{"censo.sociedades.datosBancarios.insertarAnexo" | translate}}</label>
     </p-header>
 
     <div class="bloque col-lg-12 col-md-12">
@@ -471,12 +553,15 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
           <br>
-          <p-dropdown [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [(disabled)]="!permisos" styleClass="widthAll"
-            (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
+          <p-dropdown [ngClass]="styleObligatorio('nuevo', selectedProductoServicio)"
+            [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [(disabled)]="!permisos"
+            styleClass="widthAll" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.sociedades.datosBancarios.fechaUso" | translate}} (*)</label>
-          <app-fecha [(value)]="datefechaUso" [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
+          <app-fecha [inputStyleClass]="styleObligatorio('nuevo', datefechaUso)" [(value)]="datefechaUso"
+            [disabled]="!permisos" (valueChangeSelected)="fillFechaUso($event)" (ngModelChange)="muestraCamposObligatorios('datosBancarios')"
+            (valueChangeInput)="detectFechaUsoInput($event)"></app-fecha>
 
           <!-- <p-calendar [(ngModel)]="datefechaUso" dateFormat="dd/mm/yy" [(disabled)]="!permisos" icon="far fa-calendar-alt" showIcon="true"
             [required]="true"></p-calendar> -->
@@ -486,21 +571,24 @@
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"general.description" | translate}}</label>
-          <textarea pInputTextarea autoResize="autoResize" [(disabled)]="!permisos" [(ngModel)]="descripcion"></textarea>
+          <textarea pInputTextarea autoResize="autoResize" [(disabled)]="!permisos"
+            [(ngModel)]="descripcion"></textarea>
         </div>
       </div>
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="limpiarDatosAnexo()" pButton type="button" [(disabled)]="!permisos" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="insertarAnexo()" [disabled]="!validarInsertarAnexo() || !permisos" pButton type="button" icon="far fa-save"
+        <button (click)="limpiarDatosAnexo()" pButton type="button" [(disabled)]="!permisos" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkDatos('nuevo')" [disabled]="!permisos" pButton type="button" icon="far fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>
 
   <div class="mt-3 text-right main-button ">
-    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+      label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
 
   <app-dialog></app-dialog>
@@ -517,7 +605,8 @@
 
   <!-- AUDITORIA -->
 
-  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayAuditoria" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [minWidth]="500">
     <p-header class="title">
       <label>{{"general.ventana.cgae" | translate}} - {{"censo.consultaHistorico.cabecera" | translate}}</label>
     </p-header>
@@ -526,15 +615,17 @@
       <div class="row">
         <div class="form-group col-lg-12 col-md-12">
           <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
-          <textarea pInputTextarea [(ngModel)]="body.motivo" [(disabled)]="!permisos" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+          <textarea pInputTextarea [(ngModel)]="body.motivo" [(disabled)]="!permisos"
+            (ngModelChange)="comprobarCampoMotivo()"></textarea>
         </div>
       </div>
     </div>
     <p-footer>
       <div class="text-right main-button ">
-        <button (click)="cerrarAuditoria()" [(disabled)]="!permisos" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
-        <button (click)="editarRegistro()" [disabled]="!showGuardarAuditoria || !permisos" pButton type="button" icon="fa fa-save"
-          iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+        <button (click)="cerrarAuditoria()" [(disabled)]="!permisos" pButton type="button" icon="fa fa-close"
+          iconPos="left" label="{{ 'general.boton.close' | translate}}"></button>
+        <button (click)="editarRegistro()" [disabled]="!showGuardarAuditoria || !permisos" pButton type="button"
+          icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
     </p-footer>
   </p-dialog>

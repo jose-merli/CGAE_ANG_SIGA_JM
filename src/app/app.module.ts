@@ -14,6 +14,10 @@ import { ButtonModule } from "primeng/button";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
 import { ChipsModule } from "primeng/chips";
+
+// Componentes comunes
+import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
+import { LogoutComponent } from './commons/logout/logout.component';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { DataTableModule } from "primeng/datatable";
@@ -31,7 +35,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { PanelMenuModule } from 'primeng/panelmenu';
 // import { EditorModule } from "primeng/editor";
 import { PickListModule } from "primeng/picklist";
-import { ColorPickerModule, SelectButtonModule } from 'primeng/primeng';
+import { ColorPickerModule, OverlayPanelModule, SelectButtonModule } from 'primeng/primeng';
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { RadioButtonModule } from "primeng/radiobutton";
 //Calendario
@@ -116,9 +120,6 @@ import { DatosBancariosComponent } from './features/censo/datosPersonaJuridica/d
 import { ConsultarDatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/consultar-datos-direcciones/consultar-datos-direcciones.component';
 import { DatosDireccionesComponent } from './features/censo/datosPersonaJuridica/datos-direcciones/datos-direcciones.component';
 import { DatosGenerales } from './features/censo/datosPersonaJuridica/datos-generales/datos-generales.component';
-// import { DatosCuentaBancariaComponent } from "./features/censo/datos-cuenta-bancaria/datos-cuenta-bancaria.component";
-// import { DatosMandatosComponent } from "./features/censo/datos-mandatos/datos-mandatos.component";
-// import { ListadoFicherosAnexosComponent } from "./features/censo/listado-ficheros-anexos/listado-ficheros-anexos.component";
 import { DatosIntegrantesComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/datos-integrantes.component';
 import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component';
 import { DatosRegistralesComponent } from './features/censo/datosPersonaJuridica/datos-registrales/datos-registrales.component';
@@ -129,7 +130,6 @@ import { DocumentacionSolicitudesComponent } from './features/censo/documentacio
 import { ExpedientesComponent } from './features/censo/expedientesCenso/expedientes.component';
 import { FacturacionSociedadesCensoComponent } from './features/censo/facturacionSociedadesCenso/facturacion-sociedades-censo.component';
 import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component';
-import { FichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial.component';
 import { SubtipoCurricularComponent } from './features/censo/gestion-subtiposCV/subtipo-curricular/subtipo-curricular.component';
 import { TipoCurricularComponent } from './features/censo/gestion-subtiposCV/tipo-curricular.component';
 import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
@@ -317,32 +317,25 @@ import { OldSigaServices } from './_services/oldSiga.service';
 import { PersistenceService } from './_services/persistence.service';
 import { SigaServices } from './_services/siga.service';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 registerLocaleData(es);
 
-
-
-
-
+//INFORMES Y COMUNICACIONES
+import { DescripcionEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/descripcion-envio-masivo/descripcion-envio-masivo.component';
+import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/ficha-colegial-general/ficha-colegial-general.component';
+import { DatosGeneralesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-generales-ficha-colegial/datos-generales-ficha-colegial.component';
+import { DatosColegialesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-colegiales-ficha-colegial/datos-colegiales-ficha-colegial.component';
+import { CertificadosFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/certificados-ficha-colegial/certificados-ficha-colegial.component';
+import { SancionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/sanciones-ficha-colegial/sanciones-ficha-colegial.component';
+import { SociedadesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/sociedades-ficha-colegial/sociedades-ficha-colegial.component';
+import { DatosCurricularesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-curriculares-ficha-colegial/datos-curriculares-ficha-colegial.component';
+import { DireccionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/direcciones-ficha-colegial/direcciones-ficha-colegial.component';
+import { DatosBancariosFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/datos-bancarios-ficha-colegial/datos-bancarios-ficha-colegial.component';
+import { RegtelFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/regtel-ficha-colegial/regtel-ficha-colegial.component';
+import { AlterMutuaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/alter-mutua-ficha-colegial/alter-mutua-ficha-colegial.component';
+import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/mutualidad-abogacia-ficha-colegial/mutualidad-abogacia-ficha-colegial.component';
+import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
+import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
+import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 
 
 @NgModule({
@@ -354,6 +347,8 @@ registerLocaleData(es);
 		MenuComponent,
 		LoginComponent,
 		LoginDevelopComponent,
+		LoginMultipleComponent,
+		LogoutComponent,
 		HeaderComponent,
 		HomeComponent,
 		// Censo
@@ -381,7 +376,6 @@ registerLocaleData(es);
 		BusquedaSancionesComponent,
 		BusquedaColegiadosComponent,
 		BusquedaColegiadosComponentI,
-		FichaColegialComponent,
 		EdicionCurricularesComponent,
 		BusquedaLetradosComponent,
 		MantenimientoDuplicadosComponent,
@@ -607,6 +601,7 @@ registerLocaleData(es);
 		EnviosMasivosComponent,
 		FichaRegistroEnvioMasivoComponent,
 		ConfiguracionEnvioMasivoComponent,
+		DescripcionEnvioMasivoComponent,
 		DocumentosEnvioMasivoComponent,
 		DestinatariosEnvioMasivoComponent,
 		ProgramacionEnvioMasivoComponent,
@@ -640,6 +635,21 @@ registerLocaleData(es);
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
 		TreeTableComponent,
+		FichaColegialGeneralComponent,
+		DatosGeneralesFichaColegialComponent,
+		DatosColegialesFichaColegialComponent,
+		CertificadosFichaColegialComponent,
+		SancionesFichaColegialComponent,
+		SociedadesFichaColegialComponent,
+		DatosCurricularesFichaColegialComponent,
+		DireccionesFichaColegialComponent,
+		DatosBancariosFichaColegialComponent,
+		RegtelFichaColegialComponent,
+		AlterMutuaFichaColegialComponent,
+		MutualidadAbogaciaFichaColegialComponent,
+		DatosColegialesFichaColegialComponent,
+		OtrasColegiacionesFichaColegialComponent,
+		ServiciosInteresFichaColegialComponent//,
 	],
 	imports: [
 		BrowserModule,
@@ -653,19 +663,20 @@ registerLocaleData(es);
 		DropdownModule,
 		ButtonModule,
 		DataTableModule,
+		TableModule,
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,
-
+		DialogModule,
 		RadioButtonModule,
 		ConfirmDialogModule,
 		ValidationModule,
 		GrowlModule,
 		CommonModule,
 		CalendarModule,
-
+		OverlayPanelModule,
 		ScheduleModule,
-
+		PipeTranslationModule,
 		AutoCompleteModule,
 		TooltipModule,
 		ListboxModule,
@@ -688,6 +699,8 @@ registerLocaleData(es);
 		StepsModule,
 		BusquedaColegiadoExpressModule,
 		GeneralSJCSModule,
+		TarjetaResumenFijaModule,
+
 		SelectButtonModule,
 		ColorPickerModule,
 		// BusquedaAsuntosModule,

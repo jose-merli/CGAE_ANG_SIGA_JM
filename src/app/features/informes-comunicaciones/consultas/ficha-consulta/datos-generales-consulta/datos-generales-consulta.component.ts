@@ -8,6 +8,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Subject } from "rxjs/Subject";
 import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsultasItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -41,6 +42,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   generica: string;
   listaModelos: any = [];
   progressSpinner: Boolean = false;
+  resaltadoDatos: boolean = false;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -71,11 +73,12 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     private location: Location,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
   ngOnInit() {
-
+    this.resaltadoDatos=true;
     this.getMode();
     this.getInstitucion();
     this.getDatos();
@@ -220,11 +223,11 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.cargaComboClaseCom(null);
     } else {
       this.clasesComunicaciones = [];
-      this.clasesComunicaciones.unshift({ label: msg, value: '' });
     }
   }
 
   cargaComboClaseCom(event) {
+    this.onlyCheckDatos();
     if (event != null) {
       this.body.idModulo = event.value;
     }
@@ -236,7 +239,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       .subscribe(
         data => {
           this.clasesComunicaciones = data.combooItems;
-          this.clasesComunicaciones.unshift({ label: '', value: '' });
           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 para poder filtrar el dato con o sin estos caracteres*/
           this.clasesComunicaciones.map(e => {
@@ -264,7 +266,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboModulos").subscribe(
       data => {
         this.modulos = data.combooItems;
-        this.modulos.unshift({ label: '', value: '' });
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
     para poder filtrar el dato con o sin estos caracteres*/
         this.modulos.map((e) => {
@@ -279,9 +280,6 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           }
         });
-        if (this.body.idModulo == 'undefined' || this.body.idModulo == null || this.body.idModulo == "") {
-          this.body.idModulo = this.modulos[0].value;
-        }
       },
       err => {
         console.log(err);
@@ -293,7 +291,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
-        this.objetivos.unshift({ label: '', value: '' });
       },
       err => {
         console.log(err);
@@ -302,6 +299,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // fichaPosible.activa = !fichaPosible.activa;
     this.openFicha = !this.openFicha;
   }
@@ -389,7 +389,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       (this.body.generica == "Si" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "Si") ||
       (this.body.generica == "S" && sessionStorage.getItem("esDuplicar") === 'false' || this.body.generica == "S")) ||
       this.body.generica == "1" ||
-      (sessionStorage.getItem("permisoModoLectura") == 'true' && sessionStorage.getItem("esDuplicar") === 'false') || sessionStorage.getItem("permisoModoLectura") == 'true') {
+      (sessionStorage.getItem("soloLectura") == 'true' && sessionStorage.getItem("esDuplicar") === 'false') || sessionStorage.getItem("soloLectura") == 'true') {
       this.editar = false;
     } else {
       this.editar = true;
@@ -404,6 +404,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   confirmEdit() {
+    this.onlyCheckDatos();
     let mess = this.translateService.instant("informesYcomunicaciones.consultas.datosGenerales.mensaje.cambio.modeloComunicacion");
     let icon = "fa fa-info";
     this.confirmationService.confirm({
@@ -411,6 +412,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       icon: icon,
       accept: () => {
         this.progressSpinner = true;
+        this.resaltadoDatos=false;
         this.bodyInicial.generica = this.body.generica;
         this.actualizaGenerica();
       },
@@ -462,7 +464,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
-
+    this.onlyCheckDatos();
     this.body.generica = this.generica;
     if (this.bodyInicial.generica == undefined) {
       this.bodyInicial.generica = this.body.generica;
@@ -477,6 +479,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
       this.progressSpinner = true;
+      this.resaltadoDatos=false;
 
       this.sigaServices.post("consultas_guardarDatosGenerales", this.body).subscribe(
         data => {
@@ -506,6 +509,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   restablecer() {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos=false;
     this.getDatos();
     // this.body.generica = "S";
   }
@@ -540,6 +544,53 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeObjetivo() {
+    this.onlyCheckDatos(); 
     //sessionStorage.setItem("consultasSearch", JSON.stringify(this.body));
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.muestraCamposObligatorios();
+      }else{
+        if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+          this.muestraCamposObligatorios();
+        }else{
+          this.guardar();
+        }
+      }
+    }else{
+      if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(!this.activaGuardar()){
+      if(JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)){
+        this.resaltadoDatos=true;
+      }else{
+        if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+          this.resaltadoDatos=true;
+        }
+      }
+    }else{
+      if((this.body.idModulo==undefined || this.body.idModulo==null || this.body.idModulo==="") || (this.body.nombre==undefined || this.body.nombre==null || this.body.nombre==="") || (this.body.idObjetivo==undefined || this.body.idObjetivo==null || this.body.idObjetivo==="") || (this.body.descripcion==undefined || this.body.descripcion==null || this.body.descripcion==="")){
+        this.resaltadoDatos=true;
+      }
+    }
   }
 }

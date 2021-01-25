@@ -32,7 +32,7 @@
                         <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                             {{col.header | translate}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
-                            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableModelos.filter($event.target.value,
+                            <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="tableModelos.filter($event.target.value,
                             col.field, 'contains')">
                         </th>
                     </tr>
@@ -45,7 +45,7 @@
                         </td>
                         <td *ngFor="let col of columns" pEditableColumn>
                             <!-- <span *ngIf="col.field == 'tipoEnvio'">{{dato[col.field]}}</span> -->
-                            <p-dropdown [filter]="true" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillas'" [(ngModel)]="dato.idPlantillaEnvio"
+                            <p-dropdown [filter]="true" [showClear]="true"placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde" *ngIf="col.field == 'plantillas'" [(ngModel)]="dato.idPlantillaEnvio"
                                 [options]="plantillas" class="select-form" (onChange)="onChangePlantillaEnvio(dato)"></p-dropdown>
                             <span *ngIf="col.field=='nombre'">{{dato[col.field]}}</span>
                             <span *ngIf="col.field=='tipoEnvio'">{{dato[col.field]}}</span>
@@ -98,9 +98,9 @@
                 <input [disabled]="true" type="text" class="form-control" [(ngModel)]="dato.campo" pInputText>
             </div>
             <div class="form-group col-lg-2 col-md-2">
-                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" placeholder="{{'general.boton.seleccionar' | translate}}"
+                <p-dropdown *ngIf="dato.tipoDato=='N' || dato.tipoDato=='D' || dato.tipoDato=='MV'" [disabled]="dato.operadorDefecto"
                     [options]="operadoresNumero" [(ngModel)]="dato.operacion" class="select-form"></p-dropdown>
-                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" placeholder="{{'general.boton.seleccionar' | translate}}"
+                <p-dropdown *ngIf="dato.tipoDato=='A'" [options]="operadoresTexto" [(ngModel)]="dato.operacion" [disabled]="dato.operadorDefecto"
                     class="select-form"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
@@ -108,7 +108,7 @@
                 <app-fecha  *ngIf="dato.tipoDato=='D' || dato.tipoDato=='X'" [(value)]="dato.valor" [utc]="true" (valueChangeSelected)="fillFecha($event,dato)"
                     (valueChangeInput)="fillFecha($event, dato)"></app-fecha>
 
-                <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="dato.valores"
+                <p-dropdown *ngIf="dato.tipoDato=='MV' || dato.tipoDato=='E'" [options]="dato.valores"
                     [(ngModel)]="dato.valor" class="select-form" optionLabel="DESCRIPCION"></p-dropdown>
             </div>
         </div>

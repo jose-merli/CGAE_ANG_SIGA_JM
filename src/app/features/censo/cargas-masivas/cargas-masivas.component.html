@@ -9,14 +9,15 @@
 </div>
 <div class="card">
   <div class="card-body">
-    <p class="title-module" (click)="onHideCargasMasivas()">{{ 'censo.cargasMasivas.literal' | translate }}
-      <i *ngIf="!showCargasMasivas" class="fa fa-angle-up float-right"></i>
-      <i *ngIf="showCargasMasivas" class="fa fa-angle-down float-right"></i>
+    <p class="title-module">
+      <span (click)="onHideCargasMasivas()">{{ 'censo.cargasMasivas.literal' | translate }}</span>
+      <i (click)="onHideCargasMasivas()" *ngIf="!showCargasMasivas" class="fa fa-angle-up float-right"></i>
+      <i (click)="onHideCargasMasivas()" *ngIf="showCargasMasivas" class="fa fa-angle-down float-right"></i>
     </p>
     <div *ngIf="showCargasMasivas" class="module vista-simple">
       <div class="row">
 
-        <div class="form-group col-lg-3 col-md-3">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "censo.cargasMasivas.tipoCarga.literal" | translate }}</label>
           <br>
           <p-dropdown [options]="cargasMasivas" [showClear]="true" [(ngModel)]="selectedTipoCarga" placeholder="{{'general.boton.seleccionar' | translate}}"

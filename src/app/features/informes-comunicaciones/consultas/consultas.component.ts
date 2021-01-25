@@ -9,13 +9,14 @@ import { DataTable } from "primeng/datatable";
 import { ConsultasItem } from "../../../models/ConsultasItem";
 import { ConsultasSearchItem } from "../../../models/ConsultasSearchItem";
 import { ConsultasObject } from "../../../models/ConsultasObject";
-import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
+import { CampoDinamicoItem } from "../../../models/CampoDinamicoItem";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -52,7 +53,7 @@ export class ConsultasComponent implements OnInit {
   selectedInstitucion: any;
   institucionActual: any;
   eliminar: boolean = false;
-  fichaBusqueda: boolean = false;
+  fichaBusqueda: boolean = true;
   comboGenerica: any = [];
 
   valores: CampoDinamicoItem[];
@@ -70,15 +71,17 @@ export class ConsultasComponent implements OnInit {
   derechoAcceso: any;
   permisos: any;
   activacionEditar: boolean;
-
+  historico: boolean = false;
   @ViewChild("table") table: DataTable;
-  selectedDatos;
+  selectedDatos = [];
+
 
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -88,8 +91,8 @@ export class ConsultasComponent implements OnInit {
 
     sessionStorage.removeItem("esDuplicar");
     sessionStorage.removeItem("consultasSearch");
-    sessionStorage.removeItem('idInstitucion');
-    sessionStorage.removeItem('esPorDefecto');
+    sessionStorage.removeItem("idInstitucion");
+    sessionStorage.removeItem("esPorDefecto");
     sessionStorage.removeItem("soloLectura");
     sessionStorage.removeItem("permisoModoLectura");
 
@@ -152,54 +155,53 @@ export class ConsultasComponent implements OnInit {
 
     this.operadoresTexto = [
       {
-        label: '=',
-        value: '='
+        label: "=",
+        value: "="
       },
       {
-        label: '!=',
-        value: '!='
+        label: "!=",
+        value: "!="
       },
       {
-        label: 'IS NULL',
-        value: 'IS NULL'
+        label: "IS NULL",
+        value: "IS NULL"
       },
       {
-        label: 'LIKE',
-        value: 'LIKE'
+        label: "LIKE",
+        value: "LIKE"
       }
     ];
 
     this.operadoresNumero = [
       {
-        label: '=',
-        value: '='
+        label: "=",
+        value: "="
       },
       {
-        label: '!=',
-        value: '!='
+        label: "!=",
+        value: "!="
       },
       {
-        label: '>',
-        value: '>'
+        label: ">",
+        value: ">"
       },
       {
-        label: '>=',
-        value: '>='
+        label: ">=",
+        value: ">="
       },
       {
-        label: '<',
-        value: '<'
+        label: "<",
+        value: "<"
       },
       {
-        label: '<=',
-        value: '<='
+        label: "<=",
+        value: "<="
       },
       {
-        label: 'IS NULL',
-        value: 'IS NULL'
+        label: "IS NULL",
+        value: "IS NULL"
       }
-    ]
-
+    ];
   }
 
   checkAcceso() {
@@ -221,7 +223,10 @@ export class ConsultasComponent implements OnInit {
           this.activacionEditar = false;
         } else {
           sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
           this.router.navigate(["/errorAcceso"]);
         }
       }
@@ -235,14 +240,18 @@ export class ConsultasComponent implements OnInit {
       if (this.bodySearch == null) {
         this.bodySearch = new ConsultasSearchItem();
       } else {
-        this.buscar();
+        this.buscar(false);
       }
-
     } else {
-      this.bodySearch.generica = "";
+      this.bodySearch.generica = "N";
     }
   }
 
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
@@ -278,7 +287,7 @@ export class ConsultasComponent implements OnInit {
       err => {
         console.log(err);
       }
-    )
+    );
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
       data => {
         this.objetivos = data.combooItems;
@@ -345,12 +354,17 @@ export class ConsultasComponent implements OnInit {
   SelectAll() {
     if (this.selectAll === true) {
       //this.eliminar = true;
-
+      this.selectMultiple = false;
       this.controlBtnEliminar(this.datos);
 
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -367,9 +381,8 @@ export class ConsultasComponent implements OnInit {
         var keepGoing = true;
 
         array.forEach(element => {
-
           if (keepGoing) {
-            if (element.generica == 'No') {
+            if (element.generica == "No") {
               this.eliminar = true;
             } else {
               keepGoing = false;
@@ -384,15 +397,16 @@ export class ConsultasComponent implements OnInit {
     }
   }
 
-  buscar() {
+  buscar(historico) {
     if (this.checkFilters()) {
       this.showResultados = true;
       this.selectMultiple = false;
-      this.selectedDatos = "";
+      this.selectedDatos = [];
       this.progressSpinner = true;
+      this.selectAll = false;
       sessionStorage.removeItem("consultasSearch");
       sessionStorage.removeItem("filtrosConsulta");
-      this.getResultados();
+      this.getResultados(historico);
     }
   }
 
@@ -400,9 +414,13 @@ export class ConsultasComponent implements OnInit {
     if (
       (this.bodySearch.idModulo == null || this.bodySearch.idModulo == "") &&
       (this.bodySearch.nombre == null || this.bodySearch.nombre == "") &&
-      (this.bodySearch.descripcion == null || this.bodySearch.descripcion == "") &&
-      (this.bodySearch.idObjetivo == null || this.bodySearch.idObjetivo == "") &&
-      (this.bodySearch.idClaseComunicacion == null || this.bodySearch.idClaseComunicacion == "")) {
+      (this.bodySearch.descripcion == null ||
+        this.bodySearch.descripcion == "") &&
+      (this.bodySearch.idObjetivo == null ||
+        this.bodySearch.idObjetivo == "") &&
+      (this.bodySearch.idClaseComunicacion == null ||
+        this.bodySearch.idClaseComunicacion == "")
+    ) {
       this.showSearchIncorrect();
       return false;
     } else {
@@ -428,7 +446,9 @@ export class ConsultasComponent implements OnInit {
     });
   }
 
-  getResultados() {
+  getResultados(historico) {
+    this.historico = historico;
+    this.bodySearch.historico = historico;
     this.sigaServices
       .postPaginado("consultas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -443,6 +463,9 @@ export class ConsultasComponent implements OnInit {
         },
         () => {
           this.table.reset();
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -466,10 +489,7 @@ export class ConsultasComponent implements OnInit {
           "filtrosConsulta",
           JSON.stringify(this.bodySearch)
         );
-        sessionStorage.setItem(
-          "esDuplicar",
-          "true"
-        );
+        sessionStorage.setItem("esDuplicar", "true");
         this.progressSpinner = false;
         this.router.navigate(["/fichaConsulta"]);
       },
@@ -490,7 +510,8 @@ export class ConsultasComponent implements OnInit {
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message:
         this.translateService.instant("messages.deleteConfirmation.much") +
-        dato.length + " " +
+        dato.length +
+        " " +
         this.translateService.instant(
           "menu.informesYcomunicaciones.consultas"
         ) +
@@ -514,6 +535,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   confirmarCancelar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -532,11 +554,19 @@ export class ConsultasComponent implements OnInit {
             )
           );
         } else {
-          this.showSuccess(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.ficha.correctConsultaEliminado"
-            )
-          );
+          if (this.historico) {
+            this.showSuccess(
+              this.translateService.instant(
+                "messages.activate.selected.success"
+              )
+            );
+          } else {
+            this.showSuccess(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.ficha.correctConsultaEliminado"
+              )
+            );
+          }
         }
       },
       err => {
@@ -548,8 +578,10 @@ export class ConsultasComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.selectAll = false;
+        this.progressSpinner = false;
         this.table.reset();
-        this.buscar();
+        this.buscar(this.historico);
       }
     );
   }
@@ -557,25 +589,32 @@ export class ConsultasComponent implements OnInit {
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
-    if (
-      event.keyCode === KEY_CODE.ENTER) {
-      this.buscar();
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.buscar(false);
     }
   }
 
   navigateTo(dato) {
-    let id = dato[0].id;
-    console.log(dato);
-    this.selectedInstitucion = dato[0].idInstitucion;
+    if (
+      dato[dato.length - 1].fechaBaja == null &&
+      this.historico &&
+      this.selectMultiple
+    ) {
+      dato.pop();
+      // this.selectedDatos = [];
+      this.table.reset();
+      // this.table.re
+      this.numSelected = 0;
+    }
     if (!this.selectMultiple) {
+      console.log(dato);
+      this.selectedInstitucion = dato[0].idInstitucion;
       if (
         (this.selectedInstitucion == this.institucionActual &&
           dato[0].generica == "No") ||
         (this.institucionActual == 2000 && dato[0].generica == "Si")
       ) {
         sessionStorage.setItem("consultasSearch", JSON.stringify(dato[0]));
-
-
 
         sessionStorage.setItem(
           "filtrosConsulta",
@@ -591,8 +630,6 @@ export class ConsultasComponent implements OnInit {
         );
       }
     } else {
-
-
       this.controlBtnEliminar(dato);
 
       // if (
@@ -605,13 +642,19 @@ export class ConsultasComponent implements OnInit {
       //   this.eliminar = false;
       // }
     }
-
-    if (this.institucionActual != 2000 && dato[0].idInstitucion == '2000' && dato[0].generica == "Si" || !this.activacionEditar) {
+    if (dato.length > 0) {
+      if (
+        (this.institucionActual != 2000 && dato[0].idInstitucion == "2000" && dato[0].generica == "Si") || !this.activacionEditar || dato[0].fechaBaja != undefined
+      ) {
+        sessionStorage.setItem("soloLectura", "true");
+        sessionStorage.setItem("permisoModoLectura", "true");
+      } else {
+        sessionStorage.setItem("soloLectura", "false");
+        sessionStorage.setItem("permisoModoLectura", "false");
+      }
+    }
+    if (dato[0].fechaBaja) {
       sessionStorage.setItem("soloLectura", "true");
-      sessionStorage.setItem("permisoModoLectura", "true");
-    } else {
-      sessionStorage.setItem("soloLectura", "false");
-      sessionStorage.setItem("permisoModoLectura", "false");
     }
   }
 
@@ -623,6 +666,7 @@ export class ConsultasComponent implements OnInit {
 
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
+    this.bodySearch.generica = "N";
   }
 
   // comboClaseCom() {
@@ -650,7 +694,7 @@ export class ConsultasComponent implements OnInit {
   //         data => {
   //           this.clasesComunicaciones = data.combooItems;
   //           this.clasesComunicaciones.unshift({ label: "", value: "" });
-  //           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+  //           /*creamos un labelSinTilde que guarde los labels sin caracteres especiales,
   // para poder filtrar el dato con o sin estos caracteres*/
   //           this.clasesComunicaciones.map(e => {
   //             let accents =
@@ -677,7 +721,6 @@ export class ConsultasComponent implements OnInit {
     this.comboGenerica = [
       { label: "No", value: "N" },
       { label: "Sí", value: "S" }
-
     ];
   }
 
@@ -687,39 +730,54 @@ export class ConsultasComponent implements OnInit {
 
   obtenerParametros(dato) {
     let consultaEjecutar = dato[0];
-    this.sentencia = consultaEjecutar.sentencia
+    this.sentencia = consultaEjecutar.sentencia;
     let consulta = {
       idClaseComunicacion: consultaEjecutar.idClaseComunicacion,
       sentencia: this.sentencia
     };
 
-    this.sigaServices.post("consultas_obtenerCamposDinamicos", consulta)
-      .subscribe(data => {
-        console.log(data);
-        this.valores = JSON.parse(data.body).camposDinamicos;
-        if (this.valores != undefined && this.valores != null && this.valores.length > 0) {
-          this.valores.forEach(element => {
-            if (element.valorDefecto != undefined && element.valorDefecto != null) {
-              element.valor = element.valorDefecto;
-            }
-            if (element.valores != undefined && element.valores != null) {
-              let empty = {
-                ID: 0,
-                DESCRIPCION: 'Seleccione una opción...'
+    this.sigaServices
+      .post("consultas_obtenerCamposDinamicos", consulta)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.valores = JSON.parse(data.body).camposDinamicos;
+          if (
+            this.valores != undefined &&
+            this.valores != null &&
+            this.valores.length > 0
+          ) {
+            this.valores.forEach(element => {
+              if (
+                element.valorDefecto != undefined &&
+                element.valorDefecto != null
+              ) {
+                element.valor = element.valorDefecto;
               }
-              element.valores.unshift(empty);
-            }
-            if (element.operacion == "OPERADOR") {
-              element.operacion = this.operadoresNumero[0].value;
-            }
-          });
-          this.showValores = true;
-        } else {
-          this.ejecutar();
+              if (element.valores != undefined && element.valores != null) {
+                let empty = {
+                  ID: 0,
+                  DESCRIPCION: "Seleccione una opción..."
+                };
+                element.valores.unshift(empty);
+              }
+              if (element.operacion == "OPERADOR") {
+                element.operacion = this.operadoresNumero[0].value;
+              }
+            });
+            this.showValores = true;
+          } else {
+            this.ejecutar();
+          }
+        },
+        error => {
+          this.showFail(
+            this.translateService.instant(
+              "informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"
+            )
+          );
         }
-      }, error => {
-        this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros"))
-      });
+      );
   }
 
   ejecutar() {
@@ -727,7 +785,10 @@ export class ConsultasComponent implements OnInit {
 
     this.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
 
-    if (this.camposDinamicos != null && typeof this.camposDinamicos != "undefined") {
+    if (
+      this.camposDinamicos != null &&
+      typeof this.camposDinamicos != "undefined"
+    ) {
       this.camposDinamicos.forEach(element => {
         if (element.valor != undefined && typeof element.valor == "object") {
           element.valor = element.valor.ID;
@@ -741,26 +802,37 @@ export class ConsultasComponent implements OnInit {
     let consultaEjecutar = {
       sentencia: this.sentencia,
       camposDinamicos: this.camposDinamicos
-    }
+    };
 
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", consultaEjecutar)
-      .subscribe(data => {
-        // debugger;
-        this.showValores = false;
-        if (data == null) {
-          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-        } else {
-          saveAs(data, "ResultadoConsulta.xlsx");
+      .subscribe(
+        data => {
+          // debugger;
+          this.showValores = false;
+          if (data == null) {
+            this.showInfo(
+              this.translateService.instant(
+                "informesYcomunicaciones.consultas.mensaje.sinResultados"
+              )
+            );
+          } else {
+            saveAs(data, "ResultadoConsulta.xlsx");
+          }
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
+          this.showFail(
+            this.translateService.instant(
+              "informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"
+            )
+          );
+        },
+        () => {
+          this.progressSpinner = false;
         }
-      }, error => {
-        console.log(error);
-        this.progressSpinner = false;
-        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
-      }, () => {
-        this.progressSpinner = false;
-      });
-
+      );
   }
 
   validarCamposDinamicos() {
@@ -768,7 +840,11 @@ export class ConsultasComponent implements OnInit {
     this.valores.forEach(element => {
       if (valido) {
         if (!element.valorNulo) {
-          if (element.valor != undefined && element.valor != null && element.valor != "") {
+          if (
+            element.valor != undefined &&
+            element.valor != null &&
+            element.valor != ""
+          ) {
             valido = true;
           } else {
             valido = false;
@@ -782,32 +858,42 @@ export class ConsultasComponent implements OnInit {
   }
 
   navigateComunicar(selectedDatos) {
-    sessionStorage.setItem(
-      "filtrosConsulta",
-      JSON.stringify(this.bodySearch)
-    );
+    sessionStorage.setItem("filtrosConsulta", JSON.stringify(this.bodySearch));
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de adminsitracion es 4
-    sessionStorage.setItem("idModulo", '4');
+    sessionStorage.setItem("idModulo", "4");
     this.getDatosComunicar(selectedDatos);
   }
 
   getDatosComunicar(selectedDatos) {
-
     let dato = selectedDatos[0];
-    sessionStorage.setItem('idInstitucion', dato.idInstitucion);
+    sessionStorage.setItem("idInstitucion", dato.idInstitucion);
     let rutaClaseComunicacion = this.currentRoute.toString();
-    sessionStorage.removeItem('datosComunicar');
-    sessionStorage.setItem('idConsulta', dato.idConsulta);
-    sessionStorage.setItem('idInstitucion', dato.idInstitucion);
-    this.sigaServices.post("dialogo_claseComunicacion", rutaClaseComunicacion).subscribe(
-      data => {
-        this.idClaseComunicacion = JSON.parse(data['body']).clasesComunicaciones[0].idClaseComunicacion;
-        this.router.navigate(["/dialogoComunicaciones"]);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    sessionStorage.removeItem("datosComunicar");
+    sessionStorage.setItem("idConsulta", dato.idConsulta);
+    sessionStorage.setItem("idInstitucion", dato.idInstitucion);
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.router.navigate(["/dialogoComunicaciones"]);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  setItalic(dato) {
+    if (dato.fechaBaja == null) return false;
+    else return true;
+  }
+  clickFila(event) {
+    if (event.data && !event.data.fechaBaja && this.historico) {
+      this.selectedDatos.pop();
+    }
   }
 }

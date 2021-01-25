@@ -1,0 +1,113 @@
+<div id="otrasColegiaciones">
+<div *ngIf="(tarjetaOtrasColegiaciones == '3' || tarjetaOtrasColegiaciones == '2') && esColegiado" class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!esFichaActiva('colegiaciones')" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado" (click)="abreCierraFicha('colegiaciones')">
+          <i class="fa fa-graduation-cap icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-6">
+        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('colegiaciones')">
+          <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+          </label>
+          <!-- <label class="registros-ficha">(0 registros)</label> -->
+        </div>
+        <div class="d-flex justify-content-between">
+          
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero && mostrarOtrasColegiaciones" class="registros-ficha">{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+            <span *ngIf="mostrarOtrasColegiaciones">{{ DescripcionOtrasColegiaciones.institucion }}</span>
+          </label>
+
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero && mostrarOtrasColegiaciones" class="registros-ficha">{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+            <span *ngIf="mostrarOtrasColegiaciones">{{ DescripcionOtrasColegiaciones.numColegiado }}</span>
+          </label>
+
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.fichaIntegrantes.literal.estado" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero && mostrarOtrasColegiaciones" class="registros-ficha">{{ "censo.nuevaSolicitud.fechaEstado" | translate }}
+            <span *ngIf="mostrarOtrasColegiaciones">{{ DescripcionOtrasColegiaciones.estadoColegial }}</span>
+          </label>
+
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.nuevaSolicitud.fechaEstado" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero && mostrarOtrasColegiaciones" class="registros-ficha">{{ "censo.nuevaSolicitud.fechaEstado" | translate }}
+            <span *ngIf="mostrarOtrasColegiaciones">{{ DescripcionOtrasColegiaciones.fechaEstadoStr | date: 'dd/MM/yyyy' }}</span>
+          </label>
+
+          <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
+            <span class="registros-ficha-prueba">{{ message }}</span>
+          </label>
+
+          <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.datosDireccion.literal.numero.colegiaciones" | translate }}
+            <span>{{ message }}</span>
+          </label>
+
+          <i (click)="abreCierraFicha('colegiaciones')" *ngIf="!esFichaActiva('colegiaciones')" class="fa fa-angle-down float-right"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('colegiaciones')" (click)="abreCierraFicha('colegiaciones')"class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado" (click)="abreCierraFicha('colegiaciones')">
+        <i class="fa fa-graduation-cap icon-ficha"></i>
+      </div>
+      <label (click)="abreCierraFicha('colegiaciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.otrasColegiaciones" | translate }}
+      </label>
+      <i (click)="abreCierraFicha('colegiaciones')" class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <!-- cuerpo -->
+
+  <div *ngIf="esFichaActiva('colegiaciones')" class="card-body card-body-ficha">
+    <div class="rowPrueba">
+      <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" pageLinks="4" dataKey="movil" [responsive]="true"
+        #tableColegiaciones class="tabla-listado" [value]="datosColegiaciones" [sortOrder]="1" [paginator]="activarPaginacionOtrasColegiaciones()"
+        paginatorPosition="both" [rows]="selectedItemColegiaciones">
+        <p-column *ngFor="let col of colsColegiaciones" [sortable]="true" [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+          [filter]="true" filterMatchMode="contains">
+          <ng-template let-datoH="rowData" pTemplate="body">
+            <span *ngIf="setItalic(datoH)" [ngStyle]="{
+                'font-style': 'italic',
+                'font-weight': 'bold',
+                'text-decoration': 'line-through'
+              }">{{ datoH[col.field] }}</span>
+            <span *ngIf="!setItalic(datoH)">{{ datoH[col.field] }}</span>
+          </ng-template>
+        </p-column>
+
+        <ng-template pTemplate="paginatorLeft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{ tableColegiaciones.first
+              + 1 }} al {{ tableColegiaciones.first + tableColegiaciones.rows }} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+              | translate }} {{ tableColegiaciones.totalRecords }}
+            </label>
+            <!--
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}</label>
+            -->
+            <label>{{ "general.message.mostrar" | translate }}</label>
+            <p-dropdown [(ngModel)]="selectedItemColegiaciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesColegiaciones($event)"></p-dropdown>
+            <label class="pl-1">
+              {{ "cargaMasivaDatosCurriculares.numRegistros.literal" | translate }}
+            </label>
+          </div>
+        </ng-template>
+      </p-dataTable>
+    </div>
+    <br />
+  </div>
+  <div *ngIf="esFichaActiva('colegiaciones')" class="card-footer ">
+  </div>
+  </div>
+</div>

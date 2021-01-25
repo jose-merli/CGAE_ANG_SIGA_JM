@@ -34,7 +34,6 @@ export class CargaEtiquetasComponent implements OnInit {
   datos: any[];
   numSelected: number = 0;
   selectedItem: number = 10;
-  clear: any;
   @ViewChild("pUploadFile") pUploadFile;
 
   progressSpinner: boolean = false;
@@ -135,7 +134,9 @@ export class CargaEtiquetasComponent implements OnInit {
         );
     }
   }
-
+  clear() {
+    this.msgs = [];
+  }
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -227,8 +228,11 @@ export class CargaEtiquetasComponent implements OnInit {
       .subscribe(
         data => {
           const blob = new Blob([data], { type: "text/csv" });
-          saveAs(blob, "PlantillaMasivaDatosGF.xls");
-          this.progressSpinner = false;
+          if (this.body.nombreFichero == undefined) {
+            saveAs(blob, "PlantillaMasivaDatosGF.xls");
+          } else {
+            saveAs(blob, this.body.nombreFichero);
+          } this.progressSpinner = false;
         },
         err => {
           console.log(err);

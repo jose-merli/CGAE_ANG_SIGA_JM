@@ -3,12 +3,12 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.administracion' | translate}}
-      <i class="pl-1 fa fa-angle-right"></i>{{ 'menu.administracion.gestionarPermisosAplicacion' | translate}}</p>
+      <i class="fa fa-angle-right"></i>{{ 'menu.administracion.gestionarPermisosAplicacion' | translate}}</p>
   </div>
   <div class="mt-4 permisos-filters d-flex  justify-content-start">
     <div class="mr-auto pl-0 form-group col-lg-3 col-md-3">
       <label>{{'administracion.grupos.literal.perfiles' | translate}}</label>
-      <p-dropdown (onChange)="onChangeGrupo($event)" [filter]="true" filterBy="label,labelSinTilde" [(ngModel)]="selectedGrupo"
+      <p-dropdown [showClear]="true" placeholder="{{ 'tablas.literal.seleccionar' | translate }}" (onChange)="onChangeGrupo($event)" [filter]="true" filterBy="label,labelSinTilde" [(ngModel)]="selectedGrupo"
         [options]="grupos" class="select-form" [formControl]="formPermisos.controls['grupo']"></p-dropdown>
     </div>
     <div *ngIf="formPermisos.controls['grupo'].value" class="text-right  form-group col-lg-6 col-md-6">

@@ -14,7 +14,8 @@ import { BusquedaSancionesItem } from "../../../models/BusquedaSancionesItem";
 import { BusquedaSancionesObject } from "../../../models/BusquedaSancionesObject";
 import { ComboItem } from "./../../../../app/models/ComboItem";
 import { AuthenticationService } from "../../../_services/authentication.service";
-
+import { CommonsService } from '../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-busqueda-sanciones",
   templateUrl: "./busqueda-sanciones.component.html",
@@ -39,7 +40,7 @@ export class BusquedaSancionesComponent implements OnInit {
   datesType: SelectItem[];
   colegios: any[] = [];
   colegios_seleccionados: any[] = [];
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   msgs: any;
   es: any = esCalendar;
 
@@ -71,6 +72,7 @@ export class BusquedaSancionesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -86,6 +88,9 @@ export class BusquedaSancionesComponent implements OnInit {
 
       if (sessionStorage.getItem("back") == "true") {
         this.body = JSON.parse(sessionStorage.getItem("saveFilters"));
+        if(this.body.chkArchivadas == true){
+          this.historico();
+        }
         this.transformDates(this.body);
 
         this.getComboColegios();
@@ -307,6 +312,12 @@ export class BusquedaSancionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }
@@ -425,6 +436,9 @@ export class BusquedaSancionesComponent implements OnInit {
 
   onRowSelect(selectedDatos) {
     if (!this.selectMultiple) {
+      if(this.isHistory){
+        this.body.chkArchivadas = true;
+      }
       // Guardamos los filtros
       sessionStorage.setItem("saveFilters", JSON.stringify(this.body));
 
@@ -449,6 +463,7 @@ export class BusquedaSancionesComponent implements OnInit {
   }
 
   historico() {
+    this.body.chkArchivadas = true;
     this.isHistory = true;
     this.hideHistory = true;
     this.search();
@@ -464,7 +479,28 @@ export class BusquedaSancionesComponent implements OnInit {
       this.numSelected = 0;
     }
   }
-
+  onChangeSelectAll() {
+    if (!this.isHistory) {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.data;
+        this.numSelected = this.data.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
+    } else {
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.data.filter(dato => dato.archivada == 'Sí')
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
+    }
+  }
   updateRegistry(selectedDatos) {
     this.body = new BusquedaSancionesItem();
 
@@ -487,6 +523,12 @@ export class BusquedaSancionesComponent implements OnInit {
     this.msgs.push({ severity: "success", summary: "", detail: mensaje });
   }
 
+  clickFila(event) {
+    if (event.data && event.data.archivada == 'No' && this.isHistory){
+      this.selectedDatos.pop();
+    }
+      
+  }
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({
@@ -618,4 +660,9 @@ export class BusquedaSancionesComponent implements OnInit {
     });
   }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

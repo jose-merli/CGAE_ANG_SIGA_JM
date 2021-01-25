@@ -1,14 +1,17 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="ficha-comunicacion-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>
       {{ "menu.informesYcomunicaciones" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.enviosMasivos" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.enviosMasivos.ficha.fichaEnviosMasivos" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.enviosMasivos" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "informesycomunicaciones.enviosMasivos.ficha.fichaEnviosMasivos" | translate }}
     </p>
   </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-configuracion-envio-masivo *ngSwitchCase="'configuracion'"></app-configuracion-envio-masivo>
+    <!-- <app-configuracion-envio-masivo *ngSwitchCase="'configuracion'" (emitOpenDescripcion)="emitOpenDescripcion($event)" (cuerpoPlantilla)="cuerpoPlantilla($event)" (guardarDatos)="guardarDatos($event)" [nuevoCuerpoPlantilla]="nuevoCuerpoPlantilla"></app-configuracion-envio-masivo> -->
+    <!-- <app-descripcion-envio-masivo *ngSwitchCase="'descripcion'" [idPlantillaEnvio]="idPlantillaEnvio" [cuerpoPlantillas]="cuerpoPlantillas" (emitCuerpo)="emitCuerpo($event)" (emitGuardar)="guardar($event)" [idEnvio]="idEnvio"></app-descripcion-envio-masivo> -->
     <app-programacion-envio-masivo *ngSwitchCase="'programacion'"></app-programacion-envio-masivo>
     <app-documentos-envio-masivo *ngSwitchCase="'documentos'"></app-documentos-envio-masivo>
     <app-destinatarios-etiquetas-envio-masivo *ngSwitchCase="'destinatarios'">

@@ -19,6 +19,7 @@ import { ControlAccesoDto } from "../../../../../app/models/ControlAccesoDto";
 import { DialogoComunicacionesItem } from "../../../../models/DialogoComunicacionItem";
 import { Router } from "@angular/router";
 import { esCalendar } from "./../../../../utils/calendar";
+import { CommonsService } from '../../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -69,6 +70,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private router: Router
   ) {
     super(USER_VALIDATIONS);
@@ -196,6 +198,12 @@ export class Catalogos extends SigaWrapper implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

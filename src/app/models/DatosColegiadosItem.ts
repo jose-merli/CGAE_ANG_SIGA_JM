@@ -17,6 +17,7 @@ export class DatosColegiadosItem {
   tipoDireccion: string;
   numberColegiado: number;
   sexo: string;
+  incorporacionDate: Date;
   estadoCivil: string;
   estadoColegial: string;
   fechaIncorporacion: Date[];
@@ -24,6 +25,8 @@ export class DatosColegiadosItem {
   categoria: string;
   residencia: string;
   situacion: string;
+  situaciones: string[];
+
   situacionResidente: string;
   situacionresidente: ComboItemColegiado;
   inscrito: string;
@@ -46,12 +49,13 @@ export class DatosColegiadosItem {
   asientoContable: string;
   nMutualista: string;
   idTiposSeguro: string;
-  incorporacion: Date;
+  incorporacion: String;
   fechaJura: Date;
   fechaTitulacion: Date;
   comisiones: string;
   partidoJudicial: string;
   subtipoCV: string[];
+  domicilio: string;
 
   idEstadoCivil: string;
 
@@ -65,6 +69,9 @@ export class DatosColegiadosItem {
   //Filtro Busqueda de colegios
   colegio: string[];
   identificadords: string;
-
+  noAparecerRedAbogaciaFilter: string;
+  searchCount: boolean;
+  count: string;
+  situacionResidenteFilter: string;
   constructor() { }
 }

@@ -165,8 +165,20 @@ export class OldSigaServices {
 	constructor(private http: HttpClient) {}
 
 	getOldSigaUrl(service: string) {
-		return environment.oldSigaUrl + this.oldServices[service];
+		if(service=="login"||service=="loginDevelop"){
+			return environment.oldSigaUrl + this.oldServices[service] + '?token=' + sessionStorage.getItem('AuthOldSIGA');
+		}else{
+			return environment.oldSigaUrl + this.oldServices[service] + '&token=' + sessionStorage.getItem('AuthOldSIGA');
+		}
 	}
+
+	getBackend(service: string): Observable<any> {
+		return this.http
+		  .get(this.getOldSigaUrl(service))
+		  .map(response => {
+			return response;
+		  });
+	  }
 
 	get(url: string): Observable<any> {
 		let headers = new HttpHeaders({
