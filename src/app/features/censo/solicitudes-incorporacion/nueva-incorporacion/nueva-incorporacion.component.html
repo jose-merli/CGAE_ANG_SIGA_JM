@@ -84,7 +84,7 @@
                             </div>
                             <div class="form-group col-lg-4 col-md-5" style="float:right">
                                 <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
-                                <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaSolicitud,  'fechaSolicitud')"
+                                <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaSolicitud)"
                                     [(value)]="solicitudEditar.fechaSolicitud" [disabled]="consulta" [utc]="false"
                                     (valueChangeSelected)="fillFechaSolicitud($event)"
                                     (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
@@ -145,21 +145,21 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(tipoSolicitudSelected,  'tipoSolicitudSelected')" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorio(tipoSolicitudSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
                             [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
                             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.tipoColegiacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(tipoColegiacionSelected, 'tipoColegiacionSelected')" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorio(tipoColegiacionSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
                             [(ngModel)]="tipoColegiacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [options]="tipoColegiacion"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(modalidadDocumentacionSelected, 'modalidadDocumentacionSelected')" [filter]="true"
+                        <p-dropdown [ngClass]="styleObligatorio(modalidadDocumentacionSelected)" [filter]="true"
                             [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
                             [(ngModel)]="modalidadDocumentacionSelected"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="modalidadDocumentacion">
@@ -167,7 +167,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.nuevaIncorporacion.literal.fechaPrimerEstado" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaEstado, 'fechaEstado')"
+                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaEstado)"
                             [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaEstado($event)" (valueChangeInput)="fillFechaEstado($event)">
                         </app-fecha>
@@ -275,7 +275,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.SolicitudIncorporacion.literal.tipoIdentificacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(tipoIdentificacionSelected, 'tipoIdentificacionSelected')" [filter]="true"
+                        <p-dropdown [ngClass]="styleObligatorio(tipoIdentificacionSelected)" [filter]="true"
                             [showClear]="true" filterBy="label,labelSinTilde" disabled="true" class="select-form"
                             [(ngModel)]="tipoIdentificacionSelected"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="tipoIdentificacion">
@@ -283,7 +283,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}} (*)</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.numeroIdentificacion, 'numeroIdentificacion')" [disabled]="consulta"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.numeroIdentificacion)" [disabled]="consulta"
                             type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numeroIdentificacion"
                             (ngModelChange)="onChangeNifCif()">
                         <!-- <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
@@ -292,7 +292,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDatosGenerales.literal.tratamiento" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(tratamientoSelected, 'tratamientoSelected')" [disabled]="consulta"
+                        <p-dropdown [ngClass]="styleObligatorio(tratamientoSelected)" [disabled]="consulta"
                             class="select-form" [(ngModel)]="tratamientoSelected" [options]="tratamientos"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" filterMatchMode="contains"></p-dropdown>
@@ -301,13 +301,13 @@
                         <label>
                             {{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)
                         </label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.nombre, 'nombre')" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.nombre)" [disabled]="consulta" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.nombre">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.apellido1, 'apellido1')" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.apellido1)" [disabled]="consulta" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido1">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
@@ -339,7 +339,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaNacimiento, 'fechaNacimiento')"
+                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaNacimiento)"
                             [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaNacimiento($event)"
                             (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
@@ -404,7 +404,7 @@
                         <label>
                             {{"censo.datosDireccion.literal.pais2" | translate}} (*)
                         </label>
-                        <p-dropdown [ngClass]="styleObligatorio(paisSelected, 'paisSelected')" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorio(paisSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta"
                             placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
                             [(ngModel)]="paisSelected" [options]="paises"
@@ -415,17 +415,17 @@
                         <label>
                             {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
                         </label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.domicilio, 'domicilio')" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.domicilio)" [disabled]="consulta" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.domicilio">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.codigopostal" | translate}} (*)
                         </label>
-                        <input *ngIf="!isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal, 'codigoPostal')"
+                        <input *ngIf="!isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal)"
                             [disabled]="consulta" type="text" class="form-control" [maxLength]="5"
                             [(ngModel)]="solicitudEditar.codigoPostal" (ngModelChange)="onChangeCodigoPostal()" pInputText>
-                        <input *ngIf="isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal, 'codigoPostal')"
+                        <input *ngIf="isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal)"
                             [(ngModel)]="solicitudEditar.codigoPostal" type="text" class="form-control" [maxLength]="5"
                             [disabled]="consulta" pInputText>
                     </div>
@@ -466,7 +466,7 @@
 
                     <div *ngIf="isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)</label>
-                        <input [ngClass]="styleObligatorio(poblacionExtranjeraSelected, 'poblacionExtranjeraSelected')"
+                        <input [ngClass]="styleObligatorio(poblacionExtranjeraSelected)"
                             [(ngModel)]="poblacionExtranjeraSelected" type="text" class="form-control" [maxLength]="99"
                             pInputText>
                     </div>
@@ -474,7 +474,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.telefono1, 'telefono1')" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorioTlf(solicitudEditar.telefono1)" [disabled]="consulta" type="text"
                             class="form-control" [(ngModel)]="solicitudEditar.telefono1" (input)="changeTelefono1()"
                             pInputText>
                         <div *ngIf="!tlf1Valido">
@@ -510,8 +510,8 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
-                            {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.movil, 'movil')" [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.movil"
+                            {{"censo.datosDireccion.literal.telefonoMovil" | translate}} (*)</label>
+                        <input [ngClass]="styleObligatorioTlf(solicitudEditar.movil)" [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.movil"
                             (input)="changeMovil()" pInputText>
                         <div *ngIf="!mvlValido">
                             <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
@@ -521,7 +521,7 @@
                         <label>
                             {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
                         <a id = "mailHref" class="enlace">
-                        <input id = "mailNuevaIncorporacion" style="color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico, 'correoElectronico')" [disabled]="consulta"
+                        <input id = "mailNuevaIncorporacion" style="color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
                             type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
                             pInputText>
                         <div *ngIf="!emailValido">
