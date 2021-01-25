@@ -57,6 +57,16 @@
   <div class="col-1 row cuerpo">
     <div id="botones" class="row">
       <div class="col-12 boton">
+        <button pButton (click)="sube(selectedDatos)" [disabled]="!botActivos" style="width: -webkit-fill-available;"
+          icon="fas fa-chevron-up">
+        </button>
+      </div>
+      <div class="col-12 boton">
+        <button pButton (click)="baja(selectedDatos)" [disabled]="!botActivos" style="width: -webkit-fill-available;"
+          icon="fas fa-chevron-down">
+        </button>
+      </div>
+      <!-- <div class="col-12 boton">
         <button pButton (click)="sube(selectedDatos)" [disabled]="!botActivos || disabledBotones()" style="width: -webkit-fill-available;"
           icon="fas fa-chevron-up">
         </button>
@@ -65,7 +75,7 @@
         <button pButton (click)="baja(selectedDatos)" [disabled]="!botActivos || disabledBotones()" style="width: -webkit-fill-available;"
           icon="fas fa-chevron-down">
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 

@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { DataTable } from '../../../../../node_modules/primeng/primeng';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -15,6 +14,7 @@ export class TablaDinamicaComponent implements OnInit {
   seleccion: boolean = false;
   selectionMode: string = "single";
   message;
+  page: number = 0;
 
   @Input() datos;
   @Input() cols = [

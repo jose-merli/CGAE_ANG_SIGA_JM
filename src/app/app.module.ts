@@ -66,7 +66,6 @@ import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
 import { PipeNumberModule } from './commons/number-pipe/number-pipe.module';
 import { PrecioModule } from './commons/precio/precio.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
-import { TreeTableComponent } from './commons/tree-table/tree-table.component';
 import { TrimPipePipe } from './commons/trim-pipe/trim-pipe.pipe';
 import { ValidationModule } from './commons/validation/validation.module';
 import { AuditoriaUsuarios } from './features/administracion/auditoria/usuarios/auditoria-usuarios.component';
@@ -634,7 +633,6 @@ import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta
 		BuscadorProcuradoresComponent,
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
-		TreeTableComponent,
 		FichaColegialGeneralComponent,
 		DatosGeneralesFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,

@@ -16,6 +16,7 @@ export class TablaDinamicaColaGuardiaComponent implements OnInit {
   message;
   cols = [];
   buscadores = [];
+  page: number = 0;
 
   @Input() datos;
   @Input() idUltimo;
