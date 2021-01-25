@@ -474,7 +474,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.telefono" | translate}} 1 (*)</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.telefono1)" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorioTlf(solicitudEditar.telefono1)" [disabled]="consulta" type="text"
                             class="form-control" [(ngModel)]="solicitudEditar.telefono1" (input)="changeTelefono1()"
                             pInputText>
                         <div *ngIf="!tlf1Valido">
@@ -510,14 +510,13 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
-                            {{"censo.datosDireccion.literal.telefonoMovil" | translate}}</label>
-                        <input [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.movil"
+                            {{"censo.datosDireccion.literal.telefonoMovil" | translate}} (*)</label>
+                        <input [ngClass]="styleObligatorioTlf(solicitudEditar.movil)" [disabled]="consulta" type="text" class="form-control" [(ngModel)]="solicitudEditar.movil"
                             (input)="changeMovil()" pInputText>
                         <div *ngIf="!mvlValido">
                             <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
                         </div>
                     </div>
-                    
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
