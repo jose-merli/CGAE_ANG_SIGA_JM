@@ -183,7 +183,6 @@ import { NuevoExpedienteComponent } from './features/expedientes/nuevo-expedient
 import { DevolucionComponent } from './features/sjcs/devolucion/devolucion.component';
 import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
 import { CertificacionComponent } from './features/sjcs/certificacion/certificacion.component';
-import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
 import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
@@ -194,30 +193,8 @@ import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mante
 import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
 import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
-import { SolicitudesTurnosGuardiasComponent } from './features/sjcs/oficio/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
-import { BajasTemporalesComponent } from './features/sjcs/oficio/bajas-temporales/bajas-temporales.component';
-import { SaltosYCompensacionesComponent } from './features/sjcs/oficio/saltos-compensaciones/saltos-compensaciones.component';
-import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
-import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
-import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
-import { GuardiasBajasTemporalesComponent } from './features/sjcs/guardia/guardias-bajas-temporales/guardias-bajas-temporales.component';
-import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
-import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
-import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
-import { GuardiasCentralitaComponent } from './features/sjcs/guardia/guardias-centralita/guardias-centralita.component';
-import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
-import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
-import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
-import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
-import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
-import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
-import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
-import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
-import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
-import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
 import { InformeFacturacionMultipleComponent } from './features/sjcs/informes/informe-facturacion-multiple/informe-facturacion-multiple.component';
@@ -362,8 +339,6 @@ import { TablaBuscadorProcuradorComponent } from './commons/buscador-procuradore
 import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-generalSJCS.module';
 
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
-import { OficioModule } from './features/sjcs/oficio/oficio.module';
-import { TurnosComponent } from './features/sjcs/oficio/turnos/turnos.component';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 
 
@@ -429,10 +404,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		FacturacionSociedadesCensoComponent,
 		ComunicacionSociedadesComponent,
 
-		//SJRS
-		DesignacionesComponent,
-		BajasTemporalesComponent,
-
 		//Certificados
 		ComunicacionInterprofesionalComponent,
 		SolicitarCompraComponent,
@@ -485,31 +456,8 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		MantenimientoComisariasComponent,
 		MantenimientoJuzgadosComponent,
 		MaestroPJComponent,
-		SolicitudesTurnosGuardiasComponent,
-		SaltosYCompensacionesComponent,
-		GuardiasSolicitudesTurnosComponent,
-		TurnosComponent,
-		GuardiasIncompatibilidadesComponent,
-		ProgramacionCalendariosComponent,
-		GuardiasBajasTemporalesComponent,
-		TurnosComponent,
-		GuardiasSaltosCompensacionesComponent,
-		DefinirListasGuardiasComponent,
-		GuardiasAsistenciasComponent,
-		GuardiasCentralitaComponent,
-		VolanteExpresComponent,
 		SOJComponent,
 		GestionActasComponent,
-		MantenimientoFacturacionComponent,
-		PrevisionesComponent,
-		MantenimientoPagosComponent,
-		MovimientosVariosComponent,
-		TramosLECComponent,
-		RetencionesJudicialesComponent,
-		BusquedaRetencionesAplicadasComponent,
-		GenerarImpreso190Component,
-		ResumenPagosComponent,
-		EnvioReintegrosXuntaComponent,
 		JustificacionLetradoComponent,
 		InformeFacturacionComponent,
 		InformeFacturacionMultipleComponent,
@@ -739,7 +687,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		// BusquedaAsuntosModule,
 		EditorModule,
 		SjcsModule,
-		OficioModule,
 		BusquedaAsuntosModule
 	],
 

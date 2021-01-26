@@ -4,7 +4,6 @@ import { ProgComunicacionItem } from '../../../../../models/ProgramacionComunica
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
-import { TramosLECComponent } from '../../../../sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 
