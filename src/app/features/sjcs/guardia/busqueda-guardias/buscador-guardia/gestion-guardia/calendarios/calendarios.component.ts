@@ -9,7 +9,7 @@ import { PersistenceService } from '../../../../../../../_services/persistence.s
 })
 export class CalendariosComponent implements OnInit {
 
-
+  @Input() tarjetaCalendarios;
   modoEdicion: boolean = false;
   openFicha;
   datos = {

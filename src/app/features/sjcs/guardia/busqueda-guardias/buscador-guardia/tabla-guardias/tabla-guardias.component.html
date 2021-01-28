@@ -5,7 +5,7 @@
     <!-- TABLA RESULTADOS -->
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -27,15 +27,18 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="setItalic(dato)">
+            <div *ngIf="setItalic(dato) && col.field != 'nombre'">
               <span [ngStyle]="{ 'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'} ">{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="!setItalic(dato)">
+            <div *ngIf="!setItalic(dato) && col.field != 'nombre'">
               <span>{{dato[col.field]}}</span>
             </div>
-            <!-- <div *ngIf="setItalic(dato) && col.field == 'nombre'">
-              <a [routerLink]="" (click)="openTab(dato)" [ngStyle]="{ 'font-style': 'italic', 'font-weight': 'bold', 'text-decoration': 'line-through'} ">{{dato[col.field]}}</a>
+
+            <div *ngIf="col.field == 'nombre'">
+              <a class="enlace"
+              (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div>
+            <!--
             <div *ngIf="!setItalic(dato) && col.field == 'nombre'">
               <a [routerLink]="" (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div> -->
@@ -66,8 +69,6 @@
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>
     </p-table>

@@ -36,6 +36,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   msgs = [];
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean = false;
+  @Input() tarjetaCalendariosGuardias;
 
   comboUnidad = datos_combos.comboUnidadesTiempo;
 

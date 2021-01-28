@@ -15,6 +15,7 @@ export class DatosTurnoGuardiasComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @Input() modoEdicion: boolean = false;
+  @Input() tarjetaTurno: string;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService) { }

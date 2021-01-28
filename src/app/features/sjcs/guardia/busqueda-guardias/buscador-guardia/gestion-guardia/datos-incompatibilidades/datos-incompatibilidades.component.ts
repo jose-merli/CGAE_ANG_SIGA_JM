@@ -21,6 +21,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   selectedItem: number = 10
   progressSpinner: boolean = false;
 
+  @Input() tarjetaIncompatibilidades;
   @Input() modoEdicion: boolean = false;
   @ViewChild("tabla") tabla;
   datos;

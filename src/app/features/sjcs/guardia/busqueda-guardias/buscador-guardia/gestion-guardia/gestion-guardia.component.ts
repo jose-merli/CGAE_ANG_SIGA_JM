@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
 import { procesos_maestros } from '../../../../../../permisos/procesos_maestros';
@@ -32,9 +32,29 @@ export class GestionGuardiaComponent implements OnInit {
   historico: boolean = false;
   progressSpinner: boolean = false;
   datosRedy = new EventEmitter<any>();
-  titulo = "justiciaGratuita.oficio.turnos.inforesumen";
-  infoResumen = [];
 
+  infoResumen = [];
+  enlacesTarjetaResumen: any[] = [];
+  manuallyOpened:Boolean;
+  openGen: Boolean = false;
+  openCalendarios: Boolean = false;
+  openConfigCola: Boolean = false;
+  openCola: Boolean = false;
+  openIncompatibilidades: Boolean = false;
+  openBaremos: Boolean = false;
+  openCalendarioGuardia: Boolean = false;
+  openInscripciones: Boolean = false;
+  openTurno: Boolean = false;
+
+  tarjetaDatosGenerales: string;
+  tarjetaCalendariosGuardias: string;
+  tarjetaConfigColatarjetaColaGuardia: string;
+  tarjetaColaGuardia : string;
+  tarjetaIncompatibilidades: string;
+  tarjetaBaremos: string;
+  tarjetaCalendarios: string;  
+  tarjetaInscripcionesGuardias: string;
+  tarjetaTurnoGuardias: string;
 
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
@@ -43,7 +63,7 @@ export class GestionGuardiaComponent implements OnInit {
 
 
   ngOnInit() {
-
+    this.infoResumen = [];
     if (this.persistenceService.getDatos() != undefined) {
       this.search();
       this.modoEdicion = true;
@@ -51,7 +71,10 @@ export class GestionGuardiaComponent implements OnInit {
       this.modoEdicion = false;
     }
     this.obtenerPermisos();
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.enviarEnlacesTarjeta();
   }
 
   search() {
@@ -308,6 +331,158 @@ export class GestionGuardiaComponent implements OnInit {
         console.error(error);
         this.progressSpinner = false
       });
+
+      //
+      //PROVISIONAL
+      //cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
+      //
+      setTimeout(() => {
+        this.enviarEnlacesTarjeta();
+      }, 2000);
   }
 
+  enviarEnlacesTarjeta() {
+    this.enlacesTarjetaResumen = [];
+
+    let pruebaTarjeta = {
+        label: "general.message.datos.generales",
+        value: document.getElementById("datosGenerales"),
+        nombre: "datosGenerales",
+      };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+        label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
+        value: document.getElementById("calendarioGuardia"),
+        nombre: "calendarioGuardia",
+      };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+      label: "justiciaGratuita.guardia.gestion.configuracionCola",
+      value: document.getElementById("configuracionCola"),
+      nombre: "configuracionCola",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+      label: "justiciaGratuita.oficio.turnos.coladeguardias",
+      value: document.getElementById("colaGuardias"),
+      nombre: "colaGuardias",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+      label: "dato.jgr.guardia.guardias.incompatibilidades",
+      value: document.getElementById("incompatibilidades"),
+      nombre: "incompatibilidades",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+      label: "dato.jgr.guardia.guardias.baremos",
+      value: document.getElementById("baremos"),
+      nombre: "baremos",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+      label: "agenda.fichaEventos.datosGenerales.calendario",
+      value: document.getElementById("calendarios"),
+      nombre: "calendarios",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta = {
+      label: "menu.justiciaGratuita.oficio.inscripciones",
+      value: document.getElementById("inscripciones"),
+      nombre: "inscripciones",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+    
+    pruebaTarjeta = {
+      label: "dato.jgr.guardia.guardias.turno",
+      value: document.getElementById("turnos"),
+      nombre: "turnos",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+  }
+
+  isCloseReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "generales":
+          this.openGen = this.manuallyOpened;
+          break;
+        case "calendarios":
+          this.openCalendarios = this.manuallyOpened;
+          break;
+        case "configCola":
+          this.openConfigCola = this.manuallyOpened;
+          break;
+        case "cola":
+          this.openCola = this.manuallyOpened;
+          break;
+        case "incompatibilidades":
+          this.openIncompatibilidades = this.manuallyOpened;
+          break;
+        case "baremos":
+          this.openBaremos = this.manuallyOpened;
+          break;
+        case "calendario":
+          this.openCalendarios = this.manuallyOpened;
+          break;
+        case "inscripciones":
+          this.openInscripciones = this.manuallyOpened;
+          break;
+        case "turno":
+          this.openTurno = this.manuallyOpened;
+          break;
+      }
+    }
+  }
+
+  isOpenReceive(event) {
+
+    if (event != undefined) {
+      switch (event) {
+        case "generales":
+          this.openGen = true;
+          break;
+        case "calendarioGuardia":
+          this.openCalendarioGuardia = true;
+          break;
+        case "configCola":
+          this.openConfigCola = true;
+          break;
+        case "cola":
+          this.openCola = true;
+          break;
+        case "incompatibilidades":
+          this.openIncompatibilidades = true;
+          break;
+        case "baremos":
+          this.openBaremos = true;
+          break;
+        case "calendarios":
+          this.openCalendarios = true;
+          break;
+        case "inscripciones":
+          this.openInscripciones = true;
+          break;
+        case "turnos":
+          this.openTurno = true;
+          break;
+      }
+    }
+  }
 }

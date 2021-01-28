@@ -19,6 +19,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Input() tarjetaDatosGenerales;
 
   tipoGuardiaResumen = {
     label: "",

@@ -25,6 +25,7 @@ export class DatosConfColaComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Input() tarjetaConfigCola;
 
   body: GuardiaItem = new GuardiaItem();
   bodyInicial;

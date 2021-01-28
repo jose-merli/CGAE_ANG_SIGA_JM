@@ -32,7 +32,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   botActivos: boolean = true;
   editable: boolean = true;
 
-
+  @Input() tarjetaColaGuardia;
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
   @ViewChild(TablaDinamicaColaGuardiaComponent) tabla;

@@ -30,8 +30,7 @@ export class DatosBaremosComponent implements OnInit {
   progressSpinner: boolean = false;
   //Resultados de la busqueda
 
-
-
+  @Input() tarjetaBaremos;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,

@@ -62,12 +62,6 @@ export class TablaGuardiasComponent implements OnInit {
 
   }
 
-  // aaaaaaaaaaaaaaaa(evento) {
-  //   if (evento.data.fechabaja == undefined && this.historico)
-  //     this.selectedDatos.pop();
-  // }
-
-
   isSelectMultiple() {
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
@@ -176,13 +170,13 @@ export class TablaGuardiasComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
       this.datos = new GuardiaItem();
-      this.datos.idGuardia = evento.data.idGuardia;
-      this.datos.idTurno = evento.data.idTurno;
+      this.datos.idGuardia = evento.idGuardia;
+      this.datos.idTurno = evento.idTurno;
       this.persistenceService.setDatos(this.datos);
-      this.persistenceService.setHistorico(evento.data.fechabaja ? true : false);
+      this.persistenceService.setHistorico(evento.fechabaja ? true : false);
       this.router.navigate(["/gestionGuardias"]);
     } else {
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (evento.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
     }
