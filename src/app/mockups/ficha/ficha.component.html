@@ -1,0 +1,30 @@
+<div #main [ngClass]="{'relative' : this.enableSticky}">
+  <div #parent (scroll)="manageScroll($event, navbar)" style="overflow: scroll; height: 150px;">
+    <app-migas-de-pan *ngIf="rutas" [rutas]="rutas"></app-migas-de-pan>
+
+    <div #navbar [ngClass]="{'absolute' : this.enableSticky}" id="navbar">
+      <div *ngIf="tarjetaFija">
+        <app-tarjeta *ngIf="tarjetaFija.fixed" [imagen]="tarjetaFija.imagen" [icon]="tarjetaFija.icon"
+          [iconFixed]="tarjetaFija.iconFixed" [tipo]="tarjetaFija.tipo" [nombre]="tarjetaFija.nombre"
+          [campos]="tarjetaFija.campos" [fixed]="tarjetaFija.fixed" [enlaces]="tarjetaFija.enlaces"></app-tarjeta>
+      </div>
+    </div>
+    <div class="" #content>
+      <div class="py-1" *ngFor="let tarj of listaTarjetas; let i = index">
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel [disabled]="tarj.tipo != 'detalle'">
+            <mat-expansion-panel-header [ngClass]="{'tarjetaFija' : tarj.fixed}" [collapsedHeight]="'auto'"
+              [expandedHeight]="'auto'">
+              <app-tarjeta *ngIf="!tarj.fixed" [imagen]="tarj.imagen" [icon]="tarj.icon" [tipo]="tarj.tipo"
+                [nombre]="tarj.nombre" [campos]="tarj.campos" [enlaces]="tarj.enlaces"></app-tarjeta>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <!-- <app-detalle-tarjeta></app-detalle-tarjeta> -->
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
