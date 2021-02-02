@@ -63,6 +63,7 @@ export class TarjetaColaOficio implements OnInit {
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
+  @Input() tarjetaColaOficio: string;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;

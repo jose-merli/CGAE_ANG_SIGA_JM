@@ -1,6 +1,6 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div *ngIf="permisosTarjeta">
-  <div class="busqueda-container">
+  <div class="busqueda-container" id="configColaOficio">
     <div class="card">
       <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('configuracioncolaoficio')">
         <div *ngIf="!openFicha" class="form-row">

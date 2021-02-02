@@ -63,6 +63,7 @@ export class TarjetaColaGuardias implements OnInit {
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
+  @Input() tarjetaColaGuardias: string;
   updateCombo: boolean = false;
   updateTurnosItem: boolean = false;
   // @Input() pesosSeleccionadosTarjeta;

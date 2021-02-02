@@ -4,9 +4,9 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
       [responsive]="true" [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -34,8 +34,11 @@
             <div *ngIf="!setItalic(dato) && col.field =='fechasolicitud'">
               <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
-            <div *ngIf="!setItalic(dato) && col.field !='fechasolicitud'">
+            <div *ngIf="!setItalic(dato) && col.field !='fechasolicitud' && col.field!='apellidosnombre'">
               <span>{{dato[col.field]}}</span>
+            </div>
+            <div *ngIf="!setItalic(dato) && col.field == 'apellidosnombre'">
+              <a class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div>
           </td>
         </tr>
@@ -71,9 +74,6 @@
               label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
             </p-checkbox> -->
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
-            (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>
     </p-table>

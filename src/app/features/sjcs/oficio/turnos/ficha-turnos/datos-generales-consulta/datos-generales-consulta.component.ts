@@ -73,6 +73,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   @ViewChild("importe") importe;
   //Resultados de la busqueda
   @Input() turnosItem: TurnosItems;
+  @Input() tarjetaDatosGenerales: string;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,

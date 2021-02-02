@@ -66,6 +66,7 @@ export class TarjetaGuardias implements OnInit {
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
+  @Input() tarjetaGuardias: string;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;

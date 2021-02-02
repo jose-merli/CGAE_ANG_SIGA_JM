@@ -67,6 +67,7 @@ export class TarjetaInscripciones implements OnInit {
   @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
+  @Input() tarjetaInscripciones: string;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;

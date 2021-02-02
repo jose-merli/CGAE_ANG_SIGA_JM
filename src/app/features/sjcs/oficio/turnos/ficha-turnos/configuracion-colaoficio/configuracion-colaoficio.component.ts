@@ -13,12 +13,14 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+
 @Component({
   selector: "app-configuracion-colaoficio",
   templateUrl: "./configuracion-colaoficio.component.html",
   styleUrls: ["./configuracion-colaoficio.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
+
 export class ConfiguracionColaOficioComponent implements OnInit {
 
   //Resultados de la busqueda
@@ -26,6 +28,8 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() idTurno;
   @Input() turnosItem: TurnosItems;
+  @Input() tarjetaConfiguracionColaOficio: string;
+
   turnosItem2;
   openFicha: boolean = false;
   msgs = [];

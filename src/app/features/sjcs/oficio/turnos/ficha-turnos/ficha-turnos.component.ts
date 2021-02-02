@@ -27,6 +27,25 @@ export class FichaTurnosComponent implements OnInit {
 	datos;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
+
+	enlacesTarjetaResumen: any[] = [];
+	manuallyOpened:Boolean;
+	openGen: Boolean = false;
+	openConfigTurnos: Boolean = false;
+	openConfigColaOficio: Boolean = false;
+	openColaOficio: Boolean = false;
+	openGuardias: Boolean = false;
+	openColaGuardias: Boolean = false;
+	openInscripciones: Boolean = false;
+
+	tarjetaDatosGenerales: string;
+	tarjetaConfiguracionTurnos: string;
+	tarjetaConfiguracionColaOficio: string;
+	tarjetaColaOficio : string;
+	tarjetaGuardias: string;
+	tarjetaColaGuardias: string;
+	tarjetaInscripciones: string;
+
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
 	ngOnInit() {
@@ -79,6 +98,14 @@ export class FichaTurnosComponent implements OnInit {
 			},
 
 		];
+
+		//
+      	//PROVISIONAL
+      	//cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
+      	//
+      	setTimeout(() => {
+        	this.enviarEnlacesTarjeta();
+      	}, 2000);
 	}
 
 	searchTurnos() {
@@ -119,4 +146,137 @@ export class FichaTurnosComponent implements OnInit {
 	backTo() {
 		this.location.back();
 	}
+
+	enviarEnlacesTarjeta() {
+		this.enlacesTarjetaResumen = [];
+	
+		let pruebaTarjeta = {
+			label: "general.message.datos.generales",
+			value: document.getElementById("datosGenerales"),
+			nombre: "datosGenerales",
+		  };
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+			label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
+			value: document.getElementById("calendarioGuardia"),
+			nombre: "calendarioGuardia",
+		  };
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+		  label: "justiciaGratuita.guardia.gestion.configuracionCola",
+		  value: document.getElementById("configuracionCola"),
+		  nombre: "configuracionCola",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+		  label: "justiciaGratuita.oficio.turnos.coladeguardias",
+		  value: document.getElementById("colaGuardias"),
+		  nombre: "colaGuardias",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+		  label: "dato.jgr.guardia.guardias.incompatibilidades",
+		  value: document.getElementById("incompatibilidades"),
+		  nombre: "incompatibilidades",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+		  label: "dato.jgr.guardia.guardias.baremos",
+		  value: document.getElementById("baremos"),
+		  nombre: "baremos",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+		  label: "agenda.fichaEventos.datosGenerales.calendario",
+		  value: document.getElementById("calendarios"),
+		  nombre: "calendarios",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	
+		pruebaTarjeta = {
+		  label: "menu.justiciaGratuita.oficio.inscripciones",
+		  value: document.getElementById("inscripciones"),
+		  nombre: "inscripciones",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+		
+		pruebaTarjeta = {
+		  label: "dato.jgr.guardia.guardias.turno",
+		  value: document.getElementById("turnos"),
+		  nombre: "turnos",
+		};
+	
+		this.enlacesTarjetaResumen.push(pruebaTarjeta);
+	  }
+	
+	  isCloseReceive(event) {
+		if (event != undefined) {
+		  	switch (event) {
+				case "generales":
+				this.openGen = this.manuallyOpened;
+				break;
+				case "configTurnos":
+				this.openConfigTurnos = this.manuallyOpened;
+				break;
+				case "configColaOficio":
+				this.openConfigColaOficio = this.manuallyOpened;
+				break;
+				case "colaOficio":
+				this.openColaOficio = this.manuallyOpened;
+				break;
+				case "guardias":
+				this.openGuardias = this.manuallyOpened;
+				break;
+				case "colaGuardias":
+				this.openColaGuardias = this.manuallyOpened;
+				break;
+				case "inscripciones":
+				this.openInscripciones = this.manuallyOpened;
+				break;
+			}
+		}
+	  }
+	
+	  isOpenReceive(event) {
+	
+		if (event != undefined) {
+		  switch (event) {
+			case "generales":
+			  this.openGen = true;
+			  break;
+			case "configTurnos":
+			  this.openConfigTurnos = true;
+			  break;
+			case "configColaOficio":
+			  this.openConfigColaOficio = true;
+			  break;
+			case "colaOficio":
+			  this.openColaOficio = true;
+			  break;
+			case "guardias":
+			  this.openGuardias = true;
+			  break;
+			case "colaGuardias":
+			  this.openColaGuardias = true;
+			  break;
+			case "inscripciones":
+			  this.openInscripciones = true;
+			  break;
+		  }
+		}
+	  }
 }

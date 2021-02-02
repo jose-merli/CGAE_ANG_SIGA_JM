@@ -473,11 +473,11 @@ export class TablaTurnosComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     if (!this.selectAll && !this.selectMultiple) {
       this.progressSpinner = true;
-      this.persistenceService.setDatos(evento.data);
-      this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.data.idturno } });
+      this.persistenceService.setDatos(evento);
+      this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.idturno } });
     } else {
 
-      if (evento.data.fechabaja == undefined && this.historico) {
+      if (evento.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
 
