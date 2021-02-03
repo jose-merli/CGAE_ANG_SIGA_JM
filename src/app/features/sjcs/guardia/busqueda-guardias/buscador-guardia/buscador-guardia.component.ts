@@ -81,7 +81,10 @@ export class BuscadorGuardiaComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         console.log(err);
-      })
+      },
+      ()=>{
+        this.commonsService.scrollTablaFoco('tablaFoco');
+      });
   }
 
   resetSelect() {

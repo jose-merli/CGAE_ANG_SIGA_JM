@@ -6,7 +6,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
       class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
+      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">

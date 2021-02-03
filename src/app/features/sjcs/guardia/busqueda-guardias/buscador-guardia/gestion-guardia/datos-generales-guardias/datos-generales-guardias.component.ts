@@ -21,6 +21,9 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() tarjetaDatosGenerales;
 
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+
   tipoGuardiaResumen = {
     label: "",
     value: "",
@@ -35,6 +38,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   comboTurno = [];
   progressSpinner;
   msgs;
+  resaltadoDatos: boolean = false;
+
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
@@ -42,6 +47,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   ngOnInit() {
+    this.resaltadoDatos=true;
+
     this.getCols();
     this.historico = this.persistenceService.getHistorico()
     this.getComboTipoGuardia();
@@ -78,11 +85,24 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.progressSpinner = false;
       });
-
   }
 
-  abreCierraFicha() {
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonServices.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  abreCierraFicha(key) {
     this.openFicha = !this.openFicha;
+
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
 
@@ -211,18 +231,22 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   save() {
-    if (this.permisoEscritura && !this.historico) {
-      this.progressSpinner = true;
-      let url = "";
+    if(!this.disabledSave()){
+      if (this.permisoEscritura && !this.historico) {
+        this.progressSpinner = true;
+        let url = "";
 
-      if (!this.modoEdicion && this.permisoEscritura) {
-        url = "busquedaGuardias_createGuardia";
-        this.callSaveService(url);
+        if (!this.modoEdicion && this.permisoEscritura) {
+          url = "busquedaGuardias_createGuardia";
+          this.callSaveService(url);
 
-      } else if (this.permisoEscritura) {
-        url = "busquedaGuardias_updateGuardia";
-        this.callSaveService(url);
+        } else if (this.permisoEscritura) {
+          url = "busquedaGuardias_updateGuardia";
+          this.callSaveService(url);
+        }
       }
+    }else{
+      this.muestraCamposObligatorios();
     }
   }
 

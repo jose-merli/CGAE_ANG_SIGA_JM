@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { GuardiaObject } from '../../../../../../models/guardia/GuardiaObject';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-tabla-guardias',
@@ -45,7 +46,8 @@ export class TablaGuardiasComponent implements OnInit {
     private router: Router,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -59,7 +61,6 @@ export class TablaGuardiasComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
-
   }
 
   isSelectMultiple() {

@@ -423,8 +423,8 @@ export class GestionGuardiaComponent implements OnInit {
         case "generales":
           this.openGen = this.manuallyOpened;
           break;
-        case "calendarios":
-          this.openCalendarios = this.manuallyOpened;
+        case "calendarioGuardia":
+          this.openCalendarioGuardia = this.manuallyOpened;
           break;
         case "configCola":
           this.openConfigCola = this.manuallyOpened;
@@ -438,7 +438,7 @@ export class GestionGuardiaComponent implements OnInit {
         case "baremos":
           this.openBaremos = this.manuallyOpened;
           break;
-        case "calendario":
+        case "calendarios":
           this.openCalendarios = this.manuallyOpened;
           break;
         case "inscripciones":

@@ -1,15 +1,15 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000">
 </p-growl>
 <div class="card" id="incompatibilidades">
-  <div class="card-header header-ficha" (click)="abreCierraFicha()">
+  <div class="card-header header-ficha">
     <div *ngIf="!openFicha" class="form-row">
       <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
+        <div class="img-colegiado" (click)="abreCierraFicha()">
           <i class="fas fa-certificate icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-10 cabeza">
-        <div class="d-flex justify-content-end mb-1">
+        <div class="d-flex justify-content-end mb-1 pointer" (click)="abreCierraFicha()">
           <label class="mr-auto title-ficha">{{'dato.jgr.guardia.guardias.incompatibilidades' | translate}}</label>
         </div>
         <div class="d-flex justify-content-between sub">
@@ -17,11 +17,11 @@
             <strong> {{resumenIncompatibilidades}}</strong>
           </label>
 
-          <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+          <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
       <div class="img-colegiado">
         <i class="fas fa-certificate icon-ficha"></i>
       </div>

@@ -1,16 +1,16 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 
 <div class="card" id="calendarioGuardia">
-  <div class="card-header header-ficha" (click)="abreCierraFicha()">
+  <div class="card-header header-ficha">
     <div *ngIf="!openFicha" class="form-row">
       <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
+        <div class="img-colegiado" (click)="abreCierraFicha('calendarioGuardia')">
           <i class="fas fa-calendar-alt icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-10 cabeza">
-        <div class="d-flex justify-content-end mb-1">
-          <label class="mr-auto title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
+        <div class="d-flex justify-content-end mb-1 pointer" (click)="abreCierraFicha('calendarioGuardia')">
+          <label class="mr-auto title-ficha" (click)="abreCierraFicha('calendarioGuardia')">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
         </div>
         <div class="d-flex justify-content-between sub">
           <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
@@ -26,15 +26,15 @@
             <strong *ngIf="!resumen.separarGuardia">No</strong>
             <strong *ngIf="resumen.separarGuardia">Sí</strong>
           </label>
-          <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          <i (click)="abreCierraFicha('calendarioGuardia')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+    <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('calendarioGuardia')">
       <div class="img-colegiado">
         <i class="fas fa-calendar-alt icon-ficha"></i>
       </div>
-      <label class="title-ficha">{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
+      <label class="title-ficha" >{{ 'justiciaGratuita.guardia.gestion.configuracionCalendarios' | translate }}</label>
       <i class="fa fa-angle-up ml-auto"></i>
     </div>
   </div>
@@ -55,7 +55,7 @@
             <label>
               {{ "dato.jgr.guardia.guardias.duracion" | translate }} (*)
             </label>
-            <input type="text" [(ngModel)]="body.diasGuardia" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico"
+            <input type="text" [ngClass]="styleObligatorio(body.diasGuardia)" [(ngModel)]="body.diasGuardia" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico"
               class="form-control" pInputText>
             <!-- <input [(ngModel)]="body.duracion" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="200"
               pInputText> -->
@@ -98,7 +98,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.diasSeparacionGuardias" | translate}} (*)
             </label>
-            <input type="text" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.diasSeparacionGuardias"
+            <input type="text" [ngClass]="styleObligatorio(body.diasSeparacionGuardias)" (keypress)="numberOnly($event)" [disabled]="!permisoEscritura || historico" [(ngModel)]="body.diasSeparacionGuardias"
               class="form-control" pInputText>
           </div>
 
@@ -199,7 +199,7 @@
     <div class="text-right main-button ">
       <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"></button>
-      <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
     </div>
   </div>
 </div>

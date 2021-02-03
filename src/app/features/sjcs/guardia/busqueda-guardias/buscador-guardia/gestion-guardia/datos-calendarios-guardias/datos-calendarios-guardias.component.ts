@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { datos_combos } from '../../../../../../../utils/datos_combos';
@@ -6,6 +6,7 @@ import { PersistenceService } from '../../../../../../../_services/persistence.s
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { element } from '../../../../../../../../../node_modules/protractor';
 import { Jsonp } from '../../../../../../../../../node_modules/@angular/http';
+import { CommonsService } from '../../../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-datos-calendarios-guardias',
@@ -37,16 +38,20 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean = false;
   @Input() tarjetaCalendariosGuardias;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   comboUnidad = datos_combos.comboUnidadesTiempo;
+  resaltadoDatos: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
   ngOnInit() {
-
+    this.resaltadoDatos=true;
     this.festividades = this.creaSemana();
     this.laborables = this.creaSemana();
 
@@ -90,6 +95,17 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
       });
     if (this.persistenceService.getHistorico())
       this.historico = this.persistenceService.getHistorico();
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
   }
 
   onChangeSeleccLaborables() {
@@ -185,9 +201,12 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
 
 
-  abreCierraFicha() {
+  abreCierraFicha(key) {
     if (this.modoEdicion)
       this.openFicha = !this.openFicha;
+
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   creaSemana() {
@@ -201,18 +220,22 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     return semana;
   }
   save() {
-    if (this.permisoEscritura && !this.historico) {
-      this.body.seleccionFestivos = "";
-      this.body.seleccionLaborables = "";
-      this.festividades.forEach(element => {
-        if (element.value)
-          this.body.seleccionFestivos += element.label;
-      })
-      this.laborables.forEach(element => {
-        if (element.value)
-          this.body.seleccionLaborables += element.label;
-      });
-      this.callSaveService();
+    if(!this.disabledSave()){
+      if (this.permisoEscritura && !this.historico) {
+        this.body.seleccionFestivos = "";
+        this.body.seleccionLaborables = "";
+        this.festividades.forEach(element => {
+          if (element.value)
+            this.body.seleccionFestivos += element.label;
+        })
+        this.laborables.forEach(element => {
+          if (element.value)
+            this.body.seleccionLaborables += element.label;
+        });
+        this.callSaveService();
+      }
+    }else{
+      this.muestraCamposObligatorios();
     }
   }
 
