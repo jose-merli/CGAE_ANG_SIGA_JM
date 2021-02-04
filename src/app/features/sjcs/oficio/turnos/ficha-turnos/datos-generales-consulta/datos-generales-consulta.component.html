@@ -55,7 +55,7 @@
                 {{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }} (*)
               </label>
               <input [(ngModel)]="turnosItem.abreviatura" [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="30"
-                pInputText  >
+                pInputText  [ngClass]="styleObligatorio('datosGenerales', turnosItem.abreviatura)">
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -63,7 +63,7 @@
                 {{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
               <input [(ngModel)]="turnosItem.nombre" [disabled]="disableAll || historico" type="text" class="form-control" [maxLength]="100"
-                pInputText>
+              [ngClass]="styleObligatorio('datosGenerales', turnosItem.nombre)" pInputText>
             </div>
 
             <div class="form-group col-lg-6 col-md-6">
@@ -72,7 +72,7 @@
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idpartidapresupuestaria' [filter]="true"
                 filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="partidas" placeholder="{{'general.boton.seleccionar' | translate}}"
-                [showClear]="true">
+                [ngClass]="styleObligatorio('datosGenerales', turnosItem.idpartidapresupuestaria)" [showClear]="true">
               </p-dropdown>
             </div>
 
@@ -81,7 +81,7 @@
                 {{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idgrupofacturacion' [filter]="true"
-                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="grupofacturacion" placeholder="{{'general.boton.seleccionar' | translate}}"
+                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="grupofacturacion" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idgrupofacturacion)" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -99,7 +99,7 @@
                 {{"justiciaGratuita.oficio.turnos.tipoturno" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idtipoturno' [filter]="true"
-                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="tiposturno" placeholder="{{'general.boton.seleccionar' | translate}}"
+                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="tiposturno" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idtipoturno)" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -129,7 +129,7 @@
                 {{"menu.justiciaGratuita.maestros.Area" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idarea' (onChange)="onChangeArea()"
-                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="areas" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idarea)"[options]="areas" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -139,7 +139,7 @@
                 {{"menu.justiciaGratuita.maestros.Materia" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [(ngModel)]='turnosItem.idmateria' [(disabled)]="isDisabledMateria || disableAll || historico"
-                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="materias" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [filter]="true" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idmateria)" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="materias" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -149,7 +149,7 @@
                 {{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idzona' (onChange)="onChangeZona()"
-                [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="zonas" placeholder="{{'general.boton.seleccionar' | translate}}"
+                [filter]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idzona)" filterMatchMode="contains" [options]="zonas" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -159,7 +159,7 @@
                 {{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [(ngModel)]='turnosItem.idsubzona' [(disabled)]="isDisabledSubZona || disableAll || historico"
-                (onChange)="partidoJudiciales()" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
+                (onChange)="partidoJudiciales()" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idsubzona)" [filter]="true" filterBy="label,labelSinTilde" filterMatchMode="contains"
                 [options]="subzonas" placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
               </p-dropdown>
             </div>
@@ -179,7 +179,7 @@
                 {{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll || historico" [(ngModel)]='turnosItem.idjurisdiccion' [filter]="true"
-                filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}"
+                filterBy="label,labelSinTilde" filterMatchMode="contains" [ngClass]="styleObligatorio('datosGenerales', turnosItem.idjurisdiccion)" [options]="jurisdicciones" placeholder="{{'general.boton.seleccionar' | translate}}"
                 [showClear]="true">
               </p-dropdown>
             </div>
@@ -217,7 +217,7 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="rest()" pButton [disabled]="disableAll || historico" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="save()" pButton  type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

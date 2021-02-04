@@ -13,6 +13,7 @@ import { PrisionItem } from '../../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { filter } from 'rxjs/operator/filter';
 @Component({
   selector: "app-datos-generales-consulta",
   templateUrl: "./datos-generales-consulta.component.html",
@@ -50,6 +51,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   partidasJudiciales: any[] = [];
   isDisabledMateria: boolean = false;
   comboPJ
+  resaltadoDatosGenerales: boolean = false;
   datos2;
   tipoturnoDescripcion;
   jurisdiccionDescripcion;
@@ -103,8 +105,10 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   abreCierraFicha() {
     this.openFicha = !this.openFicha;
+    this.resaltadoDatosGenerales = true;
   }
   ngOnInit() {
+    this.resaltadoDatosGenerales = true;
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -389,6 +393,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     }
 
   }
+
+  styleObligatorio(resaltado, evento) {
+    if ((evento == null || evento == undefined || evento == "") && resaltado == "datosGenerales" && this.resaltadoDatosGenerales) {
+      return "camposObligatorios";
+    }
+  }
+
   onChangeZona() {
 
     this.turnosItem.idsubzona = "";
@@ -776,7 +787,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       err => {
 
         if (JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
+          this.expandirPanelObligatorio();
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -789,6 +801,16 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       }
     );
 
+  }
+
+  expandirPanelObligatorio(){
+    var camposOblig = document.getElementsByClassName('camposObligatorios');
+          for (let i = 0; i < camposOblig.length; i++) {
+            if(camposOblig[i].tagName == "P-DROPDOWN"){
+              camposOblig[i].setAttribute("filter", "true"); 
+              console.log(i)
+            }
+          }
   }
 
   guardarDatos() {
@@ -810,7 +832,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     });
   }
   
-  disabledSave() {
+  /* disabledSave() {
     if (this.turnosItem.nombre != undefined && this.turnosItem.nombre != "" && this.turnosItem.abreviatura != undefined && this.turnosItem.abreviatura != "" && this.turnosItem.idpartidapresupuestaria != null && this.turnosItem.idpartidapresupuestaria != "" && this.turnosItem.idzona != null && this.turnosItem.idzona != "" && this.turnosItem.idsubzona != null && this.turnosItem.idsubzona != "" &&
       this.turnosItem.idjurisdiccion != null && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idjurisdiccion != "" && this.turnosItem.idgrupofacturacion != null && this.turnosItem.idmateria != null && this.turnosItem.idmateria != "" &&
       this.turnosItem.idarea != null && this.turnosItem.idarea != "" && this.turnosItem.idtipoturno != null && this.turnosItem.idtipoturno != "" && (JSON.stringify(this.turnosItem) != JSON.stringify(this.bodyInicial))
@@ -820,7 +842,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       return true;
     }
 
-  }
+  } */
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;

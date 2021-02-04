@@ -5,6 +5,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
+import { CommonsService } from '../../../../../../app/_services/commons.service';
 
 @Component({
   selector: 'app-filtrosturnos',
@@ -42,8 +43,10 @@ export class FiltrosTurnos implements OnInit {
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
+    private commonsService: CommonsService,
     private translateService: TranslateService,
     private persistenceService: PersistenceService) { }
+    textFilter: string = "Seleccionar";
 
   ngOnInit() {
     if (this.persistenceService.getPermisos() != undefined) {
@@ -354,6 +357,7 @@ export class FiltrosTurnos implements OnInit {
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux()
       this.busqueda.emit(false)
+      this.commonsService.scrollTablaFoco('tablaFoco');
     }
   }
 
