@@ -12,6 +12,8 @@ import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
 export class RelacionesComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaRelaciones: string;
+
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
