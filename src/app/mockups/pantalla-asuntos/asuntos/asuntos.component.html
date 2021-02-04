@@ -1,0 +1,39 @@
+<div class="card">
+    <div class="card-body">
+
+        <div>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="changeTab()" class="mr-4"
+                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+        </div>
+
+        <app-busqueda-asuntos [selectorEstados]="" [datePickers]="datePickers" [selectores]="selectores"
+            [emptyAccordions]="emptyAccordions" (formulario)="saveForm($event)" [modoBusqueda]="modoBusqueda">
+        </app-busqueda-asuntos>
+
+    </div>
+
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse()"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}" (click)="showResponse()"
+                [disabled]="!cFormValidity"></button>
+        </div>
+    </div>
+</div>
+<div *ngIf="show">
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <app-paginador [type]="'TOP'"></app-paginador>
+
+            <app-resultado-asuntos [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+                [elementosAux]="elementosAux"></app-resultado-asuntos>
+
+            <div>
+                <app-paginador [type]="'BOTTOM'"></app-paginador>
+            </div>
+        </div>
+    </div>
+</div>

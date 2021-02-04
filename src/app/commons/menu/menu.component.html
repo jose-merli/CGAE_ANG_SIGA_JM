@@ -18,6 +18,25 @@
           {{ opcion.label | translate }}
           <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i>
         </li>
+        <div>
+          <a [routerLink]="['/buscadorColegial']">Buscador Colegial</a>
+          <br>
+          <a [routerLink]="['/buscadorAsistenciaExpres']">Buscador Asistencia Expres</a>
+          <br>
+          <a [routerLink]="['/fichaActuacion']">Ficha Actuación</a>
+          <br>
+          <a [routerLink]="['/fichaEjg']">Ficha EJG</a>
+          <br>
+          <a [routerLink]="['/fichaColegiado']">Ficha Colegiado</a>
+          <br>
+          <a [routerLink]="['/pantallaCertificacion']">Pantalla Certificacion</a>
+          <br>
+          <a [routerLink]="['/pantallaEJG']">Pantalla EJG</a>
+          <br>
+          <a [routerLink]="['/pantallaAsuntos']">Pantalla Asuntos</a>
+          <br>
+          <a [routerLink]="['/pantallaJustificacionExpres']">Pantalla Justificación Exprés</a>
+        </div>
       </ul>
       <ul *ngIf="showChild" class="nav navbar-nav ">
         <li (click)="backMenu()" class="breadCrumbMenu">

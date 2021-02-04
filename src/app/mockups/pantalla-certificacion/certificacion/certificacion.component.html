@@ -1,0 +1,37 @@
+<div class="card">
+    <div class="card-body">
+        <app-busqueda-certificacion (formulario)="saveForm($event)"></app-busqueda-certificacion>
+    </div>
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button" icon="fas fa-eraser" iconPos="left" label="Limpiar"
+                (click)="hideResponse()"></button>
+            <button pButton type="button" icon="fas fa-search" iconPos="left" label="Buscar" (click)="showResponse()"
+                [disabled]="!cFormValidity"></button>
+            <button pButton type="button" icon="fas fa-plus" iconPos="left" label="Nuevo"></button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="show">
+    <div class="card mt-3">
+        <div class="card-body">
+            <app-paginador [type]="'TOP'"></app-paginador>
+
+            <app-resultado-certificacion [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+                [elementosAux]="elementosAux"></app-resultado-certificacion>
+
+            <div>
+                <app-paginador [type]="'BOTTOM'"></app-paginador>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="text-right main-button">
+                <button pButton type="button" icon="fa fa-times" iconPos="left" label="Eliminar"
+                    (click)="hideResponse()"></button>
+                <button pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Comunicar"
+                    (click)="showResponse()"></button>
+            </div>
+        </div>
+    </div>
+</div>

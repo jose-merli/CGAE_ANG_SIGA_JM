@@ -1,0 +1,36 @@
+<div class="card" [ngClass]="{'not-fixed' : !fixed, 'fixed': fixed}">
+    <div class="card-header header-ficha" [ngClass]="{'not-bor-and-pad-b' : !fixed, 'tarjetaFija' : fixed}">
+        <div class="form-row">
+            <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                    <img *ngIf="imagen" [src]="imagen" class="icon-ficha">
+                    <i *ngIf="icon" [ngClass]="['icon-ficha', icon]"></i>
+                </div>
+            </div>
+            <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1 pointer">
+                    <label class="mr-auto title-ficha">{{nombre}}</label>
+                </div>
+                <div class="d-flex flex-wrap justify-content-between mb-1">
+                    <label *ngFor="let campo of campos; let i = index">
+                        {{campo.key}}:
+                        <span>{{campo.value}}</span>
+                    </label>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-between">
+                    <label *ngFor="let enlace of enlaces">
+                        <a [href]="enlace.value">
+                            <span class="enlace"> {{ enlace.key }}</span>
+                        </a>
+                    </label>
+                </div>
+
+                <p *ngIf="fixed && iconFixed" class="pt-2">
+                    <i [ngClass]="['float-right', iconFixed]"></i>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>

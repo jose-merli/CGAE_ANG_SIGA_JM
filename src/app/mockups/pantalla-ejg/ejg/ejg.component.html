@@ -1,0 +1,36 @@
+<app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+
+<div class="card">
+    <div class="card-body">
+        <app-busqueda-ejg [selectorEstados]="selectorEstados" [datePickers]="datePickers" [selectores]="selectores"
+            [emptyAccordions]="emptyAccordions" (formulario)="saveForm($event)"></app-busqueda-ejg>
+    </div>
+</div>
+<!-- <div class="right col">
+    <button (click)="hideResponse()" class="m-2"><i class="fas fa-eraser"></i>Limpiar</button>
+    <button (click)="showResponse()" [disabled]="!cFormValidity" class="m-2"><i class="fas fa-eraser"></i>Buscar</button>
+    <button class="m-2"><i class="fas fa-eraser"></i>Nuevo</button>
+</div> -->
+<div *ngIf="show">
+    <div class="card mt-3">
+        <div class="card-body">
+            <app-paginador [type]="'TOP'"></app-paginador>
+
+            <app-resultado-ejg [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+                [elementosAux]="elementosAux"></app-resultado-ejg>
+
+            <div>
+                <app-paginador [type]="'BOTTOM'"></app-paginador>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <div class="text-right main-button">
+                <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir a Remesa"></button>
+                <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar EEJ"></button>
+                <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="Cambiar Estado"></button>
+                <button pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar"></button>
+            </div>
+        </div>
+    </div>
+</div>

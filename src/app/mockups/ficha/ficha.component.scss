@@ -1,0 +1,42 @@
+::ng-deep .mat-content{
+    height: 100%;
+}
+.tarjetaFija{
+    background-color: lightgrey !important;
+}
+
+  
+  #navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  .absolute {
+    position: absolute;
+    top:0;
+    left: 0;
+  }
+
+  .relative {
+    position: relative;
+  }
+  .derecha{
+    text-align: right;
+  }
+
+  ::ng-deep .mat-expansion-panel-header {
+    padding-left: 0px !important;
+    background-color: white;
+  }
+  ::ng-deep .mat-expansion-panel {
+    background-color: white;
+  }
+

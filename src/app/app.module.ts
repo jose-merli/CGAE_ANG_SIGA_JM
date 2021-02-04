@@ -358,6 +358,48 @@ import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { BuscadorColegialComponent } from './mockups/buscadorColegial/buscador-colegial.component';
+import { BuscadorAsistenciaExpresComponent } from './mockups/buscadorAsistenciaExpres/buscador-asistencia-expres.component';
+
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { TarjetaComponent } from './mockups/tarjeta/tarjeta.component';
+import { FichaComponent } from './mockups/ficha/ficha.component';
+import { MigasDePanComponent } from './mockups/shared/migas-de-pan/migas-de-pan.component';
+import { FichaActuacionComponent } from './mockups/ficha-actuacion/ficha-actuacion.component';
+import { FichaEjgsComponent } from './mockups/ficha-ejgs/ficha-ejgs.component';
+import { FichaColegiadoComponent } from './mockups/ficha-colegiado/ficha-colegiado.component';
+import { CertificacionComponent2 } from './mockups/pantalla-certificacion/certificacion/certificacion.component';
+import { BusquedaCertificacionComponent } from './mockups/pantalla-certificacion/busqueda-certificacion/busqueda-certificacion.component';
+import { ResultadoCertificacionComponent } from './mockups/pantalla-certificacion/resultado-certificacion/resultado-certificacion.component';
+import { TablaResultadoComponent } from './mockups/shared/tabla-resultado/tabla-resultado.component';
+import { PantallaCertificacionComponent } from './mockups/pantalla-certificacion/pantalla-certificacion.component';
+import { PaginadorComponent } from './mockups/shared/paginador/paginador.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { PantallaEjgComponent } from './mockups/pantalla-ejg/pantalla-ejg.component';
+import { BusquedaEJGComponent } from './mockups/pantalla-ejg/busqueda-ejg/busqueda-ejg.component';
+import { EjgComponent2 } from './mockups/pantalla-ejg/ejg/ejg.component';
+import { EmptyAccordionComponent } from './mockups/pantalla-ejg/empty-accordion/empty-accordion.component';
+import { ResultadoEJGComponent } from './mockups/pantalla-ejg/resultado-ejg/resultado-ejg.component';
+import { SelectorComponent } from './mockups/shared/selector/selector.component';
+import { PantallaAsuntosComponent } from './mockups/pantalla-asuntos/pantalla-asuntos.component';
+import { AsuntosComponent } from './mockups/pantalla-asuntos/asuntos/asuntos.component';
+import { BusquedaAsuntosComponent } from './mockups/pantalla-asuntos/busqueda-asuntos/busqueda-asuntos.component';
+import { DatePickerRangeComponent } from './mockups/pantalla-asuntos/date-picker-range/date-picker-range.component';
+import { InputDivididoComponent } from './mockups/pantalla-asuntos/input-dividido/input-dividido.component';
+import { ResultadoAsuntosComponent } from './mockups/pantalla-asuntos/resultado-asuntos/resultado-asuntos.component';
+import { PantallaJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/pantalla-justificacion-expres.component';
+import { JustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component';
+import { TablaResultadoDesplegableJEService } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable-je.service';
+import { BuscadorJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/buscador-justificacion-expres/buscador-justificacion-expres.component';
+import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
 
 
 @NgModule({
@@ -676,8 +718,38 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent//,
+		ServiciosInteresFichaColegialComponent,
 		//TarjetaResumenFijaComponent
+		BuscadorColegialComponent,
+		BuscadorAsistenciaExpresComponent,
+		TarjetaComponent,
+		FichaComponent,
+		MigasDePanComponent,
+		FichaActuacionComponent,
+		FichaEjgsComponent,
+		FichaColegiadoComponent,
+		BusquedaCertificacionComponent,
+		CertificacionComponent2,
+		ResultadoCertificacionComponent,
+		TablaResultadoComponent,
+		PantallaCertificacionComponent,
+		PaginadorComponent,
+		PantallaEjgComponent,
+		BusquedaEJGComponent,
+		EjgComponent2,
+		EmptyAccordionComponent,
+		ResultadoEJGComponent,
+		SelectorComponent,
+		PantallaAsuntosComponent,
+		AsuntosComponent,
+		BusquedaAsuntosComponent,
+		DatePickerRangeComponent,
+		InputDivididoComponent,
+		ResultadoAsuntosComponent,
+		PantallaJustificacionExpresComponent,
+		JustificacionExpresComponent,
+		BuscadorJustificacionExpresComponent,
+		TablaResultadoDesplegableComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -726,7 +798,19 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 
 		SelectButtonModule,
 		ColorPickerModule,
-		EditorModule
+		EditorModule,
+
+		MatExpansionModule,
+		MatCheckboxModule,
+		MatInputModule,
+		MatSortModule,
+		MatSelectModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		PaginatorModule,
+
 	],
 	providers: [
 		// { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -736,6 +820,7 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 
 		TrimPipePipe,
 
+		TablaResultadoDesplegableJEService,
 		OldSigaServices,
 		SigaServices,
 		CommonsService,
