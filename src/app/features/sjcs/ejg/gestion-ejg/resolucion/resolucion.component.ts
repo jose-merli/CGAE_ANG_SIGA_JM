@@ -12,6 +12,8 @@ import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem'
 export class ResolucionComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaResolucion: string;
+
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;

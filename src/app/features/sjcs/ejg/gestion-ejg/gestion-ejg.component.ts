@@ -43,6 +43,35 @@ export class GestionEjgComponent implements OnInit {
   permisoEscrituraRegtel: boolean = false;
   permisoEscrituraComunicaciones: boolean = false;
 
+  iconoTarjetaResumen = "clipboard";
+
+  manuallyOpened:Boolean;
+  tarjetaDatosGenerales: string;
+  tarjetaServiciosTramitacion: string;
+  tarjetaUnidadFamiliar: string;
+  tarjetaExpedientesEconomicos: string;
+  tarjetaRelaciones: string;
+  tarjetaEstados: string;
+  tarjetaDocumentacion: string;
+  tarjetaInformeCalificacion: string;
+  tarjetaResolucion: string;
+  tarjetaImpugnacion: string;
+  tarjetaRegtel: string;
+  tarjetaComunicaciones: string;
+
+  openTarjetaDatosGenerales: Boolean = true;
+  openTarjetaServiciosTramitacion: Boolean = false;
+  openTarjetaUnidadFamiliar: Boolean = false;
+  openTarjetaExpedientesEconomicos: Boolean = false;
+  openTarjetaRelaciones: Boolean = false;
+  openTarjetaEstados: Boolean = false;
+  openTarjetaDocumentacion: Boolean = false;
+  openTarjetaInformeCalificacion: Boolean = false;
+  openTarjetaResolucion: Boolean = false;
+  openTarjetaImpugnacion: Boolean = false;
+  openTarjetaRegtel: Boolean = false;
+  openTarjetaComunicaciones: Boolean = false;  
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private location: Location,
@@ -51,8 +80,6 @@ export class GestionEjgComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-    this.commonsService.scrollTop();
-
     this.progressSpinner = true;
 
     this.commonsService.checkAcceso(procesos_ejg.ejg)
@@ -117,6 +144,8 @@ export class GestionEjgComponent implements OnInit {
          this.obtenerPermisos();
     }
     ).catch(error => console.error(error));
+
+    this.commonsService.scrollTop();
   }
     
   clear() {
@@ -235,5 +264,92 @@ export class GestionEjgComponent implements OnInit {
               this.persistenceService.setPermisos(this.permisoEscrituraComunicaciones);
             }
             ).catch(error => console.error(error));
+  }
+
+  isCloseReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = this.manuallyOpened;
+          break;
+        case "serviciosTramitacion":
+          this.openTarjetaServiciosTramitacion = this.manuallyOpened;
+          break;
+        case "unidadFamiliar":
+          this.openTarjetaUnidadFamiliar = this.manuallyOpened;
+          break;
+        case "expedientesEconomicos":
+          this.openTarjetaExpedientesEconomicos = this.manuallyOpened;
+          break;
+        case "relaciones":
+          this.openTarjetaRelaciones = this.manuallyOpened;
+          break;
+        case "estados":
+          this.openTarjetaEstados = this.manuallyOpened;
+          break;
+        case "documentacion":
+          this.openTarjetaDocumentacion = this.manuallyOpened;
+          break;
+        case "informCalificacion":
+          this.openTarjetaInformeCalificacion = this.manuallyOpened;
+          break;
+        case "resolucion":
+          this.openTarjetaResolucion = this.manuallyOpened;
+          break;
+        case "impugnacion":
+          this.openTarjetaImpugnacion = this.manuallyOpened;
+          break;
+        case "regtel":
+          this.openTarjetaRegtel = this.manuallyOpened;
+          break;
+        case "comunicaciones":
+          this.openTarjetaComunicaciones = this.manuallyOpened;
+        break;          
+      }
+    }
+  }
+
+  isOpenReceive(event) {
+
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = true;
+          break;
+        case "serviciosTramitacion":
+          this.openTarjetaServiciosTramitacion = true;
+          break;
+        case "unidadFamiliar":
+          this.openTarjetaUnidadFamiliar = true;
+          break;
+        case "expedientesEconomicos":
+          this.openTarjetaExpedientesEconomicos = true;
+          break;
+        case "relaciones":
+          this.openTarjetaRelaciones = true;
+          break;
+        case "estados":
+          this.openTarjetaEstados = true;
+          break;
+        case "documentacion":
+          this.openTarjetaDocumentacion = true;
+          break;
+        case "informeCalificacion":
+          this.openTarjetaInformeCalificacion = true;
+          break;
+        case "resolucion":
+          this.openTarjetaResolucion = true;
+          break;
+        case "impugnacion":
+          this.openTarjetaImpugnacion = true;
+          break;
+        case "regtel":
+          this.openTarjetaRegtel = true;
+          break;
+        case "comunicaciones":
+          this.openTarjetaComunicaciones = true;
+          break;
+      }
+    }
   }
 }

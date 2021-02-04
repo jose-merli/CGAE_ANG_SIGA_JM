@@ -28,6 +28,8 @@ export class UnidadFamiliarComponent implements OnInit {
   datosFamiliaresActivos;
 
   @Input() modoEdicion;
+  @Input() tarjetaUnidadFamiliar: string;
+
   @Input() permisoEscritura;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
 

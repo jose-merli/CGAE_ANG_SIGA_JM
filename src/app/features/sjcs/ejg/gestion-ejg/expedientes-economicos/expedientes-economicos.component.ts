@@ -11,6 +11,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 export class ExpedientesEconomicosComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaExpedientesEconomicos: string;
+
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;

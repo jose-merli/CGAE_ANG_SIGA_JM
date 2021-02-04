@@ -14,6 +14,8 @@ import { ConfirmationService } from 'primeng/primeng';
 export class InformeCalificacionComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaInformeCalificacion: string;
+
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;

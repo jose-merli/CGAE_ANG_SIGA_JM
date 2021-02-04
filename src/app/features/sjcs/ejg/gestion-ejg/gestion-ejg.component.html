@@ -1,50 +1,50 @@
-<div class="ficha-comunicacion-container" id="mainContainer">
+<div class="ficha-comunicacion-container" id="top">
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p>{{'menu.justiciaGratuita' | translate}}
             <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
     </div>
     <div>
-        <app-tarjeta-resumen-fija *ngIf="permisoEscrituraResumen != undefined" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="icono"
-            (modoEdicionSend)="modoEdicionSend($event)"></app-tarjeta-resumen-fija>
-    </div>
-    <div>
-        <app-datos-generales-ejg *ngIf="permisoEscrituraDatosGenerales != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDatosGenerales" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-ejg>
-    </div>
-    <div>
-        <app-servicios-tramitacion *ngIf="permisoEscrituraServiciosTramitacion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraServiciosTramitacion" (modoEdicionSend)="modoEdicionSend($event)"></app-servicios-tramitacion>
-    </div>
-    <div>
-        <app-unidad-familiar *ngIf="permisoEscrituraUnidadFamiliar != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraUnidadFamiliar" (modoEdicionSend)="modoEdicionSend($event)"></app-unidad-familiar>
-    </div>
-    <div>
-        <app-expedientes-economicos *ngIf="permisoEscrituraExpedientesEconomicos != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraExpedientesEconomicos" (modoEdicionSend)="modoEdicionSend($event)"></app-expedientes-economicos>
-    </div>
-    <div>
-        <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)"></app-relaciones>
-    </div>
-    <div>
-        <app-estados *ngIf="permisoEscrituraEstados != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraEstados" (modoEdicionSend)="modoEdicionSend($event)"></app-estados>
-    </div>
-    <div>
-        <app-documentacion *ngIf="permisoEscrituraDocumentacion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDocumentacion" (modoEdicionSend)="modoEdicionSend($event)"></app-documentacion>
-    </div>
-    <div>
-        <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraInformeCalif" (modoEdicionSend)="modoEdicionSend($event)"></app-informe-calificacion>
-    </div>
-    <div>
-        <app-resolucion *ngIf="permisoEscrituraResolucion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)"></app-resolucion>
-    </div>
-    <div>
-        <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraImpugnacion" (modoEdicionSend)="modoEdicionSend($event)"></app-impugnacion>
-    </div>
-    <div>
-        <app-regtel *ngIf="permisoEscrituraRegtel != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)"></app-regtel>
-    </div>
-    <div>
-        <app-comunicaciones *ngIf="permisoEscrituraComunicaciones != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraComunicaciones" (modoEdicionSend)="modoEdicionSend($event)"></app-comunicaciones>
+        <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisoEscrituraResumen != undefined" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+        </app-tarjeta-resumen-fija>
+
+        <app-datos-generales-ejg (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDatosGenerales" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-datos-generales-ejg>
+        
+        <app-servicios-tramitacion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaServiciosTramitacion]="tarjetaServiciosTramitacion" *ngIf="permisoEscrituraServiciosTramitacion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraServiciosTramitacion" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-servicios-tramitacion>
+        
+        <app-unidad-familiar (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaUnidadFamiliar]="tarjetaUnidadFamiliar" *ngIf="permisoEscrituraUnidadFamiliar != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraUnidadFamiliar" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-unidad-familiar>
+        
+        <app-expedientes-economicos (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaExpedientesEconomicos]="tarjetaExpedientesEconomicos" *ngIf="permisoEscrituraExpedientesEconomicos != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraExpedientesEconomicos" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-expedientes-economicos>
+        
+        <app-relaciones (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRelaciones]="tarjetaRelaciones" *ngIf="permisoEscrituraRelaciones != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-relaciones>
+        
+        <app-estados (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaEstados]="tarjetaEstados" *ngIf="permisoEscrituraEstados != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraEstados" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-estados>
+        
+        <app-documentacion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDocumentacion]="tarjetaDocumentacion" *ngIf="permisoEscrituraDocumentacion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDocumentacion" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-documentacion>
+        
+        <app-informe-calificacion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInformeCalificacion]="tarjetaInformeCalificacion"  *ngIf="permisoEscrituraInformeCalif != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraInformeCalif" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-informe-calificacion>
+        
+        <app-resolucion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" *ngIf="permisoEscrituraResolucion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-resolucion>
+        
+        <app-impugnacion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaImpugnacion]="tarjetaImpugnacion" *ngIf="permisoEscrituraImpugnacion != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraImpugnacion" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-impugnacion>
+        
+        <app-regtel (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel" *ngIf="permisoEscrituraRegtel != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-regtel>
+        
+        <app-comunicaciones (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaComunicaciones]="tarjetaComunicaciones" *ngIf="permisoEscrituraComunicaciones != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraComunicaciones" (modoEdicionSend)="modoEdicionSend($event)">
+        </app-comunicaciones>
     </div>
 </div>
-<div class="mt-3 text-right main-button">
+<div class="mt-3 text-right main-button" id="down">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>

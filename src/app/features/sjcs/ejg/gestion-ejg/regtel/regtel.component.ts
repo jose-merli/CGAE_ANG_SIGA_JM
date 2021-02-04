@@ -13,6 +13,8 @@ import { ConfirmationService } from 'primeng/api';
 export class RegtelComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaRegtel: string;
+
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;

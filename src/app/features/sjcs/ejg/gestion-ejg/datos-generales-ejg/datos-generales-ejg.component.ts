@@ -16,6 +16,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Input() datos: EJGItem;
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaDatosGenerales: string;
   @Output() modoEdicionSend = new EventEmitter<any>();
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";

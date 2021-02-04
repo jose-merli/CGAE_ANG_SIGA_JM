@@ -15,7 +15,10 @@ import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialG
 export class ServiciosTramitacionComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaServiciosTramitacion: string;
+
   @Output() modoEdicionSend = new EventEmitter<any>();
+  
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;

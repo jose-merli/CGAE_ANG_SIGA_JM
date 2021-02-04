@@ -14,6 +14,8 @@ import { ConfirmationService } from 'primeng/api';
 export class ImpugnacionComponent implements OnInit {
   @Input() modoEdicion;
   @Input() permisoEscritura;
+  @Input() tarjetaImpugnacion: string;
+
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
