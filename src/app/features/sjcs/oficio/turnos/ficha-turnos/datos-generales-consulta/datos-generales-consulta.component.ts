@@ -788,7 +788,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
         if (JSON.parse(err.error).error.description != "") {
           this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
-          this.expandirPanelObligatorio();
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -801,16 +800,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       }
     );
 
-  }
-
-  expandirPanelObligatorio(){
-    var camposOblig = document.getElementsByClassName('camposObligatorios');
-          for (let i = 0; i < camposOblig.length; i++) {
-            if(camposOblig[i].tagName == "P-DROPDOWN"){
-              camposOblig[i].setAttribute("filter", "true"); 
-              console.log(i)
-            }
-          }
   }
 
   guardarDatos() {
