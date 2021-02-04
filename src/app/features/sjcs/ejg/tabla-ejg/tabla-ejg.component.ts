@@ -131,6 +131,7 @@ export class TablaEjgComponent implements OnInit {
       }
     );
   }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;

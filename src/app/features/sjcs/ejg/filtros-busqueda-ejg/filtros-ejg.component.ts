@@ -580,7 +580,8 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.body);
       // this.persistenceService.setFiltrosAux(this.body);
-      this.busqueda.emit(false)
+      this.busqueda.emit(false);
+      
     }
   }
   showMessage(severity, summary, msg) {

@@ -4,9 +4,10 @@
   <div class="card-body p-0">
     <!-- TABLA RESULTADOS -->
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
-      selectionMode="multiple" paginatorPosition="both">
+    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+      selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
+
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -38,11 +39,17 @@
             </div>
 
             <div *ngIf="col.field != 'fechaApertura'">
-              <div *ngIf="setItalic(dato)">
+              <div *ngIf="setItalic(dato) && col.field!='annio'">
                 <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
               </div>
-              <div *ngIf="!setItalic(dato)">
+              <div *ngIf="!setItalic(dato) && col.field!='annio'">
                 <span>{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="setItalic(dato) && col.field=='annio'">
+                <span  class="enlace"  (click)="datosEJG(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="!setItalic(dato) && col.field=='annio'">
+                <span class="enlace" (click)="datosEJG(dato)">{{dato[col.field]}}</span>
               </div>
             </div>
           </td>
@@ -71,8 +78,6 @@
             <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname"></p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{'general.message.seleccion.multiple'| translate}}</label>
         </div>
       </ng-template>
     </p-table>

@@ -15,63 +15,63 @@
       </p>
       <div *ngIf="showdatosIdentificacion" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000" [options]="comboColegio"
               [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group col-lg-3 row col-md-3">
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
               <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
               <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numero">
             </div>
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.tipoEJG' placeholder="Seleccionar" [options]="comboTipoEJG" [filter]="true"
               filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.tipoEJGColegio' placeholder="Seleccionar" [options]="comboTipoEJGColegio"
               [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.CreadoDesde" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.creadoDesde' placeholder="Seleccionar" [options]="comboCreadoDesde" [filter]="true"
               filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group row col-lg-3 col-md-3">
+          <div class="form-group-interlineado row col-lg-3 col-md-3">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.busquedaEJG.literal.fechaAperturaDesde" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaAperturaDesd" [maxDate]="getFechaHastaCalendar(body.fechaAperturaDesd, body.fechaAperturaHast)"
                 (valueChangeSelected)="fillFechaAperturaDesd($event)" (valueChangeInput)="fillFechaAperturaDesd($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "gratuita.busquedaEJG.literal.fechaAperturaHasta" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaAperturaHast" [minDate]="getFechaDesdeCalendar(body.fechaAperturaDesd, body.fechaAperturaHast)"
                 (valueChangeSelected)="fillFechaAperturaHast($event)" (valueChangeInput)="fillFechaAperturaHast($event)"></app-fecha>
             </div>
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.estadoEJG' placeholder="Seleccionar" [options]="comboEstadoEJG" [filter]="true"
               filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div id="divCont" class="form-group row col-lg-3 col-md-3">
-            <div id="divPeq1" class="form-group col-lg-6 col-md-6">
+            <div id="divPeq1" class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaEstadoDesd" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaEstadoDesd" [maxDate]="getFechaHastaCalendar(body.fechaEstadoDesd, body.fechaEstadoHast)"
                 (valueChangeSelected)="fillFechaEstadoDesd($event)" (valueChangeInput)="fillFechaEstadoDesd($event)"></app-fecha>
             </div>
-            <div id="divPeq2" class="form-group col-lg-6 col-md-6">
+            <div id="divPeq2" class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaEstadoHast" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaEstadoHast" [minDate]="getFechaDesdeCalendar(body.fechaEstadoDesd, body.fechaEstadoHast)"
@@ -79,13 +79,13 @@
             </div>
           </div>
           <div id="divCont" class="form-group row col-lg-3 col-md-3">
-            <div id="divPeq1" class="form-group col-lg-6 col-md-6">
+            <div id="divPeq1" class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaLimiteDesd" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaLimiteDesd" [maxDate]="getFechaHastaCalendar(body.fechaLimiteDesd, body.fechaLimiteHast)"
                 (valueChangeSelected)="fillFechaLimiteDesd($event)" (valueChangeInput)="fillFechaLimiteDesd($event)"></app-fecha>
             </div>
-            <div id="divPeq2" class="form-group col-lg-6 col-md-6">
+            <div id="divPeq2" class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaLimiteHast" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaLimiteHast" [minDate]="getFechaDesdeCalendar(body.fechaLimiteDesd, body.fechaLimiteHast)"
@@ -99,17 +99,17 @@
 
       <!-- Datos generales EJG -->
       <p (click)="onHideDatosGeneralesEJG()" class="title-module">{{ "justiciaGratuita.ejg.datosGenerales.datosGeneralesEJG" | translate }}
-        <i *ngIf="showDatosGeneralesEJG" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosGeneralesEJG" class="fa fa-angle-down float-right"></i>
+        <i *ngIf="showDatosGeneralesEJG" (click)="onHideDatosGeneralesEJG()" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGeneralesEJG" (click)="onHideDatosGeneralesEJG()" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showDatosGeneralesEJG" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.Dictamen" | translate }}</label>
 
             <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.dictamen' [options]="comboDictamen" [selectedItemsLabel]="textSelected"
-              styleClass="widthAll" (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
+              styleClass="widthAll" (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10"></p-multiSelect>
             <!-- <p-multiSelect #multiSelectPJ *ngIf="!(selectMultiple || selectAll) && ((nuevo && dato.zonaNueva == undefined) || (!nuevo && !seleccion) || historico)"
               [disabled]="nuevo || historico" defaultLabel="Seleccionar al menos un partido judicial" filterBy="label"
               [(ngModel)]="dato.partidosJudiciales" [options]="comboPJ" optionLabel="label" [selectedItemsLabel]="textSelected"
@@ -118,19 +118,19 @@
               <p-multiSelect maxSelectedLabels="1" [defaultLabel]="textFilter" [filter]="true" styleClass="widthAll" [(ngModel)]='modulosItem.procedimientosReal'
               [options]="procedimientos" [selectedItemsLabel]="textSelected" filterBy="label,labelSinTilde" [disabled]="modulosItem.historico || modulosItem.idjurisdiccion=='' || modulosItem.idjurisdiccion==undefined"></p-multiSelect> -->
           </div>
-          <div class="form-group col-lg-6 col-md-6">
+          <div class="form-group-interlineado col-lg-6 col-md-6">
             <label>{{ "justiciaGratuita.maestros.fundamentosCalificacion.fundamentos.fundamentosCalificacion" | translate }}</label>
             <p-dropdown [(disabled)]="isDisabledFundamentosCalif" class="select-form" [(ngModel)]='body.fundamentoCalif' placeholder="Seleccionar"
               [options]="comboFundamentoCalif" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group row col-lg-3 col-md-3">
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaDictamenDesd" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaDictamenDesd" [maxDate]="getFechaHastaCalendar(body.fechaDictamenDesd, body.fechaDictamenHast)"
                 (valueChangeSelected)="fillFechaDictamenDesd($event)" (valueChangeInput)="fillFechaDictamenDesd($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaDictamenHast" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaDictamenHast" [minDate]="getFechaDesdeCalendar(body.fechaDictamenDesd, body.fechaDictamenHast)"
@@ -140,24 +140,24 @@
         </div>
         <!-- resolucion -->
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.maestros.fundamentosResolucion.resolucion" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.resolucion' placeholder="Seleccionar" [options]="comboResolucion" [filter]="true"
               filterBy="label,labelSinTilde" (onChange)="onChangeResolucion()" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group col-lg-6 col-md-6">
+          <div class="form-group-interlineado col-lg-6 col-md-6">
             <label>{{'justiciaGratuita.ejg.datosGenerales.fundamentoJuridico'|translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.fundamentoJuridico' placeholder="Seleccionar" [options]="comboFundamentoJurid"
               [filter]="true" [(disabled)]="isDisabledFundamentosJurid" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group row col-lg-3 col-md-3">
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "busquedaSanciones.fechaResolucionDesde.literal" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaResolucionDesd" [maxDate]="getFechaHastaCalendar(body.fechaResolucionDesd, body.fechaResolucionHast)"
                 (valueChangeSelected)="fillFechaResolucionDesd($event)" (valueChangeInput)="fillFechaResolucionDesd($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "busquedaSanciones.fechaResolucionHasta.literal" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaResolucionHast" [minDate]="getFechaDesdeCalendar(body.fechaResolucionDesd, body.fechaResolucionHast)"
@@ -167,24 +167,24 @@
         </div>
         <!-- impugnacion -->
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'justiciaGratuita.ejg.datosGenerales.Impugnacion'|translate}}</label>
             <p-dropdown (onChange)="onChangeImpugnacion()" class="select-form" [(ngModel)]='body.impugnacion' placeholder="Seleccionar"
               [options]="comboImpugnacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
-          <div class="form-group col-lg-6 col-md-6">
+          <div class="form-group-interlineado col-lg-6 col-md-6">
             <label>{{'justiciaGratuita.ejg.datosGenerales.fundamentoImpugnacion'|translate}}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.fundamentoImpuganacion' placeholder="Seleccionar" [(disabled)]="isDisabledFundamentoImpug"
               [options]="comboFundamentoImpug" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <div class="form-group row col-lg-3 col-md-3">
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaImpugnacionDesd" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaImpugnacionDesd" [maxDate]="getFechaHastaCalendar(body.fechaImpugnacionDesd, body.fechaImpugnacionHast)"
                 (valueChangeSelected)="fillFechaImpugnacionDesd($event)" (valueChangeInput)="fillFechaImpugnacionDesd($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.FechaImpugnacionHast" | translate }}
               </label>
               <app-fecha [(value)]="body.fechaImpugnacionHast" [minDate]="getFechaDesdeCalendar(body.fechaImpugnacionDesd, body.fechaImpugnacionHast)"

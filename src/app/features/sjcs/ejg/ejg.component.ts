@@ -107,6 +107,12 @@ export class EJGComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         console.log(err);
+      },
+      () =>{
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       }
     );
   }
