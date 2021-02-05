@@ -29,12 +29,12 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field == 'fechaApertura'">
+            <div *ngIf="col.field == 'fechaApertura' && col.field=='annio'">
               <div *ngIf="setItalic(dato)">
-                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                <label class="enlace" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
               </div>
-              <div *ngIf="!setItalic(dato)">
-                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+              <div *ngIf="!setItalic(dato) && col.field=='annio'">
+                <label class="enlace">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
               </div>
             </div>
 

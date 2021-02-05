@@ -85,7 +85,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
   openTab(evento) {
     
-    this.persistenceService.setBody(evento.data);
+    this.persistenceService.setBody(evento);
     this.persistenceService.setFichasPosibles(fichasPosibles_unidadFamiliar);
     this.router.navigate(["/gestionJusticiables"], { queryParams: { fr: "u" } });
 

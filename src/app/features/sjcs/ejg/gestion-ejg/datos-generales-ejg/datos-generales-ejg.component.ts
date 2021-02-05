@@ -2,8 +2,9 @@ import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } fro
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../commons/translate';
+
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -34,10 +35,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
 
+  resaltadoDatosGenerales: boolean = false;
+  resaltadoDatos: boolean = false;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonsServices: CommonsService) { }
+    private commonsServices: CommonsService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.resaltadoDatos=true;
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
@@ -175,7 +181,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        this.msgs = this.commonsServices.checkPermisoAccion();
+        //this.msgs = this.commonsServices.checkPermisoAccion();
+        this.muestraCamposObligatorios();
       } else {
         this.save();
       }
@@ -239,4 +246,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
   addExp(){
     
   }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsServices.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
 }

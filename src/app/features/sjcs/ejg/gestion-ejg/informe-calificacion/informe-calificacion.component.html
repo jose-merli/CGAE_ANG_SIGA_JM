@@ -9,8 +9,8 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha" (click)="abreCierraFicha()">{{ 'justiciaGratuita.ejg.datosGenerales.InformeCalificacion' | translate }}</label>
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.ejg.datosGenerales.InformeCalificacion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="dictamen">{{dictamen.fechaDictamen | date: 'dd/MM/yyyy'}}</span></label>
@@ -63,7 +63,7 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button [disabled]="!permisoEscritura" (click)="checkPermisosConfirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.borrarDictamen' | translate}}"></button>
         <button [disabled]="!permisoEscritura" (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.descargar.informe' | translate}}"></button>

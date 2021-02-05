@@ -35,8 +35,8 @@
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px"> {{ "censo.busquedaClientes.literal.datosIdentificacion" | translate}} </label>
           <div class="form-row">
             <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}*</label>
-              <app-fecha [(value)]="body.fechaApertura" (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaApertura($event)"></app-fecha>
+              <label class="d-block pb-2">{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}(*)</label>
+              <app-fecha [inputStyleClass]="styleObligatorio(body.fechaApertura)" [(value)]="body.fechaApertura" (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaApertura($event)"></app-fecha>
             </div>
             <div class="form-row col-lg-3 col-md-3 pr-0">
               <div class="form-group col-lg-3 col-md-3">
@@ -121,7 +121,7 @@
           label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
         <button (click)="checkPermisosComunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
         <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura || disabledSave()" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

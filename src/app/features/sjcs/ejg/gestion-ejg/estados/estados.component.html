@@ -124,8 +124,6 @@
                   <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                     name="groupname"></p-checkbox>
                 </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{'general.message.seleccion.multiple'| translate}}</label>
               </div>
             </ng-template>
           </p-table>

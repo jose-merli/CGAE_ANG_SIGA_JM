@@ -30,8 +30,8 @@
     <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
           <p-table [value]="expedientesEcon" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
-            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
-            selectionMode="multiple" paginatorPosition="both">
+            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
+            selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
                 <col *ngFor="let col of cols" [style.width]="col.width">
@@ -95,8 +95,6 @@
                   <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                     name="groupname"></p-checkbox>
                 </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{'general.message.seleccion.multiple'| translate}}</label>
               </div>
             </ng-template>
           </p-table>

@@ -9,8 +9,8 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha" (click)="abreCierraFicha()">{{ "censo.regtel.literal.titulo" | translate }}</label>
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
@@ -31,7 +31,7 @@
     <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
           <p-table [value]="regtel" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
-            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
+            #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">
             <ng-template pTemplate="colgroup" let-columns>
               <colgroup>
@@ -108,8 +108,6 @@
                   <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                     name="groupname"></p-checkbox>
                 </div>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{'general.message.seleccion.multiple'| translate}}</label>
               </div>
             </ng-template>
           </p-table>
