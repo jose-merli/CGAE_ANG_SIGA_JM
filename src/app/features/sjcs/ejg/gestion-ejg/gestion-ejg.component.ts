@@ -72,6 +72,8 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaRegtel: Boolean = false;
   openTarjetaComunicaciones: Boolean = false;  
 
+  enlacesTarjetaResumen = [];
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private location: Location,
@@ -264,6 +266,108 @@ export class GestionEjgComponent implements OnInit {
               this.persistenceService.setPermisos(this.permisoEscrituraComunicaciones);
             }
             ).catch(error => console.error(error));
+    this.enviarEnlacesTarjeta();
+  }
+
+  enviarEnlacesTarjeta() {
+    this.enlacesTarjetaResumen = [];
+
+    let pruebaTarjeta ={
+      label: "general.message.datos.generales",
+      value: document.getElementById("datosGenerales"),
+      nombre: "datosGenerales",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.ejg.datosGenerales.ServiciosTramit",
+      value: document.getElementById("serviciosTramitacion"),
+      nombre: "serviciosTramitacion",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
+      value: document.getElementById("unidadFamiliar"),
+      nombre: "unidadFamiliar",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.ejg.datosGenerales.ExpedientesEconomicos",
+      value: document.getElementById("expedientesEconomicos"),
+      nombre: "expedientesEconomicos",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.ejg.datosGenerales.Relaciones",
+      value: document.getElementById("relaciones"),
+      nombre: "relaciones",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "censo.fichaIntegrantes.literal.estado",
+      value: document.getElementById("estados"),
+      nombre: "estados",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "menu.facturacionSJCS.mantenimientoDocumentacionEJG",
+      value: document.getElementById("documentacion"),
+      nombre: "documentacion",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.ejg.datosGenerales.InformeCalificacion",
+      value: document.getElementById("informeCalificacion"),
+      nombre: "informeCalificacion",
+    }
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.maestros.fundamentosResolucion.resolucion",
+      value: document.getElementById("resolucion"),
+      nombre: "resolucion",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "justiciaGratuita.ejg.datosGenerales.Impugnacion",
+      value: document.getElementById("impugnacion"),
+      nombre: "impugnacion",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    pruebaTarjeta ={
+      label: "censo.regtel.literal.titulo",
+      value: document.getElementById("regtel"),
+      nombre: "regtel",
+    };
+
+    this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+    //por hacer
+    // pruebaTarjeta ={
+    //   label: "",
+    //   value: document.getElementById("comunicaciones"),
+    //   nombre: "comunicaciones",
+    // };
+
+    // this.enlacesTarjetaResumen.push(pruebaTarjeta);
   }
 
   isCloseReceive(event) {
