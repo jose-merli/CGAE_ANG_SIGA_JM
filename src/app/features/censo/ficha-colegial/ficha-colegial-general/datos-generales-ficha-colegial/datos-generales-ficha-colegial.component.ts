@@ -18,6 +18,7 @@ import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { Calendar, AutoComplete } from 'primeng/primeng';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
 import { MultiSelect } from 'primeng/multiselect';
+import { StringObject } from "../../../../../models/StringObject";
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
   templateUrl: './datos-generales-ficha-colegial.component.html',
@@ -60,6 +61,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   checkDatosColegiales: any[] = [];
   datosColegialesInit: any[] = [];
 
+  nifCif: StringObject = new StringObject();
   activarGuardarGenerales: boolean = false;
   fechaNacCambiada: boolean = false;
   edadCalculada: any;
@@ -183,6 +185,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   isLetrado: boolean;
   @Output() idPersonaNuevo = new EventEmitter<any>();
+  @Output() aparecerLOPD = new EventEmitter<any>();
   @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
   @Input() openGen;
   @Output() opened = new EventEmitter<Boolean>();
@@ -197,11 +200,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.resaltadoDatosGenerales = true;
-    this.getLetrado();
     sessionStorage.removeItem("direcciones");
     sessionStorage.removeItem("situacionColegialesBody");
     sessionStorage.removeItem("fichaColegial");
-    sessionStorage.setItem("permisos", JSON.stringify(this.permisos)); // No se si esto hace falta
     
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.disabledNif = true;
@@ -241,13 +242,27 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
       this.tipoCambioAuditoria = null;
       // this.checkAcceso();
-      this.onInitGenerales();
-      this.onInitColegiales();
+      //this.onInitGenerales();
+      //this.onInitColegiales();
     } else {
       if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
-        this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.generalBody = new FichaColegialGeneralesItem();
         this.isLetrado = false;
+         let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
         this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+        this.generalBody = enviar;
+        this.generalBody.nif = enviar.numeroIdentificacion;
+        this.generalBody.apellidos1 = enviar.apellido1;
+        this.generalBody.soloNombre = enviar.nombre;
+        this.generalBody.idInstitucion = enviar.idInstitucion;
+        this.generalBody.apellidos2 = enviar.apellido2;
+        this.generalBody.idTratamiento = undefined;
+        this.situacionPersona = enviar.idEstado;
+        if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
+          this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
+        }
+        this.colegialesBody = JSON.parse(JSON.stringify(this.generalBody));
+        this.compruebaDNI();
       } else if (sessionStorage.getItem("nuevoNoColegiado")) {
         let enviar = JSON.parse(sessionStorage.getItem("nuevoNoColegiado"));
         this.generalBody = new FichaColegialGeneralesItem();
@@ -258,6 +273,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.generalBody.soloNombre = enviar.nombre;
         this.generalBody.idInstitucion = enviar.idInstitucion;
         this.generalBody.apellidos2 = enviar.apellido2;
+        this.generalBody.idTratamiento = undefined;
         this.situacionPersona = enviar.idEstado;
         if (this.generalBody.fechaNacimiento != null && this.generalBody.fechaNacimiento != undefined) {
           this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
@@ -292,7 +308,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.activacionTarjeta = false;
 
       // sessionStorage.removeItem("esNuevoNoColegiado");
-      this.onInitGenerales();
+      // this.onInitGenerales();
     } else {
       this.activacionEditar = true;
       this.esNewColegiado = false;
@@ -352,6 +368,21 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody.colegiado = this.esColegiado;
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
+    if(this.tarjetaGenerales == "3" || this.tarjetaGenerales == "2"){
+      this.onInitGenerales();
+      this.getSituacionPersona();
+      this.getInscritoInit();
+      this.getSituacionPersona();
+
+      if(this.tarjetaGenerales == "3"){
+        this.permisos = true;
+      }else{
+        this.permisos = false;
+      }
+      this.getLetrado();
+    }
+    
+
     if (this.openGen == true) {
       if (this.openFicha == false) {
         this.fichaPosible.activa = !this.fichaPosible.activa;
@@ -739,6 +770,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               this.showFail();
             }
           }, () => {
+            this.aparecerLOPD.emit(this.generalBody.noAparecerRedAbogacia);
             if (this.esColegiado) {
               let nombreCompleto;
               if(this.generalBody.apellidos2 != undefined){
@@ -868,6 +900,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               JSON.stringify(this.generalBody)
             );
             this.idPersonaNuevo.emit(this.idPersona);
+            this.aparecerLOPD.emit(this.generalBody.noAparecerRedAbogacia);
 
             if (this.esColegiado) {
               let nombreCompleto;
@@ -1024,9 +1057,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.fechaNacimiento
       );
     }
-    if (this.fechaAlta != undefined) {
+    /* if (this.fechaAlta != undefined) {
       this.generalBody.incorporacionDate = this.transformaFecha(this.fechaAlta);
-    }
+    } */
   }
 
   transformaFecha(fecha) {
@@ -1395,35 +1428,58 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     if(this.generalBody.idTipoIdentificacion == "" || this.generalBody.idTipoIdentificacion == undefined){
       this.resaltadoDatosGenerales = true;
     }
-    // if (this.generalBody.nif.length > 8) {
-    if (this.generalBody.idTipoIdentificacion != "50") {
-      if (this.isValidDNI(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "10";
-        return true;
-      } else if (this.isValidPassport(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "30";
-        return true;
-      } else if (this.isValidNIE(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "40";
-        return true;
-      } else if (this.isValidCIF(this.generalBody.nif)) {
-        this.generalBody.idTipoIdentificacion = "20";
-        return true;
-      } else {
-        this.generalBody.idTipoIdentificacion = "30";
-        return true;
+    if(this.generalBody.idTipoIdentificacion  != undefined && this.generalBody.idTipoIdentificacion  != null){
+      if (this.generalBody.idTipoIdentificacion != "50") {
+        if (this.isValidDNI(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "10";
+          return true;
+        } else if (this.isValidPassport(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "30";
+          return true;
+        } else if (this.isValidNIE(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "40";
+          return true;
+        } else if (this.isValidCIF(this.generalBody.nif)) {
+          this.generalBody.idTipoIdentificacion = "20";
+          return true;
+        } else {
+          this.generalBody.idTipoIdentificacion = "30";
+          return true;
+        }
       }
+    }else{
+      this.nifCif.valor = this.generalBody.nif;
+      this.sigaServices
+      .post("fichaDatosGenerales_tipoidentificacion", this.nifCif)
+      .subscribe(
+        data => {
+          this.generalBody.idTipoIdentificacion = JSON.parse(data.body)['valor'];
+          if (this.generalBody.idTipoIdentificacion != "50") {
+            if (this.isValidDNI(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "10";
+              return true;
+            } else if (this.isValidPassport(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "30";
+              return true;
+            } else if (this.isValidNIE(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "40";
+              return true;
+            } else if (this.isValidCIF(this.generalBody.nif)) {
+              this.generalBody.idTipoIdentificacion = "20";
+              return true;
+            } else {
+              this.generalBody.idTipoIdentificacion = "30";
+              return true;
+            }
+          }
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    
     }
-
-    // 1: {label: "CIF", value: "20"}
-    // 2: {label: "NIE", value: "40"}
-    // 3: {label: "NIF", value: "10"}
-    // 4: {label: "Otro", value: "50"}
-    // 5: {label: "Pasaporte", value: "30"}
-    // } else {
-    //   this.generalBody.idTipoIdentificacion = "30";
-    //   return false;
-    // }
+    
   }
   isValidPassport(dni: String): boolean {
     return (

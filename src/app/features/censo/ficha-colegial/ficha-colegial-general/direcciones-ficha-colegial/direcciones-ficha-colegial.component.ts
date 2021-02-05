@@ -135,6 +135,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.esColegiado = true;
       }
 
+      sessionStorage.removeItem("historicoDir")
+
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
           this.isColegiadoEjerciente = true;
@@ -164,11 +166,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isLetrado == true) {
-      this.isLetrado = true
-    } else {
-      this.isLetrado = !this.permisos;
-    }
+    
     if (this.esColegiado != null) {
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -179,7 +177,16 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       }
     }
     if (this.idPersona != undefined) {
-      this.onInitDirecciones();
+      if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
+        this.onInitDirecciones();
+        
+        if(this.tarjetaDirecciones == "3"){
+          this.permisos = true;
+        }else{
+          this.permisos = false;
+        }
+        this.getLetrado();
+      }
     }
     if (this.openDirec == true) {
       if (this.openFicha == false) {
@@ -298,6 +305,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.bodyDirecciones.idPersona = this.idPersona;
     this.bodyDirecciones.historico = false;
     this.searchDirecciones();
+  }
+
+  ocultarHistoricoDatosDirecciones(){
+    this.progressSpinner = true;
+    this.onInitDirecciones();
   }
 
   isSelectMultipleDirecciones() {
@@ -471,10 +483,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDirecciones() {
-    this.mostrarNumero = false;
+    this.selectAllDirecciones = false;
     this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = [];
+    this.mostrarNumero = false;
     this.selectedDatosDirecciones = "";
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
@@ -503,9 +517,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           },
           err => {
             console.log(err);
+            this.progressSpinner = false;
             this.mostrarNumero = true;
           },
           () => {
+            this.progressSpinner = false;
             if (this.datosDirecciones.length > 0) {
               this.mostrarDatosDireccion = true;
               this.DescripcionDatosDireccion = this.datosDirecciones[0];
@@ -529,12 +545,14 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchDireccionesHistoric() {
+    this.progressSpinner = true;
     this.bodyDirecciones.historico = true;
     this.searchDirecciones();
   }
 
   nuevaDireccion() {
     let newDireccion = new DatosDireccionesItem();
+    sessionStorage.setItem("permisoTarjeta", "3");
     sessionStorage.removeItem("direccion");
     sessionStorage.removeItem("editarDireccion");
     sessionStorage.setItem("fichaColegial", "true");
@@ -585,7 +603,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       if (!this.selectMultipleDirecciones) {
         if (dato[0].fechaBaja != null) {
           sessionStorage.setItem("historicoDir", "true");
-        }
+        } else sessionStorage.setItem("historicoDir", "false");
+
         var enviarDatos = null;
         if (dato && dato.length > 0) {
           enviarDatos = dato[0];
@@ -707,6 +726,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     else return true;
   }
   searchHistoricoDatosDirecciones() {
+    this.selectAllDirecciones = false;
+    this.selectMultipleDirecciones = false;
+    this.selectedDatosDirecciones = [];
     this.bodyDirecciones.historico = true;
     this.progressSpinner = true;
     // this.historico = true;

@@ -126,7 +126,7 @@
            -->
               <p-calendar #calendarFechaNacimiento [monthNavigator]="true" [yearNavigator]="true" (onSelect)="onChangeCalendar($event); activacionGuardarGenerales()"
                 (onInput)="inputFechaNacimiento($event)" [yearRange]="yearRange" [locale]="es" [(ngModel)]="fechaNacimiento"
-                (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
+                (onBlur)="blurFechaNacimiento($event)" [(disabled)]="isLetrado || tarjetaGenerales == 2 || disabledAction" dateFormat="dd/mm/yy" icon="far fa-calendar-alt"
                 [utc]="true" showIcon="true">
                 <p-footer>
                   <div class="main-button d-flex col-lg-12">
@@ -268,7 +268,7 @@
                   [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
                   [(disabled)]="isLetrado || (tarjetaGenerales == 2)  || disabledAction" (completeMethod)="filterLabelsMultipleTopics($event)"
                   [(ngModel)]="resultsTopics">
-                  <ng-template let-topicsSelecionados pTemplate="selectedItem">
+                  <ng-template let-topicsSelecionados pTemplate="selectedItem" style="padding:10px">
                     <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
                       [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
                       <span style="color:white">{{ topicsSelecionados.label }}</span>

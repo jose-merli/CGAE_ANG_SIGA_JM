@@ -236,6 +236,20 @@ para poder filtrar el dato con o sin estos caracteres*/
             // if (this.editar) {
             //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
             // }
+            this.plantillas.map(e => {
+              let accents =
+                "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+              let accentsOut =
+                "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+              let i;
+              let x;
+              for (i = 0; i < e.label.length; i++) {
+                if ((x = accents.indexOf(e.label[i])) != -1) {
+                  e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                  return e.labelSinTilde;
+                }
+              }
+            });
           },
           err => {
             console.log(err);

@@ -62,6 +62,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   colsCurriculares;
   selectedItemCurriculares: number = 10;
   rowsPerPage;
+  permisos: boolean = true;
+  isLetrado: boolean;
+
   disabledAction: boolean = false;
 
   @ViewChild("tableCurriculares")
@@ -158,7 +161,17 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
     }
     if (this.idPersona != undefined) {
-      this.onInitCurriculares();
+      if (this.datosCurriculares == undefined && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
+        this.onInitCurriculares();
+        
+        if(this.tarjetaCurriculares == "3"){
+          this.permisos = true;
+        }else{
+          this.permisos = false;
+        }
+        this.getLetrado();
+
+      }
     }
     if (this.openCurricu == true) {
       if (this.openFicha == false) {
@@ -254,6 +267,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   eliminarRegistroCV(selectedDatosCurriculares) {
+    this.progressSpinner = true;
+
     selectedDatosCurriculares.forEach(element => {
       this.datosCurricularesRemove.fichaDatosCurricularesItem.push(element);
     });
@@ -332,6 +347,10 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.router.navigate(["/edicionCurriculares"]);
   }
   searchDatosCurriculares() {
+    this.selectAllCurriculares = false;
+    this.selectMultipleCurriculares = false;
+    this.selectedDatosCurriculares = [];
+    this.numSelectedCurriculares = 0;
     this.mostrarNumero = false;
     this.progressSpinner = true;
     let bodyCurricular = {
@@ -346,12 +365,14 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       )
       .subscribe(
         data => {
+          this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
           // this.table.reset();
         },
         err => {
           //   console.log(err);
+          this.progressSpinner = false;
           this.mostrarNumero = true;
         }, () => {
           this.progressSpinner = false;
@@ -409,6 +430,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
 
   cargarDatosCV() {
     this.historicoCV = false;
+    this.progressSpinner = true;
 
     this.searchDatosCurriculares();
     this.selectedDatosCurriculares = [];
@@ -419,8 +441,12 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   }
 
   cargarHistorico() {
-    this.historicoCV = true;
+    this.selectAllCurriculares = false;
+    this.selectMultipleCurriculares = false;
     this.selectedDatosCurriculares = [];
+    this.numSelectedCurriculares = 0;
+    this.progressSpinner = true;
+    this.historicoCV = true;
 
     this.searchDatosCurriculares();
   }
@@ -485,4 +511,13 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.selectedDatosCurriculares.pop();
     }
   }
+  
+  getLetrado() {
+    if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
+      this.isLetrado = true;
+    } else {
+      this.isLetrado = !this.permisos;
+    }
+  }
+
 }

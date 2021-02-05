@@ -627,7 +627,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.router.navigate(["fichaPersonaJuridica"]);
     } else {
       this.editar = true;
-      this.body = new PersonaJuridicaItem();
+      // this.body = new PersonaJuridicaItem();
       this.numSelected = this.selectedDatos.length;
     }
   }
