@@ -46,7 +46,7 @@
               <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
                 <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
                 <p-dropdown [ngClass]="styleObligatorio(body.idTipoEnvios)" [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar || editarPlantilla"
-                  (onChange)="onChangeTipoEnvio($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}" showClear="true"
+                  (onChange)="getPlantillas(); detallePlantillaInicial(); body.asunto=''; body.cuerpo=''" placeholder="{{ 'general.boton.seleccionar' | translate }}" showClear="true"
                   [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
               </div>
               <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12': body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">

@@ -5,6 +5,8 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { truncate } from 'fs';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { EnviosMasivosObject } from '../../../../../models/EnviosMasivosObject';
+import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
 
 
 @Component({
@@ -13,6 +15,8 @@ import { CommonsService } from '../../../../../_services/commons.service';
   styleUrls: ["./configuracion-envio-masivo.component.scss"]
 })
 export class ConfiguracionEnvioMasivoComponent implements OnInit {
+  searchEnviosMasivos: EnviosMasivosObject = new EnviosMasivosObject();
+  searchEnvios: EnviosMasivosItem = new EnviosMasivosItem();
   openFicha: boolean = true;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
@@ -112,6 +116,10 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
+    if(event == null){
+      console.log(this.body.idPlantillaEnvios);
+      console.log(this.body.idTipoEnvios);
+    }
     this.onlyCheckDatos();
     if (event.value != undefined) {
       this.body.cuerpo = "";
@@ -150,6 +158,36 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
       this.body.cuerpo = "";
       this.body.asunto = "";
     }
+  }
+
+  detallePlantillaInicial() {
+      this.body.cuerpo = "";
+      if (
+        this.body.idTipoEnvios == "1" ||
+        this.body.idTipoEnvios == "4" ||
+        this.body.idTipoEnvios == "5" ||
+        this.body.idTipoEnvios == "7"
+      ) {
+
+        let datosPlantilla = {
+          idPlantillaEnvios: this.body.idPlantillaEnvios,
+          idTipoEnvios: this.body.idTipoEnvios
+        };
+        this.sigaServices
+          .post("enviosMasivos_detallePlantilla", datosPlantilla)
+          .subscribe(data => {
+            let datos = JSON.parse(data["body"]);
+            this.body.asunto = datos.asunto;
+            this.body.cuerpo = datos.cuerpo;
+          },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            }, () => {
+              
+            });
+      }
+    
   }
 
   getTipoEnvios() {
@@ -232,7 +270,16 @@ para poder filtrar el dato con o sin estos caracteres*/
               this.body.idPlantillaEnvios = this.plantillas[0].value;
             }
             this.progressSpinner = false;
-
+            if(sessionStorage.getItem(
+              "enviosMasivosSearch") == null){
+                this.detallePlantillaInicial();
+            }else{
+              let datos =
+                JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+                this.body.idTipoEnvios = datos.idTipoEnvios;
+                this.body.idPlantillaEnvios = datos.idPlantillaEnvios;
+            }
+            
             // if (this.editar) {
             //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
             // }
@@ -296,7 +343,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
     } else {
-      this.body.idTipoEnvios = "5";
+      this.body.idTipoEnvios = "1";
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.getPlantillas();
       this.editar = false;
