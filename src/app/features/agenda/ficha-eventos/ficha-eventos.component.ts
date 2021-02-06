@@ -298,7 +298,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
       this.modoEdicionEventoByAgenda = false;
       this.path = "agenda";
-      this.disabledTipoEvento = true;
+      this.disabledTipoEvento = false;
       // this.modoEdicionEvento = true;
       this.newModeConfiguration();
 

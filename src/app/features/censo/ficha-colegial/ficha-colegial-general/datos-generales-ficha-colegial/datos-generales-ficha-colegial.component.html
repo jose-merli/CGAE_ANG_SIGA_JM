@@ -265,11 +265,11 @@
               <div>
                 <label>{{ 'form.busquedaCursos.literal.temas' | translate}}</label>
                 <p-autoComplete #autocompleteTopics [(ngModel)]="resultsTopics" [suggestions]="suggestTopics" [minLength]="1" field="label"
-                  [multiple]="true" [style]="{'width':'100%'}" (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
+                [multiple]="true" [style]="{'width':'100%'}" [inputStyle]="configComplete"  (onFocus)="filterTopics($event)" (onBlur)="visiblePanelBlurTopics($event)"
                   [(disabled)]="isLetrado || (tarjetaGenerales == 2)  || disabledAction" (completeMethod)="filterLabelsMultipleTopics($event)"
                   [(ngModel)]="resultsTopics">
                   <ng-template let-topicsSelecionados pTemplate="selectedItem" style="padding:10px">
-                    <div class="ui-autocomplete-multiple-container ui-widget ui-inputtext ui-corner-all ng-star-inserted li ui-state-highlight"
+                  <div class="configEtiq"
                       [ngStyle]="{'background': topicsSelecionados.color, 'margin': marginPx, 'border': bw }">
                       <span style="color:white">{{ topicsSelecionados.label }}</span>
                     </div>

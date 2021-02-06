@@ -413,12 +413,66 @@ export class BusquedaCensoGeneralComponent implements OnInit {
             accept: () => {
               this.bodyFisica.idInstitucion = [];
               this.bodyFisica.idInstitucion.push(selectedDatos.numeroInstitucion);
+								// this.bodyFisica.idInstitucion = selectedDatos.numeroInstitucion;
+								this.bodyFisica.addDestinatarioIndv = false;
+								this.bodyFisica.nif = selectedDatos.nif;
+								this.sigaServices
+									.postPaginado('busquedaPer_searchFisica', '?numPagina=1', this.bodyFisica)
+									.subscribe(
+										(data) => {
+											this.bodySearch = JSON.parse(data['body']);
+											this.datosNoColegiados = this.bodySearch.busquedaFisicaItems;
+											if (this.datosNoColegiados.length > 0) {
+												// if (this.datosNoColegiados[0].fechaNacimiento != null) {
+												// 	this.datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+												// 		this.datosNoColegiados[0].fechaNacimiento
+												// 	);
+												// }
+												let enviar = new SolicitudIncorporacionItem();
+												enviar.numeroIdentificacion = this.datosNoColegiados[0].nif;
+												enviar.apellido1 = this.datosNoColegiados[0].primerApellido;
+												enviar.nombre = this.datosNoColegiados[0].nombre;
+												enviar.numColegiado = this.datosNoColegiados[0].numeroColegiado;
+												enviar.idInstitucion = this.datosNoColegiados[0].numeroInstitucion;
+												enviar.apellido2 = this.datosNoColegiados[0].segundoApellido;
+												enviar.sexo = this.datosNoColegiados[0].sexo;
+												enviar.naturalDe = this.datosNoColegiados[0].naturalDe;
+												enviar.idTipoIdentificacion = this.datosNoColegiados[0].idTipoIdentificacion;
+												enviar.idEstadoCivil = this.datosNoColegiados[0].idEstadoCivil;
+												enviar.fechaNacimiento = this.datosNoColegiados[0].fechaNacimientoString;
+												enviar.idTratamiento = this.datosNoColegiados[0].idTratamiento;
+												enviar.idEstado = this.datosNoColegiados[0].situacion;
+												enviar.domicilio = this.datosNoColegiados[0].direccion;
+												enviar.idProvincia = this.datosNoColegiados[0].idProvincia;
+												enviar.idPoblacion = this.datosNoColegiados[0].idPoblacion;
+												enviar.idPais = this.datosNoColegiados[0].idPais;
+												enviar.movil = this.datosNoColegiados[0].movil;
+												enviar.telefono1 = this.datosNoColegiados[0].telefono1;
+												enviar.telefono2 = this.datosNoColegiados[0].telefono2;
+												enviar.fax1 = this.datosNoColegiados[0].fax1;
+												enviar.fax2 = this.datosNoColegiados[0].fax2;
+												enviar.correoElectronico = this.datosNoColegiados[0].correoelectronico;
+												enviar.codigoPostal = this.datosNoColegiados[0].codigoPostal;
+												enviar.nombrePoblacion = this.datosNoColegiados[0].nombrePoblacion;
+												sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
+												sessionStorage.setItem('esNuevoNoColegiado', 'true');
+												sessionStorage.setItem('busquedaCensoGeneral', 'true');
+												sessionStorage.removeItem('disabledAction');
+												sessionStorage.setItem(
+													'personaBody',
+													JSON.stringify(this.datosNoColegiados[0])
+												);
+												this.router.navigate([ '/fichaColegial' ]);
+											} else {
+												sessionStorage.setItem('esNuevoNoColegiado', 'true');
+												sessionStorage.setItem('busquedaCensoGeneral', 'true');
               let noColegiado = new NoColegiadoItem();
               noColegiado.nif = selectedDatos.nif;
               noColegiado.idPersona = selectedDatos.idPersona;
               noColegiado.soloNombre = selectedDatos.nombre;
               noColegiado.apellidos1 = selectedDatos.primerApellido;
               noColegiado.apellidos2 = selectedDatos.segundoApellido;
+												noColegiado.sexo = selectedDatos.sexo;
               sessionStorage.removeItem('disabledAction');
               this.datosNoColegiados.push(noColegiado);
               sessionStorage.setItem(
@@ -427,7 +481,13 @@ export class BusquedaCensoGeneralComponent implements OnInit {
               );
 
               this.router.navigate(['/fichaColegial']);
+											}
             },
+										(err) => {
+											this.progressSpinner = false;
+										}
+									);
+							},
             reject: () => {
               sessionStorage.setItem('busquedaCensoGeneral', 'false');
 
