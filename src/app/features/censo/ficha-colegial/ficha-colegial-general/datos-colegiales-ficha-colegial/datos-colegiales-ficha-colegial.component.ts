@@ -1469,7 +1469,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
             
           }
         }else{
-          this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].idEstado).label;
+          if(this.datosColegiales != null && this.datosColegiales != undefined && this.datosColegiales.length != 0){
+            this.colegialesBody.estadoColegial = this.comboSituacion.find(item => item.value === this.datosColegiales[0].idEstado).label;
+          }
         }
        
       }
