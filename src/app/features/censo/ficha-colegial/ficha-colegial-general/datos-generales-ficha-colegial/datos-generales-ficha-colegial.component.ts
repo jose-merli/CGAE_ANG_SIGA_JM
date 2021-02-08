@@ -381,14 +381,6 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       }
       this.getLetrado();
     }
-    
-
-    if (this.openGen == true) {
-      if (this.openFicha == false) {
-        this.fichaPosible.activa = !this.fichaPosible.activa;
-        this.openFicha = !this.openFicha;
-      }
-    }
   }
   onInitGenerales() {
     // this.activacionGuardarGenerales();
@@ -478,6 +470,13 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     }
 
     this.getComboTemas();
+
+    if (!(this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&
+    this.generalBody.idTipoIdentificacion != undefined && this.generalBody.soloNombre != undefined && this.generalBody.apellidos1 != undefined &&
+    this.generalBody.soloNombre != "" && this.generalBody.apellidos1 != "" && this.generalBody.idTratamiento != null &&
+    this.generalBody.idLenguaje != "" && this.generalBody.idLenguaje != undefined)) {
+        this.abreCierraFicha("generales");
+      }
   }
 
   closeDialogConfirmation(item) {
@@ -955,6 +954,13 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           }
         );
     }
+
+    if ((this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&
+    this.generalBody.idTipoIdentificacion != undefined && this.generalBody.soloNombre != undefined && this.generalBody.apellidos1 != undefined &&
+    this.generalBody.soloNombre != "" && this.generalBody.apellidos1 != "" && this.generalBody.idTratamiento != null &&
+    this.generalBody.idLenguaje != "" && this.generalBody.idLenguaje != undefined)) {
+        this.abreCierraFicha("generales");
+      }
   }
 
   comprobarCampoMotivo() {
@@ -2813,6 +2819,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.resaltadoDatosGenerales = true;
     }
   }
+
   isOpenReceive(event) {
     let fichaPosible = this.esFichaActiva(event);
     if (fichaPosible == false) {
