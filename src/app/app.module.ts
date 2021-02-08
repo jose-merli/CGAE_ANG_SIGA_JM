@@ -394,9 +394,7 @@ import { BusquedaAsuntosComponent } from './mockups/pantalla-asuntos/busqueda-as
 import { DatePickerRangeComponent } from './mockups/shared/date-picker-range/date-picker-range.component';
 import { InputDivididoComponent } from './mockups/shared/input-dividido/input-dividido.component';
 import { ResultadoAsuntosComponent } from './mockups/pantalla-asuntos/resultado-asuntos/resultado-asuntos.component';
-import { PantallaJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/pantalla-justificacion-expres.component';
 import { JustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component';
-import { TablaResultadoDesplegableJEService } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable-je.service';
 import { BuscadorJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/buscador-justificacion-expres/buscador-justificacion-expres.component';
 import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
 import { PantallaFichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/pantalla-ficha-certificacion.component';
@@ -414,6 +412,12 @@ import { TarjetaDictamenComponent } from './mockups/ficha-ejgs/tarjeta-dictamen/
 import { TarjetaDocumentacionComponent } from './mockups/ficha-ejgs/tarjeta-documentacion/tarjeta-documentacion.component';
 import { TarjetaImpugnacionComponent } from './mockups/ficha-ejgs/tarjeta-impugnacion/tarjeta-impugnacion.component';
 import { TarjetaResolucionComponent } from './mockups/ficha-ejgs/tarjeta-resolucion/tarjeta-resolucion.component';
+import { TablaResultadoDesplegableJEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { TablaResultadoDesplegableAEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { AsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component';
+import { ResultadoAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/resultado-asistencia-expres/resultado-asistencia-expres.component';
+
+
 
 @NgModule({
 	declarations: [
@@ -758,7 +762,6 @@ import { TarjetaResolucionComponent } from './mockups/ficha-ejgs/tarjeta-resoluc
 		DatePickerRangeComponent,
 		InputDivididoComponent,
 		ResultadoAsuntosComponent,
-		PantallaJustificacionExpresComponent,
 		JustificacionExpresComponent,
 		BuscadorJustificacionExpresComponent,
 		TablaResultadoDesplegableComponent,
@@ -776,7 +779,10 @@ import { TarjetaResolucionComponent } from './mockups/ficha-ejgs/tarjeta-resoluc
 		TarjetaDictamenComponent,
 		TarjetaDocumentacionComponent,
 		TarjetaImpugnacionComponent,
-		TarjetaResolucionComponent
+		TarjetaResolucionComponent,
+		AsistenciaExpresComponent,
+		ResultadoAsistenciaExpresComponent,
+		BuscadorAsistenciaExpresComponent
 	],
 	imports: [
 		BrowserModule,
@@ -846,7 +852,7 @@ import { TarjetaResolucionComponent } from './mockups/ficha-ejgs/tarjeta-resoluc
 		DatePipe,
 
 		TrimPipePipe,
-
+		TablaResultadoDesplegableAEService,
 		TablaResultadoDesplegableJEService,
 		OldSigaServices,
 		SigaServices,

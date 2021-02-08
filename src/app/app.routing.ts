@@ -246,6 +246,8 @@ import { PantallaJustificacionExpresComponent } from "./mockups/pantalla-justifi
 import { PantallaFichaCertificacionComponent } from "./mockups/pantalla-ficha-certificacion/pantalla-ficha-certificacion.component";
 import { TarjetaRelacionesComponent } from "./mockups/mock-tarjeta-relaciones/tarjeta-relaciones/tarjeta-relaciones.component";
 import { FichaPredesignacionComponent } from "./mockups/ficha-predesignacion/ficha-predesignacion.component";
+import { JustificacionExpresComponent } from "./mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component";
+import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1328,7 +1330,7 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'pantallaJustificacionExpres',
-		component: PantallaJustificacionExpresComponent
+		component: JustificacionExpresComponent
 	},
 	{
 		path: 'pantallaFichaCertificacion',
@@ -1342,6 +1344,11 @@ const appRoutes: Routes = [
 		path: 'fichaPredesignacion',
 		component: FichaPredesignacionComponent
 	},
+	{
+		path: 'pantallaAsistenciaExpres',
+		component: AsistenciaExpresComponent
+	},
+
 
 	{ path: ' ', redirectTo: 'home' }
 ];

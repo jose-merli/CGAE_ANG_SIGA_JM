@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RowGroup, TablaResultadoDesplegableJEService } from '../tabla-resultado-desplegable-je.service';
+import { RowGroup, TablaResultadoDesplegableJEService } from '../../tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
 @Component({
   selector: 'app-justificacion-expres',
   templateUrl: './justificacion-expres.component.html',
@@ -15,138 +15,72 @@ export class JustificacionExpresComponent implements OnInit {
   totalActuaciones = 0;
   cabeceras = [
     {
-      value: "anio",
-      label: "Año/Número Designación"
+      id: "anio", 
+      name: "Año/Número Designación"
     },
     {
-      value: "modulo",
-      label: "Módulo"
+      id: "modulo", 
+      name: "Módulo"
     },
     {
-      value: "actuacion",
-      label: "Fecha Actuación"
+      id: "actuacion", 
+      name: "Fecha Actuación"
     },
     {
-      value: "justificacion",
-      label: "Justificación"
+      id: "justificacion", 
+      name: "Justificación"
     },
     {
-      value: "acreditacion",
-      label: "Acreditación"
+      id: "acreditacion", 
+      name: "Acreditación"
     },
     {
-      value: "validar",
-      label: "Validar"
+      id: "validar", 
+      name: "Validar"
     }
-  ];
-  selectores1 = [
-    {
-      nombre: "Estado",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Actuaciones Validadas",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Incluir sin EJG",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Con EJG no favorables",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "EJG's sin resolución",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "EJG's Resolución PTE CAJG",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    }
-  ];
-  datePickers1 = ["Fecha de Justificación Desde", "Fecha de Justificación Hasta"];
+];
+selectores1 = [
+  {
+    nombre : "Estado",
+    opciones: [1,2,3,4,5,6,7,8,9,10]
+  },
+  {
+    nombre : "Actuaciones Validadas",
+    opciones: [1,2,3,4,5,6,7,8,9,10]
+  },
+  {
+    nombre : "Incluir sin EJG",
+    opciones: [1,2,3,4,5,6,7,8,9,10]
+  },
+  {
+    nombre : "Con EJG no favorables",
+    opciones: [1,2,3,4,5,6,7,8,9,10]
+  },
+  {
+    nombre : "EJG's sin resolución",
+    opciones: [1,2,3,4,5,6,7,8,9,10]
+  },
+  {
+    nombre : "EJG's Resolución PTE CAJG",
+    opciones: [1,2,3,4,5,6,7,8,9,10]
+  }
+];
+datePickers1 = ["Fecha de Justificación Desde", "Fecha de Justificación Hasta"];
 
-  datePickers2 = ["Fecha de Designación Desde", "Fecha de Designación Hasta"];
-  datePickers = [this.datePickers1, this.datePickers2];
-  inputs1 = [
-    "Año Designación", "Número Designación", "Apellidos", "Nombre", "Año EJG", "Número EJG"
-  ]
+datePickers2 = ["Fecha de Designación Desde", "Fecha de Designación Hasta"];
+datePickers = [this.datePickers1, this.datePickers2];
+inputs1 = [
+  "Año Designación", "Número Designación", "Apellidos", "Nombre", "Año EJG", "Número EJG"
+]
   constructor(
     private trdService: TablaResultadoDesplegableJEService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.rowGroups = this.trdService.getTableData();
     this.rowGroupsAux = this.trdService.getTableData();
   }
-  showResponse() {
+  showResponse(){
     this.show = true;
   }
 

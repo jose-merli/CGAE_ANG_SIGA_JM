@@ -1,0 +1,37 @@
+<div class="card">
+        <div class="card-body">
+            <p class="title-module">
+                <span (click)="onHideDatos()">{{titulo}}</span>
+                <i (click)="onHideDatos()" *ngIf="showDatos" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatos()" *ngIf="!showDatos" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showDatos && modoBusquedaB" class="module vista-avanzada"> 
+                    <div class="flexCenter">
+                        <p-checkbox binary="true" label="Seleccionar todo" class="ml-0"></p-checkbox>
+                    </div>
+                    <app-paginador></app-paginador>
+                    <app-tabla-resultado-desplegable *ngIf="showResponse" [cabeceras]="cabeceras"
+                        [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"></app-tabla-resultado-desplegable>
+                    <div class="mt-3">
+                        <app-paginador></app-paginador>
+                    </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row inline">
+                <div class="center col-lg-4 col-md-4 ajustar">
+                    <div class="form-inline">
+                        <label class="mr-3 textoAlineado form-group">Fecha Justificación</label>
+                        <app-fecha [utc]="false"></app-fecha>
+                    </div>
+                </div>
+                <div class="right col main-button">
+                    <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Crear EJG"></button>
+                    <button type="submit" pButton icon="fa fa-plus" iconPos="left" label="Nueva Actuación"></button>
+                    <button type="submit" pButton icon="fa fa-plus" iconPos="left" label="Nueva Asistencia"></button>
+                    <button type="submit" pButton icon="fa fa-undo" iconPos="left" label="Restablecer"></button>
+                    <button type="submit" pButton icon="far fa-save" iconPos="left" label="Guardar"></button>
+                </div>
+            </div>
+        </div>
+</div>

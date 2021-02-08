@@ -12,9 +12,25 @@
     align-items: flex-end;
 }
 
-.vertical-center {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
+@media (max-width: 1256px) {
+    .ajustar{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .textoAlineado{
+        width: 100%;
+        text-align: left;
+    }
+}
+@media (max-width: 378px) {
+    .ajustar{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .textoAlineado{
+        width: 100%;
+        text-align: left;
+    }
 }
