@@ -395,11 +395,14 @@ import { BusquedaAsuntosComponent } from './mockups/pantalla-asuntos/busqueda-as
 import { DatePickerRangeComponent } from './mockups/pantalla-asuntos/date-picker-range/date-picker-range.component';
 import { InputDivididoComponent } from './mockups/pantalla-asuntos/input-dividido/input-dividido.component';
 import { ResultadoAsuntosComponent } from './mockups/pantalla-asuntos/resultado-asuntos/resultado-asuntos.component';
-import { PantallaJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/pantalla-justificacion-expres.component';
 import { JustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component';
-import { TablaResultadoDesplegableJEService } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable-je.service';
 import { BuscadorJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/buscador-justificacion-expres/buscador-justificacion-expres.component';
-import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
+import { TablaResultadoDesplegableComponent } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
+import { TablaResultadoDesplegableJEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-je.service';
+import { TablaResultadoDesplegableAEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
+import { AsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component';
+import { ResultadoAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/resultado-asistencia-expres/resultado-asistencia-expres.component';
+
 
 
 @NgModule({
@@ -746,10 +749,12 @@ import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justifica
 		DatePickerRangeComponent,
 		InputDivididoComponent,
 		ResultadoAsuntosComponent,
-		PantallaJustificacionExpresComponent,
 		JustificacionExpresComponent,
 		BuscadorJustificacionExpresComponent,
 		TablaResultadoDesplegableComponent,
+		AsistenciaExpresComponent,
+		ResultadoAsistenciaExpresComponent,
+		BuscadorAsistenciaExpresComponent
 	],
 	imports: [
 		BrowserModule,
@@ -819,7 +824,7 @@ import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justifica
 		DatePipe,
 
 		TrimPipePipe,
-
+		TablaResultadoDesplegableAEService,
 		TablaResultadoDesplegableJEService,
 		OldSigaServices,
 		SigaServices,

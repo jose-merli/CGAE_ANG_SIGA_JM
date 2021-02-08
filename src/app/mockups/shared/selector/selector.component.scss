@@ -1,3 +1,11 @@
 .inputWidth{
     width: 81%;
   }
+  .mw{
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+  ::ng-deep .ui-placeholder{
+    text-overflow: ellipsis !important;
+    max-width: 160px !important;
+  }

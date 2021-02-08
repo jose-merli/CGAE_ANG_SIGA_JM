@@ -242,7 +242,8 @@ import { FichaColegiadoComponent } from "./mockups/ficha-colegiado/ficha-colegia
 import { PantallaCertificacionComponent } from "./mockups/pantalla-certificacion/pantalla-certificacion.component";
 import { PantallaEjgComponent } from "./mockups/pantalla-ejg/pantalla-ejg.component";
 import { PantallaAsuntosComponent } from "./mockups/pantalla-asuntos/pantalla-asuntos.component";
-import { PantallaJustificacionExpresComponent } from "./mockups/pantalla-justificacion-expres/pantalla-justificacion-expres.component";
+import { JustificacionExpresComponent } from "./mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component";
+import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1325,8 +1326,13 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'pantallaJustificacionExpres',
-		component: PantallaJustificacionExpresComponent
+		component: JustificacionExpresComponent
 	},
+	{
+		path: 'pantallaAsistenciaExpres',
+		component: AsistenciaExpresComponent
+	},
+	
 
 	{ path: ' ', redirectTo: 'home' }
 ];

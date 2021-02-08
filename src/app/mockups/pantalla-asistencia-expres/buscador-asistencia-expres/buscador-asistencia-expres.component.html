@@ -1,0 +1,30 @@
+
+<mat-accordion class="example-headers-align" multi>
+     <mat-expansion-panel>
+        <mat-expansion-panel-header class="h100">
+            <div>
+                <div><mat-checkbox class="ml-1 custom-frame">Búsqueda de Asistencias</mat-checkbox> <mat-checkbox class="ml-2 custom-frame">Asistencia Exprés</mat-checkbox></div>
+                <div class="mb-3 borderBottom w100">Datos Comunes</div>
+            </div>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+            <form [formGroup]="aeForm">
+            <div class="row w100 d-flex justify-content-between">
+                <div>
+                    <div>Guardia Día (*)</div>
+                    <input class="inputWidth" matInput [matDatepicker]="picker" placeholder="Choose a date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+                <div class="row w100">
+                    <div class="col-4 w100" *ngFor="let selector of selectores1; let i = index;">
+                        <app-selector [i]="i" [selector]="selector"></app-selector>
+                       </div>
+                </div>
+            <app-buscador-colegial class="flexCenter" numColegiado="numColegiado" nombreAp="nombreAp"></app-buscador-colegial>
+            <div class="flexCenter">Sustituir al letrado de guardia<mat-checkbox class="ml-1"></mat-checkbox></div>
+        </div>
+        </form>
+</ng-template>
+</mat-expansion-panel>
+</mat-accordion>
