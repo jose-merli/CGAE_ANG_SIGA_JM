@@ -19,6 +19,7 @@ export class FiltrosTurnos implements OnInit {
   filtroAux: TurnosItems = new TurnosItems();
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
+  textSelected: String = '{0} opciones seleccionadas';
   // grupoZona:string;
   // zona:string;
   partidoJudicial: string;
@@ -399,4 +400,7 @@ export class FiltrosTurnos implements OnInit {
     this.msgs = [];
   }
 
+  focusinputfield(){
+    
+  }
 }
