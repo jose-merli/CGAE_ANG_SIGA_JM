@@ -2,6 +2,14 @@
     border-bottom: 1px solid #595959;
 }
 
-::ng-deep div.mat-expansion-panel-content {
-    margin-top: 0.5rem !important;
+::ng-deep {
+
+    #emptyAccor {
+
+        div.mat-expansion-panel-content {
+            margin-top: 0.5rem !important;
+        }
+        
+    }
+
 }

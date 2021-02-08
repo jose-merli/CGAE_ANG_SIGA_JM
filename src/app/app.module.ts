@@ -370,8 +370,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { TarjetaComponent } from './mockups/tarjeta/tarjeta.component';
-import { FichaComponent } from './mockups/ficha/ficha.component';
+import { TarjetaComponent } from './mockups/shared/tarjeta/tarjeta.component';
 import { MigasDePanComponent } from './mockups/shared/migas-de-pan/migas-de-pan.component';
 import { FichaActuacionComponent } from './mockups/ficha-actuacion/ficha-actuacion.component';
 import { FichaEjgsComponent } from './mockups/ficha-ejgs/ficha-ejgs.component';
@@ -392,15 +391,29 @@ import { SelectorComponent } from './mockups/shared/selector/selector.component'
 import { PantallaAsuntosComponent } from './mockups/pantalla-asuntos/pantalla-asuntos.component';
 import { AsuntosComponent } from './mockups/pantalla-asuntos/asuntos/asuntos.component';
 import { BusquedaAsuntosComponent } from './mockups/pantalla-asuntos/busqueda-asuntos/busqueda-asuntos.component';
-import { DatePickerRangeComponent } from './mockups/pantalla-asuntos/date-picker-range/date-picker-range.component';
-import { InputDivididoComponent } from './mockups/pantalla-asuntos/input-dividido/input-dividido.component';
+import { DatePickerRangeComponent } from './mockups/shared/date-picker-range/date-picker-range.component';
+import { InputDivididoComponent } from './mockups/shared/input-dividido/input-dividido.component';
 import { ResultadoAsuntosComponent } from './mockups/pantalla-asuntos/resultado-asuntos/resultado-asuntos.component';
 import { PantallaJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/pantalla-justificacion-expres.component';
 import { JustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component';
 import { TablaResultadoDesplegableJEService } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable-je.service';
 import { BuscadorJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/buscador-justificacion-expres/buscador-justificacion-expres.component';
 import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
-
+import { PantallaFichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/pantalla-ficha-certificacion.component';
+import { FichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/ficha-certificacion/ficha-certificacion.component';
+import { TablaSimpleComponent } from './mockups/shared/tabla-simple/tabla-simple.component';
+import { MockTarjetaRelacionesComponent } from './mockups/mock-tarjeta-relaciones/mock-tarjeta-relaciones.component';
+import { TarjetaRelacionesComponent } from './mockups/mock-tarjeta-relaciones/tarjeta-relaciones/tarjeta-relaciones.component';
+import { FichaPredesignacionComponent } from './mockups/ficha-predesignacion/ficha-predesignacion.component';
+import { DetalleTarjetaComponent } from './mockups/ficha-predesignacion/detalle-tarjeta/detalle-tarjeta.component';
+import { TarjetaDatosGeneralesComponent } from './mockups/ficha-ejgs/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaServiciosTramitacionComponent } from './mockups/ficha-ejgs/tarjeta-servicios-tramitacion/tarjeta-servicios-tramitacion.component';
+import { TarjetaUnidadFamiliarComponent } from './mockups/ficha-ejgs/tarjeta-unidad-familiar/tarjeta-unidad-familiar.component';
+import { TarjetaExpedientesEconomicosComponent } from './mockups/ficha-ejgs/tarjeta-expedientes-economicos/tarjeta-expedientes-economicos.component';
+import { TarjetaDictamenComponent } from './mockups/ficha-ejgs/tarjeta-dictamen/tarjeta-dictamen.component';
+import { TarjetaDocumentacionComponent } from './mockups/ficha-ejgs/tarjeta-documentacion/tarjeta-documentacion.component';
+import { TarjetaImpugnacionComponent } from './mockups/ficha-ejgs/tarjeta-impugnacion/tarjeta-impugnacion.component';
+import { TarjetaResolucionComponent } from './mockups/ficha-ejgs/tarjeta-resolucion/tarjeta-resolucion.component';
 
 @NgModule({
 	declarations: [
@@ -723,7 +736,6 @@ import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justifica
 		BuscadorColegialComponent,
 		BuscadorAsistenciaExpresComponent,
 		TarjetaComponent,
-		FichaComponent,
 		MigasDePanComponent,
 		FichaActuacionComponent,
 		FichaEjgsComponent,
@@ -750,6 +762,21 @@ import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justifica
 		JustificacionExpresComponent,
 		BuscadorJustificacionExpresComponent,
 		TablaResultadoDesplegableComponent,
+		PantallaFichaCertificacionComponent,
+		FichaCertificacionComponent,
+		TablaSimpleComponent,
+		MockTarjetaRelacionesComponent,
+		TarjetaRelacionesComponent,
+		FichaPredesignacionComponent,
+		DetalleTarjetaComponent,
+		TarjetaDatosGeneralesComponent,
+		TarjetaServiciosTramitacionComponent,
+		TarjetaUnidadFamiliarComponent,
+		TarjetaExpedientesEconomicosComponent,
+		TarjetaDictamenComponent,
+		TarjetaDocumentacionComponent,
+		TarjetaImpugnacionComponent,
+		TarjetaResolucionComponent
 	],
 	imports: [
 		BrowserModule,

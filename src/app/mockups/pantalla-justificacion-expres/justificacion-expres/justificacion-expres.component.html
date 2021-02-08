@@ -1,0 +1,60 @@
+<div class="card">
+    <div class="card-body">
+        <app-buscador-justificacion-expres [datePickers]="datePickers" [selectores1]="selectores1" [inputs1]="inputs1">
+        </app-buscador-justificacion-expres>
+    </div>
+
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}"></button>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div>
+            <app-paginador [type]="'TOP'"></app-paginador>
+        </div>
+        <app-tabla-resultado-desplegable *ngIf="showResponse" [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux"
+            [rowGroups]="rowGroups"></app-tabla-resultado-desplegable>
+        <div>
+            <app-paginador [type]="'BOTTOM'"></app-paginador>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="container-fluid px-0">
+            <div class="row">
+                <div class="col-lg-4 col-md-3">
+                    <div class="inline-block">
+                        <span class="mr-3">Cambio Designas {{numDesignas}}/{{totalDesignas}}</span>
+                        <span>Cambio Actuaciones {{numActuaciones}}/{{totalActuaciones}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label class="mr-3">Fecha Justificación</label>
+                            <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
+                                (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
+                                (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="inline-block main-button text-right">
+
+                        <button pButton type="button"  icon="fa fa-trash-alt"  iconPos="left" label="Eliminar"></button>
+                        <button type="button" pButton icon="fa fa-comment" iconPos="left" label="Comunicar"></button>
+                        <button type="button" pButton icon="far fa-save" iconPos="left" label="Guardar"></button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

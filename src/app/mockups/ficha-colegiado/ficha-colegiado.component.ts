@@ -1,3 +1,7 @@
+import { ElementRef } from '@angular/core';
+import { HostListener } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,24 +11,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FichaColegiadoComponent implements OnInit {
 
+  tarjetaFija = null;
+
   listaTarjetas = [
     {
       nombre: "Servicios de interés",
-      icon: 'fas fa-link',
-      tipo: "noDetalle",
+      icono: 'fas fa-link',
+      detalle: false,
       fixed: false,
       enlaces: [
         {
-          "key": "Más información",
-          "value": "0"
+          "texto": "Más información",
+          "href": "0"
         }
       ]
     },
     {
       nombre: "Datos Generales",
-      imagen: "assets/images/img-colegiado.PNG",
-      tipo: "detalle",
+      imagen: "",
+      icono: 'fa fa-user',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Identificación",
@@ -47,9 +55,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Datos Colegiales",
       imagen: "",
-      icon: 'far fa-address-book',
-      tipo: "detalle",
+      icono: 'far fa-address-book',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Colegio",
@@ -79,9 +88,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Otras Colegiaciones",
       imagen: "",
-      icon: 'fa fa-graduation-cap',
-      tipo: "detalle",
+      icono: 'fa fa-graduation-cap',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Colegiaciones",
@@ -92,9 +102,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Certificados",
       imagen: "",
-      icon: 'fa fa-certificate',
-      tipo: "detalle",
+      icono: 'fa fa-certificate',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Certificados",
@@ -105,9 +116,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Sanciones",
       imagen: "",
-      icon: 'fa fa-gavel',
-      tipo: "detalle",
+      icono: 'fa fa-gavel',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Sanciones",
@@ -118,9 +130,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Sociedades",
       imagen: "",
-      icon: 'fa fa-briefcase',
-      tipo: "detalle",
+      icono: 'fa fa-briefcase',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Sociedades",
@@ -131,9 +144,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Datos Curriculares",
       imagen: "",
-      icon: 'fa fa-paperclip',
-      tipo: "detalle",
+      icono: 'fa fa-paperclip',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Datos Curriculares",
@@ -144,9 +158,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Direcciones",
       imagen: "",
-      icon: 'fa fa-map-marker',
-      tipo: "detalle",
+      icono: 'fa fa-map-marker',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Direcciones",
@@ -157,9 +172,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Datos Bancarios",
       imagen: "",
-      icon: 'fa fa-bank',
-      tipo: "detalle",
+      icono: 'fa fa-bank',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Cuentas",
@@ -170,9 +186,10 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Regtel",
       imagen: "",
-      icon: 'fa fa-file-alt',
-      tipo: "detalle",
+      icono: 'fa fa-file-alt',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Directorios",
@@ -183,34 +200,79 @@ export class FichaColegiadoComponent implements OnInit {
     {
       nombre: "Alter Mutua",
       imagen: "",
-      icon: 'fa fa-user',
-      tipo: "noDetalle",
+      icono: 'fa fa-user',
+      detalle: false,
       fixed: false,
+      opened: false,
       enlaces: [
         {
-          "key": "Alternativa al RETA",
-          "value": "0"
+          "texto": "Alternativa al RETA",
+          "href": "0"
+        },
+        {
+          "texto": "Ofertas",
+          "href": "0"
         }
       ]
     },
     {
       nombre: "Mutualidad de la abogacía",
       imagen: "",
-      icon: 'fas fa-link',
-      tipo: "noDetalle",
+      icono: 'fas fa-link',
+      detalle: false,
       fixed: false,
+      opened: false,
       enlaces: [
         {
-          "key": "Plan Universal",
-          "value": "0"
+          "texto": "Plan Universal",
+          "href": "0"
+        },
+        {
+          "texto": "Seguro Accidentes",
+          "href": "0"
         }
       ]
     }
   ];
 
-  constructor() { }
+  stickyElementoffset = 0;
+  scrollOffset = 0;
+  enableSticky = false;
+  navbarHeight = 0;
+  scrollWidth = 0;
+
+  @ViewChild('parent') private parent: ElementRef;
+  @ViewChild('navbar') private navbarElement: ElementRef;
+  @ViewChild('content') private content: ElementRef;
+  @ViewChild('main') private main: ElementRef;
+
+  constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
+    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
+    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+  }
+
+  @HostListener("scroll", ['$event'])
+  manageScroll($event: Event) {
+    this.scrollOffset = $event.srcElement['scrollTop'];
+    this.setSticky();
+  }
+
+  setSticky() {
+    if (this.scrollOffset >= this.stickyElementoffset) {
+      this.enableSticky = true;
+      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
+      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
+    } else {
+      this.enableSticky = false;
+      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
+      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
+    }
   }
 
 }

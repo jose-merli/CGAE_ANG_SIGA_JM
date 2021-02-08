@@ -1,0 +1,94 @@
+<div *ngIf="!fixed">
+  <div *ngIf="!cardOpenState" class="form-row w-100 tarjeta-cerrada">
+
+    <div class="col-lg-1 col-md-2">
+      <div class="icono-wrapper">
+        <i class="{{ icon }} icono"></i>
+      </div>
+
+    </div>
+    <div class="col-lg-11 col-md-10">
+      <div class="d-flex justify-content-start mb-1">
+        <label class="mr-auto titulo-tarjeta">{{ cardTitle }}</label>
+      </div>
+      <div *ngIf="campos" class="d-flex justify-content-between campos">
+        <label *ngFor="let campo of campos">
+          {{ campo.key }}:
+          <span>
+            {{ campo.value }}
+          </span>
+        </label>
+      </div>
+      <div *ngIf="enlaces" class="d-flex justify-content-between">
+        <label *ngFor="let enlace of enlaces">
+          <a href="{{ enlace.href }}">
+            <span class="enlace">
+              {{ enlace.texto }}
+            </span>
+          </a>
+        </label>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div *ngIf="cardOpenState"
+    class="cabecera-tarjeta-abierta d-flex justify-content-start align-items-center tarjeta-abierta">
+
+    <div class="icono-wrapper">
+      <i class="{{ icon }} icono"></i>
+    </div>
+    <label class="titulo-tarjeta">{{ cardTitle }}</label>
+
+  </div>
+</div>
+
+<div *ngIf="fixed" class="form-row w-100 tarjeta-fija">
+
+  <div class="col-lg-1 col-md-2">
+
+    <div class="icono-wrapper">
+      <i class="{{ icon }} icono"></i>
+    </div>
+
+  </div>
+
+  <div class="col-lg-11 col-md-10">
+
+    <div class="d-flex">
+      <label class="titulo-tarjeta">
+        {{ cardTitle }}
+      </label>
+    </div>
+
+  </div>
+
+  <div class="col-1"></div>
+  <div class="col-11 form-row">
+    <div *ngFor="let campo of campos" class="d-flex flex-wrap mr-auto campos">
+      <label>
+        <b>{{ campo.key }}: </b>
+        {{ campo.value }}
+      </label>
+    </div>
+  </div>
+
+  <div class="col-1"></div>
+  <div class="col-11 form-row pt-2">
+    <div *ngFor="let enlace of enlaces" class="d-flex flex-wrap mr-auto">
+      <label>
+        <a [href]="enlace.href">
+          <span class="enlace">
+            {{ enlace.texto }}
+          </span>
+        </a>
+      </label>
+    </div>
+  </div>
+
+  <div class="col-12 text-right">
+    <i class="fas fa-thumbtack"></i>
+  </div>
+
+</div>

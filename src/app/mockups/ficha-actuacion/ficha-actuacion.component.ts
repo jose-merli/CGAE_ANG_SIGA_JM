@@ -1,3 +1,7 @@
+import { ElementRef } from '@angular/core';
+import { HostListener } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -10,7 +14,7 @@ export class FichaActuacionComponent implements OnInit {
   rutas: string[] = ['SJCS', 'Designaciones', 'Actuaciones'];
   tarjetaFija = {
     nombre: "Resumen Actuación",
-    icon: 'fas fa-clipboard',
+    icono: 'fas fa-clipboard',
     iconFixed: 'fas fa-thumbtack',
     tipo: "detalle",
     fixed: true,
@@ -38,9 +42,11 @@ export class FichaActuacionComponent implements OnInit {
   listaTarjetas = [
     {
       nombre: "Datos Generales",
-      imagen: "assets/images/img-colegiado.PNG",
-      tipo: "detalle",
+      imagen: "",
+      icono: 'far fa-address-book',
       fixed: false,
+      detalle: true,
+      opened: false,
       campos: [
         {
           "key": "Juzgado",
@@ -58,9 +64,10 @@ export class FichaActuacionComponent implements OnInit {
     },
     {
       nombre: "Justificación",
-      icon: "fa fa-gavel",
-      tipo: "detalle",
+      icono: "fa fa-gavel",
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Estado",
@@ -78,9 +85,11 @@ export class FichaActuacionComponent implements OnInit {
     },
     {
       nombre: "Histórico de la Actuación",
-      imagen: "assets/images/img-colegiado.PNG",
-      tipo: "detalle",
+      imagen: "",
+      icono: 'fa fa-user',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Fecha Justificación",
@@ -99,9 +108,10 @@ export class FichaActuacionComponent implements OnInit {
     {
       nombre: "Documentación",
       imagen: "",
-      icon: "fa fa-briefcase",
-      tipo: "detalle",
+      icono: "fa fa-briefcase",
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Documentos",
@@ -111,9 +121,45 @@ export class FichaActuacionComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  stickyElementoffset = 0;
+  scrollOffset = 0;
+  enableSticky = false;
+  navbarHeight = 0;
+  scrollWidth = 0;
+
+  @ViewChild('parent') private parent: ElementRef;
+  @ViewChild('navbar') private navbarElement: ElementRef;
+  @ViewChild('content') private content: ElementRef;
+  @ViewChild('main') private main: ElementRef;
+
+  constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
   }
+
+  ngAfterViewInit() {
+    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
+    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
+    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+  }
+
+  @HostListener("scroll", ['$event'])
+  manageScroll($event: Event) {
+    this.scrollOffset = $event.srcElement['scrollTop'];
+    this.setSticky();
+  }
+
+  setSticky() {
+    if (this.scrollOffset >= this.stickyElementoffset) {
+      this.enableSticky = true;
+      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
+      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
+    } else {
+      this.enableSticky = false;
+      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
+      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
+    }
+  }
+
 
 }

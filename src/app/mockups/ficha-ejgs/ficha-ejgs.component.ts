@@ -1,3 +1,7 @@
+import { ViewChild } from '@angular/core';
+import { HostListener } from '@angular/core';
+import { Renderer2 } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -10,10 +14,10 @@ export class FichaEjgsComponent implements OnInit {
   rutas: string[] = ['SJCS', 'EJGS'];
   tarjetaFija = {
     nombre: "Información Resumen",
-    icon: 'fas fa-clipboard',
-    iconFixed: 'fas fa-thumbtack',
-    tipo: "detalle",
+    icono: 'fas fa-clipboard',
+    detalle: false,
     fixed: true,
+    opened: false,
     campos: [
       {
         "key": "Año/Número EJG",
@@ -48,10 +52,13 @@ export class FichaEjgsComponent implements OnInit {
 
   listaTarjetas = [
     {
+      id: 'sjcsEjgsfichEjgsDatGen',
       nombre: "Datos Generales",
       imagen: "assets/images/img-colegiado.PNG",
-      tipo: "detalle",
+      icono: 'far fa-address-book',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Fecha Apertura",
@@ -76,11 +83,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsSerTra',
       nombre: "Servicios de tramitación",
       imagen: "",
-      icon: "fa fa-gavel",
-      tipo: "detalle",
+      icono: "fa fa-gavel",
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Turno",
@@ -97,11 +106,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsUniFam',
       nombre: "Unidad Familiar",
       imagen: "",
-      icon: 'fa fa-users',
-      tipo: "detalle",
+      icono: 'fa fa-users',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Identificación",
@@ -122,11 +133,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsExpEco',
       nombre: "Expedientes Económicos",
       imagen: "",
-      icon: 'fa fa-dollar',
-      tipo: "detalle",
+      icono: 'fa fa-dollar',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total",
@@ -135,11 +148,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsRela',
       nombre: "Relaciones",
       imagen: "",
-      icon: 'fas fa-link',
-      tipo: "detalle",
+      icono: 'fas fa-link',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Relaciones",
@@ -148,11 +163,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsEstad',
       nombre: "Estados",
       imagen: "",
-      icon: 'fa fa-graduation-cap',
-      tipo: "detalle",
+      icono: 'fa fa-graduation-cap',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Estado",
@@ -165,11 +182,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsDoc',
       nombre: "Documentación",
       imagen: "",
-      icon: 'fa fa-briefcase',
-      tipo: "detalle",
+      icono: 'fa fa-briefcase',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Número total de Documentos",
@@ -178,11 +197,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsInfoCal',
       nombre: "Informe Calificación",
       imagen: "",
-      icon: 'fa fa-certificate',
-      tipo: "detalle",
+      icono: 'fa fa-certificate',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Fecha",
@@ -199,11 +220,13 @@ export class FichaEjgsComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsfichEjgsResol',
       nombre: "Resolución",
       imagen: "",
-      icon: 'fa fa-gavel',
-      tipo: "detalle",
+      icono: 'fa fa-gavel',
+      detalle: true,
       fixed: false,
+      opened: false,
       campos: [
         {
           "key": "Fecha",
@@ -218,12 +241,100 @@ export class FichaEjgsComponent implements OnInit {
           "value": "grbjgbrejgberjgberjgbrejgebr gregergrgregergreg ...."
         }
       ]
+    },
+    {
+      id: 'sjcsEjgsfichEjgsInpug',
+      nombre: "Impugnación",
+      imagen: "",
+      icono: 'fa fa-bank',
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: [
+        {
+          "key": "Fecha",
+          "value": "25/01/2021"
+        },
+        {
+          "key": "Auto Resolutorio",
+          "value": "Jasfsdgfs dsgagag"
+        },
+        {
+          "key": "Sentido del Auto",
+          "value": "swfeswgfsdfgdfsg"
+        }
+      ]
+    },
+    {
+      id: 'sjcsEjgsfichEjgsReg',
+      nombre: "Regtel",
+      imagen: "",
+      icono: 'fas fa-file-alt',
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: [
+        {
+          "key": "Número total de Directorios",
+          "value": "No se han encontrado Registros"
+        },
+      ]
+    },
+    {
+      id: 'sjcsEjgsfichEjgsComu',
+      nombre: "Comunicaciones",
+      imagen: "",
+      icono: 'fa fa-inbox',
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: [
+        {
+          "key": "Número total de Comunicaciones",
+          "value": "54"
+        },
+      ]
     }
   ];
 
-  constructor() { }
+  stickyElementoffset = 0;
+  scrollOffset = 0;
+  enableSticky = false;
+  navbarHeight = 0;
+  scrollWidth = 0;
+
+  @ViewChild('parent') private parent: ElementRef;
+  @ViewChild('navbar') private navbarElement: ElementRef;
+  @ViewChild('content') private content: ElementRef;
+  @ViewChild('main') private main: ElementRef;
+
+  constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
+    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
+    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+  }
+
+  @HostListener("scroll", ['$event'])
+  manageScroll($event: Event) {
+    this.scrollOffset = $event.srcElement['scrollTop'];
+    this.setSticky();
+  }
+
+  setSticky() {
+    if (this.scrollOffset >= this.stickyElementoffset) {
+      this.enableSticky = true;
+      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
+      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
+    } else {
+      this.enableSticky = false;
+      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
+      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
+    }
   }
 
 }

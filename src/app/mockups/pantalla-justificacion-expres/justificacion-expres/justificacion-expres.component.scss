@@ -1,0 +1,20 @@
+.center{
+    text-align: center;
+}
+.right{
+    text-align: right;
+}
+.left{
+    text-align: left;
+}
+.inline{
+    display: flex;
+    align-items: flex-end;
+}
+
+.vertical-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}

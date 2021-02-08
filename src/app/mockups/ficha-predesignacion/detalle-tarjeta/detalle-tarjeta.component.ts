@@ -1,0 +1,71 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+
+@Component({
+  selector: 'app-detalle-tarjeta',
+  templateUrl: './detalle-tarjeta.component.html',
+  styleUrls: ['./detalle-tarjeta.component.scss']
+})
+export class DetalleTarjetaComponent implements OnInit {
+  @Input() title = "";
+  @Input() tarj;
+  imagen = "assets/user.PNG";
+  notarioForm = new FormGroup({
+    id: new FormControl(''),
+    tipo: new FormControl(''),
+    nombre: new FormControl(''),
+    ap1: new FormControl(''),
+    ap2: new FormControl(''),
+  });
+  campos = [{
+    id: "id",
+    nombre: "Identificación (*)",
+    tipo: "text"
+  }, {
+    id: "nombre",
+    nombre: "Nombre",
+    tipo: "text"
+  }, {
+    id: "ap1",
+    nombre: "Primer apellido",
+    tipo: "text"
+  }, {
+    id: "ap2",
+    nombre: "Segundo apellido",
+    tipo: "text"
+  }];
+  selectores = [
+    {
+      nombre: "Tipo (*)",
+      opciones: [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+        { label: '8', value: 8 },
+        { label: '9', value: 9 },
+        { label: '10', value: 10 },
+      ]
+    }
+  ];
+  botones = [{
+    icon: "fa fa-undo",
+    name: "Desasociar"
+  },
+  {
+    icon: "far fa-save",
+    name: "Guardar"
+  },
+  {
+    icon: "fa fa-search",
+    name: "Buscar"
+  }];
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}

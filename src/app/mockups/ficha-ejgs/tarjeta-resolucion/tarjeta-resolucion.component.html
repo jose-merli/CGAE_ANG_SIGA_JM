@@ -1,0 +1,45 @@
+<form [formGroup]="rForm">
+  <div class="row w-100 m-0 padding-interior">
+    <div class="form-row w-100">
+      <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores1; let i = index;">
+        <app-selector [i]="i" [selector]="selector"></app-selector>
+      </div>
+      <div class="messageBox col-lg-3 col-md-3 w-100 m-2">
+        {{textoInformativo}}
+      </div>
+    </div>
+    <div class="form-row w-100" *ngFor="let input of inputs1;">
+      <div class="form-group col-lg-6 col-md-6 w-100">
+        <label>{{input.nombre}}</label>
+        <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [placeholder]="input.valor"></textarea>
+      </div>
+    </div>
+    <div class="form-row w-100">
+      <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let titulo of inputsDivididos">
+        <app-input-dividido [titulo]=titulo></app-input-dividido>
+      </div>
+      <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let datePickerTitle of datePickers1">
+        <label>{{ datePickerTitle }}</label>
+        <app-fecha [utc]="false"></app-fecha>
+      </div>
+      <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let input of inputs2">
+        <label>{{input.nombre}}</label>
+        <input type="text" class="form-control" [placeholder]="input.valor" pInputText>
+      </div>
+
+      <div class="form-group col-lg-6 col-md-6 w-100 vertical-align">
+        <p-checkbox binary="true" [label]="checkboxText" *ngFor="let checkboxText of checkboxTexts" class="ml-0 mr-3">
+        </p-checkbox>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="" iconPos="left" label="Abrir Acta"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"></button>
+  </div>
+</div>

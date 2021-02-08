@@ -1,0 +1,15 @@
+<table matSort (matSortChange)="sortData($event)">
+    <thead>
+        <tr *ngFor="let cabecera of cabeceras; let i = index">
+            <th class="p-1 row w100" [mat-sort-header]=cabecera.id>
+                <div class="row ml-3 mr-1 w100">{{cabecera.name}}</div>
+            </th>
+            <th class="m-1 row w100">
+                <input height="10" type="text" [(ngModel)]="searchText[i]" (ngModelChange)="searchChange(i)" autocomplete="off" placeholder="Buscar">
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let id of ids"><td *ngFor="let dat of sortedData">{{dat[id]}}</td></tr>
+      </tbody>
+  </table>

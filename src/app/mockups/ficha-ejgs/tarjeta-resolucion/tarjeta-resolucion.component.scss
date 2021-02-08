@@ -1,0 +1,20 @@
+.padding-interior {
+    padding-right: 1.25rem !important;
+    padding-left: 1.25rem !important;
+}
+
+.messageBox{
+    background-color: lightskyblue;
+    color: white;
+    border-radius: 5px;
+    flex: 1;
+	text-align: center;
+	display: flex;
+	align-items: right;
+	justify-content: right;
+}
+
+.vertical-align {
+    display: flex;
+    align-items: flex-end;
+}

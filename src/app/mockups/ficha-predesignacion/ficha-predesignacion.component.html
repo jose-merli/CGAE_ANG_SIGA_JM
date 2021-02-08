@@ -1,0 +1,98 @@
+<div #main [ngClass]="{'relative' : this.enableSticky}" id="fichaPredesignacion">
+  <div #parent (scroll)="manageScroll($event, navbar)" style="overflow: scroll;">
+
+    <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+
+    <div #navbar [ngClass]="{'absolute' : this.enableSticky}" id="navbar">
+      <div *ngFor="let tarjF of listaTarjetasFijas; let i = index">
+        <div class="card" style="z-index: 2;">
+          <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+              <mat-expansion-panel [disabled]="true" class="tarjetaFija">
+                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <app-tarjeta [image]="tarjF.imagen" [cardTitle]="tarjF.nombre" [campos]="tarjF.campos"
+                    [icon]="tarjF.icono" [enlaces]="tarjF.enlaces" [fixed]="tarjF.fixed" class="w-100">
+                  </app-tarjeta>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                </ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div #content>
+      <div *ngFor="let tarj of listaTarjetas; let i = index;">
+        <div class="card">
+          <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+              <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
+                [disabled]="tarj.fixed || !tarj.detalle">
+                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
+                    [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened" [fixed]="tarj.fixed"
+                    class="w-100">
+                  </app-tarjeta>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+
+                  <app-detalle-tarjeta *ngIf="tarj.nombre == 'Procurador'" [title]="'Notario'" [tarj]="tarj">
+                  </app-detalle-tarjeta>
+
+                  <div *ngIf="tarj.nombre == 'Contrarios'" class="p-2 not-padding-footer">
+                    <div class="card">
+                      <div class="card-body p-0">
+                        <mat-accordion class="example-headers-align" multi>
+                          <mat-expansion-panel [disabled]="false" (opened)="tarj.subTarj.opened = true"
+                            (closed)="tarj.subTarj.opened = false">
+
+                            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                              [expandedHeight]="'auto'">
+                              <app-tarjeta [cardTitle]="'Integrantes'" [icon]="'fa fa-users'"
+                                [cardOpenState]="tarj.subTarj.opened" [fixed]="false" class="w-100">
+                              </app-tarjeta>
+                            </mat-expansion-panel-header>
+
+                            <ng-template matExpansionPanelContent>
+
+                              <div class="padding-interior">
+                                <app-paginador [type]="'TOP'"></app-paginador>
+                              </div>
+
+                              <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos"
+                                [elementosAux]="elementosAux">
+                              </app-tabla-resultado>
+
+                              <div class="padding-interior">
+                                <app-paginador [type]="'BOTTOM'"></app-paginador>
+                              </div>
+
+
+
+                            </ng-template>
+
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </div>
+                      <div *ngIf="tarj.subTarj.opened" class="card-footer">
+                        <div class="text-right main-button">
+                          <button pButton type="button"  icon="fa fa-history" iconPos="left"
+                            label="Mostrar Histórico"></button>
+                          <button type="submit" pButton icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

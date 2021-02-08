@@ -1,110 +1,115 @@
-<form [formGroup]="cForm">
-    <mat-accordion class="example-headers-align" multi>
-        <mat-expansion-panel class="my-1">
-            <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                <div class="w100 pr-4 font-weight-bold">
-                    <p class="borderBottom w100">Datos generales</p>
-                </div>
-            </mat-expansion-panel-header>
-            <ng-template matExpansionPanelContent>
-
-                <div *ngIf="modoBusqueda === 'a'" class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let titulo of inputsDivididos">
-                        <app-input-dividido [titulo]=titulo></app-input-dividido>
+<div id="busquedaAsuntos">
+    <form [formGroup]="cForm">
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 pr-4 font-weight-bold">
+                        <p class="borderBottom w100">Datos generales</p>
                     </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
 
-                    <div class="form-group-interlineado col-lg-3 col-md-3"
-                        *ngFor="let selector of selectores1; let i = index;">
-                        <app-selector [i]="i" [selector]="selector"></app-selector>
-                    </div>
+                    <div *ngIf="modoBusqueda === 'a'" class="form-row">
+                        <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let titulo of inputsDivididos">
+                            <app-input-dividido [titulo]=titulo></app-input-dividido>
+                        </div>
 
-                    <div class="form-group-interlineado col-lg-6 col-md-6" *ngFor="let datePickerTitle of datePickers1">
-                        <app-date-picker-range [datePickerTitle]="datePickerTitle"></app-date-picker-range>
-                    </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
-                        <label>NIG</label>
-                        <input type="text" class="form-control" pInputText>
-                    </div>
-                </div>
-
-                <div *ngIf="modoBusqueda === 'b'" class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
-                        <app-input-dividido [titulo]="'Año / Número SOJ'"></app-input-dividido>
-                    </div>
-
-                    <div class="form-group-interlineado col-lg-6 col-md-6">
-                        <app-date-picker-range [datePickerTitle]="'Fecha Apertura SOJ'"></app-date-picker-range>
-                    </div>
-
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
-                        <app-selector [selector]="selectorSOJ"></app-selector>
-                    </div>
-                </div>
-
-                <div *ngIf="modoBusqueda === 'c'" class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let titulo of inputsDivididos">
-                        <app-input-dividido [titulo]=titulo></app-input-dividido>
-                    </div>
-
-                    <div class="form-group-interlineado col-lg-3 col-md-3"
-                        *ngFor="let selector of selectoresAsistencias; let i = index;">
-                        <app-selector [i]="i" [selector]="selector"></app-selector>
-                    </div>
-
-                    <div class="form-group-interlineado col-lg-6 col-md-6">
-                        <app-date-picker-range [datePickerTitle]="'Fecha Apertura Designación'"></app-date-picker-range>
-                    </div>
-                    <div class="form-group-interlineado col-lg-3 col-md-3">
-                        <label>Nº Diligencia / Nº Asunto</label>
-                        <input type="text" class="form-control" pInputText>
-                    </div>
-                </div>
-
-            </ng-template>
-        </mat-expansion-panel>
-    </mat-accordion>
-
-    <mat-accordion class="example-headers-align" multi>
-        <mat-expansion-panel class="mb-1">
-            <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                <div class="w100 pr-4 font-weight-bold">
-                    <p class="borderBottom w100">Interesados</p>
-                </div>
-            </mat-expansion-panel-header>
-            <ng-template matExpansionPanelContent>
-                <div class="form-row">
-                    <div class="form-group-interlineado col-lg-3 col-md-3"
-                        *ngFor="let titulo of titulosInputInteresados">
-                        <label>{{ titulo }}</label>
-                        <input type="text" class="form-control" pInputText>
-                    </div>
-                </div>
-            </ng-template>
-        </mat-expansion-panel>
-    </mat-accordion>
-
-    <mat-accordion class="example-headers-align" multi>
-        <mat-expansion-panel class="mb-1">
-            <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                <div class="w100 pr-4 font-weight-bold">
-                    <p class="borderBottom w100">Tramitación</p>
-                </div>
-            </mat-expansion-panel-header>
-            <ng-template matExpansionPanelContent>
-                <form [formGroup]="cForm">
-                    <div class="form-row">
                         <div class="form-group-interlineado col-lg-3 col-md-3"
-                            *ngFor="let selector of selectores2; let i = index;">
+                            *ngFor="let selector of selectores1; let i = index;">
                             <app-selector [i]="i" [selector]="selector"></app-selector>
                         </div>
-                        <div class="form-group-interlineado col-lg-3 col-md-3"
-                            *ngFor="let tituloInput of titulosInputTramitacion">
-                            <label>{{tituloInput}}</label>
+
+                        <div class="form-group-interlineado col-lg-6 col-md-6"
+                            *ngFor="let datePickerTitle of datePickers1">
+                            <app-date-picker-range [datePickerTitle]="datePickerTitle"></app-date-picker-range>
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>NIG</label>
                             <input type="text" class="form-control" pInputText>
                         </div>
                     </div>
-                </form>
-            </ng-template>
-        </mat-expansion-panel>
-    </mat-accordion>
-</form>
+
+                    <div *ngIf="modoBusqueda === 'b'" class="form-row">
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-input-dividido [titulo]="'Año / Número SOJ'"></app-input-dividido>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura SOJ'"></app-date-picker-range>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <app-selector [selector]="selectorSOJ"></app-selector>
+                        </div>
+                    </div>
+
+                    <div *ngIf="modoBusqueda === 'c'" class="form-row">
+                        <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let titulo of inputsDivididos">
+                            <app-input-dividido [titulo]=titulo></app-input-dividido>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-3 col-md-3"
+                            *ngFor="let selector of selectoresAsistencias; let i = index;">
+                            <app-selector [i]="i" [selector]="selector"></app-selector>
+                        </div>
+
+                        <div class="form-group-interlineado col-lg-6 col-md-6">
+                            <app-date-picker-range [datePickerTitle]="'Fecha Apertura Designación'">
+                            </app-date-picker-range>
+                        </div>
+                        <div class="form-group-interlineado col-lg-3 col-md-3">
+                            <label>Nº Diligencia / Nº Asunto</label>
+                            <input type="text" class="form-control" pInputText>
+                        </div>
+                    </div>
+
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 pr-4 font-weight-bold">
+                        <p class="borderBottom w100">Interesados</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <div class="form-row">
+                        <div class="form-group-interlineado col-lg-3 col-md-3"
+                            *ngFor="let titulo of titulosInputInteresados">
+                            <label>{{ titulo }}</label>
+                            <input type="text" class="form-control" pInputText>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 pr-4 font-weight-bold">
+                        <p class="borderBottom w100">Tramitación</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <form [formGroup]="cForm">
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-3 col-md-3"
+                                *ngFor="let selector of selectores2; let i = index;">
+                                <app-selector [i]="i" [selector]="selector"></app-selector>
+                            </div>
+                            <div class="form-group-interlineado col-lg-3 col-md-3"
+                                *ngFor="let tituloInput of titulosInputTramitacion">
+                                <label>{{tituloInput}}</label>
+                                <input type="text" class="form-control" pInputText>
+                            </div>
+                        </div>
+                    </form>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+
+</div>
