@@ -116,10 +116,6 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
-    if(event == null){
-      console.log(this.body.idPlantillaEnvios);
-      console.log(this.body.idTipoEnvios);
-    }
     this.onlyCheckDatos();
     if (event.value != undefined) {
       this.body.cuerpo = "";
@@ -266,9 +262,6 @@ para poder filtrar el dato con o sin estos caracteres*/
           data => {
             let comboPlantillas = JSON.parse(data["body"]);
             this.plantillas = comboPlantillas.combooItems;
-            if (this.plantillas != undefined && this.plantillas.length > 0) {
-              this.body.idPlantillaEnvios = this.plantillas[0].value;
-            }
             this.progressSpinner = false;
             if(sessionStorage.getItem(
               "enviosMasivosSearch") == null){
