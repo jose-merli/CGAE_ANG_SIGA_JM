@@ -1,51 +1,30 @@
-<div class="p-2" id="detalleTarjetaFicPre">
-    <div class="card">
-        <div class="card-body p-0">
-
-            <mat-accordion class="example-headers-align" multi>
-                <mat-expansion-panel [disabled]="false" (opened)="tarj.subTarj.opened = true"
-                    (closed)="tarj.subTarj.opened = false">
-                    <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                        <app-tarjeta [cardTitle]="'Notario'" [icon]="'fa fa-user'"
-                            [cardOpenState]="tarj.subTarj.opened" [fixed]="false" class="w-100">
-                        </app-tarjeta>
-                    </mat-expansion-panel-header>
-                    <ng-template matExpansionPanelContent>
-                        <div class="row">
-                            <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
-                                <div class="text-center my-0 mx-auto image-wrapper">
-                                    <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-                                </div>
-                                <!-- <img [src]="imagen"> -->
-                            </div>
-                            <div class="bloque col-lg-10 col-md-9">
-
-                                <form [formGroup]="notarioForm">
-                                    <div class="form-row">
-                                        <div *ngFor="let campo of campos" class="form-group col-lg-3 col-md-6">
-                                            <label>{{campo.nombre}}</label>
-                                            <input [type]="campo.tipo" [formControlName]="campo.id" class="form-control"
-                                                pInputText>
-                                        </div>
-                                        <div *ngFor="let selector of selectores" class="form-group col-lg-3 col-md-6">
-                                            <app-selector [i]="0" [selector]="selector"></app-selector>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </ng-template>
-                </mat-expansion-panel>
-            </mat-accordion>
-
+<div class="row w-100 m-0">
+    <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+        <div class="text-center my-0 mx-auto image-wrapper">
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
         </div>
-        <div *ngIf="tarj.subTarj.opened" class="card-footer">
+        <!-- <img [src]="imagen"> -->
+    </div>
+    <div class="bloque col-lg-10 col-md-9">
 
-            <div class="text-right main-button">
-                <button *ngFor="let boton of botones" pButton type="button"  [icon]="boton.icon" iconPos="left"
-                    [label]="boton.name"></button>
+        <form [formGroup]="notarioForm">
+            <div class="form-row">
+                <div *ngFor="let campo of campos" class="form-group col-lg-3 col-md-6">
+                    <label>{{campo.nombre}}</label>
+                    <input [type]="campo.tipo" [formControlName]="campo.id" class="form-control" pInputText>
+                </div>
+                <div *ngFor="let selector of selectores" class="form-group col-lg-3 col-md-6">
+                    <app-selector [i]="0" [selector]="selector"></app-selector>
+                </div>
             </div>
+        </form>
+    </div>
+    <div class="w-100" style="padding-top: 0.6rem;"></div>
+</div>
 
-        </div>
+<div class="card-footer">
+    <div class="text-right main-button">
+        <button *ngFor="let boton of botones" pButton type="button"  [icon]="boton.icon" iconPos="left"
+            [label]="boton.name"></button>
     </div>
 </div>

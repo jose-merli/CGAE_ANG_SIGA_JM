@@ -396,7 +396,7 @@ import { InputDivididoComponent } from './mockups/shared/input-dividido/input-di
 import { ResultadoAsuntosComponent } from './mockups/pantalla-asuntos/resultado-asuntos/resultado-asuntos.component';
 import { JustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component';
 import { BuscadorJustificacionExpresComponent } from './mockups/pantalla-justificacion-expres/buscador-justificacion-expres/buscador-justificacion-expres.component';
-import { TablaResultadoDesplegableComponent } from './mockups/pantalla-justificacion-expres/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
+import { TablaResultadoDesplegableComponent } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
 import { PantallaFichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/pantalla-ficha-certificacion.component';
 import { FichaCertificacionComponent } from './mockups/pantalla-ficha-certificacion/ficha-certificacion/ficha-certificacion.component';
 import { TablaSimpleComponent } from './mockups/shared/tabla-simple/tabla-simple.component';

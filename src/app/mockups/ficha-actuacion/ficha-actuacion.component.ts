@@ -12,6 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class FichaActuacionComponent implements OnInit {
 
   rutas: string[] = ['SJCS', 'Designaciones', 'Actuaciones'];
+
   tarjetaFija = {
     nombre: "Resumen Actuación",
     icono: 'fas fa-clipboard',
@@ -36,11 +37,14 @@ export class FichaActuacionComponent implements OnInit {
         "value": "4"
       }
     ],
-    enlaces: []
+    enlaces: [
+      { href: 'sjcsDesigActuaDoc', texto: 'Documentación' }
+    ]
   };
 
   listaTarjetas = [
     {
+      id: 'sjcsDesigActuaDatosGen',
       nombre: "Datos Generales",
       imagen: "",
       icono: 'far fa-address-book',
@@ -63,6 +67,7 @@ export class FichaActuacionComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsDesigActuaJusti',
       nombre: "Justificación",
       icono: "fa fa-gavel",
       detalle: true,
@@ -84,6 +89,7 @@ export class FichaActuacionComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsDesigActuaHidtoAct',
       nombre: "Histórico de la Actuación",
       imagen: "",
       icono: 'fa fa-user',
@@ -106,6 +112,7 @@ export class FichaActuacionComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsDesigActuaDoc',
       nombre: "Documentación",
       imagen: "",
       icono: "fa fa-briefcase",

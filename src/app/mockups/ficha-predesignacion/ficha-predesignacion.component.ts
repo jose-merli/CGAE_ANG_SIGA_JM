@@ -51,6 +51,7 @@ export class FichaPredesignacionComponent implements OnInit {
 
   listaTarjetas = [
     {
+      id: 'sjcsEjgsRelaPreDesigDefJuri',
       nombre: "Defensa Jurídica",
       imagen: "",
       icono: 'fas fa-user',
@@ -77,6 +78,7 @@ export class FichaPredesignacionComponent implements OnInit {
       ]
     },
     {
+      id: 'sjcsEjgsRelaPreDesigProcu',
       nombre: "Procurador",
       imagen: "",
       icono: 'fas fa-user',
@@ -92,12 +94,10 @@ export class FichaPredesignacionComponent implements OnInit {
           "key": "Nombre",
           "value": "MIGUEL DSFDFGDG DSGASG"
         }
-      ],
-      subTarj: {
-        opened: false,
-      }
+      ]
     },
     {
+      id: 'sjcsEjgsRelaPreDesigContra',
       nombre: "Contrarios",
       imagen: "",
       icono: 'fas fa-users',
@@ -109,10 +109,7 @@ export class FichaPredesignacionComponent implements OnInit {
           "key": "Número de Contrarios",
           "value": "8"
         }
-      ],
-      subTarj: {
-        opened: false,
-      }
+      ]
     }
   ];
 

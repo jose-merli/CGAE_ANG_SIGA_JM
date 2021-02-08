@@ -8,7 +8,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class DetalleTarjetaComponent implements OnInit {
   @Input() title = "";
-  @Input() tarj;
   imagen = "assets/user.PNG";
   notarioForm = new FormGroup({
     id: new FormControl(''),

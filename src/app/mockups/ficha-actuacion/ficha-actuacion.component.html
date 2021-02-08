@@ -8,7 +8,7 @@
             <div class="card" style="z-index: 2;">
                 <div class="card-body p-0">
                     <mat-accordion class="example-headers-align" multi>
-                        <mat-expansion-panel [disabled]="true" class="tarjetaFija">
+                        <mat-expansion-panel [disabled]="true">
                             <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
                                 [expandedHeight]="'auto'">
                                 <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
@@ -27,16 +27,16 @@
 
         <div #content>
             <div *ngFor="let tarj of listaTarjetas; let i = index;">
-                <div class="card">
+                <div class="card" [id]="tarj.id">
                     <div class="card-body p-0">
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
                                 [disabled]="tarj.fixed || !tarj.detalle">
                                 <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
                                     [expandedHeight]="'auto'">
-                                    <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre"
-                                        [campos]="tarj.campos" [icon]="tarj.icono" [enlaces]="tarj.enlaces"
-                                        [cardOpenState]="tarj.opened" [fixed]="tarj.fixed" class="w-100">
+                                    <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
+                                        [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
+                                        [fixed]="tarj.fixed" class="w-100">
                                     </app-tarjeta>
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent></ng-template>

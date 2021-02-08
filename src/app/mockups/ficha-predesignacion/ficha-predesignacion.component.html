@@ -8,7 +8,7 @@
         <div class="card" style="z-index: 2;">
           <div class="card-body p-0">
             <mat-accordion class="example-headers-align" multi>
-              <mat-expansion-panel [disabled]="true" class="tarjetaFija">
+              <mat-expansion-panel [disabled]="true">
                 <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
                   <app-tarjeta [image]="tarjF.imagen" [cardTitle]="tarjF.nombre" [campos]="tarjF.campos"
                     [icon]="tarjF.icono" [enlaces]="tarjF.enlaces" [fixed]="tarjF.fixed" class="w-100">
@@ -25,7 +25,7 @@
 
     <div #content>
       <div *ngFor="let tarj of listaTarjetas; let i = index;">
-        <div class="card">
+        <div class="card" [id]="tarj.id">
           <div class="card-body p-0">
             <mat-accordion class="example-headers-align" multi>
               <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
@@ -38,52 +38,40 @@
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
 
-                  <app-detalle-tarjeta *ngIf="tarj.nombre == 'Procurador'" [title]="'Notario'" [tarj]="tarj">
+                  <app-detalle-tarjeta *ngIf="tarj.nombre == 'Procurador'" [title]="'Notario'">
                   </app-detalle-tarjeta>
 
-                  <div *ngIf="tarj.nombre == 'Contrarios'" class="p-2 not-padding-footer">
-                    <div class="card">
-                      <div class="card-body p-0">
-                        <mat-accordion class="example-headers-align" multi>
-                          <mat-expansion-panel [disabled]="false" (opened)="tarj.subTarj.opened = true"
-                            (closed)="tarj.subTarj.opened = false">
+                  <div *ngIf="tarj.nombre == 'Contrarios'">
 
-                            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
-                              [expandedHeight]="'auto'">
-                              <app-tarjeta [cardTitle]="'Integrantes'" [icon]="'fa fa-users'"
-                                [cardOpenState]="tarj.subTarj.opened" [fixed]="false" class="w-100">
-                              </app-tarjeta>
-                            </mat-expansion-panel-header>
+                    <div class="row w-100 m-0">
 
-                            <ng-template matExpansionPanelContent>
-
-                              <div class="padding-interior">
-                                <app-paginador [type]="'TOP'"></app-paginador>
-                              </div>
-
-                              <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos"
-                                [elementosAux]="elementosAux">
-                              </app-tabla-resultado>
-
-                              <div class="padding-interior">
-                                <app-paginador [type]="'BOTTOM'"></app-paginador>
-                              </div>
-
-
-
-                            </ng-template>
-
-                          </mat-expansion-panel>
-                        </mat-accordion>
+                      <div class="padding-interior w-100">
+                        <app-paginador [type]="'TOP'"></app-paginador>
                       </div>
-                      <div *ngIf="tarj.subTarj.opened" class="card-footer">
-                        <div class="text-right main-button">
-                          <button pButton type="button"  icon="fa fa-history" iconPos="left"
-                            label="Mostrar Histórico"></button>
-                          <button type="submit" pButton icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
-                        </div>
+
+
+                      <div class="col-lg-12 col-md-12 w-100 padding-interior">
+                        <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos"
+                          [elementosAux]="elementosAux">
+                        </app-tabla-resultado>
+                      </div>
+
+                      <div class="padding-interior w-100">
+                        <app-paginador [type]="'BOTTOM'"></app-paginador>
+                      </div>
+
+
+                    </div>
+
+                    <div class="card-footer">
+                      <div class="text-right main-button">
+                        <button pButton type="button" icon="fa fa-history" iconPos="left"
+                          label="Mostrar Histórico"></button>
+                        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
                       </div>
                     </div>
+
+
                   </div>
 
                 </ng-template>
