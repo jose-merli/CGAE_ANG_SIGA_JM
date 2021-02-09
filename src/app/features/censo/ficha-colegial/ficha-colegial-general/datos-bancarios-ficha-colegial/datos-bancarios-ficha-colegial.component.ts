@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -23,6 +23,7 @@ import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesIt
 import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
 import { DatosBancariosItem } from '../../../../../models/DatosBancariosItem';
 import { DatosBancariosObject } from '../../../../../models/DatosBancariosObject';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-datos-bancarios-ficha-colegial',
@@ -66,20 +67,33 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   DescripcionDatosBancarios;
   camposDesactivados: boolean = false;
   permisos: boolean = true;
-  disabledAction: boolean = false;
-  mensajeResumen: String;
-
-
   colsBancarios;
   rowsPerPage;
+  mostrarNumero:Boolean = false;
+  message;
+  messageNoContent;
   @Input() isLetrado;
   @Input() idPersona;
+  @Input() openBanca;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @ViewChild("tableBancarios")
+  tableBancarios: Table;
+  disabledAction: boolean = false;
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private router: Router, ) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    // private sanitizer: DomSanitizer,
+    private router: Router) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -90,8 +104,6 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.mensajeResumen = "Cargando";
-
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -110,15 +122,10 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
 
     this.getCols();
 
-    if (sessionStorage.getItem("disabledAction") == "true") {
-      // Es estado baja colegial
-      this.disabledAction = true;
-    } else {
-      this.disabledAction = false;
-    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    
     if (this.esColegiado != null)
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -128,15 +135,19 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         }
       }
     if (this.idPersona != undefined) {
-      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")) {
+      if (this.bodyDatosBancarios == undefined && (this.tarjetaBancarios == "3" || this.tarjetaBancarios == "2")){
         this.onInitDatosBancarios();
-
-        if (this.tarjetaBancarios == "3") {
+        if(this.tarjetaBancarios == "3"){
           this.permisos = true;
-        } else {
+        }else{
           this.permisos = false;
         }
         this.getLetrado();
+      }
+    }
+    if (this.openBanca == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('bancarios');
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -231,10 +242,12 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
+    if (this.activacionTarjeta) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   activarPaginacionBancarios() {
@@ -256,11 +269,16 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.searchDatosBancarios();
   }
 
-  ocultarHistoricoDatosBancarios() {
+  ocultarHistoricoDatosBancarios(){
     this.progressSpinner = true;
     this.onInitDatosBancarios();
   }
 
+  clickFilaBancarios(event) {
+    if (event.data && !event.data.fechaBaja && this.bodyDatosBancarios.historico) {
+      this.selectedDatosBancarios.pop();
+    }
+  }
   onChangeSelectAllBancarios() {
     if (this.selectAllBancarios === true) {
       if (this.bodyDatosBancarios.historico) {
@@ -272,6 +290,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
         this.selectMultipleBancarios = false;
         this.selectedDatosBancarios = this.datosBancarios;
       }
+
     } else {
       this.selectedDatosBancarios = [];
       this.numSelectedBancarios = 0;
@@ -293,7 +312,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   confirmarEliminar(selectedDatos) {
     let mess = this.translateService.instant("censo.alterMutua.literal.revisionServiciosyFacturasCuentas");
     this.icon = "fa fa-trash-alt";
-    let keyConfirmation = "alterMutua";
+    let keyConfirmation = "deleteBancarios";
 
     this.confirmationService.confirm({
       key: keyConfirmation,
@@ -333,7 +352,7 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("datosBancarios_delete", item).subscribe(
       data => {
-
+        //this.progressSpinner = false;
         if (selectedDatos.length == 1) {
           this.showSuccessDetalle(
             this.translateService.instant("messages.deleted.success")
@@ -363,7 +382,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     this.msgs.push({ severity: "success", summary: this.translateService.instant("general.message.correct"), detail: mensaje });
   }
   searchDatosBancarios() {
+    this.mostrarNumero = false;
     if (this.emptyLoadFichaColegial != true) {
+      //this.progressSpinner = true;
       this.sigaServices
         .postPaginado(
           "fichaDatosBancarios_datosBancariosSearch",
@@ -375,10 +396,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
             this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
-            if (this.datosBancarios)
-              this.mensajeResumen = this.datosBancarios.filter(it => it.fechaBaja == null).length + "";
           },
           error => {
+            this.mostrarNumero = true;
             this.searchDatosBancariosIdPersona = JSON.parse(error["error"]);
             this.showFailDetalle(
               JSON.stringify(
@@ -394,6 +414,19 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
                 this.DescripcionDatosBancarios = this.datosBancarios[i];
               }
             }
+            if (this.datosBancarios.length == 0) {
+              this.message = this.datosBancarios.length.toString();
+              this.messageNoContent = this.translateService.instant(
+                "general.message.no.registros"
+              );
+              this.mostrarNumero = true;
+  
+            } else {
+              this.message = this.datosBancarios.length.toString();
+              this.mostrarNumero = true;
+  
+            }
+
           }
         );
 
@@ -473,10 +506,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
   }
 
   searchHistoricoDatosBancarios() {
-    this.selectAllBancarios = false;
-    this.selectMultipleBancarios = false;
     this.selectedDatosBancarios = [];
-    this.progressSpinner = true;
+    this.selectMultipleBancarios = false;
+    this.selectAllBancarios = false;
     this.bodyDatosBancarios.historico = true;
     this.bodyDatosBancarios.idPersona = this.idPersona;
     this.searchDatosBancarios();
@@ -496,7 +528,18 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
+  onChangeRowsPerPages(event) {
+    this.selectedItemBancarios = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableBancarios.reset();
+  }
   getLetrado() {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isLetrado = true;

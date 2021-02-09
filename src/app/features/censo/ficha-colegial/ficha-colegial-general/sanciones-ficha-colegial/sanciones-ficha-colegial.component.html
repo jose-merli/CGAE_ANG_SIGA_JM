@@ -1,89 +1,101 @@
-<div *ngIf="!esNewColegiado">
-  <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
-    <div (click)="abreCierraFicha('sanciones')" class="card-header header-ficha">
-      <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+<div id="sancio">
+  <div *ngIf="!esNewColegiado">
+    <div *ngIf="tarjetaSanciones == '3' || tarjetaSanciones == '2'" class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!esFichaActiva('sanciones')" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado" (click)="abreCierraFicha('sanciones')">
+              <i class="fa fa-gavel icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('sanciones')">
+              <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
+              </label>
+              <!-- <label class="registros-ficha">(0 registros)</label> -->
+            </div>
+            <div class="d-flex justify-content-between">
+              
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "busquedaSanciones.colegioSancionador.literal" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
+              </label>
+
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
+              </label>
+
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
+              </label>
+
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero && mostrarDatosSanciones">{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
+                <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
+              </label>
+
+              <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+                <span>{{ message }}</span>
+              </label>
+              <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
+                <span class="registros-ficha-prueba">{{ message }}</span>
+              </label>
+              <i (click)="abreCierraFicha('sanciones')" *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="esFichaActiva('sanciones')" (click)="abreCierraFicha('sanciones')"class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abreCierraFicha('sanciones')">
             <i class="fa fa-gavel icon-ficha"></i>
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <!-- <label *ngIf="!mostrarNumero" class="mr-auto-title-ficha-prueba">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
-            </label> -->
-
-            <label class="mr-auto title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}
-            </label>
-            <!-- <label class="registros-ficha">(0 registros)</label> -->
-          </div>
-          <div class="d-flex justify-content-between">
-            <!-- <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }}:
-              <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.colegio }}</span>
-            </label>
-
-            <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }}:
-              <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.tipoSancion }}</span>
-            </label>
-
-            <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaDesde" | translate }}:
-              <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaDesde }}</span>
-            </label>
-
-            <label>{{ "censo.busquedaSolicitudesTextoLibre.literal.fechaHasta" | translate }}:
-              <span *ngIf="mostrarDatosSanciones">{{ DescripcionSanciones.fechaHasta }}</span>
-            </label> -->
-            <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ message }}...</label> -->
-            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
-              <span>{{ message }}</span>
-            </label>
-            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
-              <span class="registros-ficha-prueba">{{ message }}</span>
-            </label>
-              <!-- <label>{{ "censo.consultaDatosColegiacion.literal.numSanciones" | translate }}
-                <span>{{ message }}</span>
-              </label> -->
-            <i *ngIf="!esFichaActiva('sanciones')" class="fa fa-angle-down float-right"></i>
-          </div>
+          <label (click)="abreCierraFicha('sanciones')" class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
+          <i (click)="abreCierraFicha('sanciones')" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('sanciones')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fa fa-gavel icon-ficha"></i>
+      <!-- cuerpo -->
+
+      <div *ngIf="esFichaActiva('sanciones')" class="card-body card-body-ficha">
+        <div class="rowPrueba">
+          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
+            pageLinks="4" [responsive]="true" #tableSanciones
+            class="tabla-listado" [value]="dataSanciones" [sortOrder]="1" [paginator]="enablePagination()" paginatorPosition="both"
+            [rows]="selectedItemSanciones">
+            <p-column *ngFor="let col of colsSanciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
+              [filter]="true" filterMatchMode="contains">
+            </p-column>
+
+            <ng-template pTemplate="paginatorLeft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableSanciones.first
+                  + 1}} al {{tableSanciones.first + tableSanciones.rows}} de un total de {{tableSanciones.totalRecords}}
+                </label>
+                <label>{{ "general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedItemSanciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSanciones($event)"></p-dropdown>
+                <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              </div>
+            </ng-template>
+
+
+
+          </p-dataTable>
+
         </div>
-        <label class="title-ficha">{{ "censo.consultaDatosColegiacion.literal.sancionesLetrado" | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <br />
       </div>
     </div>
-    <!-- cuerpo -->
-
-    <div *ngIf="esFichaActiva('sanciones')" class="card-body card-body-ficha">
-      <div class="rowPrueba">
-        <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate }}" [ngClass]="{'customCursor': selectMultiple}"
-          pageLinks="4" [responsive]="true" #tableSanciones
-          class="tabla-listado" [value]="dataSanciones" [sortOrder]="sortO" [paginator]="enablePagination()" paginatorPosition="both"
-          [rows]="selectedItemSanciones">
-          <p-column *ngFor="let col of colsSanciones" [sortable]="true " [field]="col.field" [header]="col.header | translate" filterPlaceholder="{{'general.boton.search' | translate}}"
-            [filter]="true" filterMatchMode="contains">
-          </p-column>
-
-          <ng-template pTemplate="paginatorLeft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{tableSanciones.first
-                + 1}} al {{tableSanciones.first + tableSanciones.rows}} de un total de {{tableSanciones.totalRecords}}
-              </label>
-              <label>{{ "general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItemSanciones" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesSanciones($event)"></p-dropdown>
-              <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            </div>
-          </ng-template>
-
-
-
-        </p-dataTable>
-
-      </div>
-      <br />
-    </div>
-    <div *ngIf="esFichaActiva('sanciones')" class="card-footer "></div>
   </div>
 </div>

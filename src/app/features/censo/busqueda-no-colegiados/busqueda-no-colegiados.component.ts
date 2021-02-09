@@ -24,7 +24,7 @@ import { DatosNoColegiadosObject } from "../../../models/DatosNoColegiadosObject
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { SigaServices } from "../../../_services/siga.service";
 import { SubtipoCurricularItem } from "../../../models/SubtipoCurricularItem";
-
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -61,7 +61,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   es: any;
 
   historico: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
   cols: any;
   datos: any;
   rowsPerPage: any;
@@ -118,6 +118,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private datePipe: DatePipe,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) {
     this.formBusqueda = this.formBuilder.group({
@@ -275,6 +276,14 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     );
   }
 
+  clickFila(event) {
+    if (event.data && !event.data.fechaBaja && this.historico)
+      this.selectedDatos.pop();
+  }
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+
   //Funcion que carga combo del campo curricular
   getComboCategoriaCurricular() {
     this.sigaServices.get("busquedaNoColegiados_categoriaCurricular").subscribe(
@@ -418,13 +427,25 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   //Opción tabla de seleccionar todas las filas
   onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.noColegiadoSearch.noColegiadoItem;
-      this.numSelected = this.noColegiadoSearch.noColegiadoItem.length;
+    if (!this.historico) {
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.noColegiadoSearch.noColegiadoItem;
+        this.numSelected = this.noColegiadoSearch.noColegiadoItem.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.noColegiadoSearch.noColegiadoItem.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
     }
   }
 
@@ -488,7 +509,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       }
 
       this.selectMultiple = false;
-      this.selectedDatos = "";
+      this.selectedDatos = [];
       this.getColsResults();
       this.filtrosTrim();
 
@@ -523,6 +544,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }
@@ -533,7 +557,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     this.body.historico = true;
     this.buscar = false;
     this.selectMultiple = false;
-    this.selectedDatos = "";
+    this.selectedDatos = [];
     this.progressSpinner = true;
     this.filtrosTrim();
     this.selectAll = false;
@@ -767,7 +791,8 @@ export class BusquedaNoColegiadosComponent implements OnInit {
   }
 
   irEditarNoColegiado(id) {
-    if (id.length >= 1 && this.selectMultiple == false) {
+    id = [id];
+    if (id.length >= 1) {
       sessionStorage.removeItem("personaBody");
       sessionStorage.setItem(
         "filtrosBusquedaNoColegiados",
@@ -783,8 +808,6 @@ export class BusquedaNoColegiadosComponent implements OnInit {
       }
 
       this.router.navigate(["/fichaColegial"]);
-    } else {
-      this.numSelected = this.selectedDatos.length;
     }
   }
 
@@ -1013,4 +1036,9 @@ export class BusquedaNoColegiadosComponent implements OnInit {
 
   }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

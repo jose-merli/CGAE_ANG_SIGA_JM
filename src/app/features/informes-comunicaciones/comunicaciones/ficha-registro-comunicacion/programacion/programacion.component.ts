@@ -6,6 +6,7 @@ import { esCalendar } from "../../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
 import { TramosLECComponent } from '../../../../sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { TranslateService } from '../../../../../commons/translate';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 @Component({
@@ -38,6 +39,8 @@ export class ProgramacionComponent implements OnInit {
   estados: any = [];
   noEditar: boolean = false;
 
+  resaltadoDatos: boolean = false;
+
   @ViewChild('table') table: DataTable;
   selectedDatos
 
@@ -64,7 +67,8 @@ export class ProgramacionComponent implements OnInit {
 
   constructor(
     private sigaServices: SigaServices, 
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private commonsService: CommonsService
   ) {
 
 
@@ -72,12 +76,15 @@ export class ProgramacionComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    this.resaltadoDatos=true;
 
     this.getEstadosEnvios();
 
     this.getDatos();
 
+    if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
+      this.abreCierraFicha();
+    }
 
   }
 
@@ -104,6 +111,9 @@ export class ProgramacionComponent implements OnInit {
 
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    };
     if (sessionStorage.getItem("crearNuevaCom") == null) {
       this.openFicha = !this.openFicha;
       if (!this.body.fechaProgramada) {
@@ -150,6 +160,8 @@ export class ProgramacionComponent implements OnInit {
 
 
   restablecer() {
+    this.onlyCheckDatos();
+    this.resaltadoDatos=false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     if (this.body.fechaProgramada != null) {
       this.body.fechaProgramada = new Date(this.body.fechaProgramada)
@@ -158,7 +170,9 @@ export class ProgramacionComponent implements OnInit {
   }
 
   guardar() {
+    this.onlyCheckDatos();
     this.arrayProgramar = [];
+    this.resaltadoDatos=false;
     let objProgramar = {
       idEnvio: this.body.idEnvio,
       idInstitucion: this.body.idInstitucion,
@@ -213,7 +227,39 @@ export class ProgramacionComponent implements OnInit {
   }
 
   fillFechaProgramada(event) {
+    this.onlyCheckDatos();
     this.body.fechaProgramada = event;
   }
 
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(!this.isGuardarDisabled()){
+      if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }else{
+      this.muestraCamposObligatorios();
+    }
+  }
+
+  onlyCheckDatos(){
+    if(!this.isGuardarDisabled()){
+      if(this.body.fechaProgramada==undefined || this.body.fechaProgramada==null){
+        this.resaltadoDatos=true;
+      }
+    }else{
+      this.resaltadoDatos=true;
+    }
+  }
 }

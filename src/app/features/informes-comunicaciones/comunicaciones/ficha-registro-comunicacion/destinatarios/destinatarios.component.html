@@ -1,126 +1,138 @@
 <!-- <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl> -->
 <div class="ficha-container">
-  <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+  <div id="infoYComuComuFichaComuDest">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado" (click)="abreCierraFicha()">
+              <i class="fas fa-users icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
+              <label 
+                class="mr-auto title-ficha">{{"enviosMasivos.literal.destinatarios" | translate}}</label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label *ngIf="destinatarios && destinatarios.length == 0">
+                {{ 'informesycomunicaciones.comunicaciones.mensaje.noExistenDestinatarios' | translate }}
+              </label>
+              <label *ngIf="destinatarios && destinatarios.length > 0">
+                {{ "enviosMasivos.literal.destinatarios" | translate }}: {{ destinatarios.length }}
+              </label>
+              <i (click)="abreCierraFicha()" *ngIf="!openFicha && destinatarios && destinatarios.length > 0"
+                class="fa fa-angle-down float-right"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFicha" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
             <i class="fas fa-users icon-ficha"></i>
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{"enviosMasivos.literal.destinatarios" | translate}}</label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label *ngIf="destinatarios && destinatarios.length == 0">
-              {{ 'informesycomunicaciones.comunicaciones.mensaje.noExistenDestinatarios' | translate }}
-            </label>
-            <label *ngIf="destinatarios && destinatarios.length > 0">
-              {{ "enviosMasivos.literal.destinatarios" | translate }}: {{ destinatarios.length }}
-            </label>
-            <i (click)="abreCierraFicha()" *ngIf="!openFicha && destinatarios && destinatarios.length > 0" class="fa fa-angle-down float-right"></i>
-          </div>
+          <label (click)="abreCierraFicha()" class="title-ficha">{{ "enviosMasivos.literal.destinatarios" | translate }}
+          </label>
+          <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fas fa-users icon-ficha"></i>
-        </div>
-        <label (click)="abreCierraFicha()" class="title-ficha">{{ "enviosMasivos.literal.destinatarios" | translate }}
-        </label>
-        <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--tarjetas destinatario-->
-    <div *ngIf="openFicha" class=" card-body card-body-ficha">
-      <div class="card" *ngFor="let destinatario of destinatarios">
-        <div (click)="onOpenDestinatario(destinatario)" class="card-header header-ficha">
-          <div *ngIf="!destinatario.open" class="form-row">
-            <div class="col-lg-1 col-md-2">
-              <div class="img-colegiado">
-                <i class="fa fa-user icon-ficha"></i>
+      <!--tarjetas destinatario-->
+      <div *ngIf="openFicha" class=" card-body card-body-ficha">
+        <div class="card" *ngFor="let destinatario of destinatarios">
+          <div (click)="onOpenDestinatario(destinatario)" class="card-header header-ficha">
+            <div *ngIf="!destinatario.open" class="form-row">
+              <div class="col-lg-1 col-md-2">
+                <div class="img-colegiado">
+                  <i class="fa fa-user icon-ficha"></i>
+                </div>
+              </div>
+              <div class="col-lg-11 col-md-10">
+                <div class="d-flex justify-content-start mb-1 pointer">
+                  <label class="mr-auto title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate
+                    }}
+                  </label>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinarios.documentoIdentidad' | translate
+                    }}:
+                    <span>{{destinatario.nifcif}}</span>
+                  </label>
+                  <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
+                    <span>{{destinatario.nombre}}</span>
+                  </label>
+                  <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
+                    <span>{{destinatario.apellidos1}} {{destinatario.apellidos2}} </span>
+                  </label>
+
+                  <label class="mr-3">
+                    <i (click)="navigateTo(destinatario);$event.stopPropagation();"
+                      class="fas fa-external-link-alt mr-2"></i>
+                    <a (click)="navigateTo(destinatario);$event.stopPropagation();">
+                      <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                        {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                      </span>
+                    </a>
+                  </label>
+                  <i *ngIf="!destinatario.open" class="fa fa-angle-down float-right"></i>
+                </div>
               </div>
             </div>
-            <div class="col-lg-11 col-md-10">
-              <div class="d-flex justify-content-start mb-1">
-                <label class="mr-auto title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate
-                  }}
-                </label>
-              </div>
-              <div class="d-flex justify-content-between">
-                <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinarios.documentoIdentidad' | translate
-                  }}:
-                  <span>{{destinatario.nifcif}}</span>
-                </label>
-                <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
-                  <span>{{destinatario.nombre}}</span>
-                </label>
-                <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
-                  <span>{{destinatario.apellidos1}} {{destinatario.apellidos2}} </span>
-                </label>
-
+            <div *ngIf="destinatario.open" class="header-ficha-open d-flex justify-content-start align-items-center">
+              <!-- <div class="img-colegiado">
+                    <i class="fas fa-file-alt icon-ficha"></i>
+              </div> -->
+              <label
+                class="title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate }}
+              </label>
+              <div class="d-flex justify-content-start mb-1 ml-auto">
+                <i (click)="navigateTo(destinatario);$event.stopPropagation();"
+                  class="fas fa-external-link-alt mr-2 float-right"></i>
                 <label class="mr-3">
-                  <i (click)="navigateTo(destinatario);$event.stopPropagation();" class="fas fa-external-link-alt mr-2"></i>
                   <a (click)="navigateTo(destinatario);$event.stopPropagation();">
-                    <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
+                    <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                      {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
                     </span>
                   </a>
                 </label>
-                <i *ngIf="!destinatario.open" class="fa fa-angle-down float-right"></i>
+                <i class="fa fa-angle-up ml-auto"></i>
               </div>
             </div>
           </div>
-          <div *ngIf="destinatario.open" class="header-ficha-open d-flex justify-content-start align-items-center">
-            <!-- <div class="img-colegiado">
-                  <i class="fas fa-file-alt icon-ficha"></i>
-            </div> -->
-            <label class="title-ficha">{{ "informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.destinatarios.singular" | translate }}
-            </label>
-            <div class="d-flex justify-content-start mb-1 ml-auto">
-              <i (click)="navigateTo(destinatario);$event.stopPropagation();" class="fas fa-external-link-alt mr-2 float-right"></i>
-              <label class="mr-3">
-                <a (click)="navigateTo(destinatario);$event.stopPropagation();">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate }}
-                  </span>
-                </a>
-              </label>
-              <i class="fa fa-angle-up ml-auto"></i>
-            </div>
-          </div>
-        </div>
 
-        <div *ngIf="destinatario.open" class="card-body card-body-ficha">
-          <div class="row">
-            <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
-              <div class="img-colegiado text-center my-0 mx-auto">
-                <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
-              </div>
-            </div>
-            <div class="bloque col-lg-10 col-md-9">
-              <div class="form-row d-flex align-items-center">
-                <div class="form-group col-lg-4 col-md-4">
-                  <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
-                  </label>
-                  <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20" [disabled]="true" pInputText
-                  />
+          <div *ngIf="destinatario.open" class="card-body card-body-ficha">
+            <div class="row">
+              <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+                <div class="img-colegiado text-center my-0 mx-auto">
+                  <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
                 </div>
               </div>
-              <div class="form-row">
-                <div class="form-group col-lg-4 col-md-4">
-                  <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-                  </label>
-                  <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true" pInputText />
+              <div class="bloque col-lg-10 col-md-9">
+                <div class="form-row d-flex align-items-center">
+                  <div class="form-group col-lg-4 col-md-4">
+                    <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
+                    </label>
+                    <input type="text" class="form-control" [(ngModel)]="destinatario.nifcif" [attr.maxlength]="20"
+                      [disabled]="true" pInputText />
+                  </div>
                 </div>
-                <div class="form-group col-lg-34 col-md-4">
-                  <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }}
-                  </label>
-                  <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true" pInputText />
-                </div>
-                <div class="form-group col-lg-4 col-md-4">
-                  <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
-                  </label>
-                  <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true" pInputText />
+                <div class="form-row">
+                  <div class="form-group col-lg-4 col-md-4">
+                    <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                    </label>
+                    <input [(ngModel)]="destinatario.nombre" type="text" class="form-control" [disabled]="true"
+                      pInputText />
+                  </div>
+                  <div class="form-group col-lg-34 col-md-4">
+                    <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }}
+                    </label>
+                    <input [(ngModel)]="destinatario.apellidos1" type="text" class="form-control" [disabled]="true"
+                      pInputText />
+                  </div>
+                  <div class="form-group col-lg-4 col-md-4">
+                    <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
+                    </label>
+                    <input [(ngModel)]="destinatario.apellidos2" type="text " class="form-control" [disabled]="true"
+                      pInputText />
+                  </div>
                 </div>
               </div>
             </div>

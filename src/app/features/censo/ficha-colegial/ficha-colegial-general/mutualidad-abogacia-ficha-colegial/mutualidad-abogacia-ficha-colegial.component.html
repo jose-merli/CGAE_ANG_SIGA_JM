@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
-<div *ngIf="tarjetaMutualidad == '3' || tarjetaMutualidad == '2'" class="card">
+<div id="mutualidad">
+<div *ngIf="tarjetaMutualidad == '3' || tarjetaMutualidad == '2'" class="card" id="down">
   <div class="card-header header-ficha">
     <div class="form-row">
       <div class="col-lg-1 col-md-2">
@@ -28,4 +28,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

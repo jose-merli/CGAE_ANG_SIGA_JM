@@ -3,7 +3,11 @@ import { ConfigEnviosMasivosItem } from "../../../../../models/ConfiguracionEnvi
 import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
-import { truncate } from "fs";
+import { truncate } from 'fs';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { EnviosMasivosObject } from '../../../../../models/EnviosMasivosObject';
+import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
+
 
 @Component({
   selector: "app-configuracion-envio-masivo",
@@ -11,6 +15,8 @@ import { truncate } from "fs";
   styleUrls: ["./configuracion-envio-masivo.component.scss"]
 })
 export class ConfiguracionEnvioMasivoComponent implements OnInit {
+  searchEnviosMasivos: EnviosMasivosObject = new EnviosMasivosObject();
+  searchEnvios: EnviosMasivosItem = new EnviosMasivosItem();
   openFicha: boolean = true;
   body: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
   bodyInicial: ConfigEnviosMasivosItem = new ConfigEnviosMasivosItem();
@@ -23,6 +29,8 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   tipoEnvio: string;
   editarPlantilla: boolean = false;
   apiKey: string = "";
+
+  resaltadoDatos: boolean = false;
 
   editorConfig: any = {
     selector: "textarea",
@@ -71,10 +79,13 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatos = true;
+
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
@@ -105,6 +116,7 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
   }
 
   detallePlantilla(event) {
+    this.onlyCheckDatos();
     if (event.value != undefined) {
       this.body.cuerpo = "";
       if (
@@ -138,10 +150,40 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
               }
             });
       }
-    }else{
+    } else {
       this.body.cuerpo = "";
       this.body.asunto = "";
     }
+  }
+
+  detallePlantillaInicial() {
+      this.body.cuerpo = "";
+      if (
+        this.body.idTipoEnvios == "1" ||
+        this.body.idTipoEnvios == "4" ||
+        this.body.idTipoEnvios == "5" ||
+        this.body.idTipoEnvios == "7"
+      ) {
+
+        let datosPlantilla = {
+          idPlantillaEnvios: this.body.idPlantillaEnvios,
+          idTipoEnvios: this.body.idTipoEnvios
+        };
+        this.sigaServices
+          .post("enviosMasivos_detallePlantilla", datosPlantilla)
+          .subscribe(data => {
+            let datos = JSON.parse(data["body"]);
+            this.body.asunto = datos.asunto;
+            this.body.cuerpo = datos.cuerpo;
+          },
+            err => {
+              console.log(err);
+              this.progressSpinner = false;
+            }, () => {
+              
+            });
+      }
+    
   }
 
   getTipoEnvios() {
@@ -169,6 +211,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               return e.labelSinTilde;
             }
           }
+
         });
       },
       err => {
@@ -188,6 +231,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeTipoEnvio(e) {
+    this.onlyCheckDatos();
     if (e != null) {
       this.body.tipoEnvio = e.originalEvent.currentTarget.innerText;
     }
@@ -200,10 +244,15 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else {
       this.sigaServices.notifyDesHabilitarDocumentos();
     }
+    if (!this.body.idTipoEnvios) {
+      this.body.idPlantillaEnvios = null;
+      this.plantillas = [];
+    }
+
   }
 
   getPlantillas() {
-  
+
     if (this.body.idTipoEnvios == undefined || this.body.idTipoEnvios == "") {
       this.body.idPlantillaEnvios = "";
     } else {
@@ -214,7 +263,19 @@ para poder filtrar el dato con o sin estos caracteres*/
             let comboPlantillas = JSON.parse(data["body"]);
             this.plantillas = comboPlantillas.combooItems;
             this.progressSpinner = false;
-
+            if(sessionStorage.getItem(
+              "enviosMasivosSearch") == null){
+                this.detallePlantillaInicial();
+            }else{
+              let datos =
+                JSON.parse(sessionStorage.getItem("enviosMasivosSearch"));
+                this.body.idTipoEnvios = datos.idTipoEnvios;
+                this.body.idPlantillaEnvios = datos.idPlantillaEnvios;
+            }
+            
+            // if (this.editar) {
+            //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
+            // }
             this.plantillas.map(e => {
               let accents =
                 "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
@@ -234,27 +295,15 @@ para poder filtrar el dato con o sin estos caracteres*/
             console.log(err);
             this.progressSpinner = false;
           },
-          () => {
-
-            // if (this.body.idTipoEnvios != undefined) {
-            //   let plantilla = {
-            //     value: this.body.idTipoEnvios,
-            //   };
-
-            // this.emitOpenDescripcion.emit(plantilla);
-
-            // let cuerpoPlantilla = {
-            //   cuerpo: undefined,
-            // }
-            // this.cuerpoPlantilla.emit(cuerpoPlantilla);
-
-            // }
-          }
+          () => { }
         );
     }
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     this.openFicha = !this.openFicha;
   }
 
@@ -287,11 +336,15 @@ para poder filtrar el dato con o sin estos caracteres*/
       }
 
     } else {
+      this.body.idTipoEnvios = "1";
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      this.getPlantillas();
       this.editar = false;
     }
   }
 
   cancelar() {
+    this.onlyCheckDatos();
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant(
@@ -316,6 +369,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   confirmarCancelar() {
+    this.onlyCheckDatos();
     this.eliminarArray = [];
     let objCancelar = {
       idEstado: this.body.idEstado,
@@ -346,6 +400,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.onlyCheckDatos();
     // if(this.nuevoCuerpoPlantilla !=undefined){
     //   this.body.cuerpo = this.nuevoCuerpoPlantilla
     // }
@@ -358,6 +413,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         if (sessionStorage.getItem("crearNuevoEnvio") != null) {
           this.body.fechaCreacion = new Date();
         }
+        console.log(this.body.fechaCreacion);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         sessionStorage.removeItem("crearNuevoEnvio");
         sessionStorage.setItem(
@@ -389,7 +445,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   restablecer() {
+    this.resaltadoDatos = true;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.getPlantillas();
+    this.resaltadoDatos = false;
   }
 
   isGuardarDisabled() {
@@ -405,4 +464,33 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
     return true;
   }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (!this.isGuardarDisabled()) {
+      this.guardar();
+    } else {
+      if ((this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.idPlantillaEnvios == null || this.body.idPlantillaEnvios == undefined || this.body.idPlantillaEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos() {
+    if (this.isGuardarDisabled() && (this.body.idTipoEnvios == null || this.body.idTipoEnvios == undefined || this.body.idTipoEnvios === "") || (this.body.idPlantillaEnvios == null || this.body.idPlantillaEnvios == undefined || this.body.idPlantillaEnvios === "") || (this.body.descripcion == null || this.body.descripcion == undefined || this.body.descripcion === "")) {
+       this.resaltadoDatos=true;
+      } 
+    }
+  
 }

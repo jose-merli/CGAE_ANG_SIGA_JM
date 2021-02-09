@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -36,18 +36,18 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
   colsCertificados;
-  mostrarNumero: Boolean = true;
-  datosCertificados;
+  datosCertificados: any[] = [];
   certificadosBody: FichaColegialCertificadosObject = new FichaColegialCertificadosObject();
   selectedDatosCertificados;
-  message;
-  messageNoContent;
+  mostrarNumero: Boolean = true;
   fichasPosibles = [
     {
       key: "certificados",
       activa: false
     },
   ];
+  message;
+  messageNoContent;
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
   @Input() esColegiado: boolean = null;
@@ -67,6 +67,9 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
   DescripcionCertificado;
   selectedItemCertificados: number = 10;
   @Input() idPersona;
+  @Input() openCertifi;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef) { }
@@ -78,15 +81,15 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.checkGeneralBody = new FichaColegialGeneralesItem();
-      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
-      if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
+    this.generalBody = new FichaColegialGeneralesItem();
+    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.checkGeneralBody = new FichaColegialGeneralesItem();
+    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
+    if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
     }
-
+    
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -129,10 +132,15 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody.colegiado = this.esColegiado;
     }
     if (this.idPersona != undefined) {
-      if (this.datosCertificados == undefined) {
+      if(this.datosCertificados == undefined){
         if(this.tarjetaCertificados == "3" || this.tarjetaCertificados == "2"){
           this.searchCertificados();
-        }  
+        }
+      }
+    }
+    if (this.openCertifi == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('certificados')
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -159,10 +167,6 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
 
   searchCertificados() {
     this.mostrarNumero = false;
-    this.messageNoContent = this.translateService.instant(
-      "aplicacion.cargando"
-    );
-    this.message = this.messageNoContent;
     this.sigaServices
       .postPaginado(
         "fichaDatosCertificados_datosCertificadosSearch",
@@ -182,9 +186,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
         }, () => {
           if (this.datosCertificados.length > 0) {
             this.mostrarDatosCertificados = true;
-            for (let i = 0; i <= this.datosCertificados.length - 1; i++) {
-              this.DescripcionCertificado = this.datosCertificados[i];
-            }
+            this.DescripcionCertificado = this.datosCertificados[0];
           }
           if (this.datosCertificados.length == 0) {
             this.message = this.datosCertificados.length.toString();
@@ -229,10 +231,12 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.message == this.datosCertificados.length.toString()) {
+    if (this.activacionTarjeta) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
@@ -269,5 +273,12 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
         value: 40
       }
     ];
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

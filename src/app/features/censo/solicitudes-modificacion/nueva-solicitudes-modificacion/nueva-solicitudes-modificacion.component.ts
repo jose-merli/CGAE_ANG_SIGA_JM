@@ -149,6 +149,13 @@ export class NuevaSolicitudesModificacionComponent implements OnInit {
     this.obtenerMostrarAuditoria();
   }
 
+  ngOnDestroy(): void {
+    if (sessionStorage.getItem("search") != null) {
+      sessionStorage.removeItem("search");
+    }
+    
+  }
+
   // Métodos necesarios para la tabla
   getDataTable() {
     this.cols = [

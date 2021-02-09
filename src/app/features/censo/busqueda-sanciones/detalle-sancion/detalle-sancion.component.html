@@ -8,33 +8,35 @@
       <i class="fa fa-angle-right"></i>{{ "busquedaSanciones.datosSancion.literal" | translate }}
     </p>
   </div>
-  <div class="card">
-    <div class="card-header header-ficha">
-      <div class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
-            <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+  <div id="detaSanDatosGene">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i *ngIf="!existeImagen" class="fa fa-user icon-ficha"></i>
+              <img *ngIf="existeImagen" [src]="imagenPersona" class="icon-ficha" />
+            </div>
           </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
-            </label>
-          </div>
-          <div class="d-flex justify-content-between">
-            <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
-              <span>{{ body.nif }}</span>
-            </label>
-            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-              <span>{{ body.nombre }}</span>
-            </label>
-            <label *ngIf="!isPersona">{{ "censo.general.literal.FechaConstitucion" | translate }}
-              <span>{{ body.fechaNacimiento }}</span>
-            </label>
-            <label *ngIf="isPersona">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
-              <span>{{ body.fechaNacimiento }}</span>
-            </label>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1">
+              <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+              </label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+                <span>{{ body.nif }}</span>
+              </label>
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+                <span>{{ body.nombre }}</span>
+              </label>
+              <label *ngIf="!isPersona">{{ "censo.general.literal.FechaConstitucion" | translate }}
+                <span>{{ body.fechaNacimiento }}</span>
+              </label>
+              <label *ngIf="isPersona">{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+                <span>{{ body.fechaNacimiento }}</span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -52,18 +54,21 @@
             <div class="form-row">
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "busquedaSanciones.colegioSancionador.literal" | translate }} (*)</label>
-                <p-dropdown class="select-form" [options]="colegios" [(ngModel)]="body.idColegio" (onChange)="disableFields()" [(disabled)]="disabledField"></p-dropdown>
+                <p-dropdown [ngClass]="styleObligatorio(body.idColegio)" class="select-form" [options]="colegios"
+                  [(ngModel)]="body.idColegio" (onChange)="disableFields()" [(disabled)]="disabledField"></p-dropdown>
 
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "menu.expediente.sanciones.busquedaPorColegio.tipoSancion.literal" | translate }} (*)</label>
-                <p-dropdown class="select-form" [options]="tipoSancion" [(ngModel)]="body.tipoSancion" (onChange)="disableFields()" [disabled]="disabledField || permisoTarjeta == '2'"></p-dropdown>
+                <p-dropdown [showClear]="true" [ngClass]="styleObligatorio(body.tipoSancion)" class="select-form" [options]="tipoSancion"
+                  [(ngModel)]="body.tipoSancion"  (onChange)="disableFields()" placeholder="{{'general.boton.seleccionar' | translate}}"
+                  [disabled]="disabledField || permisoTarjeta == '2'"></p-dropdown>
               </div>
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "menu.expediente.sanciones.busquedaPorColegio.RefColegio.literal" | translate }}
                 </label>
-                <input type="text" class="form-control" pInputText [(ngModel)]="body.refColegio" [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"
-                />
+                <input type="text" class="form-control" pInputText [(ngModel)]="body.refColegio"
+                  [disabled]="disableFields() || disabledField || permisoTarjeta == '2'" />
               </div>
             </div>
           </div>
@@ -71,8 +76,10 @@
             <div class="form-row">
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ "busquedaSanciones.detalleSancion.fechaAcuerdo.literal" | translate }} (*)</label>
-                <app-fecha [(value)]="body.fechaAcuerdoDate" [disabled]="disabledFechaAcuerdo  || permisoTarjeta == '2'" [maxDate]="fechaMaxAcuerdo"
-                  (valueChangeSelected)="fillFechaAcuerdo($event)" (valueChangeInput)="detectFechaAcuerdoInput($event)"></app-fecha>
+                <app-fecha [inputStyleClass]="styleObligatorio(body.fechaAcuerdoDate)" [(value)]="body.fechaAcuerdoDate"
+                  [disabled]="disabledFechaAcuerdo  || permisoTarjeta == '2'" [maxDate]="fechaMaxAcuerdo"
+                  (valueChangeSelected)="fillFechaAcuerdo($event)" (valueChangeInput)="detectFechaAcuerdoInput($event)">
+                </app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <br />
@@ -80,55 +87,66 @@
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ "menu.expediente.sanciones.firmeza.literal" | translate }}
                 </label>
-                <app-fecha [(value)]="body.fechaFirmezaDate" [disabled]="disabledFechaFirme || permisoTarjeta == '2'" [minDate]="body.fechaAcuerdoDate"
-                  [maxDate]="fechaMinimaFirmeza" (valueChangeSelected)="fillFechaFirmeza($event)" (valueChangeInput)="detectFechaFirmezaInput($event)"></app-fecha>
+                <app-fecha [(value)]="body.fechaFirmezaDate" [disabled]="disabledFechaFirme || permisoTarjeta == '2'"
+                  [minDate]="body.fechaAcuerdoDate" [maxDate]="fechaMinimaFirmeza"
+                  (valueChangeSelected)="fillFechaFirmeza($event)" (valueChangeInput)="detectFechaFirmezaInput($event)">
+                </app-fecha>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
                 <br />
                 <label>{{ "facturacion.altaAbonos.literal.firmeSinFecha" | translate }}
                 </label>
-                <p-checkbox class="displayInit" name="chkFirmeza" [(ngModel)]="body.chkFirmeza" (onChange)="clearFechaFirmeza()" binary="true"
+                <p-checkbox class="displayInit" name="chkFirmeza" [(ngModel)]="body.chkFirmeza"
+                  (onChange)="clearFechaFirmeza()" binary="true"
                   [disabled]="disabledChkFirmeza || permisoTarjeta == '2'"></p-checkbox>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ "facturacion.altaAbonos.literal.periodoEjecucion" | translate }}
                 </label>
-                <app-fecha [(value)]="body.fechaDesdeDate" [disabled]="disabledPeriodoDesde || permisoTarjeta == '2'" [minDate]="body.fechaFirmezaDate"
-                  (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="detectFechaDesdeInput($event)"></app-fecha>
+                <app-fecha [(value)]="body.fechaDesdeDate" [disabled]="disabledPeriodoDesde || permisoTarjeta == '2'"
+                  [minDate]="body.fechaFirmezaDate" (valueChangeSelected)="fillFechaDesde($event)"
+                  (valueChangeInput)="detectFechaDesdeInput($event)"></app-fecha>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ " " | translate }}</label>
-                <app-fecha [(value)]="body.fechaHastaDate" [disabled]="disabledPeriodoHasta || permisoTarjeta == '2'" [minDate]="body.fechaDesdeDate"
-                  (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="detectFechaHastaInput($event)"></app-fecha>
+                <app-fecha [(value)]="body.fechaHastaDate" [disabled]="disabledPeriodoHasta || permisoTarjeta == '2'"
+                  [minDate]="body.fechaDesdeDate" (valueChangeSelected)="fillFechaHasta($event)"
+                  (valueChangeInput)="detectFechaHastaInput($event)"></app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ "busquedaSanciones.detalleSancion.rehabilitado.literal" | translate }}
                 </label>
-                <app-fecha [(value)]="body.fechaRehabilitadoDate" [disabled]="disabledRehabilitado || permisoTarjeta == '2'" [minDate]="body.fechaHastaDate"
-                  (valueChangeSelected)="fillFechaRehabilitado($event)" (valueChangeInput)="detectFechaRehabilitadoInput($event)"></app-fecha>
+                <app-fecha [(value)]="body.fechaRehabilitadoDate"
+                  [disabled]="disabledRehabilitado || permisoTarjeta == '2'" [minDate]="body.fechaHastaDate"
+                  (valueChangeSelected)="fillFechaRehabilitado($event)"
+                  (valueChangeInput)="detectFechaRehabilitadoInput($event)"></app-fecha>
               </div>
 
               <div class="form-group col-lg-6 col-md-6">
                 <br />
                 <label>{{ "facturacion.altaAbonos.literal.rehabilitadoSinFecha" | translate }}
-                  <p-checkbox class="displayInit" name="chkRehabilitado" (onChange)="clearFechaRehabilitado()" [(ngModel)]="body.chkRehabilitado"
-                    binary="true" [disabled]="disabledChkRehabilitado || permisoTarjeta == '2'"></p-checkbox>
+                  <p-checkbox class="displayInit" name="chkRehabilitado" (onChange)="clearFechaRehabilitado()"
+                    [(ngModel)]="body.chkRehabilitado" binary="true"
+                    [disabled]="disabledChkRehabilitado || permisoTarjeta == '2'"></p-checkbox>
                 </label>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label>{{ "busquedaSanciones.detalleSancion.fechaArchivada.literal" | translate }}
                 </label>
-                <app-fecha [(value)]="body.fechaArchivadaDate" [disabled]="disabledFechaArchivada || permisoTarjeta == '2'" [minDate]="body.fechaRehabilitadoDate"
-                  (valueChangeSelected)="fillFechaArchivada($event)" (valueChangeInput)="detectFechaArchivadaInput($event)"></app-fecha>
+                <app-fecha [(value)]="body.fechaArchivadaDate"
+                  [disabled]="disabledFechaArchivada || permisoTarjeta == '2'" [minDate]="body.fechaRehabilitadoDate"
+                  (valueChangeSelected)="fillFechaArchivada($event)"
+                  (valueChangeInput)="detectFechaArchivadaInput($event)"></app-fecha>
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <br />
                 <label>{{ "facturacion.altaAbonos.literal.archivadaSinFecha" | translate }}
                 </label>
-                <p-checkbox class="displayInit" name="chkArchivadas" [(ngModel)]="body.chkArchivadas" (onChange)="clearFechaArchivada()"
-                  binary="true" [disabled]="disabledChkArchivada || permisoTarjeta == '2'"></p-checkbox>
+                <p-checkbox class="displayInit" name="chkArchivadas" [(ngModel)]="body.chkArchivadas"
+                  (onChange)="clearFechaArchivada()" binary="true"
+                  [disabled]="disabledChkArchivada || permisoTarjeta == '2'"></p-checkbox>
               </div>
             </div>
           </div>
@@ -192,7 +210,8 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "busquedaSanciones.detalleSancion.texto.literal" | translate }}
                 </label>
-                <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="body.texto" [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"></textarea>
+                <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="body.texto"
+                  [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"></textarea>
               </div>
             </div>
           </div>
@@ -201,18 +220,21 @@
               <div class="form-group col-lg-12 col-md-12">
                 <label>{{ "censo.nuevaSolicitud.observaciones" | translate }}
                 </label>
-                <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="body.observaciones" [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"></textarea>
+                <textarea [rows]="10" [cols]="10" pInputTextarea [(ngModel)]="body.observaciones"
+                  [disabled]="disableFields() || disabledField || permisoTarjeta == '2'"></textarea>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <div *ngIf="!disabledField" class="text-right main-button ">
-          <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-            [disabled]="disabledGuardar || permisoTarjeta == '2'"></button>
-          <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        </div>
+
+    </div>
+    <div class="card-footer">
+      <div *ngIf="!disabledField" class="text-right main-button ">
+        <button (click)="checkDatos()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="restore()" pButton type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -222,6 +244,7 @@
   </div>
 
   <div class="mt-3 text-right main-button ">
-    <button (click)="return()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+    <button (click)="return()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+      label="{{ 'general.boton.volver' | translate}}"></button>
   </div>
 </div>

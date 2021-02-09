@@ -18,6 +18,7 @@ import { Message } from "primeng/components/common/api";
 import { PersonaJuridicaObject } from "./../../../../app/models/PersonaJuridicaObject";
 import { PersonaJuridicaItem } from "./../../../../app/models/PersonaJuridicaItem";
 import { ControlAccesoDto } from "./../../../../app/models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -65,11 +66,13 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   textFilter: String = "Elegir";
   sortO: number = 1;
   etiquetasSelected: any[];
+  pInputText;
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -176,18 +179,31 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     sessionStorage.removeItem("nuevoNoColegiado");
     sessionStorage.removeItem("nuevoNoColegiadoGen");
     sessionStorage.removeItem("solicitudIncorporacion");
-    if(sessionStorage.getItem("migaPan") != "Buscar Sociedades")
-    sessionStorage.removeItem("migaPan");
+    if (sessionStorage.getItem("migaPan") != "Buscar Sociedades")
+      sessionStorage.removeItem("migaPan");
   }
 
   onChangeSelectAll() {
-    if (this.selectAll === true) {
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+    if (!this.historico) {
+
+      if (this.selectAll === true) {
+        this.selectMultiple = false;
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+      }
     } else {
-      this.selectedDatos = [];
-      this.numSelected = 0;
+      if (this.selectAll) {
+        this.selectMultiple = true;
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectMultiple = false;
+      }
     }
   }
 
@@ -226,6 +242,11 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     );
   }
 
+  clickFila(event) {
+    if (event.data && this.historico && !event.data.fechaBaja) {
+      this.selectedDatos.pop();
+    }
+  }
   // arreglarFecha() {
   //   if (this.fechaConstitucion != undefined) {
   //     let fechaString = JSON.stringify(this.fechaConstitucion);
@@ -285,7 +306,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
     this.table.reset();
   }
 
-  pInputText;
+
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -408,6 +429,12 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -446,7 +473,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   paginate(event) {
-     
+    console.log(event);
   }
 
   cancelar() {
@@ -503,9 +530,9 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       },
       () => {
         this.editar = true;
-        this.body = new PersonaJuridicaItem();
+        //this.body = new PersonaJuridicaItem();
         this.disabledRadio = false;
-        this.isBuscar();
+        this.Search();
         this.table.reset();
       }
     );
@@ -578,6 +605,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   irEditarPersona(id) {
+    id = [id] //Se hizo en una actualizacion para evitar cambiar mucho codigo
     if (!this.selectMultiple) {
       var ir = null;
       if (id && id.length > 0) {
@@ -599,7 +627,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       this.router.navigate(["fichaPersonaJuridica"]);
     } else {
       this.editar = true;
-      //this.body = new PersonaJuridicaItem();
+      // this.body = new PersonaJuridicaItem();
       this.numSelected = this.selectedDatos.length;
     }
   }

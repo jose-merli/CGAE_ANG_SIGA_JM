@@ -8,6 +8,7 @@ import { PlantillaEnvioSearchItem } from '../../../models/PlantillaEnvioSearchIt
 import { PlantillaEnvioItem } from '../../../models/PlantillaEnvioItem';
 import { PlantillasEnvioObject } from '../../../models/PlantillasEnvioObject';
 import { useAnimation } from '@angular/core/src/animation/dsl';
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
 	ENTER = 13
 }
@@ -53,6 +54,7 @@ export class PlantillasEnvioComponent implements OnInit {
 		private translateService: TranslateService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private confirmationService: ConfirmationService,
+		private commonsService: CommonsService,
 		private router: Router
 	) { }
 
@@ -127,7 +129,12 @@ export class PlantillasEnvioComponent implements OnInit {
 				console.log(err);
 				this.progressSpinner = false;
 			},
-			() => { }
+			() => { 
+				this.progressSpinner = false;
+				setTimeout(()=>{
+					this.commonsService.scrollTablaFoco('tablaFoco');
+				  }, 5);
+			}
 		);
 	}
 
@@ -201,7 +208,7 @@ export class PlantillasEnvioComponent implements OnInit {
 
 	checkFilters() {
 		if (
-			(this.bodySearch.nombre == undefined || this.bodySearch.nombre == "") &&
+			(this.bodySearch.nombre == undefined || this.bodySearch.nombre == "" || this.bodySearch.nombre.trim().length < 3) &&
 			(this.bodySearch.idTipoEnvios == undefined || this.bodySearch.idTipoEnvios == "")) {
 			this.showSearchIncorrect();
 			return false;

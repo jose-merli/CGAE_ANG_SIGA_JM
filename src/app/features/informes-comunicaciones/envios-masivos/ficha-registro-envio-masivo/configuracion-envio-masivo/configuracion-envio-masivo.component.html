@@ -1,106 +1,109 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <app-dialog></app-dialog>
 <div class="ficha-container">
-  <!--DATOS GENERALES-->
-  <div class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fas  fa-cog icon-ficha"></i>
+  <div id="infoYComuEnvMasFichEnvMasConfCom">
+    <!--DATOS GENERALES-->
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado" (click)="abreCierraFicha()">
+              <i class="fas  fa-cog icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
+              <label  class="mr-auto title-ficha">{{'enviosMasivos.literal.configComunicacion' | translate}}</label>
+            </div>
+            <div class="d-flex justify-content-between">
+
+              <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}:
+                <span *ngIf="body.tipoEnvio">{{body.tipoEnvio}}</span>
+              </label>
+
+              <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
+            </div>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label (click)="abreCierraFicha()" class="mr-auto title-ficha">{{'enviosMasivos.literal.configComunicacion' | translate}}</label>
+        <div *ngIf="openFicha" (click)="abreCierraFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado" (click)="abreCierraFicha()">
+            <i class="fas fa-cog icon-ficha"></i>
           </div>
-          <div class="d-flex justify-content-between">
-
-            <label>{{'enviosMasivos.literal.tipoEnvio' | translate}}:
-              <span *ngIf="body.tipoEnvio">{{body.tipoEnvio}}</span>
-            </label>
-
-            <i (click)="abreCierraFicha()" *ngIf="!openFicha" class="fa fa-angle-down float-right"></i>
-          </div>
+          <label (click)="abreCierraFicha()" class="title-ficha">{{'enviosMasivos.literal.configComunicacion' | translate}}</label>
+          <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado">
-          <i class="fas fa-cog icon-ficha"></i>
-        </div>
-        <label (click)="abreCierraFicha()" class="title-ficha">{{'enviosMasivos.literal.configComunicacion' | translate}}</label>
-        <i (click)="abreCierraFicha()" class="fa fa-angle-up ml-auto"></i>
-      </div>
-    </div>
-    <!--cuerpo datos generales-->
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='7' && body.idTipoEnvios!='5','col-lg-3': body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-          <div class="form-row">
-            <div class="form-group col-lg-12">
-              <label>
-                <strong>{{'enviosMasivos.literal.configComunicacion' | translate}}</strong>
-              </label>
+      <!--cuerpo datos generales-->
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="bloque" [ngClass]="{'col-lg-12':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='7' && body.idTipoEnvios!='5','col-lg-3': body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+            <div class="form-row">
+              <div class="form-group col-lg-12">
+                <label>
+                  <strong>{{'enviosMasivos.literal.configComunicacion' | translate}}</strong>
+                </label>
+              </div>
+              <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+                <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
+                <p-dropdown [ngClass]="styleObligatorio(body.idTipoEnvios)" [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar || editarPlantilla"
+                  (onChange)="getPlantillas(); detallePlantillaInicial(); body.asunto=''; body.cuerpo=''" placeholder="{{ 'general.boton.seleccionar' | translate }}" showClear="true"
+                  [options]="tipoEnvios" [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
+              </div>
+              <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12': body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+                <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} (*)</label>
+                <p-dropdown [ngClass]="styleObligatorio(body.idPlantillaEnvios)" [disabled]="(plantillas && plantillas.length <= 0) || editar || editarPlantilla || !body.idTipoEnvios"
+                  [options]="plantillas" placeholder="Seleccionar" [(ngModel)]="body.idPlantillaEnvios" class="select-form" (onChange)="detallePlantilla($event)"></p-dropdown>
+              </div>
+              <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='7' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+                <label class="d-block">{{'enviosMasivos.literal.descripcion' | translate}} (*)</label>
+                <input [ngClass]="styleObligatorio(body.descripcion)" type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="editar"  (ngModelChange)="onlyCheckDatos()"
+                  pInputText>
+              </div>
             </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-              <label class="d-block">{{'enviosMasivos.literal.tipoEnvio' | translate}} (*)</label>
-              <p-dropdown  [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde" [disabled]="editar || editarPlantilla" (onChange)="onChangeTipoEnvio($event)"
-                [options]="tipoEnvios" (onChange)="getPlantillas(); body.asunto=''; body.cuerpo=''" [(ngModel)]="body.idTipoEnvios" class="select-form"></p-dropdown>
-            </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='7' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12': body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-              <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} (*)</label>
-              <p-dropdown  [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde" [disabled]="(plantillas && plantillas.length <= 0) || editar || editarPlantilla" [options]="plantillas" [(ngModel)]="body.idPlantillaEnvios"
-                class="select-form" (onChange)="detallePlantilla($event)"></p-dropdown>
-            </div>
-            <div class="form-group" [ngClass]="{'col-lg-4':body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='7' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
-              <label class="d-block">{{'enviosMasivos.literal.descripcion' | translate}} (*)</label>
-              <input type="text" class="form-control" [(ngModel)]="body.descripcion" [disabled]="editar" pInputText>
+          </div>
+
+          <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '7' || body.idTipoEnvios!='4' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
+            class="col-lg-9 col-md-12">
+            <div class="form-row">
+              <div class="form-group col-lg-12 col-md-12">
+                <label *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7'">
+                  <strong>{{'enviosMasivos.literal.datosCorreo' | translate}}</strong>
+                </label>
+                <label *ngIf="body.idTipoEnvios=='4'">
+                  <strong>{{'informesycomunicaciones.plantillasenvio.ficha.datosSMS' | translate}}</strong>
+                </label>
+                <label *ngIf="body.idTipoEnvios=='5'">
+                  <strong>{{'informesycomunicaciones.plantillasenvio.ficha.datosBuroSMS' | translate }}</strong>
+                </label>
+              </div>
+              <div *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7' " class="form-group col-lg-12 col-md-12">
+                <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
+                <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="editar" pInputText>
+              </div>
+              <div [hidden]="!(body.idTipoEnvios=='1' || body.idTipoEnvios=='7') " class="form-group col-lg-12 col-md-12">
+                <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
+                <editor apiKey="{{apiKey}}" [init]="editorConfig" [disabled]="editar" [(ngModel)]="body.cuerpo"></editor>
+              </div>
+              <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
+                <label>{{'enviosMasivos.literal.numCaracteres' | translate}}: </label>
+                <label *ngIf="body.cuerpo">{{body.cuerpo.length}}</label>
+              </div>
+              <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-12 col-md-12">
+                <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
+                <textarea style="height:140px" [disabled]="editar" autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160" pInputTextarea></textarea>
+              </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="body.idTipoEnvios== '1' || body.idTipoEnvios== '7' || body.idTipoEnvios!='4' || body.idTipoEnvios== '4' || body.idTipoEnvios== '5'"
-          class="col-lg-9 col-md-12">
-          <div class="form-row">
-            <div class="form-group col-lg-12 col-md-12">
-              <label *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7'">
-                <strong>{{'enviosMasivos.literal.datosCorreo' | translate}}</strong>
-              </label>
-              <label *ngIf="body.idTipoEnvios=='4'">
-                <strong>{{'informesycomunicaciones.plantillasenvio.ficha.datosSMS' | translate}}</strong>
-              </label>
-              <label *ngIf="body.idTipoEnvios=='5'">
-                <strong>{{'informesycomunicaciones.plantillasenvio.ficha.datosBuroSMS' | translate }}</strong>
-              </label>
-            </div>
-            <div *ngIf="body.idTipoEnvios=='1' || body.idTipoEnvios=='7' " class="form-group col-lg-12 col-md-12">
-              <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
-              <input type="text" class="form-control" [(ngModel)]="body.asunto" [disabled]="editar" pInputText>
-            </div>
-            <div [hidden]="!(body.idTipoEnvios=='1' || body.idTipoEnvios=='7') " class="form-group col-lg-12 col-md-12">
-              <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-              <editor apiKey="{{apiKey}}" [init]="editorConfig" [disabled]="editar" [(ngModel)]="body.cuerpo"></editor>
-            </div>
-            <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-3 col-md-3">
-              <label>{{'enviosMasivos.literal.numCaracteres' | translate}}: </label>
-              <label *ngIf="body.cuerpo">{{body.cuerpo.length}}</label>
-            </div>
-            <div *ngIf="body.idTipoEnvios=='4' || body.idTipoEnvios=='5'" class="form-group col-lg-12 col-md-12">
-              <label>{{'enviosMasivos.literal.cuerpo' | translate}}</label>
-              <textarea style="height:140px" [disabled]="editar" autoResize="autoResize" [(ngModel)]="body.cuerpo" maxlength="160" pInputTextarea></textarea>
-            </div>
-          </div>
-        </div>
       </div>
-
-    </div>
-    <div *ngIf="openFicha" class="card-footer">
-      <div class="text-right main-button">
-        <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"
-          [disabled]="body.idEstado == 6 || editar"></button>
-        <button (click)="restablecer()" [disabled]="editar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" [disabled]="isGuardarDisabled() || editar" pButton type="button" icon="far fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button>
+      <div *ngIf="openFicha" class="card-footer">
+        <div class="text-right main-button">
+          <button *ngIf="editar" (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"
+            [disabled]="body.idEstado == 6 || editar"></button>
+          <button (click)="restablecer()" [disabled]="editar" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+          <button (click)="checkDatos()" [disabled]="editar" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        </div>
       </div>
     </div>
   </div>

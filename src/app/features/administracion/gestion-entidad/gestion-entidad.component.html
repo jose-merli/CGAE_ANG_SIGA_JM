@@ -8,18 +8,18 @@
     <div class="card">
         <div class="card-body">
             <p class="title-module">
-                <span>{{'administracion.catalogos.titulo.datos.generales' | translate}}</span>
-                <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+                <span (click)="onHideDatosGenerales()">{{'administracion.catalogos.titulo.datos.generales' | translate}}</span>
+                <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{'administracion.multidioma.etiquetas.literal.idioma' | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde">
+                        <p-dropdown [showClear]="true" placeholder="{{ 'tablas.literal.seleccionar' | translate }}" class="select-form" [(ngModel)]='selectedIdiomaBusqueda' [options]="idiomaBusqueda" [filter]="true" filterBy="label,labelSinTilde">
                         </p-dropdown>
                     </div> &nbsp;&nbsp;
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{'administracion.confInterfaz.logotipo' | translate}}</label>
                         <br>
                         <div class="ui-inputgroup">

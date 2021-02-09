@@ -1,26 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, OnChanges, ViewEncapsulation } from '@angular/core';
-import { SigaServices } from '../../../../../_services/siga.service';
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { DatePipe, Location } from '@angular/common';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 // import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "./../../../../../_services/cardSearch.service";
-import { Location } from "@angular/common";
-import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
-import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
-import { AutoComplete, Dialog, Calendar, DataTable } from 'primeng/primeng';
-import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
-import { FichaColegialColegialesObject } from '../../../../../models/FichaColegialColegialesObject';
-import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
-import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
-import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
-import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
-import * as moment from 'moment';
+import { ConfirmationService, Message } from "primeng/components/common/api";
+import { DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesItem';
 import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
+import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
+import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
+import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
+import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
+import { AuthenticationService } from '../../../../../_services/authentication.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { cardService } from "./../../../../../_services/cardSearch.service";
 
 @Component({
   selector: 'app-direcciones-ficha-colegial',
@@ -72,9 +65,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   mostrarDatosSanciones: boolean = false;
   DescripcionSanciones;
   rowsPerPage;
-  disabledAction: boolean = false;
   numSelectedCurriculares: number = 0;
   colsDirecciones;
+  mostrarNumero:Boolean = false;
+  message;
+  messageNoContent;
   bodyDirecciones: DatosDireccionesItem;
   @Input() esColegiado: boolean;
   selectMultipleDirecciones: boolean = false;
@@ -95,21 +90,34 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   valorPreferenteCorreo: string = "11";
   valorPreferenteSMS: string = "12";
   selectedItemDirecciones: number = 10;
-  mensajeResumen: String;
-
   @ViewChild("tableDirecciones")
   tableDirecciones: DataTable;
   @Input() isLetrado;
   @Input() idPersona;
+  @Input() openDirec;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  disabledAction: boolean = false;
   constructor(
     private sigaServices: SigaServices,
+    private confirmationService: ConfirmationService,
+    private authenticationService: AuthenticationService,
+    private cardService: cardService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     // private sanitizer: DomSanitizer,
     private router: Router,
+    private datepipe: DatePipe,
+    private location: Location,
   ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -120,20 +128,14 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.mensajeResumen = "Cargando";
 
       if (sessionStorage.getItem("esColegiado")) {
         this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
       } else {
         this.esColegiado = true;
       }
+
       sessionStorage.removeItem("historicoDir")
-      if (sessionStorage.getItem("disabledAction") == "true") {
-        // Es estado baja colegial
-        this.disabledAction = true;
-      } else {
-        this.disabledAction = false;
-      }
 
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -164,7 +166,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-
+    
     if (this.esColegiado != null) {
       if (this.esColegiado) {
         if (this.colegialesBody.situacion == "20") {
@@ -177,16 +179,20 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     if (this.idPersona != undefined) {
       if (this.bodyDirecciones == undefined && (this.tarjetaDirecciones == "3" || this.tarjetaDirecciones == "2")) {
         this.onInitDirecciones();
-
-        if (this.tarjetaDirecciones == "3") {
+        
+        if(this.tarjetaDirecciones == "3"){
           this.permisos = true;
-        } else {
+        }else{
           this.permisos = false;
         }
         this.getLetrado();
       }
     }
-
+    if (this.openDirec == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('direcciones');
+      }
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -208,7 +214,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.colsDirecciones = [
       {
         field: "tipoDireccion",
-        header: "censo.datosDireccion.literal.tipo.direccion"
+        header: "censo.datosDireccion.literal.tipo.direccion",
+        width: "22%"
       },
       {
         field: "domicilioLista",
@@ -271,10 +278,12 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
+    if (this.activacionTarjeta) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   getFichaPosibleByKey(key): any {
@@ -298,11 +307,10 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.searchDirecciones();
   }
 
-  ocultarHistoricoDatosDirecciones() {
+  ocultarHistoricoDatosDirecciones(){
     this.progressSpinner = true;
     this.onInitDirecciones();
   }
-
 
   isSelectMultipleDirecciones() {
     this.selectMultipleDirecciones = !this.selectMultipleDirecciones;
@@ -318,15 +326,16 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   onChangeSelectAllDirecciones() {
     if (this.selectAllDirecciones === true) {
-      if (this.bodyDirecciones.historico) {
-        this.numSelectedDirecciones = this.selectedDatosDirecciones.length;
+      if (this.bodyDirecciones.historico == true) {
         this.selectMultipleDirecciones = false;
-        this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined)
+        this.selectedDatosDirecciones = this.datosDirecciones.filter(dato => dato.fechaBaja != undefined);
+        this.numSelectedCurriculares = this.selectedDatosDirecciones.length;
       } else {
         this.numSelectedDirecciones = this.datosDirecciones.length;
         this.selectMultipleDirecciones = false;
         this.selectedDatosDirecciones = this.datosDirecciones;
       }
+
     } else {
       this.selectedDatosDirecciones = [];
       this.numSelectedDirecciones = 0;
@@ -477,8 +486,9 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     this.selectAllDirecciones = false;
     this.selectMultipleDirecciones = false;
     this.selectedDatosDirecciones = [];
-    this.selectMultipleDirecciones = false;
+    this.mostrarNumero = false;
     this.selectedDatosDirecciones = "";
+    //this.progressSpinner = true;
     this.selectAll = false;
     if (this.idPersona != undefined && this.idPersona != null) {
       this.sigaServices
@@ -501,8 +511,6 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
                 contador = contador + 1;
               }
             });
-            if (this.datosDirecciones)
-              this.mensajeResumen = this.datosDirecciones.filter(it => it.fechaBaja == null).length + "";
             sessionStorage.setItem("numDespacho", JSON.stringify(contador));
 
             this.progressSpinner = false;
@@ -510,16 +518,26 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           err => {
             console.log(err);
             this.progressSpinner = false;
-
+            this.mostrarNumero = true;
           },
           () => {
             this.progressSpinner = false;
-
             if (this.datosDirecciones.length > 0) {
               this.mostrarDatosDireccion = true;
-              for (let i = 0; i <= this.datosDirecciones.length - 1; i++) {
-                this.DescripcionDatosDireccion = this.datosDirecciones[i];
-              }
+              this.DescripcionDatosDireccion = this.datosDirecciones[0];
+              
+            }
+            if (this.datosDirecciones.length == 0) {
+              this.message = this.datosDirecciones.length.toString();
+              this.messageNoContent = this.translateService.instant(
+                "general.message.no.registros"
+              );
+              this.mostrarNumero = true;
+  
+            } else {
+              this.message = this.datosDirecciones.length.toString();
+              this.mostrarNumero = true;
+  
             }
           }
         );
@@ -547,6 +565,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
       "direcciones",
       JSON.stringify(this.datosDirecciones)
     );
+    this.datosColegiales = JSON.parse(sessionStorage.getItem("datosColDir"));
 
     if (this.datosColegiales.length != 0) {
       if (this.isCrearColegial) {
@@ -579,6 +598,8 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
 
   redireccionarDireccion(dato) {
     if (this.camposDesactivados != true) {
+      this.datosColegiales = JSON.parse(sessionStorage.getItem("datosColDir"));
+
       if (!this.selectMultipleDirecciones) {
         if (dato[0].fechaBaja != null) {
           sessionStorage.setItem("historicoDir", "true");
@@ -717,7 +738,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
     // this.buscar = false;
     this.selectMultiple = false;
     this.selectedDatosDirecciones = "";
-    this.selectAll = false;
+    this.selectAllDirecciones = false;
     this.sigaServices
       .postPaginado("direcciones_search", "?numPagina=1", searchObject)
       .subscribe(
@@ -736,4 +757,17 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         }
       );
   }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
+  clickFilaDirecciones(event) {
+    if (event.data && !event.data.fechaBaja && this.bodyDirecciones.historico) {
+      this.selectedDatosDirecciones.pop();
+    }
+  }
+
 }

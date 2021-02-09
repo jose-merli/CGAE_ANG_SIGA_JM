@@ -23,6 +23,7 @@ import { cardService } from "./../../../../_services/cardSearch.service";
 import { Subscription } from "rxjs/Subscription";
 import { DataTable } from "../../../../../../node_modules/primeng/primeng";
 import { ControlAccesoDto } from "../../../../models/ControlAccesoDto";
+import { Input, SimpleChanges, EventEmitter, Output } from '@angular/core';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -89,6 +90,8 @@ export class DatosRetencionesComponent implements OnInit {
   dateParts: any;
 
   tarjeta: string;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   constructor(
@@ -177,7 +180,12 @@ export class DatosRetencionesComponent implements OnInit {
       this.disabledAction = false;
     }
   }
-
+  ngOnChanges(changes: SimpleChanges){
+    if(this.openTarjeta == "retenciones"){
+     this.openFicha = true;
+    }
+    
+  }
   changeSort(event) {
     this.sortF = "fechaFin";
     this.sortO = 1;
@@ -188,7 +196,7 @@ export class DatosRetencionesComponent implements OnInit {
 
     // this.table.sortMultiple();
   }
-
+  
   onChangeCalendar(event) {
     this.nuevafecha = event;
     this.isVolver = false;
@@ -731,7 +739,13 @@ export class DatosRetencionesComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => {
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "retenciones";
+					this.permisosEnlace.emit(permisos);
+				  }
+
+       }
     );
   }
 }

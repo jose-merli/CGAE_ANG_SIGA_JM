@@ -89,7 +89,6 @@ import { MantenimientoMandatosComponent } from './features/censo/mantenimiento-m
 import { BusquedaSancionesComponent } from './features/censo/busqueda-sanciones/busqueda-sanciones.component';
 import { BusquedaColegiadosComponent } from './features/censo/busqueda-colegiados/busqueda-colegiados.component';
 import { BusquedaColegiadosComponentI } from './features/censo/busqueda-colegiados-censoI/busqueda-colegiados.component';
-import { FichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial.component';
 import { EdicionCurricularesComponent } from './features/censo/ficha-colegial/edicionDatosCurriculares/edicionCurriculares.component';
 import { BusquedaLetradosComponent } from './features/censo/busqueda-letrados/busqueda-letrados.component';
 import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento-duplicados/mantenimiento-duplicados.component';
@@ -357,12 +356,13 @@ import { AlterMutuaFichaColegialComponent } from './features/censo/ficha-colegia
 import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/mutualidad-abogacia-ficha-colegial/mutualidad-abogacia-ficha-colegial.component';
 import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
+import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		TranslatePipe,
 		ImagePipe,
 
 		MyIframeComponent,
@@ -399,7 +399,6 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		BusquedaSancionesComponent,
 		BusquedaColegiadosComponent,
 		BusquedaColegiadosComponentI,
-		FichaColegialComponent,
 		EdicionCurricularesComponent,
 		BusquedaLetradosComponent,
 		MantenimientoDuplicadosComponent,
@@ -677,7 +676,8 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
-		ServiciosInteresFichaColegialComponent
+		ServiciosInteresFichaColegialComponent//,
+		//TarjetaResumenFijaComponent
 	],
 	imports: [
 		BrowserModule,
@@ -692,6 +692,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		DropdownModule,
 		ButtonModule,
 		DataTableModule,
+		TableModule,
 		InputTextModule,
 		InputTextareaModule,
 		CheckboxModule,
@@ -704,7 +705,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 		CalendarModule,
 		OverlayPanelModule,
 		ScheduleModule,
-
+		PipeTranslationModule,
 		AutoCompleteModule,
 		TooltipModule,
 		ListboxModule,
@@ -721,7 +722,7 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 
 		KeyFilterModule,
 		StepsModule,
-
+		TarjetaResumenFijaModule,
 
 		SelectButtonModule,
 		ColorPickerModule,

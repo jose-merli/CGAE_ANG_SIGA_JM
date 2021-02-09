@@ -15,6 +15,7 @@ import { SigaServices } from "./../../../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { CommonsService } from "../../../../../_services/commons.service";
+import { truncate } from 'fs';
 
 @Component({
   selector: "app-consultas-plantillas",
@@ -48,6 +49,7 @@ export class ConsultasPlantillasComponent implements OnInit {
   finalidad: string;
   objetivo: string;
   institucionActual: any;
+  disabledPlantilla: boolean = false;
   consultaBuscada;
   // resultadosConsultas: String = "Debe introducir al menos 3 caracteres";
   resultadosConsultas =
@@ -133,6 +135,12 @@ export class ConsultasPlantillasComponent implements OnInit {
     ];
 
     // this.body.idConsulta = this.consultas[1].value;
+
+    if(sessionStorage.getItem("disabledPlantillaEnvio") == "true"){
+      this.disabledPlantilla  = true;
+    }else{
+      this.disabledPlantilla = false;
+    }
   }
 
   // Mensajes
@@ -161,20 +169,18 @@ export class ConsultasPlantillasComponent implements OnInit {
     this.table.reset();
   }
 
-  isSelectMultiple() {
-    if (!this.soloLectura) {
-      this.selectMultiple = !this.selectMultiple;
-      this.nuevaConsulta = false;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
+  isSelectMultiple(selectedDatos) {
+    
+      if (this.selectedDatos != undefined) {
+        if(this.selectedDatos.length == 1){
+          // this.activacionEditar = true;
+        }
+        this.numSelected = this.selectedDatos.length;
       } else {
-        this.selectAll = false;
         this.selectedDatos = [];
-        this.numSelected = 0;
       }
     }
-  }
+  
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -211,6 +217,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
   navigateTo(dato) {
     let idConsulta = dato.idConsulta;
+    console.log(dato);
     if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
       if (
         dato.generica == "No" ||
@@ -230,8 +237,11 @@ export class ConsultasPlantillasComponent implements OnInit {
     }
     this.numSelected = 1;
   }
-  actualizaSeleccionados() {
-    this.numSelected = 0;
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos != undefined) {
+      
+      this.numSelected = this.selectedDatos.length;
+    }
   }
   abreCierraFicha() {
     if (
@@ -260,6 +270,7 @@ export class ConsultasPlantillasComponent implements OnInit {
     }
     return {};
   }
+  
 
   addConsulta() {
     let objNewConsulta = {
@@ -325,6 +336,7 @@ export class ConsultasPlantillasComponent implements OnInit {
             this.consultas[i].label
           );
         }
+        console.log(this.consultas);
       },
       err => {
         console.log(err);
@@ -355,6 +367,7 @@ export class ConsultasPlantillasComponent implements OnInit {
               );
             } 
           }
+          console.log(this.consultas);
         },
         err => {
           console.log(err);
@@ -384,6 +397,7 @@ export class ConsultasPlantillasComponent implements OnInit {
     let id = e.value;
     this.getFinalidad(id);
     this.getConsultaInstitucion(id);
+    console.log(id);
   }
 
   getConsultaInstitucion(id) {
@@ -409,13 +423,12 @@ export class ConsultasPlantillasComponent implements OnInit {
     if(this.datos ==undefined  || this.datos==null){
       return true;
     }else{
-     if(this.datos[0].idConsulta==undefined || this.datos[0].idConsulta=="" || this.datos[0].idConsulta==null){
-      return true;
-    }else{
-      return false;
+      if(this.datos[0].idConsulta==undefined || this.datos[0].idConsulta=="" || this.datos[0].idConsulta==null){
+        return true;
+      }else{
+        return false;
+      }
     }
-    }
-    
   }
 
   asociar() {
@@ -471,6 +484,9 @@ export class ConsultasPlantillasComponent implements OnInit {
         }
       );
 
+    console.log("selectedDatos", this.selectedDatos);
+    console.log("nuevaConsulta", this.nuevaConsulta);
+    console.log("soloLectura", this.soloLectura);
   }
 
   desasociar(dato) {
@@ -576,6 +592,7 @@ export class ConsultasPlantillasComponent implements OnInit {
           }
         }
         this.datos = [...this.datos];
+        console.log(this.datos);
       },
       err => {
         console.log(err);

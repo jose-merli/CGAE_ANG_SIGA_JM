@@ -16,6 +16,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -74,13 +75,15 @@ export class ConsultasComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos = [];
 
+
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkAcceso();
@@ -244,7 +247,11 @@ export class ConsultasComponent implements OnInit {
     }
   }
 
-
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
@@ -347,12 +354,17 @@ export class ConsultasComponent implements OnInit {
   SelectAll() {
     if (this.selectAll === true) {
       //this.eliminar = true;
-
+      this.selectMultiple = false;
       this.controlBtnEliminar(this.datos);
 
-      this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      if (this.historico) {
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      } else {
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -391,6 +403,7 @@ export class ConsultasComponent implements OnInit {
       this.selectMultiple = false;
       this.selectedDatos = [];
       this.progressSpinner = true;
+      this.selectAll = false;
       sessionStorage.removeItem("consultasSearch");
       sessionStorage.removeItem("filtrosConsulta");
       this.getResultados(historico);
@@ -450,6 +463,9 @@ export class ConsultasComponent implements OnInit {
         },
         () => {
           this.table.reset();
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -519,6 +535,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   confirmarCancelar(dato) {
+    this.progressSpinner = true;
     this.eliminarArray = [];
     dato.forEach(element => {
       let objEliminar = {
@@ -561,8 +578,10 @@ export class ConsultasComponent implements OnInit {
         console.log(err);
       },
       () => {
+        this.selectAll = false;
+        this.progressSpinner = false;
         this.table.reset();
-        this.buscar(false);
+        this.buscar(this.historico);
       }
     );
   }
@@ -625,10 +644,7 @@ export class ConsultasComponent implements OnInit {
     }
     if (dato.length > 0) {
       if (
-        (this.institucionActual != 2000 &&
-          dato[0].idInstitucion == "2000" &&
-          dato[0].generica == "Si") ||
-        !this.activacionEditar
+        (this.institucionActual != 2000 && dato[0].idInstitucion == "2000" && dato[0].generica == "Si") || !this.activacionEditar || dato[0].fechaBaja != undefined
       ) {
         sessionStorage.setItem("soloLectura", "true");
         sessionStorage.setItem("permisoModoLectura", "true");
@@ -636,6 +652,9 @@ export class ConsultasComponent implements OnInit {
         sessionStorage.setItem("soloLectura", "false");
         sessionStorage.setItem("permisoModoLectura", "false");
       }
+    }
+    if (dato[0].fechaBaja) {
+      sessionStorage.setItem("soloLectura", "true");
     }
   }
 
@@ -870,5 +889,10 @@ export class ConsultasComponent implements OnInit {
   setItalic(dato) {
     if (dato.fechaBaja == null) return false;
     else return true;
+  }
+  clickFila(event) {
+    if (event.data && !event.data.fechaBaja && this.historico) {
+      this.selectedDatos.pop();
+    }
   }
 }

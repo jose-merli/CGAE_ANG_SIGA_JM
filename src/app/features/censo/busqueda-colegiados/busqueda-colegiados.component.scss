@@ -13,6 +13,12 @@
   width: 5%;
  }
 
+ .overflow{
+  // overflow: hidden !important;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+ }
+
  .overlayPanelPrueba > .ui-overlaypanel{
 //   top: 50% !important;
 //   left: 40% !important;
@@ -51,6 +57,12 @@
   border: 1px solid #d6d6d6 !important;
   background: #ffffff !important;
   color: #555555 !important;
+}
+.enlace {
+  color: #0000EE !important
+}
+.correo{
+  color:black !important;
 }
 
 #numero{

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, OnChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -35,15 +35,16 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   activacionEditar: boolean = true;
   desactivarVolver: boolean = true;
   colsColegiaciones;
+  mostrarOtrasColegiaciones;
+  mostrarNumero: Boolean = false;
+  message: String;
+  messageNoContent: String = "";
   fichasPosibles = [
     {
       key: "colegiaciones",
       activa: false
     },
   ];
-  mostrarNumero:Boolean = false;
-  messageNoContent: String = "";
-  message: String;
   selectedItemColegiaciones: number = 10;
   @Input() tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];
@@ -56,9 +57,11 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   rowsPerPage;
   @ViewChild("tableColegiaciones")
   tableColegiaciones: DataTable;
-
+  DescripcionOtrasColegiaciones;
   @Input() esColegiado: boolean = null;
-
+  @Input() openOtrasCole;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -80,7 +83,8 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-      
+
+      this.onInitOtrasColegiaciones();
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
@@ -125,6 +129,11 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
     if(this.tarjetaOtrasColegiaciones == "3" || this.tarjetaOtrasColegiaciones == "2"){
       this.onInitOtrasColegiaciones();
     }
+    if (this.openOtrasCole == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('colegiaciones')
+      }
+    }
   }
 
   abreCierraFicha(key) {
@@ -138,10 +147,12 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.message == this.datosColegiaciones.length.toString()) {
+    if (this.activacionTarjeta) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   getFichaPosibleByKey(key): any {
@@ -170,10 +181,6 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
 
   searchOtherCollegues() {
     this.mostrarNumero = false;
-    this.messageNoContent = this.translateService.instant(
-      "aplicacion.cargando"
-    );
-    this.message = this.messageNoContent;
     this.sigaServices
       .postPaginado(
         "fichaColegialOtrasColegiaciones_searchOtherCollegues",
@@ -187,13 +194,15 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
           this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
         },
         err => {
-          this.message = this.translateService.instant(
-            "general.message.no.registros"
-          );
+          console.log(err);
           this.progressSpinner = false;
           this.mostrarNumero = true;
-        }, () => {
-          if (this.datosColegiaciones.length == 0) {
+        },()=>{
+          if (this.datosColegiaciones.length > 0) {
+            this.mostrarOtrasColegiaciones = true;
+            this.DescripcionOtrasColegiaciones = this.datosColegiaciones[0];
+          }
+          if (this.datosColegiaciones.length == 0 || this.datosColegiaciones == undefined) {
             this.message = this.datosColegiaciones.length.toString();
             this.messageNoContent = this.translateService.instant(
               "general.message.no.registros"
@@ -260,5 +269,12 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
   setItalic(datoH) {
     if (datoH.fechaBaja == null) return false;
     else return true;
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

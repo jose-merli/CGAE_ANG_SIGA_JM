@@ -33,30 +33,28 @@ export class MenuComponent implements OnInit {
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
-    this.progressSpinner = true;  
-    
+    this.progressSpinner = true;
+    //this.sigaServices.get("diccionarios").subscribe(response => {
+      //response.DiccionarioItems;
+      //this.sigaServices.get("menu").subscribe(response => {
+          
     this.translateService.getTranslations().then(
       items=>{
         this.items = items;
-        this.progressSpinner = false;
+  
+      this.progressSpinner = false;
+//        this.items = response.menuItems;
+//        return this.items;
+//      });
+//    });
       }
     );
-
-    // this.sigaServices.get("diccionarios").subscribe(response => {
-    //   response.DiccionarioItems;
-    //   this.sigaServices.get("menu").subscribe(response => {
-    //     this.progressSpinner = false;
-    //     this.items = response.menuItems;
-    //     return this.items;
-    //   });
-    // });
   }
-
   onCloseMenu() {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
       this.sigaServices.notifyMenuToggled();
-    }
+     }
   }
 
   onFixedMenu() {
@@ -77,6 +75,7 @@ export class MenuComponent implements OnInit {
   }
 
   navigateTo(ruta) {
+    sessionStorage.removeItem("disabledPlantillaEnvio");
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;

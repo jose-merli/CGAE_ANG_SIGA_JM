@@ -123,18 +123,18 @@ export class DetalleIntegranteComponent implements OnInit {
     }
     // modificacion
     else {
-      
-    if(this.body.flagSocio != undefined && this.body.flagSocio !=  null){
+            
+      if(this.body.flagSocio != undefined && this.body.flagSocio !=  null){
         if(this.body.flagSocio == "1"){
           this.body.socio = true;
         }else{
           this.body.socio = false;
         }
 
-    }
-    if(this.body.descripcionCargo != undefined && this.body.descripcionCargo !=  null){
-          this.body.cargo = this.body.descripcionCargo;
-    }
+      }
+      if(this.body.descripcionCargo != undefined && this.body.descripcionCargo !=  null){
+            this.body.cargo = this.body.descripcionCargo;
+      }
       var a = JSON.parse(sessionStorage.getItem("integrante"));
       // caso de que la persona integrante colegiada
       if (
@@ -165,6 +165,7 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
+                // console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
@@ -339,6 +340,7 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         }
 
+        console.log(this.colegiosArray);
         this.actualizarDescripcionTipoColegio();
       },
       err => {
@@ -683,6 +685,7 @@ export class DetalleIntegranteComponent implements OnInit {
         updateIntegrante.flagSocio = "0";
       }
     }
+
     if (
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
@@ -779,9 +782,9 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.nifCif = "";
       }
-       if (this.body.socio != undefined && this.body.socio != null) {
-         if(this.body.socio){
-        newIntegrante.flagSocio = "1";
+      if (this.body.socio != undefined && this.body.socio != null) {
+        if(this.body.socio){
+          newIntegrante.flagSocio = "1";
         }else{
           newIntegrante.flagSocio = "0";
         }
@@ -1109,9 +1112,11 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
+    // console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
+    // console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 

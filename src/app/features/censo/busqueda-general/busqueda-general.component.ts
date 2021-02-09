@@ -22,7 +22,8 @@ import { AuthenticationService } from '../../../_services/authentication.service
 import { NoColegiadoItem } from "../../../models/NoColegiadoItem";
 import { PersonaJuridicaItem } from '../../../models/PersonaJuridicaItem';
 import { ArrayType } from '../../../../../node_modules/@angular/compiler/src/output/output_ast';
-
+import { CommonsService } from '../../../_services/commons.service';
+import { MultiSelect } from 'primeng/multiselect';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -81,7 +82,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
   institucionActual: string;
   labelRemitente: string;
   addDestinatarioIndv: boolean = false;
-
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
+  @ViewChild('someDropdown2') someDropdown2: MultiSelect;
   currentRoute: String;
   idClaseComunicacion: String;
   keys: any[] = [];
@@ -120,6 +122,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private location: Location,
+    private commonsService: CommonsService,
     private authenticationService: AuthenticationService
   ) {
     this.formBusqueda = this.formBuilder.group({
@@ -135,6 +138,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
+    if (sessionStorage.getItem("vuelveForm") != undefined)
+      if (sessionStorage.getItem("vuelveForm") == "false") {
+        this.router.navigate(["/buscarCursos"]);
+      } else {
+        sessionStorage.setItem("vuelveForm", "true");
+      }
 
     if (sessionStorage.getItem('migaPan') != null && sessionStorage.getItem('migaPan') == "Buscar Sociedades") {
       this.persona = 'j';
@@ -614,6 +623,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
                 sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
               }
             }
+
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
       }
@@ -686,6 +699,9 @@ export class BusquedaGeneralComponent implements OnDestroy {
                   sessionStorage.setItem('AddDestinatarioIndvBack', 'true');
                 }
               }
+              setTimeout(()=>{
+                this.commonsService.scrollTablaFoco('tablaFoco');
+              }, 5);
             }
           );
       }
@@ -795,6 +811,18 @@ export class BusquedaGeneralComponent implements OnDestroy {
             enviar.fechaNacimiento = id[0].fechaNacimientoString;
             enviar.idTratamiento = id[0].idTratamiento;
             enviar.idEstado = id[0].situacion;
+            enviar.domicilio = id[0].direccion;
+            enviar.idProvincia = id[0].idProvincia;
+            enviar.idPoblacion = id[0].idPoblacion;
+            enviar.idPais = id[0].idPais;
+            enviar.movil = id[0].movil;
+            enviar.telefono1 = id[0].telefono1;
+            enviar.telefono2 = id[0].telefono2;
+            enviar.fax1 = id[0].fax1;
+            enviar.fax2 = id[0].fax2;
+            enviar.correoElectronico = id[0].correoelectronico;
+            enviar.codigoPostal = id[0].codigoPostal;
+            enviar.nombrePoblacion = id[0].nombrePoblacion;
 
             enviar.domicilio = id[0].direccion;
             enviar.idProvincia = id[0].idProvincia;
@@ -1193,12 +1221,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   getTipo(event) {
     this.selectedTipo = event;
-    if(this.selectedTipo != undefined){
+    if (this.selectedTipo != undefined) {
       this.bodyJuridica.tipo = this.selectedTipo.value;
-    }else{
+    } else {
       this.bodyJuridica.tipo = undefined;
     }
-    
+
   }
 
   navigateComunicar(dato) {
@@ -1252,5 +1280,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
   ngAfterViewChecked() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
+  focusInputField2() {
+    setTimeout(() => {
+      this.someDropdown2.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

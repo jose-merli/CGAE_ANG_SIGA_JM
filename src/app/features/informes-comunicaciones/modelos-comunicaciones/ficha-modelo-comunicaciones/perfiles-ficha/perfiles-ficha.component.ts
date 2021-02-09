@@ -65,7 +65,7 @@ export class PerfilesFichaComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (sessionStorage.getItem("soloLectura") == 'true') {
         this.soloLectura = true;
       }
 

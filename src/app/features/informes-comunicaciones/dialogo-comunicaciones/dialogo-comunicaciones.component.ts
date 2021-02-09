@@ -18,7 +18,7 @@ import { findIndex } from 'rxjs/operators';
 @Component({
 	selector: 'app-dialogo-comunicaciones',
 	templateUrl: './dialogo-comunicaciones.component.html',
-	styleUrls: [ './dialogo-comunicaciones.component.scss' ],
+	styleUrls: ['./dialogo-comunicaciones.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
 export class DialogoComunicacionesComponent implements OnInit {
@@ -69,16 +69,18 @@ export class DialogoComunicacionesComponent implements OnInit {
 		public sigaServices: SigaServices,
 		private translateService: TranslateService,
 		private location: Location
-	) {}
+	) { }
 
 	ngOnInit() {
-		if (sessionStorage.getItem('consultasSearch') != undefined) {
-			this.consultasSearch = JSON.parse(sessionStorage.getItem('consultasSearch'));
-		}
 
-		if (sessionStorage.getItem('descargasPendientes') == undefined) {
-			sessionStorage.setItem('descargasPendientes', '0');
-		}
+		if (sessionStorage.getItem('consultasSearch') != undefined) {
+            this.consultasSearch = JSON.parse(sessionStorage.getItem('consultasSearch'));
+        }
+
+        if (sessionStorage.getItem('descargasPendientes') == undefined) {
+            sessionStorage.setItem('descargasPendientes', '0');
+        }
+
 		this.progressSpinner = true;
 		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
 		sessionStorage.removeItem('back');
@@ -180,8 +182,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.idInstitucion = this.consultasSearch.idInstitucion;
 		}
 		if (sessionStorage.getItem('idInstitucion') != undefined) {
-			this.idInstitucion = sessionStorage.getItem('idInstitucion');
-		}
+            this.idInstitucion = sessionStorage.getItem('idInstitucion');
+        }
+
 		let modeloSearch = {
 			idModulo: this.idModulo,
 			idClaseComunicacion: this.idClaseComunicacion,
@@ -218,28 +221,29 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	onChangePlantillaEnvio(dato) {
-		if (dato.idPlantillaEnvio != undefined && dato.idPlantillaEnvio != null) {
+		if(dato.idPlantillaEnvio != undefined && dato.idPlantillaEnvio != null){
 			this.getTipoEnvios(dato);
-		} else {
+		}else{
 			dato.tipoEnvio = '';
 		}
 	}
 
 	getTipoEnvios(dato) {
 		if (dato.idPlantillaEnvio == '') {
-			dato.tipoEnvio = '';
+            dato.tipoEnvio = '';
 		} else {
 			this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
 				(data) => {
 					let tipoEnvio = JSON.parse(data['body']).tipoEnvio;
 
-					if (tipoEnvio != undefined && tipoEnvio != null) {
+					if(tipoEnvio != undefined && tipoEnvio != null){
 						dato.tipoEnvio = tipoEnvio.tipoEnvio;
 						dato.idTipoEnvio = tipoEnvio.idTipoEnvio;
-					} else {
+					}else{
 						dato.tipoEnvio = undefined;
 						dato.idTipoEnvio = undefined;
 					}
+					
 				},
 				(err) => {
 					console.log(err);
@@ -257,6 +261,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		} else {
 			this.bodyComunicacion.idInstitucion = this.idInstitucion;
 		}
+
 
 		if (accion == 'comunicar') {
 			this.comunicar = true;
@@ -278,16 +283,17 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.listaConsultas.forEach((element) => {
 						if (element.camposDinamicos != null) {
 							element.camposDinamicos.forEach((campo) => {
+
 								let find = this.valores.find((x) => x.campo == campo.campo);
 
-								if (campo.valores != undefined && campo.valores != null && campo.valores.length > 0) {
+								if(campo.valores != undefined && campo.valores != null && campo.valores.length > 0){
 									campo.valor = campo.valores[0].ID;
 								}
 
 								if (campo.operacion == 'OPERADOR') {
 									campo.operadorDefecto = false;
 									campo.operacion = '=';
-								} else {
+								}else{
 									campo.operadorDefecto = true;
 								}
 
@@ -320,14 +326,15 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.showFail(
 						this.translateService.instant(
 							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
-						) +
-							' ' +
-							message
+							) +
+                            ' ' +
+                            message
 					);
 				},
 				() => {
 					//this.progressSpinner = false;
 				}
+
 			);
 		}
 	}
@@ -343,7 +350,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	enviarComunicacion() {
-		//	this.progressSpinner = true;
+		//this.progressSpinner = true;
 
 		this.valores.forEach((element) => {
 			if (element.valor != null && typeof element.valor == 'object') {
@@ -362,6 +369,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		});
 
 		if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
+
 			if (this.consultasSearch != undefined) {
 				this.idInstitucion = this.consultasSearch.idInstitucion;
 			}
@@ -451,18 +459,18 @@ export class DialogoComunicacionesComponent implements OnInit {
 		//this.progressSpinner = true;
 
 		// this.valores.forEach((element) => {
-		// if (element.valor != null && typeof element.valor == 'object') {
-		// 	if (element.valor.ID != null && element.valor.ID != undefined) {
-		// 		element.valor = element.valor.ID;
-		// 	}
-		// }
-		// if (element.valores != undefined && element.valores != null) {
-		// 	let empty = {
-		// 		ID: 0,
-		// 		DESCRIPCION: 'Seleccione una opción...'
-		// 	};
-		// 	element.valores.unshift(empty);
-		// }
+			// if (element.valor != null && typeof element.valor == 'object') {
+			// 	if (element.valor.ID != null && element.valor.ID != undefined) {
+			// 		element.valor = element.valor.ID;
+			// 	}
+			// }
+			// if (element.valores != undefined && element.valores != null) {
+			// 	let empty = {
+			// 		ID: 0,
+			// 		DESCRIPCION: 'Seleccione una opción...'
+			// 	};
+			// 	element.valores.unshift(empty);
+			// }
 		// 	if (element.operacion == 'OPERADOR') {
 		// 		element.operacion = this.operadoresNumero[0].value;
 		// 	}
@@ -470,24 +478,28 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 		if (this.listaConsultas != null) {
 			for (let i = 0; this.listaConsultas.length > i; i++) {
+
 				if (this.listaConsultas[i].camposDinamicos != null) {
 					for (let j = 0; this.listaConsultas[i].camposDinamicos.length > j; j++) {
+
 						let find = this.valores.find((x) => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
 						if (find != undefined) {
+
 							if (find.valor != null && typeof find.valor == 'object') {
 								if (find.valor.ID != null && find.valor.ID != undefined) {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
-								} else {
+								}else{
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
 								}
-							} else {
+							}else{
 								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
 							}
-
+							
 							this.listaConsultas[i].camposDinamicos[j].operacion = find.operacion;
 						}
 					}
 				}
+
 			}
 		}
 
@@ -504,105 +516,104 @@ export class DialogoComunicacionesComponent implements OnInit {
 			comunicar: this.comunicar,
 			ruta: this.rutaComunicacion
 		};
+
 		let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
-		descargasPendientes = descargasPendientes + 1;
-		sessionStorage.setItem('descargasPendientes', descargasPendientes);
-		this.showInfoPerenne(
-			'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
-		);
-		this.showValores = false;
+        descargasPendientes = descargasPendientes + 1;
+        sessionStorage.setItem('descargasPendientes', descargasPendientes);
+        this.showInfoPerenne(
+            'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
+        );
+        this.showValores = false;
+
 		let filename;
 		this.sigaServices.post('dialogo_nombredoc', datos).subscribe(
-			(data) => {
-				if (data['body'] != '') {
-					let fileInfo = JSON.parse(data['body']);
-					if (fileInfo.name != 'ResultadoConsulta.xlsx') {
+            (data) => {
+                if (data['body'] != '') {
+                    let fileInfo = JSON.parse(data['body']);
+                    if (fileInfo.name != 'ResultadoConsulta.xlsx') {
 						filename = fileInfo.name;
 					} else {
-						if (sessionStorage.getItem('nombreConsulta') != undefined) {
-							filename = sessionStorage.getItem('nombreConsulta');
-							filename += '.xlsx';
-						} else {
-							filename = fileInfo.name;
-						}
-					}
-
-					this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
-						(data) => {
-							if (data.size != 0) {
-								// let a = JSON.parse(data);
-								const blob = new Blob([ data ], { type: 'text/csv' });
-
-								if (blob != undefined) {
-									// 	saveAs(blob, data.nombre);
-									// } else {
-									saveAs(blob, filename);
-									this.progressSpinner = false;
-								}
-								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-								sessionStorage.setItem('descargasPendientes', descargasPendientes);
-								this.showInfoPerenne(
-									'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
-								);
-
-								this.showValores = false;
+							if (sessionStorage.getItem('nombreConsulta') != undefined) {
+								filename = sessionStorage.getItem('nombreConsulta');
+								filename += '.xlsx';
 							} else {
+								filename = fileInfo.name;
+							}
+						}
+						
+						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
+							(data) => {
+								if (data.size != 0) {
+									// let a = JSON.parse(data);
+									const blob = new Blob([data], { type: 'text/csv' });
+
+									if (blob != undefined) {
+										// 	saveAs(blob, data.nombre);
+										// } else {
+										saveAs(blob, filename);
+										this.progressSpinner = false;
+									}
+									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+									sessionStorage.setItem('descargasPendientes', descargasPendientes);
+									this.showInfoPerenne(
+										'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
+									);
+	
+									this.showValores = false;
+								} else {
+									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+									sessionStorage.setItem('descargasPendientes', descargasPendientes);
+									this.showValores = false;
+									this.progressSpinner = false;
+									this.clearPerenne();
+									this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
+									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+								}
+							},
+							(error) => {
+								console.log(error);
+
+								this.progressSpinner = false;
 								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 								sessionStorage.setItem('descargasPendientes', descargasPendientes);
-								this.showValores = false;
-								this.progressSpinner = false;
 								this.clearPerenne();
 								this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
-								this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-								
-								
-							}
-						},
-						(error) => {
-							console.log(error);
+								if (error.message != null && error.message != undefined) {
+									this.showFail(error.message);
+								} else {
+									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+								}
 
-							this.progressSpinner = false;
-							descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-							sessionStorage.setItem('descargasPendientes', descargasPendientes);
-							this.clearPerenne();
-							this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
-							if (error.message != null && error.message != undefined) {
-								this.showFail(error.message);
-							} else {
-								this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+							},
+							() => {
+								this.progressSpinner = false;
 							}
-
-							
-						},
-						() => {
-							this.progressSpinner = false;
-						}
-					);
-				}
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.showValores = false;
-				console.log(err);
-				descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-				sessionStorage.setItem('descargasPendientes', descargasPendientes);
-				this.clearPerenne();
-				let mensaje = this.translateService.instant('informes.error.descargaDocumento');
-				if (err != null && err != undefined && err.error != null && err.error != undefined) {
-					let errDTO = JSON.parse(err.error);
-					if (errDTO.message != null && errDTO.message != undefined) {
-						mensaje = errDTO.message;
+						);
 					}
-				}
-				this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
-				this.showFail(mensaje);
-
-				
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.showValores = false;
+					console.log(err);
+					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+					sessionStorage.setItem('descargasPendientes', descargasPendientes);
+					this.clearPerenne();
+					let mensaje = this.translateService.instant('informes.error.descargaDocumento');
+					if (err != null && err != undefined && err.error != null && err.error != undefined) {
+						let errDTO = JSON.parse(err.error);
+						if (errDTO.message != null && errDTO.message != undefined) {
+							mensaje = errDTO.message;
+						}
+					}
+					this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
+					this.showFail(mensaje);
 			},
 			() => {
-				this.progressSpinner = false;
-			}
-		);
+					this.progressSpinner = false;
+				}
+			);
+
+
 	}
 
 	parseErrorBlob(err: HttpErrorResponse): Observable<any> {
@@ -663,19 +674,18 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.msgsDescarga = [];
 		this.msgsDescarga.push({ severity: 'info', summary: '', detail: mensaje });
 	}
-
 	showInfoPerenneFinalizada(mensaje: string) {
-		this.msgsDescargaFinalizada = [];
-		this.msgsDescargaFinalizada.push({ severity: 'info', summary: '', detail: mensaje });
-	}
+        this.msgsDescargaFinalizada = [];
+        this.msgsDescargaFinalizada.push({ severity: 'info', summary: '', detail: mensaje });
+    }
 
 	clear() {
 		this.msgs = [];
 	}
 
 	clearPerenne(){
-		this.msgsDescarga = [];
-	}
+        this.msgsDescarga = [];
+    }
 
 	backTo() {
 		sessionStorage.setItem('back', 'true');
@@ -683,18 +693,17 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	getPlantillas() {
-		this.sigaServices
-			.getParam('modelos_detalle_plantillasComunicacionByIdClase', '?idClase=' + this.idClaseComunicacion)
+		this.sigaServices.getParam('modelos_detalle_plantillasComunicacionByIdClase', '?idClase=' + this.idClaseComunicacion)
 			.subscribe(
-				(data) => {
-					this.plantillas = data.combooItems;
-					// this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
-				},
-				(err) => {
-					console.log(err);
-				},
-				() => {}
-			);
+			(data) => {
+				this.plantillas = data.combooItems;
+				// this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
+			},
+			(err) => {
+				console.log(err);
+			},
+			() => { }
+		);
 	}
 
 	fillFechaProgramacionCalendar(event) {

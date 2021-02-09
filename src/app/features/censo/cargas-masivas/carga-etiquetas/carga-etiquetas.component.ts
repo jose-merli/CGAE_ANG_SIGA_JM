@@ -34,7 +34,6 @@ export class CargaEtiquetasComponent implements OnInit {
   datos: any[];
   numSelected: number = 0;
   selectedItem: number = 10;
-  clear: any;
   @ViewChild("pUploadFile") pUploadFile;
 
   progressSpinner: boolean = false;
@@ -134,7 +133,9 @@ export class CargaEtiquetasComponent implements OnInit {
         );
     }
   }
-
+  clear() {
+    this.msgs = [];
+  }
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

@@ -5,6 +5,7 @@ import { Message, ConfirmationService } from "primeng/components/common/api";
 import { TranslateService } from "../../../../../commons/translate/translation.service";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: "app-configuracion",
@@ -34,6 +35,8 @@ export class ConfiguracionComponent implements OnInit {
   reenviar: boolean = false;
   cancelar: boolean = false;
   apiKey: string = "";
+
+  resaltadoDatos: boolean = false;
 
   editorConfig: any = {
     selector: 'textarea',
@@ -67,10 +70,13 @@ export class ConfiguracionComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.resaltadoDatos=true;
+    
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey")
     }
@@ -79,6 +85,10 @@ export class ConfiguracionComponent implements OnInit {
     this.getClasesComunicaciones();
     this.getModelosComunicacion();
     this.getTipoEnvios();
+
+    if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+      this.abreCierraFicha();
+    }
   }
 
   // Mensajes
@@ -162,6 +172,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   abreCierraFicha() {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     // let fichaPosible = this.getFichaPosibleByKey(key);
     // if (this.activacionEditar == true) {
     // fichaPosible.activa = !fichaPosible.activa;
@@ -263,6 +276,8 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   guardar() {
+    this.onlyCheckDatos();
+    this.resaltadoDatos=false;
     this.sigaServices.post("enviosMasivos_guardarConf", this.body).subscribe(
       data => {
         this.body.idEstado = '4';
@@ -292,6 +307,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   onCancelar() {
+    this.onlyCheckDatos();
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
       message: this.translateService.instant(
@@ -318,6 +334,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   confirmarCancelar() {
+    this.onlyCheckDatos();
     this.eliminarArray = [];
     let objCancelar = {
       idEstado: this.body.idEstado,
@@ -370,5 +387,44 @@ para poder filtrar el dato con o sin estos caracteres*/
         }, () => {
           this.progressSpinner = false
         });
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.isGuardarDisabled()){
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }else{
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.muestraCamposObligatorios();
+      }else{
+        this.guardar();
+      }
+    }
+  }
+
+  onlyCheckDatos(){
+    if(this.isGuardarDisabled()){
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.resaltadoDatos=true;
+      }
+    }else{
+      if(this.body.descripcion==null || this.body.descripcion==undefined || this.body.descripcion===""){
+        this.resaltadoDatos=true;
+      }
+    }
   }
 }

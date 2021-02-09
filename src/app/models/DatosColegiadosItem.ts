@@ -25,6 +25,8 @@ export class DatosColegiadosItem {
   categoria: string;
   residencia: string;
   situacion: string;
+  situaciones: string[];
+
   situacionResidente: string;
   situacionresidente: ComboItemColegiado;
   inscrito: string;
@@ -32,6 +34,7 @@ export class DatosColegiadosItem {
   correo: string;
   fechaNacimiento: string;
   fechaNacimientoDate: Date;
+
   idPersona: string;
   idgrupo: string[];
   idTratamiento: String;
@@ -53,6 +56,7 @@ export class DatosColegiadosItem {
   comisiones: string;
   partidoJudicial: string;
   subtipoCV: string[];
+  domicilio: string;
 
   idEstadoCivil: string;
 

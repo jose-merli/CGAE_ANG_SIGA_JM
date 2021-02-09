@@ -5,6 +5,7 @@ import { DataTable } from "primeng/datatable";
 import { TranslateService } from "../../../commons/translate/translation.service";
 import { ModelosComunicacionesItem } from "../../../models/ModelosComunicacionesItem";
 import { SigaServices } from "../../../_services/siga.service";
+import { CommonsService } from '../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -50,6 +51,7 @@ export class ModelosComunicacionesComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -228,8 +230,15 @@ para poder filtrar el dato con o sin estos caracteres*/
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+
+      if(this.showHistorico){
+        this.selectedDatos = this.datos.filter(dato => dato.fechaBaja != undefined && dato.fechaBaja != null)
+        this.numSelected = this.selectedDatos.length;
+      }else{
+        this.selectedDatos = this.datos;
+        this.numSelected = this.datos.length;
+      }
+      
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -244,6 +253,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.selectMultiple = false;
       this.selectedDatos = "";
       this.progressSpinner = true;
+      
       sessionStorage.removeItem("modelosSearch");
       sessionStorage.removeItem("filtrosModelos");
       this.getResultados();
@@ -280,10 +290,12 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getResultados() {
+    this.selectAll = false;
     let service = "modelos_search";
     if (this.showHistorico) {
       service = "modelos_search_historico";
     }
+    this.progressSpinner = true;
     this.sigaServices
       .postPaginado(service, "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -301,12 +313,18 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
+          this.progressSpinner = false;
           this.table.reset();
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
 
   getResultadosHistorico() {
+    this.selectAll = false;
+    this.progressSpinner = true;
     this.sigaServices
       .postPaginado("modelos_search_historico", "?numPagina=1", this.bodySearch)
       .subscribe(
@@ -324,6 +342,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
+          this.progressSpinner = false;
           this.table.reset();
         }
       );
@@ -342,6 +361,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     } else if (key == "hidden") {
       this.showHistorico = false;
     }
+    this.selectedDatos = [];
     this.getResultados();
   }
 
@@ -453,8 +473,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onConfirmarBorrar(dato) {
     if (!this.selectAll) {
+      this.progressSpinner = true;
       this.sigaServices.post("modelos_borrar", dato).subscribe(
         data => {
+          this.progressSpinner = false;
+
           this.showSuccess(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
@@ -462,27 +485,38 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
         },
         err => {
-          this.showFail(
-            this.translateService.instant(
-              "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
-            )
-          );
-          console.log(err);
+          this.progressSpinner = false;
+          let error = JSON.parse(err.error).description;
+          if (error == "ultimo")
+            this.showFail(
+              this.translateService.instant(
+                "censo.modelosComunicaciones.gestion.errorUltimoModelo"
+              )
+            );
+          else {
+            this.showFail(
+              this.translateService.instant(
+                "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
+              )
+            );
+            console.log(err);
+          }
         },
         () => {
+          this.selectedDatos = [];
           this.getResultados();
         }
       );
 
       //let x = this.datos.indexOf(dato);
       //this.datos.splice(x, 1);
-      this.selectedDatos = [];
-      this.selectMultiple = false;
-      this.showSuccess(
-        this.translateService.instant(
-          "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
-        )
-      );
+      // this.selectedDatos = [];
+      // this.selectMultiple = false;
+      // this.showSuccess(
+      //   this.translateService.instant(
+      //     "informesycomunicaciones.modelosdecomunicacion.correctBorrado"
+      //   )
+      // );
     } else {
       this.selectedDatos = [];
       this.showSuccess(
@@ -593,5 +627,14 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.anotherPage) {
       localStorage.removeItem("recoverLabel");
     }
+  }
+  clickRow(event) {
+    if (event.data && !event.data.fechaBaja && this.showHistorico) {
+      this.selectedDatos.pop();
+    }
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
   }
 }

@@ -19,6 +19,7 @@ import { TranslateService } from "../../../commons/translate";
 import { PersonaObject } from "../../../models/PersonaObject";
 import { saveAs } from "file-saver/FileSaver";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-inscripcion",
@@ -37,6 +38,7 @@ export class FichaInscripcionComponent implements OnInit {
   es: any = esCalendar;
   isValidate: boolean;
   editar: boolean = false;
+
   uploadFileDisable: boolean = true;
   persona: PersonaItem = new PersonaItem();
   bodySearch: PersonaObject = new PersonaObject();
@@ -44,6 +46,7 @@ export class FichaInscripcionComponent implements OnInit {
   curso: DatosCursosItem = new DatosCursosItem();
   isAdministrador: boolean = false;
   isNuevoNoColegiado: boolean = false;
+
   archivoDisponible: boolean = false;
   existeArchivo: boolean = false;
   @ViewChild("pUploadFile") pUploadFile;
@@ -74,6 +77,8 @@ export class FichaInscripcionComponent implements OnInit {
 
   checkBody: DatosInscripcionItem = new DatosInscripcionItem();
 
+  resaltadoDatos: boolean = false;
+
   //Certificados
   @ViewChild("tableCertificates")
   tableCertificates;
@@ -84,6 +89,7 @@ export class FichaInscripcionComponent implements OnInit {
     private cardService: cardService,
     private router: Router,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private changeDetectorRef: ChangeDetectorRef
   ) { }
 
@@ -246,8 +252,9 @@ export class FichaInscripcionComponent implements OnInit {
 
     // Guardamos la inscripcion para la funcioanlidad de "restablecer"
     this.checkBody = JSON.parse(JSON.stringify(this.inscripcion));
-  }
-
+    this.resaltadoDatos = true;
+    
+}
   // control de permisos
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
@@ -385,6 +392,9 @@ export class FichaInscripcionComponent implements OnInit {
               this.obtenerTiposIdentificacion();
 
               this.guardarPersona = true;
+              if((this.persona.nif == undefined || this.persona.nif == null || this.persona.nif == "") || (this.persona.tipoIdentificacion == undefined || this.persona.tipoIdentificacion == null || this.persona.tipoIdentificacion == "")) {
+                this.abreCierraFicha('personales');
+              }
             }
           },
           error => {
@@ -473,6 +483,9 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   abreCierraFicha(key) {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = !fichaPosible.activa;
     this.openFicha = !this.openFicha;
@@ -567,6 +580,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   comprobarValidacion() {
+    this.onlyCheckDatos();
     if (
       (this.persona.tipoIdentificacion != undefined ||
         this.persona.tipoIdentificacion != null) &&
@@ -585,6 +599,7 @@ export class FichaInscripcionComponent implements OnInit {
       data.map(result => {
         result.cardNotario = this.isValidate;
       });
+      console.log(data);
     });
   }
 
@@ -640,6 +655,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   guardarInscripcion() {
+    this.onlyCheckDatos();
     let url = "";
 
     // if (!this.modoEdicion && this.isAdministrador) {this.inscripcion.fechaSolicitudDate = this.inscripcion.fechaSolicitud;
@@ -755,6 +771,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   actualizaPersona() {
+    this.onlyCheckDatos();
     if (
       this.editar &&
       this.persona.nombre != undefined &&
@@ -1217,7 +1234,7 @@ export class FichaInscripcionComponent implements OnInit {
   }
 
   restablecer() {
-        this.pUploadFile.clear();
+    this.pUploadFile.clear();
     this.pUploadFile.chooseLabel = "Seleccionar Archivo";
     this.uploadFileDisable = true;
     this.inscripcion = JSON.parse(JSON.stringify(this.checkBody));
@@ -1227,7 +1244,6 @@ export class FichaInscripcionComponent implements OnInit {
     this.inscripcion.fechaSolicitudString = this.arreglarFechaString(
       this.inscripcion.fechaSolicitud
     );
-
   }
 
   arreglarFecha(fecha) {
@@ -1288,7 +1304,31 @@ export class FichaInscripcionComponent implements OnInit {
     return arrayDate;
   }
 
-   getFile(event: any) {
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
+  checkDatos(){
+    if(this.inscripcion.fechaSolicitud==null || this.inscripcion.fechaSolicitud==undefined){
+      this.muestraCamposObligatorios();
+    }else{
+      this.guardarTODO();
+    }
+  }
+
+  onlyCheckDatos(){
+    if(this.inscripcion.fechaSolicitud==null || this.inscripcion.fechaSolicitud==undefined){
+      this.resaltadoDatos=true;
+    }
+  }
+
+  getFile(event: any) {
     let fileList: FileList = event.files;
     this.uploadFileDisable = false;
 

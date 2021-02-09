@@ -16,6 +16,7 @@ import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
 import { ProgramarItem } from "../../../models/ProgramarItem";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -70,6 +71,7 @@ export class ComunicacionesComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -363,6 +365,9 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         () => {
           this.table.reset();
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -459,24 +464,27 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   navigateTo(dato) {
     this.estado = dato[0].idEstado;
-    if (!this.selectMultiple && this.estado != 5) {
+    if (this.estado != 5) {
       // this.body.estado = dato[0].estado;
       this.router.navigate(["/fichaRegistroComunicacion"]);
       sessionStorage.setItem("comunicacionesSearch", JSON.stringify(dato[0]));
       sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
-    } else if (!this.selectMultiple && this.estado == 5) {
+    } else if (this.estado == 5) {
       //this.showInfo("La comunicación está en proceso, no puede editarse");
       this.showInfo(this.translateService.instant("informesycomunicaciones.comunicaciones.envioProcess"));
       this.selectedDatos = [];
     }
   }
+  fila(dato) {
+    this.estado = dato[0].idEstado;
+  }
 
   onShowProgamar(dato) {
     this.showProgramar = true;
 
-    if (!this.selectMultiple) {
-      this.bodyProgramar.fechaProgramada = dato[0].fechaProgramacion;
-    }
+    // if (!this.selectMultiple) {
+    this.bodyProgramar.fechaProgramada = dato[0].fechaProgramacion;
+    // }
   }
 
   /*

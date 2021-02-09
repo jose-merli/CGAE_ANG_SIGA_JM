@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { Location } from "@angular/common";
@@ -41,6 +41,8 @@ export class AccesoFichaPersonaComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private router: Router,
@@ -123,6 +125,7 @@ export class AccesoFichaPersonaComponent implements OnInit {
       if (this.notario[0].tipoIdentificacion != undefined) {
         this.body.tipoIdentificacion = this.notario[0].tipoIdentificacion;
       }
+      this.progressSpinner = false;
     }
     if (this.usuarioBody != null && this.usuarioBody[0] != undefined) {
       this.idPersona = this.usuarioBody[0].idPersona;
@@ -141,6 +144,13 @@ export class AccesoFichaPersonaComponent implements OnInit {
 
     this.comprobarValidacion();
     this.checkAcceso();
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    if(this.openTarjeta == "notario"){
+     this.openFicha = true;
+    }
+    
   }
 
   search() {
@@ -459,7 +469,12 @@ export class AccesoFichaPersonaComponent implements OnInit {
       err => {
         console.log(err);
       },
-      () => { }
+      () => { 
+        if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "notario";
+					this.permisosEnlace.emit(permisos);
+				  }
+       }
     );
   }
 }

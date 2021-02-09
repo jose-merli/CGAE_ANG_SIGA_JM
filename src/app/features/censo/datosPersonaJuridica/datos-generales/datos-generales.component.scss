@@ -1,50 +1,50 @@
 .nombre-colegio {
-	padding: 0.5em 0em;
-	display: block;
+  padding: 0.5em 0em;
+  display: block;
 }
 
 .widthAll {
-	width: 100%;
+  width: 100%;
 }
 
 .card-header * {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .ui-growl-message-info .ui-growl-item {
-	color: white !important;
-	background-color: #33a1ff !important;
+  color: white !important;
+  background-color: #33a1ff !important;
 }
 
 .ui-growl-message-success .ui-growl-item {
-	color: white !important;
-	background-color: #28a745 !important;
+  color: white !important;
+  background-color: #28a745 !important;
 }
 
 .ui-growl-message-warn .ui-growl-item {
-	color: white !important;
-	background-color: #ffc107 !important;
+  color: white !important;
+  background-color: #ffc107 !important;
 }
 
 .ui-growl-message-error .ui-growl-item {
-	color: white !important;
-	background-color: #dc3545 !important;
+  color: white !important;
+  background-color: #dc3545 !important;
 }
 
 .labelError {
-	color: red;
-	font-weight: bold;
+  color: red;
+  font-weight: bold;
 }
 
 #formu {
-	display: table !important;
-	padding-left: 1.4em;
+  display: table !important;
+  padding-left: 1.4em;
 }
 
 #check {
-	display: table-cell !important;
-	vertical-align: middle !important;
-	padding-left: 0.8em;
+  display: table-cell !important;
+  vertical-align: middle !important;
+  padding-left: 0.8em;
 }
 
 // .card .card-body-ficha .bloque:first-child {
@@ -52,42 +52,70 @@
 // }
 
 ::ng-deep .ui-fileupload-choose .fa-plus::before {
-	content: "\F303";
+  content: "\F303";
 }
-
+ 
 .positionUpload {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
 }
 
-div .card {
-	display: block !important;
+div .card{
+  display: block !important;
 }
 
-_:-ms-fullscreen,
-:root .ie11up div.card {
-	display: block !important;
+ _:-ms-fullscreen, :root .ie11up div.card { display: block !important; }
+
+ 
+ .camposObligatorios{
+  border-color: red !important;
+}
+
+.camposObligatorios > div{
+  border-color: red !important;
+}
+
+
+.camposObligatorios div{
+  border-color: red !important;
+}
+
+.camposObligatorios > input{
+  border-color: red !important;
+}
+
+.camposObligatorios > div .ui-multiselect{
+  border: 1px solid red !important;
+}
+
+.ui-inputtext .camposObligatorios{
+  border: 1px solid red !important;
+}
+
+.labelError {
+  color: red;
+  font-weight: bold;
 }
 
 .ui-autocomplete-token-icon {
-	margin-top: -0.45em;
-	position: absolute;
-	top: 50%;
-	cursor: pointer;
-	left: .55em;
+  margin-top: -0.45em;
+  position: absolute;
+  top: 50%;
+  cursor: pointer;
+  left: .55em;
 }
 .ui-autocomplete-multiple-container.ui-inputtext {
-	margin-right: 0px;
-	padding-right: .7em;
+  margin-right: 0px;
+  padding-right: .7em;
 }
 .configEtiq {
-	padding-left: 1.25em;
-	padding-right: .7em;
+  padding-left: 1.25em;
+  padding-right: .7em;
 }
 span.ul.ui-autocomplete-multiple-container.ui-widget.ui-inputtext.ui-state-default.ui-corner-all.ng-star-inserted {
-	padding-left: 0;
-	padding-top: .3em;
+  padding-left: 0;
+  padding-top: .3em;
 }

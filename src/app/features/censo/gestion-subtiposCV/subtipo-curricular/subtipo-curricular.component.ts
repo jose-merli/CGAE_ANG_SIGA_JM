@@ -11,6 +11,7 @@ import { SigaServices } from "../../../../_services/siga.service";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
 import { SubtipoCurricularObject } from "../../../../models/SubtipoCurricularObject";
+import { CommonsService } from '../../../../_services/commons.service';
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -43,10 +44,10 @@ export class SubtipoCurricularComponent implements OnInit {
   inputDesc: ElementRef;
   @ViewChild("inputCdgoExt")
   inputCdgoExt: ElementRef;
-
+  institucionActual;
   @ViewChild("table")
   table;
-  selectedDatos = [];
+  selectedDatos;
   cols: any = [];
   rowsPerPage: any = [];
   datos: any[];
@@ -59,7 +60,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   msgs: any = [];
   datosOriginal;
-
+  editable: boolean = false;
   showSubtipoCurricular: boolean = true;
   progressSpinner: boolean = false;
   buscar: boolean = false;
@@ -74,6 +75,7 @@ export class SubtipoCurricularComponent implements OnInit {
     private sigaServices: SigaServices,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) { }
 
@@ -131,6 +133,8 @@ export class SubtipoCurricularComponent implements OnInit {
 
   // Métodos
   search() {
+    this.numSelected = 0;
+    this.selectedDatos = [];
     this.progressSpinner = true;
     this.buscar = true;
     this.nuevo = false;
@@ -167,6 +171,12 @@ export class SubtipoCurricularComponent implements OnInit {
         err => {
           console.log(err);
           this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }
@@ -178,6 +188,8 @@ export class SubtipoCurricularComponent implements OnInit {
 
   // Para la creación de un nuevo elemento
   newElement() {
+    this.numSelected = 0;
+    this.selectedDatos = [];
     this.selectAll = false;
     this.selectMultiple = false;
 
@@ -198,6 +210,7 @@ export class SubtipoCurricularComponent implements OnInit {
 
   cancelAction() {
     // Limpiar
+    this.numSelected = 0;
     this.body.codigoExterno = "";
     this.body.descripcion = "";
 
@@ -347,11 +360,35 @@ export class SubtipoCurricularComponent implements OnInit {
         this.translateService.instant("messages.deleteConfirmation.register") +
         "?";
     }
+    //Obtenemos la institucion actual
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+    //Recorremos el array de filas seleccionadas y los que coincidan se añaden al array para eliminar
+    let selectedDatosEliminar = [];
+    this.selectedDatos.forEach(element => {
+      if (element.idInstitucion == this.institucionActual) {
+        selectedDatosEliminar.push(element);
+      }
+    });
     this.confirmationService.confirm({
       message: mess,
       icon: icon,
       accept: () => {
-        this.removeElement(selectedDatos);
+        if(selectedDatosEliminar.length > 0){
+          this.removeElement(selectedDatosEliminar);
+        }
+        else {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancelado",
+              detail: this.translateService.instant(
+                "messages.deleted.error.curricular"
+              )
+            }
+          ];   
+        }
       },
       reject: () => {
         this.msgs = [
@@ -494,11 +531,21 @@ export class SubtipoCurricularComponent implements OnInit {
       element.isMod = false;
     });
 
-    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos.idTipoCV && x.idTipoCvSubtipo2 ==
-      selectedDatos.idTipoCvSubtipo2 && x.idInstitucion == selectedDatos.idInstitucion);
+    let id = this.datos.findIndex(x => x.idTipoCV == selectedDatos[0].idTipoCV && x.idTipoCvSubtipo2 ==
+      selectedDatos[0].idTipoCvSubtipo2 && x.idInstitucion == selectedDatos[0].idInstitucion);
     this.datos[id].isMod = true;
 
-  }
+    this.numSelected = this.selectedDatos.length;
+
+    if(this.selectedDatos.length > 1){
+          this.datos.forEach(element => {
+            element.isMod = false;
+          });
+        }
+        else{
+          this.editable = true;
+     }
+   }
 
   changeInput(selectedDatos) {
     this.editar = true;
@@ -646,9 +693,17 @@ export class SubtipoCurricularComponent implements OnInit {
       element.isMod = false;
     });
 
-    this.selectedDatos = [];
-    this.table.reset();
+    if(this.selectedDatos.length ==1){
+      this.selectedDatos.forEach(element => {
+        element.isMod = true;
+      });
+    }
 
+    this.table.reset();
+    this.numSelected = selectedDatos.length;
+    if(this.numSelected <= 1){
+      this.editable = true;
+    }
   }
 
   cancelEditAction() {
@@ -681,6 +736,7 @@ export class SubtipoCurricularComponent implements OnInit {
       );
 
     this.numSelected = 0;
+    this.selectedDatos = [];
   }
 
   return() {

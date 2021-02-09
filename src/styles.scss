@@ -653,7 +653,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 
 .ui-dialog .ui-inputtext {
 	background: white !important;
-	border-left: 1px solid #c6c7c8 !important;
+  // border-left: 1px solid #c6c7c8 !important;
 }
 
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
@@ -1406,6 +1406,11 @@ p-footer .main-button {
 	width: 100%;
 	height: 100%;
 }
+
+.ui-table .ui-table-tbody > tr > td {
+  text-align:left !important;
+}
+
 .form-group-interlineado {
 	margin-bottom: 0.3rem;
 	.icon-incidencia {
@@ -1445,3 +1450,74 @@ tr:hover {
 		z-index: 59684 !important;
 	}
 }
+
+  .camposObligatorios{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > input{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div .ui-multiselect{
+    border: 1px solid red !important;
+  }
+
+  .ui-inputtext .camposObligatorios{
+    border: 1px solid red !important;
+  }
+
+.pointer {
+	cursor: pointer !important;
+}
+
+#cabeza, #sInteres, #alterMutua, #mutualidad, #nueIncoDatosAltMut, #nueIncoMutAbo, #detaSanDatosGene, #inscripciones, #formaFichInsDatosCur {
+
+	div {
+    	cursor: default;
+	}
+
+	div > label, div > label > b, div > span {
+    	cursor: text;
+	}
+
+	div > label > a {
+    	cursor: pointer !important;
+	}
+
+}
+
+#datosGen, #datosCol, #otrasColegiaciones, #certif, #sancio, #socied, #datosCurriculares, #direcciones, #datosBanc, #regtel, #sregistrales, 
+#snotario, #sintegrantes, #sdatosBancarios, #sretenciones, #sdirecciones, #nueIncoDatosSoli, #nueIncoDatosCole, #nueIncoDatosPer, #nueIncoDatosDir, 
+#nueIncoDatosBan, #descripcion, #precios, #formadores, #certificados, #sesiones, #carga, #formaFichInsDatosIns, #formaFichInsDatosPer, #formaFichInsDatosCer, 
+#infoYComuModeComuFicMolComDatosGenr, #infoYComuModeComuFicMolComConfPer, #infoYComuModeComuFicMolComPlaDoc, #infoYComuPlaEnvFicPlaEnvDatosGen, 
+#infoYComuPlaEnvFicPlaEnvCueMsg, #infoYComuPlaEnvFicPlaEnvCons, #infoYComuPlaEnvFicPlaEnvRemi, #infoYComuConFicConDatosGen, #infoYComuConFicConConsul, 
+#infoYComuConFicConModCom, #infoYComuConFicConPlaEnv, #infoYComuComuFichaComuConfComu, #infoYComuComuFichaComuDest, #infoYComuComuFichaComuProg, 
+#infoYComuComuFichaComuDocs, #infoYComuEnvMasFichEnvMasConfCom, #infoYComuEnvMasFichEnvMasProg, #infoYComuEnvMasFichEnvMasDesInd, #infoYComuEnvMasFichEnvMasListDes, 
+#infoYComuEnvMasFichEnvMasEtiq, #infoYComuEnvMasFichEnvMasDocs, #infoYComuModeComuFicPlaDocDocumentos, #infoYComuModeComuFicPlaDocDatSal, #infoYComuModeComuFicPlaDocConsul {
+
+	div {
+		cursor: default;
+	}
+	  
+	div > label, div > label > span {
+		cursor: text;
+	}
+	  
+	div > label > a, div > i, div > label.title-ficha {
+		cursor: pointer !important;
+	}
+
+}
+
+div[class*="header-ficha-open"] {
+	cursor: pointer !important;
+}
+
+
+  
+

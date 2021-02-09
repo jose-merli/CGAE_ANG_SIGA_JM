@@ -187,6 +187,10 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
     this.numSelected = selectedDatos.length;
   }
 
+  actualizaDeSeleccionados(selectedDatos) {
+    this.numSelected = selectedDatos.length;
+  }
+  
   desasociar(dato) {
     this.confirmationService.confirm({
       // message: this.translateService.instant("messages.deleteConfirmation"),
@@ -238,6 +242,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
   }
 
   addDestinatario() {
+    this.numSelected = 0;
     sessionStorage.setItem("AddDestinatarioIndv", "true");
 
     sessionStorage.removeItem("menuProcede");
@@ -291,6 +296,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
   showFail(mensaje: string) {
     this.msgs = [];
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+
   }
 
   showSuccess(mensaje: string) {

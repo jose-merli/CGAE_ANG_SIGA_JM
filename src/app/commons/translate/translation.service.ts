@@ -105,9 +105,9 @@ export class TranslateService {
     service.get("usuario").subscribe(response => {
       this._currentLang = response.usuarioItem[0].idLenguaje;
     });
-    // service.get("diccionarios").subscribe(response => {
-    //   this._translations = response.DiccionarioItems;
-    // });
+    //service.get("diccionarios").subscribe(response => {
+    //  this._translations = response.DiccionarioItems;
+    //});
   }
 
   public get currentLang() {
@@ -151,6 +151,7 @@ export class TranslateService {
     });
   }
 
+  
   // public getTranslations(): any {
   //   this.service.get("diccionarios").subscribe(response => {
   //     this._translations = response.DiccionarioItems;
@@ -180,5 +181,6 @@ export class TranslateService {
 
     });
   }
+
 
 }

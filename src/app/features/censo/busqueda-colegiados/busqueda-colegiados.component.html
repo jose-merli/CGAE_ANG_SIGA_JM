@@ -12,187 +12,226 @@
         <!-- Datos generales -->
         <div class="card-body">
 
-            <p class="title-module" (click)="onHideDatosGenerales()">
-                <span>{{ "censo.consultaDatosGenerales.cabecera" | translate}}</span>
-                <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span (click)="onHideDatosGenerales()">{{ "censo.consultaDatosGenerales.cabecera" | translate}}</span>
+                <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales"
+                    class="fa fa-angle-down float-right"></i>
             </p>
             <div *ngIf="showDatosGenerales" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}}</label>
                         <input type="text" name="nif" class="form-control" [(ngModel)]='body.nif' pInputText>
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nif'].pristine && formBusqueda.controls['nif'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
 
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
-                        <input type="text" name="apellidos" class="form-control" [(ngModel)]='body.apellidos' pInputText>
+                        <input type="text" name="apellidos" class="form-control" [(ngModel)]='body.apellidos'
+                            pInputText>
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['apellidos'].pristine && formBusqueda.controls['apellidos'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]="body.nombre">
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['nombre'].pristine && formBusqueda.controls['nombre'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate}}</label>
-                        <p-multiSelect [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.idgrupo' [options]="comboEtiquetas"
-                            [selectedItemsLabel]="textSelected" maxSelectedLabels="1" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde">
+                        <p-multiSelect #someDropdown [disabled]="!editar" [defaultLabel]="textFilter" autoWidth="false"
+                            [(ngModel)]='body.idgrupo' [options]="comboEtiquetas"
+                            maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField()">
                         </p-multiSelect>
                     </div>
                 </div>
             </div>
 
             <!-- Datos colegiales -->
-            <p (click)="onHideDatosColegiales()" class="title-module">
-                <span>{{ "censo.consultaDatosColegiales.literal.cabecera" | translate}}</span>
-                <i *ngIf="showDatosColegiales" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span
+                    (click)="onHideDatosColegiales()">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate}}</span>
+                <i (click)="onHideDatosColegiales()" *ngIf="showDatosColegiales" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosColegiales()" *ngIf="!showDatosColegiales"
+                    class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showDatosColegiales" class="module vista-avanzada">
                 <div class="form-row">
-                    <div class="form-group col-lg-3 col-md-2">
-                        <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
-                        <p-multiSelect [disabled]="deshabilitarCombCol" [defaultLabel]="textFilter" filterBy="label" [(ngModel)]='colegiosSeleccionados'
-                            [options]="comboColegios" optionLabel="label" [selectedItemsLabel]="textSelected" maxSelectedLabels="1"
-                            styleClass="widthAll" [panelStyle]="{width:'100%'}"></p-multiSelect>
-                    </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
-                        <label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label>
-                        <input type="text" name="numeroColegiado" class="form-control" [(ngModel)]='body.numColegiado' pInputText>
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
+                        <strong><label>{{"censo.busquedaClientesAvanzada.literal.nColegiado" | translate}}</label></strong>
+                        <input type="text" #inputNumColegiado name="numeroColegiado" class="form-control" [(ngModel)]='body.numColegiado'
+                            pInputText>
                         <!-- <small class="input-error" *ngIf="!formBusqueda.controls['numeroColegiado'].pristine && formBusqueda.controls['numeroColegiado'].status == 'INVALID'">
                             Debe tener como mínimo tres carácteres</small> -->
 
                     </div>
-                    <div class="form-group col-lg-3 col-md-2">
+
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
+                        <label>{{ 'censo.busquedaClientesAvanzada.literal.colegio' | translate}}</label>
+                        <p-multiSelect #someDropdown2 [disabled]="deshabilitarCombCol" [defaultLabel]="textFilter" filterBy="label"
+                            [(ngModel)]='colegiosSeleccionados' [options]="comboColegios" optionLabel="label"
+                            maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+                            [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField2()"></p-multiSelect>
+                    </div>
+                    
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacionDesde" | translate}}</label>
-                        <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
+                        <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
+                            (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
                             (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.consultaDatosGenerales.literal.fechaIncorporacionHasta" | translate}}</label>
-                        <app-fecha [(value)]="fechaIncorporacionHastaSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionHasta($event)"
+                        <app-fecha [(value)]="fechaIncorporacionHastaSelect" [utc]="false"
+                            (valueChangeSelected)="fillFechaIncorporacionHasta($event)"
                             (valueChangeInput)="fillFechaIncorporacionHasta($event)"></app-fecha>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.fichaCliente.situacion.cabecera" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.situacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSituacion"
-                            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                        <!--    <p-dropdown class="select-form" [(ngModel)]='body.situacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSituacion"
+                            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>-->
+                        <p-multiSelect #someDropdown3 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.situaciones'
+                            [options]="comboSituacion" maxSelectedLabels="10" [selectedItemsLabel]="textSelected"
+                            styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientes.noResidente" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.residencia' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboResidencia"
+                        <p-dropdown class="select-form" [(ngModel)]='body.residencia'
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboResidencia"
                             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.fusionDuplicados.colegiaciones.inscrito" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.inscrito' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"
+                        <p-dropdown class="select-form" [(ngModel)]='body.inscrito'
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboInscrito"
                             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
                 </div>
             </div>
             <!-- Datos Generales Avanzados -->
-            <p class="title-module" (click)="onHideDatosGeneralesAvanzados()">
-                <span>{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}</span>
-                <i *ngIf="showDatosGeneneralesAvanzado" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showDatosGeneneralesAvanzado" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span
+                    (click)="onHideDatosGeneralesAvanzados()">{{ "censo.consultaDatosGeneralesAvanzada.cabecera" | translate}}</span>
+                <i (click)="onHideDatosGeneralesAvanzados()" *ngIf="showDatosGeneneralesAvanzado"
+                    class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDatosGeneralesAvanzados()" *ngIf="!showDatosGeneneralesAvanzado"
+                    class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showDatosGeneneralesAvanzado" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.sexo' [options]="comboSexo" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.sexo' [options]="comboSexo" [filter]="true"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+                            [showClear]="true"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.idEstadoCivil' [options]="comboEstadoCivil" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.idEstadoCivil' [options]="comboEstadoCivil"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoDesde" | translate}}</label>
-                        <app-fecha [(value)]="fechaNacimientoDesdeSelect" (valueChangeSelected)="fillFechaNacimientoDesde($event)" (valueChangeInput)="fillFechaNacimientoDesde($event)"></app-fecha>
+                        <app-fecha [(value)]="fechaNacimientoDesdeSelect"
+                            (valueChangeSelected)="fillFechaNacimientoDesde($event)"
+                            (valueChangeInput)="fillFechaNacimientoDesde($event)"></app-fecha>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "censo.busquedaColegiados.datosGeneralesAvanzados.fechaNacimientoHasta" | translate}}</label>
-                        <app-fecha [(value)]="fechaNacimientoHastaSelect" (valueChangeSelected)="fillFechaNacimientoHasta($event)" (valueChangeInput)="fillFechaNacimientoHasta($event)"></app-fecha>
+                        <app-fecha [(value)]="fechaNacimientoHastaSelect"
+                            (valueChangeSelected)="fillFechaNacimientoHasta($event)"
+                            (valueChangeInput)="fillFechaNacimientoHasta($event)"></app-fecha>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.busquedaClientesAvanzada.literal.categoriaCV" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular" placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoCV' [options]="comboCategoriaCurricular"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                            filterBy="label,labelSinTilde" (onChange)="onChangeCategoriaCurricular($event)"
+                            [showClear]="true"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.tipoCurricular.descripcion.literal" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
-                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
-                            [disabled]="isDisabledCombos()" [showClear]="true">
+                        <p-dropdown class="select-form" [(ngModel)]='body.subTipoCV1' [options]="comboTipoCV"
+                            emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                            filterBy="label,labelSinTilde" [disabled]="isDisabledCombos()" [showClear]="true">
                         </p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{'censo.subtipoCurricular.descripcion.literal' | translate}}</label>
-                        <p-dropdown [filter]="true" filterMatchMode="contains" emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
-                            styleClass="widthAll" class="select-form" [options]="comboSubtipoCV" [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2"
-                            [disabled]="isDisabledCombos()" [showClear]="true"></p-dropdown>
+                        <p-dropdown [filter]="true" filterMatchMode="contains"
+                            emptyFilterMessage="{{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}"
+                            styleClass="widthAll" class="select-form" [options]="comboSubtipoCV"
+                            [placeholder]="textFilter" [(ngModel)]="body.subTipoCV2" [disabled]="isDisabledCombos()"
+                            [showClear]="true"></p-dropdown>
                     </div>
                 </div>
             </div>
             <!-- Dirección -->
 
-            <p class="title-module" (click)="onHideDireccion()">
-                <span>{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate}}</span>
-                <i *ngIf="showDatosDireccion" class="fa fa-angle-up float-right"></i>
-                <i *ngIf="!showDatosDireccion" class="fa fa-angle-down float-right"></i>
+            <p class="title-module">
+                <span (click)="onHideDireccion()">{{ "censo.fichaCliente.datosDirecciones.cabecera" | translate}}</span>
+                <i (click)="onHideDireccion()" *ngIf="showDatosDireccion" class="fa fa-angle-up float-right"></i>
+                <i (click)="onHideDireccion()" *ngIf="!showDatosDireccion" class="fa fa-angle-down float-right"></i>
             </p>
 
             <div *ngIf="showDatosDireccion" class="module vista-avanzada">
                 <div class="form-row">
 
-                    <div class="form-group col-lg-3 col-md-2">
-                        <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
-                        <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='body.codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
+                        <label>{{'censo.consultaDirecciones.literal.direccion' | translate}}</label>
+                        <input type="text" name="direccion" class="form-control" [maxLength]="95"
+                            [(ngModel)]='body.domicilio' pInputText>
                     </div>
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
+                        <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
+                        <input type="text" name="codigoPostal" class="form-control" [maxLength]="5"
+                            [(ngModel)]='body.codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
+                    </div>
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"censo.datosDireccion.literal.provincia" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.idProvincia' placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [options]="comboProvincias" [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledProvincia"
+                        <p-dropdown class="select-form" [(ngModel)]='body.idProvincia'
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboProvincias"
+                            [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledProvincia"
                             [showClear]="true"></p-dropdown>
                     </div>
 
-                    <div class="form-group col-lg-3 col-md-2">
+                    <div class="form-group-interlineado col-lg-3 col-md-2">
                         <label>{{"gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true" filterMatchMode="contains" [(disabled)]="isDisabledPoblacion"
-                            [options]="comboPoblacion" (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
+                        <p-dropdown class="select-form" [(ngModel)]='body.idPoblacion' [filter]="true"
+                            filterMatchMode="contains" [(disabled)]="isDisabledPoblacion" [options]="comboPoblacion"
+                            (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
                             emptyFilterMessage="{{'resultadosPoblaciones' | translate}}" [showClear]="true">
                         </p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.tipo.direccion" | translate}}</label>
-                        <p-dropdown class="select-form" [(ngModel)]='body.tipoDireccion' placeholder="{{'general.boton.seleccionar' | translate}}"
-                            [options]="comboTiposDireccion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="select-form" [(ngModel)]='body.tipoDireccion'
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposDireccion"
+                            [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{"censo.datosDireccion.literal.correo" | translate}}</label>
                         <input type="text" name="correo" class="form-control" [(ngModel)]='body.correo' pInputText>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "censo.ws.literal.telefono" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='body.telefono'>
                     </div>
-                    <div class="form-group col-lg-3 col-md-3">
+                    <div class="form-group-interlineado col-lg-3 col-md-3">
                         <label>{{ "censo.datosDireccion.literal.movil" | translate}}</label>
                         <input type="text" class="form-control" pInputText [(ngModel)]='body.movil'>
                     </div>
@@ -203,134 +242,153 @@
         </div>
         <div class="card-footer">
             <div class="text-right main-button">
-                <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
-                <button (click)="showCount($event)" pButton type="button" icon="fas fa-calculator" iconPos="left" label="{{ 'general.boton.contar' | translate}}"></button>
-                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+                <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                     label="{{ 'general.boton.clear' | translate}}"></button>
+                <button (click)="showCount($event)" pButton type="button" icon="fas fa-calculator" iconPos="left"
+                    label="{{ 'general.boton.contar' | translate}}"></button>
+                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
+                    label="{{'general.boton.search' | translate}}"></button>
 
             </div>
         </div>
     </div>
     <!--FIN CARD-->
-    <div *ngIf="buscar == true" class="card mt-3">
+    <div *ngIf="buscar == true &&  isConsejo == true" class="card mt-3">
         <div class="card-body p-0">
-            <p-dataTable styleClass="inheritTable" emptyMessage="{{ 'general.message.no.registros' | translate}}" [ngClass]="{'customCursor': selectMultiple}"
-                [(selection)]="selectedDatos" (onRowSelect)="irEditarColegiado(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-                pageLinks="4" [responsive]="true" dataKey="idPersona" selectionMode="multiple" #table class="tabla-listado" [value]="datos"
-                [sortOrder]="sortO" [paginator]="true" paginatorPosition="both" [rows]="selectedItem">
+            <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
+                (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="cols"
+             [(selectionMode)]="selection" #table class="tabla-listado overflow" [value]="datos"
+                [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
 
-                <p-column [sortable]="true" [style]="{'width': '5%'}" field="colegioResultado" [header]="'censo.busquedaClientesAvanzada.literal.colegio' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '8%'}" field="nif" [header]="'censo.consultaDatosColegiacion.literal.numIden' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '15%'}" field="nombre" [header]="'administracion.parametrosGenerales.literal.nombre' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="numberColegiado" [header]="'censo.busquedaClientesAvanzada.literal.nColegiado' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="estadoColegial" [header]="'censo.fichaCliente.situacion.cabecera' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato[col.field]}}</label>
-                        <label *ngIf="dato.comunitario == '1'">{{dato[col.field]}} (Inscrito)</label>
-                    </ng-template>
-                </p-column>
-
-
-                <p-column [sortable]="true" [style]="{'width': '10%'}" field="incorporacionDate" [header]="'censo.consultaDatosGenerales.literal.fechaIncorporacion' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-                    </ng-template>
-                </p-column>
-
-                <p-column [sortable]="true" [style]="{'width': '7%'}" field="situacionResidenteFilter" [header]="'censo.busquedaClientes.noResidente' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>
-                            {{dato.situacionResidente}}</label>
-                    </ng-template>
-
-                    <!-- <p-column [sortable]="true" [style]="{'width': '13%'}" field="correo" [header]="'censo.datosDireccion.literal.correo' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '6%'}" field="telefono"
-                    [header]="'censo.ws.literal.telefono' | translate" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template>
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '6%'}" field="movil"
-                    [header]="'censo.datosDireccion.literal.movil' | translate" [filter]="true"
-                    filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <label>{{ dato[col.field] }}</label>
-                    </ng-template> -->
-                </p-column>
-                <p-column [sortable]="true" [style]="{'width': '5%'}" field="noAparecerRedAbogacia" [header]="'censo.busquedaColegial.lopd' | translate"
-                    [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-                    <ng-template let-col let-dato="rowData" pTemplate="body">
-                        <div id="lopdColumn">
-                            <label *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == 'No'">
-                            </label>
-                            <label (click)="displayBoolean=true; show($event,dato)">
-                                <!-- <img class="imagenEye ui-corner-all" src="./assets/images/icons/eye.png"> -->
-                                <i class="fas fa-address-card" id="dirIcon"></i>
-                            </label>
-                            <label *ngIf="dato.noAparecerRedAbogacia2 == 'Sí'">
-                                <img id="imageLOPD" src="./assets/images/icons/warning.png">
-                            </label>
-                        </div>
-
-                    </ng-template>
-                </p-column>
-
-                <ng-template pTemplate="paginatorLeft">
-                    <div class="mostrar d-flex text-right justify-content-end">
-                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
-                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-                            | translate }} {{table.totalRecords}}</label>
-                        <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{numSelected}}
-                        </label>
-                        <label>{{ "general.message.mostrar" | translate}}</label>
-                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                        <label class="pl-1">{{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                        <div class="ml-3 selectAll">
-                            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                                name="groupname">
-                            </p-checkbox>
-                        </div>
-                        <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple(); selectedDatos=false">
-                            <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.message.seleccion.multiple" | translate}}</label>
-
-                    </div>
+                <ng-template pTemplate="colgroup" let-columns>
+                    <colgroup>
+                        <col *ngFor="let col of columns" [style.width]="col.width">
+                    </colgroup>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                            {{col.header | translate}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                            <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
+                                (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
+                                (input)="table.filter($event.target.value,
+                                    col.field, 'contains')">
+                        </th>
+                    </tr>
                 </ng-template>
 
-                <!-- <p-footer>
-                    <div class="text-right main-button">
-                                            </div>
-                </p-footer> -->
-            </p-dataTable>
+                <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                        <td class="text-center" *ngFor="let col of columns">
+                            <div *ngIf="col.field !='nombre' && 
+                            col.field !='estadoColegial' && 
+                            col.field !='situacionResidente' && 
+                            col.field !='correo' && 
+                            col.field !='noAparecerRedAbogacia2' &&
+                            col.field !='fechaEstadoDate' &&
+                            col.field !='incorporacionDate' &&
+                            col.field !='numberColegiado' &&
+                            col.field !='nif'">
 
+                                <label>{{ dato[col.field] }}</label>
+                            </div>
+                            <div *ngIf="col.field == 'nif'">
+                                <a class="enlace"
+                                    (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                            </div>
+                            <div *ngIf="col.field == 'nombre'">
+                                <a class="enlace"
+                                    (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                            </div>
+                            <div *ngIf="col.field == 'numberColegiado'">
+                                <a class="enlace"
+                                    (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                            </div>
+                            <div *ngIf="col.field == 'estadoColegial'">
+                                <label
+                                    *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato[col.field]}}</label>
+                            </div>
+                            <div *ngIf="col.field == 'estadoColegial'">
+                                <label *ngIf="dato.comunitario == '1'">{{dato[col.field]}} (Inscrito)</label>
+                            </div>
+
+                            <div *ngIf="col.field == 'situacionResidente'">
+                                <label
+                                    *ngIf="dato.situacionResidente == undefined || dato.situacionResidente == null || dato.situacionResidente == '0'">No</label>
+                            </div>
+                            <div *ngIf="col.field == 'situacionResidente'">
+                                <label *ngIf="dato.situacionResidente == '1'">Si</label>
+                            </div>
+
+                            <div *ngIf="col.field == 'correo'">
+                                <a [href]="'mailto:'+dato[col.field]" class="enlace"
+                                    target="_blank">{{dato[col.field]}}</a>
+                            </div>
+
+                            <div *ngIf="col.field == 'fechaEstadoDate'">
+                                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div *ngIf="col.field == 'incorporacionDate'">
+                                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                            </div>
+
+                            <div id="lopdColumn" *ngIf="col.field == 'noAparecerRedAbogacia2'">
+                                <label
+                                    *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
+                                </label>
+                                <label
+                                    (click)="displayBoolean=true; show($event,dato); searchHistoricoDatosDirecciones(dato)">
+                                    <i class="fas fa-address-card" id="dirIcon"></i>
+                                </label>
+                                <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''"
+                                    *ngIf="dato.noAparecerRedAbogacia2 == '1'">
+                                    <img id="imageLOPD" src="./assets/images/icons/warning.png">
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td [attr.colspan]="cols.length">
+                            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                        </td>
+                    </tr>
+                </ng-template>
+
+
+                <ng-template pTemplate="paginatorleft">
+                    <div class="mostrar d-flex text-right justify-content-end">
+                        <label
+                            class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first
+                            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                            | translate }} {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados"
+                            *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                            {{selectedDatos.length}}
+                        </label>
+                        <label class="pr-3 numSeleccionados"
+                            *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                            0
+                        </label>
+                        <label>{{"general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                            (onChange)="onChangeRowsPerPages($event)">
+                        </p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                                label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                            </p-checkbox>
+                        </div>
+                        <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
+                    </div>
+                </ng-template>
+            </p-table>
         </div>
 
         <div *ngIf="buscar == true" class="card-footer">
@@ -339,19 +397,176 @@
                 <!--<button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
                     disabled></button>-->
                 <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
-                <button *ngIf="datos.length > 0" (click)="generarExcels()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.generarExcels' | translate }}"></button>
-                <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button"
-                    icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+                <button *ngIf="datos.length > 0" (click)="generarExcels()" pButton type="button" icon="far fa-save"
+                    iconPos="left" label="{{ 'general.boton.generarExcels' | translate }}"></button>
+                <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
+                    pButton type="button" icon="fa fa-comment" iconPos="left"
+                    label="{{'general.boton.comunicar' | translate }}"></button>
 
             </div>
         </div>
 
     </div>
+
+    <div *ngIf="buscar == true &&  isConsejo == false" class="card mt-3">
+            <div class="card-body p-0">
+                <p-table [autoLayout]="true" [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos"
+                    (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [responsive]="true" [columns]="colsADG"
+                 [(selectionMode)]="selection" #table class="tabla-listado overflow" [value]="datos"
+                    [paginator]="true" paginatorPosition="both" [rows]="selectedItem" id="tablaFoco">
+    
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col *ngFor="let col of columns" [style.width]="col.width">
+                        </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                                {{col.header | translate}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
+                                    (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
+                                    (input)="table.filter($event.target.value,
+                                        col.field, 'contains')">
+                            </th>
+                        </tr>
+                    </ng-template>
+    
+                    <ng-template pTemplate="body" let-dato let-columns="columns"  let-rowIndex="rowIndex">
+                        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                            <td class="text-center" *ngFor="let col of columns">
+                                <div *ngIf="col.field !='nombre' && 
+                                col.field !='estadoColegial' && 
+                                col.field !='situacionResidente' && 
+                                col.field !='correo' && 
+                                col.field !='noAparecerRedAbogacia2' &&
+                                col.field !='fechaEstadoDate' &&
+                                col.field !='incorporacionDate' &&
+                                col.field !='numberColegiado' &&
+                                col.field !='nif'">
+    
+                                    <label>{{ dato[col.field] }}</label>
+                                </div>
+                                <div *ngIf="col.field == 'nif'">
+                                    <a class="enlace"
+                                        (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                                </div>
+                                <div *ngIf="col.field == 'nombre'">
+                                    <a class="enlace"
+                                        (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                                </div>
+                                <div *ngIf="col.field == 'numberColegiado'">
+                                    <a class="enlace"
+                                        (click)="irEditarColegiado(dato)">{{ dato[col.field] }}</a>
+                                </div>
+                                <div *ngIf="col.field == 'estadoColegial'">
+                                    <label
+                                        *ngIf="dato.comunitario == undefined || dato.comunitario == null || dato.comunitario == '0'">{{dato[col.field]}}</label>
+                                </div>
+                                <div *ngIf="col.field == 'estadoColegial'">
+                                    <label *ngIf="dato.comunitario == '1'">{{dato[col.field]}} (Inscrito)</label>
+                                </div>
+    
+                                <div *ngIf="col.field == 'situacionResidente'">
+                                    <label
+                                        *ngIf="dato.situacionResidente == undefined || dato.situacionResidente == null || dato.situacionResidente == '0'">No</label>
+                                </div>
+                                <div *ngIf="col.field == 'situacionResidente'">
+                                    <label *ngIf="dato.situacionResidente == '1'">Si</label>
+                                </div>
+    
+                                <div *ngIf="col.field == 'correo'">
+                                    <a [href]="'mailto:'+dato[col.field]" class="enlace"
+                                        target="_blank">{{dato[col.field]}}</a>
+                                </div>
+    
+                                <div *ngIf="col.field == 'fechaEstadoDate'">
+                                    <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                                </div>
+    
+                                <div *ngIf="col.field == 'incorporacionDate'">
+                                    <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                                </div>
+    
+                                <div id="lopdColumn" *ngIf="col.field == 'noAparecerRedAbogacia2'">
+                                    <label
+                                        *ngIf="dato.noAparecerRedAbogacia2 == undefined || dato.noAparecerRedAbogacia2 == null || dato.noAparecerRedAbogacia2 == '0'">
+                                    </label>
+                                    <label
+                                        (click)="displayBoolean=true; show($event,dato); searchHistoricoDatosDirecciones(dato)">
+                                        <i class="fas fa-address-card" id="dirIcon"></i>
+                                    </label>
+                                    <label [ngClass]="dato.noAparecerRedAbogacia2 == '1' ? 'textAlignCenter' : ''"
+                                        *ngIf="dato.noAparecerRedAbogacia2 == '1'">
+                                        <img id="imageLOPD" src="./assets/images/icons/warning.png">
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+    
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="colsADG.length">
+                                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                            </td>
+                        </tr>
+                    </ng-template>
+    
+    
+                    <ng-template pTemplate="paginatorleft">
+                        <div class="mostrar d-flex text-right justify-content-end">
+                            <label
+                                class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first
+                                + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                                | translate }} {{table.totalRecords}}</label>
+                            <label class="pr-3 numSeleccionados"
+                                *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                                {{selectedDatos.length}}
+                            </label>
+                            <label class="pr-3 numSeleccionados"
+                                *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                                0
+                            </label>
+                            <label>{{"general.message.mostrar" | translate}}</label>
+                            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                                (onChange)="onChangeRowsPerPages($event)">
+                            </p-dropdown>
+                            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                            <div class="ml-3 selectAll">
+                                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                                    label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+                                </p-checkbox>
+                            </div>
+                            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                                <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+    
+            <div *ngIf="buscar == true" class="card-footer">
+                <div class="text-right main-button ">
+                    <!-- <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button> -->
+                    <!--<button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
+                        disabled></button>-->
+                    <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
+                    <button *ngIf="datos.length > 0" (click)="generarExcels()" pButton type="button" icon="far fa-save"
+                        iconPos="left" label="{{ 'general.boton.generarExcels' | translate }}"></button>
+                    <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
+                        pButton type="button" icon="fa fa-comment" iconPos="left"
+                        label="{{'general.boton.comunicar' | translate }}"></button>
+    
+                </div>
+            </div>
+    
+        </div>
     <!--FIN DE PRINCIPAL-->
     <app-dialog></app-dialog>
 </div>
-<p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true" [showCloseIcon]="true"
-    #op>
+<p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
+    [showCloseIcon]="true" #op>
     <div class="info-limit" *ngIf="publicarDatosContacto">
         <img src="./assets/images/icons/warning.png">
         <div class="d-inline-block">
@@ -361,8 +576,8 @@
         </div>
     </div>
 
-    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [(selection)]="selectedDatos" [responsive]="true" #table
-        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
+    <p-table [value]="datosDirecciones" [columns]="colsDirecciones" [responsive]="true" #table class="tabla-listado"
+        [paginator]="true" [rows]="selectedItem" [first]="first" [ngClass]="{ 'customCursor': selectMultiple}"
         paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
@@ -374,8 +589,8 @@
                 <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                     {{col.header | translate}}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
-                    <input class="filtros" placeholder="{{'general.boton.search' | translate}}" pDroppable="false" (click)="$event.stopPropagation()"
-                        *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                    <input class="filtros" placeholder="{{'general.boton.search' | translate}}" pDroppable="false"
+                        (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
                     col.field, 'contains')">
                 </th>
             </tr>
@@ -384,9 +599,11 @@
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
                     <span *ngIf="col.field != 'correoElectronico'"> {{dato[col.field]}}</span>
-                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]"
-                        class="col-11" target="_blank">{{dato[col.field]}}</a>
-                    <span *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
+                    <a *ngIf="col.field == 'correoElectronico' && dato[col.field] != undefined && dato[col.field] != ''"
+                        [href]="'mailto:'+dato[col.field]" class="col-11 enlace" target="_blank">{{dato[col.field]}}</a>
+                    <span
+                        *ngIf="col.field == 'correoElectronico' && dato[col.field] == undefined || dato[col.field] == ''"
+                        class="col-11 enlace">{{dato[col.field]}}</span>
                 </td>
             </tr>
         </ng-template>
@@ -399,7 +616,9 @@
         </ng-template>
         <ng-template pTemplate="paginatorleft">
             <div class="mostrar d-flex text-right justify-content-end">
-                <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first + 1}}
+                <label
+                    class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}
+                    {{table.first + 1}}
                     al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
                     }} {{table.totalRecords}}</label>
                 <!-- <label>{{"general.message.mostrar" | translate}}</label> -->
@@ -411,8 +630,8 @@
 </p-overlayPanel>
 
 <!-- DETALLE COUNT BUSQUEDA -->
-<p-overlayPanel class="overlayPanelCount" (click)="countClicado = true" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
-    [showCloseIcon]="true" #opcount>
+<p-overlayPanel class="overlayPanelCount" (click)="countClicado = true" (onBeforeHide)="hideOverlay($event)"
+    [dismissable]="true" [showCloseIcon]="true" #opcount>
     <p id="numero">
         {{"censo.busquedacolegiados.numencontrados" | translate}}:
     </p>

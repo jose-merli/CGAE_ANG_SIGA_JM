@@ -14,20 +14,20 @@
   <div class="card">
     <div class="card-body">
       <p class="title-module">
-        <span>{{ "general.message.datos.generales" | translate}}</span>
-        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+        <span (click)="onHideDatosGenerales()">{{ "general.message.datos.generales" | translate}}</span>
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"administracion.parametrosGenerales.literal.nombre.apellidos" | translate}}</label>
             <input type="text" name="nombreApellidos" [(disabled)]="editar" class="form-control" [(ngModel)]='body.nombreApellidos' (ngModelChange)="onChangeForm()"
               pInputText>
 
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
             <input type="text" name="NIF" class="form-control" [(disabled)]="editar" [(ngModel)]='body.nif' (ngModelChange)="onChangeForm()"
               pInputText>
@@ -39,7 +39,7 @@
             </div>
 
           </div>
-          <div *ngIf="editar == false" class="form-group col-lg-3 col-md-3">
+          <div *ngIf="editar == false" class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "administracion.usuarios.literal.rol" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.rol' [(disabled)]="editar" placeholder="{{ 'general.boton.seleccionar' | translate }}"
               [options]="usuarios_rol" [showClear]="true" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
@@ -49,7 +49,7 @@
               </select>-->
             <!--<img id="idRolBusqueda_loading" src="html/imagenes/loading-spinner.gif" alt="Cargando..." style="visibility:hidden">-->
           </div>
-          <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.grupo" | translate}}</label>
             <p-dropdown class="select-form" [showClear]="true" [(ngModel)]='body.grupo' placeholder="{{ 'general.boton.seleccionar' | translate }}"
               [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
@@ -59,7 +59,7 @@
             <p-dropdown class="select-form" [options]="usuarios_activo" [(ngModel)]="body.activo" [(disabled)]="disabledRadio"></p-dropdown>
           </div>-->
 
-          <div *ngIf="editar == true" class="form-group col-lg-3 col-md-3">
+          <div *ngIf="editar == true" class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"general.codeext" | translate}}</label>
             <input type="text" name="codExterno" class="form-control" [(disabled)]="!editar" [(ngModel)]='body.codigoExterno' (ngModelChange)="onChangeForm()"
               pInputText>
@@ -83,10 +83,10 @@
     </div>
   </div>
   <!--FIN CARD-->
-  <div *ngIf="buscar == true" class="card mt-3">
+  <div *ngIf="buscar == true" class="card mt-3" id="tablaFoco">
     <div class="card-body p-0">
-      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
-        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="editUsuarios($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="editUsuario(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
         [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -98,7 +98,8 @@
             <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
               {{ col.header | translate}}
               <p-sortIcon [field]="col.field"></p-sortIcon>
-              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+              <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field"
+                pInputText type="text" (input)="
                   table.filter($event.target.value, col.field, 'contains')
                 " />
             </th>
@@ -115,10 +116,10 @@
               </div>
 
               <div *ngIf="col.field == 'perfiles'">
-                <p-multiSelect [disabled]="!activacionEditar || setItalic(dato) || selectMultiple" *ngIf="!dato.usuarioNuevo" #multiSelectPJ
+                <p-multiSelect #someDropdown [disabled]="!activacionEditar || setItalic(dato) || selectMultiple" *ngIf="!dato.usuarioNuevo" #multiSelectPJ
                   defaultLabel="Elegir" filterBy="label" [(ngModel)]="dato.perfiles" [options]="usuarios_perfil" optionLabel="label"
                   [selectedItemsLabel]="textSelected" styleClass="widthAll" [panelStyle]="{ width: '100%' }" [overlayVisible]="dato.overlayVisible"
-                  (onFocus)="openMultiSelect(dato)" (onChange)="editPerfiles(dato)"></p-multiSelect>
+                  (onFocus)="openMultiSelect(dato)" (onChange)="editPerfiles(dato)"  (onPanelShow)="focusInputField()"></p-multiSelect>
 
                 <p-dropdown [disabled]="!activacionEditar" *ngIf="dato.usuarioNuevo" class="select-form" [(ngModel)]='dato.perfiles' placeholder="{{ 'general.boton.seleccionar' | translate }}"
                   [options]="usuarios_perfil" (ngModelChange)="onChangeForm()" [filter]="true" filterBy="label,labelSinTilde"></p-dropdown>
@@ -198,8 +199,8 @@
               <p-checkbox [disabled]="!activacionEditar" (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar todo"
                 name="groupname"></p-checkbox>
             </div>
-            <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
+            <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+              <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
           </div>
         </ng-template>
       </p-table>

@@ -26,6 +26,7 @@ import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
 import { Location } from "@angular/common";
+import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -123,6 +124,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     private translateService: TranslateService,
     private location: Location,
     private router: Router,
+    private commonsService: CommonsService,
     private confirmationService: ConfirmationService
   ) {
     super(USER_VALIDATIONS);
@@ -159,7 +161,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
           this.parsearFechas(filtros);
-        
         }
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
@@ -210,7 +211,8 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
         if (filtros != null && filtros != undefined) {
           this.body = filtros;
-           this.parsearFechas(filtros);
+          this.parsearFechas(filtros);
+
         }
 
         sessionStorage.removeItem("filtrosBusquedaInscripciones");
@@ -238,8 +240,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   }
 
-
-parsearFechas(filtros){
+  parsearFechas(filtros){
     if (filtros.fechaInscripcionDesde != null) {
       this.body.fechaInscripcionDesde = new Date(
         filtros.fechaInscripcionDesde)
@@ -263,6 +264,7 @@ parsearFechas(filtros){
 
   this.isBuscar();
    }
+
 
   clearFilter(dropdown: Dropdown) {
     dropdown.focus();
@@ -554,12 +556,12 @@ parsearFechas(filtros){
   getColsResults() {
     this.cols = [
       {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
-      },
-      {
         field: "identificacion",
         header: "censo.consultaDatosColegiacion.literal.numIden"
+      },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre.apellidos"
       },
       {
         field: "nombreCurso",
@@ -653,6 +655,9 @@ parsearFechas(filtros){
           },
           () => {
             this.progressSpinner = false;
+            setTimeout(()=>{
+              this.commonsService.scrollTablaFoco('tablaFoco');
+            }, 5);
           }
         );
     }
@@ -1012,7 +1017,7 @@ parsearFechas(filtros){
 
     if (this.calificacion) {
       this.table.selectionMode = "";
-      this.selectedDatos = "";
+      this.selectedDatos = [];
     } else {
       this.table.selectionMode = "multiple";
     }
@@ -1024,7 +1029,7 @@ parsearFechas(filtros){
   }
 
   editarCompleto(event, dato) {
-     
+    console.log(event);
     let data = event;
 
     if (data != null && data != undefined) {
@@ -1104,12 +1109,14 @@ parsearFechas(filtros){
   }
 
   irEditarInscripcion(selectedDatos) {
-    if (selectedDatos.length >= 1 && this.selectMultiple == false) {
+    if (selectedDatos.length >= 1) {
       sessionStorage.setItem("modoEdicionInscripcion", "true");
       sessionStorage.setItem(
         "inscripcionCurrent",
         JSON.stringify(selectedDatos[0])
       );
+      console.log(selectedDatos);
+      sessionStorage.removeItem("isCancelado");
       sessionStorage.setItem("pantallaListaInscripciones", "true");
       sessionStorage.setItem("datosTabla", JSON.stringify(this.datos));
       sessionStorage.setItem(
@@ -1179,5 +1186,11 @@ parsearFechas(filtros){
         this.isBuscar();
       }
     }
+  }
+
+  focusInputField() {
+    setTimeout(() => {
+      this.mySelect.filterInputChild.nativeElement.focus();  
+    }, 300);
   }
 }

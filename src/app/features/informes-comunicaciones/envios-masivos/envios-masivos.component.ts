@@ -15,6 +15,9 @@ import { SigaServices } from "./../../../_services/siga.service";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Router } from "@angular/router";
 import { esCalendar } from "../../../utils/calendar";
+import { CommonsService } from '../../../_services/commons.service';
+import { DatosBancariosComponent } from '../../censo/datosPersonaJuridica/datos-bancarios/datos-bancarios.component';
+import { findIndex } from "rxjs/operator/findIndex";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -65,6 +68,7 @@ export class EnviosMasivosComponent implements OnInit {
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private router: Router
   ) { }
 
@@ -288,7 +292,12 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
           this.progressSpinner = false;
         },
-        () => { }
+        () => {
+          this.progressSpinner = false;
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
+        }
       );
   }
   getResultadosComunicacionDuplicada() {

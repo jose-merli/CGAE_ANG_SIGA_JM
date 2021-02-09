@@ -268,6 +268,7 @@ export class ConsultaComponent implements OnInit {
 
     this.sigaServices.post("consultas_obtenerCamposDinamicos", consulta)
       .subscribe(data => {
+        console.log(data);
         this.valores = JSON.parse(data.body).camposDinamicos;
         if (this.valores != undefined && this.valores != null && this.valores.length > 0) {
           this.valores.forEach(element => {
@@ -289,6 +290,7 @@ export class ConsultaComponent implements OnInit {
         } else {
           this.enviar();
         }
+        console.log(this.valores);
       }, error => {
         console.log(error);
         this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.parametrosDinamicos"))

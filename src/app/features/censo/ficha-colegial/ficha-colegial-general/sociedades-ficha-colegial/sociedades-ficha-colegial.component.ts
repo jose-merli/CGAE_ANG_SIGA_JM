@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersonaJuridicaObject } from '../../../../../models/PersonaJuridicaObject';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -23,21 +23,29 @@ export class SociedadesFichaColegialComponent implements OnInit {
   selectedItemSociedades: number = 10;
   activacionTarjeta: boolean = false;
   generalBody;
+  mostrarNumero: Boolean = false;
+  message;
+  messageNoContent;
   colsSociedades = [];
   @Input() tarjetaSociedades;
   checkGeneralBody;
   openFicha: boolean = false;
   @ViewChild("tableSociedades")
   tableSociedades: DataTable;
-  fichaPosible = {
-    key: "sociedades",
-    activa: false
-  };
+  fichasPosibles = [
+    {
+      key: "sociedades",
+      activa: false
+    }
+  ];
   selectedDatosSociedades;
   rowsPerPage = [];
-  mensajeResumen: String;
-
+  disabledAction:boolean = false;
+  emptyLoadFichaColegial: boolean = false;
   @Input() idPersona;
+  @Input() openSocie;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private sigaServices: SigaServices,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
@@ -45,7 +53,14 @@ export class SociedadesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
+      this.emptyLoadFichaColegial = false;
       this.activacionTarjeta = false;
     } else {
       this.activacionTarjeta = true;
@@ -56,9 +71,6 @@ export class SociedadesFichaColegialComponent implements OnInit {
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
       this.generalBody = new FichaColegialGeneralesItem();
-      this.mensajeResumen = this.translateService.instant(
-        "aplicacion.cargando"
-      );
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     }
 
@@ -69,9 +81,14 @@ export class SociedadesFichaColegialComponent implements OnInit {
     if (this.idPersona != undefined && (this.tarjetaSociedades == "3" || this.tarjetaSociedades =="2")) {
       this.searchSocieties();
     }
+    if (this.openSocie == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('sociedades');
+      }
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
-      // this.desactivarVolver = false;
       this.activacionTarjeta = false;
+      this.emptyLoadFichaColegial = false;
 
       // sessionStorage.removeItem("esNuevoNoColegiado");
       // this.onInitGenerales();
@@ -130,6 +147,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
   }
 
   searchSocieties() {
+    this.mostrarNumero = false;
     this.sigaServices
       .postPaginado(
         "fichaColegialSociedades_searchSocieties",
@@ -141,17 +159,27 @@ export class SociedadesFichaColegialComponent implements OnInit {
           this.progressSpinner = false;
           this.sociedadesBody = JSON.parse(data["body"]);
           this.datosSociedades = this.sociedadesBody.busquedaJuridicaItems;
-          this.mensajeResumen = this.datosSociedades.length + "";
         },
         err => {
           console.log(err);
           this.progressSpinner = false;
+          this.mostrarNumero = true;
         }, () => {
           if (this.datosSociedades.length > 0) {
             this.mostrarDatosSociedades = true;
-            for (let i = 0; i <= this.datosSociedades.length - 1; i++) {
-              this.DescripcionSociedades = this.datosSociedades[i];
-            }
+            this.DescripcionSociedades = this.datosSociedades[0];
+          }
+          if (this.datosSociedades.length == 0) {
+            this.message = this.datosSociedades.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+
+          } else {
+            this.message = this.datosSociedades.length.toString();
+            this.mostrarNumero = true;
+
           }
         }
       );
@@ -169,18 +197,56 @@ export class SociedadesFichaColegialComponent implements OnInit {
     this.tableSociedades.reset();
   }
 
-  abreCierraFicha() {
-    if (this.activacionTarjeta && this.mensajeResumen == this.datosSociedades.length+"") {
+  /*abreCierraFicha() {
+    if (this.activacionTarjeta) {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+
+  }*/
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
+  }
+
+  abreCierraFicha(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+
+    if (
+      key == "generales" &&
+      !this.activacionTarjeta &&
+      !this.emptyLoadFichaColegial
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
 
-  esFichaActiva() {
-    return this.fichaPosible.activa;
+
+  esFichaActiva(key) {
+    // let fichaPosible = this.getFichaPosibleByKey(key);
+    // return fichaPosible.activa;
+    return this.openFicha;
   }
 
-
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
 
 }

@@ -29,6 +29,7 @@ import { DatosPersonaEventoObject } from "../../../models/DatosPersonaEventoObje
 import { DatosCursosItem } from "../../../models/DatosCursosItem";
 import { FechaComponent } from "../../../commons/fecha/fecha.component";
 import { find } from "../../../../../node_modules/rxjs/operators";
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
   selector: "app-ficha-eventos",
@@ -54,6 +55,10 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   disabledIsLetrado;
   filaEditable: boolean = false;
   progressSpinner2: boolean = false;
+
+  resaltadoDatos: boolean = false;
+  resaltadoDatosOpcionales: boolean = false;
+
 
   tipoInscripcionEvento: boolean = false;
 
@@ -179,6 +184,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -292,7 +298,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
       this.modoEdicionEventoByAgenda = false;
       this.path = "agenda";
-      this.disabledTipoEvento = true;
+      this.disabledTipoEvento = false;
       // this.modoEdicionEvento = true;
       this.newModeConfiguration();
 
@@ -841,22 +847,24 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   saveEvent() {
     let url = "";
     if (this.curso != null) {
-    this.newEvent.idCurso = this.curso.idCurso;
+      this.newEvent.idCurso = this.curso.idCurso;
     }
     this.progressSpinner = true;
+    this.resaltadoDatos = false;
+
     let dateStart = new Date(this.newEvent.start);
     if (this.newEvent.idEstadoEvento == null) {
       this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
     }
 
     if(dateStart > new Date() && this.newEvent.idEstadoEvento == '2'){
-        this.showMessage(
-            "error",
-            this.translateService.instant("general.message.incorrect"),
-            this.translateService.instant("message.error.evento.cumplido")
-          );
-           this.progressSpinner = false;
-    }else{
+      this.showMessage(
+          "error",
+          this.translateService.instant("general.message.incorrect"),
+          this.translateService.instant("message.error.evento.cumplido")
+        );
+         this.progressSpinner = false;
+  }else{
     if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
@@ -865,7 +873,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
         if (this.newEvent.idEventoOriginal != null && this.newEvent.idEventoOriginal != undefined) {
-          
           let utcStart = new Date(dateStart.getUTCFullYear(), dateStart.getUTCMonth(), dateStart.getUTCDate(), dateStart.getUTCHours(), dateStart.getUTCMinutes(), dateStart.getUTCSeconds());
           let dateEnd = new Date(this.newEvent.end);
           let utcEnd = new Date(dateEnd.getUTCFullYear(), dateEnd.getUTCMonth(), dateEnd.getUTCDate(), dateEnd.getUTCHours(), dateEnd.getUTCMinutes(), dateEnd.getUTCSeconds());
@@ -889,9 +896,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       url = "fichaEventos_saveEventCalendar";
       this.callSaveEvent(url);
     }
-    }
   }
-
+}
 
   checkRepeatedEvents(url) {
 
@@ -1035,6 +1041,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.showUnSuccess();
       },
       () => {
+        this.resaltadoDatosOpcionales = false;
+        this.resaltadoDatos = false;
         this.progressSpinner = false;
       }
     );
@@ -1126,7 +1134,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   restEvent() {
     this.newEvent = JSON.parse(JSON.stringify(this.initEvent));
-
+    this.resaltadoDatos = false;
+    this.resaltadoDatosOpcionales = false;
     if (this.initEvent.start != null) {
       this.newEvent.start = new Date(this.newEvent.start);
     } else {
@@ -1249,7 +1258,8 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.newEvent.start = e;
       this.validatorDates(e);
     } else if (e == null) {
-      this.newEvent.start = fecha;
+      this.newEvent.start = undefined;
+      this.newEvent.end = undefined;
       this.validatorDates(e);
     } else if (!this.createEvent) {
       this.newEvent.start = e;
@@ -1297,7 +1307,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   fillEndInput(event) {
-
+    this.onlyCheckDatos();
     let fecha = this.newEvent.end;
     if (event != null) {
       this.newEvent.end = event;
@@ -1374,6 +1384,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.newEvent.idTipoCalendario == undefined ||
         this.newEvent.title == null ||
         this.newEvent.title == undefined ||
+        this.newEvent.title == "" ||
         this.newEvent.start == null ||
         this.newEvent.start == undefined ||
         this.newEvent.end == undefined ||
@@ -1417,7 +1428,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   isCheckFechaInicioRepeticion(event) {
-
+    this.onlyCheckDatos();
     this.newEvent.fechaInicioRepeticion = event;
 
     if (this.newEvent.fechaInicioRepeticion != null) {
@@ -1439,6 +1450,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   isCheckTipoRepeticion() {
+    this.onlyCheckDatos();
     this.newEvent.valoresRepeticion = [];
     if (this.newEvent.tipoRepeticion != null) {
       this.checkTipoRepeticion = true;
@@ -2573,6 +2585,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   abrirFicha(key) {
+    this.onlyCheckDatos();
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.saveCalendarFlag) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -2588,6 +2601,9 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   abreCierraFicha(key) {
+    if(!this.openFicha){
+      this.onlyCheckDatos();
+    }
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (this.createEvent) {
       fichaPosible.activa = !fichaPosible.activa;
@@ -2667,6 +2683,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
   }
 
   guardarFormadores() {
+    this.onlyCheckDatos();
     let url = "";
 
     this.progressSpinner = true;
@@ -2765,4 +2782,68 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     return fecha;
   }
 
+  styleObligatorio(opcional, evento) {
+    // if(opcional=='opcional'){
+    //   if(this.resaltadoDatos && !(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado)){
+    //     return this.commonsService.styleObligatorio(evento);
+    //   }
+    // }else{
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+
+  }
+  styleObligatorioOpcional(opcional, evento) {
+    if (opcional == 'opcional') {
+      if (this.resaltadoDatosOpcionales && !(this.tipoAccesoLectura || this.selectedTipoLaboral || this.tipoInscripcionEvento || this.modoTipoEventoInscripcion || this.isEventoCumplidoOrCancelado)) {
+        return this.commonsService.styleObligatorio(evento);
+      }
+    }
+  }
+
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  muestraCamposObligatoriosOpcionales() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosOpcionales = true;
+  }
+
+  muestraCamposObligatoriosTodos(){
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatosOpcionales = true;
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (this.validateForm()) {
+      if (this.newEvent.fechaInicioRepeticion == undefined && this.newEvent.fechaFinRepeticion == undefined && this.newEvent.valoresRepeticion == undefined) {
+        this.muestraCamposObligatorios();
+      } else {
+        if (this.newEvent.fechaInicioRepeticion != undefined || this.newEvent.fechaFinRepeticion != undefined || this.newEvent.valoresRepeticion != undefined) {
+          this.muestraCamposObligatoriosTodos();
+        } else {
+          this.muestraCamposObligatoriosOpcionales();
+        }
+      }
+    } else {
+      this.saveEvent();
+    }
+  }
+
+  onlyCheckDatos() {
+    if (this.validateForm()) {
+      if (this.newEvent.fechaInicioRepeticion == undefined && this.newEvent.fechaFinRepeticion == undefined && this.newEvent.valoresRepeticion == undefined) {
+        this.resaltadoDatos=true;
+      } else {
+        if (this.newEvent.fechaInicioRepeticion != undefined || this.newEvent.fechaFinRepeticion != undefined || this.newEvent.valoresRepeticion != undefined) {
+          this.resaltadoDatos=true;
+        } else {
+          this.resaltadoDatos=true;
+        }
+      }
+    } 
+  }
 }

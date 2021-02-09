@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, ChangeDetectorRef, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
@@ -7,6 +7,8 @@ import { FichaDatosCurricularesObject } from '../../../../../models/FichaDatosCu
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
 import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
+import { Table } from 'primeng/table';
+import { EdicionCurricularesComponent } from '../../edicionDatosCurriculares/edicionCurriculares.component';
 
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',
@@ -20,7 +22,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   openFicha: boolean = false;
   tarjetaCurricularesNum: string;
 
-  datosCurriculares;
+  datosCurriculares: any[] = [];
   sortF: any;
   sortO: any;
   icon: string;
@@ -37,13 +39,15 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   selectAll: boolean = false;
   selectMultiple: boolean = false;
   DescripcionDatosCurriculares;
-  mensajeResumen: String;
   fichasPosibles = [
     {
       key: "curriculares",
       activa: false
     },
   ];
+  mostrarNumero: Boolean = false;
+  message;
+  messageNoContent;
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -61,15 +65,50 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   permisos: boolean = true;
   isLetrado: boolean;
 
+  disabledAction: boolean = false;
+
   @ViewChild("tableCurriculares")
-  tableCurriculares: DataTable;
+  tableCurriculares: Table;
   @Input() idPersona;
+  @Input() openCurricu;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
   constructor(private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
+    this.colsCurriculares = [
+      {
+        field: "dateFechaInicio",
+        header: "facturacion.seriesFacturacion.literal.fInicio"
+      },
+      {
+        field: "dateFechaFin",
+        header: "censo.consultaDatos.literal.fechaFin"
+      },
+      {
+        field: "categoriaCurricular",
+        header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
+      },
+      {
+        field: "tipoSubtipo",
+        header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
+      },
+      {
+        field: "descripcion",
+        header: "general.description"
+      }
+    ];
+
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
@@ -83,7 +122,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
       if (this.colegialesBody.situacionResidente == "0") this.colegialesBody.situacionResidente = "No";
       if (this.colegialesBody.situacionResidente == "1") this.colegialesBody.situacionResidente = "Si";
-      this.mensajeResumen = "Cargando";
+
       this.checkColegialesBody = JSON.parse(JSON.stringify(this.colegialesBody));
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -122,15 +161,21 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
     }
     if (this.idPersona != undefined) {
-      if (this.datosCurriculares == undefined && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
+      if ((this.datosCurriculares == undefined || this.datosCurriculares.length == 0) && (this.tarjetaCurriculares == "3" || this.tarjetaCurriculares == "2")) {
         this.onInitCurriculares();
-
-        if (this.tarjetaCurriculares == "3") {
+        
+        if(this.tarjetaCurriculares == "3"){
           this.permisos = true;
-        } else {
+        }else{
           this.permisos = false;
         }
         this.getLetrado();
+
+      }
+    }
+    if (this.openCurricu == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('curriculares')
       }
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -149,29 +194,6 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     }
   }
   getCols() {
-
-    this.colsCurriculares = [
-      {
-        field: "dateFechaInicio",
-        header: "facturacion.seriesFacturacion.literal.fInicio"
-      },
-      {
-        field: "dateFechaFin",
-        header: "censo.consultaDatos.literal.fechaFin"
-      },
-      {
-        field: "categoriaCurricular",
-        header: "censo.busquedaClientesAvanzada.literal.categoriaCV"
-      },
-      {
-        field: "tipoSubtipo",
-        header: "censo.busquedaClientesAvanzada.literal.subtiposCV"
-      },
-      {
-        field: "descripcion",
-        header: "general.description"
-      }
-    ];
 
     this.rowsPerPage = [
       {
@@ -192,7 +214,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       }
     ];
   }
-
+  onChangeRowsPerPagesCurriculares(event) {
+    this.selectedItemCurriculares = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tableCurriculares.reset();
+  }
 
   activarPaginacionCurriculares() {
     if (!this.datosCurriculares || this.datosCurriculares.length == 0)
@@ -281,6 +307,9 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       );
   }
 
+  actualizaSeleccionadosCurriculares(selectedDatos) {
+    this.numSelectedCurriculares = selectedDatos.length;
+  }
   redireccionarCurriculares(dato) {
     if (dato && dato.length < 2 && !this.selectMultipleCurriculares) {
       // enviarDatos = dato[0];
@@ -322,6 +351,8 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.selectMultipleCurriculares = false;
     this.selectedDatosCurriculares = [];
     this.numSelectedCurriculares = 0;
+    this.mostrarNumero = false;
+    this.progressSpinner = true;
     let bodyCurricular = {
       idPersona: this.idPersona,
       historico: this.historicoCV
@@ -337,21 +368,31 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
-          if (this.datosCurriculares)
-            this.mensajeResumen = this.datosCurriculares.filter(it => it.fechaBaja == null).length;
+          // this.table.reset();
         },
         err => {
           //   console.log(err);
           this.progressSpinner = false;
-
+          this.mostrarNumero = true;
         }, () => {
           this.progressSpinner = false;
-
           if (this.datosCurriculares.length > 0) {
             this.mostrarDatosCurriculares = true;
             for (let i = 0; i <= this.datosCurriculares.length - 1; i++) {
               this.DescripcionDatosCurriculares = this.datosCurriculares[i];
             }
+          }
+          if (this.datosCurriculares.length == 0) {
+            this.message = this.datosCurriculares.length.toString();
+            this.messageNoContent = this.translateService.instant(
+              "general.message.no.registros"
+            );
+            this.mostrarNumero = true;
+
+          } else {
+            this.message = this.datosCurriculares.length.toString();
+            this.mostrarNumero = true;
+
           }
         }
       );
@@ -372,11 +413,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
   //Opción tabla de seleccionar todas las filas
   onChangeSelectAllCurriculares() {
     if (this.selectAllCurriculares === true) {
-      if (this.historicoCV) {
+      if(this.historicoCV){
         this.selectMultipleCurriculares = false;
         this.selectedDatosCurriculares = this.datosCurriculares.filter(dato => dato.fechaBaja != undefined);
         this.numSelectedCurriculares = this.selectedDatosCurriculares.length;
-      } else {
+      }else{
         this.selectMultipleCurriculares = false;
         this.selectedDatosCurriculares = this.datosCurriculares;
         this.numSelectedCurriculares = this.datosCurriculares.length;
@@ -392,7 +433,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.progressSpinner = true;
 
     this.searchDatosCurriculares();
-
+    this.selectedDatosCurriculares = [];
     if (!this.historicoCV) {
       this.selectMultiple = false;
       this.selectAll = false;
@@ -406,6 +447,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     this.numSelectedCurriculares = 0;
     this.progressSpinner = true;
     this.historicoCV = true;
+
     this.searchDatosCurriculares();
   }
 
@@ -441,10 +483,12 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.mensajeResumen != "Cargando") {
+    if (this.activacionTarjeta) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   clear() {
@@ -455,7 +499,19 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
     if (datoH.fechaBaja == null) return false;
     else return true;
   }
-
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
+  clickFilaCurricular(event) {
+    if (event.data && !event.data.fechaBaja && this.historicoCV) {
+      this.selectedDatosCurriculares.pop();
+    }
+  }
+  
   getLetrado() {
     if (JSON.parse(sessionStorage.getItem("isLetrado")) == true) {
       this.isLetrado = true;
@@ -463,4 +519,5 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
       this.isLetrado = !this.permisos;
     }
   }
+
 }

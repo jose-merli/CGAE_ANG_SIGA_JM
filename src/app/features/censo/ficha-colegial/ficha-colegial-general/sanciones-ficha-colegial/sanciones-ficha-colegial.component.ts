@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, ViewChild, SimpleChanges, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../../_services/authentication.service';
@@ -42,12 +42,12 @@ export class SancionesFichaColegialComponent implements OnInit {
       activa: false
     },
   ];
-  mostrarNumero: Boolean = false;
-  messageNoContent;
   message;
+  messageNoContent;
   progressSpinner: boolean = false;
   selectedItemSanciones: number = 10;
   colsSanciones;
+  mostrarNumero: Boolean = false;
   tarjetaSancionesNum: string;
   @Input() tarjetaSanciones: string;
   selectedDatosSanciones;
@@ -62,6 +62,11 @@ export class SancionesFichaColegialComponent implements OnInit {
   rowsPerPage;
   @ViewChild("tableSanciones")
   tableSanciones: DataTable;
+@Input() openSanci;
+@Output() opened = new EventEmitter<Boolean>();
+@Output() idOpened = new EventEmitter<Boolean>();
+
+disabledAction:boolean = false;
   constructor(
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -76,17 +81,23 @@ export class SancionesFichaColegialComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem("disabledAction") == "true") { // Esto disablea tela de cosas funciona como medio permisos. 
+      // Es estado baja colegial (historico?)
+      this.disabledAction = true;
+    } else {
+      this.disabledAction = false;
+    }
     this.getCols();
     if (
       sessionStorage.getItem("personaBody") != null &&
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-      this.generalBody = new FichaColegialGeneralesItem();
-      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.checkGeneralBody = new FichaColegialGeneralesItem();
-      this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
-      this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.generalBody = new FichaColegialGeneralesItem();
+    this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.checkGeneralBody = new FichaColegialGeneralesItem();
+    this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
+    this.colegialesBody = JSON.parse(sessionStorage.getItem("personaBody"));
 
     }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
@@ -103,12 +114,15 @@ export class SancionesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-
-
-
 
   }
+
   ngOnChanges(changes: SimpleChanges) {
+    if (this.openSanci == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('sanciones')
+      }
+    }
     if (JSON.parse(sessionStorage.getItem("esNuevoNoColegiado"))) {
       this.esNewColegiado = true;
       this.activacionEditar = false;
@@ -123,13 +137,12 @@ export class SancionesFichaColegialComponent implements OnInit {
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
-if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
-  this.searchSanciones();
-}
+    if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
+      this.searchSanciones();
+    }    
   }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
-
     if (
       key == "generales" &&
       !this.activacionTarjeta &&
@@ -138,10 +151,13 @@ if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
-    if (this.activacionTarjeta && this.message == this.dataSanciones.length.toString()) {
+    if (this.activacionTarjeta) {
       fichaPosible.activa = !fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+
   }
   getCols() {
     this.colsSanciones = [
@@ -234,10 +250,6 @@ if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
   searchSanciones() {
     // Llamada al rest
     this.mostrarNumero = false;
-    this.messageNoContent = this.translateService.instant(
-      "aplicacion.cargando"
-    );
-    this.message = this.messageNoContent;
     this.bodySanciones.chkArchivadas = undefined;
     this.bodySanciones.idPersona = this.generalBody.idPersona;
     this.bodySanciones.nif = this.generalBody.nif;
@@ -263,13 +275,10 @@ if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
         err => {
           this.progressSpinner = false;
           this.mostrarNumero = true;
-
         }, () => {
           if (this.dataSanciones.length > 0) {
             this.mostrarDatosSanciones = true;
-            for (let i; i <= this.dataSanciones.length - 1; i++) {
-              this.DescripcionSanciones = this.dataSanciones[i];
-            }
+            this.DescripcionSanciones = this.dataSanciones[0];
           }
           if (this.dataSanciones.length == 0) {
             this.message = this.dataSanciones.length.toString();
@@ -283,6 +292,7 @@ if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
             this.mostrarNumero = true;
 
           }
+          this.progressSpinner = false;
         }
       );
   }
@@ -333,5 +343,12 @@ if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
     this.selectedItemSanciones = event.value;
     this.changeDetectorRef.detectChanges();
     this.tableSanciones.reset();
+  }
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
   }
 }

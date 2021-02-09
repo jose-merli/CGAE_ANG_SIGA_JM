@@ -12,6 +12,7 @@ import { ErrorItem } from "../../../../models/ErrorItem";
 import { esCalendar } from "../../../../utils/calendar";
 import { Pipe, PipeTransform } from "@angular/core";
 import { TranslateService } from "../../../../commons/translate";
+import { CommonsService } from '../../../../_services/commons.service';
 
 // @Pipe({ name: "replaceLineBreaks" })
 // export class ReplaceLineBreaks implements PipeTransform {
@@ -64,6 +65,7 @@ export class DatosCvComponent implements OnInit {
     private datePipe: DatePipe,
     private domSanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
 
@@ -226,6 +228,9 @@ export class DatosCvComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

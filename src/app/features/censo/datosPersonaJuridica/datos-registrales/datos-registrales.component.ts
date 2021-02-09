@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -16,11 +16,14 @@ import { ControlAccesoDto } from "./../../../../../app/models/ControlAccesoDto";
 import { ComboItem } from "../../../../models/ComboItem";
 import { debug } from "util";
 import { Router } from "@angular/router";
+import { CommonsService } from '../../../../_services/commons.service';
 
+import { MultiSelect } from 'primeng/multiselect';
 @Component({
   selector: "app-datos-registrales",
   templateUrl: "./datos-registrales.component.html",
-  styleUrls: ["./datos-registrales.component.scss"]
+  styleUrls: ["./datos-registrales.component.scss"],
+  encapsulation: ViewEncapsulation.None
 })
 export class DatosRegistralesComponent implements OnInit {
   uploadedFiles: any[] = [];
@@ -40,9 +43,9 @@ export class DatosRegistralesComponent implements OnInit {
   prefijo: string;
   sufijo: string;
   longitudcontador: string;
-  cadenaContador: string;
-  cadenaPrefijo: string;
-  cadenaSufijo: string;
+  cadenaContador: String;
+  cadenaPrefijo: String;
+  cadenaSufijo: String;
   noEditable: boolean = false;
   prefijoBlock: boolean = false;
   fechaConstitucion: Date;
@@ -71,6 +74,7 @@ export class DatosRegistralesComponent implements OnInit {
   file: File = undefined;
   base64String: any;
   source: any;
+  resaltadoDatos:boolean = false;
   imageBase64: any;
   imagenURL: any;
   generos: any[];
@@ -108,6 +112,8 @@ export class DatosRegistralesComponent implements OnInit {
   sufijoSSPPInicial;
   contadorSSPPInicial;
 
+  @ViewChild('someDropdown') someDropdown: MultiSelect;
+
   @ViewChild(DatosRegistralesComponent)
   datosRegistralesComponent: DatosRegistralesComponent;
 
@@ -116,6 +122,8 @@ export class DatosRegistralesComponent implements OnInit {
 
   tarjeta: string;
   searchDatos: boolean = false;
+  @Input() openTarjeta;
+  @Output() permisosEnlace = new EventEmitter<any>();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -124,7 +132,8 @@ export class DatosRegistralesComponent implements OnInit {
     private sigaServices: SigaServices,
     private cardService: cardService,
     private fichasPosibles: DatosPersonaJuridicaComponent,
-    private router: Router
+    private router: Router,
+    private commonsService: CommonsService,
   ) {
     this.formBusqueda = this.formBuilder.group({
       cif: null
@@ -187,9 +196,9 @@ export class DatosRegistralesComponent implements OnInit {
         this.modo = data.modo;
         this.contador = data.contador;
         //Se calcula contador + 1
-        let contadorNumber = Number(this.contador); 
+        let contadorNumber = Number(this.contador);
         contadorNumber += 1;
-        this.contador = contadorNumber.toString(); 
+        this.contador = contadorNumber.toString();
         this.prefijo = data.prefijo;
         this.sufijo = data.sufijo;
         this.longitudcontador = data.longitudcontador;
@@ -206,6 +215,7 @@ export class DatosRegistralesComponent implements OnInit {
             if (this.bodyAnterior[0] != null) {
               this.body.idPersona = this.bodyAnterior[0].idPersona;
               this.idPersonaEditar = this.bodyAnterior[0].idPersona;
+              
             }
             this.search();
             this.getActividadesPersona();
@@ -223,7 +233,13 @@ export class DatosRegistralesComponent implements OnInit {
       }
     );
   }
+  ngOnChanges(changes: SimpleChanges) {
+    let fichaPosible = this.esFichaActiva(this.openTarjeta);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(this.openTarjeta);
+    }
 
+  }
   checkAcceso() {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = "12a";
@@ -238,6 +254,10 @@ export class DatosRegistralesComponent implements OnInit {
         console.log(err);
       },
       () => {
+        if (this.tarjeta == "3" || this.tarjeta == "2") {
+          let permisos = "registrales";
+          this.permisosEnlace.emit(permisos);
+        }
       }
     );
   }
@@ -326,6 +346,16 @@ export class DatosRegistralesComponent implements OnInit {
         data => {
           this.personaSearch = JSON.parse(data["body"]);
           this.body = this.personaSearch.datosRegistralesItems[0];
+          if((this.body.objetoSocial == null || this.body.objetoSocial == undefined || this.body.objetoSocial == "")||
+          (this.body.resena == null || this.body.resena == undefined || this.body.resena == "")||
+          (this.body.fechaConstitucion == null || this.body.fechaConstitucion == undefined)||
+          (this.body.numRegistro == null || this.body.numRegistro == undefined || this.body.numRegistro == "")||
+          (this.body.identificacionReg == null || this.body.numRegistro == undefined || this.body.numRegistro == "")||
+          (this.body.prefijoNumsspp == null || this.body.prefijoNumsspp == undefined || this.body.prefijoNumsspp == "")||
+          (this.body.sufijoNumsspp == null || this.body.sufijoNumsspp == undefined || this.body.sufijoNumsspp == "")||
+          (this.body.contadorNumsspp == null || this.body.contadorNumsspp == undefined || this.body.contadorNumsspp == "")){
+            this.abreCierraFicha('registrales');
+          }
           this.progressSpinner = false;
           // if (this.body.identificacionReg == undefined) {
           //   this.body.fechaConstitucion = null;
@@ -369,7 +399,7 @@ export class DatosRegistralesComponent implements OnInit {
             this.getNumsspp();
 
             //}
-           
+
           } else {
             this.body = new DatosRegistralesItem();
           }
@@ -501,6 +531,7 @@ export class DatosRegistralesComponent implements OnInit {
                   this.progressSpinner = false;
                 },
                 () => {
+                  this.resaltadoDatos = false;
                   this.search();
                 }
               );
@@ -613,7 +644,7 @@ export class DatosRegistralesComponent implements OnInit {
     }
   }
 
-  getNumsspp(){
+  getNumsspp() {
 
     if (this.modificablecontador == "0" && this.sociedadProfesional) {
       this.noEditable = true;
@@ -621,7 +652,7 @@ export class DatosRegistralesComponent implements OnInit {
       this.noEditable = false;
     }
 
-    if(this.sociedadProfesional){
+    if (this.sociedadProfesional) {
       if (this.body.contadorNumsspp != undefined && this.body.contadorNumsspp != null && this.body.contadorNumsspp != "") {
 
         this.body.contadorNumsspp = this.fillWithCeros(
@@ -666,6 +697,7 @@ export class DatosRegistralesComponent implements OnInit {
         this.fechaFinCorrecta != false
       ) {
         if (this.camposDesactivados == true && this.noEditable == false) {
+          this.muestraCamposObligatorios();
           return true;
         } else {
           return false;
@@ -676,6 +708,8 @@ export class DatosRegistralesComponent implements OnInit {
           this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
           this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
         }
+        // this.muestraCamposObligatorios();
+        this.resaltadoDatos = true;
         return true;
       }
     } else if (
@@ -705,7 +739,8 @@ export class DatosRegistralesComponent implements OnInit {
         this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
         this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
       }
-
+      // this.muestraCamposObligatorios();
+      this.resaltadoDatos = true;
       return true;
     }
   }
@@ -741,6 +776,9 @@ export class DatosRegistralesComponent implements OnInit {
 
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
+    if(!fichaPosible.activa){
+      this.resaltadoDatos=true;
+    }
     // si no se esta creando una nueva sociedad && sessionStorage.getItem("crearnuevo") == null
     if (
       (this.tarjeta == '2' || this.tarjeta == '3') && sessionStorage.getItem("nuevoRegistro") == null
@@ -791,6 +829,7 @@ export class DatosRegistralesComponent implements OnInit {
         return result;
       });
 
+      console.log(data);
     });
   }
 
@@ -799,14 +838,14 @@ export class DatosRegistralesComponent implements OnInit {
     if (this.isNuevo && this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
       // if (this.modo == "0") {
-        this.body.contadorNumsspp = String(
-          this.fillWithCeros(this.contador,
-            Number(this.longitudcontador)
-          )
-        );
+      this.body.contadorNumsspp = String(
+        this.fillWithCeros(this.contador,
+          Number(this.longitudcontador)
+        )
+      );
 
-        this.body.prefijoNumsspp = this.prefijo;
-        this.body.sufijoNumsspp = this.sufijo;
+      this.body.prefijoNumsspp = this.prefijo;
+      this.body.sufijoNumsspp = this.sufijo;
 
       // } else {
       //   this.body.prefijoNumsspp = this.prefijo;
@@ -816,16 +855,16 @@ export class DatosRegistralesComponent implements OnInit {
     } else if (this.sociedadProfesional) {
       this.body.sociedadProfesional = "1";
 
-      if(this.contadorSSPPInicial != null && this.contadorSSPPInicial != undefined){
+      if (this.contadorSSPPInicial != null && this.contadorSSPPInicial != undefined) {
         this.body.contadorNumsspp = this.contadorSSPPInicial;
         this.body.prefijoNumsspp = this.prefijoSSPPInicial;
         this.body.sufijoNumsspp = this.sufijoSSPPInicial;
 
-      }else{
+      } else {
         this.getNumsspp();
       }
 
-    } else if(!this.sociedadProfesional){
+    } else if (!this.sociedadProfesional) {
       this.body.sociedadProfesional = "0";
       this.body.prefijoNumsspp = undefined;
       this.body.contadorNumsspp = undefined
@@ -882,5 +921,19 @@ export class DatosRegistralesComponent implements OnInit {
     this.habilitarCheck();
   }
 
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
 
+  focusInputField() {
+    setTimeout(() => {
+      this.someDropdown.filterInputChild.nativeElement.focus();  
+    }, 300);
+  }
 }

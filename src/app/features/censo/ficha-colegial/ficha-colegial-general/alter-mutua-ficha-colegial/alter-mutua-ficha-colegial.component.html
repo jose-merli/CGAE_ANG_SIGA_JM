@@ -1,3 +1,4 @@
+<div id = "alterMutua">
 <div *ngIf="tarjetaAlterMutua == '3' || tarjetaAlterMutua == '2'" class="card">
   <div class="card-header header-ficha">
     <div class="form-row">
@@ -28,3 +29,11 @@
     </div>
   </div>
 </div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="alterMutua" icon="icon" width="425" #alterMutua>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="alterMutua.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="alterMutua.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

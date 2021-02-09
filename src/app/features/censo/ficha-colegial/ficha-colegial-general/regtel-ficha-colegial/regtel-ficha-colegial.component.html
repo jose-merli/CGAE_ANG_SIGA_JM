@@ -1,51 +1,42 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
+<div id = "regtel">
 <div *ngIf="esRegtel">
   <div *ngIf="tarjetaRegtel == '3' || tarjetaRegtel == '2'" class="card">
-    <div (click)="abreCierraRegtel('regtel')"  class="card-header header-ficha">
+    <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('regtel')" class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
+          <div class="img-colegiado" (click)="abreCierraRegtel('regtel')">
             <i class="fas fa-file-alt icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <!-- <label *ngIf="!mostrarNumero" (click)="abreCierraRegtel('regtel')" class="mr-auto-title-ficha-prueba">{{ "censo.regtel.literal.titulo" | translate }}
-            </label> -->
-             <label class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraRegtel('regtel')">
+            <label class="mr-auto title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
-            <!-- <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
-              <span>{{ messageRegtel }}</span>
-            </label> -->
-            <!-- <label class="registros-ficha-prueba" *ngIf="!mostrarNumero">{{ messageRegtel }}...</label> -->
-            <label *ngIf="!mostrarNumero" class="registros-ficha-prueba">{{ "censo.regtel.literal.numero.directorios" | translate }}
-              <span class="registros-ficha-prueba">{{ messageRegtel }}</span>
-            </label>
-            <label *ngIf="mostrarNumero" class="registros-ficha">{{ "censo.regtel.literal.numero.directorios" | translate }}
+            <label>{{ "censo.regtel.literal.numero.directorios" | translate }}
               <span>{{ messageRegtel }}</span>
             </label>
-            <i [ngClass]="{
+            <i (click)="abreCierraRegtel('regtel')" [ngClass]="{
               'fa fa-angle-up': esFichaActiva('regtel'),
               'fa fa-angle-down': !esFichaActiva('regtel')
             }"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center">
-        <div class="img-colegiado ">
+      <div *ngIf="esFichaActiva('regtel')" (click)="abreCierraRegtel('regtel')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado " (click)="abreCierraRegtel('regtel')">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
+        <label (click)="abreCierraRegtel('regtel')" class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i (click)="abreCierraRegtel('regtel')" class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
 
     <div *ngIf="esFichaActiva('regtel')" class="card-body card-body-ficha">
-      <div class="rowPrueba">
+      <div class="row">
 
         <p-dataTable emptyMessage="{{ messageRegtel }}" [(selection)]="selectedDatosRegtel" [responsive]="true" selectionMode="single"
           dataKey="id" #tableRegTel class="tabla-listado" [value]="bodyRegTel" [sortOrder]="0" [sortField]="fechaModificacion"
@@ -104,13 +95,14 @@
     </div>
   </div>
 </div>
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelConfirmation" icon="icon" width="425" #regtelConfirmation>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="regtelFicha" icon="icon" width="425" #regtelFicha>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="regtelConfirmation.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="regtelConfirmation.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="regtelFicha.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="regtelFicha.reject()"></button>
   </p-footer>
 </p-confirmDialog>
-
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

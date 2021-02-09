@@ -19,7 +19,6 @@ import { MenuItem } from "primeng/api";
 import { Router } from "@angular/router";
 import { saveAs } from "file-saver/FileSaver";
 import { CommonsService } from '../../../../../../_services/commons.service';
-import { Identifiers } from '@angular/compiler';
 
 @Component({
   selector: "app-plantilla-documento",
@@ -53,7 +52,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   consultasComboMulti: any[];
   consultasComboCondicional: any[];
   consulta: any;
-
+  selectionMode: any;
+  disabledGuardar: any;
   consultas: any = [];
   textSelected: any;
   showHistorico: boolean = false;
@@ -86,12 +86,9 @@ export class PlantillaDocumentoComponent implements OnInit {
   esPorDefecto: boolean = false;
   label1: string;
   controlSelectionMode: string;
-  nombreCompletoArchivo: string;
-  extensionArchivo: string;
-  selectionMode: string = "single";
-
-  disabledGuardar: boolean = true;
-
+  resaltadoDatos: boolean = false;
+  nombreCompletoArchivo: any;
+  extensionArchivo: any;
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
@@ -115,6 +112,8 @@ export class PlantillaDocumentoComponent implements OnInit {
   ngOnInit() {
     this.commonsService.scrollTop();
     this.checkCamposDatosSalida();
+    this.resaltadoDatos = true;
+
     this.getInstitucionActual();
 
     //sessionStorage.removeItem('esPorDefecto');
@@ -225,26 +224,6 @@ export class PlantillaDocumentoComponent implements OnInit {
 
 
   }
-
-  isSelectMultipleDocs() {
-    if (!this.nuevoDocumento) {
-
-      if (!this.esPorDefecto) {
-        this.selectMultipleDocs = !this.selectMultipleDocs;
-        if (!this.selectMultipleDocs) {
-          // this.controlSelectionMode = "none";
-          this.selectedDocs = [];
-        } else {
-          this.selectAllDocs = false;
-          this.controlSelectionMode = "multiple";
-          this.selectedDocs = [];
-        }
-      }
-    } else {
-      this.selectMultiple = false;
-    }
-  }
-
   onChangeSelectAll(key) {
     if (key != "docs") {
       if (this.selectAll === true) {
@@ -339,11 +318,11 @@ export class PlantillaDocumentoComponent implements OnInit {
 
     if (this.selectMultiple) {
 
-      if(selectedDatos != undefined && selectedDatos != null && selectedDatos.length > 0){
+      if (selectedDatos != undefined && selectedDatos != null && selectedDatos.length > 0) {
         this.eliminarDisabled = false;
 
         selectedDatos.forEach(element => {
-  
+
           if ((element.idConsulta == "" ||
             element.idConsulta == null ||
             element.idConsulta == undefined ||
@@ -351,7 +330,7 @@ export class PlantillaDocumentoComponent implements OnInit {
             element.nombre == undefined)) {
             this.eliminarDisabled = true;
           }
-  
+
         });
       }
 
@@ -524,6 +503,7 @@ export class PlantillaDocumentoComponent implements OnInit {
 
   restablecerDatosGenerales() {
     this.disabledGuardar = true;
+    this.resaltadoDatos = false;
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.sufijos = JSON.parse(JSON.stringify(this.sufijosInicial));
     this.selectedSufijos = JSON.parse(
@@ -897,6 +877,19 @@ export class PlantillaDocumentoComponent implements OnInit {
         }
       }
     }
+    this.resaltadoDatos = false;
+    this.body.sufijos = [];
+    let orden: number = 1;
+    this.selectedSufijos.forEach(element => {
+      let ordenString = orden.toString();
+      let objSufijo = {
+        idSufijo: element.idSufijo,
+        orden: ordenString,
+        nombreSufijo: element.nombreSufijo
+      };
+      this.body.sufijos.push(objSufijo);
+      orden = orden + 1;
+    });
 
     this.sigaServices.post("plantillasDoc_guardar", this.body).subscribe(
       data => {
@@ -1421,7 +1414,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       this.institucionActual = n.value;
 
       // El modo de la pantalla viene por los permisos de la aplicación
-      if (sessionStorage.getItem("permisoModoLectura") == 'true') {
+      if (sessionStorage.getItem("permisoModoLectura") == 'true' || sessionStorage.getItem("soloLectura") == 'true') {
         this.esPorDefecto = true;
       }
 
@@ -1478,4 +1471,30 @@ export class PlantillaDocumentoComponent implements OnInit {
         });
   }
 
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
+  }
+
+  checkDatos() {
+    if (this.isGuardarDisabled()) {
+      if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardarDatosSalida();
+      }
+    } else {
+      if ((this.body.idFormatoSalida == null || this.body.idFormatoSalida == undefined || this.body.idFormatoSalida === "") || (this.body.nombreFicheroSalida == null || this.body.nombreFicheroSalida == undefined || this.body.nombreFicheroSalida === "")) {
+        this.muestraCamposObligatorios();
+      } else {
+        this.guardarDatosSalida();
+      }
+    }
+  }
 }

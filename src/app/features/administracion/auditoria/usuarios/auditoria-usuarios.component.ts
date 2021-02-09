@@ -20,6 +20,7 @@ import { esCalendar } from "./../../../../utils/calendar";
 import { HistoricoUsuarioDto } from "../../../../models/HistoricoUsuarioDto";
 import { HistoricoUsuarioRequestDto } from "../../../../models/HistoricoUsuarioRequestDto";
 import { DataTable } from "primeng/datatable";
+import { CommonsService } from '../../../../_services/commons.service';
 
 
 export enum KEY_CODE {
@@ -69,6 +70,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
+    private commonsService: CommonsService,
     private translateService: TranslateService
   ) {
     super(USER_VALIDATIONS);
@@ -239,6 +241,9 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
             this.table.first = first;
             sessionStorage.removeItem("first");
           }
+          setTimeout(()=>{
+            this.commonsService.scrollTablaFoco('tablaFoco');
+          }, 5);
         }
       );
   }

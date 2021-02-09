@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -17,8 +17,9 @@ export class ServiciosInteresComponent implements OnInit {
 	usuarioBody: any[];
 	@ViewChild('table') table;
 	@Input() userBody;
-
+	@Input() openTarjeta;
 	tarjeta: string;
+	@Output() permisosEnlace = new EventEmitter<any>();
 
 	constructor(
 		private router: Router,
@@ -107,7 +108,12 @@ export class ServiciosInteresComponent implements OnInit {
 			(err) => {
 				console.log(err);
 			},
-			() => { }
+			() => { 
+				if(this.tarjeta == "3" || this.tarjeta == "2"){
+					let permisos = "interes";
+					this.permisosEnlace.emit(permisos);
+				  }
+			 }
 		);
 	}
 }
