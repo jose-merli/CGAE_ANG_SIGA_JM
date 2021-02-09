@@ -35,6 +35,7 @@ export class DatosColegiadosItem {
   fechaNacimiento: string;
   fechaNacimientoDate: Date;
 
+  idPersona: string;
   idgrupo: string[];
   idTratamiento: String;
   tipoCV: string;

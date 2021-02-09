@@ -24,12 +24,13 @@ export class CommonsService {
     let correo = value;
     let EMAIL_REGEX = /^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
     let EMAIL_REGEX2 = /^[\w]+@{1}[\w]+\.[a-z]{2,3}$/;
-    let EMAIL_REGEX3 = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		let EMAIL_REGEX3 = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		//let EMAIL_REGEX3 = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (correo != undefined && correo != "" && EMAIL_REGEX3.test(correo)) {
+    if (correo != undefined && correo != '' && EMAIL_REGEX3.test(correo)) {
       return true;
     } else {
-      if (correo == "") {
+      if (correo == '') {
         return true;
       } else {
         return false;
@@ -40,10 +41,10 @@ export class CommonsService {
   validateWeb(value) {
     let web = value;
     let WEB_REGEX = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-    if (web != undefined && web != "" && WEB_REGEX.test(web)) {
+    if (web != undefined && web != '' && WEB_REGEX.test(web)) {
       return true;
     } else {
-      if (web == "") {
+      if (web == '') {
         return true;
       } else {
         return false;
@@ -58,10 +59,10 @@ export class CommonsService {
     //Teléfonos extranjeros
     let TLF_REGEX2 = /^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){9}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$/;
 
-    if (tlf != undefined && tlf != "" && TLF_REGEX2.test(tlf)) {
+    if (tlf != undefined && tlf != '' && TLF_REGEX2.test(tlf)) {
       return true;
     } else {
-      if (tlf == "") {
+      if (tlf == '') {
         return true;
       } else {
         return false;
@@ -76,10 +77,10 @@ export class CommonsService {
     //Teléfonos extranjeros
     let MVL_REGEX2 = /^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){9}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$/;
 
-    if (mvl != undefined && mvl != "" && MVL_REGEX2.test(mvl)) {
+    if (mvl != undefined && mvl != '' && MVL_REGEX2.test(mvl)) {
       return true;
     } else {
-      if (mvl == "") {
+      if (mvl == '') {
         return true;
       } else {
         return false;
@@ -92,10 +93,10 @@ export class CommonsService {
     let fax = value;
     let FAX_REGEX = /^(\(\+?\d{2,3}\)[\*|\s|\-|\.]?(([\d][\*|\s|\-|\.]?){6})(([\d][\s|\-|\.]?){2})?|(\+?[\d][\s|\-|\.]?){9}(([\d][\s|\-|\.]?){2}(([\d][\s|\-|\.]?){2})?)?)$/;
 
-    if (fax != undefined && fax != "" && FAX_REGEX.test(fax)) {
+    if (fax != undefined && fax != '' && FAX_REGEX.test(fax)) {
       return true;
     } else {
-      if (fax == "") {
+      if (fax == '') {
         return true;
       } else {
         return false;
@@ -176,7 +177,7 @@ export class CommonsService {
   }
   
   scrollTop() {
-    let top = document.getElementById("mainContainer");
+    let top = document.getElementById('mainContainer');
     if (top !== null) {
       top.scrollIntoView();
       top = null;
@@ -270,9 +271,9 @@ export class CommonsService {
 	para poder filtrar el dato con o sin estos caracteres*/
     let labelSinTilde = string;
     let accents =
-      "ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ";
+      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
     let accentsOut =
-      "aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz";
+      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
     let i;
     let x;
     for (i = 0; i < labelSinTilde.length; i++) {
@@ -306,8 +307,8 @@ export class CommonsService {
   }
 
   styleObligatorio(evento) {
-    if (evento == null || evento == undefined || evento == "") {
-      return "camposObligatorios";
+    if (evento == null || evento == undefined || evento == '') {
+      return 'camposObligatorios';
     }
   }
 }

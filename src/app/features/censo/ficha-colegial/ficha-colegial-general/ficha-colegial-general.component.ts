@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { ConfirmationService, Message } from "primeng/components/common/api";
 import { AuthenticationService } from '../../../../_services/authentication.service';
@@ -39,10 +39,11 @@ import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 @Component({
   selector: 'app-ficha-colegial-general',
   templateUrl: './ficha-colegial-general.component.html',
-  styleUrls: ['./ficha-colegial-general.component.scss']
+  styleUrls: ['./ficha-colegial-general.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
-
+  publicarDatosContacto: Boolean = false;
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   generalError: FichaColegialGeneralesObject = new FichaColegialGeneralesObject();
   checkGeneralBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
@@ -61,7 +62,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   idPersonaNuevo;
   permisos: boolean = true;
   displayAuditoria: boolean = false;
-  publicarDatosContacto: boolean;
   idPersona: any;
   openFicha: boolean = false;
   es: any = esCalendar;
@@ -318,6 +318,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   yearRange: string;
 
   nuevaFecha: any;
+  tarjetasActivas: boolean = false;
 
   isColegiadoEjerciente: boolean = false;
   inscritoChange: boolean = false;
@@ -402,7 +403,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.datosTarjetaResumen = [];
     if (sessionStorage.getItem("fichaColegialByMenu")) {
-      this.getColegiadoLogeado(); // Hay que asegurarse de que esto sirve para algo y funciona correctamente
+      this.comprobarColegiado();
+      this.getColegiadoLogeado();
     } else {
       this.OnInit();
     }
@@ -459,12 +461,15 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.desactivarVolver = true;
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
       this.desactivarVolver = false;
+    } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
+      this.desactivarVolver = false;
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
       );
       this.desactivarVolver = true;
+      this.generalBody.searchLoggedUser = true;
     }
 
     if (
@@ -472,7 +477,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       sessionStorage.getItem("personaBody") != undefined &&
       JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
     ) {
-      this.generalBody = new FichaColegialGeneralesItem();
+      if (this.generalBody == undefined){
+        this.generalBody = new FichaColegialGeneralesItem();
+      }
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
       this.checkGeneralBody = new FichaColegialGeneralesItem();
       this.checkGeneralBody = JSON.parse(sessionStorage.getItem("personaBody"));
@@ -520,23 +527,22 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       valor: "OCULTAR_MOTIVO_MODIFICACION"
     };
 
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          let parametroOcultarMotivo = JSON.parse(data.body);
-          if (parametroOcultarMotivo.parametro == "S" || parametroOcultarMotivo.parametro == "s") {
-            this.ocultarMotivo = true;
-          } else if (parametroOcultarMotivo.parametro == "N" || parametroOcultarMotivo.parametro == "n") {
-            this.ocultarMotivo = false;
-          } else {
-            this.ocultarMotivo = undefined;
-          }
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    this.tarjetasActivas = true;
+      this.stringAComisiones();
+  }
+  
+   stringAComisiones() {
+      if (this.generalBody.comisiones == "1") {
+        this.comisiones = true;
+      } else {
+        this.comisiones = false;
+      }
+      if (this.generalBody.noAparecerRedAbogacia == "1") {
+        this.publicarDatosContacto = true;
+      } else {
+        this.publicarDatosContacto = false;
+      }
+  
   }
 
 
@@ -544,24 +550,37 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     this.generalBody.searchLoggedUser = true;
 
     this.sigaServices
-      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+//      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+      .postPaginado('busquedaColegiados_searchColegiadoFicha', '?numPagina=1', this.generalBody)
       .subscribe(
         (data) => {
           let busqueda = JSON.parse(data['body']);
           if (busqueda.colegiadoItem.length > 0) {
-            this.OnInit();
-            this.displayColegiado = false;
-
+            //this.OnInit();
+            //this.displayColegiado = false;
+            sessionStorage.setItem('personaBody', JSON.stringify(busqueda.colegiadoItem[0]));
+            sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(false));
+            sessionStorage.setItem('esColegiado', 'true');
           } else {
-            this.displayColegiado = true;
+            //this.displayColegiado = true;
+            sessionStorage.setItem('personaBody', JSON.stringify(this.generalBody));
+            sessionStorage.setItem('esNuevoNoColegiado', JSON.stringify(true));
+            sessionStorage.setItem('emptyLoadFichaColegial', 'true');
+            sessionStorage.setItem('esColegiado', 'true');
           }
+          if (this.generalBody == undefined)
+            this.generalBody = new FichaColegialGeneralesItem();
+          this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         },
         (err) => {
           console.log(err);
-        }
-      );
+        }, () => {
+          this.OnInit();
+        });
+
   }
-  ngOnDestroy() {
+
+    ngOnDestroy() {
     sessionStorage.removeItem("esNuevoNoColegiado");
 
   }
@@ -613,7 +632,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     return fecha;
   }
   checkAccesos() {
-    this.initSpinner = true;
+    this.progressSpinner = true;
     let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299"];
     let proceso;
     procesos = procesos.map(it => {
@@ -637,15 +656,17 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.tarjetaSociedadesNum = permisosArray[7].derechoacceso;
         this.tarjetaCurricularesNum = permisosArray[8].derechoacceso;
         this.tarjetaDireccionesNum = permisosArray[9].derechoacceso;
-        this.tarjetaBancariosNum = permisosArray[9].derechoacceso;
-        this.tarjetaRegtelNum = permisosArray[10].derechoacceso;
-        this.tarjetaMutualidadNum = permisosArray[11].derechoacceso;
-        this.tarjetaAlterMutuaNum = permisosArray[12].derechoacceso;
+        this.tarjetaBancariosNum = permisosArray[10].derechoacceso;
+        this.tarjetaRegtelNum = permisosArray[11].derechoacceso;
+        this.tarjetaMutualidadNum = permisosArray[12].derechoacceso;
+        this.tarjetaAlterMutuaNum = permisosArray[13].derechoacceso;
+
       },
       err => {
         console.log(err);
       },
       () => {
+        this.progressSpinner = false;
         this.asignarPermisosTarjetas();
       }
     );
@@ -899,5 +920,37 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       }
     }
   }
+  returnHome() {
+    this.displayColegiado = false;
+    sessionStorage.removeItem("fichaColegialByMenu");
+    this.location.back();
+  }
+  comprobarColegiado() {
+    this.generalBody.searchLoggedUser = true;
+    this.sigaServices
+      .postPaginado('busquedaColegiados_searchColegiado', '?numPagina=1', this.generalBody)
+      .subscribe(
+        (data) => {
+          let busqueda = JSON.parse(data['body']);
+          if (busqueda.colegiadoItem.length > 0) {
+            this.OnInit();
+            this.displayColegiado = false;
+
+          } else {
+            this.displayColegiado = true;
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+aparecerLOPDEvent(event){
+    if(event!= undefined){
+      this.generalBody.noAparecerRedAbogacia = event;
+      this.stringAComisiones();
+    }
+  }
+
 }
 

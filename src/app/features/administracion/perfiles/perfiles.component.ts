@@ -172,7 +172,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       .postPaginado("perfiles_search", "?numPagina=1", null)
       .subscribe(
         data => {
-          console.log(data);
+           
 
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;
@@ -227,7 +227,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     );
   }
   paginate(event) {
-    console.log(event);
+     
   }
 
   checkAcceso() {
@@ -260,8 +260,8 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
   }
 
   onChangeDrop(event, dato) {
-    console.log(event);
-    console.log(dato);
+     
+     
   }
   rolDefecto(event, dato) {
     let item = new PerfilItem();
@@ -305,8 +305,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     }
   }
   editRol(event, dato) {
-    console.log(event);
-    console.log(dato);
+     
     this.datos.forEach((value: PerfilItem, key: number) => {
       if (value.idGrupo == dato.idGrupo) {
         value.editar = true;
@@ -327,7 +326,6 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
     this.isforNew = false;
     this.blockSeleccionar = true;
     this.activacionEditar = true;
-    console.log(this.datos);
     let dummy = {
       idGrupo: "",
       grupo: [],
@@ -654,7 +652,7 @@ export class PerfilesComponent extends SigaWrapper implements OnInit {
       .postPaginado("perfiles_historico", "?numPagina=1", null)
       .subscribe(
         data => {
-          console.log(data);
+           
 
           this.searchPerfiles = JSON.parse(data["body"]);
           this.datos = this.searchPerfiles.usuarioGrupoItems;

@@ -72,11 +72,9 @@ export class ConsultaComponent implements OnInit {
     this.sigaServices.consultasRefresh$.subscribe(() => {
       this.getDatos();
     });
-
     this.sigaServices.deshabilitarEditar$.subscribe(() => {
       this.editar = false;
     });
-
     this.getInstitucion();
     this.getAyuda();
     this.valores = [];
@@ -232,9 +230,7 @@ export class ConsultaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
       if (this.body.sentencia != 'undefined' && this.body.sentencia != null) {
         // this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
-
       }
-
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     }
   }
@@ -247,7 +243,6 @@ export class ConsultaComponent implements OnInit {
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.showSuccess(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.guardar.consulta.correcto"));
         this.consultaEditada = false;
-
       },
       err => {
         let error = JSON.parse(err.error);
@@ -255,16 +250,13 @@ export class ConsultaComponent implements OnInit {
         console.log(err);
       },
       () => {
-
       }
     );
 
   }
 
   ejecutar() {
-
     this.valores = [];
-
   }
 
 
@@ -298,7 +290,6 @@ export class ConsultaComponent implements OnInit {
         } else {
           this.enviar();
         }
-
         console.log(this.valores);
       }, error => {
         console.log(error);
@@ -325,9 +316,7 @@ export class ConsultaComponent implements OnInit {
 
   enviar() {
     this.progressSpinner = true;
-
     this.body.camposDinamicos = JSON.parse(JSON.stringify(this.valores));
-
     if (this.body.camposDinamicos != null && typeof this.body.camposDinamicos != "undefined") {
       this.body.camposDinamicos.forEach(element => {
         if (element.valor != undefined && typeof element.valor == "object") {
@@ -338,7 +327,6 @@ export class ConsultaComponent implements OnInit {
         }
       });
     }
-
     this.sigaServices
       .postDownloadFiles("consultas_ejecutarConsulta", this.body)
       .subscribe(data => {
@@ -355,7 +343,6 @@ export class ConsultaComponent implements OnInit {
       }, () => {
         this.progressSpinner = false;
       });
-
   }
 
   validarCamposDinamicos() {
@@ -377,7 +364,6 @@ export class ConsultaComponent implements OnInit {
   }
 
   getAyuda() {
-
     this.ayuda = [
       {
         texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto1"
@@ -439,7 +425,6 @@ export class ConsultaComponent implements OnInit {
       {
         texto: "informesYcomunicaciones.consultas.mensaje.ayuda.texto20"
       }
-
     ]
   }
 
@@ -471,13 +456,9 @@ export class ConsultaComponent implements OnInit {
   }
 
   fillFechaValor(event, dato) {
-
     let id = this.valores.findIndex(
       x => x.campo === dato.campo
     );
     this.valores[id].valor = event;
   }
-
-
-
 }

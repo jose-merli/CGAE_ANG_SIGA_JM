@@ -47,6 +47,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   showDatosColegiales: boolean = true;
   showDatosGeneneralesAvanzado: boolean = false;
   showDatosDireccion: boolean = false;
+  msgsDescarga: any;
   progressSpinner: boolean = false;
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
@@ -223,6 +224,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.progressSpinner = true;
     this.getCombos();
 
+    if (sessionStorage.getItem('descargasPendientes') == undefined) {
+      sessionStorage.setItem('descargasPendientes', '0');
+    }
+
     // sessionStorage.removeItem("esColegiado");
     sessionStorage.removeItem("disabledAction");
     sessionStorage.removeItem("busqueda");
@@ -279,17 +284,17 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "tipoDireccion",
         header: "censo.datosDireccion.literal.tipo.direccion",
-        width: "25%"
+        width: "17%"
       },
       {
         field: "domicilioLista",
         header: "censo.consultaDirecciones.literal.direccion",
-        width: "20%"
+        width: "10%"
       },
       {
         field: "codigoPostal",
         header: "censo.ws.literal.codigopostal",
-        width: "8%"
+        width: "5%"
       },
       {
         field: "nombrePoblacion",
@@ -299,7 +304,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "nombreProvincia",
         header: "censo.datosDireccion.literal.provincia",
-        width: "11%"
+        width: "10%"
       },
       {
         field: "telefono",
@@ -314,7 +319,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       {
         field: "correoElectronico",
         header: "censo.datosDireccion.literal.correo",
-        width: "14%"
+        width: "15%"
       }
     ];
     this.selection = "multiple";
@@ -1272,8 +1277,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   generarExcels() {
 
-    this.progressSpinner = true;
-
     this.body.fechaIncorporacion = [];
     this.body.fechaIncorporacion[1] = this.fechaIncorporacionHastaSelect;
     this.body.fechaIncorporacion[0] = this.fechaIncorporacionDesdeSelect;
@@ -1281,23 +1284,38 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.body.fechaNacimientoRango = [];
     this.body.fechaNacimientoRango[1] = this.fechaNacimientoHastaSelect;
     this.body.fechaNacimientoRango[0] = this.fechaNacimientoDesdeSelect;
+    
+    let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
+    descargasPendientes = descargasPendientes + 1;
+    sessionStorage.setItem('descargasPendientes', descargasPendientes);
+    this.showInfoPerenne(
+        'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
+    );
+
 
     this.sigaServices
       .postDownloadFiles("busquedaColegiados_generarExcel", this.body)
       .subscribe(data => {
-        this.progressSpinner = false;
         if (data == null) {
           this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+          descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+          sessionStorage.setItem('descargasPendientes', descargasPendientes);        
         } else {
           let nombre = this.translateService.instant("censo.nombre.fichero.generarexcel") + new Date().getTime() + ".xlsx";
           saveAs(data, nombre);
+          descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+          sessionStorage.setItem('descargasPendientes', descargasPendientes);
+          this.showInfoPerenne(
+            'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
+          );
         }
       }, error => {
-        console.log(error);
-        this.progressSpinner = false;
+        descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+        sessionStorage.setItem('descargasPendientes', descargasPendientes);
+
         this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
       }, () => {
-        this.progressSpinner = false;
+        
       });
 
   }
@@ -1321,6 +1339,10 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     this.msgs.push({ severity: "info", summary: "", detail: mensaje });
   }
 
+  showInfoPerenne(mensaje: string) {
+    this.msgsDescarga = [];
+    this.msgsDescarga.push({ severity: 'info', summary: '', detail: mensaje });
+  }
 
   showDialog() {
     this.displayBoolean = true;

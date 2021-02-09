@@ -257,7 +257,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
       .subscribe(
         data => {
-          console.log(data);
           this.searchUser = JSON.parse(data["body"]);
           this.datosActivos = this.searchUser.usuarioItem;
           this.table.paginator = true;
@@ -280,7 +279,6 @@ para poder filtrar el dato con o sin estos caracteres*/
             .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
             .subscribe(
               data => {
-                console.log(data);
                 this.progressSpinner = false;
                 this.searchUser = JSON.parse(data["body"]);
                 for (let i in this.searchUser.usuarioItem) {
@@ -353,7 +351,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       .postPaginado("usuarios_search", "?numPagina=1", this.filtrosIniciales)
       .subscribe(
         data => {
-          console.log(data);
+          
           this.progressSpinner = false;
           this.searchUser = JSON.parse(data["body"]);
           this.datos = this.searchUser.usuarioItem;
@@ -522,7 +520,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         .postPaginado("usuarios_search", "?numPagina=1", this.body)
         .subscribe(
           data => {
-            console.log(data);
+            
             this.progressSpinner = false;
             this.searchUser = JSON.parse(data["body"]);
             this.datos = this.searchUser.usuarioItem;
@@ -656,7 +654,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   paginate(event) {
-    console.log(event);
+     
   }
 
   setItalic(datoH) {
@@ -744,7 +742,6 @@ para poder filtrar el dato con o sin estos caracteres*/
   borrar(selectedItem) {
     this.usuariosDelete = new UsuarioDeleteRequestDto();
     selectedItem.forEach((value: UsuarioItem, key: number) => {
-      console.log(value);
       this.usuariosDelete.idUsuario.push(value.idUsuario);
       this.usuariosDelete.activo = value.activo;
       this.usuariosDelete.idInstitucion = "2000";
@@ -1001,11 +998,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       }
     } else {
-      console.log(this.body);
       this.sigaServices.post("usuarios_update", this.updateUsuarios).subscribe(
         data => {
           this.showSuccess();
-          console.log(data);
+          
         },
         err => {
           this.showFail();

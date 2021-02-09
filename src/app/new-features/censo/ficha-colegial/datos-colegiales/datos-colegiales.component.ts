@@ -19,7 +19,6 @@ export class DatosColegialesComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.fichasPosibles)
   }
 
   esFichaActiva(key) {
