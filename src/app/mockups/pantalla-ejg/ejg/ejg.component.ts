@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-ejg2',
@@ -6,14 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ejg.component.scss']
 })
 export class EjgComponent2 implements OnInit {
+  msgs: Message[] = [];
   rutas = ['SJCS', 'Oficio', 'E.J.G'];
   cFormValidity = true;
-  show = true;
-  selectorEstados: [1,2,3,4,5,6,7,8,9,10];
- 
+  show = false;
+  selectorEstados: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   selectores1 = [
     {
-      nombre : "Tipo EJG",
+      nombre: "Tipo EJG",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -28,7 +30,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Tipo EJG Colegio",
+      nombre: "Tipo EJG Colegio",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -43,7 +45,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Creado desde",
+      nombre: "Creado desde",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -58,7 +60,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Estado EJG",
+      nombre: "Estado EJG",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -73,13 +75,13 @@ export class EjgComponent2 implements OnInit {
       ]
     }
   ];
-  datePickers1 = ["Fecha Apertura desde", "Fecha Apertura hasta", "Fecha Estado desde","Fecha Estado hasta", 
-  "Fecha Límite desde", "Fecha Límite hasta"];
-  
-  
+  datePickers1 = ["Fecha Apertura desde", "Fecha Apertura hasta", "Fecha Estado desde", "Fecha Estado hasta",
+    "Fecha Límite desde", "Fecha Límite hasta"];
+
+
   selectores2 = [
     {
-      nombre : "Resolución",
+      nombre: "Resolución",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -94,7 +96,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Fundamentos de la resolución",
+      nombre: "Fundamentos de la resolución",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -109,7 +111,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Dictamen",
+      nombre: "Dictamen",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -124,7 +126,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Fundamento de Calificación",
+      nombre: "Fundamento de Calificación",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -139,7 +141,7 @@ export class EjgComponent2 implements OnInit {
       ]
     },
     {
-      nombre : "Impugnación",
+      nombre: "Impugnación",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -154,59 +156,59 @@ export class EjgComponent2 implements OnInit {
       ]
     }
   ];
-  datePickers2 = ["Fecha Resolución desde", "Fecha Resolución hasta", "Fecha Dictamen desde","Fecha Dictamen hasta", 
-  "Fecha Impugnación desde", "Fecha Impugnación hasta"];
+  datePickers2 = ["Fecha Resolución desde", "Fecha Resolución hasta", "Fecha Dictamen desde", "Fecha Dictamen hasta",
+    "Fecha Impugnación desde", "Fecha Impugnación hasta"];
   selectores = [this.selectores1, this.selectores2];
   datePickers = [this.datePickers1, this.datePickers2];
   emptyAccordions = ["Datos Defensa", "CAJG"];
 
-cabeceras = [
+  cabeceras = [
     {
-      id: "colegio", 
+      id: "colegio",
       name: "Colegio"
     },
     {
-      id: "identificacion", 
+      id: "identificacion",
       name: "Nº identificacion"
     },
     {
-      id: "nombre", 
+      id: "nombre",
       name: "Nombre"
     },
     {
-      id: "colegiado", 
+      id: "colegiado",
       name: "Nº Colegiado"
     },
     {
-      id: "situacion", 
+      id: "situacion",
       name: "Situación"
     },
     {
-      id: "residencia", 
+      id: "residencia",
       name: "Residencia"
     },
     {
-      id: "nacimiento", 
+      id: "nacimiento",
       name: "Fecha Nacimiento"
     },
     {
-      id: "correo", 
+      id: "correo",
       name: "Correo electrónico"
     },
     {
-      id: "telefono", 
+      id: "telefono",
       name: "Teléfono"
     },
     {
-      id: "movil", 
+      id: "movil",
       name: "Móvil"
     },
     {
-      id: "lopd", 
+      id: "lopd",
       name: "LOPD"
     }
-];
-elementos = [
+  ];
+  elementos = [
     ['ALCALÁ DE HENARES', "78909876R", "ASNDADBH AHDBHAJD JUAN", "1702", "Baja Colegial", "No", "30/04/1969", "papelera@redabogacia.org", "999999999", "666666666", "No"],
     ['BALCALÁ DE HENARES', "23909876R", "ASNDADBH AHDBHAJD ANA", "1402", "Baja Colegial", "Si", "12/04/1969", "papelera@redabogacia.org", "999999999", "666666666", "No"]
   ];
@@ -218,13 +220,26 @@ elementos = [
 
   ngOnInit(): void {
   }
-  saveForm($event){
+  saveForm($event) {
     this.cFormValidity = $event;
   }
-  showResponse(){
+  showResponse() {
     this.show = true;
   }
-  hideResponse(){
+  hideResponse() {
     this.show = false;
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

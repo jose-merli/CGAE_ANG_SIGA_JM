@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-dictamen',
@@ -7,7 +8,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./tarjeta-dictamen.component.scss']
 })
 export class TarjetaDictamenComponent implements OnInit {
-
+  msgs: Message[] = [];
   dForm = new FormGroup({
   });
   constructor() { }
@@ -51,6 +52,19 @@ export class TarjetaDictamenComponent implements OnInit {
     }
   ];
   ngOnInit(): void {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-buscador-asistencia-expres',
@@ -16,6 +17,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   modoBusqueda: string = 'b';
   modoBusquedaB: boolean = true;
   @Input() titulo: string;
+  msgs: Message[] = [];
   rutas:string[] = ['SJCS', 'Guardia', 'Asistencias'];
 
   constructor() {
@@ -98,6 +100,19 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     } else if (this.modoBusqueda === 'a') {
       this.modoBusquedaB = false;
     }
+  }
+
+  showMsg() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "info",
+      summary: 'Información buscada',
+      detail: 'Mostrando información buscada'
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

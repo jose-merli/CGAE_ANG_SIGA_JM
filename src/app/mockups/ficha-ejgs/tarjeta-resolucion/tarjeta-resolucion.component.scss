@@ -4,17 +4,15 @@
 }
 
 .messageBox{
-    background-color: lightskyblue;
+    background-color: #8da3c1;
     color: white;
     border-radius: 5px;
-    flex: 1;
-	text-align: center;
-	display: flex;
-	align-items: right;
-	justify-content: right;
+    border-color: #8da3c1;
 }
 
 .vertical-align {
     display: flex;
     align-items: flex-end;
 }
+
+

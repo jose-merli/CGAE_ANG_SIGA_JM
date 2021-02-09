@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-datos-generales',
@@ -7,7 +8,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./tarjeta-datos-generales.component.scss']
 })
 export class TarjetaDatosGeneralesComponent implements OnInit {
-
+  msgs: Message[] = [];
   datePickers1 = ["Fecha Apertura *"];
   inputs1 = [
     {
@@ -82,6 +83,19 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   dgForm = new FormGroup({
   });
   ngOnInit(): void {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail,
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="card">
     <div class="card-body">
         <app-busqueda-certificacion (formulario)="saveForm($event)"></app-busqueda-certificacion>
@@ -6,7 +7,8 @@
         <div class="text-right main-button">
             <button pButton type="button" icon="fas fa-eraser" iconPos="left" label="Limpiar"
                 (click)="hideResponse()"></button>
-            <button pButton type="button" icon="fas fa-search" iconPos="left" label="Buscar" (click)="showResponse()"
+            <button pButton type="button" icon="fas fa-search" iconPos="left" label="Buscar"
+                (click)="showResponse();showMsg('info', 'Mostrando información buscada', '')"
                 [disabled]="!cFormValidity"></button>
             <button pButton type="button" icon="fas fa-plus" iconPos="left" label="Nuevo"></button>
         </div>
@@ -28,9 +30,9 @@
         <div class="card-footer">
             <div class="text-right main-button">
                 <button pButton type="button" icon="fa fa-times" iconPos="left" label="Eliminar"
-                    (click)="hideResponse()"></button>
+                    (click)="showMsg('success', 'Se ha eliminado correctamente', '')"></button>
                 <button pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Comunicar"
-                    (click)="showResponse()"></button>
+                    (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
             </div>
         </div>
     </div>

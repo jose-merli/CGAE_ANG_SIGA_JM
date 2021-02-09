@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-asuntos',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./asuntos.component.scss']
 })
 export class AsuntosComponent implements OnInit {
-  show = true;
+  msgs: Message[] = [];
+  show = false;
   cFormValidity = true;
   modoBusqueda = 'a';
   radios = [
@@ -166,6 +168,19 @@ export class AsuntosComponent implements OnInit {
   }
   saveForm($event) {
     this.cFormValidity = $event;
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

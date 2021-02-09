@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-resolucion',
@@ -7,6 +8,8 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./tarjeta-resolucion.component.scss']
 })
 export class TarjetaResolucionComponent implements OnInit {
+  msgs: Message[] = [];
+  msgInfo: boolean = false;
   rForm = new FormGroup({
   });
   constructor() { }
@@ -14,21 +17,6 @@ export class TarjetaResolucionComponent implements OnInit {
   selectores1 = [
     {
       nombre: "Año/Acta - Fecha Resolución",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Resolución del expediente",
       opciones: [
         { label: '1', value: 1 },
         { label: '2', value: 2 },
@@ -86,7 +74,22 @@ export class TarjetaResolucionComponent implements OnInit {
         { label: '9', value: 9 },
         { label: '10', value: 10 },
       ]
-    }
+    },
+    {
+      nombre: "Resolución del expediente",
+      opciones: [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+        { label: '8', value: 8 },
+        { label: '9', value: 9 },
+        { label: '10', value: 10 },
+      ]
+    },
   ];
   inputs1 = [
     {
@@ -110,6 +113,19 @@ export class TarjetaResolucionComponent implements OnInit {
   textoInformativo = "Importante: El expediente se considera 'Resuelto' cuando se consigne, al menos, la Fecha de Resolución y el sentido de la Resolución.";
 
   ngOnInit(): void {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

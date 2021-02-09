@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <form [formGroup]="iForm">
   <div class="row w-100 m-0 padding-interior">
     <div class="form-row w-100">
@@ -31,7 +32,9 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"></button>
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+      (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
   </div>
 </div>

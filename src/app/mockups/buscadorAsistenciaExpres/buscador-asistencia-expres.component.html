@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
     <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
 
@@ -61,7 +62,7 @@
                 <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                     label="{{ 'general.boton.clear' | translate}}"></button>
                 <button type="submit" pButton icon="fa fa-search" iconPos="left"
-                    label="{{'general.boton.search' | translate}}"></button>
+                    label="{{'general.boton.search' | translate}}" (click)="showMsg()"></button>
             </div>
         </div>
     </div>

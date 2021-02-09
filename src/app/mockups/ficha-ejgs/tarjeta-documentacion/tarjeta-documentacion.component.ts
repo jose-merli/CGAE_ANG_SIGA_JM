@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-documentacion',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tarjeta-documentacion.component.scss']
 })
 export class TarjetaDocumentacionComponent implements OnInit {
-
+  msgs: Message[] = [];
   constructor() { }
   cabeceras = [
     {
@@ -47,6 +48,19 @@ export class TarjetaDocumentacionComponent implements OnInit {
     ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", "0"]
   ];
   ngOnInit(): void {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

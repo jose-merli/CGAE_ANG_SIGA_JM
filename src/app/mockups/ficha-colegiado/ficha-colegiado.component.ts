@@ -11,10 +11,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FichaColegiadoComponent implements OnInit {
 
-  tarjetaFija = null;
+  tarjetaFija = {
+    nombre: "Información Resumen",
+    icono: 'fas fa-clipboard',
+    detalle: false,
+    fixed: true,
+    campos: [
+      {
+        "key": "Apellidos y Nombre",
+        "value": "ABDTW YSVYHDZT, JUAN CARLOS"
+      },
+      {
+        "key": "Identificación",
+        "value": "21421197D"
+      },
+      {
+        "key": "Número de Colegiado",
+        "value": "4792"
+      },
+      {
+        "key": "Situación Ejercicio Actual",
+        "value": "Activo"
+      }
+    ],
+    enlaces: []
+  };
 
   listaTarjetas = [
     {
+      id: 'mockFichColeSerInte',
       nombre: "Servicios de interés",
       icono: 'fas fa-link',
       detalle: false,
@@ -27,6 +52,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeDatGen',
       nombre: "Datos Generales",
       imagen: "",
       icono: 'fa fa-user',
@@ -53,6 +79,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeDatCol',
       nombre: "Datos Colegiales",
       imagen: "",
       icono: 'far fa-address-book',
@@ -86,6 +113,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeOtrCole',
       nombre: "Otras Colegiaciones",
       imagen: "",
       icono: 'fa fa-graduation-cap',
@@ -100,6 +128,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeCert',
       nombre: "Certificados",
       imagen: "",
       icono: 'fa fa-certificate',
@@ -114,6 +143,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeSan',
       nombre: "Sanciones",
       imagen: "",
       icono: 'fa fa-gavel',
@@ -128,6 +158,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeSoci',
       nombre: "Sociedades",
       imagen: "",
       icono: 'fa fa-briefcase',
@@ -142,6 +173,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeDatCurr',
       nombre: "Datos Curriculares",
       imagen: "",
       icono: 'fa fa-paperclip',
@@ -156,6 +188,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeDirecc',
       nombre: "Direcciones",
       imagen: "",
       icono: 'fa fa-map-marker',
@@ -170,6 +203,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeDatBanc',
       nombre: "Datos Bancarios",
       imagen: "",
       icono: 'fa fa-bank',
@@ -184,6 +218,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeRegt',
       nombre: "Regtel",
       imagen: "",
       icono: 'fa fa-file-alt',
@@ -198,6 +233,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeAltMut',
       nombre: "Alter Mutua",
       imagen: "",
       icono: 'fa fa-user',
@@ -216,6 +252,7 @@ export class FichaColegiadoComponent implements OnInit {
       ]
     },
     {
+      id: 'mockFichColeMutuAboga',
       nombre: "Mutualidad de la abogacía",
       imagen: "",
       icono: 'fas fa-link',
@@ -255,6 +292,16 @@ export class FichaColegiadoComponent implements OnInit {
     this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
     this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
     this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    });
   }
 
   @HostListener("scroll", ['$event'])
@@ -273,6 +320,15 @@ export class FichaColegiadoComponent implements OnInit {
       this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
       this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
     }
+  }
+
+  isOpenReceive(event) {
+    let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
+
+    if (tarjTemp.detalle) {
+      tarjTemp.opened = true;
+    }
+
   }
 
 }

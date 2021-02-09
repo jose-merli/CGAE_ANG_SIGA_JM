@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-unidad-familiar',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tarjeta-unidad-familiar.component.scss']
 })
 export class TarjetaUnidadFamiliarComponent implements OnInit {
-
+  msgs: Message[] = [];
   cabeceras = [
     {
       id: "nif",
@@ -49,6 +50,19 @@ export class TarjetaUnidadFamiliarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail,
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

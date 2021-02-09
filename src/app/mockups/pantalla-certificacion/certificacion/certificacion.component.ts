@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-certificacion2',
@@ -7,6 +8,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./certificacion.component.scss']
 })
 export class CertificacionComponent2 implements OnInit {
+  msgs: Message[] = [];
   cFormValidity = true;
   show = false;
   cabeceras = [
@@ -64,5 +66,18 @@ export class CertificacionComponent2 implements OnInit {
   }
   hideResponse() {
     this.show = false;
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

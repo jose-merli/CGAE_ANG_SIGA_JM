@@ -16,8 +16,7 @@ export class FichaActuacionComponent implements OnInit {
   tarjetaFija = {
     nombre: "Resumen Actuación",
     icono: 'fas fa-clipboard',
-    iconFixed: 'fas fa-thumbtack',
-    tipo: "detalle",
+    detalle: false,
     fixed: true,
     campos: [
       {
@@ -37,9 +36,7 @@ export class FichaActuacionComponent implements OnInit {
         "value": "4"
       }
     ],
-    enlaces: [
-      { href: 'sjcsDesigActuaDoc', texto: 'Documentación' }
-    ]
+    enlaces: []
   };
 
   listaTarjetas = [
@@ -148,6 +145,17 @@ export class FichaActuacionComponent implements OnInit {
     this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
     this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
     this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    });
+
   }
 
   @HostListener("scroll", ['$event'])
@@ -166,6 +174,15 @@ export class FichaActuacionComponent implements OnInit {
       this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
       this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
     }
+  }
+
+  isOpenReceive(event) {
+    let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
+
+    if (tarjTemp.detalle) {
+      tarjTemp.opened = true;
+    }
+
   }
 
 

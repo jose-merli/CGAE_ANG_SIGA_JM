@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="card">
     <div class="card-body">
 
@@ -17,7 +18,8 @@
             <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                 label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse()"></button>
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
-                label="{{'general.boton.search' | translate}}" (click)="showResponse()"
+                label="{{'general.boton.search' | translate}}"
+                (click)="showResponse();showMsg('info', 'Mostrando información buscada', '')"
                 [disabled]="!cFormValidity"></button>
         </div>
     </div>

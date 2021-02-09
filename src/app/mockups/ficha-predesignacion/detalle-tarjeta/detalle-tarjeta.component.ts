@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-detalle-tarjeta',
@@ -7,6 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./detalle-tarjeta.component.scss']
 })
 export class DetalleTarjetaComponent implements OnInit {
+  msgs: Message[] = [];
   @Input() title = "";
   imagen = "assets/user.PNG";
   notarioForm = new FormGroup({
@@ -65,6 +67,19 @@ export class DetalleTarjetaComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }
