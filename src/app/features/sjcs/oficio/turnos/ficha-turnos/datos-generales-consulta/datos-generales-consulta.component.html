@@ -1,16 +1,16 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container" id="generales">
+<div class="busqueda-container" id="datosGenerales">
   <div *ngIf="permisosTarjeta" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+    <div class="card-header header-ficha" >
       <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="far fa-address-card icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ "general.message.datos.generales" | translate }}
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha" style="cursor:pointer">{{ "general.message.datos.generales" | translate }}
 
             </label>
           </div>
@@ -28,15 +28,15 @@
               <span>{{ tipoturnoDescripcion }}</span>
             </label>
             <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
         <div class="img-colegiado">
           <i class="far fa-address-card icon-ficha"></i>
         </div>
-        <label class="title-ficha">Datos Generales</label>
+        <label class="title-ficha" style="cursor:pointer">Datos Generales</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>

@@ -31,28 +31,28 @@
           <label>{{ 'menu.justiciaGratuita.maestros.Area' | translate}}</label>
           
           <p-multiSelect #someDropdown1 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idarea'
-          [options]="areas" maxSelectedLabels="10" [selectedItemsLabel]="textSelected"
-          styleClass="widthAll" (onChange)="onChangeArea()" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="areas" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+          styleClass="widthAll" (onChange)="onChangeArea()" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'menu.justiciaGratuita.maestros.Materia' | translate}}</label>
           
           <p-multiSelect #someDropdown2 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idmateria' [(disabled)]="isDisabledMateria"
-          [options]="materias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" [(disabled)]="isDisabledMateria"
-          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="materias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" [(disabled)]="isDisabledMateria"
+          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera'|translate}}</label>
           <p-multiSelect #someDropdown3 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idzona'
           [options]="zonas" maxSelectedLabels="10" (onChange)="onChangeZona()" [selectedItemsLabel]="textSelected"
-          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"  (onPanelShow)="focusInputField3()"></p-multiSelect>
+          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"  ></p-multiSelect>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.maestros.zonasYSubzonas.zona'|translate}}</label>
           <p-multiSelect #someDropdown4 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idzubzona' [(disabled)]="isDisabledSubZona"
-          [options]="subzonas" maxSelectedLabels="10" (onChange)="partidoJudiciales()"[selectedItemsLabel]="textSelected"
-          styleClass="widthAll" [filter]="true" [(disabled)]="isDisabledSubZona" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="subzonas" maxSelectedLabels="10" selectionLimits="10" (onChange)="partidoJudiciales()"[selectedItemsLabel]="textSelected"
+          styleClass="widthAll" [filter]="true" [(disabled)]="isDisabledSubZona" filterBy="label,labelSinTilde" ></p-multiSelect>
         
         </div>
 
@@ -66,16 +66,16 @@
           <label>{{'menu.justiciaGratuita.maestros.Jurisdiccion'|translate}}</label>
           
             <p-multiSelect #someDropdown5 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.jurisdiccion'
-          [options]="jurisdicciones" maxSelectedLabels="10" [selectedItemsLabel]="textSelected"
-          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="jurisdicciones" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'menu.justiciaGratuita.maestros.partidas'|translate}}</label>
           <p-multiSelect #someDropdown6 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idpartidapresupuestaria'
-          [options]="partidas" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" 
-          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="partidas" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" 
+          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         
         </div>
 
@@ -83,15 +83,15 @@
           <label>{{'justiciaGratuita.oficio.turnos.grupofacturacion'|translate}}</label>
           
           <p-multiSelect #someDropdown7 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.grupofacturacion'
-          [options]="grupofacturacion" maxSelectedLabels="10" [selectedItemsLabel]="textSelected"
-          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="grupofacturacion" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'justiciaGratuita.oficio.turnos.tipoturno'|translate}}</label>
          <p-multiSelect #someDropdown8 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idtipoturno'
-          [options]="tiposturno" maxSelectedLabels="10" [selectedItemsLabel]="textSelected"
-          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField3()"></p-multiSelect>
+          [options]="tiposturno" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+          styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
         <!-- [showClear]="true" -->
         </div>
       </div>

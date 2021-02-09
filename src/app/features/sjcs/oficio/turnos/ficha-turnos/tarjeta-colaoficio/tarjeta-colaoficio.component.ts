@@ -719,11 +719,11 @@ export class TarjetaColaOficio implements OnInit {
     fichaPosible.activa = false;
   }
   abreCierraFicha() {
-    if (this.modoEdicion) {
+    //if (this.modoEdicion) {
       this.openFicha = !this.openFicha;
-    } else {
+    /* } else {
       this.openFicha = false;
-    }
+    } */
   }
   openMultiSelect(dato) {
     // console.log(this.multiSelect);

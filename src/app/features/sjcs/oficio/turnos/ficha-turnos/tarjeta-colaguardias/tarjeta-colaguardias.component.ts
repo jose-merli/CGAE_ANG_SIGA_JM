@@ -718,7 +718,7 @@ export class TarjetaColaGuardias implements OnInit {
     }
     return {};
   }
-  abrirFicha(key) {
+  /* abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = true;
   }
@@ -726,13 +726,13 @@ export class TarjetaColaGuardias implements OnInit {
   cerrarFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = false;
-  }
+  } */
   abreCierraFicha() {
-    if (this.modoEdicion) {
+    //if (this.modoEdicion) {
       this.openFicha = !this.openFicha;
-    } else {
+    /* } else {
       this.openFicha = false;
-    }
+    } */
   }
   openMultiSelect(dato) {
     // console.log(this.multiSelect);

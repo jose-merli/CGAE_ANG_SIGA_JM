@@ -2,16 +2,16 @@
 
 <div class="ficha-container" id="guardias">
   <div *ngIf="permisosTarjeta" class="card">
-    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('tarjetaguardias')">
+    <div class="card-header header-ficha" >
       <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="fas fa-list-alt icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{'menu.justiciaGratuita.guardia.guardias'|translate}}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+            <label class="mr-auto title-ficha" style="cursor:pointer">{{'menu.justiciaGratuita.guardia.guardias'|translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
             <label *ngIf="mostrarVacio">{{ "justiciaGratuita.oficio.turnos.numeroguardias" | translate }}
@@ -29,16 +29,15 @@
             <label *ngIf="mostrarDatos">{{ "dato.jgr.guardia.guardias.letradosGuardia" | translate }}
               <span>{{ nletradosGuardias }}</span>
             </label>
-            <i (click)="abrirFicha('tarjetaguardias')" *ngIf="!esFichaActiva('tarjetaguardias')" class="fa fa-angle-up float-right"></i>
-            <i (click)="cerrarFicha('tarjetaguardias')" *ngIf="esFichaActiva('tarjetaguardias')" class="fa fa-angle-down float-right"></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha()"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
         <div class="img-colegiado">
           <i class="fas fa-list-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{"menu.justiciaGratuita.guardia.guardias" | translate}}</label>
+        <label class="title-ficha" style="cursor:pointer">{{"menu.justiciaGratuita.guardia.guardias" | translate}}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>

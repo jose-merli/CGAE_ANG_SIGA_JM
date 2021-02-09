@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
@@ -27,6 +27,8 @@ export class FichaTurnosComponent implements OnInit {
 	datos;
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
+	datosTarjetaResumen;
+	iconoTarjetaResumen = "clipboard";
 
 	enlacesTarjetaResumen: any[] = [];
 	manuallyOpened:Boolean;
@@ -49,6 +51,7 @@ export class FichaTurnosComponent implements OnInit {
 	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService) { }
 
 	ngOnInit() {
+		this.datosTarjetaResumen = [];
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 		.then(respuesta => {
 		  this.permisosTarjetaResumen = respuesta;
@@ -105,7 +108,12 @@ export class FichaTurnosComponent implements OnInit {
       	//
       	setTimeout(() => {
         	this.enviarEnlacesTarjeta();
-      	}, 2000);
+		  }, 2000);
+		
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		this.enviarEnlacesTarjeta();
 	}
 
 	searchTurnos() {
@@ -134,6 +142,12 @@ export class FichaTurnosComponent implements OnInit {
 		);
 	}
 
+	datosTarjetaResumenEvent(event) {
+		if (event != undefined) {
+		  this.datosTarjetaResumen = event;
+		}
+	}
+
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
 		this.idTurno = event.idTurno
@@ -159,17 +173,17 @@ export class FichaTurnosComponent implements OnInit {
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-			label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
-			value: document.getElementById("calendarioGuardia"),
-			nombre: "calendarioGuardia",
+			label: "menu.justiciaGratuita.guardia.gestion.configuracionTurnos",
+			value: document.getElementById("configTurnos"),
+			nombre: "configTurnos",
 		  };
 	
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
 		  label: "justiciaGratuita.guardia.gestion.configuracionCola",
-		  value: document.getElementById("configuracionCola"),
-		  nombre: "configuracionCola",
+		  value: document.getElementById("configColaOficio"),
+		  nombre: "configColaOficio",
 		};
 	
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
@@ -183,25 +197,17 @@ export class FichaTurnosComponent implements OnInit {
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-		  label: "dato.jgr.guardia.guardias.incompatibilidades",
-		  value: document.getElementById("incompatibilidades"),
-		  nombre: "incompatibilidades",
+		  label: "menu.justiciaGratuita.oficio.turnos.colaoficio",
+		  value: document.getElementById("colaOficio"),
+		  nombre: "colaOficio",
 		};
 	
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-		  label: "dato.jgr.guardia.guardias.baremos",
-		  value: document.getElementById("baremos"),
-		  nombre: "baremos",
-		};
-	
-		this.enlacesTarjetaResumen.push(pruebaTarjeta);
-	
-		pruebaTarjeta = {
-		  label: "agenda.fichaEventos.datosGenerales.calendario",
-		  value: document.getElementById("calendarios"),
-		  nombre: "calendarios",
+		  label: "menu.justiciaGratuita.oficio.turnos.guardias",
+		  value: document.getElementById("guardias"),
+		  nombre: "guardias",
 		};
 	
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
@@ -210,14 +216,6 @@ export class FichaTurnosComponent implements OnInit {
 		  label: "menu.justiciaGratuita.oficio.inscripciones",
 		  value: document.getElementById("inscripciones"),
 		  nombre: "inscripciones",
-		};
-	
-		this.enlacesTarjetaResumen.push(pruebaTarjeta);
-		
-		pruebaTarjeta = {
-		  label: "dato.jgr.guardia.guardias.turno",
-		  value: document.getElementById("turnos"),
-		  nombre: "turnos",
 		};
 	
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);

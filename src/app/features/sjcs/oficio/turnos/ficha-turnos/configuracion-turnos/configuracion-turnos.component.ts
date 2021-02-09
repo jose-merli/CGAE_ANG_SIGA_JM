@@ -324,7 +324,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
     let correo = dato.email;
     this.commonsServices.openOutlook(correo);
   }
-
+/* 
   abrirFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = true;
@@ -333,13 +333,13 @@ export class ConfiguracionTurnosComponent implements OnInit {
   cerrarFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = false;
-  }
+  } */
   abreCierraFicha() {
-    if (this.modoEdicion) {
+    //if (this.modoEdicion) {
       this.openFicha = !this.openFicha;
-    } else {
+    /* } else {
       this.openFicha = false;
-    }
+    } */
   }
 
   showMessage(severity, summary, msg) {

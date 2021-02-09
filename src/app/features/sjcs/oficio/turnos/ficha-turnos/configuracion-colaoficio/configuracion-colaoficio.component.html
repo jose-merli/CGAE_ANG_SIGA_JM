@@ -2,29 +2,28 @@
 <div *ngIf="permisosTarjeta">
   <div class="busqueda-container" id="configColaOficio">
     <div class="card">
-      <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('configuracioncolaoficio')">
+      <div class="card-header header-ficha">
         <div *ngIf="!openFicha" class="form-row">
-          <div class="col-lg-1 col-md-2">
+          <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
             <div class="img-colegiado">
               <i class="fa fa-wrench  icon-ficha"></i>
             </div>
           </div>
-          <div class="col-lg-11 col-md-10 ">
-            <div class="d-flex justify-content-start mb-1">
-              <label class="mr-auto title-ficha"> {{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
+          <div class="col-lg-11 col-md-10" >
+            <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
+              <label class="mr-auto title-ficha" style="cursor:pointer"> {{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
             </div>
             <div class="d-flex justify-content-between">
               <span>{{ pesosSeleccionadosTarjeta }}</span>
-              <i (click)="abrirFicha('configuracioncolaoficio')" *ngIf="!esFichaActiva('configuracioncolaoficio')" class="fa fa-angle-up float-right"></i>
-              <i (click)="cerrarFicha('configuracioncolaoficio')" *ngIf="esFichaActiva('configuracioncolaoficio')" class="fa fa-angle-down float-right"></i>
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha()"></i>
             </div>
           </div>
         </div>
-        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
           <div class="img-colegiado">
             <i class="fa fa-wrench  icon-ficha"></i>
           </div>
-          <label class="title-ficha">{{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
+          <label class="title-ficha" style="cursor:pointer">{{"justiciaGratuita.oficio.turnos.configuracioncolaoficio" | translate}}</label>
           <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
