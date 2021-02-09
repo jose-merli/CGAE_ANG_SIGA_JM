@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
@@ -28,6 +28,7 @@ export class FichaTurnosComponent implements OnInit {
 	messageShow: string;
 	permisosTarjetaResumen: boolean = true;
 	datosTarjetaResumen;
+	iconoTarjetaResumen = "clipboard";
 
 	enlacesTarjetaResumen: any[] = [];
 	manuallyOpened:Boolean;
@@ -111,6 +112,10 @@ export class FichaTurnosComponent implements OnInit {
 		
 	}
 
+	ngOnChanges(changes: SimpleChanges) {
+		this.enviarEnlacesTarjeta();
+	}
+
 	searchTurnos() {
 		// this.filtros.filtros.historico = event;
 		this.progressSpinner = true;
@@ -168,7 +173,7 @@ export class FichaTurnosComponent implements OnInit {
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-			label: "justiciaGratuita.guardia.gestion.configuracionTurnos",
+			label: "menu.justiciaGratuita.guardia.gestion.configuracionTurnos",
 			value: document.getElementById("configTurnos"),
 			nombre: "configTurnos",
 		  };
@@ -192,7 +197,7 @@ export class FichaTurnosComponent implements OnInit {
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-		  label: "justiciaGratuita.oficio.turnos.colaoficio",
+		  label: "menu.justiciaGratuita.oficio.turnos.colaoficio",
 		  value: document.getElementById("colaOficio"),
 		  nombre: "colaOficio",
 		};
@@ -200,7 +205,7 @@ export class FichaTurnosComponent implements OnInit {
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-		  label: "justiciaGratuita.oficio.turnos.guardias",
+		  label: "menu.justiciaGratuita.oficio.turnos.guardias",
 		  value: document.getElementById("guardias"),
 		  nombre: "guardias",
 		};
@@ -208,7 +213,7 @@ export class FichaTurnosComponent implements OnInit {
 		this.enlacesTarjetaResumen.push(pruebaTarjeta);
 	
 		pruebaTarjeta = {
-		  label: "justiciaGratuita.oficio.inscripciones",
+		  label: "menu.justiciaGratuita.oficio.inscripciones",
 		  value: document.getElementById("inscripciones"),
 		  nombre: "inscripciones",
 		};

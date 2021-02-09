@@ -28,6 +28,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   nuevo: boolean = false;
+  
+  datosTarjetaResumen;
   msgs;
   historico;
   procedimientos;
@@ -52,7 +54,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   isDisabledMateria: boolean = false;
   comboPJ
   resaltadoDatosGenerales: boolean = false;
-  datos2;
   tipoturnoDescripcion;
   jurisdiccionDescripcion;
   partidaPresupuestaria;
@@ -68,7 +69,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       activa: false
     },
   ];
-  @Output() datosSend = new EventEmitter<any>();
+  @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
 
   @Output() modoEdicionSend = new EventEmitter<any>();
 
@@ -108,6 +109,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.resaltadoDatosGenerales = true;
   }
   ngOnInit() {
+    this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
     this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
       .then(respuesta => {
@@ -432,56 +434,14 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         let findPartido = this.comboPJ.find(x => x.value === partido);
         this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales.split(";").join("; ");
       });
-      if (this.modoEdicion) {
-
-
-        this.datos2 = [
-          {
-            label: "Nombre",
-            value: this.turnosItem.nombre
-          },
-          {
-            label: "Área",
-            value: this.turnosItem.area
-          },
-          {
-            label: "Materia",
-            value: this.turnosItem.materia
-          },
-          {
-            label: "Jurisdicción",
-            value: this.jurisdiccionDescripcion
-          },
-          {
-            label: "Tipo Turno",
-            value: this.tipoturnoDescripcion
-          },
-          {
-            label: "Grupo Zona",
-            value: this.turnosItem.zona
-          },
-          {
-            label: "Zona",
-            value: this.turnosItem.subzona
-          },
-          {
-            label: "Partida Presupuestaria",
-            value: this.partidaPresupuestaria
-          },
-          {
-            label: "Partido Judicial",
-            value: this.partidoJudicial
-          },
-        ]
-        this.datosSend.emit(this.datos2);
-      }
     }
+    this.actualizarFichaResumen();
   }
   actualizarFichaResumen() {
-    if (this.modoEdicion) {
+    //if (this.modoEdicion) {
 
 
-      this.datos2 = [
+      this.datosTarjetaResumen = [
         {
           label: "Nombre",
           value: this.turnosItem.nombre
@@ -519,9 +479,10 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           value: this.partidoJudicial
         },
       ]
-      this.datosSend.emit(this.datos2);
-    }
+      this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+    //}
   }
+
   partidoJudiciales() {
     if (this.turnosItem.idsubzona != null || this.turnosItem.idsubzona != undefined) {
       this.sigaServices
@@ -802,6 +763,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   }
 
+  
   guardarDatos() {
 
 
