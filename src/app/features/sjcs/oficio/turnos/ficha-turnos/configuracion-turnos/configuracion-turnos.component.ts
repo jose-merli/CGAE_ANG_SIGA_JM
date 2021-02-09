@@ -166,6 +166,22 @@ export class ConfiguracionTurnosComponent implements OnInit {
       this.edicionEmail = true;
       this.nuevoChecks();
     }
+
+    if (this.turnosItem.validarjustificaciones == 'S') {
+      this.validJustificacion = "SI";
+    } else {
+      this.validJustificacion = "NO";
+    }
+    if (this.turnosItem.validarinscripciones == 'S') {
+      this.validInscripyBajas = "SI";
+    } else {
+      this.validInscripyBajas = "NO";
+    }
+    if (this.turnosItem.visiblemovil == '1') {
+      this.visibleMovilTexto = "SI";
+    } else {
+      this.visibleMovilTexto = "NO";
+    }
   }
 
 
@@ -266,6 +282,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
         //   }
         //   this.modoEdicionSend.emit(send);
         // }
+        
         if (this.turnosItem.validarjustificaciones == 'S') {
           this.validJustificacion = "SI";
         } else {

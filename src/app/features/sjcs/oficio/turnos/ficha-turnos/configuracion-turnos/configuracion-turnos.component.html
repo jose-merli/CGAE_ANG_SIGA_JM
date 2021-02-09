@@ -9,7 +9,7 @@
             <i class="fas fa-cog icon-ficha"></i>
           </div>
         </div>
-        <div class="col-lg-11 col-md-10 ">
+        <div class="col-lg-11 col-md-10" >
           <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
             <label class="mr-auto title-ficha" style="cursor:pointer"> {{"justiciaGratuita.oficio.turnos.configuracionturnos" | translate}}</label>
           </div>
@@ -39,7 +39,10 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('configuracion') && openFicha" class="card-body card-body-ficha">
+    <!-- *ngIf="esFichaActiva('configuracion') && openFicha" -->
+    <div 
+    *ngIf="openFicha" 
+    class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-12 col-md-12">
 
@@ -99,7 +102,7 @@
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
         <button (click)="rest()" pButton [disabled]="disableAll" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="confirmGuardar()" pButton [disabled]="disabledSave() || disableAll" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="confirmGuardar()" pButton type="button" icon="far fa-save" iconPos="left"
           label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
