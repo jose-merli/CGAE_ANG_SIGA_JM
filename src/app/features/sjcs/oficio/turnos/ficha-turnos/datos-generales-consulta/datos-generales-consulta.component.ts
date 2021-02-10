@@ -28,6 +28,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   nuevo: boolean = false;
+  @Input() openGen;
   
   datosTarjetaResumen;
   msgs;

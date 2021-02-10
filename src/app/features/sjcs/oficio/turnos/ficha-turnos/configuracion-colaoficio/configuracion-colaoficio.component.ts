@@ -25,6 +25,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() modoEdicion;
+  @Input() openConfigColaOficio;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() idTurno;
   @Input() turnosItem: TurnosItems;

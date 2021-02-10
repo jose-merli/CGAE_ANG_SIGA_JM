@@ -25,6 +25,7 @@ export class TarjetaColaOficio implements OnInit {
 
   openFicha: boolean = false;
   textSelected: String = "{label}";
+  @Input() openColaOficio;
 
   selectedItem: number = 10;
   selectAll;

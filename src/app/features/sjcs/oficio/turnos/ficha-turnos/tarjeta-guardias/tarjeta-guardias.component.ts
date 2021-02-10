@@ -26,6 +26,7 @@ export class TarjetaGuardias implements OnInit {
 
   openFicha: boolean = false;
   textSelected: String = "{label}";
+  @Input() openGuardias;
 
   selectedItem: number = 10;
   selectAll;

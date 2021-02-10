@@ -25,6 +25,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   @Input() idTurno;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() tarjetaConfiguracionTurnos: string;
+  @Input() openConfigTurnos;
 
   openFicha: boolean = false;
   msgs = [];
