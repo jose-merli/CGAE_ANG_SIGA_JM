@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,Output,EventEmitter,SimpleChanges } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -31,6 +31,19 @@ export class RelacionesComponent implements OnInit {
   seleccion: boolean = false;
   relaciones: EstadoEJGItem; //cambiar item
   nRelaciones;
+
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "relaciones",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaRelaciones;
+
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService, ) { }
 
@@ -46,6 +59,37 @@ export class RelacionesComponent implements OnInit {
     }
     this.getCols();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaRelaciones == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
+  }
+
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "relaciones" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
   getRelaciones(selected) {
     //ojo esta a estados para probar a espera de back relaciones
     this.relaciones = this.persistenceService.getDatos();
@@ -187,9 +231,6 @@ export class RelacionesComponent implements OnInit {
   }
   mostrarHistorico() {
 
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
   }
 
   onChangeRowsPerPages(event) {

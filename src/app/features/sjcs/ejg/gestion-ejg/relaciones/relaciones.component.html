@@ -2,24 +2,24 @@
 <div class="busqueda-container" id="relaciones">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+      <div *ngIf="!esFichaActiva('relaciones')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('relaciones')">
           <div class="img-colegiado">
             <i class="fas fa-link icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
-            <label class="mr-auto title-ficha">{{'justiciaGratuita.ejg.datosGenerales.Relaciones' | translate }}</label>
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('relaciones')">
+            <label class="mr-auto title-ficha pointer">{{'justiciaGratuita.ejg.datosGenerales.Relaciones' | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between" style="cursor: default;">
               <label>{{'justiciaGratuita.ejg.datosGenerales.numero.Relaciones' | translate }}: <span *ngIf="nRelaciones > 0">{{nRelaciones}}</span></label>
               <label>{{ "justiciaGratuita.ejg.datosGenerales.numero.Relaciones" | translate }}: <span *ngIf="nRelaciones == 0">{{ "general.message.no.registros" | translate }}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('relaciones')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div *ngIf="esFichaActiva('relaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('relaciones')">
         <div class="img-colegiado">
           <i class="fas fa-link icon-ficha"></i>
         </div>
@@ -27,7 +27,7 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-     <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+     <div *ngIf="esFichaActiva('relaciones')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <p-table [value]="relaciones" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
             #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" [ngClass]="{ 'customCursor': selectMultiple}"
             selectionMode="multiple" paginatorPosition="both">

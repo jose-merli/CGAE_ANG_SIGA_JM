@@ -59,7 +59,7 @@ export class GestionEjgComponent implements OnInit {
   tarjetaRegtel: string;
   tarjetaComunicaciones: string;
 
-  openTarjetaDatosGenerales: Boolean = true;
+  openTarjetaDatosGenerales: Boolean = false;
   openTarjetaServiciosTramitacion: Boolean = false;
   openTarjetaUnidadFamiliar: Boolean = false;
   openTarjetaExpedientesEconomicos: Boolean = false;
@@ -141,13 +141,13 @@ export class GestionEjgComponent implements OnInit {
             this.body = new EJGItem();
             this.modoEdicion = false;
           }
-
          }
          this.obtenerPermisos();
+          
+         this.commonsService.scrollTop();
     }
     ).catch(error => console.error(error));
 
-    this.commonsService.scrollTop();
   }
     
   clear() {
@@ -394,7 +394,7 @@ export class GestionEjgComponent implements OnInit {
         case "documentacion":
           this.openTarjetaDocumentacion = this.manuallyOpened;
           break;
-        case "informCalificacion":
+        case "informeCalificacion":
           this.openTarjetaInformeCalificacion = this.manuallyOpened;
           break;
         case "resolucion":

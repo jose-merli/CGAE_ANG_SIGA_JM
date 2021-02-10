@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -37,6 +37,16 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
+  
+  fichaPosible = {
+    key: "datosGenerales",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaDatosGenerales;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
@@ -67,6 +77,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
        this.body = new EJGItem();
        this.showTipoExp = false;
       // this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaDatosGenerales == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
     }
   }
 
@@ -132,8 +151,25 @@ export class DatosGeneralesEjgComponent implements OnInit {
   fillFechaLimPresentacion(event) {
     this.body.fechalimitepresentacion = event;
   }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "datosGenerales" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -31,6 +31,19 @@ export class ImpugnacionComponent implements OnInit {
   impugnacionDesc: String;
   fundImpugnacionDesc: String;
 
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "impugnacion",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaImpugnacion;
+
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
@@ -51,6 +64,36 @@ export class ImpugnacionComponent implements OnInit {
   }
   this.getComboImpugnacion();
   this.getComboFundamentoImpug();
+}
+
+ngOnChanges(changes: SimpleChanges): void {
+  if (this.openTarjetaImpugnacion == true) {
+    if (this.openFicha == false) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+  }
+}
+
+esFichaActiva(key) {
+
+  return this.fichaPosible.activa;
+}
+abreCierraFicha(key) {
+  this.resaltadoDatosGenerales = true;
+  if (
+    key == "impugnacion" &&
+    !this.activacionTarjeta
+  ) {
+    this.fichaPosible.activa = !this.fichaPosible.activa;
+    this.openFicha = !this.openFicha;
+  }
+  if (this.activacionTarjeta) {
+    this.fichaPosible.activa = !this.fichaPosible.activa;
+    this.openFicha = !this.openFicha;
+  }
+  this.opened.emit(this.openFicha);
+  this.idOpened.emit(key);
 }
 
 getComboImpugnacion() {
@@ -96,9 +139,6 @@ getComboFundamentoImpug() {
   );
 }
 
-abreCierraFicha() {
-    this.openFicha = !this.openFicha;
-}
 save(){
   if(this.disabledSave()){
     }
@@ -191,5 +231,15 @@ save(){
   }
   onChangeCheckRT(event) {
     this.impugnacion.requiereTurn = event;
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsServices.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
   }
 }

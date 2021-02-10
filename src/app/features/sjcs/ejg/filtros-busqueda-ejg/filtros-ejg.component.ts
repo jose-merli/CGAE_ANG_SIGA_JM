@@ -24,11 +24,11 @@ export class FiltrosEjgComponent implements OnInit {
   inst2000: boolean;
   permisoEscritura: boolean = false;
   showdatosIdentificacion: boolean = true;
-  showDatosGeneralesEJG: boolean = true;
-  showDatosDefensa: boolean = true;
-  showCAJG: boolean = true;
-  showSolicitante: boolean = true;
-  showTramitador: boolean = true;
+  showDatosGeneralesEJG: boolean = false;
+  showDatosDefensa: boolean = false;
+  showCAJG: boolean = false;
+  showSolicitante: boolean = false;
+  showTramitador: boolean = false;
   comboProcedimiento = [];
   comboCalidad = datos_combos.comboCalidad;
   comboPerceptivo = [];

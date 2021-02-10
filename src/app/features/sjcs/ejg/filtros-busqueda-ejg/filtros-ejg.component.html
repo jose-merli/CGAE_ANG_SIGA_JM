@@ -15,20 +15,20 @@
       </p>
       <div *ngIf="showdatosIdentificacion" class="module vista-avanzada">
         <div class="form-row">
+          <div class="form-group col-lg-3 row col-md-3">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label><b>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</b></label>
+              <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText>
+            </div>
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label><b>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</b></label>
+              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numero">
+            </div>
+          </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='body.colegio' placeholder="Seleccionar" [disabled]="inst2000" [options]="comboColegio"
               [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-          </div>
-          <div class="form-group col-lg-3 row col-md-3">
-            <div class="form-group-interlineado col-lg-6 col-md-6">
-              <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
-              <input type="text" [(ngModel)]="body.annio" class="form-control" (keypress)="numberOnly($event)" maxLength="4" pInputText>
-            </div>
-            <div class="form-group-interlineado col-lg-6 col-md-6">
-              <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
-              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numero">
-            </div>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}</label>
@@ -99,8 +99,8 @@
 
       <!-- Datos generales EJG -->
       <p (click)="onHideDatosGeneralesEJG()" class="title-module">{{ "justiciaGratuita.ejg.datosGenerales.datosGeneralesEJG" | translate }}
-        <i *ngIf="showDatosGeneralesEJG" (click)="onHideDatosGeneralesEJG()" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosGeneralesEJG" (click)="onHideDatosGeneralesEJG()" class="fa fa-angle-down float-right"></i>
+        <i *ngIf="showDatosGeneralesEJG" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGeneralesEJG" class="fa fa-angle-down float-right"></i>
       </p>
 
       <div *ngIf="showDatosGeneralesEJG" class="module vista-avanzada">

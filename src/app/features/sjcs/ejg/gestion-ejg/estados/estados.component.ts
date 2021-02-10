@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter,SimpleChanges } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { EstadoEJGItem } from '../../../../../models/sjcs/EstadoEJGItem';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../commons/translate';
 
 @Component({
   selector: 'app-estados',
@@ -18,7 +20,6 @@ export class EstadosComponent implements OnInit {
   nuevo;
   body: EJGItem;
   bodyInicial;
-  [x: string]: any;
   rowsPerPage: any = [];
   cols;
   msgs;
@@ -32,8 +33,24 @@ export class EstadosComponent implements OnInit {
   seleccion: boolean = false;
   historico: boolean = false;
   estados: EstadoEJGItem;
+  
+  resaltadoDatosGenerales: boolean = false;
+  fichaPosible = {
+    key: "estados",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaEstados;
+
+  [x: string]: any;
+
+
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, ) { }
+    private persistenceService: PersistenceService,private commonsServices: CommonsService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
       if (this.persistenceService.getDatos()) {
@@ -49,6 +66,16 @@ export class EstadosComponent implements OnInit {
       this.item = new EJGItem();
     }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaEstados == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
+  }
+
   getEstados(selected) {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEstados", selected).subscribe(
@@ -225,17 +252,34 @@ export class EstadosComponent implements OnInit {
     this.getEstados(this.item);
   }
 
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "estados" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   checkPermisosDelete() {
-    let msg = this.commonsService.checkPermisos(this.permisos, undefined);
+    let msg = this.commonsServices.checkPermisos(this.permisos, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       if (!this.permisos || (!this.selectMultiple && !this.selectAll) || this.selectedDatos.length == 0) {
-        this.msgs = this.commonsService.checkPermisoAccion();
+        this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
         this.confirmDelete();
       }

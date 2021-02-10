@@ -2,25 +2,25 @@
 <div class="busqueda-container" id="serviciosTramitacion">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+      <div *ngIf="!esFichaActiva('serviciosTramitacion')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('serviciosTramitacion')">
           <div class="img-colegiado">
             <i class="fas fa-gavel icon-ficha"></i>
           </div>
         </div>
        <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
-            <label class="mr-auto title-ficha">{{ "justiciaGratuita.ejg.datosGenerales.ServiciosTramit" | translate }}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('serviciosTramitacion')">
+            <label class="mr-auto title-ficha pointer">{{ "justiciaGratuita.ejg.datosGenerales.ServiciosTramit" | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between" style="cursor: default;">
               <label name>{{ "menu.justiciaGratuita.oficio.comboturno" | translate }}: <span>{{body.turno}}</span></label>
               <label name>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}: <span>{{body.guardia}}</span></label>
               <label name>{{ "menu.justiciaGratuita.Tramitador" | translate }}: <span>{{body.apellidosYNombre}}</span></label>
-              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
+              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('serviciosTramitacion')" *ngIf="!esFichaActiva('serviciosTramitacion')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div *ngIf="esFichaActiva('serviciosTramitacion')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('serviciosTramitacion')">
         <div class="img-colegiado">
           <i class="fas fa-gavel icon-ficha" ></i>
         </div>
@@ -28,7 +28,7 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva('serviciosTramitacion')" class="card-body card-body-ficha">
 
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
@@ -64,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-footer">
+    <div *ngIf="esFichaActiva('serviciosTramitacion')" class="card-footer">
       <div class="text-right main-button">
         <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>

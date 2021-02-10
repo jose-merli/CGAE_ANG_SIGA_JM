@@ -2,26 +2,26 @@
 <div class="busqueda-container" id="unidadFamiliar">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+      <div *ngIf="!esFichaActiva('unidadFamiliar')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('unidadFamiliar')">
           <div class="img-colegiado">
             <i class="fas fa-users icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
-            <label class="mr-auto title-ficha">{{ "justiciaGratuita.justiciables.rol.unidadFamiliar" | translate }}</label>
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('unidadFamiliar')">
+            <label class="mr-auto title-ficha pointer">{{ "justiciaGratuita.justiciables.rol.unidadFamiliar" | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between" style="cursor: default;">
               <label name>{{ "censo.fichaCliente.literal.identificacion" | translate }}: <span>{{body.nif}}</span></label>
               <label name>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}: <span>{{body.apellidos}}</span></label>
               <label name>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}: <span>{{body.nombre}}</span></label>
               <label name>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}: <span>{{body.estadoEJG}}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('unidadFamiliar')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div *ngIf="esFichaActiva('unidadFamiliar')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('unidadFamiliar')">
         <div class="img-colegiado">
           <i class="fas fa-users icon-ficha"></i>
         </div>
@@ -29,7 +29,7 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="openFicha" class="px-0 pt-0 pb-0 card-body card-body-ficha">
+    <div *ngIf="esFichaActiva('unidadFamiliar')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
           <!-- TABLA RESULTADOS -->
           <p-table [value]="datosFamiliaresActivos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
             #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowUnSelect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
@@ -54,22 +54,23 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
-                  <div *ngIf="col.field == 'expedienteEconom' && dato[col.field]">
+                  <div *ngIf="col.field == 'expedienteEconom' && dato[col.field] && col.field=='pjg_nif'">
                     <div *ngIf="setItalic(dato)">
-                      <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field].split("*")[0]}} -- {{ dato[col.field].split("*")[1] | date: 'dd/MM/yyyy'}}</label>
+                      <label class="enlace" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field].split("*")[0]}} -- {{ dato[col.field].split("*")[1] | date: 'dd/MM/yyyy'}}</label>
                     </div>
-                    <div *ngIf="!setItalic(dato)">
-                      <label>{{ dato[col.field].split("*")[0]}} -- {{ dato[col.field].split("*")[1] | date: 'dd/MM/yyyy'}}</label>
-                    </div>
-                    <div *ngIf="setItalic(dato) && col.field == 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
-                      <span  class="enlace"  (click)="openTab(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-                    </div>
-                    <div *ngIf="!setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
-                      <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
+                    <div *ngIf="!setItalic(dato) && col.field == 'pjg_nif'">
+                      <label class="enlace">{{ dato[col.field].split("*")[0]}} -- {{ dato[col.field].split("*")[1] | date: 'dd/MM/yyyy'}}</label>
                     </div>
                   </div>
+
                   <div *ngIf="col.field != 'expedienteEconom'">
-                    <div *ngIf="setItalic(dato) && col.field == 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
+                    <div *ngIf="setItalic(dato) && col.field != 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
+                    <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                  </div>
+                  <div *ngIf="!setItalic(dato) && col.field != 'pjg_nif' && col.field != 'pjg_nombrecompleto'">
+                    <span>{{dato[col.field]}}</span>
+                  </div>
+                    <div *ngIf="setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">
                       <span  class="enlace"  (click)="openTab(dato)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
                     </div>
                     <div *ngIf="!setItalic(dato) && (col.field == 'pjg_nif' || col.field == 'pjg_nombrecompleto')">

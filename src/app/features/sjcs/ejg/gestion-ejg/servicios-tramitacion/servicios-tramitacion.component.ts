@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter,SimpleChanges } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -35,9 +35,21 @@ export class ServiciosTramitacionComponent implements OnInit {
   msgs = [];
   nuevo;
   tipoLetrado;
+
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "serviciosTramitacion",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaServiciosTramitacion;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
-    private commonServices: CommonsService, private translateService: TranslateService,
-    private commonsServices: CommonsService) { }
+    private commonServices: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.sigaServices.get("institucionActual").subscribe(n => {
@@ -56,8 +68,35 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.getComboGuardia();
     this.getComboTurno();
   }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaServiciosTramitacion == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
+  }
+
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "serviciosTramitacion" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -165,12 +204,12 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.body.idPersona = "";
   }
   checkPermisosSave() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        this.msgs = this.commonsServices.checkPermisoAccion();
+        this.msgs = this.commonServices.checkPermisoAccion();
       } else {
         this.save();
       }
@@ -180,7 +219,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   }
   checkPermisosRest() {
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {

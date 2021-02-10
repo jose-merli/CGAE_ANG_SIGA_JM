@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter,SimpleChanges } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -27,6 +27,19 @@ export class InformeCalificacionComponent implements OnInit {
   isDisabledFundamentosCalif: boolean = true;
   comboFundamentoCalif = [];
   comboDictamen = [];
+
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "informeCalificacion",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaInformeCalificacion;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
@@ -43,9 +56,38 @@ export class InformeCalificacionComponent implements OnInit {
       this.getComboTipoDictamen();
     }
   }
-  ngOnChanges(){
-   
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaInformeCalificacion == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
   }
+
+  
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "informeCalificacion" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+  
   getComboFundamentoCalif() {
     this.sigaServices.getParam(
       "filtrosejg_comboFundamentoCalif",
@@ -104,9 +146,6 @@ export class InformeCalificacionComponent implements OnInit {
   }
   fillFechaDictamen(event) {
     this.dictamen.fechaDictamenDesd = event;
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
   }
 save(){
   if(this.disabledSave()){

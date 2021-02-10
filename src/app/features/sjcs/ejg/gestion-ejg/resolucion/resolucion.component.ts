@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,Output,SimpleChanges,EventEmitter } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -29,6 +29,19 @@ export class ResolucionComponent implements OnInit {
   fundamentoJuridicoDesc: String;
   ResolDesc: String;
 
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "resolucion",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaResolucion;
+
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService) { }
 
@@ -46,6 +59,37 @@ export class ResolucionComponent implements OnInit {
     this.getComboPonente();
     this.getComboOrigen();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaResolucion == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
+  }
+
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "resolucion" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
   getResolucion(selected) {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
@@ -209,9 +253,6 @@ export class ResolucionComponent implements OnInit {
   }
   clear() {
     this.msgs = [];
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
   }
   fillFechaPresPonente(event) {
     this.resolucion.fechaPresentacionPonente = event; 

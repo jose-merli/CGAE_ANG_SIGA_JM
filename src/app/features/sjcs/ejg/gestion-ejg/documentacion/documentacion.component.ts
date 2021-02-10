@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,Output,EventEmitter,SimpleChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
@@ -31,6 +31,19 @@ export class DocumentacionComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   nDocumentos;
+
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "documentacion",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaDocumentacion;
+
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
@@ -48,6 +61,38 @@ export class DocumentacionComponent implements OnInit {
     this.item = new EJGItem();
   }
 }
+
+ngOnChanges(changes: SimpleChanges): void {
+  if (this.openTarjetaDocumentacion == true) {
+    if (this.openFicha == false) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+  }
+}
+
+esFichaActiva(key) {
+
+  return this.fichaPosible.activa;
+}
+
+abreCierraFicha(key) {
+  this.resaltadoDatosGenerales = true;
+  if (
+    key == "documentacion" &&
+    !this.activacionTarjeta
+  ) {
+    this.fichaPosible.activa = !this.fichaPosible.activa;
+    this.openFicha = !this.openFicha;
+  }
+  if (this.activacionTarjeta) {
+    this.fichaPosible.activa = !this.fichaPosible.activa;
+    this.openFicha = !this.openFicha;
+  }
+  this.opened.emit(this.openFicha);
+  this.idOpened.emit(key);
+}
+
   getDocumentos(selected) {
      this.progressSpinner = true;
      this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
@@ -221,9 +266,7 @@ export class DocumentacionComponent implements OnInit {
     delete() {
 
     }
-    abreCierraFicha() {
-      this.openFicha = !this.openFicha;
-    }
+
     checkPermisosConsultar(){
       let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
       if (msg != undefined) {

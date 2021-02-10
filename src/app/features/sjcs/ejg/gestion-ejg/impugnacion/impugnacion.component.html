@@ -2,25 +2,25 @@
 <div class="busqueda-container" id="impugnacion">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+      <div *ngIf="!esFichaActiva('impugnacion')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('impugnacion')">
           <div class="img-colegiado">
             <i class="fas fa-university icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha()">
-            <label class="mr-auto title-ficha">{{ 'justiciaGratuita.ejg.datosGenerales.Impugnacion' | translate }}</label>
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('impugnacion')">
+            <label class="mr-auto title-ficha pointer">{{ 'justiciaGratuita.ejg.datosGenerales.Impugnacion' | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between" style="cursor: default;">
               <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span *ngIf="impugnacion">{{impugnacion.fechaAuto | date: 'dd/MM/yyyy'}}</span></label>
               <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}: <span>{{impugnacionDesc}}</span></label>
               <label id ="maxHeader">{{ "justiciaGratuita.ejg.datosGenerales.SentidoAuto" | translate }}: <span>{{fundImpugnacionDesc}}</span></label>
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"></i>
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('impugnacion')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div *ngIf="esFichaActiva('impugnacion')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('impugnacion')">
         <div class="img-colegiado">
           <i class="fas fa-university icon-ficha"></i>
         </div>
@@ -29,13 +29,13 @@
       </div>
     </div>
 
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva('impugnacion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-12 col-md-12">
           <div class="form-row">
             <div *ngIf="impugnacion" class="form-group col-lg-3 col-md-3">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.fechaAuto" | translate }}*</label>
-              <app-fecha [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
+              <app-fecha [inputStyleClass]="styleObligatorio(impugnacion.fechaAuto)" [(value)]="impugnacion.fechaAuto" (valueChangeSelected)="fillFechaAuto($event)" (valueChangeInput)="fillFechaAuto($event)"></app-fecha>
             </div>
             <div *ngIf="impugnacion" class="form-group col-lg-6 col-md-6">
                 <label>{{ "justiciaGratuita.ejg.datosGenerales.AutoResolutorio" | translate }}</label>
@@ -78,7 +78,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="openFicha" class="card-footer">
+    <div *ngIf="esFichaActiva('impugnacion')" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
         <button (click)="checkPermisosConfirmRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-repeat" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>

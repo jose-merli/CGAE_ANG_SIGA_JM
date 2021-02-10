@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, EventEmitter, Output,SimpleChanges } from '@angular/core';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -32,6 +32,20 @@ export class UnidadFamiliarComponent implements OnInit {
 
   @Input() permisoEscritura;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
+
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "unidadFamiliar",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaUnidadFamiliar;
+
+
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService, private router: Router ) { }
@@ -76,9 +90,37 @@ export class UnidadFamiliarComponent implements OnInit {
         (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
     this.getCols();
   }
-  ngOnChanges() {
-    
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaUnidadFamiliar == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
   }
+
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "unidadFamiliar" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
   setItalic(dato) {
     if (dato.fechabaja == null) return false;
     else return true;
@@ -231,9 +273,6 @@ export class UnidadFamiliarComponent implements OnInit {
      this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
     
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
   }
   checkPermisosDownloadEEJ(){
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);

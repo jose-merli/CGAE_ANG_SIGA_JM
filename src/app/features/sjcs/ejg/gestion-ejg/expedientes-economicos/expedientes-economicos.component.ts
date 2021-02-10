@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,Output,SimpleChanges,EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -30,6 +30,20 @@ export class ExpedientesEconomicosComponent implements OnInit {
   seleccion: boolean = false;
   item: EJGItem;
   nExpedientes;
+
+  resaltadoDatosGenerales: boolean = false;
+  resaltadoDatos: boolean = false;
+  
+  fichaPosible = {
+    key: "expedientesEconomicos",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaExpedientesEconomicos;
+
   constructor(
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService, ) { }
@@ -48,6 +62,37 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.body = new EJGItem();
     }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaExpedientesEconomicos == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
+  }
+
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "expedientesEconomicos" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
   getExpedientesEconomicos(selected) {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getExpedientesEconomicos", selected).subscribe(
@@ -183,8 +228,5 @@ export class ExpedientesEconomicosComponent implements OnInit {
   }
   downloadEEJ(){
 
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
   }
 }

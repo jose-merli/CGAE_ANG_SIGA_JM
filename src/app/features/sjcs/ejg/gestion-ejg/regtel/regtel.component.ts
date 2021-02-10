@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, SimpleChanges, EventEmitter } from '@angular/core';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -33,6 +33,19 @@ export class RegtelComponent implements OnInit {
   seleccion: boolean = false;
   nRegtel;
 
+  resaltadoDatosGenerales: boolean = false;
+  
+  fichaPosible = {
+    key: "regtel",
+    activa: false
+  }
+  
+  activacionTarjeta: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Input() openTarjetaRegtel;
+
+
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
@@ -52,6 +65,37 @@ export class RegtelComponent implements OnInit {
     this.item = new EJGItem();
   }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaRegtel == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
+    }
+  }
+
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "regtel" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
   getRegtel(selected) {
   //CAMBIAR
     this.progressSpinner = true;
@@ -113,9 +157,6 @@ export class RegtelComponent implements OnInit {
       summary: summary,
       detail: msg
     });
-  }
-  abreCierraFicha() {
-    this.openFicha = !this.openFicha;
   }
   clear() {
     this.msgs = [];
