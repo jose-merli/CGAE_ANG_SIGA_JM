@@ -21,10 +21,10 @@
 <div *ngIf="show">
     <div class="card mt-3">
         <div class="card-body">
-            <app-paginador [type]="'TOP'"></app-paginador>
+            <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
 
-            <app-resultado-ejg [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
-                [elementosAux]="elementosAux"></app-resultado-ejg>
+            <app-resultado-ejg [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+                [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)"></app-resultado-ejg>
 
             <div>
                 <app-paginador [type]="'BOTTOM'"></app-paginador>
@@ -33,13 +33,13 @@
 
         <div class="card-footer">
             <div class="text-right main-button">
-                <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir a Remesa"
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir a Remesa"
                     (click)="showMsg('success', 'Se ha añadido a Remesa correctamente', '')"></button>
-                <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar EEJ"
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar EEJ"
                     (click)="showMsg('success', 'Se ha descargado correctamente', '')"></button>
-                <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="Cambiar Estado"
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Cambiar Estado"
                     (click)="showMsg('success', 'Se ha cambiado el estado correctamente', '')"></button>
-                <button pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar"
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar"
                     (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
             </div>
         </div>

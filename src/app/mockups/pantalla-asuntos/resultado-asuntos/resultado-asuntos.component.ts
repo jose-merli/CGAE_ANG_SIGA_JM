@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-resultado-asuntos',
@@ -10,9 +10,13 @@ export class ResultadoAsuntosComponent implements OnInit {
   @Input() cabeceras = [];
   @Input() elementos = [];
   @Input() elementosAux = [];
+  @Input() allSelected = false;
+  @Output() anySelected = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
   }
-
+  notifyAnySelected(event){
+    this.anySelected.emit(event);
+  }
 }

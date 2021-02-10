@@ -14,6 +14,9 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
   showDatos: boolean = false;
   modoBusqueda: string = 'b';
   modoBusquedaB: boolean = true;
+  selectAll = false;
+  isDisabled = true;
+  selectMultiple = false;
   show = true;
   titulo = "Asistencias";
   cabeceras = [
@@ -45,7 +48,9 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
       id: "diligencia",
       name: "Nª Diligencia"
     }
-  ];
+];
+seleccionarTodo = false;
+
   constructor(
     private trdService: TablaResultadoDesplegableAEService,
   ) { }
@@ -66,6 +71,17 @@ export class ResultadoAsistenciaExpresComponent implements OnInit {
       this.modoBusquedaB = true;
     } else if (this.modoBusqueda === 'a') {
       this.modoBusquedaB = false;
+    }
+  }
+  selectedAll(event){
+    this.seleccionarTodo = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.seleccionarTodo || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
     }
   }
 

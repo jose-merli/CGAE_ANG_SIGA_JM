@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Renderer2, EventEmitter, Output } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 @Component({
   selector: 'app-tabla-resultado',
@@ -7,18 +7,20 @@ import { Sort } from '@angular/material/sort';
 })
 
 export class TablaResultadoComponent implements OnInit {
+  @Output() anySelected = new EventEmitter<any>();
   @Input() cabeceras = [];
   @Input() elementos = [];
   @Input() elementosAux = [];
+  @Input() allSelected = false;
   ids = [];
   sortedData = [];
   searchText = [];
   objArray = [];
   interface = {};
   numColumnas = 0;
-
-  constructor() {
-  }
+  selectedArray = [];
+  constructor(
+  ) {}
   ngOnInit(): void {
     this.cabeceras.forEach(cab => {
       this.ids.push(cab.id);
@@ -31,6 +33,29 @@ export class TablaResultadoComponent implements OnInit {
     this.interface = _temp;
     this.elementToSortedData();
   }
+
+  selectRow(rowId){
+    if(this.selectedArray.includes(rowId)){
+      const i = this.selectedArray.indexOf(rowId);
+      this.selectedArray.splice(i, 1);
+    }else{
+      this.selectedArray.push(rowId);
+    }
+    if(this.selectedArray.length != 0){
+      this.anySelected.emit(true);
+    }else{
+      this.anySelected.emit(false);
+    }
+    
+  }
+  isSelected(id){
+    if(this.selectedArray.includes(id)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   toNumber(variable: any) {
     return Number(variable);
   }
@@ -44,10 +69,7 @@ export class TablaResultadoComponent implements OnInit {
       }
       this.objArray.push(Object.assign({}, this.interface));
     }
-
     this.sortedData = this.objArray.slice();
-    console.log("file: tabla-resultado.component.ts ~ line 44 ~ TablaResultadoComponent ~ elementToSortedData ~ this.ids", this.ids);
-    console.log("file: tabla-resultado.component.ts ~ line 49 ~ TablaResultadoComponent ~ elementToSortedData ~ this.sortedData", this.sortedData);
   }
 
   sortData(sort: Sort) {

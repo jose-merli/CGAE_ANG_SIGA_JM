@@ -21,7 +21,7 @@
       </div>
       <div *ngIf="enlaces" class="d-flex justify-content-between">
         <label *ngFor="let enlace of enlaces">
-          <a href="{{ enlace.href }}">
+          <a [routerLink]="[enlace.href,  enlace.params]">
             <span class="enlace">
               {{ enlace.texto }}
             </span>
@@ -78,7 +78,7 @@
   <div class="col-11 form-row pt-2">
     <div *ngFor="let enlace of enlaces" class="d-flex flex-wrap mr-auto">
       <label>
-        <a (click)="goToCard(enlace)">
+        <a (click)="goToCard(enlace)" [routerLink]="[enlace.href,  enlace.params]">
           <span class="enlace">
             {{ enlace.nombre }}
           </span>

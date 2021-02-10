@@ -28,9 +28,9 @@
     <div class="card mt-3">
         <div class="card-body">
 
-            <app-paginador [type]="'TOP'"></app-paginador>
+            <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
 
-            <app-resultado-asuntos [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+            <app-resultado-asuntos [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
                 [elementosAux]="elementosAux"></app-resultado-asuntos>
 
             <div>

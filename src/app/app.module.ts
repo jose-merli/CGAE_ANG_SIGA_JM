@@ -359,7 +359,6 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { BuscadorColegialComponent } from './mockups/buscadorColegial/buscador-colegial.component';
-import { BuscadorAsistenciaExpresComponent } from './mockups/buscadorAsistenciaExpres/buscador-asistencia-expres.component';
 
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
@@ -416,6 +415,11 @@ import { TablaResultadoDesplegableJEService } from './mockups/tabla-resultado-de
 import { TablaResultadoDesplegableAEService } from './mockups/tabla-resultado-desplegable/tabla-resultado-desplegable-ae.service';
 import { AsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component';
 import { ResultadoAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/resultado-asistencia-expres/resultado-asistencia-expres.component';
+import { PantallaAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component';
+import { AplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/aplicacionEnPagos/aplicacionEnPagos.component';
+import { ResultadoAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/resultado-aplicacionEnPagos/resultado-aplicacionEnPagos.component';
+import { BusquedaAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/busqueda-aplicacionEnPagos/busqueda-aplicacionEnPagos.component';
+import { BuscadorAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component';
 
 
 
@@ -738,7 +742,6 @@ import { ResultadoAsistenciaExpresComponent } from './mockups/pantalla-asistenci
 		ServiciosInteresFichaColegialComponent,
 		//TarjetaResumenFijaComponent
 		BuscadorColegialComponent,
-		BuscadorAsistenciaExpresComponent,
 		TarjetaComponent,
 		MigasDePanComponent,
 		FichaActuacionComponent,
@@ -782,7 +785,12 @@ import { ResultadoAsistenciaExpresComponent } from './mockups/pantalla-asistenci
 		TarjetaResolucionComponent,
 		AsistenciaExpresComponent,
 		ResultadoAsistenciaExpresComponent,
-		BuscadorAsistenciaExpresComponent
+		ResultadoAsistenciaExpresComponent,
+		BuscadorAsistenciaExpresComponent,
+		PantallaAplicacionEnPagosComponent,
+		AplicacionEnPagosComponent,
+		ResultadoAplicacionEnPagosComponent,
+		BusquedaAplicacionEnPagosComponent
 	],
 	imports: [
 		BrowserModule,

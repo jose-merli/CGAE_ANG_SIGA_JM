@@ -235,7 +235,6 @@ import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicac
 import { DialogoComunicacionesComponent } from './features/informes-comunicaciones/dialogo-comunicaciones/dialogo-comunicaciones.component';
 import { FichaColegialGeneralComponent } from './features/censo/ficha-colegial/ficha-colegial-general/ficha-colegial-general.component';
 import { BuscadorColegialComponent } from "./mockups/buscadorColegial/buscador-colegial.component";
-import { BuscadorAsistenciaExpresComponent } from "./mockups/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
 import { FichaActuacionComponent } from "./mockups/ficha-actuacion/ficha-actuacion.component";
 import { FichaEjgsComponent } from "./mockups/ficha-ejgs/ficha-ejgs.component";
 import { FichaColegiadoComponent } from "./mockups/ficha-colegiado/ficha-colegiado.component";
@@ -248,6 +247,8 @@ import { TarjetaRelacionesComponent } from "./mockups/mock-tarjeta-relaciones/ta
 import { FichaPredesignacionComponent } from "./mockups/ficha-predesignacion/ficha-predesignacion.component";
 import { JustificacionExpresComponent } from "./mockups/pantalla-justificacion-expres/justificacion-expres/justificacion-expres.component";
 import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component";
+import { PantallaAplicacionEnPagosComponent } from "./mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component";
+import { BuscadorAsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1238,7 +1239,7 @@ const appRoutes: Routes = [
 
 	{ path: 'catalogos', component: Catalogos, canActivate: [AuthGuard] },
 	{
-		path: 'auditoriaUsuarios',
+		path: 'auditoriaUsuarios/:id',
 		component: AuditoriaUsuarios,
 		canActivate: [AuthGuard]
 	},
@@ -1348,7 +1349,10 @@ const appRoutes: Routes = [
 		path: 'pantallaAsistenciaExpres',
 		component: AsistenciaExpresComponent
 	},
-
+	{
+		path: 'pantallaAplicacionEnPagosComponent',
+		component: PantallaAplicacionEnPagosComponent
+	},
 
 	{ path: ' ', redirectTo: 'home' }
 ];

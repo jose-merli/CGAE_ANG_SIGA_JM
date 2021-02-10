@@ -7,6 +7,8 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./ficha-predesignacion.component.scss']
 })
 export class FichaPredesignacionComponent implements OnInit {
+
+  allSelected = false;
   msgs: Message[] = [];
   rutas = ['SJCS', 'EJGS', 'Relaciones', 'PRE-Designación'];
 
@@ -153,7 +155,7 @@ export class FichaPredesignacionComponent implements OnInit {
     ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
     ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
   ];
-
+  isDisabled = true;
   stickyElementoffset = 0;
   scrollOffset = 0;
   enableSticky = false;
@@ -185,7 +187,17 @@ export class FichaPredesignacionComponent implements OnInit {
       this.listaTarjetasFijas[0].enlaces.push(tarjTmp);
     });
   }
-
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
   @HostListener("scroll", ['$event'])
   manageScroll($event: Event) {
     this.scrollOffset = $event.srcElement['scrollTop'];

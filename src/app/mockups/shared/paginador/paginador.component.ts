@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 enum PaginatorType {
   TOP,
@@ -11,8 +11,9 @@ enum PaginatorType {
   styleUrls: ['./paginador.component.scss']
 })
 export class PaginadorComponent implements OnInit {
-
+  @Output() seleccionarTodo = new EventEmitter();
   @Input() type: PaginatorType;
+  selected = false;
   opcionesDropdown = [
     {
       label: 10,
@@ -36,5 +37,9 @@ export class PaginadorComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  selectedAll(){
+    this.selected = !this.selected;
+    console.log('PAGINADOR EMIT: ', this.selected)
+    this.seleccionarTodo.emit(this.selected);
+  }
 }

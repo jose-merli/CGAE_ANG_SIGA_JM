@@ -22,18 +22,18 @@
             <span class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
                 <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i	
                     class="fas fa-chevron-right"></i></span>	
-            <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i	
-                    class="fas fa-chevron-down"></i></span>
+            <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i class="fas fa-chevron-down"></i></span>
             </span>
-            <div class="table-row-wrapper" [id]="rowGroup.id">
-                <div *ngIf="!posicionOcultar(-1)" class="table-row-header p-2" >
+            <div (click)="selectRow(rowSelected, rowGroup.id)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(rowGroup.id), 'fixedBlue': seleccionarTodo}" [id]="rowGroup.id" #rowSelected>
+           
+                <div *ngIf="!posicionOcultar(-1)" class="table-row-header p-2 selectedRowClass" >
                      {{rowGroup.id}}
                 </div>
-                <div *ngFor="let cell of rowGroup.rows[0]['cells']; let z = index" class="table-cell p-2" #BorderedCell [ngClass]="{'collapse':posicionOcultar(z)}">
-                    <div class="cell-wrapper">
+                <div *ngFor="let cell of rowGroup.rows[0]['cells']; let z = index" class="table-cell p-2 selectedRowClass" #BorderedCell [ngClass]="{'collapse':posicionOcultar(z)}" #cellSelected>
+                    <div class="cell-wrapper selectedRowClass">
                         <span class="column-title">{{cabeceras[z+1].name}}</span>
                         <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span> 
-                        <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 
+                        <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button class="main-button" pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 
                         <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
                         </p-checkbox></span>
                         <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'"><app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)"	(valueChangeInput)="fillFechaIncorporacionDesde($event)">	
@@ -59,11 +59,11 @@
         </div>
             <div 
             *ngFor="let row of rowGroup.rows | slice:1; let i = index" class="table-row child collapse">
-                <div class="table-row-wrapper" [id]="rowGroup.id">
-                    <div *ngIf="!posicionOcultar(-1)" class="table-row-header p-2 hidden">
+                <div (click)="selectRow(rowSelected, rowGroup.id + i)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(rowGroup.id + i), 'fixedBlue': seleccionarTodo}" [id]="rowGroup.id" #rowSelected>
+                    <div *ngIf="!posicionOcultar(-1)" class="table-row-header p-2 hidden selectedRowClass">
                     </div>
-                    <div *ngFor="let cell of row['cells']; let z = index" class="table-cell p-2 " [ngClass]="{'collapse':posicionOcultar(z), 'borders-child': isPar(i)}">
-                        <div class="cell-wrapper">
+                    <div *ngFor="let cell of row['cells']; let z = index" class="table-cell p-2 selectedRowClass" [ngClass]="{'collapse':posicionOcultar(z), 'borders-child': isPar(i)}" #cellSelected>
+                        <div class="cell-wrapper selectedRowClass">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'text'">{{cell.value}}</span> 
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 

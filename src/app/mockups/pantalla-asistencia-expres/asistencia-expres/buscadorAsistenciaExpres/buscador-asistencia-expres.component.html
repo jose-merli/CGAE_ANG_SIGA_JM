@@ -1,16 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
     <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
-
-    <div class="card">
         <div class="card-body">
-
-            <div class="form-row">
-                <div class="col-4">
-                    <p-radioButton *ngFor="let radio of datos.radios" [(ngModel)]='modoBusqueda' (click)="changeTab()"
-                        class="mr-4" name="prueba" [value]="radio.value" [label]="radio.label"></p-radioButton>
-                </div>
-            </div>
             <p class="title-module">
                 <span (click)="onHideDatos()">{{titulo}}</span>
                 <i (click)="onHideDatos()" *ngIf="showDatos" class="fa fa-angle-up float-right"></i>
@@ -65,6 +56,4 @@
                     label="{{'general.boton.search' | translate}}" (click)="showMsg()"></button>
             </div>
         </div>
-    </div>
 
-</div>

@@ -1,143 +1,67 @@
 import { Component, OnInit } from '@angular/core';
-import { Message } from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-asuntos',
-  templateUrl: './asuntos.component.html',
-  styleUrls: ['./asuntos.component.scss']
+  selector: 'app-aplicacionEnPagos',
+  templateUrl: './aplicacionEnPagos.component.html',
+  styleUrls: ['./aplicacionEnPagos.component.scss']
 })
-export class AsuntosComponent implements OnInit {
-  allSelected = false;
-  msgs: Message[] = [];
-  show = false;
+export class AplicacionEnPagosComponent implements OnInit {
+  isDisabled = true;
+  show = true;
   cFormValidity = true;
   modoBusqueda = 'a';
   modoBusquedaB = false;
+  allSelected = false;
   radios = [
-    { label: 'Designaciones', value: 'a' },
-    { label: 'SOJ', value: 'b' },
-    { label: 'Asistencias', value: 'c' }
+    { label: 'Retención', value: 'b' },
+    { label: 'Aplicación en Pagos', value: 'a' }
   ];
   cabeceras = [
     {
-      id: "nif",
-      name: "NIF/CIF"
+      id: "nColegiado",
+      name: "Nº Colegiado"
     },
     {
-      id: "nombre",
-      name: "Nombre"
+      id: "ApsNombre",
+      name: "Apellidos, Nombre"
     },
     {
-      id: "apellidos",
-      name: "Apellidos"
+      id: "fechIni",
+      name: "Fecha Inicio"
     },
     {
-      id: "colegio",
-      name: "Colegio"
+      id: "destinatario",
+      name: "Destinatario"
     },
     {
-      id: "numColegiado",
-      name: "Número de Colegiado"
+      id: "añoMes",
+      name: "Año/Mes"
     },
     {
-      id: "estado",
-      name: "Estado colegial"
+      id: "retenido",
+      name: "Importe Retenido"
     },
     {
-      id: "residencia",
-      name: "Residencia"
+      id: "fechaRetencion",
+      name: "Fecha Retención"
+    },
+    {
+      id: "importePago",
+      name: "Importe pago"
+    },
+    {
+      id: "pago",
+      name: "Pago"
     }
   ];
   elementos = [
-    ["78909876R", "JUAN", "ASNDADBH AHDBHAJD", 'ALCALÁ DE HENARES', "1702", "Ejerciente", "No"],
-    ["23909876R", "ANA", "ASNDADBH AHDBHAJD", 'BALCALÁ DE HENARES', "1402", "Ejerciente", "Si"]
+    ["5553", "GARCÍA, PÉREZ, JUAN", "01/01/2019", 'AEAT', "2019/01", "-100,00", "06/12/2018", "5.437,34", "Pago primer trimestre TO 2019"]
   ];
   elementosAux = [
-    ["78909876R", "JUAN", "ASNDADBH AHDBHAJD", 'ALCALÁ DE HENARES', "1702", "Ejerciente", "No"],
-    ["23909876R", "ANA", "ASNDADBH AHDBHAJD", 'BALCALÁ DE HENARES', "1402", "Ejerciente", "Si"]
+    ["5553", "GARCÍA, PÉREZ, JUAN", "01/01/2019", 'AEAT', "2019/01", "-100,00", "06/12/2018", "5.437,34", "Pago primer trimestre TO 2019"]
   ];
 
   selectores1 = [
-    {
-      nombre: "Tipo Designación",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Estado Designación",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Juzgado",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    }
-  ];
-  datePickers1 = ["Fecha Apertura Designación"];
-
-
-  selectores2 = [
-    {
-      nombre: "Turno",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
-    {
-      nombre: "Guardia",
-      opciones: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-        { label: '8', value: 8 },
-        { label: '9', value: 9 },
-        { label: '10', value: 10 },
-      ]
-    },
     {
       nombre: "Colegio",
       opciones: [
@@ -154,12 +78,73 @@ export class AsuntosComponent implements OnInit {
       ]
     }
   ];
+  datePickers1 = [];
+  inputs1 = ["NIF", "Apellidos", "Nombre", "Número de colegiado"];
+  selectores2 = [
+    {
+      nombre: "Tipo retención",
+      opciones: [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+        { label: '8', value: 8 },
+        { label: '9', value: 9 },
+        { label: '10', value: 10 },
+      ]
+    },
+    {
+      nombre: "Destinatario",
+      opciones: [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+        { label: '8', value: 8 },
+        { label: '9', value: 9 },
+        { label: '10', value: 10 },
+      ]
+    },
+    {
+      nombre: "Pago de aplicación",
+      opciones: [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+        { label: '8', value: 8 },
+        { label: '9', value: 9 },
+        { label: '10', value: 10 },
+      ]
+    }
+  ];
   datePickers2 = [];
+  inputs2 = ["Número de Abono"];
   selectores = [this.selectores1, this.selectores2];
   datePickers = [this.datePickers1, this.datePickers2];
-  emptyAccordions = ["Datos Defensa", "CAJG"];
+  inputs = [this.inputs1, this.inputs2];
+  emptyAccordions = [];
   constructor() { }
-
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
   ngOnInit(): void {
   }
   showResponse() {
@@ -179,22 +164,6 @@ export class AsuntosComponent implements OnInit {
     } else if (this.modoBusqueda === 'a') {
       this.modoBusquedaB = false;
     }
-  }
-  selectedAll(event){
-    this.allSelected = event;
-  }
-
-  showMsg(severity, summary, detail) {
-    this.msgs = [];
-    this.msgs.push({
-      severity,
-      summary,
-      detail
-    });
-  }
-
-  clear() {
-    this.msgs = [];
   }
 
 }

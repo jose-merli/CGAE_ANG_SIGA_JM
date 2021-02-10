@@ -13,6 +13,7 @@ export class JustificacionExpresComponent implements OnInit {
   totalDesignas = 0;
   numActuaciones = 0;
   totalActuaciones = 0;
+  isDisabled = true;
   cabeceras = [
     {
       id: "anio", 
@@ -71,7 +72,8 @@ datePickers2 = ["Fecha de Designación Desde", "Fecha de Designación Hasta"];
 datePickers = [this.datePickers1, this.datePickers2];
 inputs1 = [
   "Año Designación", "Número Designación", "Apellidos", "Nombre", "Año EJG", "Número EJG"
-]
+];
+seleccionarTodo = false;
   constructor(
     private trdService: TablaResultadoDesplegableJEService,
   ) {}
@@ -83,5 +85,16 @@ inputs1 = [
   showResponse(){
     this.show = true;
   }
-
+  selectedAll(event){
+    this.seleccionarTodo = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
+  
 }

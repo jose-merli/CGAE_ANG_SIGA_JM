@@ -7,7 +7,10 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./tarjeta-unidad-familiar.component.scss']
 })
 export class TarjetaUnidadFamiliarComponent implements OnInit {
+  allSelected = false;
+  isDisabled = true;
   msgs: Message[] = [];
+
   cabeceras = [
     {
       id: "nif",
@@ -51,7 +54,17 @@ export class TarjetaUnidadFamiliarComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
   showMsg(severity, summary, detail) {
     this.msgs = [];
     this.msgs.push({

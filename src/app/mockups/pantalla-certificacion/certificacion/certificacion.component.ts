@@ -8,9 +8,12 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./certificacion.component.scss']
 })
 export class CertificacionComponent2 implements OnInit {
+
+  isDisabled = true;
   msgs: Message[] = [];
   cFormValidity = true;
   show = false;
+  allSelected = false;
   cabeceras = [
     {
       id: "periodo",
@@ -68,6 +71,17 @@ export class CertificacionComponent2 implements OnInit {
     this.show = false;
   }
 
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
   showMsg(severity, summary, detail) {
     this.msgs = [];
     this.msgs.push({
@@ -79,5 +93,6 @@ export class CertificacionComponent2 implements OnInit {
 
   clear() {
     this.msgs = [];
+
   }
 }

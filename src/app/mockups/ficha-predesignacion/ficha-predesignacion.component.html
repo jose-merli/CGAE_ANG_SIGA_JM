@@ -48,13 +48,13 @@
                     <div class="row w-100 m-0">
 
                       <div class="padding-interior w-100">
-                        <app-paginador [type]="'TOP'"></app-paginador>
+                        <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
                       </div>
 
 
                       <div class="col-lg-12 col-md-12 w-100 padding-interior">
-                        <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos"
-                          [elementosAux]="elementosAux">
+                        <app-tabla-resultado [allSelected]="allSelected" [cabeceras]="cabeceras" [elementos]="elementos"
+                          [elementosAux]="elementosAux"  (anySelected)="notifyAnySelected($event)">
                         </app-tabla-resultado>
                       </div>
 
@@ -67,9 +67,9 @@
 
                     <div class="card-footer">
                       <div class="text-right main-button">
-                        <button pButton type="button" icon="fa fa-history" iconPos="left"
+                        <button [disabled]="isDisabled" pButton type="button" icon="fa fa-history" iconPos="left"
                           label="Mostrar Histórico" (click)="showMsg('success', 'Se ha mostrado el histórico correctamente', '')"></button>
-                        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+                        <button [disabled]="isDisabled" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
                       </div>
                     </div>
 

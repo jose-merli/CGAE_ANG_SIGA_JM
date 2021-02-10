@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/components/common/api';
 
+
 @Component({
   selector: 'app-ficha-certificacion',
   templateUrl: './ficha-certificacion.component.html',
   styleUrls: ['./ficha-certificacion.component.scss']
 })
 export class FichaCertificacionComponent implements OnInit {
+
+  panelDatGenOpenState: boolean = false;
+  isDisabled = true;
+  panelFacOpenState: boolean = false;
   msgs: Message[] = [];
   tarjetaFija = null;
   rutas = null;
@@ -32,7 +37,6 @@ export class FichaCertificacionComponent implements OnInit {
       campos: []
     }
   ];
-
 
   campos = [
     {
@@ -120,6 +124,15 @@ export class FichaCertificacionComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  notifyAnySelected(event){
+    if (event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
+
 
   showMsg(severity, summary, detail) {
     this.msgs = [];

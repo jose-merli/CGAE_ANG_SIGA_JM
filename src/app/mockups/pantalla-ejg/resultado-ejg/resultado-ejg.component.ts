@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-resultado-ejg',
@@ -10,9 +10,13 @@ export class ResultadoEJGComponent implements OnInit {
   @Input() cabeceras = [];
   @Input() elementos = [];
   @Input() elementosAux = [];
+  @Input() allSelected = [];
+  @Output() anySelected = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
   }
-
+  notifyAnySelected(event){
+    this.anySelected.emit(event);
+  }
 }
