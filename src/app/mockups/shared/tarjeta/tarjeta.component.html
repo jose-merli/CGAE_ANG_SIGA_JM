@@ -78,16 +78,22 @@
   <div class="col-11 form-row pt-2">
     <div *ngFor="let enlace of enlaces" class="d-flex flex-wrap mr-auto">
       <label>
-        <a [routerLink]="[enlace.href,  enlace.params]">
+        <a (click)="goToCard(enlace)" [routerLink]="[enlace.href,  enlace.params]">
           <span class="enlace">
-            {{ enlace.texto }}
+            {{ enlace.nombre }}
           </span>
         </a>
       </label>
     </div>
+
+    <div class="ml-auto click">
+      <i (click)="goDown()" class="fa fa-angle-down pr-3"></i>
+      <i (click)="goTop()" class="fa fa-angle-up"></i>
+    </div>
+
   </div>
 
-  <!-- <div class="col-12 text-right">
+  <!-- <div class="col-12 text-right click">
     <i class="fas fa-thumbtack"></i>
   </div> -->
 

@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <form [formGroup]="colegiadoForm">
     <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -12,7 +13,7 @@
             <button [disabled]="!colegiadoForm.valid" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                 label="{{ 'general.boton.clear' | translate}}"></button>
             <button type="submit" [disabled]="!colegiadoForm.valid" pButton icon="fa fa-search" iconPos="left"
-                label="{{'general.boton.search' | translate}}"></button>
+                label="{{'general.boton.search' | translate}}" (click)="showMsg()" ></button>
         </div>
     </div>
 </form>

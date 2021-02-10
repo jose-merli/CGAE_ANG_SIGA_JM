@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-ficha-predesignacion',
@@ -6,7 +7,9 @@ import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } fro
   styleUrls: ['./ficha-predesignacion.component.scss']
 })
 export class FichaPredesignacionComponent implements OnInit {
+
   allSelected = false;
+  msgs: Message[] = [];
   rutas = ['SJCS', 'EJGS', 'Relaciones', 'PRE-Designación'];
 
   listaTarjetasFijas = [
@@ -45,7 +48,8 @@ export class FichaPredesignacionComponent implements OnInit {
           "key": "Impuganción",
           "value": "fsfsf dfgdfgdfgdgd"
         }
-      ]
+      ],
+      enlaces: []
     },
   ];
 
@@ -172,6 +176,16 @@ export class FichaPredesignacionComponent implements OnInit {
     this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
     this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
     this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.listaTarjetasFijas[0].enlaces.push(tarjTmp);
+    });
   }
   selectedAll(event){
     this.allSelected = event;
@@ -200,6 +214,28 @@ export class FichaPredesignacionComponent implements OnInit {
       this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
       this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
     }
+  }
+
+  isOpenReceive(event) {
+    let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
+
+    if (tarjTemp.detalle) {
+      tarjTemp.opened = true;
+    }
+
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

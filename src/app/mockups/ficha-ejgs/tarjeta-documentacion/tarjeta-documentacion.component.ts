@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
+
 
 @Component({
   selector: 'app-tarjeta-documentacion',
@@ -6,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./tarjeta-documentacion.component.scss']
 })
 export class TarjetaDocumentacionComponent implements OnInit {
-
+  msgs: Message[] = [];
   constructor() { }
   allSelected = false;
   isDisabled = true;
@@ -50,6 +52,7 @@ export class TarjetaDocumentacionComponent implements OnInit {
   ];
   ngOnInit(): void {
   }
+
   selectedAll(event){
     this.allSelected = event;
     this.isDisabled = !event;
@@ -61,4 +64,17 @@ export class TarjetaDocumentacionComponent implements OnInit {
       this.isDisabled = true;
     }
   }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 }

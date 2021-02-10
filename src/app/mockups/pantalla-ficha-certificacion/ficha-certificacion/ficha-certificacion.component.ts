@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
+
 
 @Component({
   selector: 'app-ficha-certificacion',
@@ -6,62 +8,89 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./ficha-certificacion.component.scss']
 })
 export class FichaCertificacionComponent implements OnInit {
+
   panelDatGenOpenState: boolean = false;
   isDisabled = true;
   panelFacOpenState: boolean = false;
+  msgs: Message[] = [];
+  tarjetaFija = null;
+  rutas = null;
+  listaTarjetas = [
+    {
+      id: 'pantFichaCertiDatGen',
+      nombre: "Datos Generales",
+      imagen: "",
+      icono: 'far fa-address-book',
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: []
+    },
+    {
+      id: 'pantFichaCertiFactura',
+      nombre: "Facturaciones",
+      imagen: "",
+      icono: 'far fa-address-book',
+      detalle: true,
+      fixed: false,
+      opened: false,
+      campos: []
+    }
+  ];
+
   campos = [
     {
-      nombre: "Periodo", 
+      nombre: "Periodo",
       valor: "01/01/2019 - 31/03/2019"
     },
     {
-      nombre: "Partida presupuestaria", 
+      nombre: "Partida presupuestaria",
       valor: "Generalitat 2019"
     }];
-    inputs = [
-      {
-        nombre: "Nombre(*)", 
-        valor: "Certificación primer trimestre de 2019"
-      }];
+  inputs = [
+    {
+      nombre: "Nombre(*)",
+      valor: "Certificación primer trimestre de 2019"
+    }];
   cabeceras = [
     {
-      id: "fechaDesde", 
+      id: "fechaDesde",
       name: "Fecha desde"
     },
     {
-      id: "fechaHasta", 
+      id: "fechaHasta",
       name: "Fecha hasta"
     },
     {
-      id: "nombre", 
+      id: "nombre",
       name: "Nombre"
     },
     {
-      id: "turno", 
+      id: "turno",
       name: "Turno"
     },
     {
-      id: "guardia", 
+      id: "guardia",
       name: "Guardia"
     },
     {
-      id: "total", 
+      id: "total",
       name: "Total"
     },
     {
-      id: "pendiente", 
+      id: "pendiente",
       name: "Pendiente"
     },
     {
-      id: "pagado", 
+      id: "pagado",
       name: "Pagado"
     },
     {
-      id: "regul", 
+      id: "regul",
       name: "Regul."
     }
-];
-elementos = [
+  ];
+  elementos = [
     ['01/01/2019', "03/01/2019", "Facturación primer trimestre", "", "", "6.308.23", "1.105.20", "", "Si"],
     ['02/02/2019', "06/02/2019", "Facturación primer trimestre", "", "", "6.308.23", "1.105.20", "", "Si"]
   ];
@@ -72,29 +101,30 @@ elementos = [
 
   cabeceras2 = [
     {
-      id: "fechaEstado", 
+      id: "fechaEstado",
       name: "Fecha de Estado"
     },
     {
-      id: "proceso", 
+      id: "proceso",
       name: "Proceso"
     },
     {
-      id: "estado", 
+      id: "estado",
       name: "Estado"
     }
-];
+  ];
 
-elementos2 = [
-  ["01/01/2019 06:55", "Certificación","Enviado"],
-  ["03/01/2019 06:55", "Certificación","Abierta"],
-  ["04/01/2019 06:55", "Certificación","Validada"],
-  ["05/01/2019 06:55", "Certificación","Validando"]
-];
+  elementos2 = [
+    ["01/01/2019 06:55", "Certificación", "Enviado"],
+    ["03/01/2019 06:55", "Certificación", "Abierta"],
+    ["04/01/2019 06:55", "Certificación", "Validada"],
+    ["05/01/2019 06:55", "Certificación", "Validando"]
+  ];
   constructor() { }
 
   ngOnInit(): void {
   }
+
   notifyAnySelected(event){
     if (event){
       this.isDisabled = false;
@@ -102,4 +132,19 @@ elementos2 = [
       this.isDisabled = true;
     }
   }
+
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 }

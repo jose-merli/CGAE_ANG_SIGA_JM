@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="row w-100 m-0">
     <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
         <div class="text-center my-0 mx-auto image-wrapper">
@@ -25,6 +26,6 @@
 <div class="card-footer">
     <div class="text-right main-button">
         <button *ngFor="let boton of botones" pButton type="button"  [icon]="boton.icon" iconPos="left"
-            [label]="boton.name"></button>
+            [label]="boton.name" (click)="showMsg('success', 'Boton pulsado correctamente', '')"></button>
     </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-certificacion2',
@@ -7,7 +8,9 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./certificacion.component.scss']
 })
 export class CertificacionComponent2 implements OnInit {
+
   isDisabled = true;
+  msgs: Message[] = [];
   cFormValidity = true;
   show = false;
   allSelected = false;
@@ -67,6 +70,7 @@ export class CertificacionComponent2 implements OnInit {
   hideResponse() {
     this.show = false;
   }
+
   selectedAll(event){
     this.allSelected = event;
     this.isDisabled = !event;
@@ -77,5 +81,18 @@ export class CertificacionComponent2 implements OnInit {
     } else {
       this.isDisabled = true;
     }
+  }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+
   }
 }

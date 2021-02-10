@@ -48,6 +48,7 @@ export class FichaEjgsComponent implements OnInit {
         "value": "ggdfgdg gfgfd gg gfgfdgdfgfdgfdgfdgdfgf"
       }
     ],
+    enlaces: []
   };
 
   listaTarjetas = [
@@ -317,6 +318,16 @@ export class FichaEjgsComponent implements OnInit {
     this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
     this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
     this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    });
   }
 
   @HostListener("scroll", ['$event'])
@@ -335,6 +346,15 @@ export class FichaEjgsComponent implements OnInit {
       this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
       this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
     }
+  }
+
+  isOpenReceive(event) {
+    let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
+
+    if (tarjTemp.detalle) {
+      tarjTemp.opened = true;
+    }
+
   }
 
 }

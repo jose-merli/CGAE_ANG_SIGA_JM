@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-impugnacion',
@@ -7,6 +8,7 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./tarjeta-impugnacion.component.scss']
 })
 export class TarjetaImpugnacionComponent implements OnInit {
+  msgs: Message[] = [];
   iForm = new FormGroup({
   });
   constructor() { }
@@ -58,6 +60,19 @@ export class TarjetaImpugnacionComponent implements OnInit {
     "Requiere turnado de profesionales"
   ];
   ngOnInit(): void {
+  }
+
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 

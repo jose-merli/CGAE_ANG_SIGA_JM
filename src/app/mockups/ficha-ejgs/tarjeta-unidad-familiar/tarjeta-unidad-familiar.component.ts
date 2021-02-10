@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-tarjeta-unidad-familiar',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class TarjetaUnidadFamiliarComponent implements OnInit {
   allSelected = false;
   isDisabled = true;
+  msgs: Message[] = [];
+
   cabeceras = [
     {
       id: "nif",
@@ -62,4 +65,17 @@ export class TarjetaUnidadFamiliarComponent implements OnInit {
       this.isDisabled = true;
     }
   }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail,
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
 }
