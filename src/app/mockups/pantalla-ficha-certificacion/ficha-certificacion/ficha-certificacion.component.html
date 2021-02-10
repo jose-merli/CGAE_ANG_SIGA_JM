@@ -58,7 +58,7 @@
                                     <app-paginador (seleccionarTodo)="selectedAll($event)"></app-paginador>
                                 </div>
                                 <div>
-                                    <app-tabla-simple [cabeceras]="cabeceras2" [elementos]="elementos2"></app-tabla-simple>
+                                    <app-tabla-simple [cabeceras]="cabeceras2" [elementos]="elementos2" (anySelected)="notifyAnySelected($event)"></app-tabla-simple>
                                 </div>
                                 <div>
                                     <app-paginador [type]="'BOTTOM'"></app-paginador>
@@ -72,24 +72,24 @@
         <div *ngIf="panelDatGenOpenState" class="card-footer">
             <div class="text-right main-button">
     
-                                           <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                                           <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                                                         label="Incidencias"></button>
-                                                    <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                                                    <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                                                         label="Subir fichero"
                                                         (click)="showMsg('success', 'Se ha subido el fichero correctamente', '')"></button>
-                                                    <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                                                    <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                                                         label="Reabrir"
                                                         (click)="showMsg('success', 'Se ha reabierto correctamente', '')"></button>
-                                                    <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                                                    <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                                                         label="Cerrar y Enviar"
                                                         (click)="showMsg('success', 'Se ha cerrado y enviado correctamente', '')"></button>
-                                                    <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                                                    <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                                                         label="Comunicar"
                                                         (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
-                                                    <button pButton type="button"  icon="far fa-save"  iconPos="left"
+                                                    <button [disabled]="isDisabled" pButton type="button"  icon="far fa-save"  iconPos="left"
                                                         label="Guardar"
                                                         (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
-                                                    <button pButton type="button"  icon="fa fa-undo"  iconPos="left"
+                                                    <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-undo"  iconPos="left"
                                                         label="Restablecer"
                                                         (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
     

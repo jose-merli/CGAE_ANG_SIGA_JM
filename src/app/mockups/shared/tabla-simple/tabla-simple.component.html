@@ -8,7 +8,7 @@
           </tr>
         </thead>
         <tbody class="ui-table-tbody">
-          <tr mdbTableCol *ngFor="let el of elementos; let i = index">
+          <tr mdbTableCol (click)="selectRow(i)" *ngFor="let el of elementos; let i = index" [ngClass]="{'fixedBlue': allSelected, 'hoverBlue': isSelected(i)}">
             <td *ngFor="let campo of el; let j = index">{{campo}}</td>
           </tr>
         </tbody>
