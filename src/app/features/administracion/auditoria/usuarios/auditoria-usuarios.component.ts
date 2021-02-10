@@ -85,12 +85,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
 
   ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
-            this.persona = (params['id'] );
-            console.log('this.params: ', params)
-            console.log('this.persona: ', this.persona)
-        });
-
+    this.persona = this.route.snapshot.params["id"];
+  
     if (sessionStorage.getItem("tarjeta") != null) {
       this.volver = true;
     }

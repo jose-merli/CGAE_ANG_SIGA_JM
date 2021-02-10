@@ -20,8 +20,9 @@
         <div class="card-body">
             <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
 
-            <app-resultado-certificacion [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
-                [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)"></app-resultado-certificacion>
+            <app-resultado-certificacion [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras"
+                [elementos]="elementos" [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)">
+            </app-resultado-certificacion>
 
             <div>
                 <app-paginador [type]="'BOTTOM'"></app-paginador>
@@ -30,13 +31,9 @@
         <div class="card-footer">
             <div class="text-right main-button">
                 <button [disabled]="isDisabled" pButton type="button" icon="fa fa-times" iconPos="left" label="Eliminar"
-                    (click)="hideResponse()"></button>
-                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Comunicar"
-                    (click)="showResponse()"></button>
-                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-times" iconPos="left" label="Eliminar"
                     (click)="showMsg('success', 'Se ha eliminado correctamente', '')"></button>
-                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-reply-all" iconPos="left" label="Comunicar"
-                    (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-reply-all" iconPos="left"
+                    label="Comunicar" (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
             </div>
         </div>
     </div>

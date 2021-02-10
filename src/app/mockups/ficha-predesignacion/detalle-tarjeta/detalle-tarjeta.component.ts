@@ -52,18 +52,7 @@ export class DetalleTarjetaComponent implements OnInit {
       ]
     }
   ];
-  botones = [{
-    icon: "fa fa-undo",
-    name: "Desasociar"
-  },
-  {
-    icon: "far fa-save",
-    name: "Guardar"
-  },
-  {
-    icon: "fa fa-search",
-    name: "Buscar"
-  }];
+
   constructor() { }
 
   ngOnInit(): void {

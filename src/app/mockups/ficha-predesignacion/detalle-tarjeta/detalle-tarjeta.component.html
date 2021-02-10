@@ -25,7 +25,11 @@
 
 <div class="card-footer">
     <div class="text-right main-button">
-        <button *ngFor="let boton of botones" pButton type="button"  [icon]="boton.icon" iconPos="left"
-            [label]="boton.name" (click)="showMsg('success', 'Boton pulsado correctamente', '')"></button>
+        <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="Desasociar"
+            (click)="showMsg('success', 'Se ha desasociado correctamente', '')"></button>
+        <button pButton type="button"  icon="far fa-save" iconPos="left" label="Guardar"
+            (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
+        <button pButton type="button"  icon="fa fa-search" iconPos="left" label="Buscar"
+            (click)="showMsg('info', 'Mostrando información buscada', '')"></button>
     </div>
 </div>
