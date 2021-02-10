@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -6,31 +7,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./asistencia-expres.component.scss']
 })
 export class AsistenciaExpresComponent implements OnInit {
-  show = true;
+  msgs: Message[] = [];
+  show = false;
   cFormValidity = true;
-  modoBusqueda = 'a';
-  modoBusquedaB = false;
-  rutas:string[] = ['SJCS', 'Guardia', 'Asistencias'];
+  modoBusqueda = 'b';
+  rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
   radios = [
     { label: 'Búsqueda de Asistencias', value: 'a' },
     { label: 'Asistencia Exprés', value: 'b' }
   ];
   selectores1 = [
     {
-      nombre : "Turno",
-      opciones: [1,2,3,4,5,6,7,8,9,10]
+      nombre: "Turno",
+      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
     {
-      nombre : "Guardia",
-      opciones: [1,2,3,4,5,6,7,8,9,10]
+      nombre: "Guardia",
+      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
     {
-      nombre : "Tipo Asistencia Colegio",
-      opciones: [1,2,3,4,5,6,7,8,9,10]
+      nombre: "Tipo Asistencia Colegio",
+      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
     {
-      nombre : "Letrado de Guardia",
-      opciones: [1,2,3,4,5,6,7,8,9,10]
+      nombre: "Letrado de Guardia",
+      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
   ];
 
@@ -48,13 +49,17 @@ export class AsistenciaExpresComponent implements OnInit {
     this.cFormValidity = $event;
   }
 
-  changeTab() {
-    this.hideResponse();
-    if (this.modoBusqueda === 'b') {
-      this.modoBusquedaB = true;
-    } else if (this.modoBusqueda === 'a') {
-      this.modoBusquedaB = false;
-    }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+      this.msgs.push({
+      severity,
+      summary,
+      detail
+      });
   }
+  
+  clear() {
+    this.msgs = [];
+  } 
 
 }

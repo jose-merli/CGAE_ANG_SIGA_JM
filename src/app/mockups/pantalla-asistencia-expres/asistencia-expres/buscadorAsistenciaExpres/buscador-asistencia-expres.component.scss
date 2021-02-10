@@ -1,8 +1,3 @@
-::ng-deep .custom-frame {
-    & .mat-checkbox-background, .mat-checkbox-frame {
-      border-radius: 70% !important;
-    }
-  }
   .borderBottom{
       border-bottom: 1px solid black;
   }
@@ -24,4 +19,30 @@
   .flexCenter{
     display: flex;
     align-items: flex-end;
+}
+
+::ng-deep {
+
+  #buscadAsisExpr {
+
+    .mat-expansion-panel {
+      box-shadow: none !important;
+    }
+
+    .mat-expansion-panel-header {
+      padding-right: 0px !important;
+      padding-left: 0px !important;
+      border-bottom: 1px solid black;
+    }
+
+    .mat-expansion-panel-body {
+      padding-left: 0px !important;
+    }
+
+    div.mat-expansion-panel-content {
+      margin-top: 0.5rem !important;
+    }
+
+  }
+
 }

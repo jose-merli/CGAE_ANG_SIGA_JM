@@ -1,58 +1,117 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div class="busqueda-container">
-        <div class="card-body">
-            <p class="title-module">
-                <span (click)="onHideDatos()">{{titulo}}</span>
-                <i (click)="onHideDatos()" *ngIf="showDatos" class="fa fa-angle-up float-right"></i>
-                <i (click)="onHideDatos()" *ngIf="!showDatos" class="fa fa-angle-down float-right"></i>
-            </p>
-            <div *ngIf="showDatos && modoBusquedaB" class="module vista-avanzada">
-                <form [formGroup]="aeForm">
-                    <div class="form-row">
-                        <div class="form-group-interlineado col-lg-3 col-md-3">
-                            <label>Guardia Día (*)</label>
-                            <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
-                                (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                                (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
-                        </div>
-                        <div *ngFor="let dato of datos.dropdowns" class="form-group-interlineado col-lg-3 col-md-3">
-                            <label>{{dato.label}}</label>
-                            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-                                [filter]="true" [showClear]="true" [(ngModel)]="opcionSeleccionado"
-                                [ngModelOptions]="{standalone: true}" [options]="dato.options" (change)="capturar()">
-                            </p-dropdown>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group-interlineado col-lg-3 col-md-3">
-                            <label>Letrado de Guardia</label>
-                            <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
-                                [filter]="true" [showClear]="true" [(ngModel)]="opcionSeleccionado"
-                                [ngModelOptions]="{standalone: true}" [options]="datos.dropdowns[0].options"
-                                (change)="capturar()">
-                            </p-dropdown>
-                        </div>
-                        <div class="form-group-interlineado col-lg-6 col-md-6">
-                            <app-buscador-colegial numColegiado="numColegiado" nombreAp="nombreAp">
-                            </app-buscador-colegial>
-                        </div>
-                        <div class="form-check col-lg-3 col-md-3">
-                            <br>
-                            <label class="form-group-label pt-2"><b>Sustituir al letrado de guardia</b></label>
-                            &nbsp;&nbsp;
-                            <p-checkbox binary="true"></p-checkbox>
-                        </div>
-                    </div>
-                </form>
+<!-- <div class="busqueda-container">
+    <div class="card-body">
+        <p class="title-module">
+            <span (click)="onHideDatos()">{{titulo}}</span>
+            <i (click)="onHideDatos()" *ngIf="showDatos" class="fa fa-angle-up float-right"></i>
+            <i (click)="onHideDatos()" *ngIf="!showDatos" class="fa fa-angle-down float-right"></i>
+        </p> -->
+<!-- <div id="buscadAsisExpr">
+    <div *ngIf="showDatos && modoBusquedaB" class="module vista-avanzada">
+        <form [formGroup]="aeForm">
+            <div class="form-row">
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <label>Guardia Día (*)</label>
+                    <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
+                        (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
+                        (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
+                </div>
+                <div *ngFor="let dato of datos.dropdowns" class="form-group-interlineado col-lg-3 col-md-3">
+                    <label>{{dato.label}}</label>
+                    <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                        [filter]="true" [showClear]="true" [(ngModel)]="opcionSeleccionado"
+                        [ngModelOptions]="{standalone: true}" [options]="dato.options" (change)="capturar()">
+                    </p-dropdown>
+                </div>
             </div>
-
-        </div>
-        <div class="card-footer">
-            <div class="text-right main-button">
-                <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                    label="{{ 'general.boton.clear' | translate}}"></button>
-                <button type="submit" pButton icon="fa fa-search" iconPos="left"
-                    label="{{'general.boton.search' | translate}}" (click)="showMsg()"></button>
+            <div class="form-row">
+                <div class="form-group-interlineado col-lg-3 col-md-3">
+                    <label>Letrado de Guardia</label>
+                    <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                        [filter]="true" [showClear]="true" [(ngModel)]="opcionSeleccionado"
+                        [ngModelOptions]="{standalone: true}" [options]="datos.dropdowns[0].options"
+                        (change)="capturar()">
+                    </p-dropdown>
+                </div>
+                <div class="form-group-interlineado col-lg-6 col-md-6">
+                    <app-buscador-colegial numColegiado="numColegiado" nombreAp="nombreAp">
+                    </app-buscador-colegial>
+                </div>
+                <div class="form-check col-lg-3 col-md-3">
+                    <br>
+                    <label class="form-group-label pt-2"><b>Sustituir al letrado de guardia</b></label>
+                    &nbsp;&nbsp;
+                    <p-checkbox binary="true"></p-checkbox>
+                </div>
             </div>
-        </div>
+        </form>
+    </div>
+</div> -->
 
+<!-- </div>
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}" (click)="showMsg()"></button>
+        </div>
+    </div>
+
+</div> -->
+
+<div id="buscadAsisExpr">
+
+    <div *ngIf="modoBusqueda === 'b'">
+        <form [formGroup]="aeForm">
+            <mat-accordion class="example-headers-align" multi>
+                <mat-expansion-panel class="my-1">
+                    <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                        <div class="w100 font-weight-bold">
+                            <p class="w100">{{ titulo }}</p>
+                        </div>
+                    </mat-expansion-panel-header>
+                    <ng-template matExpansionPanelContent>
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>Guardia Día (*)</label>
+                                <app-fecha [utc]="false"></app-fecha>
+                            </div>
+                            <div *ngFor="let dato of datos.dropdowns" class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>{{dato.label}}</label>
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="opcionSeleccionado"
+                                    [ngModelOptions]="{standalone: true}" [options]="dato.options"
+                                    (change)="capturar()">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-3 col-md-3">
+                                <label>Letrado de Guardia</label>
+                                <p-dropdown class="select-form"
+                                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                    [showClear]="true" [(ngModel)]="opcionSeleccionado"
+                                    [ngModelOptions]="{standalone: true}" [options]="datos.dropdowns[0].options"
+                                    (change)="capturar()">
+                                </p-dropdown>
+                            </div>
+                            <div class="form-group-interlineado col-lg-6 col-md-6">
+                                <app-buscador-colegial numColegiado="numColegiado" nombreAp="nombreAp">
+                                </app-buscador-colegial>
+                            </div>
+                            <div class="form-check col-lg-3 col-md-3">
+                                <br>
+                                <label class="form-group-label pt-2"><b>Sustituir al letrado de guardia</b></label>
+                                &nbsp;&nbsp;
+                                <p-checkbox binary="true"></p-checkbox>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </form>
+    </div>
+
+</div>

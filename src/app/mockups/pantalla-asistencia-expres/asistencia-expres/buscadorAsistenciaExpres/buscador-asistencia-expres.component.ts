@@ -13,12 +13,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     numColegiado: new FormControl(''),
     nombreAp: new FormControl(''),
   });
-  showDatos: boolean = false;
-  modoBusqueda: string = 'b';
+  @Input() modoBusqueda: string;
   modoBusquedaB: boolean = true;
   @Input() titulo: string;
   msgs: Message[] = [];
-  rutas:string[] = ['SJCS', 'Guardia', 'Asistencias'];
+  rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
 
 
   constructor() {
@@ -86,18 +85,6 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     // Pasamos el valor seleccionado a la variable verSeleccion
     this.verSeleccion = this.opcionSeleccionado;
 
-  }
-
-  onHideDatos() {
-    this.showDatos = !this.showDatos;
-  }
-
-  changeTab() {
-    if (this.modoBusqueda === 'b') {
-      this.modoBusquedaB = true;
-    } else if (this.modoBusqueda === 'a') {
-      this.modoBusquedaB = false;
-    }
   }
 
   showMsg() {
