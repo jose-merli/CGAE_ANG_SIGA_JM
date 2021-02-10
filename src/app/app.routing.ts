@@ -1011,7 +1011,7 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'comunicacionesCenso',
+		path: 'comunicacionesCenso/:id',
 		component: ComunicacionesCensoComponent,
 
 		canActivate: [AuthGuard]

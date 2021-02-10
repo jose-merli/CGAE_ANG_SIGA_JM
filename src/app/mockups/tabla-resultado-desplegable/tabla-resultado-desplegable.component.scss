@@ -416,5 +416,10 @@ padding: 0;
 .hoverBlue2{
   background-color: lightsteelblue !important;
 }
-
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
 

@@ -4,8 +4,8 @@
         <mat-accordion class="example-headers-align" multi>
             <mat-expansion-panel class="my-1">
                 <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                    <div class="w100 pr-4 font-weight-bold">
-                        <p class="borderBottom w100">Datos Identificación</p>
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">Datos Identificación</p>
                     </div>
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
@@ -30,10 +30,7 @@
                         <div class="form-group-interlineado col-lg-4 col-md-4"
                             *ngFor="let datePickerTitle of datePickers1">
                             <label>{{ datePickerTitle }}</label>
-                            <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
-                                (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                                (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
-                            <!-- <app-calendario [datePickerTitle]="datePickerTitle"></app-calendario> -->
+                            <app-fecha [utc]="false"></app-fecha>
                         </div>
                     </div>
                 </ng-template>
@@ -44,26 +41,22 @@
         <mat-accordion class="example-headers-align" multi>
             <mat-expansion-panel class="mb-1">
                 <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                    <div class="w100 pr-4 font-weight-bold">
-                        <p class="borderBottom w100">Datos Generales EJG</p>
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">Datos Generales EJG</p>
                     </div>
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
                     <form [formGroup]="cForm">
                         <div class="form-row">
-                            <div class="form-group-interlineado"
-                                *ngFor="let selector of selectores2; let i = index; let isFirst = first;"
-                                [ngClass]="{'col-lg-4 col-md-4': !isFirst, 'col-lg-8 col-md-8': isFirst}">
+                            <div class="form-group-interlineado col-lg-4 col-md-4"
+                                *ngFor="let selector of selectores2; let i = index;">
                                 <app-selector [i]="i" [selector]="selector"></app-selector>
                             </div>
 
                             <div class="form-group-interlineado col-lg-4 col-md-4"
-                                *ngFor="let datePickerTitle of datePickers1">
+                                *ngFor="let datePickerTitle of datePickers2">
                                 <label>{{ datePickerTitle }}</label>
-                                <app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false"
-                                    (valueChangeSelected)="fillFechaIncorporacionDesde($event)"
-                                    (valueChangeInput)="fillFechaIncorporacionDesde($event)"></app-fecha>
-                                <!-- <app-calendario [datePickerTitle]="datePickerTitle"></app-calendario> -->
+                                <app-fecha [utc]="false"></app-fecha>
                             </div>
                         </div>
                     </form>
@@ -71,9 +64,120 @@
             </mat-expansion-panel>
         </mat-accordion>
 
-        <div *ngFor="let emptyAccordion of emptyAccordions">
-            <app-empty-accordion [titulo]=emptyAccordion></app-empty-accordion>
-        </div>
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">Datos Defensa</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <form [formGroup]="cForm">
+                        <div class="form-row">
+                            <div class="form-group-interlineado col-lg-4 col-md-4"
+                                *ngFor="let selector of selectores3; let i = index;">
+                                <app-selector [i]="i" [selector]="selector"></app-selector>
+                            </div>
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4" *ngFor="let inputTitle of inputs1">
+                                <label>{{ inputTitle }}</label>
+                                <input type="text" class="form-control" pInputText>
+                            </div>
+                        </div>
+                    </form>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">CAJG</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <form [formGroup]="cForm">
+                        <div class="form-row">
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4" *ngFor="let inputTitle of inputs2">
+                                <label>{{ inputTitle }}</label>
+                                <input type="text" class="form-control" pInputText>
+                            </div>
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4"
+                                *ngFor="let selector of selectores4; let i = index;">
+                                <app-selector [i]="i" [selector]="selector"></app-selector>
+                            </div>
+
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4"
+                                *ngFor="let datePickerTitle of datePickers3">
+                                <label>{{ datePickerTitle }}</label>
+                                <app-fecha [utc]="false"></app-fecha>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">Solicitante</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <form [formGroup]="cForm">
+                        <div class="form-row">
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4" *ngFor="let inputTitle of inputs3">
+                                <label>{{ inputTitle }}</label>
+                                <input type="text" class="form-control" pInputText>
+                            </div>
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4"
+                                *ngFor="let selector of selectores5; let i = index;">
+                                <app-selector [i]="i" [selector]="selector"></app-selector>
+                            </div>
+
+                        </div>
+                    </form>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mb-1">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">Tramitador/Asistencia/Designación</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                    <form [formGroup]="cForm">
+                        <div class="form-row">
+
+                            <div class="form-group-interlineado col-lg-4 col-md-4"
+                                *ngFor="let selector of selectores6; let i = index;">
+                                <app-selector [i]="i" [selector]="selector"></app-selector>
+                            </div>
+
+                            <div class="form-group-interlineado col-lg-8 col-md-8 pl5">
+                                <app-buscador-colegial></app-buscador-colegial>
+                            </div>
+
+                        </div>
+                    </form>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+
     </form>
 
 </div>
