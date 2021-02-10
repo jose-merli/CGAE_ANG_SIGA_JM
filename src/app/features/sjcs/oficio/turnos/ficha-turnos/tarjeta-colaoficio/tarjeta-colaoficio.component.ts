@@ -26,6 +26,9 @@ export class TarjetaColaOficio implements OnInit {
   openFicha: boolean = false;
   textSelected: String = "{label}";
   @Input() openColaOficio;
+  
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   selectedItem: number = 10;
   selectAll;
@@ -119,6 +122,11 @@ export class TarjetaColaOficio implements OnInit {
       this.turnosItem = new TurnosItems();
     }
     // this.arreglaChecks();
+    if (this.openColaOficio == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('colaOficio')
+      }
+    }
   }
 
   ngOnInit() {
@@ -719,12 +727,10 @@ export class TarjetaColaOficio implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = false;
   }
-  abreCierraFicha() {
-    //if (this.modoEdicion) {
-      this.openFicha = !this.openFicha;
-    /* } else {
-      this.openFicha = false;
-    } */
+  abreCierraFicha(key) {
+    this.openFicha = !this.openFicha;
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   openMultiSelect(dato) {
     // console.log(this.multiSelect);

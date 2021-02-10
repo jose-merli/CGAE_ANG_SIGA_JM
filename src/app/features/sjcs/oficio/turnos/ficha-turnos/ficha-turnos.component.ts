@@ -250,7 +250,7 @@ export class FichaTurnosComponent implements OnInit {
 	  }
 	
 	  isOpenReceive(event) {
-	
+		
 		if (event != undefined) {
 		  switch (event) {
 			case "generales":

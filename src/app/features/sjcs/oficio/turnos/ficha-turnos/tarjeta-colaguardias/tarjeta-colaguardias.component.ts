@@ -27,6 +27,9 @@ export class TarjetaColaGuardias implements OnInit {
   textSelected: String = "{label}";
   @Input() openColaGuardias;
 
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
@@ -182,6 +185,11 @@ export class TarjetaColaGuardias implements OnInit {
     }
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
+    }
+    if (this.openColaGuardias == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('colaGuardias')
+      }
     }
   }
 
@@ -728,12 +736,10 @@ export class TarjetaColaGuardias implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = false;
   } */
-  abreCierraFicha() {
-    //if (this.modoEdicion) {
-      this.openFicha = !this.openFicha;
-    /* } else {
-      this.openFicha = false;
-    } */
+  abreCierraFicha(key) {
+    this.openFicha = !this.openFicha;
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
   openMultiSelect(dato) {
     // console.log(this.multiSelect);

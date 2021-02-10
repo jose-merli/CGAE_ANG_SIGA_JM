@@ -30,6 +30,9 @@ export class ConfiguracionColaOficioComponent implements OnInit {
   @Input() idTurno;
   @Input() turnosItem: TurnosItems;
   @Input() tarjetaConfiguracionColaOficio: string;
+  
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   turnosItem2;
   openFicha: boolean = false;
@@ -120,7 +123,11 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       this.getPerfilesSeleccionados();
       this.turnosItem = new TurnosItems();
     }
-
+    if (this.openConfigColaOficio == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('configColaOficio')
+      }
+    }
   }
   ngOnInit() {
     if (this.persistenceService.getPermisos() != true) {
@@ -559,13 +566,10 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = false;
   } */
-  abreCierraFicha() {
-    //if (this.modoEdicion) {
-      this.openFicha = !this.openFicha;
-    /* } else {
-      this.openFicha = false;
-    } */
-
+  abreCierraFicha(key) {
+    this.openFicha = !this.openFicha;
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
   }
 
   showMessage(severity, summary, msg) {

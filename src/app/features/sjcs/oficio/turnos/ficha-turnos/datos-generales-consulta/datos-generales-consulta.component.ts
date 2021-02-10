@@ -73,6 +73,9 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   @Output() datosTarjetaResumenEmit = new EventEmitter<any>();
 
   @Output() modoEdicionSend = new EventEmitter<any>();
+  
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   @ViewChild("importe") importe;
   //Resultados de la busqueda
@@ -105,9 +108,10 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     }
   }
 
-  abreCierraFicha() {
+  abreCierraFicha(key) {
     this.openFicha = !this.openFicha;
-    this.resaltadoDatosGenerales = true;
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(true);
   }
   ngOnInit() {
     this.actualizarFichaResumen();

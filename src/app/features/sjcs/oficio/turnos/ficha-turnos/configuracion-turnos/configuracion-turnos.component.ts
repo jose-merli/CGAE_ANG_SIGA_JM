@@ -26,6 +26,9 @@ export class ConfiguracionTurnosComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() tarjetaConfiguracionTurnos: string;
   @Input() openConfigTurnos;
+  
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
 
   openFicha: boolean = false;
   msgs = [];
@@ -141,6 +144,11 @@ export class ConfiguracionTurnosComponent implements OnInit {
       }
     );
     this.arreglaChecks();
+    if (this.openConfigTurnos == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('configTurnos')
+      }
+    }
   }
 
   ngOnInit() {
@@ -352,12 +360,10 @@ export class ConfiguracionTurnosComponent implements OnInit {
     let fichaPosible = this.getFichaPosibleByKey(key);
     fichaPosible.activa = false;
   } */
-  abreCierraFicha() {
-    //if (this.modoEdicion) {
-      this.openFicha = !this.openFicha;
-    /* } else {
-      this.openFicha = false;
-    } */
+  abreCierraFicha(key) {
+    this.openFicha = !this.openFicha;
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(true);
   }
 
   showMessage(severity, summary, msg) {
