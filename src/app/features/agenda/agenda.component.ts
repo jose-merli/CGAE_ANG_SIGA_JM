@@ -82,7 +82,6 @@ export class AgendaComponent implements OnInit {
         }
       },
       viewRender: function (view) {
-        console.log("rerer", this.es);
         if (view.options.locale == 'ca_ES') {
           this.allDayText = 'Tot<br/>el dia';
         } else if (view.options.locale == 'gl_ES') {
@@ -102,7 +101,6 @@ export class AgendaComponent implements OnInit {
           view.el[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].innerHTML = this.allDayText;
         }
 
-        console.log("d", view);
       }
     }
 
@@ -176,7 +174,7 @@ export class AgendaComponent implements OnInit {
         }
 
         let allDayText = this.calendarioSchedule.el.nativeElement.children[0].children[1].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[0].children[0].children[0].children[0].firstChild.children[0].innerTextHTML = "jol";
-        console.log("fweff", allDayText);
+    
         this.progressSpinner = false;
       },
       err => {
@@ -274,8 +272,6 @@ export class AgendaComponent implements OnInit {
     evento.idEventoOriginal = event.calEvent.idEventoOriginal;
     evento.idRepeticionEvento = event.calEvent.idRepeticionEvento;
 
-    evento.descripcionOld = event.calEvent.descripcionOld;
-    evento.fechaInicioOld = event.calEvent.fechaInicioOld;
 
     if (event.calEvent.realEnd) {
       evento.end = event.calEvent.realEnd;

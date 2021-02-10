@@ -47,7 +47,6 @@ import { TablaPartidasJudicialesComponent } from './gestion-modulos/gestion-part
 
     ],
     declarations: [
-        PartidosJudicialesComponent,
         FiltrosPartidasJudiciales,
         TablaPartidasJudicialesComponent
     ],

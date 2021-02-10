@@ -335,6 +335,7 @@ import { MutualidadAbogaciaFichaColegialComponent } from './features/censo/ficha
 import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
 
 
 @NgModule({
@@ -647,6 +648,7 @@ import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta
 		MutualidadAbogaciaFichaColegialComponent,
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
+		PartidosJudicialesComponent,
 		ServiciosInteresFichaColegialComponent//,
 	],
 	imports: [

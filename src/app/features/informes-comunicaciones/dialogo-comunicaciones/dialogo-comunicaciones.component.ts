@@ -11,7 +11,7 @@ import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { typeSourceSpan } from '@angular/compiler';
 import { DataTable } from 'primeng/datatable';
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 import { truncate } from 'fs';
 import { findIndex } from 'rxjs/operators';
 
@@ -23,6 +23,8 @@ import { findIndex } from 'rxjs/operators';
 })
 export class DialogoComunicacionesComponent implements OnInit {
 	msgs: any;
+	msgsDescarga: any;
+	msgsDescargaFinalizada: any;
 	selectedItem: number = 10;
 	//Diálogo de comunicación
 	showComunicar: boolean = false;
@@ -71,9 +73,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	ngOnInit() {
 
-		if (sessionStorage.getItem("consultasSearch") != undefined) {
-			this.consultasSearch = JSON.parse(sessionStorage.getItem("consultasSearch"));
-		}
+		if (sessionStorage.getItem('consultasSearch') != undefined) {
+            this.consultasSearch = JSON.parse(sessionStorage.getItem('consultasSearch'));
+        }
+
+        if (sessionStorage.getItem('descargasPendientes') == undefined) {
+            sessionStorage.setItem('descargasPendientes', '0');
+        }
 
 		this.progressSpinner = true;
 		this.datosSeleccionados = JSON.parse(sessionStorage.getItem('datosComunicar'));
@@ -175,9 +181,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 		if (this.consultasSearch != undefined) {
 			this.idInstitucion = this.consultasSearch.idInstitucion;
 		}
-		if  (sessionStorage.getItem('idInstitucion')  !=  undefined) {
-			            this.idInstitucion  =  sessionStorage.getItem('idInstitucion');
-		        }
+		if (sessionStorage.getItem('idInstitucion') != undefined) {
+            this.idInstitucion = sessionStorage.getItem('idInstitucion');
+        }
+
 		let modeloSearch = {
 			idModulo: this.idModulo,
 			idClaseComunicacion: this.idClaseComunicacion,
@@ -217,13 +224,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 		if(dato.idPlantillaEnvio != undefined && dato.idPlantillaEnvio != null){
 			this.getTipoEnvios(dato);
 		}else{
-			dato.tipoEnvio = "";
+			dato.tipoEnvio = '';
 		}
 	}
 
 	getTipoEnvios(dato) {
-		if (dato.idPlantillaEnvio == "") {
-			dato.tipoEnvio = "";
+		if (dato.idPlantillaEnvio == '') {
+            dato.tipoEnvio = '';
 		} else {
 			this.sigaServices.post('dialogo_tipoEnvios', dato.idPlantillaEnvio).subscribe(
 				(data) => {
@@ -267,10 +274,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 		if (this.comunicar && !this.comprobarPlantillas()) {
 			this.showFail('Se ha de seleccionar al menos una plantilla de envio por modelo');
 		} else {
-			this.progressSpinner = true;
+			//this.progressSpinner = true;
 			this.sigaServices.post('dialogo_obtenerCamposDinamicos', this.bodyComunicacion).subscribe(
 				(data) => {
-					console.log(data);
 					this.progressSpinner = false;
 					this.valores = [];
 					this.listaConsultas = JSON.parse(data['body']).consultaItem;
@@ -278,15 +284,15 @@ export class DialogoComunicacionesComponent implements OnInit {
 						if (element.camposDinamicos != null) {
 							element.camposDinamicos.forEach((campo) => {
 
-								let find = this.valores.find(x => x.campo == campo.campo);
+								let find = this.valores.find((x) => x.campo == campo.campo);
 
 								if(campo.valores != undefined && campo.valores != null && campo.valores.length > 0){
 									campo.valor = campo.valores[0].ID;
 								}
 
-								if(campo.operacion == "OPERADOR"){
+								if (campo.operacion == 'OPERADOR') {
 									campo.operadorDefecto = false;
-									campo.operacion = "=";
+									campo.operacion = '=';
 								}else{
 									campo.operadorDefecto = true;
 								}
@@ -320,7 +326,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.showFail(
 						this.translateService.instant(
 							'informesycomunicaciones.modelosdecomunicacion.consulta.errorParametros'
-						) + ' ' + message
+							) +
+                            ' ' +
+                            message
 					);
 				},
 				() => {
@@ -342,7 +350,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	enviarComunicacion() {
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 
 		this.valores.forEach((element) => {
 			if (element.valor != null && typeof element.valor == 'object') {
@@ -406,9 +414,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 		}
 	}
 
-	enviar() {
-		console.log(this.listaConsultas);
-	}
+	enviar() {}
 
 	onRowSelectModelos(event) {
 		event.data = true;
@@ -450,7 +456,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	descargarComunicacion() {
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 
 		// this.valores.forEach((element) => {
 			// if (element.valor != null && typeof element.valor == 'object') {
@@ -476,7 +482,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				if (this.listaConsultas[i].camposDinamicos != null) {
 					for (let j = 0; this.listaConsultas[i].camposDinamicos.length > j; j++) {
 
-						let find = this.valores.find(x => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
+						let find = this.valores.find((x) => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
 						if (find != undefined) {
 
 							if (find.valor != null && typeof find.valor == 'object') {
@@ -511,19 +517,25 @@ export class DialogoComunicacionesComponent implements OnInit {
 			ruta: this.rutaComunicacion
 		};
 
+		let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
+        descargasPendientes = descargasPendientes + 1;
+        sessionStorage.setItem('descargasPendientes', descargasPendientes);
+        this.showInfoPerenne(
+            'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
+        );
+        this.showValores = false;
+
 		let filename;
-		this.sigaServices
-			.post("dialogo_nombredoc", datos)
-			.subscribe(
-				data => {
-					if (data["body"] != "") {
-						let fileInfo = JSON.parse(data["body"]);
-						if (fileInfo.name != "ResultadoConsulta.xlsx") {
-							filename = fileInfo.name;
-						} else {
+		this.sigaServices.post('dialogo_nombredoc', datos).subscribe(
+            (data) => {
+                if (data['body'] != '') {
+                    let fileInfo = JSON.parse(data['body']);
+                    if (fileInfo.name != 'ResultadoConsulta.xlsx') {
+						filename = fileInfo.name;
+					} else {
 							if (sessionStorage.getItem('nombreConsulta') != undefined) {
 								filename = sessionStorage.getItem('nombreConsulta');
-								filename += ".xlsx"
+								filename += '.xlsx';
 							} else {
 								filename = fileInfo.name;
 							}
@@ -541,21 +553,33 @@ export class DialogoComunicacionesComponent implements OnInit {
 										saveAs(blob, filename);
 										this.progressSpinner = false;
 									}
+									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+									sessionStorage.setItem('descargasPendientes', descargasPendientes);
+									this.showInfoPerenne(
+										'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
+									);
+	
 									this.showValores = false;
 								} else {
+									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+									sessionStorage.setItem('descargasPendientes', descargasPendientes);
 									this.showValores = false;
 									this.progressSpinner = false;
-									this.showFail(
-										this.translateService.instant('informes.error.descargaDocumento')
-									);
+									this.clearPerenne();
+									this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
+									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
 							},
 							(error) => {
 								console.log(error);
 
 								this.progressSpinner = false;
+								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+								sessionStorage.setItem('descargasPendientes', descargasPendientes);
+								this.clearPerenne();
+								this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 								if (error.message != null && error.message != undefined) {
-									this.showFail(error.message)
+									this.showFail(error.message);
 								} else {
 									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
@@ -567,10 +591,13 @@ export class DialogoComunicacionesComponent implements OnInit {
 						);
 					}
 				},
-				err => {
+				(err) => {
 					this.progressSpinner = false;
 					this.showValores = false;
 					console.log(err);
+					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+					sessionStorage.setItem('descargasPendientes', descargasPendientes);
+					this.clearPerenne();
 					let mensaje = this.translateService.instant('informes.error.descargaDocumento');
 					if (err != null && err != undefined && err.error != null && err.error != undefined) {
 						let errDTO = JSON.parse(err.error);
@@ -578,9 +605,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 							mensaje = errDTO.message;
 						}
 					}
+					this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 					this.showFail(mensaje);
-
-				}, () => {
+			},
+			() => {
 					this.progressSpinner = false;
 				}
 			);
@@ -596,17 +624,17 @@ export class DialogoComunicacionesComponent implements OnInit {
 				observer.error(JSON.parse(reader.result as string));
 				observer.complete();
 				this.showFail(JSON.parse(reader.result as string));
-			}
+			};
 		});
 		reader.readAsText(err.error);
 		return obs;
 	}
 
 	getInstitucion() {
-		        this.sigaServices.get('institucionActual').subscribe((n)  =>  {
-			            this.idInstitucion  =  n.value;
-			            this.getClaseComunicaciones();
-		        });
+		this.sigaServices.get('institucionActual').subscribe((n) => {
+			this.idInstitucion = n.value;
+			this.getClaseComunicaciones();
+		});
 	}
 
 	getMaxNumeroModelos() {
@@ -642,9 +670,22 @@ export class DialogoComunicacionesComponent implements OnInit {
 		this.msgs.push({ severity: 'info', summary: '', detail: mensaje });
 	}
 
+	showInfoPerenne(mensaje: string) {
+		this.msgsDescarga = [];
+		this.msgsDescarga.push({ severity: 'info', summary: '', detail: mensaje });
+	}
+	showInfoPerenneFinalizada(mensaje: string) {
+        this.msgsDescargaFinalizada = [];
+        this.msgsDescargaFinalizada.push({ severity: 'info', summary: '', detail: mensaje });
+    }
+
 	clear() {
 		this.msgs = [];
 	}
+
+	clearPerenne(){
+        this.msgsDescarga = [];
+    }
 
 	backTo() {
 		sessionStorage.setItem('back', 'true');
@@ -652,11 +693,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 	}
 
 	getPlantillas() {
-		this.sigaServices.getParam(
-			"modelos_detalle_plantillasComunicacionByIdClase",
-			"?idClase=" +
-			this.idClaseComunicacion
-		  ).subscribe(
+		this.sigaServices.getParam('modelos_detalle_plantillasComunicacionByIdClase', '?idClase=' + this.idClaseComunicacion)
+			.subscribe(
 			(data) => {
 				this.plantillas = data.combooItems;
 				// this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });

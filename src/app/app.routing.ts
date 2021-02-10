@@ -26,9 +26,11 @@ import { AuditoriaComponent } from './features/censo/auditoria/auditoria.compone
 import { Routes, RouterModule } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { AppComponent } from "./app.component";
+import { AuthGuard } from "./_guards/auth.guards";
 import { LoginComponent } from "./commons/login/login.component";
 import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
 import { LoginMultipleComponent } from "./commons/login-multiple/login-multiple.component";
+import { HomeComponent } from "./features/home/home.component";
 import { LogoutComponent } from "./commons/logout/logout.component";
 
 // Censo
@@ -200,7 +202,6 @@ import { NuevaConsultaExpertaComponent } from './features/consultas/nueva-consul
 
 //Comunicaciones
 import { InformesGenericosComponent } from './features/comunicaciones/informes-genericos/informes-genericos.component';
-import { HomeComponent } from './features/home/home.component';
 import { ListaCorreosComponent } from './features/comunicaciones/lista-correos/lista-correos.component';
 
 // Administracion
@@ -237,7 +238,6 @@ import { PlantillasEnvioComponent } from './features/informes-comunicaciones/pla
 //COOKIES
 import { PoliticaCookiesComponent } from './features/politica-cookies/politica-cookies.component';
 
-import { AuthGuard } from './_guards/auth.guards';
 import { DefinirTipoPlantillaComponent } from './features/comunicaciones/definir-tipo-plantilla/definir-tipo-plantilla.component';
 import { BandejaSalidaComponent } from './features/comunicaciones/bandeja-salida/bandeja-salida.component';
 import { BandejaEntradaComponent } from './features/comunicaciones/bandeja-entrada/bandeja-entrada.component';
@@ -1124,6 +1124,27 @@ const appRoutes: Routes = [
 		component: FichaEventosComponent,
 		canActivate: [ AuthGuard ]
 	},
+	//Agenda
+	{
+		path: 'agenda',
+		component: AgendaComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'editarCalendario',
+		component: FichaCalendarioComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'editarNotificacion',
+		component: DatosNotificacionesComponent,
+		canActivate: [ AuthGuard ]
+	},
+	{
+		path: 'fichaEventos',
+		component: FichaEventosComponent,
+		canActivate: [ AuthGuard ]
+	},
 
 	// Administracion
 	{
@@ -1253,8 +1274,8 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'dialogoComunicaciones',
-		component: DialogoComunicacionesComponent,
-		canActivate: [AuthGuard]
+		component: DialogoComunicacionesComponent
+		//canActivate: [AuthGuard]
 	},
 	// {
 	// 	path: 'guardias',

@@ -420,10 +420,14 @@ export class ConsultasPlantillasComponent implements OnInit {
   }
 
   disabledSave(){
-    if(this.datos[0].idConsulta==undefined || this.datos[0].idConsulta=="" || this.datos[0].idConsulta==null){
+    if(this.datos ==undefined  || this.datos==null){
       return true;
     }else{
-      return false;
+      if(this.datos[0].idConsulta==undefined || this.datos[0].idConsulta=="" || this.datos[0].idConsulta==null){
+        return true;
+      }else{
+        return false;
+      }
     }
   }
 

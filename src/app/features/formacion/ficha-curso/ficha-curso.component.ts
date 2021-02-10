@@ -1,6 +1,7 @@
 import { Location } from "@angular/common";
 import { ChangeDetectorRef, Component, OnInit, ViewChild, ViewEncapsulation, ElementRef, Renderer, Input } from "@angular/core";
 import { saveAs } from "file-saver/FileSaver";
+import { DomSanitizer } from "../../../../../node_modules/@angular/platform-browser";
 import { Router } from "../../../../../node_modules/@angular/router";
 import { ConfirmationService } from "../../../../../node_modules/primeng/api";
 import { AutoComplete, Dropdown } from "../../../../../node_modules/primeng/primeng";
@@ -20,7 +21,7 @@ import { CertificadoCursoObject } from "../../../models/CertificadoCursoObject";
 import { EventoObject } from "../../../models/EventoObject";
 import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import * as moment from 'moment';
-import { EditorComponent } from '@tinymce/tinymce-angular';
+import { EditorModule, EditorComponent } from '@tinymce/tinymce-angular';
 import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
@@ -258,6 +259,9 @@ export class FichaCursoComponent implements OnInit {
     private commonsService: CommonsService,
     private elRef: ElementRef, private renderer: Renderer,
   ) {
+
+    window.scrollTo(0, 0);
+
   }
 
   ngOnInit() {
@@ -458,11 +462,14 @@ export class FichaCursoComponent implements OnInit {
           sessionStorage.getItem("formador") != undefined) &&
         sessionStorage.getItem("toBackNewFormador") == "true"
       ) {
-        sessionStorage.removeItem("toBackNewFormador");
+        this.abreCierraFicha('formadores');
         this.pressNewFormador = true;
         this.modoEdicionFormador = false;
         this.editFormador = true;
         this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+        sessionStorage.removeItem("toBackNewFormador");
+        let x = document.getElementById("Formadores");
+        x.scrollIntoView({ behavior: "auto" });
       } else {
         this.getTrainers();
         sessionStorage.removeItem("toBackNewFormador");

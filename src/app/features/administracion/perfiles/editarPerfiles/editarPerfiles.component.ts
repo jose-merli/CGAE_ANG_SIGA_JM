@@ -49,7 +49,6 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
   @ViewChild("table") table;
   ngOnInit() {
     this.crear = JSON.parse(sessionStorage.getItem("crear"));
-    console.log(sessionStorage);
     this.rolesAsignados = [];
     this.rolesNoAsignados = [];
     this.saveRolesAsignados = [];

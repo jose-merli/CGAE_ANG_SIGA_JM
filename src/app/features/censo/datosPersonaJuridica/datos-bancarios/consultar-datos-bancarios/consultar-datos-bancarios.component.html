@@ -412,7 +412,7 @@
             [ngClass]="{'customCursor': selectMultiple}" [paginator]="activarPaginacion()" #table class="tabla-listado"
             [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [paginator]="true" paginatorPosition="both"
             [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
-            (onEditInit)="editar=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
+            (onEditInit)="editarAnexo=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
 
 
 
@@ -469,7 +469,7 @@
       <div *ngIf="openFichaListadoFicherosAnexos" class="card-footer">
         <div class="text-right main-button ">
           <div  class="text-right main-button">
-            <button  (click)="editarDescripcion()" [(disabled)]="!permisos || disabledAction" pButton type="button"
+            <button (click)="editarDescripcion()" *ngIf="editarAnexo == true" [(disabled)]="!permisos || disabledAction" pButton type="button"
               icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
             <button *ngIf="!nuevo" [(disabled)]="mandatoAnexoVacio || !permisos || disabledAction"
               (click)="mostrarDialogoNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
@@ -553,7 +553,7 @@
         <div class="form-group col-lg-6 col-md-6">
           <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)</label>
           <br>
-          <p-dropdown [ngClass]="styleObligatorio('nuevo', selectedProductoServicio)"
+          <p-dropdown [ngClass]="styleObligatorio('nuevo', selectedProductoServicio)" [showClear]="true" placeholder="{{'general.boton.seleccionar' | translate}}" 
             [(ngModel)]="selectedProductoServicio" [options]="comboProductoServicio" [(disabled)]="!permisos"
             styleClass="widthAll" (ngModelChange)="muestraCamposObligatorios('datosBancarios')" (onChange)="onChangeComboProductoServicio($event)"></p-dropdown>
         </div>
