@@ -43,12 +43,12 @@ export class FichaColegiadoComponent implements OnInit {
       nombre: "Servicios de interés",
       icono: 'fas fa-link',
       detalle: false,
-      fixed: true,
+      fixed: false,
       enlaces: [
         {
           "texto": "Facturación",
-         // "href": "/mantenimientoFactura",
-         "href": "",
+          // "href": "/mantenimientoFactura",
+          "href": "",
           "params": []
         },
         {
