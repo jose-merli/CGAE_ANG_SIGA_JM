@@ -9,3 +9,9 @@
     text-overflow: ellipsis !important;
     max-width: 160px !important;
   }
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}

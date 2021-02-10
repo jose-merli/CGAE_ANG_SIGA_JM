@@ -7,8 +7,10 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./certificacion.component.scss']
 })
 export class CertificacionComponent2 implements OnInit {
+  isDisabled = true;
   cFormValidity = true;
   show = false;
+  allSelected = false;
   cabeceras = [
     {
       id: "periodo",
@@ -64,5 +66,16 @@ export class CertificacionComponent2 implements OnInit {
   }
   hideResponse() {
     this.show = false;
+  }
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
   }
 }

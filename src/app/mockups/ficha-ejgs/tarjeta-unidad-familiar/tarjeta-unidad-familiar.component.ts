@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tarjeta-unidad-familiar.component.scss']
 })
 export class TarjetaUnidadFamiliarComponent implements OnInit {
-
+  allSelected = false;
+  isDisabled = true;
   cabeceras = [
     {
       id: "nif",
@@ -50,5 +51,15 @@ export class TarjetaUnidadFamiliarComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
 }

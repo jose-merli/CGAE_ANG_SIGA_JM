@@ -18,11 +18,23 @@ export class FichaColegiadoComponent implements OnInit {
       nombre: "Servicios de interés",
       icono: 'fas fa-link',
       detalle: false,
-      fixed: false,
+      fixed: true,
       enlaces: [
         {
-          "texto": "Más información",
-          "href": "0"
+          "texto": "Facturación",
+         // "href": "/mantenimientoFactura",
+         "href": "",
+          "params": []
+        },
+        {
+          "texto": "Auditoría",
+          "href": "/auditoriaUsuarios",
+          "params": "21496003L"
+        },
+        {
+          "texto": "Comunicaciones",
+          "href": "/comunicacionesCenso",
+          "params": "21496003L"
         }
       ]
     },

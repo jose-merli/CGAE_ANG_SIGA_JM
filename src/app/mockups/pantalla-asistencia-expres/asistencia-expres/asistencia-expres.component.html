@@ -1,3 +1,15 @@
-<!--<app-buscador-asistencia-expres [selectores1]="selectores1"></app-buscador-asistencia-expres>-->
-<app-buscador-asistencia-expres></app-buscador-asistencia-expres>
-<app-resultado-asistencia-expres></app-resultado-asistencia-expres>
+<div class="busqueda-container">
+    <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="changeTab()" class="mr-4"
+                    name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+            </div>
+            <app-buscador-asistencia-expres></app-buscador-asistencia-expres>
+            <div *ngIf="show">
+                    <app-resultado-asistencia-expres></app-resultado-asistencia-expres>
+            </div>
+        </div>
+    </div>
+</div>

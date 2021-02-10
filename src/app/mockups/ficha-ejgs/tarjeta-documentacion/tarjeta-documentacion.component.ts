@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-tarjeta-documentacion',
@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class TarjetaDocumentacionComponent implements OnInit {
 
   constructor() { }
+  allSelected = false;
+  isDisabled = true;
   cabeceras = [
     {
       id: "nif",
@@ -48,5 +50,15 @@ export class TarjetaDocumentacionComponent implements OnInit {
   ];
   ngOnInit(): void {
   }
-
+  selectedAll(event){
+    this.allSelected = event;
+    this.isDisabled = !event;
+  }
+  notifyAnySelected(event){
+    if (this.allSelected || event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
 }

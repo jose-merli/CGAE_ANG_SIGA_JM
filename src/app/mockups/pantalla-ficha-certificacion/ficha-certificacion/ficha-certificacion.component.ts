@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-ficha-certificacion',
@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FichaCertificacionComponent implements OnInit {
   panelDatGenOpenState: boolean = false;
+  isDisabled = true;
   panelFacOpenState: boolean = false;
   campos = [
     {
@@ -94,5 +95,11 @@ elementos2 = [
 
   ngOnInit(): void {
   }
-
+  notifyAnySelected(event){
+    if (event){
+      this.isDisabled = false;
+    } else {
+      this.isDisabled = true;
+    }
+  }
 }

@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 
 import { SigaServices } from "./../../../../_services/siga.service";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from '@angular/router';
 import { ConfirmationService } from "primeng/api";
 import { TranslateService } from "../../../../commons/translate/translation.service";
 import { USER_VALIDATIONS } from "../../../../properties/val-properties";
@@ -71,7 +71,8 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private route: ActivatedRoute
   ) {
     super(USER_VALIDATIONS);
   }
@@ -84,6 +85,11 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
 
 
   ngOnInit() {
+        this.route.queryParams.subscribe((params) => {
+            this.persona = (params['id'] );
+            console.log('this.params: ', params)
+            console.log('this.persona: ', this.persona)
+        });
 
     if (sessionStorage.getItem("tarjeta") != null) {
       this.volver = true;

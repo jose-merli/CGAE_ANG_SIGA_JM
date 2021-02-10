@@ -55,7 +55,7 @@
                         </div>
                         <div class="form-group-interlineado col-lg-6 col-md-6">
                             <div>
-                                <app-paginador></app-paginador>
+                                <app-paginador (seleccionarTodo)="selectedAll($event)"></app-paginador>
                             </div>
                             <div>
                                 <app-tabla-simple [cabeceras]="cabeceras2" [elementos]="elementos2"></app-tabla-simple>
@@ -113,7 +113,7 @@
                     </div>
                 </mat-expansion-panel-header>
                 <ng-template matExpansionPanelContent>
-                    <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos" [elementosAux]="elementosAux">
+                    <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos" [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)">
                     </app-tabla-resultado>
                     <!-- <div>
                         <app-paginador [type]="'BOTTOM'"></app-paginador>
@@ -124,11 +124,11 @@
     </div>
     <div *ngIf="panelFacOpenState" class="card-footer">
         <div class="text-right main-button">
-            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Reabrir"></button>
-            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Comunicar"></button>
-            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Nuevo"></button>
-            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Restablecer"></button>
-            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Guardar"></button>
+            <button  [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Reabrir"></button>
+            <button  [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Comunicar"></button>
+            <button  [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Nuevo"></button>
+            <button  [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Restablecer"></button>
+            <button  [disabled]="isDisabled" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="Guardar"></button>
         </div>
     </div>
 </div>

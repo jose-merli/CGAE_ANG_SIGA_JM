@@ -14,10 +14,10 @@
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
               <div class="padding-interior">
-                <app-paginador [type]="'TOP'"></app-paginador>
+                <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
               </div>
               <div>
-                <app-tabla-resultado [cabeceras]="cabeceras" [elementos]="elementos" [elementosAux]="elementosAux">
+                <app-tabla-resultado [allSelected]="allSelected" [cabeceras]="cabeceras" [elementos]="elementos" [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)">
                 </app-tabla-resultado>
               </div>
               <div class="padding-interior">

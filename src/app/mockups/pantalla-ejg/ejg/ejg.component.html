@@ -14,10 +14,10 @@
 <div *ngIf="show">
     <div class="card mt-3">
         <div class="card-body">
-            <app-paginador [type]="'TOP'"></app-paginador>
+            <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
 
-            <app-resultado-ejg [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
-                [elementosAux]="elementosAux"></app-resultado-ejg>
+            <app-resultado-ejg [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+                [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)"></app-resultado-ejg>
 
             <div>
                 <app-paginador [type]="'BOTTOM'"></app-paginador>
@@ -26,10 +26,10 @@
 
         <div class="card-footer">
             <div class="text-right main-button">
-                <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir a Remesa"></button>
-                <button pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar EEJ"></button>
-                <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="Cambiar Estado"></button>
-                <button pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar"></button>
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-plus" iconPos="left" label="Añadir a Remesa"></button>
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-download" iconPos="left" label="Descargar EEJG"></button>
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-eraser" iconPos="left" label="Cambiar Estado"></button>
+                <button [disabled]="isDisabled" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar"></button>
             </div>
         </div>
     </div>

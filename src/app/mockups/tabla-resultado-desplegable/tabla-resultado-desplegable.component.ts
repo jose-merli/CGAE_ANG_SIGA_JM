@@ -1,4 +1,4 @@
-import { ElementRef, Renderer2 } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -13,6 +13,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() cabeceras = [];
   @Input() rowGroups: RowGroup[];
   @Input() rowGroupsAux: RowGroup[];
+  @Input() seleccionarTodo = false;
+  @Output() anySelected = new EventEmitter<any>();
   cabecerasMultiselect = [];
   modalStateDisplay = true;
   searchText = [];
@@ -21,12 +23,30 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   numCabeceras = 0;
   numColumnas = 0;
   numColumnasChecked = 0;
+  selected = false;
+  selectedArray = [];
   RGid = "inicial";
   down = false;
   @ViewChild('table') table: ElementRef;
+
+  
   constructor(
     private renderer: Renderer2
-  ) {}
+  ) {
+    this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
+      console.log('e.target: ', event.target)
+      console.log('e.target classes: ', event.target.classList)
+      console.log('this.table.nativeElement: ', this.table.nativeElement)
+      for (let i = 0; i < this.table.nativeElement.children.length; i++) {
+        console.log('this.table.nativeElement.classes: ', this.table.nativeElement.children[i].className)
+      
+      if(!event.target.classList.contains("selectedRowClass")){
+        this.selected = false;
+        this.selectedArray = [];
+      }
+    }
+    });
+  }
 
   ngOnInit(): void {
     this.numCabeceras = this.cabeceras.length;
@@ -35,7 +55,27 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.cabecerasMultiselect.push(cab.name);
     })
   }
-
+  selectRow(rowSelected, rowId){
+    this.selected = true;
+    if(this.selectedArray.includes(rowId)){
+      const i = this.selectedArray.indexOf(rowId);
+      this.selectedArray.splice(i, 1);
+    } else {
+    this.selectedArray.push(rowId);
+  }
+    if(this.selectedArray.length != 0){
+      this.anySelected.emit(true);
+    }else{
+      this.anySelected.emit(false);
+    }
+  }
+  isSelected(id){
+    if(this.selectedArray.includes(id)){
+      return true;
+    } else {
+      return false;
+    }
+  }
   sortData(sort: Sort) {
     let data :RowGroup[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {

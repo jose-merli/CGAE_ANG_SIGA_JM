@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tarjeta-relaciones.component.scss']
 })
 export class TarjetaRelacionesComponent implements OnInit {
+  allSelected = false;
   listaTarjetas = [
     {
       opened: false,
@@ -66,5 +67,7 @@ export class TarjetaRelacionesComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  selectedAll(event){
+    this.allSelected = event;
+  }
 }

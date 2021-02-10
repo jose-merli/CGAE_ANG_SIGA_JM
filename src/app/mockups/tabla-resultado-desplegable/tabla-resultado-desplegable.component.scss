@@ -394,4 +394,27 @@ left: -20px;
 border-top: 1px solid #D5D5D5;
   border-bottom: 1px solid #D5D5D5;
 }
+.cell-value ::ng-deep .ui-calendar-w-btn input {
+padding: 0;
+}
+.cell-value ::ng-deep .ui-widget.ui-button {
+  position: relative;
+  height: 100%;
+}
+.cell-value ::ng-deep .ui-calendar-w-btn span {
+  display: flex !important;
+}
+.cell-value ::ng-deep .ui-calendar {
+  display: flex !important;
+}
+.hoverBlue:hover {
+	background-color: lightsteelblue !important;
+}
+.fixedBlue{
+  background-color: lightsteelblue !important;
+}
+.hoverBlue2{
+  background-color: lightsteelblue !important;
+}
+
 

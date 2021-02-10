@@ -11,7 +11,7 @@
                 </p-dropdown>
                 <label class="pl-1">Registros</label>
                 <div *ngIf="type === 'TOP'" class="ml-3 selectAll">
-                    <p-checkbox binary="true" label="Seleccionar todo" name="groupname">
+                    <p-checkbox (onChange)="selectedAll()" binary="true" label="Seleccionar todo" name="groupname">
                     </p-checkbox>
                 </div>
             </div>

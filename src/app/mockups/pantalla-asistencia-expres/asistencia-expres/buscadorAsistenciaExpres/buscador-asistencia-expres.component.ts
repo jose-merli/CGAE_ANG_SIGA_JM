@@ -16,14 +16,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   modoBusqueda: string = 'b';
   modoBusquedaB: boolean = true;
   @Input() titulo: string;
-  rutas:string[] = ['SJCS', 'Guardia', 'Asistencias'];
+
 
   constructor() {
     this.datos = {
-      radios: [
-        { label: 'Búsqueda de Asistencias', value: 'a' },
-        { label: 'Asistencia Exprés', value: 'b' }
-      ],
+      radios: [],
       dropdowns: [
         {
           label: 'Turno',
