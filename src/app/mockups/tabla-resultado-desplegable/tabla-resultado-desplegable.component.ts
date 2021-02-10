@@ -34,12 +34,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     private renderer: Renderer2
   ) {
     this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
-      console.log('e.target: ', event.target)
-      console.log('e.target classes: ', event.target.classList)
-      console.log('this.table.nativeElement: ', this.table.nativeElement)
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
-        console.log('this.table.nativeElement.classes: ', this.table.nativeElement.children[i].className)
-      
+
       if(!event.target.classList.contains("selectedRowClass")){
         this.selected = false;
         this.selectedArray = [];

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Renderer2, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnInit, Renderer2, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 @Component({
   selector: 'app-tabla-resultado',
@@ -12,6 +12,7 @@ export class TablaResultadoComponent implements OnInit {
   @Input() elementos = [];
   @Input() elementosAux = [];
   @Input() allSelected = false;
+  @ViewChild('tablaResultado') table: ElementRef;
   ids = [];
   sortedData = [];
   searchText = [];
@@ -20,7 +21,17 @@ export class TablaResultadoComponent implements OnInit {
   numColumnas = 0;
   selectedArray = [];
   constructor(
-  ) {}
+    private renderer: Renderer2
+  ) {
+    this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
+      for (let i = 0; i < this.table.nativeElement.children.length; i++) {
+        console.log('event.target.classList: ', event.target.classList)
+      if(!event.target.classList.contains("selectedRowClass")){
+        this.selectedArray = [];
+      }
+    }
+    });
+  }
   ngOnInit(): void {
     this.cabeceras.forEach(cab => {
       this.ids.push(cab.id);

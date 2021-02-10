@@ -1,4 +1,4 @@
-<div id="tablaResultado">
+<div id="tablaResultado" #tablaResultado>
 
     <div class="tabla-listado overflow my-3">
         <div class="ui-table ui-widget ui-table-responsive ui-table-hoverable-rows ui-table-auto-layout">
@@ -18,9 +18,9 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="ui-table-tbody">
-                        <tr (click)="selectRow(i)" *ngFor="let dat of sortedData; let i = index;"  [ngClass]="{'fixedBlue': allSelected, 'hoverBlue': isSelected(i)}">
-                            <td *ngFor="let id of ids">
+                    <tbody class="ui-table-tbody selectedRowClass">
+                        <tr class="selectedRowClass" (click)="selectRow(i)" *ngFor="let dat of sortedData; let i = index;"  [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': allSelected}">
+                            <td class="selectedRowClass" *ngFor="let id of ids">
                                 {{ dat[id] }}
                             </td>
                         </tr>
