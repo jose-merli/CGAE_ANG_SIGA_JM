@@ -20,7 +20,6 @@ export class DatosGeneralesComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    console.log(this.fichasPosibles);
   }
 
   esFichaActiva(key) {

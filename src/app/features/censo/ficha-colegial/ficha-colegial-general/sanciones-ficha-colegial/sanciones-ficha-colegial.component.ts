@@ -115,9 +115,6 @@ disabledAction:boolean = false;
       this.activacionTarjeta = true;
     }
 
-    this.searchSanciones();
-
-
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -140,6 +137,9 @@ disabledAction:boolean = false;
       this.esNewColegiado = false;
       this.activacionTarjeta = true;
     }
+    if(this.tarjetaSanciones == "3" || this.tarjetaSanciones == "2"){
+      this.searchSanciones();
+    }    
   }
   abreCierraFicha(key) {
     let fichaPosible = this.getFichaPosibleByKey(key);

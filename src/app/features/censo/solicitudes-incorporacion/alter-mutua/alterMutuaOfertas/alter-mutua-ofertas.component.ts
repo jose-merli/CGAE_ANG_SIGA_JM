@@ -792,14 +792,12 @@ export class AlterMutuaOfertasComponent implements OnInit {
               this.propuestas.propuestas[i].descripcion
             )
           };
-          console.log(this.infoPropuesta.descripcion);
         }
       }
       if (event.value.value == "") {
         this.tarifa = null;
       }
     }
-    console.log(this.infoPropuesta.descripcion);
   }
 
 
@@ -908,7 +906,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
         result => {
           this.poblaciones = result.combooItems;
           this.progressSpinner = false;
-          console.log(this.poblaciones);
         },
         error => {
           console.log(error);

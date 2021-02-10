@@ -256,15 +256,15 @@ export class FichaCursoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private changeDetectorRef: ChangeDetectorRef,
-    private domSanitizer: DomSanitizer,
     private commonsService: CommonsService,
     private elRef: ElementRef, private renderer: Renderer,
   ) {
+
+    window.scrollTo(0, 0);
+
   }
 
   ngOnInit() {
-
-    this.commonsService.scrollTop();
     this.resaltadoDatos = true;
     sessionStorage.removeItem("crearnuevo");
     sessionStorage.removeItem("pantallaFichaCurso");
@@ -462,11 +462,14 @@ export class FichaCursoComponent implements OnInit {
           sessionStorage.getItem("formador") != undefined) &&
         sessionStorage.getItem("toBackNewFormador") == "true"
       ) {
-        sessionStorage.removeItem("toBackNewFormador");
+        this.abreCierraFicha('formadores');
         this.pressNewFormador = true;
         this.modoEdicionFormador = false;
         this.editFormador = true;
         this.loadNewTrainer(JSON.parse(sessionStorage.getItem("formador")));
+        sessionStorage.removeItem("toBackNewFormador");
+        let x = document.getElementById("Formadores");
+        x.scrollIntoView({ behavior: "auto" });
       } else {
         this.getTrainers();
         sessionStorage.removeItem("toBackNewFormador");

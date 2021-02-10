@@ -449,7 +449,7 @@ export class DatosIntegrantesComponent implements OnInit {
       data.map(result => {
         result.cardIntegrantes = this.isValidate;
       });
-      // console.log(data);
+      //  
     });
   }
 

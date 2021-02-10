@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -10,7 +10,7 @@ import { Router } from '../../../../../../../node_modules/@angular/router';
   templateUrl: './alter-mutua-ficha-colegial.component.html',
   styleUrls: ['./alter-mutua-ficha-colegial.component.scss']
 })
-export class AlterMutuaFichaColegialComponent implements OnInit {
+export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
 
   @Input() tarjetaAlterMutua;
   solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
@@ -19,7 +19,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit {
 
   generalTratamiento: any[] = [];
   progressSpinner: boolean = false;
-
+  viernes = false
   constructor(private sigaServices: SigaServices,
     private router: Router) { }
 
@@ -33,8 +33,12 @@ export class AlterMutuaFichaColegialComponent implements OnInit {
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     }
 
+  }
+  ngOnChanges() {
+    if ((this.tarjetaAlterMutua == "2" || this.tarjetaAlterMutua == "3") && !this.viernes) {
     this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
       n => {
+          this.viernes = true;
         this.generalTratamiento = n.combooItems;
         let tratamiento = this.generalTratamiento.find(
           item => item.value === this.generalBody.idTratamiento
@@ -47,7 +51,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit {
         console.log(err);
       }
     );
-
+    }
   }
 
 

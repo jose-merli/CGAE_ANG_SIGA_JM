@@ -453,7 +453,7 @@
                 <span *ngIf="datePipeIncorporacion">{{ colegialesBody.incorporacion | date: 'dd/MM/yyyy' }}</span>
                 <span *ngIf="!datePipeIncorporacion">{{ colegialesBody.incorporacion}}</span>
               </label>
-              <i (click)="abreCierraFicha('colegiales')" *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
+              <i *ngIf="!esFichaActiva('colegiales')" class="fa fa-angle-down float-right"></i>
             </div>
           </div>
         </div>
@@ -461,9 +461,9 @@
           <div class="img-colegiado">
             <i class="far fa-address-book icon-ficha"></i>
           </div>
-          <label (click)="abreCierraFicha('colegiales')" class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
+          <label class="title-ficha">{{ "censo.consultaDatosColegiales.literal.cabecera" | translate }}
           </label>
-          <i (click)="abreCierraFicha('colegiales')" class="fa fa-angle-up ml-auto"></i>
+          <i class="fa fa-angle-up ml-auto"></i>
         </div>
       </div>
       <!-- cuerpo -->

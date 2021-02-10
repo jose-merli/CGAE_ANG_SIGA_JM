@@ -561,7 +561,6 @@ export class DatosRetencionesComponent implements OnInit {
               this.fechaMinima = new Date(
                 this.fechaMinima.getTime() + 1000 * 60 * 60 * 24
               );
-              // console.log(this.nuevafecha)
               // this.nuevafecha = this.datepipe.transform(
               //   new Date(),
               //   "dd/MM/yyyy"
@@ -570,7 +569,6 @@ export class DatosRetencionesComponent implements OnInit {
             if (this.datos.length == 1) {
               this.fechaMinima = undefined;
               this.nuevafecha = new Date();
-              console.log(this.nuevafecha);
             }
           },
           err => {

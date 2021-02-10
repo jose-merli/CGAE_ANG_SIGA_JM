@@ -9,6 +9,7 @@ export class SolicitudIncorporacionItem {
   soloNombre: String;
   apellidos: String;
   apellido1: String;
+  idPersona: String;
   idsolicitudincorporacion: String;
   apellido2: String;
   sexo: String;
@@ -16,6 +17,7 @@ export class SolicitudIncorporacionItem {
   duplicado: boolean;
   fechaNacimiento: Date;
   fechaNacimientoStr: any;
+  fechaNacimientoString: string;
   numColegiado: String;
   fechaSolicitud: Date;
   fechaEstado: Date;

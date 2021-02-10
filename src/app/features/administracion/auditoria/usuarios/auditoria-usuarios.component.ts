@@ -226,7 +226,6 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
       .postPaginado("auditoriaUsuarios_search", "?numPagina=1", this.bodySearch)
       .subscribe(
         data => {
-          console.log(data);
           this.searchParametros = JSON.parse(data["body"]);
           this.datosUsuarios = this.searchParametros.historicoUsuarioItem;
           this.buscar = true;

@@ -42,6 +42,7 @@ export class DatosInscripcionItem {
   idPersona: string;
   idInstitucion: string;
 
+  formaPago: string;
   editar: boolean;
   flagArchivado: number;
   numeroSesiones: number;
@@ -52,6 +53,7 @@ export class DatosInscripcionItem {
   totales: string;
 
   idEstadoCurso: string;
+  nombreFichero: String;
 
   constructor() { }
 }

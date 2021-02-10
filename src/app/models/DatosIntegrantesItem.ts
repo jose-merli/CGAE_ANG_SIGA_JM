@@ -30,8 +30,10 @@ export class DatosIntegrantesItem {
   tipo: String;
   completo: boolean = false;
   socio: boolean = false;
+  flagSocio: String;
   valor: String;
   colegio: String;
   numeroInstitucion: String;
+  descripcionCargo: String;
   constructor() {}
 }

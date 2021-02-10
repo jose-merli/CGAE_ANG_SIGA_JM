@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, OnChanges, ViewEncapsulation, SimpleChanges, EventEmitter} from '@angular/core';
+import { DataTable } from 'primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
@@ -8,7 +9,7 @@ import { BusquedaSancionesItem } from '../../../../../models/BusquedaSancionesIt
 import { BusquedaSancionesObject } from '../../../../../models/BusquedaSancionesObject';
 import { DocushareItem } from '../../../../../models/DocushareItem';
 import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
-import { saveAs } from "file-saver/FileSaver";
+import { saveAs } from 'file-saver/FileSaver';
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/api';
 
@@ -20,7 +21,10 @@ import { ConfirmationService } from '../../../../../../../node_modules/primeng/a
 export class RegtelFichaColegialComponent implements OnInit {
 
   messageRegtel: String;
+  
+  @ViewChild('tableRegTel') tableRegTel: DataTable;
   numSelectedDatosRegtel: number = 0;
+  rowsPerPage: any;
   dataSanciones: any[] = [];
   bodySearchSanciones: BusquedaSancionesObject = new BusquedaSancionesObject();
   @Input() tarjetaRegtel: string;
@@ -30,13 +34,15 @@ export class RegtelFichaColegialComponent implements OnInit {
   @Input() esColegiado: boolean;
   idPersona: any;
   mostrarDatosSanciones: boolean = false;
+  checkRegTel: boolean = false;
+  selectedItemRegtel: number = 10;
   DescripcionSanciones;
   generalBody: FichaColegialGeneralesItem;
   bodySearchRegTel: DocushareObject = new DocushareObject();
-  atrasRegTel: String = "";
+  atrasRegTel: String = '';
   bodySanciones: BusquedaSancionesItem = new BusquedaSancionesItem();
   esRegtel: boolean;
-  messageNoContentRegTel: String = "";
+  messageNoContentRegTel: String = '';
   buttonVisibleRegtelCarpeta: boolean = true;
   buttonVisibleRegtelDescargar: boolean = true;
   colegialesBody: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -44,112 +50,119 @@ export class RegtelFichaColegialComponent implements OnInit {
   buttonVisibleRegtelAtras: boolean = true;
   activacionEditar: boolean = true;
   ficha = {
-    key: "generales",
+    key: 'generales',
     activa: false
   };
   openFicha: boolean = false;
-  icon
+  icon;
   msgs = [];
   colsRegtel;
   @Input() openRegtel;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  constructor(private sigaServices: SigaServices,
+  constructor(
+    private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService
+    ) {}
 
   ngOnInit() {
     this.getCols();
     if (
-      sessionStorage.getItem("personaBody") != null &&
-      sessionStorage.getItem("personaBody") != undefined &&
-      JSON.parse(sessionStorage.getItem("esNuevoNoColegiado")) != true
+      sessionStorage.getItem('personaBody') != null &&
+      sessionStorage.getItem('personaBody') != undefined &&
+      JSON.parse(sessionStorage.getItem('esNuevoNoColegiado')) != true
     ) {
       this.generalBody = new FichaColegialGeneralesItem();
-      this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
+      this.generalBody = JSON.parse(sessionStorage.getItem('personaBody'));
       this.idPersona = this.generalBody.idPersona;
     }
 
-    if (sessionStorage.getItem("esColegiado")) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
+    if (sessionStorage.getItem('esColegiado')) {
+      this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
     } else {
       this.esColegiado = true;
     }
-    if (this.esColegiado) {
-      this.sigaServices
-        .postPaginado(
-          "fichaColegialRegTel_searchListDoc",
-          "?numPagina=1",
-          this.idPersona
-        )
-        .subscribe(
-          data => {
-            this.bodySearchRegTel = JSON.parse(data["body"]);
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
-            // this.bodyRegTel.forEach(element => {
-            //   element.fechaModificacion = this.arreglarFechaRegtel(
-            //     JSON.stringify(new Date(element.fechaModificacion))
-            //   );
-            // });
-            if (this.bodyRegTel.length != 0) {
-              this.messageRegtel = this.bodyRegTel.length + "";
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                "general.message.no.registros"
-              );
-            }
-            if (this.bodyRegTel.length > 0) {
-              this.atrasRegTel = this.bodyRegTel[0].parent;
-            }
-          },
-          err => {
-            this.messageRegtel = this.translateService.instant(
-              "general.message.no.registros"
-            );
-          },
-      );
-    } else {
-      this.sigaServices
-        .postPaginado(
-          "fichaColegialRegTel_searchListDocNoCol",
-          "?numPagina=1",
-          this.idPersona
-        )
-        .subscribe(
-          data => {
-            this.bodySearchRegTel = JSON.parse(data["body"]);
-            this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
-            // this.bodyRegTel.forEach(element => {
-            //   element.fechaModificacion = this.arreglarFechaRegtel(
-            //     JSON.stringify(new Date(element.fechaModificacion))
-            //   );
-
-            // });
-            if (this.bodyRegTel.length != 0) {
-              this.messageRegtel = this.bodyRegTel.length + "";
-            } else {
-              this.messageRegtel = this.translateService.instant(
-                "general.message.no.registros"
-              );
-            }
-            if (this.bodyRegTel.length > 0) {
-              this.atrasRegTel = this.bodyRegTel[0].parent;
-            }
-          },
-          err => {
-            this.messageRegtel = this.translateService.instant(
-              "general.message.no.registros"
-            );
-          }
-        );
-    }
-
-    this.comprobarREGTEL();
-
+       
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    // if (this.esColegiado && (this.tarjetaRegtel == "3" || this.tarjetaRegtel == "2")) {
+    //   this.sigaServices
+    //     .postPaginado(
+    //       "fichaColegialRegTel_searchListDoc",
+    //       "?numPagina=1",
+    //       this.idPersona
+    //     )
+    //     .subscribe(
+    //       data => {
+    //         this.bodySearchRegTel = JSON.parse(data["body"]);
+    //         this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+    //         this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
+    //         // this.bodyRegTel.forEach(element => {
+    //         //   element.fechaModificacion = this.arreglarFechaRegtel(
+    //         //     JSON.stringify(new Date(element.fechaModificacion))
+    //         //   );
+    //         // });
+    //         if (this.bodyRegTel.length != 0) {
+    //           this.messageRegtel = this.bodyRegTel.length + "";
+    //         } else {
+    //           this.messageRegtel = this.translateService.instant(
+    //             "general.message.no.registros"
+    //           );
+    //         }
+    //         if (this.bodyRegTel.length > 0) {
+    //           this.atrasRegTel = this.bodyRegTel[0].parent;
+    //         }
+    //       },
+    //       err => {
+    //         this.messageRegtel = this.translateService.instant(
+    //           "general.message.no.registros"
+    //         );
+    //       },
+    //   );
+    // } else {
+    //   this.sigaServices
+    //     .postPaginado(
+    //       "fichaColegialRegTel_searchListDocNoCol",
+    //       "?numPagina=1",
+    //       this.idPersona
+    //     )
+    //     .subscribe(
+    //       data => {
+    //         this.bodySearchRegTel = JSON.parse(data["body"]);
+    //         this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
+    //         // this.bodyRegTel.forEach(element => {
+    //         //   element.fechaModificacion = this.arreglarFechaRegtel(
+    //         //     JSON.stringify(new Date(element.fechaModificacion))
+    //         //   );
+
+    //         // });
+    //         if (this.bodyRegTel.length != 0) {
+    //           this.messageRegtel = this.bodyRegTel.length + "";
+    //         } else {
+    //           this.messageRegtel = this.translateService.instant(
+    //             "general.message.no.registros"
+    //           );
+    //         }
+    //         if (this.bodyRegTel.length > 0) {
+    //           this.atrasRegTel = this.bodyRegTel[0].parent;
+    //         }
+    //       },
+    //       err => {
+    //         this.messageRegtel = this.translateService.instant(
+    //           "general.message.no.registros"
+    //         );
+    //       }
+    //     );
+    // }
+    if ((this.tarjetaRegtel == '3' || this.tarjetaRegtel == '2') && !this.checkRegTel) {
+      this.comprobarREGTEL();
+    }
+
+  }
+
+  /* ngOnChanges(changes: SimpleChanges) {
 
     if (this.openRegtel == true) {
       if (this.openFicha == false) {
@@ -163,28 +176,46 @@ export class RegtelFichaColegialComponent implements OnInit {
     } else {
       this.activacionEditar = true;
     }
-  }
-  getCols() {
-    this.colsRegtel = [
-      {
-        field: "title",
-        header: "censo.resultadosSolicitudesModificacion.literal.Nombre"
-      },
-      {
-        field: "summary",
-        header: "censo.regtel.literal.resumen"
-      },
-      {
-        field: "fechaModificacion",
-        header: "censo.datosDireccion.literal.fechaModificacion"
-      },
-      {
-        field: "sizeKB",
-        header: "censo.regtel.literal.tamanno"
-      }
-    ];
+  } */
 
-  }
+  getCols() {
+		this.rowsPerPage = [
+			{
+				label: 10,
+				value: 10
+			},
+			{
+				label: 20,
+				value: 20
+			},
+			{
+				label: 30,
+				value: 30
+			},
+			{
+				label: 40,
+				value: 40
+			}
+		];
+		this.colsRegtel = [
+			{
+				field: 'title',
+				header: 'censo.resultadosSolicitudesModificacion.literal.Nombre'
+			},
+			{
+				field: 'summary',
+				header: 'censo.regtel.literal.resumen'
+			},
+			{
+				field: 'fechaModificacion',
+				header: 'censo.datosDireccion.literal.fechaModificacion'
+			},
+			{
+				field: 'sizeKB',
+				header: 'censo.regtel.literal.tamanno'
+			}
+		];
+	}
 
   activarPaginacionRegTel() {
     if (!this.bodyRegTel || this.bodyRegTel.length == 0) return false;
@@ -210,11 +241,11 @@ export class RegtelFichaColegialComponent implements OnInit {
 
   comprobarREGTEL() {
     this.esRegtel = false;
-    this.messageNoContentRegTel = this.translateService.instant(
-      "aplicacion.cargando"
-    );
+    this.checkRegTel = true;
+    this.messageNoContentRegTel = this.translateService.instant('aplicacion.cargando');
+
     this.messageRegtel = this.messageNoContentRegTel;
-    this.sigaServices.get("fichaColegialRegTel_permisos").subscribe(
+    this.sigaServices.get('fichaColegialRegTel_permisos').subscribe(
       data => {
         let value = data;
         if (value) {
@@ -226,7 +257,7 @@ export class RegtelFichaColegialComponent implements OnInit {
       },
       err => {
         this.messageRegtel = this.translateService.instant(
-          "general.message.no.registros"
+          'general.message.no.registros'
         );
         this.progressSpinner = false;
       }
@@ -236,13 +267,13 @@ export class RegtelFichaColegialComponent implements OnInit {
     if (this.esColegiado) {
       this.sigaServices
         .postPaginado(
-          "fichaColegialRegTel_searchListDoc",
-          "?numPagina=1",
+          'fichaColegialRegTel_searchListDoc',
+          '?numPagina=1',
           this.idPersona
         )
         .subscribe(
           data => {
-            this.bodySearchRegTel = JSON.parse(data["body"]);
+            this.bodySearchRegTel = JSON.parse(data['body']);
             this.bodyRegTel = this.bodySearchRegTel.docuShareObjectVO;
             this.generalBody.identificadords = this.bodySearchRegTel.identificadorDS;
             // this.bodyRegTel.forEach(element => {
@@ -251,10 +282,10 @@ export class RegtelFichaColegialComponent implements OnInit {
             //   );
             // });
             if (this.bodyRegTel.length != 0) {
-              this.messageRegtel = this.bodyRegTel.length + "";
+              this.messageRegtel = this.bodyRegTel.length + '';
             } else {
               this.messageRegtel = this.translateService.instant(
-                "general.message.no.registros"
+                'general.message.no.registros'
               );
             }
             if (this.bodyRegTel.length > 0) {
