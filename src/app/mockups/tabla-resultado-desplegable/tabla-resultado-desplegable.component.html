@@ -8,7 +8,7 @@
       <span>Columnas</span>-->
       <p-multiSelect #mySelect  [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras" [defaultLabel]="numColumnas + ' visibles'" optionLabel="name" optionValue="id" [displaySelectedLabel] = "false"></p-multiSelect> Columnas
 </div>
-<div class="table"  matSort (matSortChange)="sortData($event)" #table>
+<div class="table"  matSort (matSortChange)="sortData($event)" #table id="tablaResultadoDesplegable">
     <div class="table-header ">
         <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader [ngClass]="{'collapse': cabeceraOculta(selectedHeader, cabecera.id, BorderedHeader, BorderedCell)}">
             <div>
