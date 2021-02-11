@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener,ElementRef, ViewChild } from '@angular/core';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TranslateService } from '../../../../commons/translate';
@@ -65,11 +65,14 @@ export class FiltrosEjgComponent implements OnInit {
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
 
+  
+  @ViewChild('inputNumero') inputNumero: ElementRef;
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
+    private _elementRef: ElementRef,
     private commonServices: CommonsService) { }
 
   ngOnInit() {
@@ -105,6 +108,9 @@ export class FiltrosEjgComponent implements OnInit {
       this.body = new EJGItem();
     }
     this.body.annio = new Date().getFullYear().toString();
+    setTimeout(() => {
+      this.inputNumero.nativeElement.focus();  
+    }, 300);
   }
 
   getCombos() {

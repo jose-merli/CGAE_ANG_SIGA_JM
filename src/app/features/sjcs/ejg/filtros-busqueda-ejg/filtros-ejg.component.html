@@ -22,7 +22,7 @@
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label><b>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</b></label>
-              <input type="text" class="form-control" maxLength="10" pInputText [(ngModel)]="body.numero">
+              <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="body.numero">
             </div>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">

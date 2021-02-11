@@ -22,7 +22,6 @@ export class ImpugnacionComponent implements OnInit {
   impugnacion: EJGItem;
   item: EJGItem;
   msgs = [];
-  [x: string]: any;
   nuevo;
   comboFundamentoImpug = [];
   comboImpugnacion = [];
@@ -30,8 +29,10 @@ export class ImpugnacionComponent implements OnInit {
   checkmodificableRT: boolean = false;
   impugnacionDesc: String;
   fundImpugnacionDesc: String;
+  isDisabledFundamentoImpug: boolean = false;
 
   resaltadoDatosGenerales: boolean = false;
+  resaltadoDatos: boolean = false;
   
   fichaPosible = {
     key: "impugnacion",
@@ -156,7 +157,7 @@ save(){
     this.msgs = [];
   }
   checkPermisosConfirmRest(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
@@ -190,12 +191,12 @@ save(){
   rest(){
   }
   checkPermisosSave(){
-    let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
+    let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
     } else {
       if (this.disabledSave()) {
-        this.msgs = this.commonsServices.checkPermisoAccion();
+        this.msgs = this.commonServices.checkPermisoAccion();
       } else {
         this.save();
       }
@@ -227,7 +228,7 @@ save(){
     this.impugnacion.fechaPublicacion = event;
   }
   onChangeCheckBis(event) {
-    this.this.impugnacion.bis = event;
+    this.impugnacion.bis = event;
   }
   onChangeCheckRT(event) {
     this.impugnacion.requiereTurn = event;
@@ -235,7 +236,7 @@ save(){
 
   styleObligatorio(evento){
     if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
-      return this.commonsServices.styleObligatorio(evento);
+      return this.commonServices.styleObligatorio(evento);
     }
   }
   muestraCamposObligatorios(){

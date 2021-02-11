@@ -100,6 +100,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   menorEdadJusticiable: boolean = false;
 
+  resaltadoDatos: boolean = false;
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
@@ -1437,4 +1439,15 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
   }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+  muestraCamposObligatorios(){
+    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    this.resaltadoDatos=true;
+  }
+
 }

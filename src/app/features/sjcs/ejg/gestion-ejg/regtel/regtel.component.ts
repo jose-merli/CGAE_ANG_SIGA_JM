@@ -101,8 +101,9 @@ export class RegtelComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getDocumentos", selected).subscribe(
     n => {
-        this.regtel = JSON.parse(n.body).ejgDocItems;
-        this.nRegtel = this.documentos.length;
+         let regtel = JSON.parse(n.body).ejgDocItems;
+        // this.nRegtel = this.documentos.length;
+        this.nRegtel = regtel.length;
         this.progressSpinner = false;
       },
       err => {
