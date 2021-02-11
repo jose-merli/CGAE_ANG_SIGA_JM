@@ -12,6 +12,7 @@ export class AplicacionEnPagosComponent implements OnInit {
   modoBusqueda = 'a';
   modoBusquedaB = false;
   allSelected = false;
+  rutas: string[] = ['SJCS', 'Buscar retenciones'];
   radios = [
     { label: 'Retención', value: 'b' },
     { label: 'Aplicación en Pagos', value: 'a' }
