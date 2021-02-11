@@ -6,11 +6,11 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./selector.component.scss']
 })
 export class SelectorComponent implements OnInit {
-@Input() selector;
-@Input() i;
-@Input() textoVisible = "Selecciona";
-opcionSeleccionado: string  = '0';
-verSeleccion: string = '';
+  @Input() selector;
+  @Input() i;
+  @Input() textoVisible = "Seleccionar";
+  opcionSeleccionado: number = 0;
+  verSeleccion: number;
   constructor() { }
 
   ngOnInit(): void {
@@ -18,5 +18,5 @@ verSeleccion: string = '';
   capturar() {
     // Pasamos el valor seleccionado a la variable verSeleccion
     this.verSeleccion = this.opcionSeleccionado;
-}
+  }
 }
