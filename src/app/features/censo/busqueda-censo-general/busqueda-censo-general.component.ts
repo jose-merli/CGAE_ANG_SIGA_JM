@@ -205,6 +205,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     } else {
       this.isBuscarExacta();
     }
+    this.sessionInfo();
   }
 
   isBuscarExacta() {
@@ -276,10 +277,8 @@ export class BusquedaCensoGeneralComponent implements OnInit {
 
   irFichaColegial(selectedDatos) {
     this.progressSpinner = true;
-    sessionStorage.setItem('busquedaCensoGeneral', 'true');
     this.body.colegios_seleccionados = this.colegios_seleccionados;
-    sessionStorage.setItem('filtrosBusqueda', JSON.stringify(this.body));
-
+    
     // if (this.authenticationService.getInstitucionSession() == 2000) {
     //   this.getNoColegiado(selectedDatos);
     // } else {
@@ -296,6 +295,11 @@ export class BusquedaCensoGeneralComponent implements OnInit {
     //   this.getNoColegiado(selectedDatos);
     // }
     // }
+  }
+
+  sessionInfo(){
+    sessionStorage.setItem('busquedaCensoGeneral', 'true');
+    sessionStorage.setItem('filtrosBusqueda', JSON.stringify(this.body));
   }
 
   getColegiado(selectedDatos) {
