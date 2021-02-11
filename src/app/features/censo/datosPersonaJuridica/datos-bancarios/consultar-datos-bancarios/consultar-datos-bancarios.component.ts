@@ -131,6 +131,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   ocultarMotivo: boolean = undefined;
   showComunicar: boolean = false;
 
+  editarAnexo: boolean = false;
   lengthCountryCode: Number = 0;
   // historico:boolean = false;
   activaServicios: boolean = false;
@@ -1718,10 +1719,6 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   rellenarComboProductoServicio(bodyDatosBancariosAnexo) {
-    this.comboProductoServicio.push({
-      label: "Seleccione el tipo",
-      value: ""
-    });
 
     bodyDatosBancariosAnexo.forEach(element => {
       if (element.tipo === "MANDATO") {
@@ -2059,6 +2056,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.selectedProductoServicio = [];
       this.comboProductoServicio = [];
       this.editar = false;
+      this.editarAnexo = false;
       this.cargarDatosAnexos();
     }
   }
@@ -2069,6 +2067,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   onEditCancel() {
     this.editar = false;
+    this.editarAnexo = false;
   }
 
   editarCompleto(event) {
@@ -2078,6 +2077,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       this.blockCrear = true;
     } else {
       this.editar = true;
+      this.editarAnexo = true;
       this.blockCrear = false;
       this.bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem.forEach(
         (value: DatosBancariosSearchAnexosItem, key: number) => {
@@ -2122,8 +2122,10 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.activaDescarga(evento);
     if (!this.selectMultiple) {
       this.editar = true;
+      this.editarAnexo = true;
     } else {
       this.editar = false;
+      this.editarAnexo = false;
     }
   }
 

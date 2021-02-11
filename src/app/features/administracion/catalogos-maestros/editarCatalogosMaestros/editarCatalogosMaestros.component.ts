@@ -75,7 +75,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
       data => {
         this.showSuccess();
         this.correcto = true;
-        console.log(data);
+         
         this.correcto = true;
         sessionStorage.setItem(
           "registroAuditoriaUsuariosActualizado",

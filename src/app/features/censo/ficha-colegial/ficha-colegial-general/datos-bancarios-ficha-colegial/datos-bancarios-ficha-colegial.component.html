@@ -140,11 +140,11 @@
   </div>
   <div *ngIf="esFichaActiva('bancarios')" class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="bodyDatosBancarios.historico" (click)="onInitDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      <button *ngIf="bodyDatosBancarios.historico" (click)="ocultarHistoricoDatosBancarios()" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
       <button *ngIf="!bodyDatosBancarios.historico" (click)="searchHistoricoDatosBancarios()" pButton type="button" icon="fa fa-history"
         iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"></button>
-      <button (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!(selectedDatosBancarios && selectedDatosBancarios != '' && bodyDatosBancarios.historico == false) || tarjetaBancarios == '2' || disabledAction || isLetrado"
+      <button (click)="confirmarEliminar(selectedDatosBancarios)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled]="!(selectedDatosBancarios && selectedDatosBancarios != '') || tarjetaBancarios == '2' || disabledAction || isLetrado || bodyDatosBancarios.historico"
         label="{{'general.boton.eliminar'  | translate}}"></button>
       <button (click)="nuevaCuentaBancaria()" [disabled]="tarjetaBancarios == '2' || disabledAction || isLetrado" pButton type="button"
         icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>

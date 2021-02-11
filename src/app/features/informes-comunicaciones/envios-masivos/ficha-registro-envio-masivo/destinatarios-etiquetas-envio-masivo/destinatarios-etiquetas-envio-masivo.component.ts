@@ -132,28 +132,32 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
   getSeleccionadas() {
     this.progressSpinner = true;
 
-    this.sigaServices
-      .post("enviosMasivos_etiquetasEnvio", this.body.idEnvio)
-      .subscribe(
-        n => {
-          // coger etiquetas de una persona juridica
-          this.etiquetasSeleccionadas = [];
-          this.etiquetasSeleccionadas = JSON.parse(n["body"]).comboItems;
-          this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
-          this.progressSpinner = false;
+    if(this.body.idEnvio != undefined){
+      this.sigaServices
+        .post("enviosMasivos_etiquetasEnvio", this.body.idEnvio)
+        .subscribe(
+          n => {
+            // coger etiquetas de una persona juridica
+            this.etiquetasSeleccionadas = [];
+            this.etiquetasSeleccionadas = JSON.parse(n["body"]).comboItems;
+            this.seleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
+            this.progressSpinner = false;
 
-        },
-        err => {
-          console.log(err);
-          this.progressSpinner = false;
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
 
-        },
-        () => {
-          this.progressSpinner = false;
-        }
+          },
+          () => {
+            this.progressSpinner = false;
+          }
 
 
-      );
+        );
+    }else{
+      this.progressSpinner = false;
+    }
   }
 
 

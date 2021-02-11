@@ -2,8 +2,8 @@ import { TranslateService } from "../translate/translation.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { MenuItem } from "primeng/api";
+import { PanelMenuModule } from "primeng/panelmenu";
 import { SigaServices } from "../../_services/siga.service";
-import { PersistenceService } from '../../_services/persistence.service';
 
 @Component({
   selector: "app-menu",
@@ -27,30 +27,34 @@ export class MenuComponent implements OnInit {
   constructor(
     private router: Router,
     private sigaServices: SigaServices,
-    private translateService: TranslateService,
-    private persistenceService: PersistenceService
+    private translateService: TranslateService
   ) { }
 
   // TODO: Revisar si tiene sentido que las rutas las devuelva el back
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
     this.progressSpinner = true;
-    this.sigaServices.get("diccionarios").subscribe(response => {
-      response.DiccionarioItems;
-      this.sigaServices.get("menu").subscribe(response => {
-        this.progressSpinner = false;
-        this.items = response.menuItems;
-        return this.items;
-      });
-    });
+    //this.sigaServices.get("diccionarios").subscribe(response => {
+      //response.DiccionarioItems;
+      //this.sigaServices.get("menu").subscribe(response => {
+          
+    this.translateService.getTranslations().then(
+      items=>{
+        this.items = items;
+  
+      this.progressSpinner = false;
+//        this.items = response.menuItems;
+//        return this.items;
+//      });
+//    });
+      }
+    );
   }
-
   onCloseMenu() {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
       this.sigaServices.notifyMenuToggled();
-      console.log(this.closeMenu);
-    }
+     }
   }
 
   onFixedMenu() {
@@ -72,7 +76,6 @@ export class MenuComponent implements OnInit {
 
   navigateTo(ruta) {
     sessionStorage.removeItem("disabledPlantillaEnvio");
-    this.persistenceService.clearPersistence();
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;
@@ -112,7 +115,6 @@ export class MenuComponent implements OnInit {
     if (items) {
       this.showChildOfChild = !this.showChildOfChild;
       this.selectedItemOfChild = items;
-      console.log(this.selectedItemOfChild);
       this.selectedLabelOfChild = label;
     }
   }
@@ -124,6 +126,4 @@ export class MenuComponent implements OnInit {
   backMenuChild() {
     this.showChildOfChild = false;
   }
-
-
 }

@@ -532,7 +532,6 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   navigateTo(dato) {
     this.showButtons(dato);
-    console.log(dato);
     if (!this.selectMultiple && this.estado != 5) {
       // this.body.estado = dato[0].estado;
       this.progressSpinner = true;

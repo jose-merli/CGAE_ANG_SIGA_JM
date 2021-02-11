@@ -589,7 +589,6 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.anotherPage = true;
     let id = dato[0].id;
     this.body = dato[0];
-    console.log(dato);
     if (!this.selectMultiple) {
       if (dato[0].fechaBaja) {
         sessionStorage.setItem("soloLectura", "true");
