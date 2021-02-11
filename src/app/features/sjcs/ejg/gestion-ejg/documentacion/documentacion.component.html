@@ -12,7 +12,7 @@
           <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('documentacion')">
             <label class="mr-auto title-ficha pointer">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between" style="cursor: default;">
+          <div class="d-flex justify-content-between default">
               <label *ngIf="nDocumentos > 3">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: <span>{{nDocumentos}}</span></label>
               <label *ngIf="nDocumentos <= 3 && nDocumentos > 0 && documentos != undefined && documentos[0] != undefined && documentos[1] != undefined && documentos[2] != undefined">{{ "enviosMasivos.literal.documentos" | translate }}: <span>{{documentos[0].documentoDesc}},{{documentos[1].documentoDesc}},{{documentos[2].documentoDesc}}</span></label>
               <label *ngIf="nDocumentos == 0">{{ "justiciaGratuita.ejg.datosGenerales.numero.Documentos" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
@@ -24,7 +24,7 @@
         <div class="img-colegiado">
           <i class="fas fa-briefcase icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate }}</label>
+        <label class="title-ficha pointer">{{ "menu.facturacionSJCS.mantenimientoDocumentacionEJG" | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>

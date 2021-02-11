@@ -12,7 +12,7 @@
           <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('regtel')">
             <label class="mr-auto title-ficha pointer">{{ "censo.regtel.literal.titulo" | translate }}</label>
           </div>
-          <div class="d-flex justify-content-between" style="cursor: default;">
+          <div class="d-flex justify-content-between default">
             <label *ngIf="nRegtel == 0">{{ "censo.regtel.literal.numero.directorios" | translate }}: <span>{{ "general.message.no.registros" | translate }}</span></label>
             <label *ngIf="nRegtel > 0">{{ "censo.regtel.literal.numero.directorios" | translate }}: <span>{{nRegtel}}</span></label>
             <label></label>
@@ -25,7 +25,7 @@
         <div class="img-colegiado">
           <i class="fas fa-file-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ "censo.regtel.literal.titulo" | translate }}</label>
+        <label class="title-ficha pointer">{{ "censo.regtel.literal.titulo" | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>

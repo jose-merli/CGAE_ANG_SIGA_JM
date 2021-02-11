@@ -110,10 +110,12 @@ export class TablaEjgComponent implements OnInit {
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
         this.consultaUnidadFamiliar(selected);
+        this.commonsService.scrollTop();
         // this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.commonsService.scrollTop();
       }
     );
   }
@@ -125,6 +127,7 @@ export class TablaEjgComponent implements OnInit {
         this.persistenceService.setBodyAux(this.datosFamiliares);
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
+        this.commonsService.scrollTop();
       },
       err => {
         console.log(err);

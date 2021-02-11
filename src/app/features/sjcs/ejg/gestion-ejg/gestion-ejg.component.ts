@@ -144,9 +144,19 @@ export class GestionEjgComponent implements OnInit {
          }
          this.obtenerPermisos();
           
-         this.commonsService.scrollTop();
+         
     }
     ).catch(error => console.error(error));
+    //this.commonsService.scrollTop();
+    this.goTop();
+  }
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
 
   }
     
