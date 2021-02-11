@@ -106,7 +106,7 @@ export class TarjetaRelacionesComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
   }
 }

@@ -1,7 +1,3 @@
-import { ViewChild } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -298,28 +294,14 @@ export class FichaEjgsComponent implements OnInit {
     }
   ];
 
-  stickyElementoffset = 0;
-  scrollOffset = 0;
-  enableSticky = false;
-  navbarHeight = 0;
-  scrollWidth = 0;
-
-  @ViewChild('parent') private parent: ElementRef;
-  @ViewChild('navbar') private navbarElement: ElementRef;
-  @ViewChild('content') private content: ElementRef;
-  @ViewChild('main') private main: ElementRef;
-
-  constructor(private renderer: Renderer2) { }
+  constructor() { }
 
   ngOnInit() {
-    
+
   }
 
   ngAfterViewInit() {
     this.goTop();
-    this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
-    this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
-    this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
 
     this.listaTarjetas.forEach(tarj => {
       let tarjTmp = {
@@ -330,24 +312,6 @@ export class FichaEjgsComponent implements OnInit {
 
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
-  }
-
-  @HostListener("scroll", ['$event'])
-  manageScroll($event: Event) {
-    this.scrollOffset = $event.srcElement['scrollTop'];
-    this.setSticky();
-  }
-
-  setSticky() {
-    if (this.scrollOffset >= this.stickyElementoffset) {
-      this.enableSticky = true;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", this.navbarHeight + "px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    } else {
-      this.enableSticky = false;
-      this.renderer.setStyle(this.content.nativeElement, "padding-top", "0px");
-      this.renderer.setStyle(this.navbarElement.nativeElement, "right", this.scrollWidth + "px");
-    }
   }
 
   isOpenReceive(event) {

@@ -1,10 +1,10 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-<div #main [ngClass]="{'relative' : this.enableSticky}" id="fichaPredesignacion">
-  <div #parent (scroll)="manageScroll($event, navbar)">
+<div id="fichaPredesignacion">
+  <div>
     <div id="top"></div>
     <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
 
-    <div #navbar [ngClass]="{'absolute' : this.enableSticky}" id="navbar" class="tarjetaFija">
+    <div id="navbar" class="tarjetaFija">
       <div *ngFor="let tarjF of listaTarjetasFijas; let i = index">
         <div class="card" style="z-index: 2;">
           <div class="card-body p-0">
@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div #content>
+    <div>
       <div *ngFor="let tarj of listaTarjetas; let i = index;">
         <div class="card" [id]="tarj.id">
           <div class="card-body p-0">

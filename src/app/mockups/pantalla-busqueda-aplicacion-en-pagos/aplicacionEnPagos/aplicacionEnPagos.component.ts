@@ -7,6 +7,10 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./aplicacionEnPagos.component.scss']
 })
 export class AplicacionEnPagosComponent implements OnInit {
+  habilitarBotones;
+  camposDesactivados;
+  disabledAction;
+  tarjeta;
   msgs: Message[] = [];
   isDisabled = true;
   show = false;
@@ -236,5 +240,9 @@ export class AplicacionEnPagosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  isRestablecer() { }
+
+  anadirIntegrante() { }
 
 }
