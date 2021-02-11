@@ -287,7 +287,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         // if (sessionStorage.getItem("crearNuevoEnvio") != null) {
         //   this.body.fechaCreacion = new Date();
         // }
-        // console.log(this.body.fechaCreacion);
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         // sessionStorage.removeItem("crearNuevoEnvio");
         // sessionStorage.setItem("enviosMasivosSearch", JSON.stringify(this.body));

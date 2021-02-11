@@ -8,15 +8,11 @@ import { ListboxModule } from 'primeng/listbox';
 import { ButtonModule } from 'primeng/button';
 
 
-export enum KEY_CODE {
-	ENTER = 13
-  }
 @Component({
 	selector: 'app-login-develop',
 	templateUrl: './login-develop.component.html',
 	styleUrls: ['./login-develop.component.scss']
 })
-
 export class LoginDevelopComponent implements OnInit {
 	form: FormGroup;
 
@@ -82,7 +78,7 @@ export class LoginDevelopComponent implements OnInit {
 			}
 		);
 		//Comentar esto para trabajar en local
-		 this.sigaServices.getBackend('validaUsuario').subscribe(
+		this.sigaServices.getBackend('validaUsuario').subscribe(
 			(response) => {
 				this.progressSpinner = false;
 				this.ocultar = true;

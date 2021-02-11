@@ -346,7 +346,6 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
               this.direccion = this.remitente.direccion[0];
             }
 
-            console.log(this.direccion);
             let filtro = "";
             this.getComboPoblacionInicial(filtro);
           }
@@ -365,7 +364,6 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
         () => { }
       );
 
-    console.log("Direccionon", this.direccion);
   }
 
   buscar() {

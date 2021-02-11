@@ -116,6 +116,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   numColegiadoDuplicado: boolean = false;
   bodyInicial;
   cargarDatos: boolean = false;
+  veFicha: boolean = false;
   fechaActual: Date = new Date();
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
@@ -180,6 +181,10 @@ export class NuevaIncorporacionComponent implements OnInit {
           sessionStorage.getItem("nuevaIncorporacion")
         );
         this.solicitudEditar.numeroIdentificacion = nuevaIncorporacion.numeroIdentificacion;
+        this.solicitudEditar = JSON.parse(
+          sessionStorage.getItem("nuevaIncorporacion")
+        );
+        this.solicitudEditar.numeroIdentificacion = nuevaIncorporacion.numeroIdentificacion;
 
         if (this.solicitudEditar.fechaIncorporacion != null)
           if (this.solicitudEditar.fechaIncorporacion.getDate == undefined && this.solicitudEditar.fechaIncorporacion != undefined) {
@@ -197,7 +202,10 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.fechaSolicitud = new Date();
         this.sexoSelected = this.solicitudEditar.sexo;
         this.estadoCivilSelected = this.solicitudEditar.idEstadoCivil;
-        this.tratamientoSelected = this.solicitudEditar.idTratamiento;
+          
+        this.provinciaSelected = this.solicitudEditar.idProvincia;
+        this.poblacionSelected = this.solicitudEditar.idPoblacion;
+//  this.tratamientoSelected = this.solicitudEditar.idTratamiento;
 
         this.checkSolicitudInicio = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
@@ -250,6 +258,9 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.dniDisponible = false;
 
     }
+
+    if (new Date(this.solicitudEditar.fechaEstado) <= new Date())
+      this.veFicha = true;
 
     if (this.solicitudEditar.apellido2 != undefined && this.solicitudEditar.apellido2 != null && this.solicitudEditar.apellido2 != "") {
       this.solicitudEditar.apellidos = this.solicitudEditar.apellido1 + " " + this.solicitudEditar.apellido2;
@@ -337,6 +348,12 @@ export class NuevaIncorporacionComponent implements OnInit {
       result => {
         this.estadosSolicitud = result.combooItems;
         this.arregloTildesCombo(this.estadosSolicitud);
+        if (this.consulta == false) {
+          this.estadoSolicitudSelected = "20";
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+        }
+
       },
       error => {
         console.log(error);
@@ -368,14 +385,21 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.paises = result.combooItems;
         this.arregloTildesCombo(this.paises);
 
-        if (this.solicitudEditar.pais == undefined) {
+        if (this.solicitudEditar.idPais == undefined) {
           this.paisSelected = "191";
           let paisSpain = this.paises.find(x => x.value == "191");
           this.solicitudEditar.pais = paisSpain.label;
           this.bodyInicial.pais = paisSpain.label;
           this.bodyInicial.idPais = this.paisSelected;
           this.solicitudEditar.idPais = this.paisSelected;
-        }
+        }else{
+          this.paisSelected = this.solicitudEditar.idPais;
+          let paisSpain = this.paises.find(x => x.value == this.solicitudEditar.idPais);
+          this.solicitudEditar.pais = paisSpain.label;
+          this.bodyInicial.pais = paisSpain.label;
+          this.bodyInicial.idPais = this.paisSelected;
+    
+        } 
 
       },
       error => {
@@ -540,6 +564,10 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.solicitudEditar.fechaNacimiento = new Date(
         this.solicitudEditar.fechaNacimiento
       );
+    }
+
+    if(this.bodyInicial.idEstado != undefined){
+      this.estadoSolicitudSelected = this.bodyInicial.idEstado;
     }
 
     if (this.bodyInicial.apellidos != undefined &&
@@ -1126,7 +1154,13 @@ export class NuevaIncorporacionComponent implements OnInit {
                         }
                       ];
 
-                      this.searchSolicitante();
+                      this.solicitudEditar.idSolicitud = JSON.parse(result.body).id.split(",")[0];
+                      this.solicitudEditar.idPersona = JSON.parse(result.body).id.split(",")[1];
+
+                      if (new Date(this.solicitudEditar.fechaEstado) <= new Date()) {
+                        this.veFicha = true;
+                        this.searchSolicitante();
+                      }
                       this.consulta = true;
                       this.pendienteAprobacion = false;
                       sessionStorage.setItem("pendienteAprobacion", "false");
@@ -1146,6 +1180,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                       );
                       this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
 
+                      this.progressSpinner = false;
                       this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
                     },
                     error => {
@@ -1191,7 +1226,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.progressSpinner = true;
 
       this.body = new DatosColegiadosItem();
-      this.body.nif = this.solicitudEditar.numeroIdentificacion;
+      this.body.idPersona = this.solicitudEditar.idPersona;
       sessionStorage.setItem("consulta", "true");
 
       if (this.solicitudEditar.idEstado == "50") {
