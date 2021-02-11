@@ -78,8 +78,8 @@
             <div *ngIf="col.field != 'nif' && col.field !='denominacion'">
                 <span>{{dato[col.field]}}</span>
             </div>
-            <div *ngIf="col.field == 'nif' || col.field =='denominacion'">
-                <a [routerLink]="" (click)="redireccionarSociedades(dato)" class="enlace">{{dato[col.field]}}</a>
+            <div *ngIf="col.field == 'nif' || col.field =='denominacion'" class="pointer">
+                <a (click)="redireccionarSociedades(dato)" class="enlace">{{dato[col.field]}}</a>
             </div>
         </ng-template>
       </p-column>
