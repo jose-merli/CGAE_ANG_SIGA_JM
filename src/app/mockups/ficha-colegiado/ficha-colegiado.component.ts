@@ -49,7 +49,7 @@ export class FichaColegiadoComponent implements OnInit {
           "texto": "Facturación",
           // "href": "/mantenimientoFactura",
           "href": "",
-          "params": []
+          "params": ""
         },
         {
           "texto": "Auditoría",
@@ -60,6 +60,31 @@ export class FichaColegiadoComponent implements OnInit {
           "texto": "Comunicaciones",
           "href": "/comunicacionesCenso",
           "params": "21496003L"
+        },
+        {
+          "texto": "Más información",
+          "href": "",
+          "params": ""
+        },
+        {
+          "texto": "Guardias inscrito",
+          "href": "",
+          "params": ""
+        },
+        {
+          "texto": "Calendario de Guardias",
+          "href": "",
+          "params": ""
+        },
+        {
+          "texto": "Asistencias",
+          "href": "",
+          "params": ""
+        },
+        {
+          "texto": "Pre Asistencias",
+          "href": "",
+          "params": ""
         }
       ]
     },

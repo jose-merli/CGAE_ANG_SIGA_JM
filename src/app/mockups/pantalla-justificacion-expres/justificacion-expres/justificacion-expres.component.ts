@@ -22,6 +22,30 @@ export class JustificacionExpresComponent implements OnInit {
       name: "Año/Número Designación"
     },
     {
+      id: 'ejgs',
+      name: "EJG's"
+    },
+    {
+      id: 'clientes',
+      name: 'Clientes'
+    },
+    {
+      id: 'finalizado',
+      name: 'Finalizado'
+    },
+    {
+      id: 'juzgado',
+      name: 'Juzgado'
+    },
+    {
+      id: 'nig',
+      name: 'NIG'
+    },
+    {
+      id: 'nproced',
+      name: 'Nº Proced'
+    },
+    {
       id: "modulo",
       name: "Módulo"
     },
@@ -45,27 +69,39 @@ export class JustificacionExpresComponent implements OnInit {
   selectores1 = [
     {
       nombre: "Estado",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
+      { label: 'XXXXXXXXXXX', value: 2 },
+      { label: 'XXXXXXXXXXX', value: 3 },]
     },
     {
       nombre: "Actuaciones Validadas",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
+      { label: 'XXXXXXXXXXX', value: 2 },
+      { label: 'XXXXXXXXXXX', value: 3 },]
     },
     {
       nombre: "Incluir sin EJG",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
+      { label: 'XXXXXXXXXXX', value: 2 },
+      { label: 'XXXXXXXXXXX', value: 3 },]
     },
     {
       nombre: "Con EJG no favorables",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
+      { label: 'XXXXXXXXXXX', value: 2 },
+      { label: 'XXXXXXXXXXX', value: 3 },]
     },
     {
       nombre: "EJG's sin resolución",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
+      { label: 'XXXXXXXXXXX', value: 2 },
+      { label: 'XXXXXXXXXXX', value: 3 },]
     },
     {
       nombre: "EJG's Resolución PTE CAJG",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      opciones: [{ label: 'XXXXXXXXXXX', value: 1 },
+      { label: 'XXXXXXXXXXX', value: 2 },
+      { label: 'XXXXXXXXXXX', value: 3 },]
     }
   ];
   datePickers1 = ["Fecha de Justificación Desde", "Fecha de Justificación Hasta"];

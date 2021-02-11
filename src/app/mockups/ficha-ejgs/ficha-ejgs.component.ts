@@ -88,7 +88,7 @@ export class FichaEjgsComponent implements OnInit {
       nombre: "Servicios de tramitación",
       imagen: "",
       icono: "fa fa-gavel",
-      detalle: true,
+      detalle: false,
       fixed: false,
       opened: false,
       campos: [

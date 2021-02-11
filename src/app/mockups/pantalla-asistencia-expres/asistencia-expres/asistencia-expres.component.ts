@@ -16,24 +16,6 @@ export class AsistenciaExpresComponent implements OnInit {
     { label: 'Búsqueda de Asistencias', value: 'a' },
     { label: 'Asistencia Exprés', value: 'b' }
   ];
-  selectores1 = [
-    {
-      nombre: "Turno",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    },
-    {
-      nombre: "Guardia",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    },
-    {
-      nombre: "Tipo Asistencia Colegio",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    },
-    {
-      nombre: "Letrado de Guardia",
-      opciones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    }
-  ];
 
   constructor() { }
 
@@ -51,15 +33,15 @@ export class AsistenciaExpresComponent implements OnInit {
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
-      this.msgs.push({
+    this.msgs.push({
       severity,
       summary,
       detail
-      });
+    });
   }
-  
+
   clear() {
     this.msgs = [];
-  } 
+  }
 
 }

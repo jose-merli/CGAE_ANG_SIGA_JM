@@ -24,17 +24,29 @@ export class FichaActuacionComponent implements OnInit {
         "value": "D2018/00078"
       },
       {
-        "key": "Letrado",
-        "value": "2131 SDFASFA SDFF, JUAN"
+        "key": "Turno",
+        "value": "XXXXXX"
       },
       {
-        "key": "Fecha Actuación",
-        "value": "25/01/2018"
+        "key": "Gurdia",
+        "value": "XXXXXX"
       },
       {
         "key": "Número Actuación",
         "value": "4"
-      }
+      },
+      {
+        "key": "Fecha Actuación",
+        "value": "23/09/2018"
+      },
+      {
+        "key": "Letrado",
+        "value": "2131 SDFASFA SDFF, JUAN"
+      },
+      {
+        "key": "Asistido",
+        "value": "SDFASFA SDFF, JUAN"
+      },
     ],
     enlaces: []
   };
