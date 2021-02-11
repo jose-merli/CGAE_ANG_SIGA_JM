@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-aplicacionEnPagos',
@@ -6,11 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./aplicacionEnPagos.component.scss']
 })
 export class AplicacionEnPagosComponent implements OnInit {
+  msgs: Message[] = [];
   isDisabled = true;
-  show = true;
+  show = false;
   cFormValidity = true;
   modoBusqueda = 'a';
-  modoBusquedaB = false;
   allSelected = false;
   rutas: string[] = ['SJCS', 'Buscar retenciones'];
   radios = [
@@ -223,13 +224,17 @@ export class AplicacionEnPagosComponent implements OnInit {
     this.cFormValidity = $event;
   }
 
-  changeTab() {
-    this.hideResponse();
-    if (this.modoBusqueda === 'b') {
-      this.modoBusquedaB = true;
-    } else if (this.modoBusqueda === 'a') {
-      this.modoBusquedaB = false;
-    }
+  showMsg(severity, summary, detail) {
+    this.msgs = [];
+    this.msgs.push({
+      severity,
+      summary,
+      detail
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

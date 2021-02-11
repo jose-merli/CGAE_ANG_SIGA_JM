@@ -8,6 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class BusquedaAsuntosComponent implements OnInit {
 
+  expanded = true;
   @Output() formulario = new EventEmitter<boolean>();
   cForm = new FormGroup({
     NIF: new FormControl(''),

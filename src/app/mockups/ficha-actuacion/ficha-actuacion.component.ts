@@ -151,9 +151,11 @@ export class FichaActuacionComponent implements OnInit {
   constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
+    
   }
 
   ngAfterViewInit() {
+    this.goTop();
     this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
     this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
     this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
@@ -195,6 +197,14 @@ export class FichaActuacionComponent implements OnInit {
       tarjTemp.opened = true;
     }
 
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
 

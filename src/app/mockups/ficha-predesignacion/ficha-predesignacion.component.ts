@@ -170,9 +170,11 @@ export class FichaPredesignacionComponent implements OnInit {
   constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
+    
   }
 
   ngAfterViewInit() {
+    this.goTop();
     this.stickyElementoffset = this.navbarElement.nativeElement.getBoundingClientRect().top;
     this.navbarHeight = this.navbarElement.nativeElement.clientHeight;
     this.scrollWidth = this.main.nativeElement.clientHeight - this.parent.nativeElement.clientHeight;
@@ -187,12 +189,12 @@ export class FichaPredesignacionComponent implements OnInit {
       this.listaTarjetasFijas[0].enlaces.push(tarjTmp);
     });
   }
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
   }
-  notifyAnySelected(event){
-    if (this.allSelected || event){
+  notifyAnySelected(event) {
+    if (this.allSelected || event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;
@@ -236,6 +238,14 @@ export class FichaPredesignacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  goTop() {
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
   }
 
 }

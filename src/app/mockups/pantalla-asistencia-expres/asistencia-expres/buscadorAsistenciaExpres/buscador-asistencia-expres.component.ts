@@ -8,6 +8,7 @@ import { Message } from 'primeng/components/common/api';
   styleUrls: ['./buscador-asistencia-expres.component.scss']
 })
 export class BuscadorAsistenciaExpresComponent implements OnInit {
+  expanded = true;
   datos;
   aeForm = new FormGroup({
     numColegiado: new FormControl(''),
