@@ -20,41 +20,41 @@ export class AsuntosComponent implements OnInit {
   ];
   cabeceras = [
     {
-      id: "nif",
-      name: "NIF/CIF"
+      id: "anio",
+      name: "Año"
     },
     {
-      id: "nombre",
-      name: "Nombre"
+      id: "num",
+      name: "Número"
     },
     {
-      id: "apellidos",
-      name: "Apellidos"
+      id: "nProc",
+      name: "Nº Procedimiento/Año/NIG"
     },
     {
-      id: "colegio",
-      name: "Colegio"
+      id: "juzgado",
+      name: "Juzgado"
     },
     {
-      id: "numColegiado",
-      name: "Número de Colegiado"
+      id: "tipo",
+      name: "Tipo"
     },
     {
-      id: "estado",
-      name: "Estado colegial"
+      id: "turnoGuard",
+      name: "Turno/Guardia"
     },
     {
-      id: "residencia",
-      name: "Residencia"
+      id: "letrado",
+      name: "Letrado"
     }
   ];
   elementos = [
-    ["78909876R", "JUAN", "ASNDADBH AHDBHAJD", 'ALCALÁ DE HENARES', "1702", "Ejerciente", "No"],
-    ["23909876R", "ANA", "ASNDADBH AHDBHAJD", 'BALCALÁ DE HENARES', "1402", "Ejerciente", "Si"]
+    ["2018", "345", "UH5657", 'SDEGFSAGDASG', "XXX", "111111", "SFSADG DFSGDFGDG ANA"],
+    ["2020", "789", "JV8765", 'DASGSDGSG', "BBB", "222222", "EWRFASWF DGSDEG JESÚS"]
   ];
   elementosAux = [
-    ["78909876R", "JUAN", "ASNDADBH AHDBHAJD", 'ALCALÁ DE HENARES', "1702", "Ejerciente", "No"],
-    ["23909876R", "ANA", "ASNDADBH AHDBHAJD", 'BALCALÁ DE HENARES', "1402", "Ejerciente", "Si"]
+    ["2018", "345", "UH5657", 'SDEGFSAGDASG', "XXX", "111111", "SFSADG DFSGDFGDG ANA"],
+    ["2020", "789", "JV8765", 'DASGSDGSG', "BBB", "222222", "EWRFASWF DGSDEG JESÚS"]
   ];
 
   selectores1 = [
