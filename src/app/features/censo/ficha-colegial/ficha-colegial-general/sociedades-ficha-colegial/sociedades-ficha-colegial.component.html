@@ -79,7 +79,7 @@
                 <span>{{dato[col.field]}}</span>
             </div>
             <div *ngIf="col.field == 'nif' || col.field =='denominacion'">
-                <a (click)="redireccionarSociedades(dato)" class="enlace">{{dato[col.field]}}</a>
+                <a [routerLink]="" (click)="redireccionarSociedades(dato)" class="enlace">{{dato[col.field]}}</a>
             </div>
         </ng-template>
       </p-column>
