@@ -22,7 +22,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
-  body: EJGItem;
+  body: EJGItem = new EJGItem();;
   bodyInicial: EJGItem;
   msgs = [];
   nuevo;
@@ -208,6 +208,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
     }
   }
+
+  clearFilters() {
+    this.body = new EJGItem();
+    this.persistenceService.clearFiltros();
+  }
+
   clear() {
     this.msgs = [];
   }

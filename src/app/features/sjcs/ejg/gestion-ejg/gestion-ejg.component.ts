@@ -160,6 +160,11 @@ export class GestionEjgComponent implements OnInit {
 
   }
     
+  clearFilters() {
+    this.body = new EJGItem();
+    this.persistenceService.clearFiltros();
+  }
+
   clear() {
     this.msgs = [];
   }

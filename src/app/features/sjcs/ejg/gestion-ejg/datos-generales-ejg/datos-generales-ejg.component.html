@@ -120,7 +120,7 @@
         <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-plus" iconPos="left"
           label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
         <button (click)="checkPermisosComunicar()" pButton [disabled]="!permisoEscritura" type="button" icon="fas fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
-        <button (click)="checkPermisosRest()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="clearFilters()" pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="checkPermisosSave()" pButton [disabled]="!permisoEscritura" type="button" icon="far fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>

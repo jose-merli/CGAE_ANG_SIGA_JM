@@ -608,7 +608,28 @@ export class FiltrosEjgComponent implements OnInit {
   clearFilters() {
     this.body = new EJGItem();
     this.persistenceService.clearFiltros();
+    this.inputNumero.nativeElement.focus();
+    this.body.annio = new Date().getFullYear().toString();
+      
+    this.showdatosIdentificacion = true;
+    this.showDatosGeneralesEJG = false;
+    this.showDatosDefensa = false;
+    this.showCAJG = false;
+    this.showSolicitante = false;
+    this.showTramitador = false;
+    this.goTop();
   }
+
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
+
+  }
+
   checkPermisosIsNuevo(){
     let msg = this.commonServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
