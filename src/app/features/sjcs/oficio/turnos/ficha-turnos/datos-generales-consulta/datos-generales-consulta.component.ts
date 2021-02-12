@@ -518,7 +518,8 @@ export class DatosGeneralesTurnosComponent implements OnInit {
           }
         );
     } else {
-      this.isDisabledSubZona = true;
+      //this.isDisabledSubZona = true;
+      this.partidoJudicial = "";
     }
 
   }
@@ -672,6 +673,11 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   }
 
   save() {
+    //comprobamos si todos los campos obligatorios se han rellenado
+    var camposOblig = document.getElementsByClassName('camposObligatorios');
+    if(camposOblig.length>0) {
+      this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
+    }
     this.progressSpinner = true;
     let url = "";
     if (!this.modoEdicion) {
@@ -685,7 +691,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     }
   }
 
-  callSaveService(url) {
+  callSaveService(url) {    
     if (this.turnosItem.codigoext != undefined) {
       this.turnosItem.codigoext = this.turnosItem.codigoext.trim();
     }
@@ -769,12 +775,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         }
       },
       err => {
-        //comprobamos si todos los campos obligatorios se han rellenado
-        var camposOblig = document.getElementsByClassName('camposObligatorios');
-        if(camposOblig.length>0) {
-          this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
-        }
-        else if (JSON.parse(err.error).error.description != "") {
+        if (JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
