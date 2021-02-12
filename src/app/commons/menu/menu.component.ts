@@ -35,22 +35,27 @@ export class MenuComponent implements OnInit {
   //o revisar si se pude instanciar el router de forma dinámica al arrancar el angular
   ngOnInit() {
     this.progressSpinner = true;
-    this.sigaServices.get("diccionarios").subscribe(response => {
-      response.DiccionarioItems;
-      this.sigaServices.get("menu").subscribe(response => {
-        this.progressSpinner = false;
-        this.items = response.menuItems;
-        return this.items;
-      });
-    });
+    //this.sigaServices.get("diccionarios").subscribe(response => {
+      //response.DiccionarioItems;
+      //this.sigaServices.get("menu").subscribe(response => {
+          
+    this.translateService.getTranslations().then(
+      items=>{
+        this.items = items;
+  
+      this.progressSpinner = false;
+//        this.items = response.menuItems;
+//        return this.items;
+//      });
+//    });
+      }
+    );
   }
-
   onCloseMenu() {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
       this.sigaServices.notifyMenuToggled();
-      console.log(this.closeMenu);
-    }
+     }
   }
 
   onFixedMenu() {
@@ -112,7 +117,6 @@ export class MenuComponent implements OnInit {
     if (items) {
       this.showChildOfChild = !this.showChildOfChild;
       this.selectedItemOfChild = items;
-      console.log(this.selectedItemOfChild);
       this.selectedLabelOfChild = label;
     }
   }

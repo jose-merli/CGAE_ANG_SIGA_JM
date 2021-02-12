@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
 import { DatosSolicitudMutualidadItem } from '../../../../../models/DatosSolicitudMutualidadItem';
@@ -14,7 +14,7 @@ import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem
   templateUrl: './mutualidad-abogacia-ficha-colegial.component.html',
   styleUrls: ['./mutualidad-abogacia-ficha-colegial.component.scss']
 })
-export class MutualidadAbogaciaFichaColegialComponent implements OnInit {
+export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChanges {
   @Input() tarjetaMutualidad;
   msgs = [];
   progressSpinner: boolean = false;
@@ -26,7 +26,7 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit {
   fechaAlta: Date;
   @Input() datosBancarios: DatosBancariosItem[] = [];
   @Input() datosDirecciones: DatosDireccionesItem[] = [];
-
+  jueves = false;
 
 
   constructor(private sigaServices: SigaServices,
@@ -45,20 +45,30 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit {
       this.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
     }
 
-    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
-      n => {
-        this.generalTratamiento = n.combooItems;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
+
+  }
+
+  ngOnChanges() {
+
+    if ((this.tarjetaMutualidad == "2" || this.tarjetaMutualidad == "3") && !this.jueves) {
+      this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
+        n => {
+          this.jueves = true;
+          this.generalTratamiento = n.combooItems;
+          let tratamiento = this.generalTratamiento.find(
+            item => item.value === this.generalBody.idTratamiento
+          );
+          if (tratamiento != undefined && tratamiento.label != undefined) {
+            this.tratamientoDesc = tratamiento.label;
+          }
+        },
+        err => {
+          console.log(err);
+          this.jueves = true;
+
         }
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      );
+    }
   }
 
   arreglarFecha(fecha) {

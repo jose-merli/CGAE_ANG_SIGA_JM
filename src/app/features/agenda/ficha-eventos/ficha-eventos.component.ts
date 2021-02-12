@@ -352,7 +352,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("modoEdicionEventoByAgenda") == "false") {
       this.modoEdicionEventoByAgenda = false;
       this.path = "agenda";
-      this.disabledTipoEvento = true;
+      this.disabledTipoEvento = false;
       // this.modoEdicionEvento = true;
       this.newModeConfiguration();
       this.checkIsStateEvento();
@@ -867,19 +867,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
     this.sigaServices.get("fichaEventos_getEventStates").subscribe(
       n => {
         this.comboEstados = n.combooItems;
-        if (
-          this.newEvent.idEstadoEvento == undefined ||
-          this.newEvent.idEstadoEvento == null ||
-          this.newEvent.idEstadoEvento == ""
-        ) {
-
-          if (this.newEvent.idTipoEvento != this.valorTipoEventoFestivo) {
-            this.newEvent.idEstadoEvento = this.comboEstados[0].value;
-          }
-        }
-
-        this.progressSpinner2 = false;
-
+        
       },
       err => {
         console.log(err);
@@ -1097,34 +1085,28 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
   saveEvent() {
     let url = "";
-
-    if (this.curso != undefined) {
+    if (this.curso != null) {
       this.newEvent.idCurso = this.curso.idCurso;
     }
-
     this.progressSpinner = true;
     this.resaltadoDatos = false;
 
-    if (!this.selectedTipoLaboral) {
-      if (this.newEvent.idEstadoEvento == null) {
-        this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
-      }
+    let dateStart = new Date(this.newEvent.start);
+    if (this.newEvent.idEstadoEvento == null) {
+      this.newEvent.idEstadoEvento = this.valorEstadoEventoPlanificado;
     }
     if (this.newEvent.descripcion != undefined) this.newEvent.descripcion = this.newEvent.descripcion.trim();
     if (this.newEvent.recursos != undefined) this.newEvent.recursos = this.newEvent.recursos.trim()
 
-    if (sessionStorage.getItem("calendarioLaboralAgenda") == "true") {
-
-      if (!this.modoEdicionEvento) {
-        url = "fichaEventos_saveEventCalendar";
-        this.newEvent.descripcionOld = this.initEvent.descripcion;
-        this.callSaveEvent(url);
-      } else {
-        url = "fichaEventos_updateEventCalendar";
-        this.callSaveEvent(url);
-      }
-
-    } else if (
+    if(dateStart > new Date() && this.newEvent.idEstadoEvento == '2'){
+      this.showMessage(
+          "error",
+          this.translateService.instant("general.message.incorrect"),
+          this.translateService.instant("message.error.evento.cumplido")
+        );
+         this.progressSpinner = false;
+  }else{
+    if (
       sessionStorage.getItem("modoEdicionEventoByAgenda") == "true" ||
       (this.modoTipoEventoInscripcion && this.modoEdicionEvento) ||
       this.modoEdicionEvento
@@ -1132,7 +1114,6 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       if (this.newEvent.idEvento != null) {
         url = "fichaEventos_updateEventCalendar";
         if (this.newEvent.idEventoOriginal != null && this.newEvent.idEventoOriginal != undefined) {
-          let dateStart = new Date(this.newEvent.start);
           let utcStart = new Date(dateStart.getUTCFullYear(), dateStart.getUTCMonth(), dateStart.getUTCDate(), dateStart.getUTCHours(), dateStart.getUTCMinutes(), dateStart.getUTCSeconds());
           let dateEnd = new Date(this.newEvent.end);
           let utcEnd = new Date(dateEnd.getUTCFullYear(), dateEnd.getUTCMonth(), dateEnd.getUTCDate(), dateEnd.getUTCHours(), dateEnd.getUTCMinutes(), dateEnd.getUTCSeconds());
@@ -1157,7 +1138,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
       this.callSaveEvent(url);
     }
   }
-
+}
 
   checkRepeatedEvents(url) {
 

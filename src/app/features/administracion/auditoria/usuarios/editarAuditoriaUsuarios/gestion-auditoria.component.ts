@@ -115,7 +115,7 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("auditoriaUsuarios_update", this.update).subscribe(
       data => {
         this.showSuccess();
-        console.log(data);
+         
         this.correcto = true;
         registroActualizado = true;
         sessionStorage.setItem(

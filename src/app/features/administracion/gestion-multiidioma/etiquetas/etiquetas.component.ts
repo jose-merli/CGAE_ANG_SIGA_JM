@@ -191,7 +191,6 @@ para poder filtrar el dato con o sin estos caracteres*/
       .postPaginado("etiquetas_search", "?numPagina=1", this.bodySearch)
       .subscribe(
       data => {
-        console.log(data);
         this.searchParametros = JSON.parse(data["body"]);
         this.datosTraduccion = this.searchParametros.etiquetaItem;
         this.buscarSeleccionado = true;
@@ -264,7 +263,6 @@ para poder filtrar el dato con o sin estos caracteres*/
         .post("etiquetas_update", this.elementosAGuardar[i])
         .subscribe(
         data => {
-          console.log(data);
         },
         err => {
           console.log(err);
