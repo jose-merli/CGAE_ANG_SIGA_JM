@@ -52,7 +52,7 @@
                 {{"justiciaGratuita.oficio.turnos.requisitosguardias" | translate}} (*)
               </label>
               <p-dropdown class="select-form" [disabled]="disableAll" [(ngModel)]='turnosItem.idguardias' [filter]="true" filterBy="label,labelSinTilde"
-                filterMatchMode="contains" [options]="guardias" (onChange)="onChangeRequisitosGuardias()" placeholder="{{'general.boton.seleccionar' | translate}}"
+                filterMatchMode="contains" [options]="guardias" (onChange)="onChangeRequisitosGuardias()" 
                 [showClear]="true">
               </p-dropdown>
             </div>

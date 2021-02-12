@@ -14,6 +14,8 @@ import { TurnosItems } from '../../../../../../models/sjcs/TurnosItems';
 import { ModulosItem } from '../../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { filter } from 'rxjs/operator/filter';
+
+// Tiene un problema ya que como esta implementado no se abre mediante la tarjeta fija
 @Component({
   selector: "app-datos-generales-consulta",
   templateUrl: "./datos-generales-consulta.component.html",
@@ -60,6 +62,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   partidaPresupuestaria;
   MateriaDescripcion
   isDisabledSubZona: boolean = false;
+  fOpen: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -106,12 +109,20 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.partidoJudicial = "";
       this.turnosItem = new TurnosItems();
     }
+    if (this.openGen == true || this.fOpen==true) {
+      this.fOpen=true;
+      if (this.openFicha == false) {
+        this.abreCierraFicha('generales')
+      }
+    }
+    this.opened.emit(this.openFicha);
+    if(this.openFicha == true)this.idOpened.emit(true);
   }
 
   abreCierraFicha(key) {
     this.openFicha = !this.openFicha;
     this.opened.emit(this.openFicha);
-    this.idOpened.emit(true);
+    this.idOpened.emit(key);
   }
   ngOnInit() {
     this.actualizarFichaResumen();
@@ -652,6 +663,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     }
 
   }
+  isCloseReceive(event){
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
 
   save() {
     this.progressSpinner = true;
@@ -751,9 +769,13 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         }
       },
       err => {
-
-        if (JSON.parse(err.error).error.description != "") {
+        //comprobamos si todos los campos obligatorios se han rellenado
+        var camposOblig = document.getElementsByClassName('camposObligatorios');
+        if(camposOblig.length>0) {
           this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
+        }
+        else if (JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
