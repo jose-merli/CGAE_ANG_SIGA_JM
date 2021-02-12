@@ -2,3 +2,5 @@
 /node_modules/
 src/app/commons/login-develop/login-develop.component.ts
 src/app/_services/authentication.service.ts
+.scannerwork/sonarts-bundle/
+.scannerwork/
