@@ -95,9 +95,9 @@
         <p-column *ngFor="let col of cols" [sortable]="true" [field]="col.field" [header]="col.header | translate" [filter]="true"
           filterPlaceholder="{{ 'general.boton.search' | translate }}" filterMatchMode="contains">
           <ng-template let-dato="rowData" pTemplate="body">
-          <span *ngIf="col.field=='nombre'"><a [routerLink]="" class="enlace"
+          <span *ngIf="col.field=='nombre'"><a class="enlace"
             (click)="irFichaColegial(dato)">{{dato.nombre}}</a></span>
-            <span *ngIf="col.field=='apellidos'"><a [routerLink]="" class="enlace"
+            <span *ngIf="col.field=='apellidos'"><a class="enlace"
               (click)="irFichaColegial(dato)">{{dato.apellidos}}</a></span>
               <div *ngIf="col.field != 'nombre' && col.field != 'apellidos'">
                 <span>{{ dato[col.field]}}</span>

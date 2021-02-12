@@ -812,17 +812,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
     }
-    if (this.tarjetaMutualidadNum == "3" || this.tarjetaMutualidadNum == "2") {
-      let pruebaTarjeta = {
-        label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
-        value: document.getElementById("mutualidad"),
-        nombre: "tarjetaMutualidad",
-      }
-      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
-      if (findDato == undefined) {
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-    }
+
     if (this.tarjetaAlterMutuaNum == "3" || this.tarjetaAlterMutuaNum == "2") {
       let pruebaTarjeta = {
         label: "censo.alterMutua.titulo",
@@ -834,6 +824,19 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
     }
+    
+    if (this.tarjetaMutualidadNum == "3" || this.tarjetaMutualidadNum == "2") {
+      let pruebaTarjeta = {
+        label: "censo.fichaColegial.mutualidadAbogacia.literal.titulo",
+        value: document.getElementById("mutualidad"),
+        nombre: "tarjetaMutualidad",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
+    
   }
   idPersonaNuevoEvent(event) {
     if (event != undefined) {
