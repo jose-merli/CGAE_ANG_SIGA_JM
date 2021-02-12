@@ -198,7 +198,7 @@ export class AplicacionEnPagosComponent implements OnInit {
       ]
     }
   ];
-  datePickers2 = [];
+  datePickers2 = ['Fecha Notificación', 'Fecha Retención'];
   inputs2 = ["Número de Abono"];
   selectores = [this.selectores1, this.selectores2];
   datePickers = [this.datePickers1, this.datePickers2];

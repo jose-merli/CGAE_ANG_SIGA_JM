@@ -249,6 +249,7 @@ import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/
 import { PantallaAplicacionEnPagosComponent } from "./mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component";
 import { BuscadorAsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
 import { TarjetaColaGuardiaComponent } from "./mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component";
+import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1356,6 +1357,10 @@ const appRoutes: Routes = [
 	{
 		path: 'tarjetaColaGuardia',
 		component: TarjetaColaGuardiaComponent
+	},
+	{
+		path: 'pantallaCalendarios',
+		component: PantallaCalendariosComponent
 	},
 
 	{ path: ' ', redirectTo: 'home' }

@@ -421,6 +421,9 @@ import { ResultadoAplicacionEnPagosComponent } from './mockups/pantalla-busqueda
 import { BusquedaAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/busqueda-aplicacionEnPagos/busqueda-aplicacionEnPagos.component';
 import { BuscadorAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component';
 import { TarjetaColaGuardiaComponent } from './mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component';
+import { PantallaCalendariosComponent } from './mockups/pantalla-calendarios/pantalla-calendarios.component';
+import { BusquedaPantallaCalendariosComponent } from './mockups/pantalla-calendarios/busqueda-pantalla-calendarios/busqueda-pantalla-calendarios.component';
+import { ResultadoPantallaCalendariosComponent } from './mockups/pantalla-calendarios/resultado-pantalla-calendarios/resultado-pantalla-calendarios.component';
 
 
 
@@ -792,7 +795,10 @@ import { TarjetaColaGuardiaComponent } from './mockups/tarjeta-cola-guardia/tarj
 		AplicacionEnPagosComponent,
 		ResultadoAplicacionEnPagosComponent,
 		BusquedaAplicacionEnPagosComponent,
-		TarjetaColaGuardiaComponent
+		TarjetaColaGuardiaComponent,
+		PantallaCalendariosComponent,
+		BusquedaPantallaCalendariosComponent,
+		ResultadoPantallaCalendariosComponent
 	],
 	imports: [
 		BrowserModule,
