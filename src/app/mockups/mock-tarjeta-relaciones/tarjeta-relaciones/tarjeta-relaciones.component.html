@@ -4,7 +4,7 @@
       <div class="card-body p-0">
         <mat-accordion class="example-headers-align" multi>
           <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
-            [disabled]="tarj.fixed || !tarj.detalle" [ngClass]="{'tarjetaFija': tarj.fixed}">
+            [disabled]="tarj.fixed || !tarj.detalle">
             <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
               <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos" [icon]="tarj.icono"
                 [cardOpenState]="tarj.opened" [enlaces]="tarj.enlaces" [fixed]="tarj.fixed" class="w-100">

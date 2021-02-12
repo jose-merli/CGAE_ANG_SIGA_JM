@@ -1,30 +1,3 @@
-.flexCenter{
-    display: flex;
-    align-items: flex-end;
-}
-  .content {
-    padding: 16px;
-  }
-  
-  .absolute {
-    position: absolute;
-    top:0;
-    left: 0;
-  }
-
-  .relative {
-    position: relative;
-  }
-
-  .padding-interior {
-    padding-right: 1.25rem !important;
-    padding-left: 1.25rem !important;
-  }
-  
-.tarjetaFija {
-  background-color: lightgrey;
-}
-
 ::ng-deep {
 
   #tarjetaRelaciones {
@@ -54,4 +27,9 @@
 
   }
 
+}
+
+.padding-interior {
+  padding-right: 1.25rem !important;
+  padding-left: 1.25rem !important;
 }

@@ -248,6 +248,7 @@ import { JustificacionExpresComponent } from "./mockups/pantalla-justificacion-e
 import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component";
 import { PantallaAplicacionEnPagosComponent } from "./mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component";
 import { BuscadorAsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
+import { TarjetaColaGuardiaComponent } from "./mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1351,6 +1352,10 @@ const appRoutes: Routes = [
 	{
 		path: 'pantallaAplicacionEnPagosComponent',
 		component: PantallaAplicacionEnPagosComponent
+	},
+	{
+		path: 'tarjetaColaGuardia',
+		component: TarjetaColaGuardiaComponent
 	},
 
 	{ path: ' ', redirectTo: 'home' }

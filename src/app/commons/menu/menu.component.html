@@ -5,7 +5,7 @@
   <div class="container-fluid">
     <div class="col-items">
       <ul *ngIf="!showChild" class="nav navbar-nav d-flex">
-        <li [ngClass]="{
+        <!-- <li [ngClass]="{
             config: opcion.idClass === 'config',
             catalogos: opcion.idClass === 'catalogos',
             adm: opcion.idClass === 'adm',
@@ -17,7 +17,7 @@
           ">
           {{ opcion.label | translate }}
           <i *ngIf="opcion.items" class="fa fa-angle-right float-right"></i>
-        </li>
+        </li> -->
         <div class="mt-3">
             <li class="mockupTitle" >
                 MOCKUPS
@@ -88,11 +88,16 @@
           <i class="fa fa-angle-right float-right"></i>
           <br>
         </li>
-        <li [ngClass]="{'menu-item-active': isRoute('/pantallaAplicacionEnPagosComponent')}" >
+        <!-- <li [ngClass]="{'menu-item-active': isRoute('/pantallaAplicacionEnPagosComponent')}" >
           <a [routerLink]="['/pantallaAplicacionEnPagosComponent']">Pantalla Aplicación en pagos</a>
           <i class="fa fa-angle-right float-right"></i>
           <br>
         </li>
+        <li [ngClass]="{'menu-item-active': isRoute('/tarjetaColaGuardia')}" >
+          <a [routerLink]="['/tarjetaColaGuardia']">Tarjeta Cola Guardia</a>
+          <i class="fa fa-angle-right float-right"></i>
+          <br>
+        </li> -->
         
         </div>
       </ul>
