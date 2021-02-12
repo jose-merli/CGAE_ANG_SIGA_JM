@@ -381,6 +381,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       }
       this.getLetrado();
     }
+    if (this.openGen == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('colegiales')
+      }
+    }
   }
   onInitGenerales() {
     // this.activacionGuardarGenerales();
@@ -955,12 +960,12 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         );
     }
 
-    if ((this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&
+    /*if ((this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&
     this.generalBody.idTipoIdentificacion != undefined && this.generalBody.soloNombre != undefined && this.generalBody.apellidos1 != undefined &&
     this.generalBody.soloNombre != "" && this.generalBody.apellidos1 != "" && this.generalBody.idTratamiento != null &&
     this.generalBody.idLenguaje != "" && this.generalBody.idLenguaje != undefined)) {
         this.abreCierraFicha("generales");
-      }
+      }*/
   }
 
   comprobarCampoMotivo() {

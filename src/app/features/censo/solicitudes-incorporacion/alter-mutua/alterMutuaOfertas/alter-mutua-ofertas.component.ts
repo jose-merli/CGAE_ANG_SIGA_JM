@@ -374,7 +374,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
         this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
           this.propuestas.mensaje
         );
-        console.log(this.propuestas.mensaje);
       },
       error => {
         console.log(error);

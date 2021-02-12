@@ -34,27 +34,27 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
     }
 
   }
+
   ngOnChanges() {
     if ((this.tarjetaAlterMutua == "2" || this.tarjetaAlterMutua == "3") && !this.viernes) {
-    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
-      n => {
+
+      this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
+        n => {
           this.viernes = true;
-        this.generalTratamiento = n.combooItems;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
+          this.generalTratamiento = n.combooItems;
+          let tratamiento = this.generalTratamiento.find(
+            item => item.value === this.generalBody.idTratamiento
+          );
+          if (tratamiento != undefined && tratamiento.label != undefined) {
+            this.tratamientoDesc = tratamiento.label;
+          }
+        },
+        err => {
+          console.log(err);
         }
-      },
-      err => {
-        console.log(err);
-      }
-    );
+      );
     }
   }
-
-
   irAlterMutuaReta() {
     this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
     this.solicitudEditar.idPais = "191";
