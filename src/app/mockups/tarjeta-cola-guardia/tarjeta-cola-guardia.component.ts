@@ -22,7 +22,8 @@ export class TarjetaColaGuardiaComponent implements OnInit {
         "key": "Nº colegiado",
         "value": "104 Perez Salas Juan … 700 Sanchez Sanchez Pepe … 20 inscritos"
       }
-    ]
+    ],
+    enlaces: []
   };
 
   selectores = [
@@ -120,8 +121,8 @@ export class TarjetaColaGuardiaComponent implements OnInit {
     this.msgs = [];
   }
 
-  notifyAnySelected(event){
-    if (this.allSelected || event){
+  notifyAnySelected(event) {
+    if (this.allSelected || event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;
