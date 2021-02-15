@@ -424,6 +424,10 @@ import { TarjetaColaGuardiaComponent } from './mockups/tarjeta-cola-guardia/tarj
 import { PantallaCalendariosComponent } from './mockups/pantalla-calendarios/pantalla-calendarios.component';
 import { BusquedaPantallaCalendariosComponent } from './mockups/pantalla-calendarios/busqueda-pantalla-calendarios/busqueda-pantalla-calendarios.component';
 import { ResultadoPantallaCalendariosComponent } from './mockups/pantalla-calendarios/resultado-pantalla-calendarios/resultado-pantalla-calendarios.component';
+import { DetalleTarjetaDatosGeneralesFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion.component';
+import { DetalleTarjetaJustificacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion.component';
+import { DetalleTarjetaHistoricoFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion.component';
+import { DetalleTarjetaDocumentacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion.component';
 
 
 
@@ -798,7 +802,11 @@ import { ResultadoPantallaCalendariosComponent } from './mockups/pantalla-calend
 		TarjetaColaGuardiaComponent,
 		PantallaCalendariosComponent,
 		BusquedaPantallaCalendariosComponent,
-		ResultadoPantallaCalendariosComponent
+		ResultadoPantallaCalendariosComponent,
+		DetalleTarjetaDatosGeneralesFichaActuacionComponent,
+		DetalleTarjetaJustificacionFichaActuacionComponent,
+		DetalleTarjetaHistoricoFichaActuacionComponent,
+		DetalleTarjetaDocumentacionFichaActuacionComponent,
 	],
 	imports: [
 		BrowserModule,

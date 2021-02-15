@@ -1,0 +1,73 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="row w-100 m-0 padding-interior">
+  <div class="bloque col-lg-4 col-md-4 mb-5">
+    <div class="row my-2">
+      <div class="col-6">
+        <label>Número actuación</label>
+        <span class="font-weight-bold d-block w-100">{{ numActuacion }}</span>
+      </div>
+      <div class="col-6">
+        <label>Estado</label>
+        <span class="font-weight-bold d-block w-100">{{ estado }}</span>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-6">
+        <label>Fecha actuación (*)</label>
+        <app-fecha [utc]="true"></app-fecha>
+      </div>
+      <div class="col-6" id="check">
+        <p-checkbox binary="true" label="Día Después"></p-checkbox>
+      </div>
+    </div>
+    <div *ngFor="let selector of selectores1" class="row mb-2">
+      <div class="col-12">
+        <app-selector [i]="0" [selector]="selector"></app-selector>
+      </div>
+    </div>
+  </div>
+  <div class="bloque col-lg-4 col-md-4 mb-5">
+    <div class="row my-2">
+      <div class="col-4">
+        <label>Nº Asunto</label>
+        <input type="text" class="form-control" pInputText>
+      </div>
+      <div class="col-8">
+        <label>NIG</label>
+        <input type="text" class="form-control" pInputText>
+      </div>
+    </div>
+
+    <div *ngFor="let selector of selectores2" class="row mb-2">
+      <div class="col-12">
+        <app-selector [i]="0" [selector]="selector"></app-selector>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 mb-5">
+    <div class="row my-2">
+      <div class="col-12">
+        <label>Descripción</label>
+        <input type="text" class="form-control" pInputText>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-12">
+        <label>Observaciones</label>
+        <textarea class="form-control" rows="7" pInputTextarea></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <!-- <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="Comunicar"
+      (click)="showMsg('success', 'Se ha comunicado correctamente', '')" disabled></button> -->
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+      (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')" disabled></button>
+  </div>
+</div>

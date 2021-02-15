@@ -16,8 +16,12 @@ export class FichaActuacionComponent implements OnInit {
     fixed: true,
     campos: [
       {
-        "key": "Año/Número designación",
+        "key": "Año/Número asistencia",
         "value": "D2018/00078"
+      },
+      {
+        "key": "Fecha de la Asistencia",
+        "value": "22/09/2018"
       },
       {
         "key": "Turno",
@@ -58,16 +62,20 @@ export class FichaActuacionComponent implements OnInit {
       opened: false,
       campos: [
         {
-          "key": "Juzgado",
-          "value": "Juzgado de lo social N1 BADAJOZ"
+          "key": "Fecha de Actuación",
+          "value": "12/03/2019"
         },
         {
-          "key": "Módulo",
-          "value": "SSDFXXXX XXXX XXXXXXX"
+          "key": "Tipo Actuación",
+          "value": "XXXXXXX"
         },
         {
-          "key": "Acreditación",
-          "value": "DSHBSBFSHDFNSDH SDHFB SDUFSUY"
+          "key": "Coste",
+          "value": "XX"
+        },
+        {
+          "key": "Comisaría/Juzgado",
+          "value": "XXXXX"
         }
       ]
     },
@@ -80,17 +88,13 @@ export class FichaActuacionComponent implements OnInit {
       opened: false,
       campos: [
         {
-          "key": "Estado",
-          "value": "XXXXX"
-        },
-        {
           "key": "Fecha Justificación",
           "value": "25/01/2021"
         },
         {
-          "key": "Partida Presupuestaria",
-          "value": "XXXXXXXXX"
-        }
+          "key": "Estado",
+          "value": "XXXXX"
+        },
       ]
     },
     {
