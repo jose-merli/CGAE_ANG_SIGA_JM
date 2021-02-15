@@ -3,13 +3,13 @@
   <div *ngIf="permisosTarjeta" class="card">
     <div class="card-header header-ficha" >
       <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generales')">
           <div class="img-colegiado">
             <i class="far fa-address-card icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 ">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('generales')">
             <label class="mr-auto title-ficha" style="cursor:pointer">{{ "general.message.datos.generales" | translate }}
 
             </label>
@@ -28,11 +28,11 @@
               <span>{{ tipoturnoDescripcion }}</span>
             </label>
             <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha()"></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha('generales')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('generales')">
         <div class="img-colegiado">
           <i class="far fa-address-card icon-ficha"></i>
         </div>

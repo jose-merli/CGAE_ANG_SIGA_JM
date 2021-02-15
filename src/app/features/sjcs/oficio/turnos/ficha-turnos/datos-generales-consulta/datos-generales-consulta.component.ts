@@ -31,7 +31,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   modoEdicion: boolean = false;
   nuevo: boolean = false;
   @Input() openGen;
-  
+
   datosTarjetaResumen;
   msgs;
   historico;
@@ -66,7 +66,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
   fichasPosibles = [
     {
       key: "generales",
-      activa: false
+      activa: true
     },
     {
       key: "configuracion",
@@ -109,21 +109,33 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.partidoJudicial = "";
       this.turnosItem = new TurnosItems();
     }
-    if (this.openGen == true || this.fOpen==true) {
-      this.fOpen=true;
+
+    //Logica a revisar
+    if (this.openGen == true) {
       if (this.openFicha == false) {
         this.abreCierraFicha('generales')
       }
     }
-    this.opened.emit(this.openFicha);
-    if(this.openFicha == true)this.idOpened.emit(true);
   }
 
   abreCierraFicha(key) {
-    this.openFicha = !this.openFicha;
+    this.resaltadoDatosGenerales = true;
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    if (
+      key == "generales" &&
+      !this.modoEdicion
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
+  
   ngOnInit() {
     this.actualizarFichaResumen();
     this.resaltadoDatosGenerales = true;
@@ -154,6 +166,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     }
     this.getCombos();
   }
+
 
   getCombos() {
     this.sigaServices.get("fichaZonas_getPartidosJudiciales").subscribe(
@@ -454,7 +467,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.actualizarFichaResumen();
   }
   actualizarFichaResumen() {
-    //if (this.modoEdicion) {
+    if (this.modoEdicion) {
 
 
       this.datosTarjetaResumen = [
@@ -496,7 +509,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
         },
       ]
       this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
-    //}
+    }
   }
 
   partidoJudiciales() {
@@ -664,13 +677,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     }
 
   }
-  isCloseReceive(event){
-    let fichaPosible = this.esFichaActiva(event);
-    if (fichaPosible == false) {
-      this.abreCierraFicha(event);
-    }
-    // window.scrollTo(0,0);
-  }
 
   save() {
     //comprobamos si todos los campos obligatorios se han rellenado
@@ -793,7 +799,6 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
   
   guardarDatos() {
-
 
 
   }

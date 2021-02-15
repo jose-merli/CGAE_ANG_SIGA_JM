@@ -4,13 +4,13 @@
   <div *ngIf="permisosTarjeta" class="card">
     <div class="card-header header-ficha">
       <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('configTurnos')">
           <div class="img-colegiado">
             <i class="fas fa-cog icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10" >
-          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha()">
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('configTurnos')">
             <label class="mr-auto title-ficha" style="cursor:pointer"> {{"justiciaGratuita.oficio.turnos.configuracionturnos" | translate}}</label>
           </div>
           <div class="d-flex justify-content-between" style="cursor:default">
@@ -26,11 +26,11 @@
             <label>{{ "administracion.informes.literal.visibleMovil" | translate }}
               <span>{{ visibleMovilTexto }}</span>
             </label>
-            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha()"></i>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} " (click)="abreCierraFicha('configTurnos')"></i>
           </div>
         </div>
       </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha()">
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('configTurnos')">
         <div class="img-colegiado">
           <i class="fas fa-cog icon-ficha"></i>
         </div>

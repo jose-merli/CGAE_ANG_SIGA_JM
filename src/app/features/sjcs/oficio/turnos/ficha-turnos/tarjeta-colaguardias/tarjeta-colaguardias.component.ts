@@ -164,6 +164,11 @@ export class TarjetaColaGuardias implements OnInit {
       this.turnosItem = new TurnosItems();
     }
     // this.arreglaChecks();
+    if (this.openColaGuardias == true) {
+      if (this.openFicha == false) {
+        this.abreCierraFicha('colaGuardias')
+      }
+    }
   }
 
   ngOnInit() {
@@ -185,11 +190,6 @@ export class TarjetaColaGuardias implements OnInit {
     }
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true
-    }
-    if (this.openColaGuardias == true) {
-      if (this.openFicha == false) {
-        this.abreCierraFicha('colaGuardias')
-      }
     }
   }
 
@@ -714,7 +714,7 @@ export class TarjetaColaGuardias implements OnInit {
       this.numSelected = selectedDatos.length;
     }
   }
-
+  
   clear() {
     this.msgs = [];
   }
@@ -737,10 +737,22 @@ export class TarjetaColaGuardias implements OnInit {
     fichaPosible.activa = false;
   } */
   abreCierraFicha(key) {
-    this.openFicha = !this.openFicha;
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    if (
+      key == "colaGuardias" &&
+      !this.modoEdicion
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
+
   openMultiSelect(dato) {
     // console.log(this.multiSelect);
     dato.onPanelShow;

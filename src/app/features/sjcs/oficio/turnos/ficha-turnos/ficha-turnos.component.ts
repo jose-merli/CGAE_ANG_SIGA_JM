@@ -73,7 +73,7 @@ export class FichaTurnosComponent implements OnInit {
 		this.fichasPosibles = [
 			{
 				key: 'generales',
-				activa: true
+				activa: false
 			},
 			{
 				key: 'configuracion',

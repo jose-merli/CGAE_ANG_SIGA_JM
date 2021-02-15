@@ -728,7 +728,18 @@ export class TarjetaColaOficio implements OnInit {
     fichaPosible.activa = false;
   }
   abreCierraFicha(key) {
-    this.openFicha = !this.openFicha;
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    if (
+      key == "colaOficio" &&
+      !this.modoEdicion
+    ) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
   }
