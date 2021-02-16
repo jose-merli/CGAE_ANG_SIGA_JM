@@ -6,8 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./input-dividido.component.scss']
 })
 export class InputDivididoComponent implements OnInit {
-  @Input() titulo="";
-  tituloVacio=" ";
+  @Input() titulo = "";
   constructor() { }
 
   ngOnInit(): void {

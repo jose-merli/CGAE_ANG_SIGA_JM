@@ -433,7 +433,11 @@ import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './moc
 import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
 import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
 import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
-import { FichaDesignaciónOficioComponent } from './mockups/ficha-designación-oficio/ficha-designación-oficio.component';
+import { FichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
 
 
 
@@ -818,7 +822,11 @@ import { FichaDesignaciónOficioComponent } from './mockups/ficha-designación-o
 		DetalleTarjetaJustificacionFichaActuacionOficioComponent,
 		DetalleTarjetaGestionFichaActuacionOficoComponent,
 		DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent,
-		FichaDesignaciónOficioComponent,
+		FichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 	],
 	imports: [
 		BrowserModule,
