@@ -420,6 +420,29 @@ import { AplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicaci
 import { ResultadoAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/resultado-aplicacionEnPagos/resultado-aplicacionEnPagos.component';
 import { BusquedaAplicacionEnPagosComponent } from './mockups/pantalla-busqueda-aplicacion-en-pagos/busqueda-aplicacionEnPagos/busqueda-aplicacionEnPagos.component';
 import { BuscadorAsistenciaExpresComponent } from './mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component';
+import { PantallaCalendariosComponent } from './mockups/pantalla-calendarios/pantalla-calendarios.component';
+import { CalendariosComponent } from './mockups/pantalla-calendarios/calendarios/calendarios.component';
+import { ResultadoCalendariosComponent } from './mockups/pantalla-calendarios/resultado-calendarios/resultado-calendarios.component';
+import { BusquedaCalendariosComponent } from './mockups/pantalla-calendarios/busqueda-calendarios/busqueda-calendarios.component';
+import { FichaDesignacionesComponent } from './mockups/ficha-designaciones/ficha-designaciones.component';
+import { FichaContrariosComponent } from './mockups/ficha-contrarios/ficha-contrarios.component';
+import { FichaAsistenciaComponent } from './mockups/ficha-asistencia/ficha-asistencia.component';
+import { TarjetaAsistidoComponent } from './mockups/ficha-asistencia/tarjeta-asistido/tarjeta-asistido.component';
+import { TarjetaActuacionesComponent } from './mockups/ficha-asistencia/tarjeta-actuaciones/tarjeta-actuaciones.component';
+import { HoraComponent } from './mockups/shared/hora/hora.component';
+import { TarjetaDatosGeneralesAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaOtrosDatosComponent } from './mockups/ficha-asistencia/tarjeta-otros-datos/tarjeta-otros-datos.component';
+import { TarjetaRelacionesAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-relaciones/tarjeta-relaciones.component';
+import { TarjetaContrariosComponent } from './mockups/ficha-asistencia/tarjeta-contrarios/tarjeta-contrarios.component';
+import { TablaResultadoMixComponent } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix.component';
+import { TarjetaDocumentacionAsistenciaComponent } from './mockups/ficha-asistencia/tarjeta-documentacion-asistencia/tarjeta-documentacion-asistencia.component';
+import { FichaCalendarioProgramacionComponent } from './mockups/ficha-calendario-programacion/ficha-calendario-programacion.component';
+import { TablaResultadoMixFCService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-fc.service';
+import { TablaResultadoMixDAService } from './mockups/shared/tabla-resultado-mix/tabla-resultado-mix-da.service';
+import { TarjetaGuardiasCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-guardias-calendario/tarjeta-guardias-calendario.component';
+import { TarjetaDatosGeneralesCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-datos-generales-calendario/tarjeta-datos-generales-calendario.component';
+import { TarjetaDatosAdicionalesComponent } from './mockups/ficha-asistencia/tarjeta-datos-adicionales/tarjeta-datos-adicionales.component';
+import { TarjetaCaracteristicasComponent } from './mockups/ficha-asistencia/tarjeta-caracteristicas/tarjeta-caracteristicas.component';
 
 
 
@@ -790,7 +813,29 @@ import { BuscadorAsistenciaExpresComponent } from './mockups/pantalla-asistencia
 		PantallaAplicacionEnPagosComponent,
 		AplicacionEnPagosComponent,
 		ResultadoAplicacionEnPagosComponent,
-		BusquedaAplicacionEnPagosComponent
+		BusquedaAplicacionEnPagosComponent,
+		PantallaCalendariosComponent,
+		CalendariosComponent,
+		ResultadoCalendariosComponent,
+		BusquedaCalendariosComponent,
+		FichaDesignacionesComponent,
+		FichaContrariosComponent,
+		FichaAsistenciaComponent,
+		TarjetaAsistidoComponent,
+		TarjetaActuacionesComponent,
+		HoraComponent,
+		TarjetaDatosGeneralesAsistenciaComponent,
+		TarjetaOtrosDatosComponent,
+		TarjetaContrariosComponent,
+		TarjetaRelacionesAsistenciaComponent,
+		TablaResultadoMixComponent,
+		TarjetaRelacionesAsistenciaComponent,
+		TarjetaDocumentacionAsistenciaComponent,
+		FichaCalendarioProgramacionComponent,
+		TarjetaGuardiasCalendarioComponent,
+		TarjetaDatosGeneralesCalendarioComponent,
+		TarjetaDatosAdicionalesComponent,
+		TarjetaCaracteristicasComponent
 	],
 	imports: [
 		BrowserModule,
@@ -862,6 +907,8 @@ import { BuscadorAsistenciaExpresComponent } from './mockups/pantalla-asistencia
 		TrimPipePipe,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoDesplegableJEService,
+		TablaResultadoMixDAService,
+		TablaResultadoMixFCService,
 		OldSigaServices,
 		SigaServices,
 		CommonsService,

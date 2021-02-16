@@ -1,0 +1,83 @@
+<div #main [ngClass]="{'relative' : this.enableSticky}" id="fichaAsistencia">
+    <div #parent (scroll)="manageScroll($event, navbar)" style="overflow: scroll;">
+        <div id="top"></div>
+        <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+
+        <div *ngIf="tarjetaFija !== null" #navbar [ngClass]="{'absolute' : this.enableSticky}" id="navbar">
+
+            <div class="card" style="z-index: 2;">
+                <div class="card-body p-0">
+                    <mat-accordion class="example-headers-align" multi>
+                        <mat-expansion-panel [disabled]="true">
+                            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                                [expandedHeight]="'auto'">
+                                <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
+                                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono"
+                                    [enlaces]="tarjetaFija.enlaces" [fixed]="tarjetaFija.fixed" class="w-100"
+                                    (isOpen)="isOpenReceive($event)">
+                                </app-tarjeta>
+                            </mat-expansion-panel-header>
+                            <ng-template matExpansionPanelContent>
+                            </ng-template>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+
+        </div>
+
+        <div #content>
+            <div *ngFor="let tarj of listaTarjetas; let i = index;">
+                <div class="card" [id]="tarj.id">
+                    <div class="card-body p-0">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
+                                [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
+                                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
+                                    [expandedHeight]="'auto'">
+                                    <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
+                                        [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
+                                        [fixed]="tarj.fixed" class="w-100">
+                                    </app-tarjeta>
+                                </mat-expansion-panel-header>
+                                <ng-template matExpansionPanelContent>
+                                    <div *ngIf="tarj.nombre == 'Datos Generales'">
+                                        <app-tarjeta-datos-generales-asistencia></app-tarjeta-datos-generales-asistencia>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Colegiado'">
+                                        
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Otros Datos'">
+                                        <app-tarjeta-otros-datos></app-tarjeta-otros-datos>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Datos Adicionales'">
+                                        <app-tarjeta-datos-adicionales></app-tarjeta-datos-adicionales>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Relaciones'">
+                                        <app-tarjeta-relaciones-asistencia></app-tarjeta-relaciones-asistencia>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Asistido'">
+                                        <app-tarjeta-asistido></app-tarjeta-asistido>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Contrarios'">
+                                            <app-tarjeta-contrarios></app-tarjeta-contrarios>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Documentación'">
+                                        <app-tarjeta-documentacion-asistencia></app-tarjeta-documentacion-asistencia>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Características'">
+                                        <app-tarjeta-caracteristicas></app-tarjeta-caracteristicas>
+                                    </div>
+                                    <div *ngIf="tarj.nombre == 'Actuaciones'">
+                                        <app-tarjeta-actuaciones></app-tarjeta-actuaciones>
+                                    </div>
+                                </ng-template>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="down"></div>
+    </div>
+</div>

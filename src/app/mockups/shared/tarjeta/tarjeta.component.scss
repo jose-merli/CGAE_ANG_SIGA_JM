@@ -15,6 +15,9 @@
         font-size: 0.9rem;
         font-weight: bold;
     }
+    .right {
+        text-align: right;
+    }
 
     .campos {
     
@@ -107,6 +110,8 @@
         cursor: pointer !important;
     }
 }
-
+.spaceBet{
+    justify-content: space-between;
+}
 
   

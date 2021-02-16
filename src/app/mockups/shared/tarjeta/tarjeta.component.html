@@ -34,12 +34,14 @@
   </div>
 
   <div *ngIf="cardOpenState"
-    class="cabecera-tarjeta-abierta d-flex justify-content-start align-items-center tarjeta-abierta">
-
+    class="cabecera-tarjeta-abierta d-flex spaceBet align-items-center tarjeta-abierta">
+  <div>
     <div class="icono-wrapper">
       <i class="{{ icon }} icono"></i>
     </div>
     <label class="titulo-tarjeta">{{ cardTitle }}</label>
+  </div>
+  <div *ngIf="cardTitle == 'Asistido'" class="right mr-2"><a routerLink="/fichaJusticiable"></a>Ficha Justiciable</div>
 
   </div>
 </div>

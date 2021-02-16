@@ -1,0 +1,56 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+<div class="card">
+    <div class="card-body">
+
+        <div>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="changeTab()" class="mr-4"
+                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+        </div>
+
+        <app-busqueda-calendarios [datePickers]="datePickers" [selectores]="selectores" [inputs]="inputs"
+            [emptyAccordions]="emptyAccordions" (formulario)="saveForm($event)" [modoBusqueda]="modoBusqueda">
+        </app-busqueda-calendarios>
+
+    </div>
+
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button (click)="anadirIntegrante()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton type="button"
+            icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+            <button (click)="isRestablecer() " pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+            label="Limpiar"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}" (click)="showResponse()"
+                [disabled]="!cFormValidity"></button>
+        </div>
+    </div>
+</div>
+<div *ngIf="show">
+    <div class="card mt-3">
+        <div class="card-body">
+
+            <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
+
+            <app-resultado-calendarios [allSelected]="allSelected" [showResponse]="show" [cabeceras]="cabeceras" [elementos]="elementos"
+                [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)"></app-resultado-calendarios>
+                
+            <div>
+                <app-paginador [type]="'BOTTOM'"></app-paginador>
+            </div>
+        </div>
+        
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button [disabled]="isDisabled" pButton type="button"  icon="fa fa-download" iconPos="left"
+                label="Descargar LOG"></button>
+            <button pButton type="button" icon="fa fa-reply-all" iconPos="left"
+                label="Duplicar"></button>
+            <button  [disabled]="isDisabled" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+                label="Eliminar"></button>
+            <button pButton type="button" icon="fa fa-plus" iconPos="left"
+                label="Nuevo"></button>
+        </div>
+    </div>
+    </div>
+</div>

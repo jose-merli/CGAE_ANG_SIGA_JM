@@ -77,7 +77,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.rowGroups = this.rowGroupsAux.filter((row) => {
         data.push(row);
     });
+    console.log('data: ', data)
     data = data.slice();
+    console.log('data slice: ', data)
     if (!sort.active || sort.direction === '') {
       this.rowGroups = data;
       return;

@@ -1,0 +1,33 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<form [formGroup]="rForm">
+    <div class="row w-100 m-0">
+        <div class="bloque col-lg-7 col-md-7 col-sm-7 p-2">
+            <div class="form-row w-100">
+                <div class="form-group col-lg-4 col-md-4" *ngFor="let input of inputs1">
+                    <label>{{input.nombre}}</label>
+                    <input type="text" class="form-control" [placeholder]="input.valor" pInputText>
+                  </div>
+                  <div class="form-group col-lg-4 col-md-4" *ngFor="let selector of selectores1; let i = index;">
+                      <app-selector [i]="i" [selector]="selector"></app-selector>
+                  </div>
+            </div>
+        </div>
+        <div class="bloque col-lg-5 col-md-5 col-sm-5 p-2">
+          <div class="form-row w-100" *ngFor="let input of inputs2;">
+              <div class="form-group col-lg-8 col-md-8 w-100">
+                <label>{{input.nombre}}</label>
+                <textarea [rows]="5" [cols]="30" pInputTextarea autoResize="false" [placeholder]="input.valor"></textarea>
+              </div>
+            </div>
+        </div>
+  </div>
+</form>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', '')"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+      (click)="showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+  </div>
+</div>

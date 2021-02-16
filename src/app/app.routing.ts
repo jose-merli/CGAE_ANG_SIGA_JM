@@ -249,6 +249,12 @@ import { JustificacionExpresComponent } from "./mockups/pantalla-justificacion-e
 import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component";
 import { PantallaAplicacionEnPagosComponent } from "./mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component";
 import { BuscadorAsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
+import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
+import { CalendariosComponent } from "./mockups/pantalla-calendarios/calendarios/calendarios.component";
+import { FichaDesignacionesComponent } from "./mockups/ficha-designaciones/ficha-designaciones.component";
+import { FichaContrariosComponent } from "./mockups/ficha-contrarios/ficha-contrarios.component";
+import { FichaAsistenciaComponent } from "./mockups/ficha-asistencia/ficha-asistencia.component";
+import { FichaCalendarioProgramacionComponent } from "./mockups/ficha-calendario-programacion/ficha-calendario-programacion.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1352,7 +1358,30 @@ const appRoutes: Routes = [
 	{
 		path: 'pantallaAplicacionEnPagosComponent',
 		component: PantallaAplicacionEnPagosComponent
+	}, {
+		path: 'pantallaCalendariosComponent',
+		component: PantallaCalendariosComponent
+	},{
+		path: 'calendariosComponent',
+		component: CalendariosComponent
+	},{
+		path: 'fichaDesignacionesComponent',
+		component: FichaDesignacionesComponent
+	},{
+		path: 'fichaContrariosComponent',
+		component: FichaContrariosComponent
+	},{
+		path: 'fichaAsistenciaComponent',
+		component: FichaAsistenciaComponent
+	},{
+		path: 'fichaCalendarioProgramacionComponent',
+		component: 	FichaCalendarioProgramacionComponent
+
 	},
+
+	
+
+	
 
 	{ path: ' ', redirectTo: 'home' }
 ];
