@@ -34,7 +34,7 @@
           <br>
         </li>-->
         <li [ngClass]="{'menu-item-active': isRoute('/fichaActuacion')}" >
-          <a [routerLink]="['/fichaActuacion']">Ficha Actuación</a>
+          <a [routerLink]="['/fichaActuacion']">Ficha Actuación (Guardia)</a>
           <i class="fa fa-angle-right float-right"></i>
           <br>
         </li>
@@ -100,6 +100,11 @@
         </li>
         <li [ngClass]="{'menu-item-active': isRoute('/pantallaCalendarios')}" >
           <a [routerLink]="['/pantallaCalendarios']">Pantalla Calendarios</a>
+          <i class="fa fa-angle-right float-right"></i>
+          <br>
+        </li>
+        <li [ngClass]="{'menu-item-active': isRoute('/fichaActuacionOficio')}" >
+          <a [routerLink]="['/fichaActuacionOficio']">Ficha Actuación (Oficio)</a>
           <i class="fa fa-angle-right float-right"></i>
           <br>
         </li>

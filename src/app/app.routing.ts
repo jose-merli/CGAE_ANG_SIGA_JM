@@ -250,6 +250,7 @@ import { PantallaAplicacionEnPagosComponent } from "./mockups/pantalla-busqueda-
 import { BuscadorAsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
 import { TarjetaColaGuardiaComponent } from "./mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component";
 import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
+import { FichaActuacionOficioComponent } from "./mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1361,6 +1362,10 @@ const appRoutes: Routes = [
 	{
 		path: 'pantallaCalendarios',
 		component: PantallaCalendariosComponent
+	},
+	{
+		path: 'fichaActuacionOficio',
+		component: FichaActuacionOficioComponent
 	},
 
 	{ path: ' ', redirectTo: 'home' }

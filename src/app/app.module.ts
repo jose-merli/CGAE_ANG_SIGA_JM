@@ -428,6 +428,12 @@ import { DetalleTarjetaDatosGeneralesFichaActuacionComponent } from './mockups/f
 import { DetalleTarjetaJustificacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion.component';
 import { DetalleTarjetaHistoricoFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion.component';
 import { DetalleTarjetaDocumentacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion.component';
+import { FichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio.component';
+import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
+import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
+import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
+import { FichaDesignaciónOficioComponent } from './mockups/ficha-designación-oficio/ficha-designación-oficio.component';
 
 
 
@@ -807,6 +813,12 @@ import { DetalleTarjetaDocumentacionFichaActuacionComponent } from './mockups/fi
 		DetalleTarjetaJustificacionFichaActuacionComponent,
 		DetalleTarjetaHistoricoFichaActuacionComponent,
 		DetalleTarjetaDocumentacionFichaActuacionComponent,
+		FichaActuacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent,
+		DetalleTarjetaJustificacionFichaActuacionOficioComponent,
+		DetalleTarjetaGestionFichaActuacionOficoComponent,
+		DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent,
+		FichaDesignaciónOficioComponent,
 	],
 	imports: [
 		BrowserModule,
