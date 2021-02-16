@@ -138,6 +138,7 @@ export class GestionEjgComponent implements OnInit {
             //  }
           } else {
             //  hemos pulsado nuevo
+            this.router.navigate(["/gestionEjg"]);
             this.body = new EJGItem();
             this.modoEdicion = false;
           }

@@ -22,7 +22,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
-  body: EJGItem = new EJGItem();;
+  body: EJGItem = new EJGItem();
   bodyInicial: EJGItem;
   msgs = [];
   nuevo;
@@ -230,6 +230,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       }
     }
   }
+
   save(){
 
   }
