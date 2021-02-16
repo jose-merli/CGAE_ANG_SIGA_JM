@@ -252,6 +252,7 @@ import { TarjetaColaGuardiaComponent } from "./mockups/tarjeta-cola-guardia/tarj
 import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
 import { FichaActuacionOficioComponent } from "./mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component";
 import { FichaDesignacionOficioComponent } from "./mockups/ficha-designacion-oficio/ficha-designacion-oficio.component";
+import { FichaCambioLetradoComponent } from "./mockups/ficha-cambio-letrado/ficha-cambio-letrado.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1371,6 +1372,10 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaDesignacionOficio',
 		component: FichaDesignacionOficioComponent
+	},
+	{
+		path: 'fichaDesignacionOfiCambioLetrado',
+		component: FichaCambioLetradoComponent
 	},
 
 	{ path: ' ', redirectTo: 'home' }

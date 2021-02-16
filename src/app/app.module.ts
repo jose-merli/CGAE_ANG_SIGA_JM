@@ -438,6 +438,9 @@ import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './m
 import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
 import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
 import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
+import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
+import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
 
 
 
@@ -827,6 +830,9 @@ import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from '.
 		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		FichaCambioLetradoComponent,
+		DetalleTarjetaDatosRenuncianteComponent,
+		DetalleTarjetaDatosSustitutoComponent,
 	],
 	imports: [
 		BrowserModule,
