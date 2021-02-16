@@ -28,7 +28,8 @@
         </div>
       </div>
 
-      <div *ngIf="esFichaActiva('configuracioncolaoficio') && openFicha" class="card-body card-body-ficha">
+      <!-- esFichaActiva('configuracioncolaoficio') &&  -->
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
         <div class="form-row">
           <div class="form-group picklistcolaoficio col-lg-6 col-md-6">
             <p-pickList class="pick-sufijos" [source]="pesosExistentes" [target]="pesosSeleccionados" sourceHeader="{{ 'justiciaGratuita.oficio.turnos.pesosexistentes' | translate }}"

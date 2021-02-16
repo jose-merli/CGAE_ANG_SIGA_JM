@@ -42,7 +42,8 @@
       </div>
     </div>
     <!--cuerpo datos generales-->
-    <div *ngIf="esFichaActiva('tablacolaoficio') && openFicha" class="card-body card-body-ficha">
+    <!-- esFichaActiva('tablacolaoficio') && -->
+    <div *ngIf=" openFicha" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-2 col-md-2">
           <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }} (*)

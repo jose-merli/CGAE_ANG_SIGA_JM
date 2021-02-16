@@ -110,10 +110,9 @@ export class DatosGeneralesTurnosComponent implements OnInit {
       this.turnosItem = new TurnosItems();
     }
 
-    //Logica a revisar
     if (this.openGen == true) {
       if (this.openFicha == false) {
-        this.abreCierraFicha('generales')
+        this.abreCierraFicha('datosGenerales')
       }
     }
   }
@@ -122,7 +121,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     this.resaltadoDatosGenerales = true;
     let fichaPosible = this.getFichaPosibleByKey(key);
     if (
-      key == "generales" &&
+      key == "datosGenerales" &&
       !this.modoEdicion
     ) {
       fichaPosible.activa = !fichaPosible.activa;

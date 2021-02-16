@@ -224,7 +224,7 @@ export class FichaTurnosComponent implements OnInit {
 	  isCloseReceive(event) {
 		if (event != undefined) {
 		  	switch (event) {
-				case "generales":
+				case "datosGenerales":
 				this.openGen = this.manuallyOpened;
 				break;
 				case "configTurnos":
@@ -253,7 +253,7 @@ export class FichaTurnosComponent implements OnInit {
 		
 		if (event != undefined) {
 		  switch (event) {
-			case "generales":
+			case "datosGenerales":
 			  this.openGen = true;
 			  break;
 			case "configTurnos":

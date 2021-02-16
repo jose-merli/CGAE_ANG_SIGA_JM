@@ -2,12 +2,12 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>
-      {{ "menu.informesYcomunicaciones" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.informesYcomunicaciones.consultas" | translate }}
-      <i class="pl-1 fa fa-angle-right"></i>{{ "informesycomunicaciones.consultas.ficha.fichaConsulta" | translate }}
+      {{ "menu.justiciaGratuita" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.justiciaGratuita.TurnosOficio" | translate }}
+      <i class="pl-1 fa fa-angle-right"></i>{{ "menu.justiciaGratuita.Turnos" | translate }}
     </p>
   </div>
-  <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen" [chincheta]="true" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+  <app-tarjeta-resumen-fija class="pb-50" *ngIf="idTurno != undefined" [chincheta]="true" titulo="justiciaGratuita.oficio.turnos.inforesumen"
   [datos]="datosTarjetaResumen" [enlaces]="enlacesTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-datos-generales-consulta (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [turnosItem]="turnosItem" (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)" (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'" [openGen]="openGen"></app-datos-generales-consulta>
