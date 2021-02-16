@@ -241,7 +241,6 @@ import { FichaColegiadoComponent } from "./mockups/ficha-colegiado/ficha-colegia
 import { PantallaCertificacionComponent } from "./mockups/pantalla-certificacion/pantalla-certificacion.component";
 import { PantallaEjgComponent } from "./mockups/pantalla-ejg/pantalla-ejg.component";
 import { PantallaAsuntosComponent } from "./mockups/pantalla-asuntos/pantalla-asuntos.component";
-import { PantallaJustificacionExpresComponent } from "./mockups/pantalla-justificacion-expres/pantalla-justificacion-expres.component";
 import { PantallaFichaCertificacionComponent } from "./mockups/pantalla-ficha-certificacion/pantalla-ficha-certificacion.component";
 import { TarjetaRelacionesComponent } from "./mockups/mock-tarjeta-relaciones/tarjeta-relaciones/tarjeta-relaciones.component";
 import { FichaPredesignacionComponent } from "./mockups/ficha-predesignacion/ficha-predesignacion.component";
@@ -249,12 +248,16 @@ import { JustificacionExpresComponent } from "./mockups/pantalla-justificacion-e
 import { AsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/asistencia-expres.component";
 import { PantallaAplicacionEnPagosComponent } from "./mockups/pantalla-busqueda-aplicacion-en-pagos/pantalla-aplicacionEnPagos.component";
 import { BuscadorAsistenciaExpresComponent } from "./mockups/pantalla-asistencia-expres/asistencia-expres/buscadorAsistenciaExpres/buscador-asistencia-expres.component";
-import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
 import { CalendariosComponent } from "./mockups/pantalla-calendarios/calendarios/calendarios.component";
 import { FichaDesignacionesComponent } from "./mockups/ficha-designaciones/ficha-designaciones.component";
 import { FichaContrariosComponent } from "./mockups/ficha-contrarios/ficha-contrarios.component";
 import { FichaAsistenciaComponent } from "./mockups/ficha-asistencia/ficha-asistencia.component";
 import { FichaCalendarioProgramacionComponent } from "./mockups/ficha-calendario-programacion/ficha-calendario-programacion.component";
+import { TarjetaColaGuardiaComponent } from "./mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component";
+import { PantallaCalendariosComponent } from "./mockups/pantalla-calendarios/pantalla-calendarios.component";
+import { FichaActuacionOficioComponent } from "./mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component";
+import { FichaDesignacionOficioComponent } from "./mockups/ficha-designacion-oficio/ficha-designacion-oficio.component";
+import { FichaCambioLetradoComponent } from "./mockups/ficha-cambio-letrado/ficha-cambio-letrado.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1378,10 +1381,27 @@ const appRoutes: Routes = [
 		component: 	FichaCalendarioProgramacionComponent
 
 	},
+	{
+		path: 'tarjetaColaGuardia',
+		component: TarjetaColaGuardiaComponent
+	},
+	{
+		path: 'pantallaCalendarios',
+		component: PantallaCalendariosComponent
+	},
+	{
+		path: 'fichaActuacionOficio',
+		component: FichaActuacionOficioComponent
+	},
+	{
+		path: 'fichaDesignacionOficio',
+		component: FichaDesignacionOficioComponent
+	},
+	{
+		path: 'fichaDesignacionOfiCambioLetrado',
+		component: FichaCambioLetradoComponent
+	},
 
-	
-
-	
 
 	{ path: ' ', redirectTo: 'home' }
 ];

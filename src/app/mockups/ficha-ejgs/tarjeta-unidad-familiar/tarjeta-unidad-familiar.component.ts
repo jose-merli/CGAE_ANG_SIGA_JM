@@ -13,53 +13,53 @@ export class TarjetaUnidadFamiliarComponent implements OnInit {
 
   cabeceras = [
     {
-      id: "nif",
-      name: "NIF"
+      id: "identificador",
+      name: "Identificador"
     },
     {
-      id: "nombre",
-      name: "Nombre"
+      id: "apellidosnombre",
+      name: "Apellidos, Nombre"
     },
     {
-      id: "apellidos",
-      name: "Apellidos"
+      id: "direccion",
+      name: "Dirección"
     },
     {
-      id: "fechaAlta",
-      name: "Fecha Alta"
+      id: "rol",
+      name: "Rol"
     },
     {
-      id: "cargos",
-      name: "Cargos"
+      id: "relacionadocon",
+      name: "Relacionado con"
     },
     {
-      id: "estado",
-      name: "Estado"
+      id: "parentesco",
+      name: "Parentesco"
     },
     {
-      id: "participación",
-      name: "Participación"
+      id: "expedienteeconomico",
+      name: "Expediente económico"
     }
   ];
   elementos = [
-    ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
-    ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
+    ['78900234T', "SFSFSAF DSGSDGSG, VICTOR JAVIER", "C/ LA SERNA Nº 10", "SOLICITANTE", "BJXNVBWLZ RJJFJKM, PEDRO MARIA", "", 'No solicitado'],
+    ['78900234T', "ASWDFASG RETGAEWRT, MARIA TERESA", "C/ LA SERNA Nº 10", "SOLICITANTE", "BJXNVBWLZ RJJFJKM, PEDRO MARIA", "", 'No solicitado'],
   ];
   elementosAux = [
-    ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
-    ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
+    ['78900234T', "SFSFSAF DSGSDGSG, VICTOR JAVIER", "C/ LA SERNA Nº 10", "SOLICITANTE", "BJXNVBWLZ RJJFJKM, PEDRO MARIA", "", 'No solicitado'],
+    ['78900234T', "ASWDFASG RETGAEWRT, MARIA TERESA", "C/ LA SERNA Nº 10", "SOLICITANTE", "BJXNVBWLZ RJJFJKM, PEDRO MARIA", "", 'No solicitado'],
   ];
 
   constructor() { }
 
   ngOnInit() {
   }
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
     this.isDisabled = !event;
   }
-  notifyAnySelected(event){
-    if (this.allSelected || event){
+  notifyAnySelected(event) {
+    if (this.allSelected || event) {
       this.isDisabled = false;
     } else {
       this.isDisabled = true;

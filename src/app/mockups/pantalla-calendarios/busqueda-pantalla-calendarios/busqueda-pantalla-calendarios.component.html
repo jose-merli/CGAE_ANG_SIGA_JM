@@ -1,0 +1,28 @@
+<div id="busquedaPantallaCalendarios">
+  <form [formGroup]="cForm">
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel class="my-1" [expanded]="expanded">
+        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+          <div class="w100 font-weight-bold">
+            <p class="w100">Destinatario</p>
+          </div>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+
+          <div class="form-row">
+
+            <div class="form-group-interlineado col-lg-3 col-md-3" *ngFor="let selector of selectores1; let i = index;">
+              <app-selector [i]="i" [selector]="selector"></app-selector>
+            </div>
+
+            <div class="form-group-interlineado col-lg-6 col-md-6" *ngFor="let datePickerTitle of datePickers1">
+              <app-date-picker-range [datePickerTitle]="datePickerTitle"></app-date-picker-range>
+            </div>
+
+          </div>
+
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </form>
+</div>

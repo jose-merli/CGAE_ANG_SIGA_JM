@@ -22,6 +22,12 @@ export class TablaResultadoDesplegableJEService {
         "D2019/2345676 - 03/04/2020": [
           {
             a1: [
+              { type: 'text', value: 'E2018/2323' },
+              { type: 'text', value: 'SUEICVRE IBPPBT, JUAN MANUEL' },
+              { type: 'checkbox', value: 'No' },
+              { type: 'text', value: 'JUZGADO INSTRUCCIÓN Nº4' },
+              { type: 'text', value: '2433423423442' },
+              { type: 'text', value: 'P.A. 1521/16 R' },
               { type: 'select', value: '(B-17) 1238' },
               { type: 'datePicker', value: '05/04/2020' },
               { type: 'text', value: '08/04/2020' },
@@ -31,6 +37,12 @@ export class TablaResultadoDesplegableJEService {
           },
           {
             a2: [
+              { type: 'text', value: 'E2018/2323' },
+              { type: 'text', value: 'SUEICVRE IBPPBT, JUAN MANUEL' },
+              { type: 'checkbox', value: 'No' },
+              { type: 'text', value: 'JUZGADO INSTRUCCIÓN Nº4' },
+              { type: 'text', value: '2433423423442' },
+              { type: 'text', value: 'P.A. 1521/16 R' },
               { type: 'text', value: '(B-17) 1538' },
               { type: 'checkbox', value: 'No' },
               { type: 'text', value: '09/04/2020' },
@@ -40,6 +52,12 @@ export class TablaResultadoDesplegableJEService {
           },
           {
             a3: [
+              { type: 'text', value: 'E2018/2323' },
+              { type: 'text', value: 'SUEICVRE IBPPBT, JUAN MANUEL' },
+              { type: 'checkbox', value: 'Si' },
+              { type: 'text', value: 'JUZGADO INSTRUCCIÓN Nº4' },
+              { type: 'text', value: '2433423423442' },
+              { type: 'text', value: 'P.A. 1521/16 R' },
               { type: 'text', value: '(B-17) 1638' },
               { type: 'text', value: '06/04/2020' },
               { type: 'text', value: '09/04/2020' },
@@ -53,6 +71,12 @@ export class TablaResultadoDesplegableJEService {
         "D2019/3565676 - 06/04/2020": [
           {
             b1: [
+              { type: 'text', value: 'E2018/343' },
+              { type: 'text', value: 'BIGGYCH NOKTHYOP, PEDRO' },
+              { type: 'checkbox', value: 'No' },
+              { type: 'text', value: 'JUZGADO INSTRUCCIÓN Nº4' },
+              { type: 'text', value: '2433423423442' },
+              { type: 'text', value: 'D.U. 39/19' },
               { type: 'select', value: '(B-17) 1938' },
               { type: 'datePicker', value: '07/04/2020' },
               { type: 'text', value: '10/04/2020' },
@@ -62,6 +86,12 @@ export class TablaResultadoDesplegableJEService {
           },
           {
             b2: [
+              { type: 'text', value: 'E2018/343' },
+              { type: 'text', value: 'BIGGYCH NOKTHYOP, PEDRO' },
+              { type: 'checkbox', value: 'Si' },
+              { type: 'text', value: 'JUZGADO INSTRUCCIÓN Nº4' },
+              { type: 'text', value: '2433423423442' },
+              { type: 'text', value: 'D.U. 39/19' },
               { type: 'text', value: '(B-18) 2338' },
               { type: 'text', value: '12/04/2020' },
               { type: 'checkbox', value: '' },
@@ -71,6 +101,12 @@ export class TablaResultadoDesplegableJEService {
           },
           {
             b3: [
+              { type: 'text', value: 'E2018/343' },
+              { type: 'text', value: 'BIGGYCH NOKTHYOP, PEDRO' },
+              { type: 'checkbox', value: 'No' },
+              { type: 'text', value: 'JUZGADO INSTRUCCIÓN Nº4' },
+              { type: 'text', value: '2433423423442' },
+              { type: 'text', value: 'D.U. 39/19' },
               { type: 'text', value: '(B-18) 8648' },
               { type: 'text', value: '01/04/2020' },
               { type: 'text', value: '02/04/2020' },
@@ -82,7 +118,7 @@ export class TablaResultadoDesplegableJEService {
       },
     ],
   };
-  constructor() {}
+  constructor() { }
 
   public getTableData() {
     let rowGroups: RowGroup[] = [];

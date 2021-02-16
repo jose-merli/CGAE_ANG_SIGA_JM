@@ -16,8 +16,7 @@
 
 ::ng-deep {
 
-  #busquedaAppPagos{
-
+  #busquedaAplicacionEnPagos {
     .mat-expansion-panel {
       box-shadow: none !important;
     }
@@ -25,6 +24,7 @@
     .mat-expansion-panel-header {
       padding-right: 0px !important;
       padding-left: 0px !important;
+      border-bottom: 1px solid black;
     }
 
     .mat-expansion-panel-body {

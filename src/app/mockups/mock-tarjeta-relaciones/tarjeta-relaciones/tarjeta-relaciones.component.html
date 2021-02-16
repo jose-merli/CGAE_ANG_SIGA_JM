@@ -4,12 +4,10 @@
       <div class="card-body p-0">
         <mat-accordion class="example-headers-align" multi>
           <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
-            [disabled]="tarj.fixed || !tarj.detalle" [ngClass]="{'tarjetaFija': tarj.fixed}">
+            [disabled]="tarj.fixed || !tarj.detalle">
             <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-              <!-- <app-tarjeta [imagen]="tarj.imagen" [tipo]="tarj.tipo" [nombre]="tarj.nombre" [campos]="tarj.campos"></app-tarjeta> -->
-              <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
-                [icon]="tarj.icono" [cardOpenState]="tarj.opened" [enlaces]="tarj.enlaces" [fixed]="tarj.fixed"
-                class="w-100">
+              <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos" [icon]="tarj.icono"
+                [cardOpenState]="tarj.opened" [enlaces]="tarj.enlaces" [fixed]="tarj.fixed" class="w-100">
               </app-tarjeta>
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
@@ -17,7 +15,8 @@
                 <app-paginador (seleccionarTodo)="selectedAll($event)" [type]="'TOP'"></app-paginador>
               </div>
               <div>
-                <app-tabla-resultado [allSelected]="allSelected" [cabeceras]="cabeceras" [elementos]="elementos" [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)">
+                <app-tabla-resultado [allSelected]="allSelected" [cabeceras]="cabeceras" [elementos]="elementos"
+                  [elementosAux]="elementosAux" (anySelected)="notifyAnySelected($event)">
                 </app-tabla-resultado>
               </div>
               <div class="padding-interior">

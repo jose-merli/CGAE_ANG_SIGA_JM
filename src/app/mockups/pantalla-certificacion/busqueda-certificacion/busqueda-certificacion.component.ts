@@ -8,6 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class BusquedaCertificacionComponent implements OnInit {
   @Output() formulario = new EventEmitter<boolean>();
+  expanded = true;
   cForm = new FormGroup({
     numColegiado: new FormControl(''),
     nombreAp: new FormControl(''),

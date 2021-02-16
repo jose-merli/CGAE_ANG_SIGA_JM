@@ -359,7 +359,6 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { BuscadorColegialComponent } from './mockups/buscadorColegial/buscador-colegial.component';
-
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -443,6 +442,27 @@ import { TarjetaGuardiasCalendarioComponent } from './mockups/ficha-calendario-p
 import { TarjetaDatosGeneralesCalendarioComponent } from './mockups/ficha-calendario-programacion/tarjeta-datos-generales-calendario/tarjeta-datos-generales-calendario.component';
 import { TarjetaDatosAdicionalesComponent } from './mockups/ficha-asistencia/tarjeta-datos-adicionales/tarjeta-datos-adicionales.component';
 import { TarjetaCaracteristicasComponent } from './mockups/ficha-asistencia/tarjeta-caracteristicas/tarjeta-caracteristicas.component';
+import { TarjetaColaGuardiaComponent } from './mockups/tarjeta-cola-guardia/tarjeta-cola-guardia.component';
+import { BusquedaPantallaCalendariosComponent } from './mockups/pantalla-calendarios/busqueda-pantalla-calendarios/busqueda-pantalla-calendarios.component';
+import { ResultadoPantallaCalendariosComponent } from './mockups/pantalla-calendarios/resultado-pantalla-calendarios/resultado-pantalla-calendarios.component';
+import { DetalleTarjetaDatosGeneralesFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion/detalle-tarjeta-datos-generales-ficha-actuacion.component';
+import { DetalleTarjetaJustificacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion/detalle-tarjeta-justificacion-ficha-actuacion.component';
+import { DetalleTarjetaHistoricoFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion/detalle-tarjeta-historico-ficha-actuacion.component';
+import { DetalleTarjetaDocumentacionFichaActuacionComponent } from './mockups/ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion/detalle-tarjeta-documentacion-ficha-actuacion.component';
+import { FichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/ficha-actuacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio/detalle-tarjeta-datos-generales-ficha-actuacion-oficio.component';
+import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
+import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
+import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
+import { FichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
+import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
+import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
+
 
 
 
@@ -835,7 +855,28 @@ import { TarjetaCaracteristicasComponent } from './mockups/ficha-asistencia/tarj
 		TarjetaGuardiasCalendarioComponent,
 		TarjetaDatosGeneralesCalendarioComponent,
 		TarjetaDatosAdicionalesComponent,
-		TarjetaCaracteristicasComponent
+		TarjetaCaracteristicasComponent,
+		TarjetaColaGuardiaComponent,
+		PantallaCalendariosComponent,
+		BusquedaPantallaCalendariosComponent,
+		ResultadoPantallaCalendariosComponent,
+		DetalleTarjetaDatosGeneralesFichaActuacionComponent,
+		DetalleTarjetaJustificacionFichaActuacionComponent,
+		DetalleTarjetaHistoricoFichaActuacionComponent,
+		DetalleTarjetaDocumentacionFichaActuacionComponent,
+		FichaActuacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent,
+		DetalleTarjetaJustificacionFichaActuacionOficioComponent,
+		DetalleTarjetaGestionFichaActuacionOficoComponent,
+		DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent,
+		FichaDesignacionOficioComponent,
+		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
+		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
+		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
+		FichaCambioLetradoComponent,
+		DetalleTarjetaDatosRenuncianteComponent,
+		DetalleTarjetaDatosSustitutoComponent,
 	],
 	imports: [
 		BrowserModule,

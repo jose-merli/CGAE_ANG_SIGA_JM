@@ -13,7 +13,6 @@ export class TarjetaRelacionesComponent implements OnInit {
       nombre: "Relaciones",
       imagen: "",
       icono: 'fas fa-link',
-      tipo: "detalle",
       fixed: false,
       detalle: true,
       campos: [
@@ -24,45 +23,6 @@ export class TarjetaRelacionesComponent implements OnInit {
       ]
     }
   ];
-
-  /*cabeceras = [
-    {
-      id: "nif",
-      name: "NIF"
-    },
-    {
-      id: "nombre",
-      name: "Nombre"
-    },
-    {
-      id: "apellidos",
-      name: "Apellidos"
-    },
-    {
-      id: "fechaAlta",
-      name: "Fecha Alta"
-    },
-    {
-      id: "cargos",
-      name: "Cargos"
-    },
-    {
-      id: "estado",
-      name: "Estado"
-    },
-    {
-      id: "participación",
-      name: "Participación"
-    }
-  ];
-  elementos = [
-    ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
-    ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
-  ];
-  elementosAux = [
-    ['78900234T', "VICTOR JAVIER", "SFSFSAF DSGSDGSG", "06/02/2019", "Administrador", "Ejerciente", ""],
-    ['23768954R', "MARIA TERESA", "ASWDFASG RETGAEWRT", "08/02/2019", "Administrador", "Ejerciente", ""]
-  ];*/
 
   cabeceras = [
     {
@@ -106,7 +66,7 @@ export class TarjetaRelacionesComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  selectedAll(event){
+  selectedAll(event) {
     this.allSelected = event;
   }
 }

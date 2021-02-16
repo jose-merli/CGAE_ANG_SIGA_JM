@@ -19,4 +19,5 @@ export class SelectorComponent implements OnInit {
     // Pasamos el valor seleccionado a la variable verSeleccion
     this.verSeleccion = this.opcionSeleccionado;
   }
+
 }

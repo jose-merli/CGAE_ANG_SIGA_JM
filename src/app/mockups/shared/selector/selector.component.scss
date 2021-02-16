@@ -2,14 +2,23 @@
     width: 81%;
   }
 
-::ng-deep .ui-placeholder{
-    text-overflow: ellipsis !important;
-    max-width: 160px !important;
-  }
 .center {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0;
+}
+
+::ng-deep {
+
+  #tablaResultadoDesplegable {
+
+    .ui-placeholder{
+      text-overflow: ellipsis !important;
+      max-width: 160px !important;
+    }
+    
+  }
+
 }
 

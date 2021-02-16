@@ -196,7 +196,7 @@ export class FichaAsistenciaComponent implements OnInit {
       fixed: false,
       opened: false,
       campos: []
-    }
+    },
     {
       id: 'sjcsEjgsfichAsistCar',
       nombre: "Características",

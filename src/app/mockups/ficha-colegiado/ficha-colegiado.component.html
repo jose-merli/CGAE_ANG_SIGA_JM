@@ -1,7 +1,7 @@
-<div #main [ngClass]="{'relative' : this.enableSticky}" id="fichaColegiado">
-    <div #parent (scroll)="manageScroll($event, navbar)" style="overflow: scroll;">
+<div id="fichaColegiado">
+    <div>
         <div id="top"></div>
-        <div *ngIf="tarjetaFija !== null" #navbar [ngClass]="{'absolute' : this.enableSticky}" id="navbar">
+        <div *ngIf="tarjetaFija !== null" id="navbar" class="tarjetaFija">
 
             <div class="card" style="z-index: 2;">
                 <div class="card-body p-0">
@@ -24,7 +24,7 @@
 
         </div>
 
-        <div #content>
+        <div>
             <div *ngFor="let tarj of listaTarjetas; let i = index;">
                 <div class="card" [id]="tarj.id">
                     <div class="card-body p-0">
