@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GestionEjgComponent } from './ejg/gestion-ejg/gestion-ejg.component';
+import { FichaEjgsComponent } from './ejg/ficha/ficha-ejgs.component';
 import { AuthGuard } from '../../_guards/auth.guards';
 
 const routesSjcs: Routes = [
@@ -76,7 +76,7 @@ const routesSjcs: Routes = [
 	},
 	{
 		path: 'gestionEjg',
-		component: GestionEjgComponent,
+		component: FichaEjgsComponent,
 		canActivate: [AuthGuard]
 	},
 ];

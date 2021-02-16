@@ -1,13 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_BASE_HREF, DatePipe } from '@angular/common';
 import { ValidationModule } from './commons/validation/validation.module';
 import { MenubarModule } from 'primeng/menubar';
 import { PanelMenuModule } from 'primeng/panelmenu';
-import { MenuItem } from 'primeng/api';
 import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { DialogModule } from "primeng/dialog";
@@ -37,9 +35,7 @@ import { LoginComponent } from './commons/login/login.component';
 import { LoginDevelopComponent } from './commons/login-develop/login-develop.component';
 import { LoginMultipleComponent } from './commons/login-multiple/login-multiple.component';
 import { LogoutComponent } from './commons/logout/logout.component';
-import { TranslatePipe, TranslateService } from './commons/translate';
 import { ImagePipe } from './commons/image-pipe/image.pipe';
-import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { TreeModule } from 'primeng/tree';
 import { BusquedaColegiadoExpressModule } from './commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
@@ -185,14 +181,12 @@ import { JustificacionComponent } from './features/sjcs/justificacion/justificac
 import { CertificacionComponent } from './features/sjcs/certificacion/certificacion.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
-import { RetencionesIRPFComponent } from './features/sjcs/maestros/retenciones-IRPF/retenciones-IRPF.component';
 import { CalendarioLaboralComponent } from './features/sjcs/maestros/calendarioLaboral/calendarioLaboral.component';
 import { MantenimientoProcuradoresComponent } from './features/sjcs/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
 import { MantenimientoPrisionesComponent } from './features/sjcs/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
 import { MantenimientoComisariasComponent } from './features/sjcs/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component';
 import { MantenimientoJuzgadosComponent } from './features/sjcs/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
 import { MaestroPJComponent } from './features/sjcs/maestros/maestro-pj/maestro-pj.component';
-import { DestinatariosRetencionesComponent } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { GestionActasComponent } from './features/sjcs/gestion-actas/gestion-actas.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
@@ -341,10 +335,16 @@ import { GeneralSJCSModule } from './commons/busqueda-generalSJCS/busqueda-gener
 import { BusquedaAsuntosModule } from './commons/busqueda-asuntos/busqueda-asuntos.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 
-
-
-
-
+//angular material
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
 	declarations: [
@@ -627,7 +627,6 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		DatosColegialesFichaColegialComponent,
 		OtrasColegiacionesFichaColegialComponent,
 		ServiciosInteresFichaColegialComponent,
-		//TarjetaResumenFijaComponent
 		BuscadorProcuradoresComponent,
 		FiltroBuscadorProcuradorComponent,
 		TablaBuscadorProcuradorComponent,
@@ -687,7 +686,16 @@ import { PipeTranslationModule } from './commons/translate/pipe-translation.modu
 		// BusquedaAsuntosModule,
 		EditorModule,
 		SjcsModule,
-		BusquedaAsuntosModule
+		BusquedaAsuntosModule,
+		MatSelectModule,
+		MatSortModule,
+		MatTableModule,
+		MatExpansionModule,
+		MatPaginatorModule,
+		MatCheckboxModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		MatInputModule
 	],
 
 	exports: [],
