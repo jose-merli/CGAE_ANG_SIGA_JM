@@ -6,16 +6,6 @@
         <app-filtro-busqueda-ejg [selectorEstados]="selectorEstados" [datePickers]="datePickers" [selectores]="selectores"
             [inputs]="inputs" (formulario)="saveForm($event)"></app-filtro-busqueda-ejg>
     </div>
-    <div class="card-footer">
-        <div class="text-right main-button">
-            <button pButton type="button" icon="fas fa-eraser" iconPos="left" label="Limpiar"
-                (click)="hideResponse()"></button>
-            <button pButton type="button" icon="fas fa-search" iconPos="left" label="Buscar"
-                (click)="showResponse();showMsg('info', 'Mostrando información buscada', '')"
-                [disabled]="!cFormValidity"></button>
-            <button pButton type="button" icon="fas fa-plus" iconPos="left" label="Nuevo"></button>
-        </div>
-    </div>
 </div>
 
 <div *ngIf="show">

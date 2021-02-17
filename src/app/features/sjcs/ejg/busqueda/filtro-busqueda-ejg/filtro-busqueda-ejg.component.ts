@@ -1,5 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-filtro-busqueda-ejg',
@@ -8,7 +12,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class FiltroBusquedaEJGComponent implements OnInit {
 
+  
+  body: EJGItem = new EJGItem();
+
   expanded = true;
+
   @Output() formulario = new EventEmitter<boolean>();
   cForm = new FormGroup({
     anio: new FormControl(''),
@@ -32,9 +40,19 @@ export class FiltroBusquedaEJGComponent implements OnInit {
   inputs2 = [];
   inputs3 = [];
 
-  constructor() { }
+
+  cFormValidity = true;
+  
+  @ViewChild('inputNumero') inputNumero: ElementRef;
+
+  constructor(
+    private persistenceService: PersistenceService,
+    private router: Router,
+    private commonsService: CommonsService
+    ) { }
 
   ngOnInit(): void {
+    
     for (let i = 0; i < this.selectores.length; i++) {
       this.selectores1 = this.selectores[0];
       this.selectores2 = this.selectores[1];
@@ -53,9 +71,37 @@ export class FiltroBusquedaEJGComponent implements OnInit {
       this.inputs2 = this.inputs[1];
       this.inputs3 = this.inputs[2];
     }
+
+    setTimeout(() => {
+      this.inputNumero.nativeElement.focus();
+    }, 300);
+    this.body.annio = new Date().getFullYear().toString();
+    
   }
 
   sendFom(value: FormGroup) {
     this.formulario.emit(value.valid)
+  }
+
+  clear() {
+    this.body = new EJGItem();
+    this.persistenceService.clearFiltros();
+    this.inputNumero.nativeElement.focus();
+    this.body.annio = new Date().getFullYear().toString();
+    this.commonsService.scrollTop();
+  }
+
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+  
+  nuevoEJG(){
+    this.persistenceService.clearDatos();
+    this.router.navigate(["/gestionEjg"]);
   }
 }

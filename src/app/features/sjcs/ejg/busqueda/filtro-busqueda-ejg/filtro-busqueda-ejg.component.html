@@ -13,12 +13,12 @@
                         <div class="form-group-interlineado col-lg-4 col-md-4">
                             <div class="form-row">
                                 <div class="col-lg-4 col-md-4 pl5">
-                                    <label>Año</label>
-                                    <input type="text" class="form-control" pInputText formControlName="anio">
+                                    <label><strong>Año</strong></label>
+                                    <input type="text" class="form-control" [(ngModel)]="body.annio" pInputText formControlName="anio">
                                 </div>
                                 <div class="col-log-8 col-md-8 pr5">
                                     <label>Número</label>
-                                    <input type="text" class="form-control" pInputText formControlName="numero">
+                                    <input type="text" class="form-control" pInputText [(ngModel)]="body.numero" #inputNumero formControlName="numero">
                                 </div>
                             </div>
                         </div>
@@ -178,6 +178,16 @@
             </mat-expansion-panel>
         </mat-accordion>
 
+        <div class="card-footer">
+            <div class="text-right main-button">
+                <button pButton type="button" icon="fas fa-eraser" iconPos="left" label="Limpiar"
+                    (click)="clear()"></button>
+                <button pButton type="button" icon="fas fa-search" iconPos="left" label="Buscar"
+                    (click)="showResponse();showMsg('info', 'Mostrando información buscada', '')"
+                    [disabled]="!cFormValidity"></button>
+                <button pButton type="button" icon="fas fa-plus" iconPos="left" label="Nuevo" (click)="nuevoEJG()"></button>
+            </div>
+        </div>
     </form>
 
 </div>
