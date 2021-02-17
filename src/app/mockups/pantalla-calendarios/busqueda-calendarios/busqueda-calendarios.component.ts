@@ -8,13 +8,15 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class BusquedaCalendariosComponent implements OnInit {
 
+  expanded = true;
+
   @Output() formulario = new EventEmitter<boolean>();
   cForm = new FormGroup({
     NIF: new FormControl(''),
     Apellidos: new FormControl(''),
     Nombre: new FormControl(''),
   });
-  
+
   @Input() selectores = [];
   @Input() datePickers = [];
   @Input() inputs = [];

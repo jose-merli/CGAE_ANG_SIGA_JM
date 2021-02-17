@@ -1,46 +1,11 @@
-.borderBottom{
-    border-bottom: 1px solid black;
-}
-.right {
-    text-align: right;
-}
-.borderRight{
-    border-left: 1x solid grey;
-    height: 200px;
-}
-.inline{
+.inline {
     display: inline-flex
 }
-.toBottom{
+
+.toBottom {
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
-}
-::ng-deep {
-
-    #detalleTarjetaFicPre {
-
-        .mat-expansion-panel {
-            box-shadow: none !important;
-        }
-    
-        .mat-expansion-panel-header {
-            padding: 0.5rem 1rem 0.5rem .67rem !important;
-        }
-    
-        .mat-expansion-panel-body {
-            padding-left: 0px !important;
-            padding-right: 0px !important;
-            padding-top: 0.6rem !important;
-        }
-    
-        div.mat-expansion-panel-content {
-            margin-top: 0.5rem !important;
-            border-top: 1px solid  #E3E9F6;
-        }
-
-    }
-    
 }
 
 .padding-interior {
@@ -50,18 +15,26 @@
 
 .bloque {
     border-right: 1px solid #c6c7c8;
-	padding: 0.5rem 2rem;
+    padding: 0.5rem 2rem;
 
     &:last-child {
         border-right: none;
     }
+
     &:first-child {
         padding-left: 0.5rem;
     }
 
     .image-wrapper {
         border-radius: 0%;
-		width: 100%;
-		position: relative;
+        width: 100%;
+        position: relative;
     }
+}
+
+.icon-search {
+    height: 27.38px;
+    display: flex;
+    justify-content: center;
+    color: linear-gradient(to top, rgba(0, 67, 117, .9) 0%, rgba(0, 67, 117, 1) 100%);
 }

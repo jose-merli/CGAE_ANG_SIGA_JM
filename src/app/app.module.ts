@@ -454,11 +454,10 @@ import { DetalleTarjetaDatosGeneralesFichaActuacionOficioComponent } from './moc
 import { DetalleTarjetaJustificacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio/detalle-tarjeta-justificacion-ficha-actuacion-oficio.component';
 import { DetalleTarjetaGestionFichaActuacionOficoComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-gestion-ficha-actuacion-ofico/detalle-tarjeta-gestion-ficha-actuacion-ofico.component';
 import { DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent } from './mockups/ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio/detalle-tarjeta-datos-facturacion-ficha-actuacion-oficio.component';
-import { FichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/ficha-designacion-oficio.component';
-import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
-import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
-import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
-import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './mockups/ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-datos-generales-ficha-designacion-oficio/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-detalle-ficha-designacion-oficio/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio/detalle-tarjeta-datos-adicionales-ficha-designacion-oficio.component';
+import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from './mockups/ficha-designaciones/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio/detalle-tarjeta-datos-facturacion-ficha-designacion-oficio.component';
 import { FichaCambioLetradoComponent } from './mockups/ficha-cambio-letrado/ficha-cambio-letrado.component';
 import { DetalleTarjetaDatosRenuncianteComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-renunciante/detalle-tarjeta-datos-renunciante.component';
 import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-letrado/detalle-tarjeta-datos-sustituto/detalle-tarjeta-datos-sustituto.component';
@@ -869,7 +868,6 @@ import { DetalleTarjetaDatosSustitutoComponent } from './mockups/ficha-cambio-le
 		DetalleTarjetaJustificacionFichaActuacionOficioComponent,
 		DetalleTarjetaGestionFichaActuacionOficoComponent,
 		DetalleTarjetaDatosFacturacionFichaActuacionOficioComponent,
-		FichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
 		DetalleTarjetaDetalleFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent,
