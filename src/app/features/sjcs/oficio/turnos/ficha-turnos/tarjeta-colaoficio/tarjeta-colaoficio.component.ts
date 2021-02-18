@@ -15,6 +15,7 @@ import { TurnosObject } from '../../../../../../models/sjcs/TurnosObject';
 import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { Router } from '../../../../../../../../node_modules/@angular/router';
 @Component({
   selector: "app-tarjeta-colaoficio",
   templateUrl: "./tarjeta-colaoficio.component.html",
@@ -90,7 +91,10 @@ export class TarjetaColaOficio implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService,
+    private router: Router) {
+      
+     }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -110,6 +114,7 @@ export class TarjetaColaOficio implements OnInit {
           if (this.persistenceService.getDatos() != undefined) {
             this.turnosItem = this.persistenceService.getDatos();
           }
+          // turnosItem.fechabaja tiene valor null
           if (this.turnosItem.fechabaja != undefined) {
             this.disableAll = true;
           }
@@ -233,9 +238,12 @@ export class TarjetaColaOficio implements OnInit {
     this.body = new TurnosObject();
     this.body.turnosItem = this.selectedDatos;
 
-    this.sigaServices.post("turnos_updateUltimo", this.body.turnosItem[0]).subscribe(
+    this.sigaServices.post("turnos_updateUltimo", this.body.turnosItem).subscribe(
       data => {
 
+        var ultimaPosicion = this.datos[this.datos.length-1];
+        this.datos[this.datos.length-1] = this.selectedDatos[0];
+        this.selectedDatos[0] = ultimaPosicion;
         this.nuevo = false;
         this.selectedDatos = [];
         // this.getColaOficio();
@@ -749,6 +757,12 @@ export class TarjetaColaOficio implements OnInit {
     // this.multiSelect.show();
     // dato.overlayVisible = true;
   }
+
+  saltoCompensacion(evento){
+      this.progressSpinner = true;
+      this.persistenceService.setDatos(evento);
+      this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: evento.idturno , 'numerocolegiado': evento.numerocolegiado } });
+  } 
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;

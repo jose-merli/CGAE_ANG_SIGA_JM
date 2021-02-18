@@ -218,28 +218,32 @@ export class ConfiguracionTurnosComponent implements OnInit {
 
 
   confirmGuardar() {
-    let mess = this.translateService.instant(
-      "justiciaGratuita.oficio.turnos.confirmguardarturnos"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.save()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancel",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
+    //Comprobar que se ha modificado el campo de "requisitos guardias"
+    if (this.bodyInicial.idguardias != this.body.idguardias){
+      let mess = this.translateService.instant(
+        "justiciaGratuita.oficio.turnos.confirmguardarturnos"
+      );
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.save()
+        },
+        reject: () => {
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "Cancel",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    }
+    else this.save()
   }
   getFichaPosibleByKey(key): any {
     let fichaPosible = this.fichasPosibles.filter(elto => {

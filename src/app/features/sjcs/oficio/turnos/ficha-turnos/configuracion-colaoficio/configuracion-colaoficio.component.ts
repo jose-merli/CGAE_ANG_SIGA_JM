@@ -199,12 +199,11 @@ export class ConfiguracionColaOficioComponent implements OnInit {
         JSON.stringify(this.pesosExistentes)
       );
     } else {
-      this.sigaServices
-        .post("combossjcs_ordenCola", this.turnosItem.idordenacioncolas)
+      this.sigaServices.getParam("combossjcs_ordenCola", "?idordenacioncolas="+this.turnosItem.idordenacioncolas)
         .subscribe(
           n => {
             // coger etiquetas de una persona juridica
-            this.pesosExistentes = JSON.parse(n["body"]).colaOrden;
+            this.pesosExistentes = n.colaOrden;
             this.pesosExistentes.forEach(element => {
               if (element.por_filas == "ALFABETICOAPELLIDOS") {
                 element.por_filas = "Apellidos y nombre"
@@ -225,7 +224,6 @@ export class ConfiguracionColaOficioComponent implements OnInit {
                 element.orden = "descendente"
               }
             });
-
             this.pesosExistentesInicial = JSON.parse(
               JSON.stringify(this.pesosExistentes)
             );
@@ -234,7 +232,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
             console.log(err);
           }, () => {
             this.getPerfilesExtistentes();
-          }
+          } 
         );
     }
   }
@@ -355,9 +353,11 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     let array: any[] = [];
     let arrayNoSel: any[] = [];
     this.pesosSeleccionados.forEach(element => {
+      console.log("Seleccionados"+element.por_filas);
       array.push(element);
     });
     this.pesosExistentes.forEach(element => {
+      console.log("No seleccionados"+element.por_filas);
       arrayNoSel.push(element);
     });
     array.forEach(element => {
@@ -381,7 +381,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
       idturno: this.turnosItem.idturno,
     };
     this.sigaServices
-      .post("turnos_tarjetaGuardarPesos2", objPerfiles)
+      .post("turnos_tarjetaGuardarPesos", objPerfiles)
       .subscribe(
         n => {
           this.showSuccess(this.translateService.instant("justiciaGratuita.oficio.turnos.guardadopesos"));
